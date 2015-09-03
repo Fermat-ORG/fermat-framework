@@ -6,10 +6,10 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoCrypto;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 
 import junit.framework.TestCase;
 
@@ -41,10 +41,10 @@ public class GetTransactionsTest extends TestCase {
     ErrorManager errorManager;
 
     /**
-     * DealsWithWalletAddressBook interface Mocked
+     * DealsWithCryptoAddressBook interface Mocked
      */
     @Mock
-    WalletAddressBookManager walletAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithWalletContacts interface Mocked
@@ -64,15 +64,15 @@ public class GetTransactionsTest extends TestCase {
 
     String walletPublicKey;
 
-    WalletModuleCryptoWallet walletModuleCryptoWallet;
+    WalletModuleCryptoCrypto walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
+        walletModuleCryptoWallet = new WalletModuleCryptoCrypto();
         walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         walletModuleCryptoWallet.setErrorManager(errorManager);
-        walletModuleCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
+        walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
         walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
         walletModuleCryptoWallet.setBitcoinWalletManager(bitcoinWalletManager);
         walletModuleCryptoWallet.initialize();

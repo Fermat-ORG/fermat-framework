@@ -4,13 +4,13 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoCrypto;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetWalletAddressBookRegistryException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 
@@ -66,10 +66,10 @@ public class InitializeTest extends TestCase {
     OutgoingExtraUserManager outgoingExtraUserManager;
 
     /**
-     * DealsWithWalletAddressBook interface Mocked
+     * DealsWithCryptoAddressBook interface Mocked
      */
     @Mock
-    WalletAddressBookManager walletAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithWalletContacts interface Mocked
@@ -78,18 +78,18 @@ public class InitializeTest extends TestCase {
     WalletContactsManager walletContactsManager;
 
 
-    WalletModuleCryptoWallet walletModuleCryptoWallet;
+    WalletModuleCryptoCrypto walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
+        walletModuleCryptoWallet = new WalletModuleCryptoCrypto();
         walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         walletModuleCryptoWallet.setBitcoinWalletManager(bitcoinWalletManager);
         walletModuleCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setExtraUserManager(extraUserManager);
         walletModuleCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
-        walletModuleCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
+        walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
         walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
     }
 
@@ -121,7 +121,7 @@ public class InitializeTest extends TestCase {
 
     @Test
     public void testInitialize_CantGetWalletAddressBookRegistryException() throws Exception {
-        doThrow(new CantGetWalletAddressBookRegistryException()).when(walletAddressBookManager).getWalletAddressBookRegistry();
+        doThrow(new CantGetWalletAddressBookRegistryException()).when(cryptoAddressBookManager).getWalletAddressBookRegistry();
 
         catchException(walletModuleCryptoWallet).initialize();
         assertThat(caughtException())

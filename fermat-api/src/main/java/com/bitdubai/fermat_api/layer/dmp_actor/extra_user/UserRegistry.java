@@ -19,9 +19,9 @@ public interface UserRegistry {
 
     public Actor createUser(String userName, byte[] photo) throws CantCreateExtraUserRegistry;
 
-    public Actor getUser(UUID userId) throws CantGetExtraUserRegistry;
+    public Actor getUser(String actorPublicKey) throws CantGetExtraUserRegistry;
 
-    public byte[] getPhoto(UUID id) throws CantGetExtraUserRegistry;
+    public byte[] getPhoto(String actorPublicKey) throws CantGetExtraUserRegistry;
 
-    public void setPhoto(UUID id, byte[] photo) throws CantGetExtraUserRegistry;
+    public void setPhoto(String actorPublicKey, byte[] photo) throws CantGetExtraUserRegistry;
 }

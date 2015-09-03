@@ -169,9 +169,9 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
         DatabaseTableRecord extrauserRecord=null;
         try{
 
-            UUID userId = UUID.randomUUID();
+            String actorPublicKey = UUID.randomUUID().toString();
 
-            actor.setId(userId);
+            actor.setActorPublicKey(actorPublicKey);
             actor.setName(userName);
             actor.setPhoto(null);
             /**
@@ -182,7 +182,7 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
             extrauserTable = database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
             extrauserRecord = extrauserTable.getEmptyRecord();
 
-            extrauserRecord.setUUIDValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId);
+            extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, actorPublicKey);
             extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, userName);
             extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, NO_IMAGE);
             extrauserRecord.setLongValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
@@ -229,9 +229,9 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
         DatabaseTableRecord extrauserRecord=null;
         try{
 
-            UUID userId = UUID.randomUUID();
+            String actorPublicKey = UUID.randomUUID().toString();
 
-            actor.setId(userId);
+            actor.setActorPublicKey(actorPublicKey);
             actor.setName(userName);
             actor.setPhoto(photo);
             /**
@@ -242,37 +242,30 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
             extrauserTable = database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
             extrauserRecord = extrauserTable.getEmptyRecord();
 
-            extrauserRecord.setUUIDValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId);
+            extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, actorPublicKey);
             extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, userName);
-            extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, userId.toString());
+            extrauserRecord.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, actorPublicKey);
             extrauserRecord.setLongValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
             extrauserTable.insertRecord(extrauserRecord);
 
-            // Now we create the file to store the image
-            PluginBinaryFile imageFile;
-
-            String filename = userId.toString();
-
 
             try {
-
-                imageFile = pluginFileSystem.getBinaryFile(pluginId,DeviceDirectory.LOCAL_USERS.getName(), filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-
+                pluginFileSystem.getBinaryFile(pluginId,DeviceDirectory.LOCAL_USERS.getName(), actorPublicKey, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             } catch (CantCreateFileException cantPersistFileException) {
-                throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + actorPublicKey, "");
             } catch (FileNotFoundException e) {
 
                 try {
-                    imageFile = pluginFileSystem.createBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName() , filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName() , actorPublicKey, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
                     imageFile.setContent(photo);
                     try {
                         imageFile.persistToMedia();
                     } catch (CantPersistFileException cantPersistFileException) {
-                        throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                        throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + actorPublicKey, "");
 
                     }
                 } catch (CantCreateFileException cantPersistFileException) {
-                    throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                    throw new CantCreateExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + actorPublicKey, "");
                 }
             }
 
@@ -308,12 +301,12 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
     /**
      * <p>Return a specific user, looking for registered user id.
      *
-     * @param userId
+     * @param actorPublicKey
      * @return Object user
      * @throws CantGetExtraUserRegistry
      */
     @Override
-    public Actor getUser(UUID userId) throws CantGetExtraUserRegistry {
+    public Actor getUser(String actorPublicKey) throws CantGetExtraUserRegistry {
          /**
          * Reads the user data table , in this case only the name , creates an instance and returns
          */
@@ -325,7 +318,7 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
          *  I will load the information of table into a memory structure, filter by user id .
          */
             table = this.database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
-            table.setUUIDFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, userId, DatabaseFilterType.EQUAL);
+            table.setStringFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -333,7 +326,7 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
              * Will go through the records getting each extra user.
              */
 
-            actor.setId(userId);
+            actor.setActorPublicKey(actorPublicKey);
             for (DatabaseTableRecord record : table.getRecords()) {
                 actor.setName(record.getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME));
                 if(record.getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN).equals(NO_IMAGE))
@@ -341,10 +334,8 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
                 else {
                     PluginBinaryFile imageFile;
 
-                    String filename= userId.toString();
-
                     String path = DeviceDirectory.LOCAL_USERS.getName();
-                    imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    imageFile = pluginFileSystem.getBinaryFile(pluginId, path, actorPublicKey, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
                     actor.setPhoto(imageFile.getContent());
                 }
             }
@@ -377,11 +368,11 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
     }
 
     @Override
-    public byte[] getPhoto(UUID id) throws CantGetExtraUserRegistry {
+    public byte[] getPhoto(String actorPublicKey) throws CantGetExtraUserRegistry {
         DatabaseTable table;
         try {
             table = this.database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
-            table.setUUIDFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            table.setStringFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             String fileName =  table.getRecords().get(0).getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN);
             if(fileName.equals(NO_IMAGE))
@@ -389,10 +380,8 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
 
             PluginBinaryFile imageFile;
 
-            String filename= id.toString();
-
             String path = DeviceDirectory.LOCAL_USERS.getName();
-            imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+            imageFile = pluginFileSystem.getBinaryFile(pluginId, path, actorPublicKey, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             return imageFile.getContent();
         } catch (CantLoadTableToMemoryException | FileNotFoundException | CantCreateFileException e) {
             throw new CantGetExtraUserRegistry("",e,"","");
@@ -402,13 +391,13 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
     }
 
     @Override
-    public void setPhoto(UUID id, byte[] photo) throws CantGetExtraUserRegistry {
+    public void setPhoto(String actorPublicKey, byte[] photo) throws CantGetExtraUserRegistry {
         try {
             /**
              *  I will load the information of table into a memory structure, filter by user id .
              */
             DatabaseTable table = this.database.getTable(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
-            table.setUUIDFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            table.setStringFilter(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -418,41 +407,34 @@ public class ExtraUserRegistry implements DealsWithErrors, DealsWithPluginDataba
             String oldPhotoFileName;
             for (DatabaseTableRecord record : table.getRecords()) {
                 oldPhotoFileName = record.getStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN);
-                record.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, id.toString());
+                record.setStringValue(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_PHOTO_FILE_NAME_COLUMN, actorPublicKey);
                 table.updateRecord(record);
                 if (oldPhotoFileName.equals(NO_IMAGE)) {
 
-                    // Now we create the file to store the image
-                    PluginBinaryFile imageFile;
-
-                    String filename = id.toString();
-
                     try {
-                        imageFile = pluginFileSystem.getBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                        pluginFileSystem.getBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), actorPublicKey, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
                     } catch (CantCreateFileException cantPersistFileException) {
-                        throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                        throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + actorPublicKey, "");
                     } catch (FileNotFoundException e) {
                         try {
-                            imageFile = pluginFileSystem.createBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                            PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), actorPublicKey, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
                             imageFile.setContent(photo);
                             try {
                                 imageFile.persistToMedia();
                             } catch (CantPersistFileException cantPersistFileException) {
-                                throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                                throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + actorPublicKey, "");
                             }
                         } catch (CantCreateFileException cantPersistFileException) {
-                            throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + filename, "");
+                            throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", cantPersistFileException, "Error persist image file " + actorPublicKey, "");
                         }
                     }
                 } else {
-                    PluginBinaryFile imageFile;
-                    String filename = id.toString();
                     try {
-                        imageFile = this.pluginFileSystem.getBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                        PluginBinaryFile imageFile = this.pluginFileSystem.getBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), actorPublicKey, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
                         imageFile.setContent(photo);
                         imageFile.persistToMedia();
                     } catch (CantPersistFileException | CantCreateFileException | FileNotFoundException e) {
-                        throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", e, "Error persist image file " + filename, "");
+                        throw new CantGetExtraUserRegistry("CAN'T SAVE USER PHOTO", e, "Error persist image file " + actorPublicKey, "");
                     }
                 }
             }

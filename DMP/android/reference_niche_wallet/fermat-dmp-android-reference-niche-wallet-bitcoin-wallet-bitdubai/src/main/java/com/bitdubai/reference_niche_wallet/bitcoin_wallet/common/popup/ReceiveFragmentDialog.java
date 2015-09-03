@@ -18,8 +18,10 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -42,7 +44,7 @@ public class ReceiveFragmentDialog extends Dialog implements
      * Hardcoded walletPublicKey and user_id
      */
     String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
-    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
+    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
 
 
 
@@ -140,7 +142,16 @@ public class ReceiveFragmentDialog extends Dialog implements
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, actor_id, Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
+                    user_id,
+                    Actors.INTRA_USER,
+                    actor_id.toString(),
+                    Actors.EXTRA_USER,
+                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                    Vaults.BITCOIN_VAULT,
+                    walletPublicKey,
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+            );
             walletAddres = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

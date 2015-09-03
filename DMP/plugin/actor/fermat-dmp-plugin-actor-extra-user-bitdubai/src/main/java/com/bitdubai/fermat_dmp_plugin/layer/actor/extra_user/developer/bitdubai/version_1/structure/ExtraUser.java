@@ -8,6 +8,7 @@ import java.util.UUID;
 
 /**
  * Created by ciencias on 3/18/15.
+ *
  */
 public class ExtraUser implements Actor {
 
@@ -16,7 +17,7 @@ public class ExtraUser implements Actor {
      */
     private byte[] photo;
     private String name;
-    private UUID id;
+    private String actorPublicKey;
 
     /**
      * User interface implementation.
@@ -29,8 +30,8 @@ public class ExtraUser implements Actor {
     }
 
     @Override
-    public void setId(UUID id) {
-        this.id = id;
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
     }
 
     @Override
@@ -39,8 +40,8 @@ public class ExtraUser implements Actor {
     }
 
     @Override
-    public UUID getId() {
-        return this.id;
+    public String getActorPublicKey() {
+        return this.actorPublicKey;
     }
 
     @Override

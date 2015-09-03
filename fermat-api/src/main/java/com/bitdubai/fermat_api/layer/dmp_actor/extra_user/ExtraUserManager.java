@@ -16,14 +16,14 @@ public interface ExtraUserManager {
 
     // TODO ADD EXCEPTIONS?
 
-    public Actor getActor(UUID id);
+    Actor getActor(String actorPublicKey);
 
-    public void setPhoto(UUID id, byte[] photo);
+    void setPhoto(String actorPublicKey, byte[] photo);
 
-    public byte[] getPhoto(UUID id);
+    byte[] getPhoto(String actorPublicKey);
 
-    public Actor createActor(String userName);
+    Actor createActor(String userName);
 
-    public Actor createActor(String userName, byte[] photo);
+    Actor createActor(String userName, byte[] photo);
 
 }

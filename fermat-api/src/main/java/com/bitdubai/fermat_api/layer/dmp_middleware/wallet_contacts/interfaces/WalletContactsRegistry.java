@@ -46,7 +46,7 @@ public interface WalletContactsRegistry {
                                                           Integer max,
                                                           Integer offset) throws CantGetAllWalletContactsException;
 
-    WalletContactRecord createWalletContact(UUID actorId,
+    WalletContactRecord createWalletContact(String actorPublicKey,
                                             String actorName,
                                             Actors actorType,
                                             CryptoAddress receivedCryptoAddress,
@@ -62,7 +62,7 @@ public interface WalletContactsRegistry {
 
     List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException;
 
-    WalletContactRecord getWalletContactByActorId(UUID actorId) throws CantGetWalletContactException, WalletContactNotFoundException;
+    WalletContactRecord getWalletContactByActorPublicKey(String actorPublicKey) throws CantGetWalletContactException, WalletContactNotFoundException;
 
     WalletContactRecord getWalletContactByContactId(UUID contactId) throws CantGetWalletContactException, WalletContactNotFoundException;
 }

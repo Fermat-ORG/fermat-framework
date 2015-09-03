@@ -11,13 +11,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoCrypto;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.WalletAddressBookRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 
 import junit.framework.TestCase;
@@ -65,10 +65,10 @@ public class CreateWalletContactTest extends TestCase {
     ExtraUserManager extraUserManager;
 
     /**
-     * DealsWithWalletAddressBook interface Mocked
+     * DealsWithCryptoAddressBook interface Mocked
      */
     @Mock
-    WalletAddressBookManager walletAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithWalletContacts interface Mocked
@@ -100,7 +100,7 @@ public class CreateWalletContactTest extends TestCase {
     ReferenceWallet referenceWallet;
     String walletPublicKey;
 
-    WalletModuleCryptoWallet walletModuleCryptoWallet;
+    WalletModuleCryptoCrypto walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
@@ -109,15 +109,15 @@ public class CreateWalletContactTest extends TestCase {
         deliveredCryptoAddress = new CryptoAddress("asdasd ", CryptoCurrency.BITCOIN);
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
+        walletModuleCryptoWallet = new WalletModuleCryptoCrypto();
         walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setExtraUserManager(extraUserManager);
-        walletModuleCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
+        walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
         walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
         walletModuleCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
         doReturn(actorAddressBookRegistry).when(actorAddressBookManager).getActorAddressBookRegistry();
-        doReturn(walletAddressBookRegistry).when(walletAddressBookManager).getWalletAddressBookRegistry();
+        doReturn(walletAddressBookRegistry).when(cryptoAddressBookManager).getWalletAddressBookRegistry();
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
         doReturn(user).when(extraUserManager).createActor(anyString());
         doReturn(cryptoAddress).when(cryptoVaultManager).getAddress();
@@ -173,7 +173,7 @@ public class CreateWalletContactTest extends TestCase {
 
     @Test
     public void testCreateWalletContact_RegistryIsNotInitialized_CantGetWalletContactException() throws Exception {
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
+        walletModuleCryptoWallet = new WalletModuleCryptoCrypto();
         catchException(walletModuleCryptoWallet).createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
         assertThat(caughtException())
                 .isNotNull()

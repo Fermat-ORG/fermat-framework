@@ -70,7 +70,7 @@ public class SendFragment extends Fragment {
     ReferenceWalletSession walletSession;
     View rootView;
     String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
-    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
+    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
     Typeface tf;
     CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
@@ -368,7 +368,7 @@ public class SendFragment extends Fragment {
                     CryptoWalletWalletContact walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
 
                     // TODO harcoded deliveredbyactorid
-                    cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), walletPublicKey, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
+                    cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), walletPublicKey, user_id, Actors.INTRA_USER, walletContactRecord.getActorPublicKey(), walletContactRecord.getActorType());
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {
