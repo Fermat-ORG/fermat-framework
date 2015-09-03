@@ -474,12 +474,17 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
       {
           //Save request
 
-          //fire evento to intra user
-            getIntraUserNetworkServiceDao().saveAskIntraUserForAcceptanceRequest(intraUserLoggedInPublicKey, intraUserLoggedInName,  intraUserToAddPublicKey,  myProfileImage);
+          //fire event to intra user
+          UUID requestId = UUID.randomUUID();
+          getIntraUserNetworkServiceDao().saveAskIntraUserForAcceptanceRequest(requestId,intraUserLoggedInPublicKey, intraUserLoggedInName,  intraUserToAddPublicKey,  myProfileImage);
+      }
+      catch (CantExecuteDatabaseOperationException e)
+      {
+            throw new ErrorAskIntraUserForAcceptanceException("ERROR ASK INTRAUSER FOR ACCEPTANCE",e,"","Error to save record on database");
       }
       catch (Exception e)
       {
-
+          throw new ErrorAskIntraUserForAcceptanceException("ERROR ASK INTRAUSER FOR ACCEPTANCE",e, "", "Generic Exception");
       }
     }
 

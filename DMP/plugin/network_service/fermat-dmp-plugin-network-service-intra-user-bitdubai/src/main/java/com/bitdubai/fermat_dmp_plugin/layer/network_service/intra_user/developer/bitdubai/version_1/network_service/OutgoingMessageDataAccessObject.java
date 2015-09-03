@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -23,6 +23,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.OutgoingMessageDataAccessObject</code> have
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.OutgoingMessageDataAccessObject</code> have
  * all methods implementation to access the data base (CRUD)
  * <p/>
  *
@@ -173,7 +174,7 @@ public class OutgoingMessageDataAccessObject {
                 /*
                  * 4.1 - Create and configure a  OutgoingIntraUserNetworkServiceMessage
                  */
-                OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
+               OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -248,7 +249,7 @@ public class OutgoingMessageDataAccessObject {
                 /*
                  * 4.1 - Create and configure a  OutgoingIntraUserNetworkServiceMessage
                  */
-                OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
+               OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -337,7 +338,7 @@ public class OutgoingMessageDataAccessObject {
                 /*
                  * 5.1 - Create and configure a  OutgoingIntraUserNetworkServiceMessage
                  */
-                OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
+               OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -493,10 +494,10 @@ public class OutgoingMessageDataAccessObject {
 
         try {
 
-            outgoingIntraUserNetworkServiceMessage.setId(record.getLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME));
-            outgoingIntraUserNetworkServiceMessage.setSender(UUID.fromString(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME)));
-            outgoingIntraUserNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));;
-            outgoingIntraUserNetworkServiceMessage.setTextContent(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
+            outgoingIntraUserNetworkServiceMessage.setId(record.getLongValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME));
+            outgoingIntraUserNetworkServiceMessage.setSender(UUID.fromString(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME)));
+            outgoingIntraUserNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));;
+            outgoingIntraUserNetworkServiceMessage.setTextContent(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
             outgoingIntraUserNetworkServiceMessage.setMessageType(MessagesTypes.getByCode(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME)));
             outgoingIntraUserNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
             outgoingIntraUserNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));;

@@ -49,16 +49,20 @@ public class IntraUserNetworkServiceDao {
     Database database;
 
 
-    public void saveAskIntraUserForAcceptanceRequest(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) throws CantExecuteDatabaseOperationException {
+    public void saveAskIntraUserForAcceptanceRequest(UUID id, String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) throws CantExecuteDatabaseOperationException {
         try
         {
+            long millis = new java.util.Date().getTime();
+
             database = openDatabase();
             DatabaseTable table = this.database.getTable(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
 
+            record.setUUIDValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_ID_COLUMN_NAME, id);
             record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserToAddPublicKey);
             record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME, intraUserLoggedInName);
             record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME,intraUserLoggedInPublicKey);
+            record.setLongValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME,millis);
 
             table.insertRecord(record);
             closeDatabase();
