@@ -133,7 +133,6 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         Database database;
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
-            database.closeDatabase();
             return IncomingCryptoDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
