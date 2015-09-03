@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fbf7ed"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/green"
+            android:background="@color/material_blue_grey_800"
             android:text="Cancel"
             android:textColor="#FFFFFF" />
 
@@ -26,10 +27,56 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/green"
-            android:text="Save"
+            android:background="@color/material_blue_grey_800"
+            android:text="Register"
             android:textColor="#FFFFFF" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/accent_material_dark">
+
+        <RelativeLayout
+            android:id="@+id/loadingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center" >
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imageView_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_default_account"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/txtView_account_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:shadowColor="#000"
+            android:shadowDy="10"
+            android:shadowRadius="8"
+            android:text="Matias Furszyfer"
+            android:textColor="#FFF"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -217,105 +264,7 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/linear_address_tittle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="3dip"
-        android:paddingLeft="7dip"
-        android:paddingRight="7dip"
-        android:paddingTop="3dip">
 
-
-        <TextView
-            android:id="@+id/address_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|left"
-            android:layout_marginLeft="7dip"
-            android:layout_weight="1"
-            android:text="ADDRESS"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_black_light"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/ic_plus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_plus_green" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_address"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:paddingBottom="3dip"
-        android:paddingLeft="7dip"
-        android:paddingRight="7dip"
-        android:paddingTop="3dip">
-
-        <EditText
-            android:id="@+id/contact_address"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="end"
-            android:layout_marginRight="5dip"
-            android:layout_weight="1"
-            android:background="@drawable/shape_section"
-            android:elevation="2dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:hint="address"
-            android:paddingBottom="7dip"
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-            android:paddingTop="7dip"
-            android:textColor="#72af9c"
-            android:textColorHint="#BDBDBD"
-            android:textSize="20sp"
-            android:textStyle="normal" />
-
-        <EditText
-            android:id="@+id/contact_address_type"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="end"
-            android:layout_marginLeft="5dip"
-            android:layout_weight="1"
-            android:background="@drawable/shape_section"
-            android:elevation="2dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:hint="type"
-            android:paddingBottom="7dip"
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-            android:paddingTop="7dip"
-            android:textColor="#72af9c"
-            android:textColorHint="#BDBDBD"
-            android:textSize="20sp"
-            android:textStyle="normal" />
-
-        <ImageView
-            android:id="@+id/paste_from_clipboard_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:src="@drawable/ic_action_send_now_grey" />
-
-        <ImageView
-            android:id="@+id/scan_qr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:src="@drawable/ic_action_camera_grey" />
-    </LinearLayout>
 
 
 </LinearLayout>

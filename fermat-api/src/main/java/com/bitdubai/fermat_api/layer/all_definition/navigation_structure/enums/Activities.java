@@ -20,6 +20,7 @@ public enum Activities {
      * Intra user
      */
     CWP_INTRA_USER_ACTIVITY("CIUA"),
+    CWP_INTRA_USER_CREATE_ACTIVITY("CIUCA"),
 
     //Wallet store
     CWP_WALLET_STORE_MAIN_ACTIVITY("CWSMA"),
@@ -185,6 +186,8 @@ public enum Activities {
                 return Activities.CWP_WALLET_PUBLISHER_MAIN;
             case "CIUA":
                 return CWP_INTRA_USER_ACTIVITY;
+            case "CIUCA":
+                return CWP_INTRA_USER_CREATE_ACTIVITY;
 
         }
         // throw an IllegalArgumentException or return null
