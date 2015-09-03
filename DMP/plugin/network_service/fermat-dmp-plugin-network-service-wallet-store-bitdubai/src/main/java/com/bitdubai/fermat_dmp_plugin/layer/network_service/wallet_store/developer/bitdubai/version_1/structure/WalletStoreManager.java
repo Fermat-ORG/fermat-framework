@@ -51,6 +51,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by rodrigo on 7/21/15.
@@ -340,9 +341,14 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      */
     public CatalogItemImpl getCatalogItem(UUID walletId) throws CantGetCatalogItemException {
         CatalogItemImpl catalogItemImpl;
+        //Logger LOG = Logger.getGlobal();
+
         try {
+            //LOG.info("MAP_WALLETSTOREMANAGER:"+getDatabaseDAO()+"");
             catalogItemImpl = getDatabaseDAO().getCatalogItem(walletId);
+            //LOG.info("MAP_CATLOGITEM:" + catalogItemImpl + "");
             catalogItemImpl.setIcon(getWalletIcon(catalogItemImpl.getId().toString(), catalogItemImpl.getName()));
+            //LOG.info("MAP_ICON:" + catalogItemImpl.getId() + "-" + catalogItemImpl.getName());
             catalogItemImpl.setDetailedCatalogItemImpl(getDetailedCatalogItem(walletId));
         } catch (Exception e) {
             throw new CantGetCatalogItemException(CantGetCatalogItemException.DEFAULT_MESSAGE, e, null, null);

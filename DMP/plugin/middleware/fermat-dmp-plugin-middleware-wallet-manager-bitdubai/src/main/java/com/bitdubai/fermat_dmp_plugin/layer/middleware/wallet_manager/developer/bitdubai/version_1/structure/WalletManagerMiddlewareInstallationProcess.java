@@ -168,6 +168,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
         }
         catch (Exception e)
         {
+            LOG.info("MAP_EXCEPCION_GENERICA:"+e.toString()+"-"+e.getMessage());
             throw new CantInstallWalletException("ERROR INSTALLING WALLET", e, "Wallet to install " + walletPublicKey, "");
         }
     }
