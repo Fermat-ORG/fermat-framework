@@ -29,7 +29,7 @@ la Asset Issuer subApp, inicia una Digital Asset Transaction de Asset Issuing en
 
 * Se solicita a la Crypto Vault la creación de una transaction bitcoin la cual devuelve un hash. Este hash se define como la GenesisTransaction
 en el Digital Asset.
-* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress
+* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book
 * Se completa la crypto transacción especificando el GenesisAmount.
 * Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_RETURN de la crypto transacción.
 * Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.
