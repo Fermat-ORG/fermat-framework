@@ -30,15 +30,26 @@ Interacion y Flujo de pluggin, subapp, explicacion.
 
 = Flujo Desarrollo
 
-Quizas para una primera version, la plataforma tenga definido el contrato de características de los
-tipos y subtipos de Assests soportados.
-Por ejemplo, para el asset tipo voucher, existirán x condiciones que el issuer debe especificar.
-Deberiamos de enfocarnos a manipular los asset con la informacion basica, y con dicha informacion.
+El flujo de desarrollo del Asset describe lo necesario para generar un Digital Asset.
+El objeto DigitalAsset de la plataforma, contará con las siguientes propiedades:
 
-El issuer define propiedades generales de assets, y dependiendo del tipo de asset, las condiciones
-que aplican. --> Resultado: Digital Asset.
+ * Identity Asset Issuer: Identity del Actor AssetIssuer
+ * String name: nombre del Asset definido por el issuer.
+ * String description: descripción del asset definido por el issuer.
+ * List<Resource>: lista de recursos posibles del asset, como por ejemplo imágenes, videos, etc.
+ * String GenesisTransaction: hash de la transacciín bitcoin donde el asset está incluido.
+ * Address GenesisAddress: dirección Genesis generada por la Asset Vault
+ * long GenesisAmount: valor crypto del digital asset en Satoshis.
 
-Una vez finalizado y cerrado el asset, se genera la Genesis Transaction.
+Como contrato básico para el Digital Asset para poder cerrar el ciclo en el desarrollo inicial de la plataforma,
+especificaremos que:
+
+ * Redimible
+ * Date ExpirationDate: fecha de expiración que puede ser nunca.
+
+ 
+
+
 
 = Transferencia y confirmación de Asset a beneficiario
 
