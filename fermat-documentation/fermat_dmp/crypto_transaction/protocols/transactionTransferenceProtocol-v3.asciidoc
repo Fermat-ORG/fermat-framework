@@ -1,0 +1,322 @@
+= Transaction Transference Protocol - Version 2 (DRAFT)
+
+Date: Sep 2nd 2015 +
+Author: Ezequiel Postan <ezequiel_postan@hotmail.com>
+
+== Consideraciones
+
+Este archivo consiste en una puesta en limpio de la implementación actual y no en una revisión de la
+versión anterior.
+
+== Definiciones preliminares
+
+Agente:: Thread que realiza un trabajo en paralelo.
+Transacción crypto:: Mecanismo por el cual una red de crypto currencies registra el traspaso de valor de un usuario a otro.
+Transacción:: Tarea de modificar los estados de las wallets y crypto volt de manera transaccional
+
+CryptoStatus:: Enum que lista los posbles estados de una transacción crypto. Estos son:
+ ** PENDING_SUBMIT: Cuando la transacciòn se creó internamente, pero aún no fue distribuida en la red de Bitcoin. Este estado es importante sólo para las transacciones salientes.
+ ** ON_CRYPTO_NETWORK: Cuando se ve la transacción crypto en la red pero sin ninguna confirmación
+ ** ON_BLOCKCHAIN: Cuando la transacción crypto obtiene la primer confirmación.
+ ** IRREVERSIBLE: Cuando la tramsacción crypto obtiene suficientes confrmaciones para considerar la transacción irreversble.
+ ** REVERSED_ON_CRYPTO_NETWORK: Cuando se revierte la transacción antes de tener la primera confirmación.
+ ** REVERSED_ON_BLOCKCHAIN: Cuando se revierte la transacción luego de obtener su primera confirmación.
+
+
+Specialist:: Enum que lista qué tipo de plug-in debe tomar poseción de la transacción a traspazar. Este enum es necesario dado que este plug-in debe dar distintas transacciones a distintos plug-ins, por ende cuando un plug-in venga a tomar posesión de una transacción debe indicar qué tipo de transacciones maneja.
+CryptoTransaction:: Contenedor de datos con la información de una transacción. Esta información es:
+** Hash de la transacción
+** Dirección de Origen
+** Dirección de Destino
+** Crypto Currency
+** CryptoStatus
+** Monto
+
+Transaction:: Contenedor de datos con la información de una transacción. Estos datos son:
+** Un identificador distintivo (TransactionId)
+** Un elemento de tipo CryptoTransaction
+** Un valor de Action (hoy no se utiliza, pero se puede completar. Posible aplicabilidad futura)
+** Un timestamp que coloca quien genera la transaccón. (En este caso la red bitcoin)
+
+TransactionStatus:: Estado interno que guarda un plug-in sobre cadaa transacción que describe su relación con la misma. El estado puede ser:
+** ACKNOWLEDGE: Cuando recibe una transacción pero aún no confirmó su recepción.
+** RESPONSIBLE: Cuando posee la transacción y aún no la aplicó ni la traspasó
+** DELIVERED: Cuando traspasó la transacción a otro plug-in para que este se haga responsable.
+** APPLIED: Cuando aplicó la transacción
+
+ProtocolStatus:: Estado interno que guarda un plug-in sobre cada transacción que describe su situación de traspaso de la misma. Este estado puede ser:
+** NO_ACTION_REQUIRED: Cuando se tiene una transacción pero no se requiere ejecutar ningún traspaso o aplicación aún.
+** TO_BE_NOTIFIED: Cuando se debe notificar un evento para iniciar el traspaso de una transacción.
+** SENDING_NOTIFIED: Cuando se emitió el evento que notifica el pedido de traspaso de la transacción.
+** RECEPTION_NOTIFIED: Cuando se recibe la confirmación de receptión del traspaso de una transacción.
+
+TransactionSender:: Interfaz que implementan los plug-ins que traspasan transacciones a otros módulos, brinda los siguientes métodos:
+
+```
+  void confirmReception(TransactionId transactionId)
+  List<Transaction> getPendingTransactions(Specialist specialist)
+```
+
+  El método confirmedReception marca la transacción marcada como argumento como (DELIVERED,RECEPTION_NOTIFIED).
+  El método getPendingTransactions retorna la lista de todas las transacciones con ProtocolStatus SENDING_NOTIFIED que tienen como Specialist al pasado como argumento. Notar que no camba el estado de ninguna transacción.
+
+IMPORTANT: Respetar que `getPendingTransactions` retorne sólo lo que está en estado (RESPONSIBLE,SENDING_NOTIFIED). No intentar "optimizar" pasando las transacciones en TO_BE_NOTIFIED porque traería graves problemas de concurrencia.
+
+NOTE: Por cuestiones de concurrencia y reutilización de código la interfaz cambiará levemente en la implementación, ver <<Transaction-Transference-Protocol-v2-ImplementationNotes,notas de implementación>>.
+
+== Convensiones
+
+* Escribiremos que una transacción tiene un estado (TS,PS) para describir que su TransactionStatus
+es TS y el ProtocolStatus es PS.
+* Dada una transacción crypto, una transacción asociada es una transacción que tiene como
+CryptoTransaction un contenedor con los datos de la transacción crypto. Notar que una misma
+transacción crypto puede tener más de una transacción asociada. Esto se da por ejemplo cuando,
+al detectar que una transacción es confirmada por primera vez se genera un objeto Transaction, y si
+esta transacción crypto se reversa generará un nuevo objeto transaction. La duferencia entre ambos
+objetos será primero el identificador de la transacción y por otro lado la transacción crypto que
+contiene el objeto tendrá un crypto estado distinto.
+
+== Protocolo
+
+Para simplificar la explicación supondemos que el receptor de las transacciones crypto y por ende el emisor original de las transacciones es el plug-in de la red bitcoin. A su vez, usaremos el término 'red bitcoin' para referirnos a este plug-in. El plug-in al que traspasa las transacciones la red btcoin será el IncomingCrypto y el plug-in que aplicalas transacciones el el IncomingCryptoExtraUser.
+
+Analicemos los pasos del protocolo de traspaso de transacciones en estos componentes.
+
+. Cuando la red bitcoin despierta, revisa las transacciones *nuevas* que han llegado por la red.
+  Al analizar el crypto estado de cada transacción crypto se tendrá que avisar los estados del ciclo de vida
+  de la transacción desde el último que notificó hasta llegar al actual. +
+  El ciclo de vida es ON_CRYPTO_NETWORK -->  [REVERSED_ON_CRYPTO_NETWORK] --> ON_BLOCKCHAIN --> [REVERSED_ON_BLOCKCHAIN] --> IRREVERSIBLE, donde los estados entre corchetes
+  pueden no ocurrir durante el ciclo y finalizan el ciclo de esa transacción.
+  Las transacciones creadas que deben informarse se crean con estado (RESPONSIBLE, TO_BE_NOTIFIED).
+. Un agente de la red bitcoin detecta que hay transacciones crypto con ProtocolStatus TO_BE_NOTIFIED o SENDING_NOTIFIED, entonces envía un evento correspondiente al crypto estado de la
+  transaccion.
+** Si la transaccion tiene estado ON_CRYPTO_NETWORK se lanza el evento IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent,
+** Si la transaccion tiene estado ON_BLOCKCHAIN se lanza el evento IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent,
+** Si la transaccion tiene estado REVERSED_ON_CRYPTO_NETWORK se lanza el evento IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent,
+** Si la transaccion tiene estado REVERSED_ON_BLOCKCHAIN se lanza el evento IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent,
+Luego de lanzar los eventos marca las transacciones que tenía en TO_BE_NOTIFIED como SENDING_NOTIFIED. <<Transaction-Transference-Protocol-v2-Note2,VER NOTA>>
+. El IncomngCrypto regstra el evento.
+. El MonitorAgent (un agente) del IncomingCrypto ve que hay transacciones pendientes y llama al método `getPendingTransactions(CRYPTO_ROUTER)` de la fuente que emitió el evento, luego recorre la lista que devuelve y *primero guarda en su base de datos* a todas las transacciones colocándoles el estado (ACKNOWLEDGE,TO_BE_NOTIFIED). *Luego*, por cada transacción en la base de datos con estado (ACKNOWLEDGE,TO_BE_NOTIFIED) (que pueden ser más que las que guardó recién) ejecuta los siguientes pasos *en ese orden*:
+.. Llama al método `confirmReception` con el TransactionId de la transacción como parámetro.
+.. Marca la transacción como (RESPONSIBLE,NO_ACTION_REQUIRED).
+. El RelayAgent (un segundo agente) del IncomingCrypto analizará las transacciones con estado (RESPONSIBLE,NO_ACTION_REQUIRED). Por cada una de ellas haría los siguientes pasos *en el orden enunciado*
+.. Deduciría a partir de la información de las mismas su Specialist y lo marcaría.
+.. Pasaría la transacción al estado (RESPONSIBLE,TO_BE_NOTIFIED)
+.. Cuando termina de recorrer la lista recorre ahora todas las que están con TransactonStatus RESPONSIBLE y ProtocolStatus TO_BE_NOTIFIED o SENDING_NOTIFIED. Registra todos los especialistas que vio en *este recoorido* (no intentar optimizar usando el recorrido anterior porque puede perderse si el sistema se cae) y realiza los siguente pasos *en el orden enunciado*:
+... Por cada Specialist registrado en el recorrido anterior lanza el evento correspondiente.
+... Pasa cada transacción con ProtocolStatus TO_BE_NOTIFIED a SENDING_NOTIFED. <<Transaction-Transference-Protocol-v2-Note3,VER NOTA>>
+. EL incomng crypto extra-user escuchará el evento.
+. El MonitorAgent (un agente) del IncomingCryptoExtraUser ve que hay transacciones pendientes y llama al método `getPendingTransactions(EXTRA_USER)` del IncomingCrypto, luego recorre la lista que devuelve y *primero guarda en su base de datos* a todas las transacciones asignándoles el estado (ACKNOWLEDGE,TO_BE_NOTIFIED). *Luego*, por cada transacción en la base de datos con estad (ACKNOWLEDGE,TO_BE_NOTIFIED) (que pueden ser más que las que guardó recién) ejecuta los siguientes pasos *en ese orden*:
+.. Llama al método `confirmReception` con el TransactionId de la transacción como parámetro, con lo que el IncomingCrypto marcará la transacción que se indique como (DELIVIRED,RECEPTION_NOTIFIED) en la base de datos del IncomingCrypto.
+.. Marca la transacción como (RESPONSIBLE,NO_ACTION_REQUIRED).
+. El RelayAgent (segundo agente) del IncomingCryptoExtraUser ve las transacciones que tiene y decide si debe ejecutarlas o no, *luego de ejecutar la transacción* la marca como (APPLIED,NO_ACTION_REQUIRED)
+
+== Consideraciones
+
+El protocolo debe estar preparado para la caída del dispostvo en cualquier paso, por ende las siguientes implementaciones son necesarias.
+
+* Si un emisor envía el evento para que retiren transacciones y el receptor las retira, almacena, pero el sistema cae antes que pueda confirmarl su receptión termnaremos con este estado:
+** El receptor tendrá transacciones en su base de datos en (ACKNOWLEDGED,TO_BE_NOTIFIED)
+** El emisor no sabrá que el receptor ya las retiró. Recordar que el receptor sólo retra lo que está en (RESPONSIBLE,SENDING_NOTIFIED).
+
+Por ende cuando se levante el sistema, el receptor volverá a pedir transacciones pendientes y recibirá en la lista transacciones que ya tiene. Cuando esto ocurra, el receptor simplemente ignorará la excepción que lanzará la base de datos por querer introducir algo que ya tenemos y procederá a confirmar la recepción de la transacción para que el emisor la saque de la próxima lista a mandar.
+
+* Si un receptor llama al `confirmReception` y ants de pasar la transacción de (ACKNOWLEDGED,TO_BE_NOTIFIED) a (RESPONSIBLE,NO_ACTION_REQUIRED) se cae el sistema tendremos la siguiente situación:
+** El emisor tendrá una transaccón confirmada como (DELIVERED,RECEPTION_NOTIFICED) que el receptor aún tendrá como (ACKNOWLEDGED,TO_BE_NOTIFIED). Por ende no se enviaría en la siguiente lista de transacciones al llamar al método `getPendingTransactions`.
+
+Es por esto que el agente que toma la lista de transacciones nuevas, tras registrarlas en su base de datos, vuelve a pedirle a la misma *todas* las transacciones en (ACKNOWLEDGED,TO_BE_NOTIFED). Ya que la que se había confirmado pero no registrado confirmación no estaría en la lista obtenida de `getPendingTransactions`.
+Lo que debemos considerar es entonces que cuando se llame al método `confirmTransacton` más de una vez con la misma transacción, este no lance una excepción sino que simplemente ignore la segunda confirmación para que esta vez el receptor de la transacción pueda pasarla al estado (RESPONSIBLE,NO_ACTION_REQUIRED)
+
+
+[[Transaction-Transference-Protocol-v2-Note1]]
+NOTE: Quiero analizar la posibilidad de cancelar aquí mismo el envío del APPLY de la transacción si aún no se envió, pero es algo tarde cuando escribo esto, voy a verlo al levantarme con mi mente más despierta. A diferencia de la <<Transaction-Transference-Protocol-v2-Note3,últma nota>> aquí no es tan simple, porque el que notifica es otro thread.
+
+[[Transaction-Transference-Protocol-v2-Note2]]
+NOTE: DESPUÉS VI ESTO MÁS DESPEJADO Y ME DI CUENTA QUE ESTE PROBLEMA NO SE DA, PORQUE EL MÉRODO `getPrndeingTransactions` NO ENTREGARÍA TRANSACCIONES EN ESTADO TO_BE_NOTFIED, podría ignorarse esta nota, la dejé para recordarlo yo. +
+Esto visto en detalle muestra problemas de concurrencia nuevamente, ejemplo: lanzo el evento y el incoming crypto toma las transaccones, las confirma y cuando luego de confirmarlas es que recíen este agente marca la transaccón al estado SENDING_NOTIFED, aquí dependo de cómo esté implementado el módulo de base de datos para saber si esto puede andar mal (no sólo en si la base de datos usa un lock, sino tambien en cuanto a cómo actualiza un campo). Analizado sin mucho detalle creo que podría causar problemas al incorporar los reversed. Creo que con colocar un lock se podría solucionar. +
+
+[[Transaction-Transference-Protocol-v2-Note3]]
+NOTE: Acá hay que analizar de nuevo la posibilidad de cancelar el envió de transacciones con acción APPLY si ya tengo registrado el REVERSED. Creo que en este caso puedo cancelar el traspaso si la transaccón tiene ProtocolStatus TO_BE_NOTIFIED.
+
+== Conclusiones hasta aquí
+
+* Las consideraciones de cambio que tengo presentes son:
+** Incorporación de nuevos especalistas
+** Los criterios de decisión se podrían encapsular en clases y usar el patrón de diseño strategy. Pero esto no llegué a verlo.
+** Consultas de informacón: Para que se consulte información, se podría tener uno o más métodos que simplemente no cambien ningún estado interno y retornen la información pedida.
+* Si parametrizamos el protocolo haciendo que la interfaz TransactionSender tenga un parámetro de tipo genérico podríamos reutilizar el protocolo con otro tipo de transacciones, simplemente cambiaríamos la clase CryptoTransaction por otro contenedor de datos que usarían el emisor y receptor.
+* Parece ser más eficiente porque elimina un par de agentes.
+* Creo que los Network Services que transporten información de valor que deba sincronizarse usarían este protocolo con eventos especializados que indiquen nuevas meta-transacciones.
+* Aún hay que revisar esto y completar los pasos con el incoming-crypto-extra-user y ver si incorporar el incoming-crpyo-intra-user no rompe nada
+* Falta analizar el impacto del cambio de usar una transacción crypto por cada meta transacción a pasar a usar una UTXO por cada meta transacción.
+
+[[Transaction-Transference-Protocol-v2-ImplementationNotes]]
+== Notas de implementación (IncomingCrypto)
+
+Probablemente sea mejor leer primero <<Transaction-Transference-Protocol-v2-NotaParaLuis,esta nota>>
+
+=== Opción 1: Propuesta en reunión de equipo, refinada por Ezequiel siguiendo esa idea.
+
+* El incoming crypto usará una clase (Registry) que compartirán los dos agentes de cada módulo. Por cada módulo el registry abritá una copia de la tabla que guarda las transacciones. Esto se hace para evitar problemas de concurrencia.
+* También para solventar problemas de concurrencia, optamos por modificar la interfaz del pluginRoot. En lugar de implementar la interfaz `TransactionSender` definiremos una interfaz `IncomingCryptoManager` con el método `TransactionSender getTransactionSender(Specialist specialist)`. +
+La implementación de esta interfaz hará que retornemos una copia de la tabla de transacciones actual que lleva el manejador de la base de datos (haremos un open de la tabla para pasar una instancia de la abstracción distinta, lo cual resuelve varias cuestiones de concurrencia).
+Además, notemos que podemos parametrizar las Transactions para que transporten otro tipo de datos fuera de transacciones crypto, esto será de utilidad para reutilizar el código. Por último un nombre más adecuado para la interfaz TransactionSender sería TransactionManager, las interfaces finales serán entonces:
+
+  public interface IncomingCryptoManager {
+    TransactionManager<CryptoTransaction> getTransactionSender(Specialist specialist)
+  }
+
+  public interface TransactionManager<E> {
+    public void confirmReception(UUID transactionId)
+    public List<Transaction<E>> getPendingTransactions(Specialist specialist)
+  }
+
+* Será el mismo Registry quien implementará la interfaz `TransactionManager<CryptoTransaction>`.
+* Además el Registry tendrá los siguientes métodos para los agentes:
+
+NOTE: EventWrapper es un contenedor de datos de información de eventos. Probablemente no hace falta.
+
+  // To manage events
+  // Used by the Monitor Agent
+  void saveNewEvent(String eventType, String eventSource) throws CantSaveEvent;
+  EventWrapper getNextPendingEvent() throws CantReadEvent;
+  void discardEvent(UUID eventId) throws CantReadEvent, CantSaveEvent;
+
+  //To manage transactions
+
+  // User by the Monitor Agent
+  // Las coloca en (A,TBN)
+  void acknowledgeTransactions(List<Transaction<CryptoTransaction>> transactionList) CantAcknowledgeTransactionException;
+  // Retorna las que están en (A,TBN)
+  List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() CantGetTransactionsException;
+  // Pasa una de (R,NAR)
+  void acquireResponsibility(Transaction<CryptoTransaction> transaction) CantAcquireResponsibility;
+
+  // Used by Relay Agent
+  // Retorna las (R,NAR)
+  List<Transaction<CryptoTransaction>> getResponsibleTransactions() CantAccessTransactionsException;
+  // Pasa la transacción a TBN y le agrega el Specialist.
+  void setToNotify(UUID id, Specialist specialist)
+  // La lista de (R,TBN) o (R,SN)
+  List<Transaction<CryptoTransaction>> getResponsibleTransactionsPendingAction() CantAccessTransactionsException;
+  // Da los Specialist de las que están en TBN y SN
+  List<Specialist> getSpecialists() CantReadSpecialistsException;
+  // Pasa las que son TBN a SN
+  void setSendingNotified() CantSaveTransactionsException;
+
+=== Opció 2: Contrapropuesta de Ezequiel
+
+* Tras analizar el tema de concurrencia llegué a la conclusión de que puedo evitar pasar el Registry a otros módulos y además puedo resolver los temas de concurrencia que hablamos hoy.
+* La solución a los temas de concurrencia la hago abriendo la tabla que requiere usar cada método del registry como primer sentencia del método (cosa que igual tengo que hacer en la otra implementación). Esto da un objeto Database propio a cada thread dado que las variables serán locales y esas son exclusivas por thread, por lo que la concurrencia pasa a ser solucionada por el motor de base de datos según la conclusión que tuvimos hoy (ayer).
+* A mí esta solución me parece más simple, sería el pluginRoot el que implementa la interfaz TransactionSender como pensaba inicialmente.
+
+Dejo a su elección la implementación que considere mejor (si agregar lo del transaction manager o dejar simplemente la intefaz transaction sender). Como dije, yo prefiero la segunda opción.
+
+IMPORTANT: En ambos casos hay que tratar lo que escribí <<Transaction-Transference-Protocol-v2-NotaParaLuis,abajo>>
+
+== Analizar
+
+* ¿Se pueden fusionar el Monitor y el RelayAgent en un sólo thread?
+** Preferimos no hacerlo al menos para esta versión. En teoría podría hacerse.
+* Analizar si pude quitarse el parámetro Specialist al método `getPendingTransactions`.
+
+[[Transaction-Transference-Protocol-v2-NotaParaLuis]]
+== Nota para Luis
+
+Tuve que mirar el código de la parte de base de datos. No sé si alguien más aparte de mí está trabajando con cosas multithread pero dejo un par de aclaraciones de lo que veo.
+La versión corta es que hay que cambiar un par de lineas de un archivo del plugin de base de datos, la explicación del por qué la dejo acá abajo.
+
+. Si bien a nivel de SQL las cosas pueden tener locks y demás mecanismos de concurrencia, lo que manejamos desde otros plug-ins es una abstracción, por ende si alguna variable de clase (member) es usada por los métodos que implementan estas abstracciones entonces serán compartidas por los threads que usen un mismo objeto. +
+. Si un método que es llamado por varios threads accede a una tabla (un objeto DatabaseTable), uno puede crear una instancia de DatabaseTable nueva en cada llamada del método para que estos no compartan variables de las abstracciones (acá la abstracción es el objeto DatabaseTable). Es decir hacer algo así:
+
+  public void metodoCompartido(){
+     DatabaseTable t = this.database.getTable(Nombre_de_la_tabla);
+     ...
+     Manipulan la tabla
+     ...
+  }
+
+Eso puede dar la impresión de resolver el tema, pero si uno presta atención se usa una variable de la clase para acceder a una nueva tabla (la variable referenciada como `this.database`) +
+El código del método getTable de la clase Database está link:https://github.com/bitDubai/fermat-pip-android-addon-os-android-database-system-bitdubai/blob/master/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/AndroidDatabase.java#L116[aquí], como vemos:
+
+```
+    /**
+     * <p>Return a DatabaseTable definition
+     *
+     * @param tableName name database table using
+     * @return DatabaseTable Object
+     */
+    @Override
+    public DatabaseTable getTable(String tableName){
+
+        databaseTable = new AndroidDatabaseTable(this.context,this.Database, tableName);
+
+        return databaseTable;
+    }
+```
+
+La variable databaseTable es un miembro de la clase, por lo que sería compartidas por distintos threads. +
+Eso a mi entender trae problemas porque si dos threads llaman a métodos que requieren tablas distintas de la misma base de datos tendría trazas que hacen que el pedido de un thread pise al del otro (debido a esa asignación previa al return). +
+Esto haría que necesite no sólo obtener la tabla dentro de un método compartido por varios threads sino que también hace que tenga que abrir la base de datos en el inicio de cada llamada a un método de ese estilo. +
+Afortunadamente el método `openDatabase(UUID ownerId, String databaseName)` del DatabaseSystem no usa miembros de clase y sólo usa variables locales por lo que parece ser thread safe (por lo que el problema no escalaría otro nivel más). El código es link:https://github.com/bitDubai/fermat-pip-android-addon-os-android-database-system-bitdubai/blob/master/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/AndroidPluginDatabaseSystem.java#L28[este]:
+
+```
+    @Override
+    public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        try{
+            AndroidDatabase database;
+            String hasDBName = hashDataBaseName(databaseName);
+            database = new AndroidDatabase(this.Context, ownerId, hasDBName);
+            database.openDatabase(hasDBName);
+
+            return database;
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new CantOpenDatabaseException();
+        }
+
+    }
+```
+
+Más allá de eso, analicé el código problemático del AndroidDatabase (la clase que implementa la interfaz Database para Android) y en mi opinión cambiando el código de la implementación de la base de datos que dice:
+
+```
+    public DatabaseTable getTable(String tableName){
+
+        databaseTable = new AndroidDatabaseTable(this.context,this.Database, tableName);
+
+        return databaseTable;
+    }
+```
+
+por simplemente
+
+    public DatabaseTable getTable(String tableName){
+        return new AndroidDatabaseTable(this.context,this.Database, tableName);
+    }
+
+se arregla la necesidad de que tenga que abrir la base de datos en cada método. La variable que se asigna en ese código es variable de clase (miembro), pero no es usada en ningún otro lado. Igual pediría que lo revise alguien que entiende mejor el plug-in (yo sólo navegué un par de clases). +
+
+Yo implementé los métodos abriendo la tabla para generar una copia exclusiva para cada thread, pero si mi razonamiento es correcto hay que corregir el código de la base de datos que menciono. +
+
+Si mi razonamiento es erroneo, me disculpo por el tiempo que pueda haber llevado leer mi análisis.
+
+Luego vi que pasa algo similar con el método
+
+```
+    @Override
+    public DatabaseTransaction newTransaction(){
+
+        return databaseTransaction = new AndroidDatabaseTransaction();
+    }
+```
+
+Aquí la variable `databaseTransaction` se usa en otra parte, pero parece ser innecesaria también. Esa preferiría que también la revisen. Aunque en este caso no sé si sería probelmático (no revisé el código de las transacciones).
+
+Por último intenté analizar el método `executeTransaction` de la clase AndroidDatabase, excede mis conocimientos saber si hay problemas allí. Se referencia a una variable que es miembro de la clase (es decir, una que no es variable local del método y por ende podría ser compartida por varios threads al invocarlo), pero esa variable es una referencia a una instancia de la clase SQLiteDatabase, con la cual no estoy familiarizado.
+
+== Consultar
+
+* Consultar a Rodrigo la longitud de un hash de una transacción crypto para almacenar en la base de datos del Regysty.
+* Consultar a Rodrigo la longitud de una dirección bitcoin de una transacción crypto para almacenar en la base de datos del Regysty.

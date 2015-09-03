@@ -129,4 +129,7 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
      * @param position position to render
      */
     protected abstract void bindHolder(H holder, M data, int position);
+
+
+
 }

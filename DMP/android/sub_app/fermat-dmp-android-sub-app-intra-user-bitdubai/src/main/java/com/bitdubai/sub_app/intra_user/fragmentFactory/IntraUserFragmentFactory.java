@@ -7,6 +7,7 @@ import com.bitdubai.sub_app.intra_user.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user.fragments.DetailsActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.MainActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.MoreDetailsActivityFragment;
+import com.bitdubai.sub_app.intra_user.fragments.RegisterIntraUserFragment;
 import com.bitdubai.sub_app.intra_user.preference_settings.IntraUserPreferenceSettings;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
 
@@ -32,13 +33,11 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
             case CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY:
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
-
-
             case CWP_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_FREE_FRAGMENT:
-                currentFragment = ConnectionsListFragment.newInstance();
+                currentFragment = RegisterIntraUserFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_PAID_FRAGMENT:
                 currentFragment = ConnectionsListFragment.newInstance();

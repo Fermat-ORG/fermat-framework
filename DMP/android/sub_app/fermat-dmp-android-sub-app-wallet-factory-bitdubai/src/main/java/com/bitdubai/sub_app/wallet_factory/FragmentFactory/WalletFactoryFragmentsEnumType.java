@@ -13,8 +13,7 @@ public enum WalletFactoryFragmentsEnumType implements FermatFragmentsEnumType<Wa
     CWP_WALLET_FACTORY_PROJECTS_FRAGMENT("CWFPF"),
     CWP_WALLET_FACTORY_SEND_FRAGMENT("CWFSF"),
     CWP_WALLET_FACTORY_MAIN_FRAGMENT("CWFMF"),
-    CWP_WALLET_FACTORY_EDIT_MODE("CWFEM")
-    ;
+    CWP_WALLET_FACTORY_EDIT_MODE("CWFEM");
 
 
     private String key;

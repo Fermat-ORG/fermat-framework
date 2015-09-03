@@ -164,8 +164,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeCryptoRegistryException("Failed attempt to open IncomingCrypto database",cantOpenDatabaseException,"Database Name: "+IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE,"");
-        } finally {
-            this.database.closeDatabase();
         }
     }
 

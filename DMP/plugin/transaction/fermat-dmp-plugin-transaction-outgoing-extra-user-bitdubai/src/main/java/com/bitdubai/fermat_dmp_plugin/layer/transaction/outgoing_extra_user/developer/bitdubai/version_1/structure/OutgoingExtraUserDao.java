@@ -97,13 +97,20 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         }
     }
 
-    public void registerNewTransaction(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws CantInsertRecordException {
+    public void registerNewTransaction(String walletPublicKey,
+                                       CryptoAddress destinationAddress,
+                                       long cryptoAmount,
+                                       String notes,
+                                       String deliveredByActorPublicKey,
+                                       Actors deliveredByActorType,
+                                       String deliveredToActorPublicKey,
+                                       Actors deliveredToActorType) throws CantInsertRecordException {
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
             DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
 
-            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
 
             transactionTable.insertRecord(recordToInsert);
             database.closeDatabase();
@@ -279,7 +286,15 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
 
-    private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord, String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) {
+    private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
+                                 String walletPublicKey,
+                                 CryptoAddress destinationAddress,
+                                 long cryptoAmount,
+                                 String notes,
+                                 String deliveredByActorPublicKey,
+                                 Actors deliveredByActorType,
+                                 String deliveredToActorPublicKey,
+                                 Actors deliveredToActorType) {
 
         UUID transactionId = UUID.randomUUID();
 
@@ -304,10 +319,10 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode());
 
 
-        databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME, deliveredByActorId);
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME, deliveredByActorPublicKey);
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME, deliveredByActorType.getCode());
-        databaseTableRecord.setUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME, deliveredToActorId);
-        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, deliveredByActorType.getCode());
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME, deliveredToActorPublicKey);
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, deliveredToActorType.getCode());
     }
 
 
@@ -406,8 +421,8 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
         Actors actorFromType = Actors.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME));
         Actors actorToType = Actors.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME));
-        UUID actorFromId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME);
-        UUID actorToId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
+        String actorFromPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME);
+        String actorToPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
 
         bitcoinTransaction.setWalletPublicKey(walletPublicKey);
         bitcoinTransaction.setIdTransaction(transactionId);
@@ -419,9 +434,9 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         bitcoinTransaction.setTimestamp(timestamp);
         bitcoinTransaction.setMemo(memo);
         bitcoinTransaction.setCryptoStatus(cryptoStatus);
-        bitcoinTransaction.setActorFromId(actorFromId);
+        bitcoinTransaction.setActorFromPublicKey(actorFromPublicKey);
         bitcoinTransaction.setActorFromType(actorFromType);
-        bitcoinTransaction.setActorToId(actorToId);
+        bitcoinTransaction.setActorToPublicKey(actorToPublicKey);
         bitcoinTransaction.setActorToType(actorToType);
 
         return bitcoinTransaction;
