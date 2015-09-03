@@ -29,8 +29,6 @@ public class WalletStoreFragmentFactory extends FermatSubAppFragmentFactory<Wall
             case CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY:
                 currentFragment = MoreDetailsActivityFragment.newInstance();
                 break;
-
-
             case CWP_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = MainActivityFragment.newInstance();
                 break;
