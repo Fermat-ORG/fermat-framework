@@ -187,10 +187,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         } catch (CantShowLoginIdentitiesException e) {
             e.printStackTrace();
         }
-
     }
-
-
 
     /**
      * Determine if this fragment use menu
@@ -226,7 +223,6 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     protected boolean recyclerHasFixedSize() {
         return true;
     }
-
 
     @Override
     public ArrayList<IntraUserConnectionListItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {

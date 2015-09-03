@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develo
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.*;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 
@@ -27,7 +27,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     List<URL> videoPreviews;
     URL url;
     long skinSizeInBytes;
-    com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer;
+    DesignerIdentity designer;
     boolean isDefault;
     ScreenSize screenSize;
 

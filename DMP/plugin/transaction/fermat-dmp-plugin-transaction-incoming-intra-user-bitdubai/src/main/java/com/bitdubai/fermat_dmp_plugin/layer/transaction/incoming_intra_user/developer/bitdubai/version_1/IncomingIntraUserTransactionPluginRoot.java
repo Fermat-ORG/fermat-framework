@@ -6,24 +6,16 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.dev
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_transaction.incoming_intra_user.IncomingIntraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedFromIntraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedFromIntraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedFromIntraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedFromIntraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.MoneyReceivedEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,53 +66,6 @@ public class IncomingIntraUserTransactionPluginRoot implements Service, Incoming
 
     @Override
     public void start() {
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-
-        EventListener eventListener;
-        EventHandler eventHandler;
-
-
-        eventListener = eventManager.getNewListener(EventType.MONEY_RECEIVED);
-        eventHandler = new MoneyReceivedEventHandler();
-        ((MoneyReceivedEventHandler) eventHandler).setIncomingIntraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER);
-        eventHandler = new IncomingCryptoIdentifiedFromIntraUserEventHandler();
-        ((IncomingCryptoIdentifiedFromIntraUserEventHandler) eventHandler).setIncomingIntraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER);
-        eventHandler = new IncomingCryptoReceivedFromIntraUserEventHandler();
-        ((IncomingCryptoReceivedFromIntraUserEventHandler) eventHandler).setIncomingIntraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER);
-        eventHandler = new IncomingCryptoReceptionConfirmedFromIntraUserEventHandler();
-        ((IncomingCryptoReceptionConfirmedFromIntraUserEventHandler) eventHandler).setIncomingIntraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER);
-        eventHandler = new IncomingCryptoReversedFromIntraUserEventHandler();
-        ((IncomingCryptoReversedFromIntraUserEventHandler) eventHandler).setIncomingIntraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-        
-        
-
 
         this.serviceStatus = ServiceStatus.STARTED;
     }

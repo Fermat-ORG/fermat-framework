@@ -8,12 +8,10 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_except
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.ActorAddressBookNotFoundException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.*;
@@ -21,15 +19,16 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 
 /**
  * Created by jorgegonzalez on 2015.07.08..
+ *
  */
 public class BitcoinBasicWalletTransactionExecutor implements TransactionExecutor {
 
     private BitcoinWalletWallet bitcoinWallet;
-    private ActorAddressBookManager actorAddressBookManager;
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
-    public BitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final ActorAddressBookManager actorAddressBookManager){
+    public BitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager){
         this.bitcoinWallet = bitcoinWallet;
-        this.actorAddressBookManager = actorAddressBookManager;
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
     @Override
@@ -101,8 +100,7 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
         try {
             CryptoTransaction cryptoTransaction = transaction.getInformation();
 
-            ActorAddressBookRegistry actorAddressBookRegistry = this.actorAddressBookManager.getActorAddressBookRegistry();
-            ActorAddressBookRecord actorAddressBookRecord = actorAddressBookRegistry.getActorAddressBookByCryptoAddress(cryptoTransaction.getAddressTo());
+            CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransaction.getAddressTo());
 
 
             long timestamp = transaction.getTimestamp();
@@ -116,19 +114,17 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
             bitcoinWalletTransactionRecord.setTimestamp(timestamp);
             bitcoinWalletTransactionRecord.setMemo("No information");
 
-            bitcoinWalletTransactionRecord.setActorFromId(actorAddressBookRecord.getDeliveredToActorId());
-            bitcoinWalletTransactionRecord.setActorFromType(actorAddressBookRecord.getDeliveredToActorType());
-            bitcoinWalletTransactionRecord.setActorToId(actorAddressBookRecord.getDeliveredByActorId());
-            bitcoinWalletTransactionRecord.setActorToType(actorAddressBookRecord.getDeliveredByActorType());
+            bitcoinWalletTransactionRecord.setActorFromPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
+            bitcoinWalletTransactionRecord.setActorFromType(cryptoAddressBookRecord.getDeliveredByActorType());
+            bitcoinWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
+            bitcoinWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
 
             return bitcoinWalletTransactionRecord;
 
-        } catch (CantGetActorAddressBookRegistryException e) {
-            throw new CantGenerateTransactionException("I couldn't get actor address book registry",e,"","");
-        } catch (CantGetActorAddressBookException e) {
-            throw new CantGenerateTransactionException("I couldn't get actor address book",e,"","");
-        } catch (ActorAddressBookNotFoundException e) {
-            throw new CantGenerateTransactionException("I couldn't find the actor",e,"","");
+        } catch (CantGetCryptoAddressBookRecordException e) {
+            throw new CantGenerateTransactionException("I couldn't get crypto address book record",e,"","");
+        } catch (CryptoAddressBookRecordNotFoundException e) {
+            throw new CantGenerateTransactionException("I couldn't find the crypto address book record",e,"","");
         }
     }
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public interface Actor {
 
-    UUID getId();
+    String getActorPublicKey();
 
     String getName();
 
@@ -22,9 +22,4 @@ public interface Actor {
 
     byte[] getPhoto();
 
-    void setId(UUID id);
-
-    void setName(String name);
-
-    void setPhoto(byte[] photo);
 }
