@@ -103,7 +103,7 @@ public class DetailsActivityFragment extends FermatFragment {
 
         FermatButton installButton = (FermatButton) rootView.findViewById(R.id.wallet_install_button);
         InstallationStatus installStatus = catalogItem.getInstallationStatus();
-        int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
+        int resId = 0;//UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
         resId = (resId == R.string.wallet_status_installed) ? R.string.wallet_status_open : resId;
         installButton.setText(resId);
         installButton.setOnClickListener(new View.OnClickListener() {

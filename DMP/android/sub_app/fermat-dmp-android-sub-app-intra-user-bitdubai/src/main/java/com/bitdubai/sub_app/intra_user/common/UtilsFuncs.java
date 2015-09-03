@@ -1,5 +1,10 @@
 package com.bitdubai.sub_app.intra_user.common;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Rect;
+
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 
 import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
@@ -7,17 +12,30 @@ import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.In
 import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.UPGRADE_AVAILABLE;
 import com.intra_user.bitdubai.R;
 /**
- * Created by nelson on 28/08/15.
+ * Created by Matias Furszyfer on 28/08/15.
  */
-public enum UtilsFuncs {
-    INSTANCE;
+public class UtilsFuncs {
 
-    public int getInstallationStatusStringResource(InstallationStatus installationStatus) {
-        if (installationStatus == INSTALLED || installationStatus == NOT_UNINSTALLED)
-            return R.string.wallet_status_installed;
-        if (installationStatus == UPGRADE_AVAILABLE)
-            return R.string.wallet_status_upgrade;
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
+        int targetWidth = 50;
+        int targetHeight = 50;
+        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+                targetHeight,Bitmap.Config.ARGB_8888);
 
-        return R.string.wallet_status_install;
+        Canvas canvas = new Canvas(targetBitmap);
+        Path path = new Path();
+        path.addCircle(((float) targetWidth - 1) / 2,
+                ((float) targetHeight - 1) / 2,
+                (Math.min(((float) targetWidth),
+                        ((float) targetHeight)) / 2),
+                Path.Direction.CCW);
+
+        canvas.clipPath(path);
+        Bitmap sourceBitmap = scaleBitmapImage;
+        canvas.drawBitmap(sourceBitmap,
+                new Rect(0, 0, sourceBitmap.getWidth(),
+                        sourceBitmap.getHeight()),
+                new Rect(0, 0, targetWidth, targetHeight), null);
+        return targetBitmap;
     }
 }

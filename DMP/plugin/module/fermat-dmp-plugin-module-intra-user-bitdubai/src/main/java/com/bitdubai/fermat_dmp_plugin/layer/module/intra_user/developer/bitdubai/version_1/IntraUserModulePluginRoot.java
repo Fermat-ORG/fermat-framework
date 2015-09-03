@@ -550,20 +550,32 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
      */
     @Override
     public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(int max,int offset) throws CantGetIntraUsersListException {
+        List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+
+        intraUserList.add(new IntraUserModuleInformation("Matias Furszyfer","public_key",null));
+        intraUserList.add(new IntraUserModuleInformation("Jorge Gonzales","public_key",null));
+        intraUserList.add(new IntraUserModuleInformation("Cher Munish","public_key",null));
+        intraUserList.add(new IntraUserModuleInformation("Scrowe Math","public_key",null));
         try
         {
-            List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+
 
             List<ActorIntraUser> actorsList = this.actorIntraUserManager.getWaitingYourAcceptanceIntraUsers(this.intraUserLoggedPublicKey, max, offset);
 
             for (ActorIntraUser intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
             }
+
             return intraUserList;
         }
        catch(CantGetIntraUSersException e)
         {
-            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
+            //throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
+            /**
+             * Testing purpose
+             */
+
+            return intraUserList;
         }
         catch(Exception e)
         {
