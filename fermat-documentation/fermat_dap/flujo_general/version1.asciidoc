@@ -93,8 +93,9 @@ El plugin Asset Issuing será el encargado de la creación de los Assets, incluy
 deberá solicitar la genesis transaction, la cual se define como la transacción origen de los crypto montos a ser transferidos junto al asset, así mismo, debe solicitar
 la genesis address, la cual se define como la dirección que emitió el Asset. Una vez obtenida la información antes mencionada, este plugin debe crear las transacciones que
 permitan la transferencia de los Assets a los destinatarios. Este plugin debe ser responsable de cada uno de los Assets generados hasta que todos hayan sido entregados a los
-destinatarios. Este plugin debe tener la capacidad de monitorear que Asset ha sido entregado y registrarlo (aun no veo donde) para su posterior consumo. Si un asset no ha
-sido registrado como entregado por este plugin, ese Asset no debería ser consumido por el beneficiario.
+destinatarios. Este plugin debe tener la capacidad de monitorear que Asset ha sido entregado y registrarlo (aun no veo donde), *como menciono Luis eso lo registraremos en la capa Asset Issuet wallet,
+donde una vez publicado el Asset Issuer, ahi colocaremos un registro en esa capa, donde especifique la cantidad de dicho Asset, y de ahi comenzara a descontar al ser enviados,
+y luego podremos desde alli las transacciones asociadas a ese Asset*, para su posterior consumo. Si un asset no hasido registrado como entregado por este plugin, ese Asset no debería ser consumido por el beneficiario.
 Estos Assets pueden ser enviados a cualquier tipo de wallet, es decir, debe ser transparente para este plugin los destinatarios de los assets, la metadata que se entrega a
  este plugin debe incluir la información que permita discriminar a que tipo de wallet/destinatario va dirigido el Asset, este proceso de filtrado podría tomarse de las wallets
  instaladas actualmente, este plugin debe recibir de una capa superior el criterio de selección de los destinatarios, de tal forma que este pueda crear la transación que permita
@@ -105,7 +106,8 @@ Los crypto montos del emisor asociados a cada assets deben estar reservados en e
 cambiar una vez reservados.
 
 *Preguntar al team:*
-¿Es posible que el emisor elimine/cancele un asset a discreción?
+¿Es posible que el emisor elimine/cancele un asset a discreción? Creo que seria posible, eliminar, anular, o modificar, siempre y cuando no hay sido publicado, porque a la final el es
+responsable de dicho Asset.
 
 = Transferencia y confirmación de Asset a beneficiario
 
