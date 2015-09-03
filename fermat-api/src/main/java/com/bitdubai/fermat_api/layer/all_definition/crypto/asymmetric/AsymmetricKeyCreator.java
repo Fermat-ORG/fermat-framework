@@ -26,7 +26,7 @@ public class AsymmetricKeyCreator {
 		Curve curve = EllipticCryptographyCurve.getSecP256K1();
 		if(privateKey.getS().compareTo(BigInteger.ZERO) <= 0 || privateKey.getS().compareTo(curve.getN()) >= 0)
 			throw new InvalidParameterException();
-		
+
 		Point point = ECMath.multiplyPointScalar(curve.getG(), privateKey.getS(), curve);
 		return  new AsymmetricPublicKey(point.toUncompressedString());
 	}
