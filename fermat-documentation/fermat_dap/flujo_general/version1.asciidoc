@@ -25,13 +25,22 @@ especificaremos que:
 
  * Redimible
  * ExpirationDate: fecha de expiración que puede ser nunca.
+ * Transferible _(es bueno plantearlo desde la versión inicial para poder establecer a los responsables del proceso de traspaso de propiedad del Digital Asset)_
 
-El Digital Asset va a tener un enum con los siguientes estados:
+La emisión de un Digital Asset va a tener un enum con los siguientes estados:
 * Draft: cuando el issuer está completando los datos básicos del asset y del contrato.
 * InProgress: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
 * Final: cuando se generó el hash del DA.
 * PendingOnCrypto: cuando se transmite la transacción en la red crypto.
 * Closed: cuando se recibió la transacción crypto en la asset Vault.
+
+El proceso de canje de un Asset por un servicio (Redeem Point) va a tener un enum con los siguientes estados:
+ * ToRedeem: cuando la Asset Wallet comienza el proceso de canje del DA.
+ * Checking: cuando el DA ha sido enviado al Redeem point para su verificación.
+ * Checked: cuando el Redeem Point ha verificado el DA.
+ * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
+ * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
+ * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
 
  Assset Issuing
 
