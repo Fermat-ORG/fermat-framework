@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetContactProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
@@ -36,9 +35,9 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     String walletPublicKey;
 
     /**
-     * Represent the actorId
+     * Represent the actor public key
      */
-    UUID actorId;
+    String actorPublicKey;
 
     /**
      * Represent the actorName
@@ -66,15 +65,15 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     /**
      * Constructor with parameters
      *
-     * @param actorId actor's id
+     * @param actorPublicKey actor's public key
      * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
      * @param contactId contact's id
      * @param actorName actor's id
      * @param actorType actor's type
      * @param walletPublicKey wallet's public Key
      */
-    public WalletContactsMiddlewareRecord(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, String walletPublicKey) {
-        this.actorId = actorId;
+    public WalletContactsMiddlewareRecord(String actorPublicKey, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, String walletPublicKey) {
+        this.actorPublicKey = actorPublicKey;
         this.actorName = actorName;
         this.actorType = actorType;
         this.contactId = contactId;
@@ -128,8 +127,8 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
      * @return UUID
      */
     @Override
-    public UUID getActorId() {
-        return actorId;
+    public String getActorPublicKey() {
+        return actorPublicKey;
     }
 
     /**

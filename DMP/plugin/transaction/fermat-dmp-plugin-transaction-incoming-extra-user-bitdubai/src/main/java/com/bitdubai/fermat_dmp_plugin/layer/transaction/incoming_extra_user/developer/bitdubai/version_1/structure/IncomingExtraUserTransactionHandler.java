@@ -8,24 +8,20 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_except
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.WalletAddressBookNotFoundException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRecord;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.TransactionExecutorFactory;
 
-
 /**
- * Created by eze on 2015.06.22..
+ * Created by eze on 2015.06.22.
+ *
  */
-public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWallet, DealsWithActorAddressBook, DealsWithWalletAddressBook {
+public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWallet, DealsWithCryptoAddressBook {
 
     /*
      * DealsWithBitcoinWallet Interface member variables
@@ -33,13 +29,9 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
     private BitcoinWalletManager bitcoinWalletManager;
 
     /*
-     * DealsWithActorAddressBook Interface member variables
-     */
-    private ActorAddressBookManager actorAddressBookManager;
-    /*
-    * DealsWithWalletAddressBook member variables
+    * DealsWithCryptoAddressBook member variables
     */
-    private WalletAddressBookManager walletAddressBookManager;
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
     /*
      * DealsWithBitcoinWallet Interface method implementation
@@ -50,46 +42,33 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
     }
 
     /*
-     * DealsWithActorAddressBook Interface method implementation
-     */
-    @Override
-    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBookManager) {
-        this.actorAddressBookManager = actorAddressBookManager;
-    }
-
-    /*
-    * DealsWithWalletAddressBook method implementation
+    * DealsWithCryptoAddressBook method implementation
     */
     @Override
-    public void setWalletAddressBookManager(WalletAddressBookManager walletAddressBookManager) {
-        this.walletAddressBookManager = walletAddressBookManager;
+    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
-
-    public void handleTransaction(Transaction<CryptoTransaction> transaction) throws CantGetWalletAddressBookRegistryException, CantGetWalletAddressBookException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, UnexpectedTransactionException {
+    public void handleTransaction(Transaction<CryptoTransaction> transaction) throws CantGetCryptoAddressBookRecordException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, UnexpectedTransactionException {
         try {
-            WalletAddressBookRegistry walletAddressBookRegistry = this.walletAddressBookManager.getWalletAddressBookRegistry();
             try {
-                WalletAddressBookRecord walletAddressBookRecord = walletAddressBookRegistry.getWalletCryptoAddressBookByCryptoAddress(transaction.getInformation().getAddressTo());
-                ReferenceWallet referenceWallet = walletAddressBookRecord.getWalletType();
-                String walletPublicKey = walletAddressBookRecord.getWalletPublicKey();
+                CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(transaction.getInformation().getAddressTo());
+                ReferenceWallet referenceWallet = cryptoAddressBookRecord.getWalletType();
+                String walletPublicKey = cryptoAddressBookRecord.getWalletPublicKey();
 
-                TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager, actorAddressBookManager);
+                TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager, cryptoAddressBookManager);
                 TransactionExecutor executor = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
 
                 executor.executeTransaction(transaction);
-            } catch (WalletAddressBookNotFoundException exception) {
+            } catch (CryptoAddressBookRecordNotFoundException exception) {
                 //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
-                throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
+                throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
             }
-        } catch (CantGetWalletAddressBookRegistryException | CantGetWalletAddressBookException | CantLoadWalletException | CantRegisterCreditException | CantRegisterDebitException | UnexpectedTransactionException e){
+        } catch (CantGetCryptoAddressBookRecordException | CantLoadWalletException | CantRegisterCreditException | CantRegisterDebitException | UnexpectedTransactionException e){
             throw e;
         } catch (Exception exception) {
             //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
-            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
+            throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
         }
-
     }
-
-
 }

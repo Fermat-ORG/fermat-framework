@@ -254,7 +254,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         try {
             List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
-                contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress()));
             }
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

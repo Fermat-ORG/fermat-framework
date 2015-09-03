@@ -79,6 +79,11 @@ public enum EventType {
         public PlatformEvent getEvent() { return new IncomingCryptoIrreversibleEvent(this); }
     },
 
+    INCOMING_CRYPTO_METADATA ("ICMD") {
+        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoMetadataEventListener(eventMonitor); }
+        public PlatformEvent getEvent() { return new IncomingCryptoMetadataEvent(); }
+    },
+
     INCOMING_CRYPTO_ON_BLOCKCHAIN("ICOBC") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnBlockchainEventListener(this, eventMonitor); }
         public PlatformEvent getEvent() { return new IncomingCryptoOnBlockchainEvent(this); }
@@ -89,6 +94,11 @@ public enum EventType {
         public PlatformEvent getEvent() { return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent(this); }
     },
 
+    INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER ("ICOBWTIU") {
+        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventListener( eventMonitor); }
+        public PlatformEvent getEvent() { return new IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEvent(); }
+    },
+
     INCOMING_CRYPTO_ON_CRYPTO_NETWORK("ICOCN") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnCryptoNetworkEventListener(this, eventMonitor); }
         public PlatformEvent getEvent() { return new IncomingCryptoOnCryptoNetworkEvent(this); }
@@ -97,6 +107,11 @@ public enum EventType {
     INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICOCNWTEU") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor); }
         public PlatformEvent getEvent() { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(this); }
+    },
+
+    INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICOCNWTIU") {
+        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventListener(eventMonitor); }
+        public PlatformEvent getEvent() { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEvent(); }
     },
 
     INCOMING_CRYPTO_RECEIVED("ICR") {
@@ -169,6 +184,11 @@ public enum EventType {
         public PlatformEvent getEvent() { return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent(this); }
     },
 
+    INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER ("ICROBWTIU") {
+        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEventListener(eventMonitor); }
+        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEvent(); }
+    },
+
     INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK("ICROCN") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnCryptoNetworkEventListener(this, eventMonitor); }
         public PlatformEvent getEvent() { return new IncomingCryptoReversedOnCryptoNetworkEvent(this); }
@@ -177,6 +197,11 @@ public enum EventType {
     INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICROCNWTEU") {
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor); }
         public PlatformEvent getEvent() { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent(this); }
+    },
+
+    INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICROCNWTIU") {
+        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEventListener(eventMonitor); }
+        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEvent(); }
     },
 
     INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE("TWT") {
