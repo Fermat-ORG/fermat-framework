@@ -313,7 +313,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
 
@@ -536,6 +536,20 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
             }
 
+        }else{
+            try {
+                //resetThisActivity();
+
+                getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.getValueFromString(activity));
+
+                loadUI(getSubAppSessionManager().getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getType().getCode()));
+
+
+            }catch (Exception e){
+
+                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
