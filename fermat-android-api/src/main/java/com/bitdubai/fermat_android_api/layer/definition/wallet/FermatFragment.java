@@ -6,7 +6,11 @@ import android.app.Fragment;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -110,5 +114,20 @@ public abstract class FermatFragment extends Fragment {
     public void setSubAppResourcesProviderManager(SubAppResourcesProviderManager subAppResourcesProviderManager) {
         this.subAppResourcesProviderManager = subAppResourcesProviderManager;
     }
+
+    /**
+     *  Change activity
+     */
+    protected final void changeActivity(Activities activity){
+        ((FermatScreenSwapper)getActivity()).changeActivity(activity.getCode());
+    }
+    /**
+     *  Change activity
+     */
+    protected final void changeFragment(String fragment){
+        ((FermatScreenSwapper)getActivity()).changeScreen(fragment,null);
+    }
+
+
 }
 
