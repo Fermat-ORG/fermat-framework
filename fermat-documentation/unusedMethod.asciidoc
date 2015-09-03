@@ -48,6 +48,10 @@
 
 * /DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/beans/dto/Record.java
 
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_publisher/developer/bitdubai/version_1/structure/ImageMiddlewareImpl.java
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_publisher/developer/bitdubai/version_1/structure/InformationPublishedComponentMiddlewareImpl.java
+
 
 
 - Method Private
@@ -69,6 +73,12 @@
     private WalletStoreLanguage getWalletStoreLanguage(final Language language, final InstallationStatus installationStatus)
 
     private DeveloperIdentity getDeveloper(UUID developerId)
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_publisher/developer/bitdubai/version_1/database/InformationPublishedComponentDao.java
+
+    private ComponentVersionDetailMiddlewareImpl constructComponentVersionDetailMiddlewareFrom(DatabaseTableRecord record) throws InvalidParameterException
+
+    private ImageMiddlewareImpl constructImageMiddlewareFrom(DatabaseTableRecord record) throws FileNotFoundException, CantCreateFileException
 
 
 - Method Public
@@ -170,6 +180,57 @@
 
     public void setDao(PublisherIdentityDao dao)
 
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/navigation_structure/developer/bitdubai/version_1/database/WalletNavigationStructureMiddlewareDao.java
+
+    public void createNavigationStructure(WalletNavigationStructure walletNavigationStructure) throws CantCreateEmptyWalletNavigationStructureException
+
+    public void deleteNavigationStructure(String publicKey) throws CantDeleteNavigationStructureException, NavigationStructureNotFoundException
+
+    public List<WalletNavigationStructure> findAllNavigationStructuresByActivity(String activity) throws CantListNavigationStructuresException
+
+    public WalletNavigationStructure findWalletNavigationStructureById(String id) throws CantGetWalletNavigationStructureException, NavigationStructureNotFoundException
+
+    public List<WalletNavigationStructure> findAllNavigationStructuresById(String id) throws CantListNavigationStructuresException
+
+    public void updateWalletNavigationStructure(WalletNavigationStructure walletNavigationStructure) throws NavigationStructureNotFoundException, CantUpdateNavigationStructureException
+
+    private Database openDatabase() throws CantExecuteDatabaseOperationException
+
+    private DatabaseTable getDatabaseTable(String tableName)
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_publisher/developer/bitdubai/version_1/database/ComponentVersionDetailDao.java
+
+    public ComponentVersionDetail findById(String id) throws CantReadRecordDataBaseException
+
+    public List<ComponentVersionDetail> findAll() throws CantReadRecordDataBaseException
+
+    public List<ComponentVersionDetail> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void update(ComponentVersionDetailMiddlewareImpl entity) throws CantUpdateRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_publisher/developer/bitdubai/version_1/database/InformationPublishedComponentDao.java
+
+    public List<InformationPublishedComponent> findAll() throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_publisher/developer/bitdubai/version_1/database/ScreensShotsComponentsDao.java
+
+    public Image findById(String id) throws CantReadRecordDataBaseException
+
+    public List<Image> findAll() throws CantReadRecordDataBaseException
+
+    public List<Image> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void update(ImageMiddlewareImpl entity) throws CantUpdateRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+
+
+
 - Class
 
 * /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/WalletStoreNetworkServiceDatabaseFactory.java
@@ -187,6 +248,10 @@
 * /DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/composite_wallet/multi_account_wallet/developer/bitdubai/version_1/interfaces/AccountService.java
 * /DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/composite_wallet/multi_account_wallet/developer/bitdubai/version_1/interfaces/WalletService.java
 * /DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/composite_wallet/multi_account_wallet/developer/bitdubai/version_1/MultiAccountWalletCompositeWalletPluginRoot.java
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_language/developer/bitdubai/version_1/utils/RepositoryManager.java
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_manager/developer/bitdubai/version_1/structure/WalletManagerMiddlewareInstallationInformation.java
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/navigation_structure/developer/bitdubai/version_1/developerUtils/WalletnavigationStructureMiddlewareDeveloperDatabaseFactory.java
+
 
 
 = Refactor Pendientes por hacer:
