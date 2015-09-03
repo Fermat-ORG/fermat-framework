@@ -1,4 +1,4 @@
-[[flujo-general-BitDubai-V1]]
+[line-through]#[[flujo-general-BitDubai-V1]]
 
 = Flujo General de la Plataform DAP
 
@@ -53,6 +53,21 @@ especificaremos que:
 
 = Transferencia y confirmación de Asset a beneficiario
 
+= Notificación en Incoming Issuer
+
+El plugin Incoming Issuer en el lado del consumidor o beneficiario será el encargado de monitorear la existencia de un Digital Asset (de alguna manera, por definir) que esté dirigido para la Asset Wallet del usuario,
+en caso de recibir la notificación de la existencia de un Digital Asset, este plugin deberá verificar la metadata que debe estar incluida en el Asset,  esta comprobación debe
+incluir la verificación de la genesis Transaction, con lo cual se puede verificar el origen del Asset.
+Una vez verificado el origen del Asset, el plugin debe lanzará una notificación a una capa superior para que el usuario esté en cuenta de la existencia de este Asset.
+Es de hacer notar que hasta el momento, se piensa que el usuario va a autorizar si el Asset va a ser descargado en el dispositivo, esto podría cambiar en un futuro,
+ya que se plantea que este Asset puede estar "pre-instalado" en el dispositivo. Se podría definir varias posibles condiciones de descarga de un Asset:
+ * descargable automáticamente (el Issuer la instala automáticamente en las Asset Wallets destino)
+ * descargable por autorización del usuario.
+ * preinstalada en la Asset Wallet.
+Una vez que la Asset Wallet autoriza la instalación o descarga del Digital Asset, se procede a crear la transacción que va a transferir el monto crypto asociado a la metadata
+de la genesis transaction a la Asset Vault del destinatario. Una vez realizada correctamente la transferencia de fondos, se debe notificar a las capas que controlan la UI la
+correcta instalación/descarga del Asset.
+
 = Registro en Asset Issuer Wallet
 
 Es importante mencionar que este proceso realizara una transaccion contable al Asset del Issuer, aumentando la cantidad de Asset originado por el Asset en su creacion,
@@ -93,3 +108,4 @@ Aclarar que pasa con este Asset si se puede volver a enviar.
 
 
 
+#
