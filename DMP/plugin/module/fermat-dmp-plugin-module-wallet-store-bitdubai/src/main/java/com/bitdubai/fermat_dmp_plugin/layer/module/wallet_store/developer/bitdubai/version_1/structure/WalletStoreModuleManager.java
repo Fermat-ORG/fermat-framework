@@ -539,7 +539,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             LOG.info("MAP_WMM:"+walletManagerManager);
             WalletInstallationProcess walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
             LOG.info("MAP_DUM:"+deviceUserManager);
-            DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
+            //DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
             Skin skin = getWalletSkinFromWalletCatalogueId(walletCatalogueId);
             Language language = getWalletLanguageFromWalletCatalogueId(walletCatalogueId);
 
@@ -561,7 +561,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             LOG.info("MAP_DEVELOPER:"+detailedCatalogItem.getDeveloper().getAlias());
             LOG.info("MAP_VERSION:"+version);
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
-                    catalogItem.getId().toString(), null, deviceUser.getPublicKey()/*"testPublicKey"*/, null,
+                    catalogItem.getId().toString(), null, /*deviceUser.getPublicKey()*/"testPublicKey", null,
                     walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
                     skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
                     language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
@@ -572,9 +572,9 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             throw new CantStartInstallationException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, "Cannot get the catalog items", "Please, check the cause");
         } catch (CantFindProcessException exception) {
             throw new CantStartInstallationException(CantFindProcessException.DEFAULT_MESSAGE, exception, "Cannot get the WalletInstallationProcess", "Please, check the cause");
-        } catch (CantGetLoggedInDeviceUserException exception) {
+        } /*catch (CantGetLoggedInDeviceUserException exception) {
             throw new CantStartInstallationException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, exception, "Cannot get the Device user", "Please, check the cause");
-        } catch (CantGetSkinException exception) {
+        }*/ catch (CantGetSkinException exception) {
             throw new CantStartInstallationException(CantGetSkinException.DEFAULT_MESSAGE, exception, "Cannot get the wallet Skin", "Please, check the cause");
         } catch (CantGetLanguageException exception) {
             throw new CantStartInstallationException(CantGetLanguageException.DEFAULT_MESSAGE, exception, "Cannot get the wallet language", "Please, check the cause");

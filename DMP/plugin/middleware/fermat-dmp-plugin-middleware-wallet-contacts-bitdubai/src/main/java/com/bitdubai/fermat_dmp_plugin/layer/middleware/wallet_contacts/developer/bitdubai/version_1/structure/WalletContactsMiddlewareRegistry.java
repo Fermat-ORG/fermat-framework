@@ -104,7 +104,7 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
 
     /**
      * This method create a contact
-     * @param actorId actor's id
+     * @param actorPublicKey actor's id
      * @param actorName actor's name
      * @param actorType actor's actorType (extra-intra-device)
      * @param receivedCryptoAddress received cryptoAddress
@@ -112,12 +112,12 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
      * @return WalletContactRecord
      */
     @Override
-    public WalletContactRecord createWalletContact(UUID actorId, String actorName, Actors actorType, CryptoAddress receivedCryptoAddress, String walletPublicKey) throws CantCreateWalletContactException {
+    public WalletContactRecord createWalletContact(String actorPublicKey, String actorName, Actors actorType, CryptoAddress receivedCryptoAddress, String walletPublicKey) throws CantCreateWalletContactException {
 
         WalletContactRecord walletContactRecord;
         try {
             UUID contactId = UUID.randomUUID();
-            walletContactRecord = new WalletContactsMiddlewareRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletPublicKey);
+            walletContactRecord = new WalletContactsMiddlewareRecord(actorPublicKey, actorName, actorType, contactId, receivedCryptoAddress, walletPublicKey);
             walletContactsMiddlewareDao.create(walletContactRecord);
             return walletContactRecord;
         } catch (CantCreateWalletContactException e){
@@ -182,9 +182,9 @@ public class WalletContactsMiddlewareRegistry implements DealsWithErrors, DealsW
     }
 
     @Override
-    public WalletContactRecord getWalletContactByActorId(UUID actorId) throws CantGetWalletContactException, WalletContactNotFoundException {
+    public WalletContactRecord getWalletContactByActorPublicKey(String actorPublicKey) throws CantGetWalletContactException, WalletContactNotFoundException {
         try {
-            return walletContactsMiddlewareDao.findByActorId(actorId);
+            return walletContactsMiddlewareDao.findByActorPublicKey(actorPublicKey);
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;

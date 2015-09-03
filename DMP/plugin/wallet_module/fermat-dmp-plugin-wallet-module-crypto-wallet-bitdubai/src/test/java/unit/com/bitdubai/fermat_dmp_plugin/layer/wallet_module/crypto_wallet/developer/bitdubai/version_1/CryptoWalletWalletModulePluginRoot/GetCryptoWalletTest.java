@@ -7,13 +7,13 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletWalletModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletCryptoModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetWalletAddressBookRegistryException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 
 import junit.framework.TestCase;
@@ -72,10 +72,10 @@ public class GetCryptoWalletTest extends TestCase {
     OutgoingExtraUserManager outgoingExtraUserManager;
 
     /**
-     * DealsWithWalletAddressBook interface Mocked
+     * DealsWithCryptoAddressBook interface Mocked
      */
     @Mock
-    WalletAddressBookManager walletAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithWalletContacts interface Mocked
@@ -84,11 +84,11 @@ public class GetCryptoWalletTest extends TestCase {
     WalletContactsManager walletContactsManager;
 
 
-    CryptoWalletWalletModulePluginRoot cryptoWalletWalletModulePluginRoot;
+    CryptoWalletCryptoModulePluginRoot cryptoWalletWalletModulePluginRoot;
 
     @Before
     public void setUp() throws Exception {
-        cryptoWalletWalletModulePluginRoot = new CryptoWalletWalletModulePluginRoot();
+        cryptoWalletWalletModulePluginRoot = new CryptoWalletCryptoModulePluginRoot();
         cryptoWalletWalletModulePluginRoot.setActorAddressBookManager(actorAddressBookManager);
         cryptoWalletWalletModulePluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
         cryptoWalletWalletModulePluginRoot.setCryptoVaultManager(cryptoVaultManager);
@@ -96,7 +96,7 @@ public class GetCryptoWalletTest extends TestCase {
         cryptoWalletWalletModulePluginRoot.setExtraUserManager(extraUserManager);
         cryptoWalletWalletModulePluginRoot.setLogManager(logManager);
         cryptoWalletWalletModulePluginRoot.setOutgoingExtraUserManager(outgoingExtraUserManager);
-        cryptoWalletWalletModulePluginRoot.setWalletAddressBookManager(walletAddressBookManager);
+        cryptoWalletWalletModulePluginRoot.setCryptoAddressBookManager(cryptoAddressBookManager);
         cryptoWalletWalletModulePluginRoot.setWalletContactsManager(walletContactsManager);
     }
 
@@ -122,7 +122,7 @@ public class GetCryptoWalletTest extends TestCase {
 
     @Test(expected=CantGetCryptoWalletException.class)
     public void testGetCryptoWallet_CantGetWalletAddressBookRegistryException() throws Exception {
-        doThrow(new CantGetWalletAddressBookRegistryException()).when(walletAddressBookManager).getWalletAddressBookRegistry();
+        doThrow(new CantGetWalletAddressBookRegistryException()).when(cryptoAddressBookManager).getWalletAddressBookRegistry();
 
         cryptoWalletWalletModulePluginRoot.getCryptoWallet();
     }

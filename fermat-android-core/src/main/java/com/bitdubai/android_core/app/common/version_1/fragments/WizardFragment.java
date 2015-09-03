@@ -57,6 +57,10 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
     private ViewPager viewPager;
     private FermatTextView back;
     private FermatTextView next;
+    /**
+     * ARGUMENTS
+     */
+    private Object args;
 
     /**
      * Set Wizard FragmentsEnumType
@@ -101,7 +105,7 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
             // load ui
             viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
             viewPager.setPageTransformer(true, new DepthPageTransformer());
-            WizardPageAdapter adapter = new WizardPageAdapter(getChildFragmentManager(), fragments);
+            WizardPageAdapter adapter = new WizardPageAdapter(getFragmentManager(), fragments);
             viewPager.setAdapter(adapter);
             viewPager.setCurrentItem(0);
             position = 0;
@@ -147,7 +151,7 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
                 back.setVisibility(View.INVISIBLE);
 
             if (fragments.size() > 1 && next != null) {
-                next.setText("Next");
+                next.setText("Next >>");
                 next.setVisibility(View.VISIBLE);
             } else if (next != null) {
                 next.setText("Finish");
@@ -289,5 +293,14 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
             view.setVisibility(View.INVISIBLE);
         else
             return;
+    }
+
+    /**
+     * Setting arguments like session, module, etc..
+     *
+     * @param args Object... Arguments
+     */
+    public void setArgs(Object args) {
+        this.args = args;
     }
 }

@@ -8,7 +8,9 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
  */
 public enum WizardTypes {
 
-    CWP_WALLET_FACTORY_CREATE_NEW_PROJECT("CWFCNP");
+    CWP_WALLET_FACTORY_CREATE_NEW_PROJECT("CWFCNP"),
+    CWP_WALLET_PUBLISHER_PUBLISH_PROJECT("CWPPP");
+
 
     private String code;
 
@@ -29,6 +31,8 @@ public enum WizardTypes {
         switch (code) {
             case "CWFCNP":
                 return WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT;
+            case "CWPPP":
+                return WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT;
             default:
                 break;
         }

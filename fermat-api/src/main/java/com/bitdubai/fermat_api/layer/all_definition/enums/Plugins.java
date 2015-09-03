@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * Created by ciencias on 2/13/15.
+ * 
  */
 public enum Plugins {
 
@@ -47,13 +48,12 @@ public enum Plugins {
     BITDUBAI_WALLET_STORE_NETWORK_SERVICE("BWSTONETSER", Developers.BITDUBAI),
     BITDUBAI_WALLET_CONTACTS_MIDDLEWARE("BWALLCMIDD", Developers.BITDUBAI),
     BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE("BWCNETSER", Developers.BITDUBAI),
-    BITDUBAI_USER_ADDRESS_BOOK_CRYPTO("BUADDBCRY", Developers.BITDUBAI),
-    BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO("BWADDBCRY", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_ADDRESS_BOOK("BCADDB", Developers.BITDUBAI),
     BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION("BOUEXUT", Developers.BITDUBAI),
     BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION("BINEXUT", Developers.BITDUBAI),
     BITDUBAI_INCOMING_CRYPTO_TRANSACTION("BINCRYT", Developers.BITDUBAI),
     BITDUBAI_USER_DEVICE_USER("BUDEVU", Developers.BITDUBAI),
-    BITDUBAI_USER_EXTRA_USER("BUEXU", Developers.BITDUBAI),
+    BITDUBAI_ACTOR_EXTRA_USER("BAEXU", Developers.BITDUBAI),
     BITDUBAI_USER_INTRA_USER("BUINU", Developers.BITDUBAI),
     BITDUBAI_COINBASE_WORLD("BCOINW", Developers.BITDUBAI),
     BITDUBAI_BITCOIN_WALLET_BASIC_WALLET("BBTCWBW", Developers.BITDUBAI),
@@ -182,10 +182,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE;
             case "BWCNETSER":
                 return Plugins.BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE;
-            case "BUADDBCRY":
-                return Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO;
-            case "BWADDBCRY":
-                return Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO;
+            case "BCADDB":
+                return Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK;
             case "BOUEXUT":
                 return Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION;
             case "BINEXUT":
@@ -194,8 +192,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION;
             case "BUDEVU":
                 return Plugins.BITDUBAI_USER_DEVICE_USER;
-            case "BUEXU":
-                return Plugins.BITDUBAI_USER_EXTRA_USER;
+            case "BAEXU":
+                return Plugins.BITDUBAI_ACTOR_EXTRA_USER;
             case "BUINU":
                 return Plugins.BITDUBAI_USER_INTRA_USER;
             case "BCOINW":

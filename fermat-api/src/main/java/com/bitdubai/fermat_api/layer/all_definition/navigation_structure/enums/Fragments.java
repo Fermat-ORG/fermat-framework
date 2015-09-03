@@ -132,6 +132,9 @@ public enum Fragments implements FermatFragments {
         return this.code;
     }
 
+    public String getStringValue(){
+        return this.code;
+    }
 
     public String toString() {
         return code;

@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.*;
 
@@ -80,12 +82,12 @@ public interface CryptoWallet extends Serializable{
     /**
      * updates the photo of an actor
      *
-     * @param actorId actor's id
+     * @param actorPublicKey actor's public key
      * @param actor type
      * @param photo byte array with photo information
      * @throws CantUpdateWalletContactException
      */
-    void updateContactPhoto(UUID actorId,
+    void updateContactPhoto(String actorPublicKey,
                             Actors actor,
                             byte[] photo) throws CantUpdateWalletContactException;
 
@@ -133,19 +135,22 @@ public interface CryptoWallet extends Serializable{
     /**
      * Receive methods
      */
-    CryptoAddress requestAddress(UUID deliveredByActorId,
-                                 Actors deliveredByActorType,
-                                 String deliveredToActorName,
-                                 Actors deliveredToActorType,
-                                 ReferenceWallet referenceWallet,
-                                 String walletPublicKey) throws CantRequestCryptoAddressException;
+    CryptoAddress requestAddressToKnownUser(String deliveredByActorPublicKey,
+                                            Actors deliveredByActorType,
+                                            String deliveredToActorPublicKey,
+                                            Actors deliveredToActorType,
+                                            Platforms platform,
+                                            Vaults vault,
+                                            String walletPublicKey,
+                                            ReferenceWallet walletType) throws CantRequestCryptoAddressException;
 
-    CryptoAddress requestAddress(UUID deliveredByActorId,
-                                 Actors deliveredByActorType,
-                                 UUID deliveredToActorId,
-                                 Actors deliveredToActorType,
-                                 ReferenceWallet referenceWallet,
-                                 String walletPublicKey) throws CantRequestCryptoAddressException;
+    CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
+                                               Actors deliveredByActorType,
+                                               String deliveredToActorName,
+                                               Platforms platform,
+                                               Vaults vault,
+                                               String walletPublicKey,
+                                               ReferenceWallet walletType) throws CantRequestCryptoAddressException;
 
     /**
      * Send money methods
@@ -153,9 +158,9 @@ public interface CryptoWallet extends Serializable{
     void send(long cryptoAmount,
               CryptoAddress destinationAddress,
               String notes, String walletPublicKey,
-              UUID deliveredByActorId,
+              String deliveredByActorPublicKey,
               Actors deliveredByActorType,
-              UUID deliveredToActorId,
+              String deliveredToActorPublicKey,
               Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
 
 }
