@@ -156,9 +156,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         try {
             //mainMenu = getActivityUsedType().getMainMenu();
-            if(mainMenu!=null){
-                for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem: mainMenu.getMenuItems()){
-                    MenuItem item = menu.add (menuItem.getLabel());
+            if (mainMenu != null) {
+                for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem : mainMenu.getMenuItems()) {
+                    MenuItem item = menu.add(menuItem.getLabel());
 
 //                item.setOnMenuItemClickListener (new ActionMenuView.OnMenuItemClickListener(){
 //                    @Override
@@ -175,7 +175,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
 
             return true;
-
 
 
         } catch (Exception e) {
@@ -258,7 +257,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
-    private void setMainMenu(MainMenu mainMenu){
+    private void setMainMenu(MainMenu mainMenu) {
         this.mainMenu = mainMenu;
     }
 
@@ -300,7 +299,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     private void paintToolbarIcon(TitleBar titleBar) {
-        if(titleBar.getIconName()!=null){
+        if (titleBar.getIconName() != null) {
 
             getActionBar().setIcon(R.drawable.world);
         }
@@ -536,7 +535,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     window.setStatusBarColor(Color.TRANSPARENT);
 
                     gc();
-                    InputStream inputStream= getAssets().open("drawables/home3.png");
+                    InputStream inputStream = getAssets().open("drawables/home3.png");
 
 
                     window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
@@ -747,11 +746,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
 
     @Override
-    public void paintComboBoxInActionBar(ArrayAdapter adapter,ActionBar.OnNavigationListener listener) {
+    public void paintComboBoxInActionBar(ArrayAdapter adapter, ActionBar.OnNavigationListener listener) {
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         //ArrayAdapter<String> itemsAdapter =
-          //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
-        getActionBar().setListNavigationCallbacks(adapter,listener);
+        //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
+        getActionBar().setListNavigationCallbacks(adapter, listener);
         adapter.notifyDataSetChanged();
     }
 
@@ -868,7 +867,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     /**
-     *  Get IntraUserModuleManager
+     * Get IntraUserModuleManager
      */
     public IntraUserModuleManager getIntraUserModuleManager() {
         return (IntraUserModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
@@ -910,6 +909,29 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             wizardFragment = new WizardFragment();
             wizardFragment.setWizard(wizard);
             wizardFragment.setCancelable(true);
+            wizardFragment.show(getFragmentManager(), WizardFragment.class.getName());
+        } else {
+            Log.e(TAG, "Wizard not found...");
+        }
+    }
+
+    /**
+     * Launch wizard configuration from key
+     *
+     * @param key  Name of FermatWizard Enum
+     * @param args Object... arguments to passing to the wizard fragment
+     */
+    @Override
+    public void showWizard(WizardTypes key, Object... args) {
+        if (wizards == null)
+            throw new NullPointerException("the wizard is null");
+        Wizard wizard = wizards.get(key);
+        if (wizard != null) {
+            dismissWizard();
+            wizardFragment = new WizardFragment();
+            wizardFragment.setWizard(wizard);
+            wizardFragment.setCancelable(true);
+            wizardFragment.setArgs(args);
             wizardFragment.show(getFragmentManager(), WizardFragment.class.getName());
         } else {
             Log.e(TAG, "Wizard not found...");

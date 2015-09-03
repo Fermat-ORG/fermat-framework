@@ -57,6 +57,12 @@ public abstract class FermatFragment extends Fragment {
         }
     }
 
+    protected void startWizard(WizardTypes key, Object... args) {
+        if (context != null && isAttached) {
+            context.showWizard(key, args);
+        }
+    }
+
     /**
      * Dismiss active wizard configuration
      */
