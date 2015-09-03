@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoCrypto;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 
@@ -60,7 +60,7 @@ public class UpdateWalletContactTest extends TestCase {
     CryptoAddress receivedCryptoAddress;
     String actorName;
 
-    WalletModuleCryptoCrypto walletModuleCryptoWallet;
+    CryptoWalletWalletModuleManager walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
@@ -68,7 +68,7 @@ public class UpdateWalletContactTest extends TestCase {
         contactId = UUID.randomUUID();
         receivedCryptoAddress = new CryptoAddress("asdasdasd", CryptoCurrency.BITCOIN);
         actorName = "Vigo Mortensen";
-        walletModuleCryptoWallet = new WalletModuleCryptoCrypto();
+        walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);

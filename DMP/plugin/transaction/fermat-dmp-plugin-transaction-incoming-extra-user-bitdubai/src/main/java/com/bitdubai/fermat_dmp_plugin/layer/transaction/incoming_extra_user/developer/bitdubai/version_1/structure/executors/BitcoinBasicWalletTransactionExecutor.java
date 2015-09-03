@@ -114,10 +114,10 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
             bitcoinWalletTransactionRecord.setTimestamp(timestamp);
             bitcoinWalletTransactionRecord.setMemo("No information");
 
-            bitcoinWalletTransactionRecord.setActorFromPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-            bitcoinWalletTransactionRecord.setActorFromType(cryptoAddressBookRecord.getDeliveredToActorType());
-            bitcoinWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
-            bitcoinWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredByActorType());
+            bitcoinWalletTransactionRecord.setActorFromPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
+            bitcoinWalletTransactionRecord.setActorFromType(cryptoAddressBookRecord.getDeliveredByActorType());
+            bitcoinWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
+            bitcoinWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
 
             return bitcoinWalletTransactionRecord;
 

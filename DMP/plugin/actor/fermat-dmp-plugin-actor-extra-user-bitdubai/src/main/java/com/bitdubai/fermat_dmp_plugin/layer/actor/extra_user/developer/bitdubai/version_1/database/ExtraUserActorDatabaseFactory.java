@@ -1,4 +1,4 @@
-package   com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database;
+package   com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -13,16 +13,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.Crypto Address BookCryptoModuleDatabaseFactory</code>
+ *  The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.Extra UserActorDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/09/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoAddressBookCryptoModuleDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class ExtraUserActorDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -35,7 +35,7 @@ public class CryptoAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public CryptoAddressBookCryptoModuleDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public ExtraUserActorDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -70,22 +70,15 @@ public class CryptoAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Crypto Address Book table.
+             * Create Extra User table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME);
 
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
+            table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_NOMBRE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 
-            table.addIndex(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_FIRST_KEY_COLUMN);
+            table.addIndex(ExtraUserActorDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

@@ -370,11 +370,9 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             if (actorPublicKey == null) {
                 throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, null, "", "The actorPublicKey is required, can not be null");
             } else {
-                database.openDatabase();
                 DatabaseTable walletContactAddressBookTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
                 walletContactAddressBookTable.setStringFilter(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
                 walletContactAddressBookTable.loadToMemory();
-                database.closeDatabase();
                 List<DatabaseTableRecord> records = walletContactAddressBookTable.getRecords();
 
                 if (!records.isEmpty()) {
@@ -388,12 +386,7 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
                 }
             }
         } catch (CantLoadTableToMemoryException e) {
-            // Register the failure.
-            database.closeDatabase();
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            database.closeDatabase();
-            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
 

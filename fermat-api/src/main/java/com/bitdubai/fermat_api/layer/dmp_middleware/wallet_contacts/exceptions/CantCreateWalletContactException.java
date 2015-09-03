@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions;
 
-import com.bitdubai.fermat_api.FermatException;
-
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.exceptions.CantCreateWalletContactException</code>
  * is thrown when an error occurs trying to create a new contact for a wallet

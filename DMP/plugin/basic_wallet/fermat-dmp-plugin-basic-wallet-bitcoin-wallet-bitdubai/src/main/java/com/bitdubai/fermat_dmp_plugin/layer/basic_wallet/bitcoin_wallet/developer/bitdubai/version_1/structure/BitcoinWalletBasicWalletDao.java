@@ -216,11 +216,10 @@ public class BitcoinWalletBasicWalletDao {
 
     private DatabaseTableRecord getBalancesRecord() throws CantGetBalanceRecordException{
         try {
-            database.openDatabase();
             DatabaseTable balancesTable = getBalancesTable();
             balancesTable.loadToMemory();
             return balancesTable.getRecords().get(0);
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantLoadTableToMemoryException exception) {
+        } catch (CantLoadTableToMemoryException exception) {
             throw new CantGetBalanceRecordException("Error to get balances record",exception,"Can't load balance table" , "");
         }
     }

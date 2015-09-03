@@ -113,7 +113,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         super.onCreate(savedInstanceState);
         setUpScreenComponents();
 
-        user_address_wallet= getWalletAddress(walletContact.actorId);
+        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
 
         showQRCodeAndAddress();
 
@@ -138,14 +138,14 @@ public class ReceiveFragmentDialog extends Dialog implements
 
     }
 
-    private String getWalletAddress(UUID actor_id) {
+    private String getWalletAddress(String actorPublicKey) {
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
             CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
                     user_id,
                     Actors.INTRA_USER,
-                    actor_id.toString(),
+                    actorPublicKey,
                     Actors.EXTRA_USER,
                     Platforms.CRYPTO_CURRENCY_PLATFORM,
                     Vaults.BITCOIN_VAULT,

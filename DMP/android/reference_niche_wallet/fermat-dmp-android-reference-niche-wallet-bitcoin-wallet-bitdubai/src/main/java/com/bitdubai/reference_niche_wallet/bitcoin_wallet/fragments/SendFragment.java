@@ -345,7 +345,7 @@ public class SendFragment extends Fragment {
         try {
             List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
-                contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress()));
             }
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -368,7 +368,16 @@ public class SendFragment extends Fragment {
                     CryptoWalletWalletContact walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
 
                     // TODO harcoded deliveredbyactorid
-                    cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), walletPublicKey, user_id, Actors.INTRA_USER, walletContactRecord.getActorPublicKey(), walletContactRecord.getActorType());
+                    cryptoWallet.send(
+                            Long.parseLong(amount.getText().toString()),
+                            validAddress,
+                            editNotes.getText().toString(),
+                            walletPublicKey,
+                            user_id,
+                            Actors.INTRA_USER,
+                            walletContactRecord.getActorPublicKey(),
+                            walletContactRecord.getActorType()
+                    );
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {

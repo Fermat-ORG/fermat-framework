@@ -22,9 +22,4 @@ public interface Actor {
 
     byte[] getPhoto();
 
-    void setActorPublicKey(String actorPublicKey);
-
-    void setName(String name);
-
-    void setPhoto(byte[] photo);
 }

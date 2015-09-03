@@ -53,7 +53,7 @@ public enum Plugins {
     BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION("BINEXUT", Developers.BITDUBAI),
     BITDUBAI_INCOMING_CRYPTO_TRANSACTION("BINCRYT", Developers.BITDUBAI),
     BITDUBAI_USER_DEVICE_USER("BUDEVU", Developers.BITDUBAI),
-    BITDUBAI_USER_EXTRA_USER("BUEXU", Developers.BITDUBAI),
+    BITDUBAI_ACTOR_EXTRA_USER("BAEXU", Developers.BITDUBAI),
     BITDUBAI_USER_INTRA_USER("BUINU", Developers.BITDUBAI),
     BITDUBAI_COINBASE_WORLD("BCOINW", Developers.BITDUBAI),
     BITDUBAI_BITCOIN_WALLET_BASIC_WALLET("BBTCWBW", Developers.BITDUBAI),
@@ -192,8 +192,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION;
             case "BUDEVU":
                 return Plugins.BITDUBAI_USER_DEVICE_USER;
-            case "BUEXU":
-                return Plugins.BITDUBAI_USER_EXTRA_USER;
+            case "BAEXU":
+                return Plugins.BITDUBAI_ACTOR_EXTRA_USER;
             case "BUINU":
                 return Plugins.BITDUBAI_USER_INTRA_USER;
             case "BCOINW":
