@@ -64,6 +64,25 @@ en el Digital Asset.
 Realizadas estas operaciones, y al momento de recibir el GenesisAmount en la Asset Vault, las operaciones de crédito dentro de la
 Asset Wallet deben ocurrir. [Franklin, completar más info]
 
+= Funciones del Asset Issuing
+
+El plugin Asset Issuing será el encargado de la creación de los Assets, incluyendo metadata y crypto monto, que posteriormente serán enviados a los posibles destinatarios de los Digital Assets. Este plugin
+deberá solicitar la genesis transaction, la cual se define como la transacción origen de los crypto montos a ser transferidos junto al asset, así mismo, debe solicitar
+la genesis address, la cual se define como la dirección que emitió el Asset. Una vez obtenida la información antes mencionada, este plugin debe crear las transacciones que
+permitan la transferencia de los Assets a los destinatarios. Este plugin debe ser responsable de cada uno de los Assets generados hasta que todos hayan sido entregados a los
+destinatarios. Este plugin debe tener la capacidad de monitorear que Asset ha sido entregado y registrarlo (aun no veo donde) para su posterior consumo. Si un asset no ha
+sido registrado como entregado por este plugin, ese Asset no debería ser consumido por el beneficiario.
+Estos Assets pueden ser enviados a cualquier tipo de wallet, es decir, debe ser transparente para este plugin los destinatarios de los assets, la metadata que se entrega a
+ este plugin debe incluir la información que permita discriminar a que tipo de wallet/destinatario va dirigido el Asset, este proceso de filtrado podría tomarse de las wallets
+ instaladas actualmente, este plugin debe recibir de una capa superior el criterio de selección de los destinatarios, de tal forma que este pueda crear la transación que permita
+ enviar el asset al destinatario.
+Los Assets que no se hayan enviado deben permanecer en el dispositivo emisor hasta que el beneficiario haya autorizado la instalación/descarga del digital asset
+a su dispositivo. Al momento de instalación del Asset en el dispositivo destino es que se debe realizar la trasferencia del crypto monto al dispositivo destino.
+Los crypto montos del emisor asociados a cada assets deben estar reservados en el dispositivo emisor hasta que sean transferidos a los beneficiarios. Estos montos no deben
+cambiar una vez reservados.
+
+*Preguntar al team:*
+¿Es posible que el emisor elimine/cancele un asset a discreción?
 
 = Transferencia y confirmación de Asset a beneficiario
 
@@ -81,6 +100,9 @@ ya que se plantea que este Asset puede estar "pre-instalado" en el dispositivo. 
 Una vez que la Asset Wallet autoriza la instalación o descarga del Digital Asset, se procede a crear la transacción que va a transferir el monto crypto asociado a la metadata
 de la genesis transaction a la Asset Vault del destinatario. Una vez realizada correctamente la transferencia de fondos, se debe notificar a las capas que controlan la UI la
 correcta instalación/descarga del Asset.
+
+*Preguntar al team*:
+¿Un asset puede ser descargado o instalado por algún otro medio distinto a la red de fermat? ¿Se podría recibir vía código QR?
 
 = Registro en Asset Issuer Wallet
 
@@ -100,7 +122,11 @@ Este proceso determina el intercambio del Asset User donde mediante un metodo do
 y acreditando o retornando dicho asset al Asset Issuer o alguna wallet que determine la Redemcion.
 Aclarar que pasa con este Asset si se puede volver a enviar.
 
+Redeem Point debe utilizar el plugin Incoming Issuer para realizar la verificación de la validez de la Genesis Transaction del Digital Asset, ya que este plugin es el encargado
+de estar pendiente de la llegada de un Digital Asset. Una vez verificada la genesis transaction se debe realizar la trasferencia del monto crypto del dispositivo del usuario.
 
-
+Una vez verificada la genesis transaction por parte del Redeem Point, se debe notificar al plugin Outgoing Issuer que debe realizar la transferencia del monto crypto asociado
+a la genesis transaction hacía el dispositivo que va a recibir el digital asset para su "redemción". Una vez que se produzca la transferencia del monto del Digital Asset
+el dispositivo del beneficiero del asset debe proceder a registrar el consumo del mencionado Asset y proceder a su inhabilitación (¿?) del dispositivo y registrarlo como consumido.
 
 #
