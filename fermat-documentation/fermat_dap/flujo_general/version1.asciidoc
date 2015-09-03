@@ -2,32 +2,6 @@
 
 = Flujo General de la Plataform DAP
 
-
-El actor ISSUER procede a crear el Asset donde colocara la informacion relevante:
-
-  * Tienen un Emisor, que es alguno de los actores del sistema.
-  * Tienen una fecha de expiración. (aunque en algunos casos puede ser que no expiren nunca)
-  * Tienen uno o mas elementos multi-media (imagen, sonido, video, animación, etc.) destinados a
-    representar ante el usuario final dicho asset.
-  * Son de un determinado tipo.
-  * Pueden ser redimido.
-  * Tienen una lista de condiciones que dependen de su tipo. (Las entienden cualquier wallet que maneje
-    ese tipo de Assets)
-  * Son de un determinado sub-tipo.
-  * Tienen una lista de condiciones que dependen de su sub-tipo. (Las entienden cualquier wallet que
-    maneje ese sub-tipo de Assets)
-  * Tienen una lista de condiciones que dependen de su emisor. (Solo las entienden las wallets del emisor)
-
-El Issuer determinara en que momento el Asset estara disponible para su envio o publicacion a las Wallets
-instaladas en otros dispositivos y de manera asincrona comenzara la instalacion del Asset, siempre y
-cuando se haya validado algunas informacion tecnica del Asset, por ejemplo que no haya caducado,
-el actor User, debera de una manera aceptar
-el Asset recibido.
-
-Deberiamos de buscar la manera de saber el codigo de la billetera para proceder a enviar el asset.
-
-Interacion y Flujo de pluggin, subapp, explicacion.
-
 = Flujo Desarrollo
 
 El flujo de desarrollo del Asset describe lo necesario para generar un Digital Asset.
