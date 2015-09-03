@@ -12,6 +12,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -31,12 +32,16 @@ import java.util.ArrayList;
 public class IntraUserConnectionsAdapter extends FermatAdapter<IntraUserConnectionListItem, IntraUserConnectionsAdapter.IntraUserItemViewHolder> {
 
 
+
+    private boolean addButtonVisible=false;
+
     protected IntraUserConnectionsAdapter(Context context) {
         super(context);
     }
 
     public IntraUserConnectionsAdapter(Context context, ArrayList<IntraUserConnectionListItem> dataSet) {
         super(context, dataSet);
+
     }
 
     /**
@@ -59,7 +64,7 @@ public class IntraUserConnectionsAdapter extends FermatAdapter<IntraUserConnecti
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.intra_user_connection_item;
+        return R.layout.intra_user_connection_item_with_buttons;
     }
 
     /**
@@ -83,6 +88,27 @@ public class IntraUserConnectionsAdapter extends FermatAdapter<IntraUserConnecti
         }
         holder.txtView_profile_phrase.setText(data.getProfilePhrase());
         holder.txtView_profile_status.setText(data.getConnectionStatus());
+
+        if(addButtonVisible){
+            holder.imageView_add_connection.setVisibility(View.VISIBLE);
+            holder.imageView_add_connection.setImageResource(R.drawable.ic_action_add_person_grey);
+            holder.imageView_add_connection.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "add connection", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            holder.imageView_add_connection.setVisibility(View.INVISIBLE);
+        }
+        holder.imageView_chat.setImageResource(R.drawable.ic_action_chat);
+        holder.imageView_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Chat", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     class IntraUserItemViewHolder extends FermatViewHolder {
@@ -90,6 +116,8 @@ public class IntraUserConnectionsAdapter extends FermatAdapter<IntraUserConnecti
         FermatTextView txtView_profile_name;
         FermatTextView txtView_profile_phrase;
         FermatTextView txtView_profile_status;
+        ImageView imageView_add_connection;
+        ImageView imageView_chat;
 
         protected IntraUserItemViewHolder(View itemView) {
             super(itemView);
@@ -98,8 +126,14 @@ public class IntraUserConnectionsAdapter extends FermatAdapter<IntraUserConnecti
             txtView_profile_name = (FermatTextView) itemView.findViewById(R.id.txtView_profile_name);
             txtView_profile_phrase = (FermatTextView) itemView.findViewById(R.id.txtView_profile_phrase);
             txtView_profile_status = (FermatTextView) itemView.findViewById(R.id.txtView_profile_status);
+            imageView_chat = (ImageView) itemView.findViewById(R.id.imageView_chat);
+            imageView_add_connection = (ImageView) itemView.findViewById(R.id.imageView_add_connection);
+
+
+
         }
     }
+
 
     public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
         int targetWidth = 50;
@@ -122,6 +156,10 @@ public class IntraUserConnectionsAdapter extends FermatAdapter<IntraUserConnecti
                         sourceBitmap.getHeight()),
                 new Rect(0, 0, targetWidth, targetHeight), null);
         return targetBitmap;
+    }
+
+    public void setAddButtonVisible(boolean addButtonVisible) {
+        this.addButtonVisible = addButtonVisible;
     }
 
 }

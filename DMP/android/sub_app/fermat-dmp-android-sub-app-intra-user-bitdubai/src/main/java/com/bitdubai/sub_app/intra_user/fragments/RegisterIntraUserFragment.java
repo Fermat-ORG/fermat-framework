@@ -1,16 +1,12 @@
 package com.bitdubai.sub_app.intra_user.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.ClipData;
-import android.content.ClipDescription;
-import android.content.ClipboardManager;
-import android.content.Context;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,26 +22,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 
 import com.bitdubai.sub_app.intra_user.common.Views.RoundedDrawable;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.intra_user.bitdubai.R;
 import com.squareup.picasso.Picasso;
 
@@ -56,7 +48,6 @@ import com.squareup.picasso.Picasso;
 public class RegisterIntraUserFragment extends FermatFragment {
     private static final String ARG_POSITION = "position";
 
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
 
     /**
      * Wallet session
@@ -91,17 +82,16 @@ public class RegisterIntraUserFragment extends FermatFragment {
      * Screen views
      */
     private View rootView;
-    private EditText editAddress;
     private EditText editContactName;
     private EditText editPrefixName;
     private EditText editLastName;
     private EditText editMiddleName;
     private EditText editSufixName;
     private EditText editAlias;
-    private TextView editAddressTitle;
-    private EditText editAddressType;
     private ImageView takePictureButton;
 
+
+    private ProgressBar progressBar;
 
     /**
      * deals with Error manager
@@ -109,26 +99,34 @@ public class RegisterIntraUserFragment extends FermatFragment {
     private ErrorManager errorManager;
 
     /**
+     * Identity Image
+     */
+    byte[] identityImage = null;
+
+    private TextView txtView_account_name;
+    private ImageView imageView_profile;
+
+    private RelativeLayout header;
+
+    /**
      * Resources
      */
-    private WalletResourcesProviderManager walletResourcesProviderManager;
+    //private WalletResourcesProviderManager walletResourcesProviderManager;
 
 
     /**
      *
-     * @param position
-     * @param intraUserSubAppSession
+     * @param
+     * @param
      * @return
      */
 
-    public static RegisterIntraUserFragment newInstance(int position, IntraUserSubAppSession intraUserSubAppSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static RegisterIntraUserFragment newInstance() {
         RegisterIntraUserFragment f = new RegisterIntraUserFragment();
-        f.setIntraUserSubAppSession(intraUserSubAppSession);
         Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
+        //b.putInt(ARG_POSITION, position);
         f.setArguments(b);
         //f.setContactName(intraUserSubAppSession.getIntraUserModuleManager());
-        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return f;
     }
 
@@ -137,9 +135,14 @@ public class RegisterIntraUserFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try{
+            intraUserSubAppSession = (IntraUserSubAppSession)subAppsSession;
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+            errorManager = intraUserSubAppSession.getErrorManager();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-        errorManager = intraUserSubAppSession.getErrorManager();
         //try {
             //cryptoWalletManager = walletSession.getCryptoWalletManager();
            // cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -154,7 +157,7 @@ public class RegisterIntraUserFragment extends FermatFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_create_contact, container, false);
+        rootView = inflater.inflate(R.layout.new_intra_user_fragment, container, false);
         try {
 
             // save_contact and cancel button definition
@@ -203,24 +206,31 @@ public class RegisterIntraUserFragment extends FermatFragment {
             });
 
 
-            // paste_button button definition
-            ImageView pasteFromClipboardButton = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
-            pasteFromClipboardButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    pasteFromClipboard(rootView);
-                }
-            });
-
             editContactName = (EditText) rootView.findViewById(R.id.contact_name);
             editLastName = (EditText) rootView.findViewById(R.id.contact_last_name);
             editPrefixName = (EditText) rootView.findViewById(R.id.contact_name_prefix);
             editMiddleName = (EditText) rootView.findViewById(R.id.contact_middle_name);
             editSufixName = (EditText) rootView.findViewById(R.id.contact_name_sufix);
             editAlias = (EditText) rootView.findViewById(R.id.contact_alias);
-            editAddressTitle = (TextView) rootView.findViewById(R.id.address_title);
-            editAddressType = (EditText) rootView.findViewById(R.id.contact_address_type);
 
             editContactName.setText(contactName);
+
+            editContactName.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    txtView_account_name.setText(editContactName.getText().toString());
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+
+            });
 
             editContactName.setTypeface(tf);
             editLastName.setTypeface(tf);
@@ -228,36 +238,14 @@ public class RegisterIntraUserFragment extends FermatFragment {
             editMiddleName.setTypeface(tf);
             editSufixName.setTypeface(tf);
             editAlias.setTypeface(tf);
-            editAddressTitle.setTypeface(tf);
-            editAddressType.setTypeface(tf);
 
-            editAddress = (EditText) rootView.findViewById(R.id.contact_address);
-            editAddress.setTypeface(tf);
-            editAddress.addTextChangedListener(new TextWatcher() {
-                public void afterTextChanged(Editable s) {
-//                    if (validateAddress(editAddress.getText().toString(), cryptoWallet) != null) {
-//                        editAddress.setTextColor(Color.parseColor("#72af9c"));
-//                    } else {
-//                        editAddress.setTextColor(Color.parseColor("#b46a54"));
-//                    }
-                }
+            txtView_account_name = (TextView) rootView.findViewById(R.id.txtView_account_name);
 
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+            progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-            });
+            imageView_profile = (ImageView) rootView.findViewById(R.id.imageView_profile);
 
-            ImageView scanImage = (ImageView) rootView.findViewById(R.id.scan_qr);
-
-            scanImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.contact_address));
-                    //integrator.initiateScan();
-                }
-            });
+            header = (RelativeLayout) rootView.findViewById(R.id.header);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -271,8 +259,49 @@ public class RegisterIntraUserFragment extends FermatFragment {
      */
     private void saveContact() {
         try {
-            EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
-            EditText address = (EditText) rootView.findViewById(R.id.contact_address);
+            editContactName = (EditText) rootView.findViewById(R.id.contact_name);
+
+            //Thread thread = new Thread();
+
+            progressBar.setVisibility(View.VISIBLE);
+            // Start lengthy operation in a background thread
+
+//            Runnable runnable = new Runnable() {
+//                public void run() {
+//
+//                    try {
+//
+//                        intraUserSubAppSession.getIntraUserModuleManager().createIntraUser(editContactName.getText().toString(),identityImage);
+//                        Toast.makeText(getActivity(), "Identity sucessfully created", Toast.LENGTH_SHORT).show();
+//
+//
+//                    } catch (CouldNotCreateIntraUserException e) {
+//                        e.printStackTrace();
+//                    }
+////                    while (mProgressStatus < 100) {
+////                        mProgressStatus = doWork();
+////
+////                        // Update the progress bar
+////                        mHandler.post(new Runnable() {
+////                            public void run() {
+////                                mProgress.setProgress(mProgressStatus);
+////                            }
+////                        });
+////                    }
+//                }
+//            };
+//            //Thread thread = new Thread();
+//
+//            getActivity().runOnUiThread(runnable);
+
+
+            //thread.start();
+
+            intraUserSubAppSession.getIntraUserModuleManager().createIntraUser(editContactName.getText().toString(),identityImage);
+
+            Toast.makeText(getActivity(), "Identity sucessfully created", Toast.LENGTH_SHORT).show();
+
+            ((FermatScreenSwapper)getActivity()).changeActivity(Activities.CWP_INTRA_USER_ACTIVITY.getCode(),null);
 
             //CryptoAddress validAddress = validateAddress(address.getText().toString(), cryptoWallet);
 
@@ -307,6 +336,8 @@ public class RegisterIntraUserFragment extends FermatFragment {
      * back to contacts
      */
     private void returnToContacts() {
+
+        ((FermatScreenSwapper)getActivity()).changeActivity(Activities.CWP_INTRA_USER_ACTIVITY.getCode(),null);
 //        ContactsFragment contactsFragment = new ContactsFragment();
 //        contactsFragment.setWalletSession(walletSession);
 //
@@ -315,38 +346,6 @@ public class RegisterIntraUserFragment extends FermatFragment {
 //        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 //        FT.replace(R.id.fragment_container2, contactsFragment);
 //        FT.commit();
-    }
-
-    /**
-     * Paste valid clipboard text into a view
-     *
-     * @param rootView
-     */
-    private void pasteFromClipboard(View rootView) {
-        try {
-            ClipboardManager clipboard = (ClipboardManager) rootView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-
-            // Gets the ID of the "paste" menu item
-            ImageView mPasteItem = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
-            if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                mPasteItem.setEnabled(true);
-                ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-                EditText editText = (EditText) rootView.findViewById(R.id.contact_address);
-//                CryptoAddress validAddress = validateAddress(item.getText().toString(), cryptoWallet);
-//                if (validAddress != null) {
-//                    editText.setText(validAddress.getAddress());
-//                } else {
-//                    Toast.makeText(getActivity().getApplicationContext(), "Cannot find an address in the clipboard text.\n\n" + item.getText().toString(), Toast.LENGTH_SHORT).show();
-//                }
-            } else {
-                // This enables the paste menu item, since the clipboard contains plain text.
-                mPasteItem.setEnabled(false);
-            }
-        } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
 
@@ -471,7 +470,7 @@ public class RegisterIntraUserFragment extends FermatFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            Bitmap imageBitmap = null;
+            Bitmap imageBitmap =null;
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -481,7 +480,8 @@ public class RegisterIntraUserFragment extends FermatFragment {
                     Uri selectedImage = data.getData();
                     try {
                         imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
-                        imageBitmap = Bitmap.createScaledBitmap(imageBitmap,takePictureButton.getWidth(),takePictureButton.getHeight(),true);
+                        imageBitmap = Bitmap.createScaledBitmap(imageBitmap, takePictureButton.getWidth(), takePictureButton.getHeight(), true);
+                        identityImage = imageBitmap.getNinePatchChunk();
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
@@ -491,6 +491,9 @@ public class RegisterIntraUserFragment extends FermatFragment {
             takePictureButton.setBackground(new RoundedDrawable(imageBitmap, takePictureButton));
             takePictureButton.setImageDrawable(null);
             contactPicture = imageBitmap;
+            Drawable drawable = new BitmapDrawable(imageBitmap);
+            header.setBackground(drawable);
+            imageView_profile.setImageBitmap(null);
         }
     }
 
@@ -532,7 +535,4 @@ public class RegisterIntraUserFragment extends FermatFragment {
         startActivityForResult(intentLoad, REQUEST_LOAD_IMAGE);
     }
 
-    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
-        this.walletResourcesProviderManager = walletResourcesProviderManager;
-    }
 }

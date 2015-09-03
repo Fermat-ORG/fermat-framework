@@ -12,6 +12,8 @@ public interface WizardConfiguration {
 
     void showWizard(WizardTypes key);
 
+    void showWizard(WizardTypes key, Object... args);
+
     void dismissWizard();
 
 }
