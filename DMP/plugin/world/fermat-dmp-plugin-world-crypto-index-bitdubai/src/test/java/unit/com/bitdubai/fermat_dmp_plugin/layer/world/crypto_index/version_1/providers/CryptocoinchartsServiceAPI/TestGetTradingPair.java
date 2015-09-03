@@ -20,10 +20,10 @@ public class TestGetTradingPair {
     public void setValues(){
         setUrl= "http://api.cryptocoincharts.info/tradingPair/btc_usd";
     }
-    @Test
+    /*@Test
     public void getTradingPairTest(){
         urlResult=cryptocoinchartsServiceAPI.getTradingPair("btc","usd");
         Assertions.assertThat(setUrl).isEqualTo(urlResult);
-    }
+    }*/
 
 }

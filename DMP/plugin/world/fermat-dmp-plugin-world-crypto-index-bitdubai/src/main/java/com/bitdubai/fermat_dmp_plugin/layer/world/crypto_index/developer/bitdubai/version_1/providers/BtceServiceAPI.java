@@ -3,16 +3,15 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdub
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.InterfaceUrlAPI;
 
 /**
- * Created by francisco on 31/08/15.
+ * Created by francisco on 02/09/15.
  */
-public class BterServiceAPI implements InterfaceUrlAPI {
-
-   private String UrlAPI;
+public class BtceServiceAPI implements InterfaceUrlAPI {
+    private String UrlAPI;
 
     @Override
     public String getUrlAPI(String c, String f) {
-        String pair = c + "_" + f;
-        UrlAPI="http://data.bter.com/api/1/ticker/"+ pair;
+        String pair = c.toLowerCase() + "_" + f.toLowerCase();
+        UrlAPI="https://btc-e.com/api/3/ticker/"+ pair;
         return UrlAPI;
     }
 }

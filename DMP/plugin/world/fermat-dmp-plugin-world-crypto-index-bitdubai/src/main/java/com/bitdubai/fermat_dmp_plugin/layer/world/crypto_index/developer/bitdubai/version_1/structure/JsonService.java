@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +17,8 @@ import java.nio.charset.Charset;
  */
 public class JsonService {
 
+    private JSONObject json=null;
+
        public String readAll(Reader rd) throws IOException {
             StringBuilder sb = new StringBuilder();
             int cp;
@@ -25,13 +28,22 @@ public class JsonService {
             return sb.toString();
         }
 
-        public JSONObject getJSONFromUrl(String url) throws JSONException, IOException {
-                InputStream is = new URL(url).openStream();
+        public JSONObject getJSONFromUrl(String url) throws JSONException {
+            InputStream is;
+            json=null;
+            try {
+                is = new URL(url).openStream();
                 BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
                 String jsonText = readAll(rd);
-                JSONObject json = new JSONObject(jsonText);
+                json = new JSONObject(jsonText);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
                 return json;
         }
+
+
 
     }
 
