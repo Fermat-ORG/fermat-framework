@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
 
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -111,7 +112,16 @@ public class DetailsActivityFragment extends FermatFragment {
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "To MoreDetailActivity", Toast.LENGTH_SHORT).show();
+                final MoreDetailsActivityFragment fragment = MoreDetailsActivityFragment.newInstance();
+                fragment.setSubAppsSession(subAppsSession);
+                fragment.setSubAppSettings(subAppSettings);
+                fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
+
+                final FragmentTransaction FT = getActivity().getFragmentManager().beginTransaction();
+                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                FT.replace(R.id.activity_container, fragment);
+                FT.addToBackStack(null);
+                FT.commit();
             }
         });
 
