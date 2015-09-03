@@ -15,7 +15,7 @@ public class ExtraUserActorDatabaseConstants {
     /**
      * Extra User database table definition.
      */
-    static final String EXTRA_USER_TABLE_NAME = "extra_user";
+   public static final String EXTRA_USER_TABLE_NAME = "extra_user";
 
     static final String EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME = "extra_user_public_key";
     static final String EXTRA_USER_NOMBRE_COLUMN_NAME = "nombre";

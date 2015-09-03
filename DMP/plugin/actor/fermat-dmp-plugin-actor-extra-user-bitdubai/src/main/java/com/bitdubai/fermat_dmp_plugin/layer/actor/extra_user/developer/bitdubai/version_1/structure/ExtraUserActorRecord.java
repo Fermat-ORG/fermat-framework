@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
  */
 public class ExtraUserActorRecord implements Actor {
 
-    private String actorPrivateKey;
 
     private String actorPublicKey;
 
@@ -22,11 +21,16 @@ public class ExtraUserActorRecord implements Actor {
 
     private byte[] photo;
 
-    public ExtraUserActorRecord(String actorPrivateKey, String actorPublicKey, String name, byte[] photo) {
-        this.actorPrivateKey = actorPrivateKey;
+    public ExtraUserActorRecord( String actorPublicKey, String name, byte[] photo) {
         this.actorPublicKey = actorPublicKey;
         this.name = name;
-        this.photo = photo;
+        this.photo = (byte[])photo.clone();
+    }
+
+    public ExtraUserActorRecord( String actorPublicKey, String name) {
+        this.actorPublicKey = actorPublicKey;
+        this.name = name;
+        this.photo = new byte[0];
     }
 
     @Override
@@ -41,7 +45,7 @@ public class ExtraUserActorRecord implements Actor {
 
     @Override
     public byte[] getPhoto() {
-        return photo;
+        return (byte[])this.photo.clone();
     }
 
     @Override

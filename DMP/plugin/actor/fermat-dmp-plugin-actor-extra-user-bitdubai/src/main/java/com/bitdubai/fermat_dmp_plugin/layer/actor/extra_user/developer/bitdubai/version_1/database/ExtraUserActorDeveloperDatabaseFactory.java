@@ -97,6 +97,15 @@ public class ExtraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
                    */
                 throw new CantInitializeExtraUserActorDatabaseException(cantCreateDatabaseException.getMessage());
             }
+
+        }
+        catch (Exception e) {
+
+             /*
+              * The database exists but cannot be open. I can not handle this situation.
+              */
+            throw new CantInitializeExtraUserActorDatabaseException(e.getMessage());
+
         }
     }
 
