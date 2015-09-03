@@ -18,27 +18,22 @@ import java.util.List;
  */
 public class MarketPrice implements MarketRateProvider {
     Double marketExchangeRate = null;
-   // JsonService jsonService= new JsonService();
     HTTPJson jsonService = new HTTPJson();
-
     BtceServiceAPI btceServiceAPI = new BtceServiceAPI();
     BterServiceAPI bterServiceAPI = new BterServiceAPI();
     CcexServiceAPI ccexServiceAPI = new CcexServiceAPI();
     CexioServiceAPI cexioServiceAPI = new CexioServiceAPI();
     CryptocoinchartsServiceAPI cryptocoinchartsServiceAPI = new CryptocoinchartsServiceAPI();
-
-
-
     String url = null;
         /**
      *
      * **/
     @Override
     public double getHistoricalExchangeRate(CryptoCurrency c, FiatCurrency f, long time) {
-            String crypto=c.getCode().toString();
-            String fiat = f.getCode().toString();
-            url = cryptocoinchartsServiceAPI.getUrlAPI(crypto, fiat);
-        marketExchangeRate = Double.valueOf(jsonService.getJSONFromUrl(url).getString("price"));
+            String crypto= c.getCode();
+            String fiat = f.getCode();
+            marketExchangeRate=null;
+            marketExchangeRate=getBestMarketPrice(crypto, fiat);
         return marketExchangeRate;
     }
 

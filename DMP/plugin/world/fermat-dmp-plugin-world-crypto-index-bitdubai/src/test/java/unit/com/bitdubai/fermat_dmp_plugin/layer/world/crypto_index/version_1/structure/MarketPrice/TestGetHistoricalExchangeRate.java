@@ -29,6 +29,7 @@ public class TestGetHistoricalExchangeRate {
     public void getHistoricalExchangeRateTest() throws InvalidParameterException {
         setValue();
        marketExchangeRate=marketPrice.getHistoricalExchangeRate(c,f,time);
+        System.out.println("El precio: " + marketExchangeRate);
         Assertions.assertThat(marketExchangeRate).isNotEqualTo(null);
     }
 }

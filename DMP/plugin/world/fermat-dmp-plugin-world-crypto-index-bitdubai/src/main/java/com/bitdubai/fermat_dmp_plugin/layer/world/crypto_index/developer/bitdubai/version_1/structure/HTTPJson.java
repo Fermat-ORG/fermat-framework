@@ -18,47 +18,61 @@ import org.json.JSONObject;
 
 
 public class HTTPJson {
-
-    static InputStream is = null;
-    static JSONObject jObj = null;
-    static String json = "";
+    private BufferedReader bufferedReader;
+    private InputStream inputStream;
+    private JSONObject jsonObject;
+    private String json = "";
 
     public HTTPJson() {
 
     }
     public JSONObject getJSONFromUrl(String url) {
+        bufferedReader = null;
+        inputStream = null;
+        jsonObject = null;
+        inputStream=getInputStream(url);
+        bufferedReader = getReader(inputStream);
+        jsonObject=getJsonObject(bufferedReader);
+        return jsonObject;
+    }
+
+    private InputStream getInputStream(String url){
         try {
-           DefaultHttpClient httpClient = new DefaultHttpClient();
+            DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
             HttpResponse httpResponse = httpClient.execute(httpGet);
             HttpEntity httpEntity = httpResponse.getEntity();
-            is = httpEntity.getContent();
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            inputStream = httpEntity.getContent();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return inputStream;
+    }
+    private BufferedReader getReader(InputStream is){
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
+            bufferedReader = new BufferedReader(new InputStreamReader(
                     is, "iso-8859-1"), 8);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            is.close();
-            json = sb.toString();
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
+
+        return bufferedReader;
+    }
+    private JSONObject getJsonObject(BufferedReader reader){
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
         try {
-            jObj = new JSONObject(json);
-        } catch (JSONException e) {
-
+            while ((line = reader.readLine()) != null) {
+               stringBuilder.append(line + "\n");
+                }
+            inputStream.close();
+            json = stringBuilder.toString();
+            jsonObject = new JSONObject(json);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return jObj;
 
+
+        return jsonObject;
     }
 }
