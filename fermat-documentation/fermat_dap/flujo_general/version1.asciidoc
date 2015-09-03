@@ -18,25 +18,35 @@ El objeto DigitalAsset de la plataforma, contará con las siguientes propiedades
  * Address GenesisAddress: dirección Genesis generada por la Asset Vault
  * long GenesisAmount: valor crypto del digital asset en Satoshis.
 
+ Digital Asset Contract (DAC)
+
 Como contrato básico para el Digital Asset para poder cerrar el ciclo en el desarrollo inicial de la plataforma,
 especificaremos que:
 
  * Redimible
  * ExpirationDate: fecha de expiración que puede ser nunca.
 
-Una vez completadas estas propiedades por parte del Issuer, y cerrado y decidido a crear el Digital Asset sin más cambios,
-la Asset Issuer subApp, inicia una Digital Asset Transaction de Asset Issuing en la que lo siguiente ocurre:
+El Digital Asset va a tener un enum con los siguientes estados:
+* Draft: cuando el issuer está completando los datos básicos del asset y del contrato.
+* InProgress: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
+* Final: cuando se generó el hash del DA.
+* PendingOnCrypto: cuando se transmite la transacción en la red crypto.
+* Closed: cuando se recibió la transacción crypto en la asset Vault.
+
+ Assset Issuing
+
+Una vez completadas estas propiedades por parte del Issuer, la Asset Issuer subApp, inicia una Digital Asset Transaction de Asset Issuing en la que lo siguiente ocurre:
 
 * Se solicita a la Crypto Vault la creación de una transaction bitcoin la cual devuelve un hash. Este hash se define como la GenesisTransaction
 en el Digital Asset.
-* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book
+* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
+la plataforma DAP y la vault de donde sale la dirección.
 * Se completa la crypto transacción especificando el GenesisAmount.
 * Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_RETURN de la crypto transacción.
 * Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.
-* El Digital Asset es considerado creado y cerrado.
+* El Digital Asset es considerado creado.
+* El Digital Asset se considera available cuando la transacción bitcoin es detectada como entrante por el Incoming Crypto.
 
-
-[Manuel completar más info de la transacción]
 
 Realizadas estas operaciones, y al momento de recibir el GenesisAmount en la Asset Vault, las operaciones de crédito dentro de la
 Asset Wallet deben ocurrir.
