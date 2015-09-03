@@ -62,8 +62,25 @@ en el Digital Asset.
 [Manuel completar más info de la transacción]
 
 Realizadas estas operaciones, y al momento de recibir el GenesisAmount en la Asset Vault, las operaciones de crédito dentro de la
-Asset Wallet deben ocurrir. [Franklin, completar más info]
+Asset Wallet deben ocurrir.
 
+= Registro en Asset Issuer Wallet
+
+Es importante mencionar que este proceso realizara una transaccion contable al Asset del Issuer, aumentando la cantidad de Asset originado por el Asset en su creacion,
+para que cuando sea enviado a un Asset User, le sea debitado dicho asset a la wallet Issuet y acreditados a la walletAsset User, de esta forma podriamos conocer cuantos Asset de ese tipo
+han sido creados y estan disponible para su envio, todo esta operacion debe ser originado mediante una transaccion de la capa transaction.
+
+= Registro en Asset User Wallet
+
+Este proceso realizara una transaccion contable a la wallet Asset del User, aumentando la cantidad de Asset User enviado por el Asset Issuer, y acreditando dicho asset a la wallet Issuet,
+de esta forma podriamos conocer cuantos Asset de ese tipo tiene disponible el Aset User para su intercambio, todo esta operacion debe ser originado mediante una transaccion
+de la capa transaction.
+
+= Registro en Redeem Point Wallet
+
+Este proceso determina el intercambio de la wallet Asset User donde mediante un metodo donde se pase las direcciones correspondiente se realizara una transaccion contable a la Asset del User, disminuyendo la cantidad de la wallet Asset User,
+y acreditando o retornando dicho asset a la Asset Issuer en punto Reddem Point o en alguna wallet que determine la Redemcion.
+Aclarar que pasa con este Asset si se puede volver a enviar.
 
 = Transferencia y confirmación de Asset a beneficiario
 
@@ -81,26 +98,6 @@ ya que se plantea que este Asset puede estar "pre-instalado" en el dispositivo. 
 Una vez que la Asset Wallet autoriza la instalación o descarga del Digital Asset, se procede a crear la transacción que va a transferir el monto crypto asociado a la metadata
 de la genesis transaction a la Asset Vault del destinatario. Una vez realizada correctamente la transferencia de fondos, se debe notificar a las capas que controlan la UI la
 correcta instalación/descarga del Asset.
-
-= Registro en Asset Issuer Wallet
-
-Es importante mencionar que este proceso realizara una transaccion contable al Asset del Issuer, aumentando la cantidad de Asset originado por el Asset en su creacion,
-para que cuando sea enviado a un Asset User, le sea debitado dicho asset al Issuet y acreditados al Asset User, de esta forma podriamos conocer cuantos Asset de ese tipo
-han sido creados y estan disponible para su envio, todo esta operacion debe ser originado mediante una transaccion de la capa transaction.
-
-= Registro en Asset User Wallet
-
-Este proceso realizara una transaccion contable al Asset del User, aumentando la cantidad de Asset User enviado por el Asset Issuer, y acreditando dicho asset al Issuet
-de esta forma podriamos conocer cuantos Asset de ese tipo tiene disponible el Aset User para su intercambio, todo esta operacion debe ser originado mediante una transaccion
-de la capa transaction.
-
-= Registro en Redeem Point Wallet
-
-Este proceso determina el intercambio del Asset User donde mediante un metodo donde se pase las direcciones correspondiente se realizara una transaccion contable al Asset del User, disminuyendo la cantidad de Asset User,
-y acreditando o retornando dicho asset al Asset Issuer o alguna wallet que determine la Redemcion.
-Aclarar que pasa con este Asset si se puede volver a enviar.
-
-
 
 
 #
