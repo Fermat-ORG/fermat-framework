@@ -45,10 +45,24 @@ Como contrato básico para el Digital Asset para poder cerrar el ciclo en el des
 especificaremos que:
 
  * Redimible
- * Date ExpirationDate: fecha de expiración que puede ser nunca.
+ * ExpirationDate: fecha de expiración que puede ser nunca.
 
- 
+Una vez completadas estas propiedades por parte del Issuer, y cerrado y decidido a crear el Digital Asset sin más cambios,
+la Asset Issuer subApp, inicia una Digital Asset Transaction de Asset Issuing en la que lo siguiente ocurre:
 
+* Se solicita a la Crypto Vault la creación de una transaction bitcoin la cual devuelve un hash. Este hash se define como la GenesisTransaction
+en el Digital Asset.
+* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress
+* Se completa la crypto transacción especificando el GenesisAmount.
+* Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_OUTPUT de la crypto transacción.
+* Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.
+* El Digital Asset es considerado creado y cerrado.
+
+
+[Manuel completar más info de la transacción]
+
+Realizadas estas operaciones, y al momento de recibir el GenesisAmount en la Asset Vault, las operaciones de crédito dentro de la
+Asset Wallet deben ocurrir. [Franklin, completar más info]
 
 
 = Transferencia y confirmación de Asset a beneficiario
@@ -86,25 +100,6 @@ Este proceso determina el intercambio del Asset User donde mediante un metodo do
 y acreditando o retornando dicho asset al Asset Issuer o alguna wallet que determine la Redemcion.
 Aclarar que pasa con este Asset si se puede volver a enviar.
 
-= Consumo de Assests
-
- 1) La branded wallet específica de un tipo de Asset (por ej. vourcher), al iniciarse la plataforma
- registra en el cloud server su existencia con su direccion de Bitcoin,
- para que el issuer (en forma automática) envíe el asset al usuario que tiene instalada la wallet.
-
- 2) Proceso de redimir el asset: una posibilidad es que en el local de MacDonalds, el usuario tenga
- que escanera un código QR con la dirección bitcoins a donde enviar los bitcoins del asset.
- Un proceso background se encargará de generar la transacción bitcoin y marcar el asset como consumido.
-
- 3) La dirección del issuer hacia donde enviar el dinero al redimirlo, puede estar incluida dentro
- de la metadata del asset. Esto quizas sea mandatorio para recuperar el dinero
- de assets expirados no redimidos. (Si es que el contrato exige recuperar el dinero).
-
-
-= Consultas principales:
-
- La Asset Vault no solamente guardará los bitcoins de los assets, sino tambien el Digital Asset
- (es decir, el contrato, la definición, imagenes, etc. y el hash del asset).
 
 
 
