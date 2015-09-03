@@ -3,16 +3,15 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.dev
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.CantStartIntraUserCryptoMonitorAgentException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantAcquireResponsibilityException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.EventWrapper;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserCryptoSourceAdministrator;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -140,7 +139,7 @@ public class IncomingIntraUserCryptoMonitorAgent {
         }
 
         private void doTheMainTask() {
-            IncomingIntraUserRegistry.EventWrapper eventWrapper = null;
+            EventWrapper eventWrapper = null;
             try {
                 eventWrapper     = this.registry.getNextCryptoPendingEvent();
                 while(eventWrapper != null) {
@@ -152,13 +151,13 @@ public class IncomingIntraUserCryptoMonitorAgent {
             }
         }
 
-        private void processEvent(IncomingIntraUserRegistry.EventWrapper eventWrapper) {
+        private void processEvent(EventWrapper eventWrapper) {
             // We have here new pending transactions, we will check the source and ask for the right
             // TransactionSender
 
             TransactionProtocolManager<CryptoTransaction> source = null;
             try {
-                source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
+                source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.getEventSource()));
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 return;
@@ -206,7 +205,7 @@ public class IncomingIntraUserCryptoMonitorAgent {
             }
             // After finishing all the steps we mark the event as seen.
             try {
-                registry.disableEvent(eventWrapper.eventId);
+                registry.disableEvent(eventWrapper.getEventId());
                 System.out.println("TTF - INTRA USER MONITOR: EVENT DISABLED");
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
