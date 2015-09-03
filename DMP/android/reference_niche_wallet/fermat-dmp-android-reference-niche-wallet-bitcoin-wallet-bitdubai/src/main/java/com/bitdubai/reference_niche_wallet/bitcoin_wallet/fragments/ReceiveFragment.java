@@ -30,8 +30,10 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -106,7 +108,7 @@ public class ReceiveFragment extends Fragment {
      * Hardcoded walletPublicKey and user_id
      */
     String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
-    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
+    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
 
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
@@ -239,7 +241,7 @@ public class ReceiveFragment extends Fragment {
         try {
             List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
-                contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress()));
             }
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -319,8 +321,15 @@ public class ReceiveFragment extends Fragment {
     private void getWalletAddress(String contact_name) {
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, contact_name.toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
-            user_address_wallet = cryptoAddress.getAddress();
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddressToNewExtraUser(
+                    user_id,
+                    Actors.INTRA_USER,
+                    contact_name,
+                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                    Vaults.BITCOIN_VAULT,
+                    walletPublicKey,
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+            ); user_address_wallet = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -331,7 +340,16 @@ public class ReceiveFragment extends Fragment {
     private void getWalletAddress(WalletContact walletContact) {
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(user_id, Actors.INTRA_USER, walletContact.actorId, Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
+                    user_id,
+                    Actors.INTRA_USER,
+                    walletContact.actorPublicKey,
+                    Actors.EXTRA_USER,
+                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                    Vaults.BITCOIN_VAULT,
+                    walletPublicKey,
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+            );
             user_address_wallet = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

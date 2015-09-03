@@ -3,15 +3,14 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.dev
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 
 import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.25..
+ *
  */
 public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
@@ -21,9 +20,9 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     private UUID transactionId;
 
-    private UUID actorFromId;
+    private String actorFromPublicKey;
 
-    private UUID actorToId;
+    private String actorToPublicKey;
 
     private Actors actorFromType;
 
@@ -101,20 +100,23 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         return transactionHash;
     }
 
-
     @Override
-    public UUID getActorTo() {
-        return this.actorToId;
+    public String getActorFromPublicKey() {
+        return actorFromPublicKey;
     }
 
-    public void setActorToId(UUID actorToId) {this.actorToId = actorToId;}
-
-    @Override
-    public UUID getActorFrom() {
-        return this.actorFromId;
+    public void setActorFromPublicKey(String actorFromPublicKey) {
+        this.actorFromPublicKey = actorFromPublicKey;
     }
 
-    public void setActorFromId(UUID actorFromId){this.actorFromId = actorFromId;}
+    @Override
+    public String getActorToPublicKey() {
+        return actorToPublicKey;
+    }
+
+    public void setActorToPublicKey(String actorToPublicKey) {
+        this.actorToPublicKey = actorToPublicKey;
+    }
 
     @Override
     public Actors getActorToType() {return this.actorToType; }

@@ -18,8 +18,8 @@ public class BitcoinWalletTransactionWrapper implements BitcoinWalletTransaction
     private final TransactionType transactionType;
     private final CryptoAddress addressFrom;
     private final CryptoAddress addressTo;
-    private final UUID actorFrom;
-    private final UUID actorTo;
+    private final String actorFromPublicKey;
+    private final String actorToPublicKey;
     private final Actors actorFromType;
     private final Actors actorToType;
     private final BalanceType balanceType;
@@ -34,8 +34,8 @@ public class BitcoinWalletTransactionWrapper implements BitcoinWalletTransaction
                                            final TransactionType transactionType,
                                            final CryptoAddress addressFrom,
                                            final CryptoAddress addressTo,
-                                           final UUID actorFrom,
-                                           final UUID actorTo,
+                                           final String actorFromPublicKey,
+                                           final String actorToPublicKey,
                                            final Actors actorFromType,
                                            final Actors actorToType,
                                            final BalanceType balanceType,
@@ -49,8 +49,8 @@ public class BitcoinWalletTransactionWrapper implements BitcoinWalletTransaction
         this.transactionType = transactionType;
         this.addressFrom = addressFrom;
         this.addressTo = addressTo;
-        this.actorFrom = actorFrom;
-        this.actorTo = actorTo;
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
         this.balanceType = balanceType;
@@ -82,13 +82,13 @@ public class BitcoinWalletTransactionWrapper implements BitcoinWalletTransaction
     }
 
     @Override
-    public UUID getActorTo() {
-        return actorTo;
+    public String getActorFromPublicKey() {
+        return actorFromPublicKey;
     }
 
     @Override
-    public UUID getActorFrom() {
-        return actorFrom;
+    public String getActorToPublicKey() {
+        return actorToPublicKey;
     }
 
     @Override
