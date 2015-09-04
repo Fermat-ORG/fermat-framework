@@ -13,6 +13,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.dev
 public class IncomingIntraUserTransactionDatabaseConstants {
 
     /**
+     * Incoming Intra User database name.
+     */
+    static final String INCOMING_INTRA_USER_DATABASE = "incoming_intra_user_database";
+
+    /**
      * Incoming Intra User Registry database table definition.
      */
     static final String INCOMING_INTRA_USER_REGISTRY_TABLE_NAME = "incoming_intra_user_registry";

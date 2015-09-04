@@ -145,7 +145,7 @@ public class GetAllIntraUsersTest extends TestCase
     @Test
     public void getAllIntraUsersTest_GetListOk_ThrowsCantGetIntraUSersException() throws Exception {
 
-        actorIntraUserList = testIntraUserActorPluginRoot.getAllIntraUsers(intraUserLoggedPublicKey);
+        actorIntraUserList = testIntraUserActorPluginRoot.getAllIntraUsers(intraUserLoggedPublicKey,0,50);
         Assertions.assertThat(actorIntraUserList)
                 .isNotNull();
     }
@@ -156,7 +156,7 @@ public class GetAllIntraUsersTest extends TestCase
 
         when(mockDatabase.getTable(IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME)).thenReturn(null);
 
-        catchException(testIntraUserActorPluginRoot).getAllIntraUsers(intraUserLoggedPublicKey);
+        catchException(testIntraUserActorPluginRoot).getAllIntraUsers(intraUserLoggedPublicKey,0,50);
 
         assertThat(caughtException())
                 .isNotNull()
