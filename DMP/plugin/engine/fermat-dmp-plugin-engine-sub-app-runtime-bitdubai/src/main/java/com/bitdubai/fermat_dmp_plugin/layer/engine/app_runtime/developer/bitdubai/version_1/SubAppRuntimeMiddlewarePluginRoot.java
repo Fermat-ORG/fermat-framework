@@ -204,7 +204,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     @Override
     public SubApp getSubApp(SubApps subApps) {
         SubApp subApp = listSubApp.get(subApps);
-        if(subApp!=null){
+        if (subApp != null) {
             lastSubapp = subApps;
             return subApp;
         }
@@ -240,7 +240,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     }
 
     /**
-     * DealWithEvents Interface implementation. 
+     * DealWithEvents Interface implementation.
      */
 
     @Override
@@ -249,7 +249,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     }
 
     /**
-     * DealWithErrors Interface implementation. 
+     * DealWithErrors Interface implementation.
      */
 
     @Override
@@ -258,7 +258,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     }
 
     /**
-     * DealsWithPluginIdentity methods implementation. 
+     * DealsWithPluginIdentity methods implementation.
      */
 
     @Override
@@ -269,7 +269,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
     /**
      * The first time this plugins runs, it will setup the initial structure for the App, subApp and so on through the local
-     * interfaces of the classes involved, 
+     * interfaces of the classes involved,
      */
     private void firstRunCheck() {
 
@@ -282,7 +282,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
 
     /**
-     * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the 
+     * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.
      */
     private void factoryReset() throws CantFactoryResetException {
@@ -462,7 +462,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             //runtimeActivity.setStatusBarColor("");
 
 
-
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
             statusBar.setColor("#b46a54");
 
@@ -569,7 +568,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeSubApp.addActivity(runtimeActivity);
 
 
-
             /**End Wallet Factory*/
 
             //wallet Publisher app
@@ -588,6 +586,17 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeTitleBar.setLabel("Wallet Publisher");
             runtimeActivity.setTitleBar(runtimeTitleBar);
             runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeWizard = new Wizard();
+            runtimeWizardPage = new WizardPage();
+            runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_1);
+            runtimeWizard.addPage(runtimeWizardPage);
+
+            runtimeWizardPage = new WizardPage();
+            runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_2);
+            runtimeWizard.addPage(runtimeWizardPage);
+
+            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, runtimeWizard);
 
             runtimeSideMenu = new SideMenu();
             runtimeMenuItem = new MenuItem();
@@ -784,7 +793,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 //            runtimeTabStrip.setTabsIndicateColor("#b46a54");
 
 
-
             //mati
             SearchView runtimeSearchView = new SearchView();
             runtimeSearchView.setLabel("Search");
@@ -834,8 +842,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
 
 
-
-
 //            runtimeTabStrip = new TabStrip();
 //            runtimeTab = new Tab();
 //            runtimeTab.setLabel("All");
@@ -860,7 +866,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
 
             //runtimeActivity.setTabStrip(runtimeTabStrip);
-
 
 
 //            runtimeFragment = new Fragment();

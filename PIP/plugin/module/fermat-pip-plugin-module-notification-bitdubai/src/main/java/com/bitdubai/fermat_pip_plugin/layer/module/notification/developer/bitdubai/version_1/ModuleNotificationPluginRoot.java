@@ -9,11 +9,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.event.FlagNotification;
+import com.bitdubai.fermat_api.layer.all_definition.util.WalletUtils;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -127,6 +129,9 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         setUpEventListeners();
 
 
+        this.poolNotification = new LinkedList();
+
+
         try {
             flagNotification = new FlagNotification();
             this.serviceStatus = ServiceStatus.STARTED;
@@ -210,14 +215,20 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
     public void addIncomingExtraUserNotification(EventSource eventSource,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) {
        // try {
 
-        poolNotification = new LinkedList();
+        //poolNotification = new LinkedList();
 
-            //poolNotification.add(createNotification(eventSource, walletPublicKey, amount, cryptoCurrency, actorId, actorType));
-            Notification notification = new Notification();
-            notification.setAlertTitle("Sos capo pibe");
-            notification.setTextTitle("Ganaste un premio");
-            notification.setTextBody("5000 btc");
+        try {
+            Notification notification = createNotification(eventSource, walletPublicKey, amount, cryptoCurrency, actorId, actorType);
+            notification.setNotificationType(NotificationType.INCOMING_MONEY.getCode());
             poolNotification.add(notification);
+        } catch (CantCreateNotification cantCreateNotification) {
+            cantCreateNotification.printStackTrace();
+        }
+//            Notification notification = new Notification();
+//            notification.setAlertTitle("Sos capo pibe");
+//            notification.setTextTitle("Ganaste un premio");
+//            notification.setTextBody("5000 btc");
+//            poolNotification.add(notification);
             // notify observers
             notifyNotificationArrived();
 
@@ -231,7 +242,7 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
             Actor actor = getActor(actorId);
 
             Notification notification = new Notification();
-            notification.setAlertTitle(getSourceString(eventSource) + " " + amount);
+            notification.setAlertTitle(getSourceString(eventSource) + " " + WalletUtils.formatBalanceString(amount));
 
             notification.setImage(actor.getPhoto());
 
@@ -239,7 +250,7 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
 
             notification.setWalletPublicKey(walletPublicKey);
 
-            notification.setTextBody(actor.getName() + makeString(eventSource) + amount + " in " + cryptoCurrency.getCode());
+            notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
 
             return notification;
 
@@ -251,7 +262,12 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         throw new CantCreateNotification();
     }
 
+    public void deleteObserver(Observer observer){
+        this.flagNotification.deleteObservers();
+    }
+
     private void notifyNotificationArrived(){
+
         this.flagNotification.setActive(true);
     }
 
