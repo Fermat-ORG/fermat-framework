@@ -96,29 +96,23 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
-
 
     /**
      * DealsWithLogger Interface implementation.
@@ -161,9 +155,7 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
                 WalletFactoryModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-
     }
-
 
     @Override
     public WalletFactoryDeveloper getLoggedDeveloper() {
