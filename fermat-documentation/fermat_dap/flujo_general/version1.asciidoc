@@ -27,6 +27,7 @@ especificaremos que:
  * ExpirationDate: fecha de expiración que puede ser nunca.
 
 El Digital Asset va a tener un enum con los siguientes estados:
+
 * Draft: cuando el issuer está completando los datos básicos del asset y del contrato.
 * InProgress: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
 * Final: cuando se generó el hash del DA.
