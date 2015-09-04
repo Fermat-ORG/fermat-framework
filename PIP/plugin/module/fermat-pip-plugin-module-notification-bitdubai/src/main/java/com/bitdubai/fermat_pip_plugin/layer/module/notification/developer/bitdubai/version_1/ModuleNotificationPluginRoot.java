@@ -212,12 +212,16 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
 
         poolNotification = new LinkedList();
 
-            //poolNotification.add(createNotification(eventSource, walletPublicKey, amount, cryptoCurrency, actorId, actorType));
-            Notification notification = new Notification();
-            notification.setAlertTitle("Sos capo pibe");
-            notification.setTextTitle("Ganaste un premio");
-            notification.setTextBody("5000 btc");
-            poolNotification.add(notification);
+        try {
+            poolNotification.add(createNotification(eventSource, walletPublicKey, amount, cryptoCurrency, actorId, actorType));
+        } catch (CantCreateNotification cantCreateNotification) {
+            cantCreateNotification.printStackTrace();
+        }
+//            Notification notification = new Notification();
+//            notification.setAlertTitle("Sos capo pibe");
+//            notification.setTextTitle("Ganaste un premio");
+//            notification.setTextBody("5000 btc");
+//            poolNotification.add(notification);
             // notify observers
             notifyNotificationArrived();
 
@@ -251,7 +255,12 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         throw new CantCreateNotification();
     }
 
+    public void deleteObserver(Observer observer){
+        this.flagNotification.deleteObservers();
+    }
+
     private void notifyNotificationArrived(){
+
         this.flagNotification.setActive(true);
     }
 

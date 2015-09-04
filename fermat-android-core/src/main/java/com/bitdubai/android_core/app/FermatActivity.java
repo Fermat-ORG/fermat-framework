@@ -482,6 +482,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         getNotificationManager().addObserver(this);
     }
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+        getNotificationManager().deleteObserver(this);
+    }
+
     /**
      * @param tabs
      * @param activity
