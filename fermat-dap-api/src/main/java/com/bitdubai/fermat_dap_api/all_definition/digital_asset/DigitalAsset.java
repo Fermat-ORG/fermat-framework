@@ -1,8 +1,6 @@
-package com.bitdubai.fermat_api.all_definition.digital_asset;
+package com.bitdubai.fermat_dap_api.all_definition.digital_asset;
 
-import com.bitdubai.fermat_api.all_definition.contracts.Contract;
-import com.bitdubai.fermat_api.all_definition.digital_asset.enums.State;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 

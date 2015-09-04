@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.all_definition.contracts.exceptions;
+package com.bitdubai.fermat_dap_api.all_definition.contracts.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

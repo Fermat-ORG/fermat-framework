@@ -1,6 +1,6 @@
-package com.bitdubai.fermat_api.all_definition.contracts;
+package com.bitdubai.fermat_dap_api.all_definition.contracts;
 
-import com.bitdubai.fermat_api.all_definition.contracts.exceptions.CantDefineContractPropertyException;
+import com.bitdubai.fermat_dap_api.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 
 import java.util.List;
 

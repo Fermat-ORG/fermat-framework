@@ -1,11 +1,10 @@
-package com.bitdubai.fermat_api.all_definition.digital_asset;
+package com.bitdubai.fermat_dap_api.all_definition.digital_asset;
 
-import com.bitdubai.fermat_api.all_definition.contracts.Contract;
-import com.bitdubai.fermat_api.all_definition.contracts.ContractProperty;
-import com.bitdubai.fermat_api.all_definition.contracts.exceptions.CantDefineContractPropertyException;
-import com.bitdubai.fermat_api.all_definition.digital_asset.enums.ContractPropertyName;
+import com.bitdubai.fermat_dap_api.all_definition.contracts.Contract;
+import com.bitdubai.fermat_dap_api.all_definition.contracts.ContractProperty;
+import com.bitdubai.fermat_dap_api.all_definition.contracts.exceptions.CantDefineContractPropertyException;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.ContractPropertyName;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
