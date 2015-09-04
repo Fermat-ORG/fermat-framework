@@ -62,7 +62,6 @@ public class CreateActorTest extends TestCase {
     /**
      * PluginDatabaseSystem Interface member variables.
      */
-
     @Mock
     PluginDatabaseSystem mockPluginDatabaseSystem;
 

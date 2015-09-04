@@ -25,7 +25,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/09/15.
  *
  * @version 1.0
@@ -50,8 +50,8 @@ public class ExtraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
     /**
      * Constructor
      *
-     * @param pluginDatabaseSystem
-     * @param pluginId
+     * @param pluginDatabaseSystem reference passed by plugin root
+     * @param pluginId reference passed by plugin root
      */
     public ExtraUserActorDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -65,126 +65,63 @@ public class ExtraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
      */
     public void initializeDatabase() throws CantInitializeExtraUserActorDatabaseException {
         try {
-
-             /*
-              * Open new database connection
-              */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
-
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-             /*
-              * The database exists but cannot be open. I can not handle this situation.
-              */
             throw new CantInitializeExtraUserActorDatabaseException(cantOpenDatabaseException.getMessage());
-
         } catch (DatabaseNotFoundException e) {
-
-             /*
-              * The database no exist may be the first time the plugin is running on this device,
-              * We need to create the new database
-              */
             ExtraUserActorDatabaseFactory extraUserActorDatabaseFactory = new ExtraUserActorDatabaseFactory(pluginDatabaseSystem);
-
             try {
-                  /*
-                   * We create the new database
-                   */
                 database = extraUserActorDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                  /*
-                   * The database cannot be created. I can not handle this situation.
-                   */
                 throw new CantInitializeExtraUserActorDatabaseException(cantCreateDatabaseException.getMessage());
             }
-
-        }
-        catch (Exception e) {
-
-             /*
-              * The database exists but cannot be open. I can not handle this situation.
-              */
+        } catch (Exception e) {
             throw new CantInitializeExtraUserActorDatabaseException(e.getMessage());
-
         }
     }
 
-
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        /**
-         * I only have one database on my plugin. I will return its name.
-         */
-        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
+        List<DeveloperDatabase> databases = new ArrayList<>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase("Extra User", this.pluginId.toString()));
         return databases;
     }
 
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
-        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
+        List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
-        /**
-         * Table Extra User columns.
-         */
-        List<String> extraUserColumns = new ArrayList<String>();
+        List<String> extraUserColumns = new ArrayList<>();
 
         extraUserColumns.add(ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME);
-        extraUserColumns.add(ExtraUserActorDatabaseConstants.EXTRA_USER_NOMBRE_COLUMN_NAME);
+        extraUserColumns.add(ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME);
         extraUserColumns.add(ExtraUserActorDatabaseConstants.EXTRA_USER_TIME_STAMP_COLUMN_NAME);
-        /**
-         * Table Extra User addition.
-         */
+
         DeveloperDatabaseTable extraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME, extraUserColumns);
         tables.add(extraUserTable);
-
-
 
         return tables;
     }
 
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
-        /**
-         * Will get the records for the given table
-         */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
 
+        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 
-        /**
-         * I load the passed table name from the SQLite database.
-         */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * if there was an error, I will returned an empty list.
-             */
             return returnedRecords;
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
+        List<String> developerRow = new ArrayList<>();
         for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
+             for (DatabaseRecord field : row.getValues()) {
+                  developerRow.add(field.getValue());
             }
-            /**
-             * I create the Developer Database record
-             */
             returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
         }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
         return returnedRecords;
     }
 
