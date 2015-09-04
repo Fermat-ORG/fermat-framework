@@ -86,7 +86,7 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
                 String name = record.getStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_NOMBRE_COLUMN_NAME);
-                return new ExtraUserActorRecord(actorPublicKey, name);
+                return new ExtraUserActorRecord(actorPublicKey,"", name);
             } else
                 throw new ExtraUserNotFoundException(ExtraUserNotFoundException.DEFAULT_MESSAGE, null, "", "There's no record with that actorPublicKey.");
 

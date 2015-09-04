@@ -179,7 +179,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
 
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Extra User Created Successfully.", null, null);
-        return new ExtraUserActorRecord(publicKey, actorName);
+        return new ExtraUserActorRecord(publicKey,privateKey, actorName);
     }
 
     @Override
@@ -214,15 +214,14 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
 
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Extra User Created Successfully.", null, null);
-        return new ExtraUserActorRecord(publicKey, actorName);
+        return new ExtraUserActorRecord(publicKey, privateKey,actorName);
     }
 
     @Override
     public Actor getActorByPublicKey(String actorPublicKey) throws CantGetExtraUserException, ExtraUserNotFoundException {
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Trying to get an specific extra user...", null, null);
 
-        try {
-            //String privateKey = getPrivateKey(actorPublicKey);
+        try {String privateKey = getPrivateKey(actorPublicKey);
             byte[] image;
             try {
                 image = loadPhoto(actorPublicKey);
@@ -231,7 +230,8 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
             }
             Actor actor = extraUserActorDao.getActorByPublicKey(actorPublicKey);
 
-            return new ExtraUserActorRecord(actorPublicKey, actor.getName(), image);
+            return new ExtraUserActorRecord(actorPublicKey, privateKey,actor.getName(), image);
+
         } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -299,7 +299,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
     }
 
-   /* private String getPrivateKey(String publicKey) throws CantLoadPrivateKeyException {
+   private String getPrivateKey(String publicKey) throws CantLoadPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(
                     pluginId,
@@ -317,7 +317,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         } catch (Exception e) {
             throw new CantLoadPrivateKeyException(CantLoadPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
-    }*/
+    }
 
     private void persistPhoto(String publicKey, byte[] photo) throws CantPersistPhotoException {
         try {

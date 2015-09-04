@@ -19,6 +19,8 @@ public class GettersTest {
 
     ExtraUserActorRecord extraUserActorRecord;
 
+    private String actorPrivateKey;
+
     private String actorPublicKey;
 
     private String name;
@@ -33,10 +35,11 @@ public class GettersTest {
 
         name = "alias";
         actorPublicKey= "publicKey";
+        actorPrivateKey= "privateKey";
         photo = new byte[10];
 
 
-        extraUserActorRecord = new ExtraUserActorRecord(actorPublicKey, name,photo);
+        extraUserActorRecord = new ExtraUserActorRecord(actorPublicKey,actorPrivateKey, name,photo);
 
     }
 

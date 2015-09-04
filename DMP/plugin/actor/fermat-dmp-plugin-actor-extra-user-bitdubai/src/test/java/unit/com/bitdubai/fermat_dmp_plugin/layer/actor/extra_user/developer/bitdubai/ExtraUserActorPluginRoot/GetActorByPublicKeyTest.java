@@ -70,6 +70,9 @@ public class GetActorByPublicKeyTest extends TestCase
     private ExtraUserActorDatabaseFactory mockExtraUserActorDatabaseFactory;
 
     @Mock
+    private Database mockDatabase;
+
+    @Mock
     private DatabaseTable mockTable;
 
 
@@ -92,9 +95,6 @@ public class GetActorByPublicKeyTest extends TestCase
 
     @Mock
     private PluginBinaryFile mockBinaryFile;
-
-
-    Database mockDatabase= Mockito.mock(Database.class);
 
 
     private ExtraUserActorPluginRoot extraUserActorPluginRoot;
