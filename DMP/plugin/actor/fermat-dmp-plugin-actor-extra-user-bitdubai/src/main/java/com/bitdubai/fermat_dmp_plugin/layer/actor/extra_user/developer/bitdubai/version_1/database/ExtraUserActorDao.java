@@ -66,6 +66,9 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
         } catch (CantOpenDatabaseException e) {
             throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         }
+        catch (Exception e) {
+            throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
+        }
     }
 
     public Actor getActorByPublicKey(String actorPublicKey) throws CantGetExtraUserException, ExtraUserNotFoundException {
@@ -83,12 +86,16 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
                 String name = record.getStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_NOMBRE_COLUMN_NAME);
-                return new ExtraUserActorRecord(null, actorPublicKey, name, null);
+                return new ExtraUserActorRecord(actorPublicKey,"", name);
             } else
                 throw new ExtraUserNotFoundException(ExtraUserNotFoundException.DEFAULT_MESSAGE, null, "", "There's no record with that actorPublicKey.");
 
-        } catch (CantLoadTableToMemoryException e) {
+        }
+        catch (CantLoadTableToMemoryException e) {
             throw new CantGetExtraUserException(CantGetExtraUserException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+        catch (Exception e) {
+            throw new CantGetExtraUserException(CantGetExtraUserException.DEFAULT_MESSAGE, e, "", "General Exception");
         }
     }
 

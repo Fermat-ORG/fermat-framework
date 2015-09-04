@@ -1,47 +1,25 @@
-/*
- * @#IntraUserNetworkServiceManager.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
-
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorDisconnectingIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorInIntraUserSearchException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager</code>
- * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * Created by natalia on 02/09/15.
  */
-public class IntraUserNetworkServiceManager implements IntraUserManager {
+public class IntraUserNetworkServiceCommunicationManager {
 
     /**
      * Represent the communicationLayerManager
@@ -90,7 +68,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      * @param communicationLayerManager a communicationLayerManager instance
      * @param errorManager a errorManager instance
      */
-    public IntraUserNetworkServiceManager(ECCKeyPair eccKeyPair, CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public IntraUserNetworkServiceCommunicationManager(ECCKeyPair eccKeyPair, CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.eccKeyPair                               = eccKeyPair;
         this.communicationLayerManager                = communicationLayerManager;
@@ -116,7 +94,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-             communicationLayerManager.requestConnectionTo(NetworkServices.INTRA_USER, remoteNetworkServicePublicKey);
+            communicationLayerManager.requestConnectionTo(NetworkServices.INTRA_USER, remoteNetworkServicePublicKey);
 
 
         } catch (CommunicationException e) {
@@ -299,52 +277,4 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
 
     }
 
-
-    /*
-     * IntraUserManager Interface method implementation
-     */
-    @Override
-    public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
-        return null;
-    }
-
-    @Override
-    public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException {
-        return null;
-    }
-
-    @Override
-    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) {
-
-    }
-
-    @Override
-    public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) {
-
-    }
-
-    @Override
-    public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) {
-
-    }
-
-    @Override
-    public void disconnectIntraUSer(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws ErrorDisconnectingIntraUserException {
-
-    }
-
-    @Override
-    public void cancelIntraUSer(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws ErrorCancellingIntraUserException {
-
-    }
-
-    @Override
-    public List<IntraUserNotification> getNotifications(){
-        return new ArrayList<IntraUserNotification>();
-    }
-
-    @Override
-    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) {
-
-    }
 }

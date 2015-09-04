@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
  * Created by natalia on 24/08/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class IinitializeDatabaseTest extends TestCase
+public class InitializeDatabaseTest extends TestCase
 {
 
     @Mock
@@ -92,7 +92,7 @@ public class IinitializeDatabaseTest extends TestCase
 
         }
 
-  /*  @Test
+   @Test
     public void initializeDatabaseTest_InitSucefuly_throwsCantInitializeIntraUserActorDatabaseException() throws Exception {
 
         intraUserActorDao = new IntraUserActorDao(mockPluginDatabaseSystem, mockPluginFileSystem, pluginId);
@@ -100,9 +100,6 @@ public class IinitializeDatabaseTest extends TestCase
         catchException(intraUserActorDao).initializeDatabase();
         assertThat(CatchException.<Exception>caughtException()).isNull();
 
-        byte[] profileImage = new byte[10];
 
-        catchException(intraUserActorDao).createNewIntraUser(intraUserPublicKey, intraUserAlias, intraUserLoggedPublicKey, profileImage, ContactState.CONNECTED);
-        assertThat(CatchException.<Exception>caughtException()).isNotNull();
-    }*/
+    }
 }
