@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.PaintActionBar;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -57,7 +56,6 @@ import com.bitdubai.sub_app.intra_user.util.CommonLogger;
 import com.intra_user.bitdubai.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -67,7 +65,7 @@ import static android.widget.Toast.makeText;
  * Created by Matias Furszyfer on 2015.08.31..
  */
 
-public class ConnectionsListFragment extends FermatListFragment<IntraUserConnectionListItem> implements FermatListItemListeners<IntraUserConnectionListItem>, SearchView.OnQueryTextListener, SearchView.OnCloseListener, ActionBar.OnNavigationListener {
+public class ConnectionsRequestListFragment extends FermatListFragment<IntraUserConnectionListItem> implements FermatListItemListeners<IntraUserConnectionListItem>, SearchView.OnQueryTextListener, SearchView.OnCloseListener, ActionBar.OnNavigationListener {
 
     private final int POPUP_MENU_WIDHT = 325;
 
@@ -83,8 +81,8 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     private boolean isStartList=false;
     private int mNotificationsCount=0;
 
-    public static ConnectionsListFragment newInstance(){
-        ConnectionsListFragment fragment = new ConnectionsListFragment();
+    public static ConnectionsRequestListFragment newInstance(){
+        ConnectionsRequestListFragment fragment = new ConnectionsRequestListFragment();
         return fragment;
     }
 
@@ -268,7 +266,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         ArrayList<IntraUserConnectionListItem> data=null;
 
         try {
-            List<IntraUserInformation> lstIntraUser = intraUserModuleManager.getAllIntraUsers(0,10);
+            List<IntraUserInformation> lstIntraUser = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET);
             //List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
 
             data = new ArrayList<>();
@@ -276,14 +274,15 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
                 IntraUserConnectionListItem item = new IntraUserConnectionListItem(intraUserInformation.getName(),null,intraUserInformation.getProfileImage(),"connected");
                 data.add(item);
             }
+            ((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(true);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
-            data = IntraUserConnectionListItem.getTestData(getResources());
         }
-        data = IntraUserConnectionListItem.getTestData(getResources());
+
+
 
         return data;
     }
@@ -324,6 +323,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             adapter = new IntraUserConnectionsAdapter(getActivity(), intraUserItemList);
+            ((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(true);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -345,7 +345,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     public void onItemClickListener(IntraUserConnectionListItem data, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Hubo un problema");
-        builder.setMessage("No se pudieron obtener los detalles de la connexión seleccionada");
+        builder.setMessage("No se pudieron obtener los detalles de la wallet seleccionada");
         builder.setPositiveButton("OK", null);
         builder.show();
     }
