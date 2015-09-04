@@ -12,10 +12,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,10 +24,10 @@ import java.util.logging.Logger;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, /*DealsWithEvents, DealsWithErrors, */ DealsWithPluginDatabaseSystem, Plugin, Service {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithErrors,  DealsWithPluginDatabaseSystem, Plugin, Service {
 
-    //ErrorManager errorManager;
-    //EventManager eventManager;
+    ErrorManager errorManager;
+    EventManager eventManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
 
@@ -59,15 +59,15 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         this.pluginDatabaseSystem=pluginDatabaseSystem;
     }
 
-    //@Override
-    //public void setErrorManager(ErrorManager errorManager) {
-        //this.errorManager=errorManager;
-    //}
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager=errorManager;
+    }
 
-    //@Override
-    //public void setEventManager(EventManager eventManager) {
-        //this.eventManager=eventManager;
-    //}
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager=eventManager;
+    }
 
     @Override
     public void start() throws CantStartPluginException {
