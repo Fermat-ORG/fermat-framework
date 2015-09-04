@@ -24,17 +24,17 @@ import java.util.Observer;
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceRemoteAgent</code> represent
  * the remote network services locally
- *
+ * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
  * for more info see @link https://en.wikipedia.org/wiki/Observer_pattern
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 13/06/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserNetworkServiceLocal implements Observer{
+public class IntraUserNetworkServiceLocal implements Observer {
 
     /**
      * Represent the public key of the remote network service
@@ -60,13 +60,13 @@ public class IntraUserNetworkServiceLocal implements Observer{
      * Constructor with parameters
      *
      * @param remoteNetworkServicePublicKey
-     * @param errorManager instance
+     * @param errorManager                    instance
      * @param outgoingMessageDataAccessObject instance
      */
     public IntraUserNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
-        this.remoteNetworkServicePublicKey   = remoteNetworkServicePublicKey;
-        this.errorManager                    = errorManager;
-        this.eventManager                    = eventManager;
+        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
         this.outgoingMessageDataAccessObject = outgoingMessageDataAccessObject;
     }
 
@@ -77,19 +77,19 @@ public class IntraUserNetworkServiceLocal implements Observer{
      *
      * @param message the message to send
      */
-    public void sendMessage(Message message){
+    public void sendMessage(Message message) {
 
         try {
 
             /*
              * Cast the message to OutgoingIntraUserNetworkServiceMessage
              */
-                OutgoingIntraUserNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (OutgoingIntraUserNetworkServiceMessage) message;
+            OutgoingIntraUserNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (OutgoingIntraUserNetworkServiceMessage) message;
 
             /*
              * Configure the correct status
              */
-                outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.PENDING_TO_SEND);
+            outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.PENDING_TO_SEND);
 
             /*
              * Save to the data base table
@@ -103,14 +103,13 @@ public class IntraUserNetworkServiceLocal implements Observer{
     }
 
 
-
     /**
      * Notify the client when a incoming message is receive by the incomingIntraUserNetworkServiceMessage
      * ant fire a new event
      *
      * @param incomingIntraUserNetworkServiceMessage received
      */
-    private void onMessageReceived(IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage){
+    private void onMessageReceived(IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage) {
 
         /**
          * Put the message on a event and fire new event
@@ -127,7 +126,7 @@ public class IntraUserNetworkServiceLocal implements Observer{
      * when new message is received
      *
      * @param observable the observable object
-     * @param data the data update
+     * @param data       the data update
      */
     @Override
     public void update(Observable observable, Object data) {
@@ -139,6 +138,7 @@ public class IntraUserNetworkServiceLocal implements Observer{
 
     /**
      * Return the public key of the remote network service
+     *
      * @return
      */
     public String getRemoteNetworkServicePublicKey() {
