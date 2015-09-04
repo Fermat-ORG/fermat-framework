@@ -113,7 +113,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * WizardTypes
      */
     private Map<WizardTypes, Wizard> wizards;
-    private WizardFragment wizardFragment;
 
     /**
      * Activity type
@@ -894,27 +893,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     /**
      * Launch wizard configuration from key
      *
-     * @param key Name of FermatWizard Enum
-     */
-    @Override
-    public void showWizard(WizardTypes key) {
-        if (wizards == null)
-            throw new NullPointerException("the wizard is null");
-        Wizard wizard = wizards.get(key);
-        if (wizard != null) {
-            dismissWizard();
-            wizardFragment = new WizardFragment();
-            wizardFragment.setWizard(wizard);
-            wizardFragment.setCancelable(true);
-            wizardFragment.show(getFragmentManager(), WizardFragment.class.getName());
-        } else {
-            Log.e(TAG, "Wizard not found...");
-        }
-    }
-
-    /**
-     * Launch wizard configuration from key
-     *
      * @param key  Name of FermatWizard Enum
      * @param args Object... arguments to passing to the wizard fragment
      */
@@ -924,25 +902,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             throw new NullPointerException("the wizard is null");
         Wizard wizard = wizards.get(key);
         if (wizard != null) {
-            dismissWizard();
-            wizardFragment = new WizardFragment();
-            wizardFragment.setWizard(wizard);
-            wizardFragment.setCancelable(true);
-            wizardFragment.setArgs(args);
-            wizardFragment.show(getFragmentManager(), WizardFragment.class.getName());
+            /* Starting Wizard Activity */
+            WizardActivity.open(this, args, wizard);
         } else {
             Log.e(TAG, "Wizard not found...");
-        }
-    }
-
-    /**
-     * Dismiss Wizard Fragment if needed and release variable
-     */
-    @Override
-    public void dismissWizard() {
-        if (wizardFragment != null) {
-            wizardFragment.dismiss();
-            wizardFragment = null;
         }
     }
 
