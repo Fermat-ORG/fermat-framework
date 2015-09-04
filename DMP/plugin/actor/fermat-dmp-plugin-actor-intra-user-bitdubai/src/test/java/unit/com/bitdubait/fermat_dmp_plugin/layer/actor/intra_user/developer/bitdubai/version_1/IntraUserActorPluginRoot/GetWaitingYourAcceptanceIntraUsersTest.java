@@ -145,7 +145,7 @@ public class GetWaitingYourAcceptanceIntraUsersTest  extends TestCase
     @Test
     public void getWaitingTheirAcceptanceIntraUsersTest_GetListOk_ThrowsCantGetIntraUSersException() throws Exception {
 
-        actorIntraUserList = testIntraUserActorPluginRoot.getWaitingYourAcceptanceIntraUsers(intraUserLoggedPublicKey);
+        actorIntraUserList = testIntraUserActorPluginRoot.getWaitingYourAcceptanceIntraUsers(intraUserLoggedPublicKey,0,50);
         Assertions.assertThat(actorIntraUserList)
                 .isNotNull();
     }
@@ -156,7 +156,7 @@ public class GetWaitingYourAcceptanceIntraUsersTest  extends TestCase
 
         when(mockDatabase.getTable(IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME)).thenReturn(null);
 
-        catchException(testIntraUserActorPluginRoot).getWaitingYourAcceptanceIntraUsers(intraUserLoggedPublicKey);
+        catchException(testIntraUserActorPluginRoot).getWaitingYourAcceptanceIntraUsers(intraUserLoggedPublicKey,0,50);
 
         assertThat(caughtException())
                 .isNotNull()

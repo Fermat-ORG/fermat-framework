@@ -61,7 +61,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         super.onCreate(savedInstanceState);
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
 
-
         try {
 
             /*
@@ -389,7 +388,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
-        //this.lastWallet =(InstalledWallet) savedInstanceState.getSerializable(INSTALLED_WALLET);
         try {
             String walletPublicKey = savedInstanceState.getString(WALLET_PUBLIC_KEY);
 

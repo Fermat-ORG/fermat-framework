@@ -9,6 +9,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.
 
 /**
  * Created by loui on 22/02/15.
+ *
  */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 

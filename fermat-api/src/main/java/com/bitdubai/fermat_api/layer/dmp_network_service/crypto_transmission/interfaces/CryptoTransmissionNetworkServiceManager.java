@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TransactionMetadataState;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantSetToCreditedInWalletException;
