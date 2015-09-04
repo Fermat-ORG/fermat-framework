@@ -374,9 +374,10 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 //            cantGetIntraUserSearchResult.printStackTrace();
 //        }
 
-
+        swipeRefreshLayout.setRefreshing(true);
         ((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(true);
         adapter.changeDataSet(IntraUserConnectionListItem.getTestDataExample(getResources()));
+
 
         return true;
     }
