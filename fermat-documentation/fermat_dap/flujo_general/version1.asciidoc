@@ -101,6 +101,7 @@ El proceso de canje de un Asset por un servicio (Redeem Point) va a tener un enu
  * Checked: cuando el Redeem Point ha revisado el DA.
  * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
  * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
+ * NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
  * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
 
  En el caso del dispositivo Redeem Point, el proceso de canje de un Digital Asset incluye los siguientes estados, definidos en un enum:
@@ -110,6 +111,7 @@ El proceso de canje de un Asset por un servicio (Redeem Point) va a tener un enu
  * Checked: cuando el Redeem Point ha revisado el DA.
  * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
  * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
+ * NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
  * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
  
 
