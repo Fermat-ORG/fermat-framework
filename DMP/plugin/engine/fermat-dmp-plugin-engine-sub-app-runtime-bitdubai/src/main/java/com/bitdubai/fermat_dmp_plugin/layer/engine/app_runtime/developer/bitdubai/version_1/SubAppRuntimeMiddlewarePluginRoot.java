@@ -596,7 +596,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_2);
             runtimeWizard.addPage(runtimeWizardPage);
 
-            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_FACTORY_CREATE_NEW_PROJECT, runtimeWizard);
+            runtimeActivity.addWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, runtimeWizard);
 
             runtimeSideMenu = new SideMenu();
             runtimeMenuItem = new MenuItem();
