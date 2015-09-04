@@ -7,8 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.FermatCryptoTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -144,20 +143,21 @@ public class IncomingIntraUserRegistry {
      *      Methods used by the Relay Agent     *
      ********************************************/
 
+    // TODO: REVISAR QUE DEVUELVA SÓLO LAS QUE ESTÁN CON LA METADATA SINCRONIZADA
     // Retorna las (R,TBA)
-    public List<Transaction<CryptoTransaction>> getResponsibleTBATransactions() throws InvalidParameterException, IncomingIntraUserCantGetTransactionsException {
-        try {
-            return this.incomingIntraUserDao.getAllTransactionsInState(TransactionStatus.RESPONSIBLE, ProtocolStatus.TO_BE_APPLIED);
-        } catch (CantLoadTableToMemoryException e) {
-            throw new IncomingIntraUserCantGetTransactionsException("Database errors ocurred",e,"","");
-        } catch (Exception e) {
-            throw new IncomingIntraUserCantGetTransactionsException("An unexpected exception ocurred",FermatException.wrapException(e),"","");
-        }
+    public List<Transaction<CryptoTransaction>> getResponsibleTBATransactions() {
+            return this.incomingIntraUserDao.getAllTransactionsToBeApplied();
     }
 
     // Pasa la transacción a APPLIED.
     public void setToApplied(UUID id) throws IncomingIntraUserCantAccessTransactionsException {
-
+        try {
+            this.incomingIntraUserDao.updateTransactionToApplied(id);
+        } catch (CantLoadTableToMemoryException | IncomingIntraUserExpectedTransactionNotFoundException | CantUpdateRecordException e) {
+            throw new IncomingIntraUserCantAccessTransactionsException("Database errors ocurred",e,"","");
+        } catch (Exception e) {
+            throw new IncomingIntraUserCantAccessTransactionsException("An unexpected exception ocurred",FermatException.wrapException(e),"","");
+        }
     }
 
     /*
@@ -169,27 +169,34 @@ public class IncomingIntraUserRegistry {
      *******************************************************/
 
     public void acknowledgeFermatCryptoTransactions(List<Transaction<FermatCryptoTransaction>> transactionList) throws IncomingIntraUserCantAcknowledgeTransactionException {
+        try {
+            for (Transaction<FermatCryptoTransaction> transaction : transactionList)
+                if (this.incomingIntraUserDao.isANewFermatTransaction(transaction))
+                    this.incomingIntraUserDao.saveFermatTransactionAsAcknowledgedToBeNotified(transaction);
+        } catch (CantInsertRecordException | CantLoadTableToMemoryException e) {
+            throw new IncomingIntraUserCantAcknowledgeTransactionException("Database errors ocurred",e,"","");
+        } catch (Exception e) {
+            throw new IncomingIntraUserCantAcknowledgeTransactionException("An unexpected exception ocurred",FermatException.wrapException(e),"","");
+        }
     }
 
-    public List<Transaction<FermatCryptoTransaction>> getAcknowledgedFermatCryptoTransactions() throws InvalidParameterException {
-        return null;
+    public List<Transaction<FermatCryptoTransaction>> getAcknowledgedFermatCryptoTransactions() throws IncomingIntraUserCantGetTransactionsException {
+        try {
+            return this.incomingIntraUserDao.getAllFermatCryptoTransactionsInState(TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED);
+        } catch (CantLoadTableToMemoryException | InvalidParameterException e) {
+            throw new IncomingIntraUserCantGetTransactionsException("Database errors ocurred",e,"","");
+        } catch (Exception e) {
+            throw new IncomingIntraUserCantGetTransactionsException("An unexpected exception ocurred",FermatException.wrapException(e),"","");
+        }
     }
 
     public void acquireFermatCryptoTransactionResponsibility(Transaction<FermatCryptoTransaction> transaction) throws IncomingIntraUserCantAcquireResponsibilityException { //
-    }
-
-
-
-
-    private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord) throws InvalidParameterException {
-        return null;
-    }
-
-    private List<DatabaseTableRecord> getAllRecordsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) {
-        return null;
-    }
-
-    private List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws InvalidParameterException {
-        return null;
+        try {
+            this.incomingIntraUserDao.updateFermatCryptoTransactionToResponsibleToBeApplied(transaction);
+        } catch (CantUpdateRecordException | CantLoadTableToMemoryException | IncomingIntraUserExpectedTransactionNotFoundException  e) {
+            throw new IncomingIntraUserCantAcquireResponsibilityException("Database errors ocurred",e,"","");
+        } catch (Exception e) {
+            throw new IncomingIntraUserCantAcquireResponsibilityException("An unexpected exception ocurred",FermatException.wrapException(e),"","");
+        }
     }
 }
