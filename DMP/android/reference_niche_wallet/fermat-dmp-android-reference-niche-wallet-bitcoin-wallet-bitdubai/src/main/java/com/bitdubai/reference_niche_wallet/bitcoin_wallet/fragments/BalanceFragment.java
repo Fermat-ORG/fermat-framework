@@ -284,7 +284,8 @@ public class BalanceFragment extends FermatWalletFragment {
             custonMati.setLastTransactionsEvent(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((FermatNotifications) getActivity()).launchNotification("Mati notification", "Reference wallet", "Vendiste una lata de café por 100 btc");
+                    //((FermatNotifications) getActivity()).launchNotification("Mati notification", "Reference wallet", "Vendiste una lata de café por 100 btc");
+
                 }
             });
             custonMati.setSeeAlltransactionsEvent(new View.OnClickListener() {

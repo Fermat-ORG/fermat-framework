@@ -27,7 +27,8 @@ public enum EventSource {
     DISCOUNT_WALLET_BASIC_WALLET_PLUGIN ("DWB"),
     DEVICE_CONNECTIVITY ("DCO"),
     CRYPTO_ROUTER ("CCR"),
-    CRYPTO_VAULT ("CCV");
+    CRYPTO_VAULT ("CCV"),
+    INCOMING_EXTRA_USER("IEU");
 
 
     private final String code;
@@ -83,6 +84,9 @@ public enum EventSource {
                 return EventSource.CRYPTO_ROUTER;
             case "CCV":
                 return EventSource.CRYPTO_VAULT;
+            case "IEU":{
+                return INCOMING_EXTRA_USER;
+            }
             //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
 
