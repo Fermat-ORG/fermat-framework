@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api;
+package com.bitdubai.fermat_dap_api;
 
 import com.bitdubai.fermat_api.FermatException;
 
