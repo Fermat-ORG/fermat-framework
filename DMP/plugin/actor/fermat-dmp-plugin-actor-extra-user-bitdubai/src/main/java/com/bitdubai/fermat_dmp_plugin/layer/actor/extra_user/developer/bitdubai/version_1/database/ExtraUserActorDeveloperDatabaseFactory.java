@@ -66,17 +66,19 @@ public class ExtraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
     public void initializeDatabase() throws CantInitializeExtraUserActorDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new CantInitializeExtraUserActorDatabaseException(cantOpenDatabaseException.getMessage());
+        } catch (CantOpenDatabaseException e) {
+            throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, e, "Error opening database.", null);
         } catch (DatabaseNotFoundException e) {
             ExtraUserActorDatabaseFactory extraUserActorDatabaseFactory = new ExtraUserActorDatabaseFactory(pluginDatabaseSystem);
             try {
                 database = extraUserActorDatabaseFactory.createDatabase(pluginId, pluginId.toString());
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                throw new CantInitializeExtraUserActorDatabaseException(cantCreateDatabaseException.getMessage());
+            } catch (CantCreateDatabaseException z) {
+                throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, z, "Error creating database.", null);
+            } catch (Exception z) {
+                throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, z, "Error not handled.", null);
             }
         } catch (Exception e) {
-            throw new CantInitializeExtraUserActorDatabaseException(e.getMessage());
+            throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, e, "Error not handled.", null);
         }
     }
 

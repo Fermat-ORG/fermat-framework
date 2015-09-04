@@ -13,21 +13,9 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeExtraUserActorDatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE EXTRA USER ACTOR DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE EXTRA USER ACTOR DATABASE EXCEPTION";
 
     public CantInitializeExtraUserActorDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
-    }
-
-    public CantInitializeExtraUserActorDatabaseException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantInitializeExtraUserActorDatabaseException(final String message) {
-        this(message, null);
-    }
-
-    public CantInitializeExtraUserActorDatabaseException() {
-        this(DEFAULT_MESSAGE);
     }
 }

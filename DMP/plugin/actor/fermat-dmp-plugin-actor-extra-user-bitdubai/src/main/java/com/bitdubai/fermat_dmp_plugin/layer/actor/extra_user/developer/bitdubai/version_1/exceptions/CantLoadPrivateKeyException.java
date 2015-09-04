@@ -19,16 +19,4 @@ public class CantLoadPrivateKeyException extends FermatException {
     public CantLoadPrivateKeyException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-    public CantLoadPrivateKeyException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantLoadPrivateKeyException(final String message) {
-        this(message, null);
-    }
-
-    public CantLoadPrivateKeyException() {
-        this(DEFAULT_MESSAGE);
-    }
 }
