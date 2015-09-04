@@ -28,11 +28,10 @@ especificaremos que:
  * Transferible _(es bueno plantearlo desde la versión inicial para poder establecer a los responsables del proceso de traspaso de propiedad del Digital Asset)_
 
 La emisión de un Digital Asset va a tener un enum con los siguientes estados:
+
 * Draft: cuando el issuer está completando los datos básicos del asset y del contrato.
-* InProgress: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
-* Final: cuando se generó el hash del DA.
-* PendingOnCrypto: cuando se transmite la transacción en la red crypto.
-* Closed: cuando se recibió la transacción crypto en la asset Vault.
+* PendingFinal: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
+* Final: cuando se generó el hash del DA y el Asset ya no se puede modificar.
 
  Assset Issuing
 
