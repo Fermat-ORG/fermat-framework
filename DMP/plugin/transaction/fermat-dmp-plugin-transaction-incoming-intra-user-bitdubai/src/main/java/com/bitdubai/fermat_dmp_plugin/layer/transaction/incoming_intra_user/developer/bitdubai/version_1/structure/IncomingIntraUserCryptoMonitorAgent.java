@@ -142,7 +142,7 @@ public class IncomingIntraUserCryptoMonitorAgent {
             EventWrapper eventWrapper = null;
             try {
                 eventWrapper     = this.registry.getNextCryptoPendingEvent();
-                while(eventWrapper != null) {
+                while(thisIsAPendingEvent(eventWrapper)) {
                     processEvent(eventWrapper);
                     eventWrapper = this.registry.getNextCryptoPendingEvent();
                 }
@@ -151,60 +151,42 @@ public class IncomingIntraUserCryptoMonitorAgent {
             }
         }
 
+        private boolean thisIsAPendingEvent(EventWrapper eventWrapper){
+            return eventWrapper != null;
+        }
+
         private void processEvent(EventWrapper eventWrapper) {
-            // We have here new pending transactions, we will check the source and ask for the right
-            // TransactionSender
-
-            TransactionProtocolManager<CryptoTransaction> source = null;
             try {
-                source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.getEventSource()));
-            } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                return;
-            }
-
-            // Now we ask for the pending transactions
-            try {
+                TransactionProtocolManager<CryptoTransaction> source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.getEventSource()));
                 List<Transaction<CryptoTransaction>> transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
+
                 System.out.println("TTF - INTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
-                // Now we save the list in the registry
+
                 this.registry.acknowledgeTransactions(transactionList);
+
                 System.out.println("TTF - INTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
-            } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                return;
-            }
 
-            // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
-            // Remember that this list can be more extensive than the one we saved, this is
-            // because the system could have shut down in this step of the protocol making old
-            // transactions to be stored but not precessed.
-            List<Transaction<CryptoTransaction>> acknowledgedTransactions = null;
-            try {
-                acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
-            } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                return;
-            }
+                // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
+                // Remember that this list can be more extensive than the one we saved, this is
+                // because the system could have shut down in this step of the protocol making old
+                // transactions to be stored but not precessed.
+                List<Transaction<CryptoTransaction>> acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
 
-
-            // An finally, for each transaction we confirm it and then register responsibility.
-            for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
-                try {
-                    source.confirmReception(transaction.getTransactionID());
-                    System.out.println("TTF - INTRA USER MONITOR: TRANSACTION RESPONSIBILITY ACQUIRED");
-                    registry.acquireResponsibility(transaction);
-                } catch (CantConfirmTransactionException | IncomingIntraUserCantAcquireResponsibilityException exception) {
-                    // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
-                    //       la transacción
-                    // We will inform the exception and try again in the next round
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                // And finally, for each transaction we confirm it and then register responsibility.
+                for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
+                    try {
+                        source.confirmReception(transaction.getTransactionID());
+                        System.out.println("TTF - INTRA USER MONITOR: TRANSACTION RESPONSIBILITY ACQUIRED");
+                        registry.acquireResponsibility(transaction);
+                    } catch (CantConfirmTransactionException | IncomingIntraUserCantAcquireResponsibilityException exception) {
+                        // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
+                        //       la transacción
+                        // We will inform the exception and try again in the next round
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                    }
                 }
-            }
-            // After finishing all the steps we mark the event as seen.
-            try {
+
+                // After finishing all the steps we mark the event as seen.
                 registry.disableEvent(eventWrapper.getEventId());
                 System.out.println("TTF - INTRA USER MONITOR: EVENT DISABLED");
             } catch (Exception e) {
