@@ -9,7 +9,7 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CommunicationFermatPacket</code> represent
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.FermatPacketCommunication</code> represent
  * the package protocol to transport the data
  * <p/>
  *
@@ -82,10 +82,10 @@ public interface FMPPacket {
     public String toJson();
 
     /**
-     * Convert to CommunicationFermatPacket from json
+     * Convert to FermatPacketCommunication from json
      *
      * @param json string object
-     * @return CommunicationFermatPacket
+     * @return FermatPacketCommunication
      */
     public FMPPacket fromJson(String json);
 

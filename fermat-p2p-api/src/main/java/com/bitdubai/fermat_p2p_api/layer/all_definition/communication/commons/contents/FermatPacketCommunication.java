@@ -1,10 +1,10 @@
 /*
- * @#Packet.java - 2015
+ * @#FermatPacketCommunication.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
@@ -12,19 +12,25 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatP
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CommunicationFermatPacket</code> implements
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.FermatPacketCommunication</code> implements
  * the package to transport the data
  * <p/>
  *
- * Created by Jorge Gonzales
- * Update by Roberto Requena - (rart3001@gmail.com) on 11/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 02/09/15.
  *
  * @version 1.0
  */
-public class CommunicationFermatPacket implements FermatPacket {
+public class FermatPacketCommunication implements FermatPacket, Serializable {
+
+    /**
+     * Represent the serialVersionUID
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Represent the id
@@ -47,9 +53,9 @@ public class CommunicationFermatPacket implements FermatPacket {
 	private FermatPacketType fermatPacketType;
 
     /**
-     * Represent the fermatMessage
+     * Represent the messageContent
      */
-	private FermatMessage fermatMessage;
+	private String messageContent;
 
     /**
      * Represent the signature
@@ -64,12 +70,12 @@ public class CommunicationFermatPacket implements FermatPacket {
     /**
      * Constructor
      */
-    public CommunicationFermatPacket() {
+    public FermatPacketCommunication() {
         this.id = UUID.randomUUID();
         this.destination = null;
         this.sender = null;
         this.fermatPacketType = null;
-        this.fermatMessage = null;
+        this.messageContent = null;
         this.signature = null;
         this.networkServiceType = null;
     }
@@ -80,16 +86,16 @@ public class CommunicationFermatPacket implements FermatPacket {
      * @param destination
      * @param sender
      * @param fermatPacketType
-     * @param fermatMessage
+     * @param messageContent
      * @param signature
      * @param networkServiceType
      */
-    public CommunicationFermatPacket(String destination, String sender, FermatPacketType fermatPacketType, FermatMessage fermatMessage, String signature, NetworkServiceType networkServiceType) {
+    public FermatPacketCommunication(String destination, String sender, FermatPacketType fermatPacketType, String messageContent, String signature, NetworkServiceType networkServiceType) {
         this.id = UUID.randomUUID();
         this.destination = destination;
         this.sender = sender;
         this.fermatPacketType = fermatPacketType;
-        this.fermatMessage = fermatMessage;
+        this.messageContent = messageContent;
         this.signature = signature;
         this.networkServiceType = networkServiceType;
     }
@@ -195,26 +201,25 @@ public class CommunicationFermatPacket implements FermatPacket {
 
     /**
      * (non-Javadoc)
-     * @see FermatPacket#getFermatMessage()
+     * @see FermatPacket#getMessageContent()
      */
     @Override
-    public FermatMessage getFermatMessage() {
-        return fermatMessage;
+    public String getMessageContent() {
+        return messageContent;
     }
 
     /**
-     * Set the fermatMessage of the packet
+     * Set the message Content of the packet
      *
-     * @param fermatMessage
+     * @param messageContent
      */
-    public void setFermatMessage(FermatMessage fermatMessage) {
-        this.fermatMessage = fermatMessage;
+    public void setFermatMessage(String messageContent) {
+        this.messageContent = messageContent;
     }
 
     /**
-     * Convert this object to json string
-     *
-     * @return String json
+     * (non-Javadoc)
+     * @see FermatPacket#toJson()
      */
     public String toJson(){
 
@@ -230,7 +235,7 @@ public class CommunicationFermatPacket implements FermatPacket {
     public FermatPacket fromJson(String json){
 
         Gson gson = new Gson();
-        return gson.fromJson(json, CommunicationFermatPacket.class);
+        return gson.fromJson(json, FermatPacketCommunication.class);
 
     }
 
@@ -238,20 +243,43 @@ public class CommunicationFermatPacket implements FermatPacket {
      * (non-Javadoc)
      * @see Object#equals(Object)
      */
-
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FermatPacketCommunication)) return false;
+        FermatPacketCommunication that = (FermatPacketCommunication) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getSender(), that.getSender()) &&
+                Objects.equals(getDestination(), that.getDestination()) &&
+                Objects.equals(getFermatPacketType(), that.getFermatPacketType()) &&
+                Objects.equals(getMessageContent(), that.getMessageContent()) &&
+                Objects.equals(getSignature(), that.getSignature()) &&
+                Objects.equals(getNetworkServiceType(), that.getNetworkServiceType());
+    }
 
     /**
      * (non-Javadoc)
      * @see Object#hashCode()
      */
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getSender(), getDestination(), getFermatPacketType(), getMessageContent(), getSignature(), getNetworkServiceType());
+    }
 
     /**
      * (non-Javadoc)
      * @see Object#toString()
      */
-
-
+    @Override
+    public String toString() {
+        return "FermatPacketCommunication{" +
+                "destination='" + destination + '\'' +
+                ", id=" + id +
+                ", sender='" + sender + '\'' +
+                ", fermatPacketType=" + fermatPacketType +
+                ", messageContent=" + messageContent +
+                ", signature='" + signature + '\'' +
+                ", networkServiceType=" + networkServiceType +
+                '}';
+    }
 }

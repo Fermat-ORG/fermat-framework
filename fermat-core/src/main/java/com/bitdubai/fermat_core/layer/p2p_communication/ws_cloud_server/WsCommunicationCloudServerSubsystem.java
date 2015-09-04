@@ -1,15 +1,27 @@
-package com.bitdubai.fermat_core.layer.p2p_communication.comunication_server;
+/*
+ * @#WsCommunicationCloudServerSubsystem.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
+package com.bitdubai.fermat_core.layer.p2p_communication.ws_cloud_server;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantStartSubsystemException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationSubsystem;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.DeveloperBitDubai;
 
 
 /**
- * Created by loui on 26/04/15.
+ * The Class <code>com.bitdubai.fermat_core.layer.p2p_communication.ws_cloud_server.WsCommunicationCloudServerSubsystem</code>
+ * <p/>
+ * Created by Roberto Requena - (rart3001@gmail.com) on 01/09/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class CommunicationServerSubsystem implements CommunicationSubsystem {
+public class WsCommunicationCloudServerSubsystem implements CommunicationSubsystem {
 
     private Plugin plugin;
 
@@ -26,8 +38,9 @@ public class CommunicationServerSubsystem implements CommunicationSubsystem {
          */
 
         try {
-          /*  DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();*/
+
+            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            plugin = developerBitDubai.getPlugin();
         }
         catch (Exception exception)
         {

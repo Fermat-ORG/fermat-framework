@@ -585,11 +585,19 @@ public class Platform implements Serializable {
 
 
             /*
-             * Plugin Communication Server
+             * Plugin Web Socket Communication Cloud Server
              * -----------------------------
              */
-            Plugin communicationServer = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getCommunicationServerPlugin();
-            injectPluginReferencesAndStart(communicationServer, Plugins.BITDUBAI_CLOUD_CHANNEL);
+            Plugin wsCommunicationCloudServer = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getWsCommunicationCloudServerPlugin();
+            injectPluginReferencesAndStart(wsCommunicationCloudServer, Plugins.BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER);
+
+            /*
+             * Plugin Web Socket Communication Cloud Client
+             * -----------------------------
+             */
+            Plugin wsCommunicationCloudClient = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getWsCommunicationCloudClientPlugin();
+            injectPluginReferencesAndStart(wsCommunicationCloudClient, Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL);
+
 
 
             /*

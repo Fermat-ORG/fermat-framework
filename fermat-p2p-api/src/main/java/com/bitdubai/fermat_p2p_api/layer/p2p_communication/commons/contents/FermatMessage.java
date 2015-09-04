@@ -7,8 +7,10 @@
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -34,18 +36,46 @@ public interface FermatMessage {
     public String getSender();
 
     /**
-     * Get the destination of the packet
+     * Get the receiver of the packet
      *
      * @return String
      */
-    public String getDestination();
+    public String getReceiver();
 
     /**
-     * Get the Content
+     * Get the Byte Content
      *
      * @return byte[]
      */
     public byte[] getContent();
+
+    /**
+     * Get the String Content
+     *
+     * @return String
+     */
+    public String getStringContent();
+
+    /**
+     * Get the delivery timestamp
+     *
+     * @return Timestamp
+     */
+    public Timestamp getDeliveryTimestamp();
+
+    /**
+     * Get the Shipping Timestamp
+     *
+     * @return Timestamp
+     */
+    public Timestamp getShippingTimestamp();
+
+    /**
+     * Get the FermatMessagesStatus
+     *
+     * @return FermatMessagesStatus
+     */
+    public FermatMessagesStatus getFermatMessagesStatus();
 
     /**
      * Get the signature of the packet
@@ -69,7 +99,7 @@ public interface FermatMessage {
     public String toJson();
 
     /**
-     * Convert to CommunicationFermatPacket from json
+     * Convert to FermatPacketCommunication from json
      *
      * @param json string object
      * @return FermatMessage

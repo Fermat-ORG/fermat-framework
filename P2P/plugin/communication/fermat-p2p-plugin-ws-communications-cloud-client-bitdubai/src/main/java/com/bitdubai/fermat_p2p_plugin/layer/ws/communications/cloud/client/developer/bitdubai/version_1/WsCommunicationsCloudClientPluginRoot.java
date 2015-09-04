@@ -15,12 +15,19 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClient;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import org.java_websocket.WebSocketImpl;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_17;
+
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +107,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
-        this.disableServerFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        this.disableServerFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
     }
 
     /**
@@ -114,11 +121,18 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
         try {
 
             if (disableServerFlag) {
-                System.out.println("WsCommunicationsCloudClientPluginRoot - Local Server is Disable, no started");
+                System.out.println("WsCommunicationsCloudClientPluginRoot - Local Client is Disable, no started");
                 return;
             }
 
             System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
+
+            WebSocketImpl.DEBUG = true;
+
+            Draft draft = new Draft_17();
+            URI uri = new URI("ws://192.168.0.7:9090/");
+            WsCommunicationsCloudClient wsCommunicationsCloudClient = WsCommunicationsCloudClient.constructWsCommunicationsCloudClientFactory(uri, draft);
+            wsCommunicationsCloudClient.connect();
 
 
         } catch (Exception e) {

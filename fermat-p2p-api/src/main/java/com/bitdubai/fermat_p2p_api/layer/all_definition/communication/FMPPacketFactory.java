@@ -16,7 +16,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.MalformedFMPPacke
 import com.google.gson.Gson;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationPacketFactory</code> is a
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FermatPacketCommunicationFactory</code> is a
  * factory class tha construct the different packet types
  * <p/>
  *
@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 public class FMPPacketFactory {
 
     /**
-     * Construct a CommunicationFermatPacket encrypted with the destination identity public key and signed
+     * Construct a FermatPacketCommunication encrypted with the destination identity public key and signed
      * whit the private key passed as an argument
      *
      * @param sender
@@ -37,7 +37,7 @@ public class FMPPacketFactory {
      * @param fmpPacketType
      * @param networkServicesType
      * @param privateKey to sing the message
-     * @return CommunicationFermatPacket
+     * @return FermatPacketCommunication
      * @throws FMPException
      */
     public static FMPPacket constructCloudFMPPacketEncryptedAndSinged(final String sender, final String destination, final String message, final FMPPacketType fmpPacketType, final NetworkServices networkServicesType, final String privateKey) throws FMPException{
@@ -50,10 +50,10 @@ public class FMPPacketFactory {
 
 
     /**
-     * Construct a CommunicationFermatPacket from a json string
+     * Construct a FermatPacketCommunication from a json string
      *
      * @param jsonPacketData
-     * @return CommunicationFermatPacket
+     * @return FermatPacketCommunication
      * @throws FMPException
      */
 	public static FMPPacket constructCloudFMPPacket(String jsonPacketData) throws FMPException {
@@ -91,14 +91,14 @@ public class FMPPacketFactory {
      * @param message
      * @param signature
      * @param networkServicesType
-     * @return CommunicationFermatPacket
+     * @return FermatPacketCommunication
      * @throws FMPException
      */
 	public static FMPPacket constructCloudFMPPacket(String destination, String sender, FMPPacketType fMPPacketType, String message, String signature, NetworkServices networkServicesType) throws FMPException{
 
         if((destination == null) || (sender == null) || (fMPPacketType == null) || (message == null) || (signature == null) || (networkServicesType == null)){
 
-            throw new MalformedFMPPacketException("All argument to construct the CommunicationFermatPacket are required",null, "", "Any argument is null");
+            throw new MalformedFMPPacketException("All argument to construct the FermatPacketCommunication are required",null, "", "Any argument is null");
         }
 
 		return new CloudFMPPacket(destination, sender, fMPPacketType, message, signature, networkServicesType);

@@ -178,7 +178,7 @@ public class TransactionLayer implements PlatformLayer {
             incomingCryptoSubsystem.start();
             mIncomingCrypto = incomingCryptoSubsystem.getPlugin();
         } catch (CantStartSubsystemException e){
-            System.err.println("CantStartSubsystemException: " + e.getFermatMessage());
+            System.err.println("CantStartSubsystemException: " + e.getMessageContent());
         }
          */
     }

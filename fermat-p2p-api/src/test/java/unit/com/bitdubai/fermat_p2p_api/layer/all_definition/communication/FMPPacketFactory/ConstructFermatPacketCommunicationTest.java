@@ -12,7 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 
 
-public class ConstructCommunicationFermatPacketTest {
+public class ConstructFermatPacketCommunicationTest {
 
 	private FMPPacket testPacket;
 	private String testPacketData;
@@ -44,20 +44,20 @@ public class ConstructCommunicationFermatPacketTest {
 	@Ignore
 	@Test
 	public void ConstructCloudPacket_ValidDataPacket_NotNull() throws Exception {
-		//testPacket = CommunicationPacketFactory.constructCloudPacket(testPacketData);
+		//testPacket = FermatPacketCommunicationFactory.constructCloudPacket(testPacketData);
 		assertThat(testPacket).isNotNull();
 	}
 
 	@Ignore
 	@Test(expected=FMPException.class)
 	public void ConstructCloudPacket_NullDataPacket_ThrowsFMPException() throws Exception {
-		//testPacket = CommunicationPacketFactory.constructCloudPacket(null);
+		//testPacket = FermatPacketCommunicationFactory.constructCloudPacket(null);
 	}
 
 	@Ignore
 	@Test(expected=FMPException.class)
 	public void ConstructCloudPacket_EmptyDataPacket_ThrowsFMPException() throws Exception {
-		//testPacket = CommunicationPacketFactory.constructCloudPacket("");
+		//testPacket = FermatPacketCommunicationFactory.constructCloudPacket("");
 	}
 
 }

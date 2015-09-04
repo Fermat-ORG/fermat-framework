@@ -47,7 +47,7 @@ public interface Message {
     public String toJson();
 
     /**
-     * Convert to CommunicationFermatPacket from json
+     * Convert to FermatPacketCommunication from json
      *
      * @param json string object
      * @return FermatMessage

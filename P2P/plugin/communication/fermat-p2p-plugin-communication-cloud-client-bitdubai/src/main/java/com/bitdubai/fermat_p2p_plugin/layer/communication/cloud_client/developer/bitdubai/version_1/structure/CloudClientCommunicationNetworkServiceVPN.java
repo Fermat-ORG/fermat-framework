@@ -656,7 +656,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Client Public Key: " + identity.getPublicKey();
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
-		context += "CommunicationFermatPacket Sender: " + packet.getSender();
+		context += "FermatPacketCommunication Sender: " + packet.getSender();
 		String possibleReason = "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
 		possibleReason += "This can also be an unexpected attack from an unexpected sender.";
 
@@ -673,7 +673,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 	private IllegalPacketSignatureException constructIllegalPacketSignatureException(final FMPPacket packet){
 
 		String message = IllegalPacketSignatureException.DEFAULT_MESSAGE;
-		String context = "Data CommunicationFermatPacket Information: " + packet.toString();
+		String context = "Data FermatPacketCommunication Information: " + packet.toString();
 		String possibleReason = "There was an improper signature associated with this packet; check if you're using the standard Asymmetric Cryptography Signature method";
 
 		return new IllegalPacketSignatureException(message, null, context, possibleReason);
@@ -703,7 +703,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		context += "FermatMessage Hash: " + messageHash;
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Signature: " + signature;
-		String possibleReason = "The FMP CommunicationFermatPacket construction failed, check the cause and the values in the context";
+		String possibleReason = "The FMP FermatPacketCommunication construction failed, check the cause and the values in the context";
 
 		return new CloudCommunicationException(message, cause, context, possibleReason);
 	}

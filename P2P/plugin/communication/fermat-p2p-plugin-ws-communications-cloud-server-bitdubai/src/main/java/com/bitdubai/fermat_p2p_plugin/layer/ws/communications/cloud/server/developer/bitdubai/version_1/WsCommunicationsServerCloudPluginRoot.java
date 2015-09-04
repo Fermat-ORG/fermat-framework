@@ -65,11 +65,6 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
     public static final Boolean ENABLE_SERVER = Boolean.FALSE;
 
     /**
-     * Represents the numbers of the port that the services is listening
-     */
-    private static final int LISTENING_PORT = 9090;
-
-    /**
      * Represent the status of this service
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
@@ -163,7 +158,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                          }
 
                         WebSocketImpl.DEBUG = true;
-                        InetSocketAddress inetSocketAddress = new InetSocketAddress(address, WsCommunicationsServerCloudPluginRoot.LISTENING_PORT);
+                        InetSocketAddress inetSocketAddress = new InetSocketAddress(address, WsCommunicationCloudServer.DEFAULT_PORT);
                         WsCommunicationCloudServer wsCommunicationCloudServer = new WsCommunicationCloudServer(inetSocketAddress);
                         wsCommunicationCloudServer.start();
 

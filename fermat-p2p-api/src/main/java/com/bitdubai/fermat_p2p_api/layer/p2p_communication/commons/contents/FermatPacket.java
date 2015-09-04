@@ -54,11 +54,11 @@ public interface FermatPacket {
 	public FermatPacketType getFermatPacketType();
 
     /**
-     * Get the message of the packet
+     * Get the message content of the packet
      *
-     * @return FermatMessage
+     * @return String
      */
-	public FermatMessage getFermatMessage();
+	public String getMessageContent();
 
     /**
      * Get the signature of the packet
@@ -82,7 +82,7 @@ public interface FermatPacket {
     public String toJson();
 
     /**
-     * Convert to CommunicationFermatPacket from json
+     * Convert to FermatPacketCommunication from json
      *
      * @param json string object
      * @return FermatPacket
