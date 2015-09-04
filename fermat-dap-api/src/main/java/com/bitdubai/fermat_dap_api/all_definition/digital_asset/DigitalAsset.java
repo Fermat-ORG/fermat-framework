@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.all_definition.digital_asset;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -11,16 +12,21 @@ import java.util.List;
  * Created by rodrigo on 9/4/15.
  */
 public class DigitalAsset  implements Serializable{
+    /**
+     * properties defined by the Issuer
+     */
     String publicKey;
     String name;
     String description;
     List<Resource> resources;
     DigitalAssetContract contract;
-
-    String genesisTransaction;
-    CryptoAddress genesisAddress;
     long genesisAmount;
 
+    /**
+     * Properties defined by the Asset Issuer Transaction
+     */
+    String genesisTransaction;
+    CryptoAddress genesisAddress;
     State state;
 
     /**
@@ -103,5 +109,15 @@ public class DigitalAsset  implements Serializable{
 
     public void setState(State state) {
         this.state = state;
+    }
+
+    /**
+     * The string of the Digital Asset will be used to generate a unique Hash
+     * I generate an XML with the class structure
+     * @return
+     */
+    @Override
+    public String toString() {
+        return XMLParser.parseObject(this);
     }
 }
