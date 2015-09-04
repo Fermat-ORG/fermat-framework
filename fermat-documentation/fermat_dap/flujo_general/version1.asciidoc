@@ -111,7 +111,7 @@ El proceso de canje de un Asset por un servicio (Redeem Point) va a tener un enu
  * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
  * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
  * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
- 
+
 
 = Funciones del Asset Issuing
 
