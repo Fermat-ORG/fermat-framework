@@ -25,8 +25,9 @@ especificaremos que:
 
  * Redimible
  * ExpirationDate: fecha de expiración que puede ser nunca.
+ * Transferible _(es bueno plantearlo desde la versión inicial para poder establecer a los responsables del proceso de traspaso de propiedad del Digital Asset)_
 
-El Digital Asset va a tener un enum con los siguientes estados:
+La emisión de un Digital Asset va a tener un enum con los siguientes estados:
 * Draft: cuando el issuer está completando los datos básicos del asset y del contrato.
 * InProgress: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
 * Final: cuando se generó el hash del DA.
@@ -94,6 +95,25 @@ a la genesis transaction hacía el dispositivo que va a recibir el digital asset
 el dispositivo del beneficiero del asset debe proceder a registrar el consumo del mencionado Asset y proceder a su inhabilitación (¿?) del dispositivo y registrarlo como consumido.
 
 
+El proceso de canje de un Asset por un servicio (Redeem Point) va a tener un enum, en el dispositivo del beneficierio, con los siguientes estados:
+ * ToRedeem: cuando la Asset Wallet comienza el proceso de canje del DA.
+ * Checking: cuando el DA ha sido enviado al Redeem point para su verificación.
+ * Checked: cuando el Redeem Point ha revisado el DA.
+ * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
+ * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
+ * NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
+ * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
+
+ En el caso del dispositivo Redeem Point, el proceso de canje de un Digital Asset incluye los siguientes estados, definidos en un enum:
+ * Incoming: cuando se recibe la notificación de un Asset entrante.
+ * ToCheck: cuando el DA se ha recibido en el RP.
+ * Checking: cuando el RP esté verificando la información provista por el DA.
+ * Checked: cuando el Redeem Point ha revisado el DA.
+ * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
+ * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
+ * NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
+ * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
+ 
 
 = Funciones del Asset Issuing
 
@@ -111,9 +131,6 @@ a su dispositivo. Al momento de instalación del Asset en el dispositivo destino
 Los crypto montos del emisor asociados a cada assets deben estar reservados en el dispositivo emisor hasta que sean transferidos a los beneficiarios. Estos montos no deben
 cambiar una vez reservados.
 
-*Preguntar al team:*
-¿Es posible que el emisor elimine/cancele un asset a discreción? Creo que seria posible, eliminar, anular, o modificar, siempre y cuando no hay sido publicado, porque a la final el es
-responsable de dicho Asset.
 
 = Transferencia y confirmación de Asset a beneficiario
 
@@ -135,5 +152,11 @@ correcta instalación/descarga del Asset.
 *Preguntar al team*:
 ¿Un asset puede ser descargado o instalado por algún otro medio distinto a la red de fermat? ¿Se podría recibir vía código QR?
 
+ = Transferencia y confirmación del Digital Asset a Redeem Point.
+
+El proceso de transferencia de un Digital Asset a un Redeem Point es aquel en el cual el usuario va a canjear el DA por un servicio provisto por el emisor del asset (Issuer).
+Este proceso incluye la participación del Plugin Outgoing Issuer en el dispositivo del beneficiario, el cual será el encargado de generar la trasacción que transferirá el DA
+al Redeem Point. Este plugin, una vez culminada la creación de la transacción para realizar el envío del Digital Asset este debe modificar el estado del DA para que los siguientes
+actores de la DAP procedan a notificar al usuario su consumo o su rechazo y su eliminación de la Asset Wallet.
 
 #
