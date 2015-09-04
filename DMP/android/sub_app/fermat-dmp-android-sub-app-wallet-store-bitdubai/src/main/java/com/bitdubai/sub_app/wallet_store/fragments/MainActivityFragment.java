@@ -38,6 +38,7 @@ import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Fragment que luce como un Activity donde se muestra la lista de Wallets disponibles en el catalogo de la Wallet Store
@@ -59,6 +60,11 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
      */
     private ArrayList<WalletStoreListItem> catalogueItemList;
     private WalletStoreListItem selectedItem;
+
+    /**
+     * Executor Service
+     */
+    private ExecutorService executor;
 
     /**
      * Create a new instance of this fragment
@@ -216,7 +222,9 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
                 InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(getActivity(), errorManager);
                 InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, subAppsSession);
-                installWalletWorker.run();
+                if (executor != null)
+                    executor.shutdownNow();
+                executor = installWalletWorker.execute();
             }
 
             @Override
@@ -230,8 +238,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         };
 
         final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
-
-        worker.run();
+        worker.execute();
     }
 
     private void showDetailsActivityFragment(WalletStoreListItem item) {
@@ -264,8 +271,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         };
 
         final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
-
-        worker.run();
+        worker.execute();
     }
 
     @NonNull
