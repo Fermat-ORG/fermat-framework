@@ -6,7 +6,7 @@
 
 El flujo de desarrollo del Asset describe lo necesario para generar un Digital Asset.
 
-  Obeto Digital Asset (DA)
+  Objeto Digital Asset (DA)
 
 El objeto DigitalAsset de la plataforma, contará con las siguientes propiedades:
 
