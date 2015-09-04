@@ -1,18 +1,14 @@
-package com.bitdubai.android_core.app.common.version_1.fragments;
+package com.bitdubai.android_core.app;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
@@ -32,83 +28,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Wizard Dialog Fragment
+ * Wizard Activity
  *
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class WizardFragment extends android.support.v4.app.DialogFragment implements View.OnClickListener {
+public class WizardActivity extends FragmentActivity implements View.OnClickListener {
 
-    private static final String TAG = "WizardFragment";
+    private static final String TAG = "WizardActivity";
     /**
-     * FLAGS
+     * ARGUMENTS
      */
-    private boolean isAttached;
-
+    private static Object[] args;
+    private static Wizard wizarType;
     /**
      * DATA
      */
-    private Wizard wizard;
-    private List<android.support.v4.app.Fragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
     private int position = -1;
     /**
      * UI
      */
-    private View rootView;
     private ViewPager viewPager;
     private FermatTextView back;
     private FermatTextView next;
-    /**
-     * ARGUMENTS
-     */
-    private Object[] args;
 
-    /**
-     * Set Wizard FragmentsEnumType
-     *
-     * @param wizard
-     */
-    public void setWizard(Wizard wizard) {
-        this.wizard = wizard;
+
+    public static void open(Activity context, Object[] _args, Wizard _wizardType) {
+        args = _args;
+        wizarType = _wizardType;
+        Intent wizardIntent = new Intent(context, WizardActivity.class);
+        context.startActivity(wizardIntent);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenTheme);
+        setContentView(R.layout.runtime_app_wizard_fragment);
         setupFragments();
         if (fragments == null || fragments.size() == 0) {
             // nothing to see here...
-            dismiss();
+            finish();
             return;
         }
-    }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        return dialog;
-    }
-
-    /*
-    @Override
-    public void setStyle(int style, int theme) {
-        super.setStyle(R.style.FullScreenDialog, theme);
-    }*/
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.runtime_app_wizard_fragment, container, false);
         if (fragments != null && fragments.size() > 0) {
             Log.i(TAG, String.format("Wizard Pages: %d", fragments.size()));
             // load ui
-            viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+            viewPager = (ViewPager) findViewById(R.id.viewpager);
             viewPager.setPageTransformer(true, new DepthPageTransformer());
-            //WizardPageAdapter adapter = new WizardPageAdapter(getChildFragmentManager(), fragments);
-            //viewPager.setAdapter(adapter);
+            WizardPageAdapter adapter = new WizardPageAdapter(getFragmentManager(), fragments);
+            viewPager.setAdapter(adapter);
             viewPager.setCurrentItem(0);
             position = 0;
             viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -119,8 +89,8 @@ public class WizardFragment extends android.support.v4.app.DialogFragment implem
 
                 @Override
                 public void onPageSelected(int position) {
-                    boolean isNext = WizardFragment.this.position <= position;
-                    WizardFragment.this.position = position;
+                    boolean isNext = WizardActivity.this.position <= position;
+                    WizardActivity.this.position = position;
                     if (position == 0) {
                         showView(false, back);
                         showView(true, next);
@@ -145,9 +115,8 @@ public class WizardFragment extends android.support.v4.app.DialogFragment implem
                     // do nothing...
                 }
             });
-
-            back = (FermatTextView) rootView.findViewById(R.id.back);
-            next = (FermatTextView) rootView.findViewById(R.id.next);
+            back = (FermatTextView) findViewById(R.id.back);
+            next = (FermatTextView) findViewById(R.id.next);
 
             if (position == 0 && back != null)
                 back.setVisibility(View.INVISIBLE);
@@ -166,33 +135,20 @@ public class WizardFragment extends android.support.v4.app.DialogFragment implem
                 back.setOnClickListener(this);
 
         }
-        return rootView;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        isAttached = true;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        isAttached = false;
     }
 
     private void setupFragments() {
-        if (wizard != null) {
-            for (WizardPage page : wizard.getPages()) {
+        if (wizarType != null) {
+            for (WizardPage page : wizarType.getPages()) {
                 switch (page.getType()) {
                     case CWP_WALLET_FACTORY_CREATE_STEP_1:
-                        //fragments.add(new CreateWalletFragment());
+                        fragments.add(new CreateWalletFragment());
                         break;
                     case CWP_WALLET_FACTORY_CREATE_STEP_2:
-                        //fragments.add(new SetupNavigationFragment());
+                        fragments.add(new SetupNavigationFragment());
                         break;
                     case CWP_WALLET_PUBLISHER_PUBLISH_STEP_1:
-                        //fragments.add(StartPublishFragment.newInstance(args));
+                        fragments.add(StartPublishFragment.newInstance(args));
                     default:
                         break;
                 }
@@ -228,7 +184,7 @@ public class WizardFragment extends android.support.v4.app.DialogFragment implem
     public void doNext() {
         if (position >= fragments.size() - 1) {
             // validate all fragments before finish
-            final ProgressDialog dialog = new ProgressDialog(getActivity());
+            final ProgressDialog dialog = new ProgressDialog(this);
             dialog.setCancelable(false);
             dialog.setMessage("Please wait...");
             dialog.show();
@@ -251,23 +207,21 @@ public class WizardFragment extends android.support.v4.app.DialogFragment implem
                         }
                     }
                     final int pos = posFail;
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                                if (pos == -1) {
-                                    // close this wizard
-                                    dismiss();
-                                } else if (pos > -1) {
-                                    if (viewPager != null) {
-                                        viewPager.setCurrentItem(pos);
-                                        Toast.makeText(getActivity(), "Something is missing, please review this step.", Toast.LENGTH_LONG).show();
-                                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            if (pos == -1) {
+                                // close this wizard
+                                finish();
+                            } else if (pos > -1) {
+                                if (viewPager != null) {
+                                    viewPager.setCurrentItem(pos);
+                                    Toast.makeText(WizardActivity.this, "Something is missing, please review this step.", Toast.LENGTH_LONG).show();
                                 }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }.run();
         } else if (position < (fragments.size() - 1)) {
@@ -287,9 +241,7 @@ public class WizardFragment extends android.support.v4.app.DialogFragment implem
     public void showView(boolean show, View view) {
         if (view == null)
             return;
-        if (!isAttached)
-            return;
-        Animation fade = AnimationUtils.loadAnimation(getActivity(), show ? R.anim.fade_in : R.anim.fade_out);
+        Animation fade = AnimationUtils.loadAnimation(this, show ? R.anim.fade_in : R.anim.fade_out);
         view.setAnimation(fade);
         if (show && (view.getVisibility() == View.INVISIBLE || view.getVisibility() == View.GONE))
             view.setVisibility(View.VISIBLE);
@@ -299,12 +251,10 @@ public class WizardFragment extends android.support.v4.app.DialogFragment implem
             return;
     }
 
-    /**
-     * Setting arguments like session, module, etc..
-     *
-     * @param args Object... Arguments
-     */
-    public void setArgs(Object[] args) {
-        this.args = args;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        args = null;
+        wizarType = null;
     }
 }

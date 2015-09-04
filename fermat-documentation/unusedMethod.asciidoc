@@ -145,3 +145,10 @@
 * /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/MyLayoutInflaterFactory.java
 * /DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_manager/WalletManagerSubApp.java
 * /DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/actor/intra_user/developer/bitdubai/version_1/exceptions/CantGetIntraUserActorException.java
+
+
+= Refactor Pendientes por hacer:
+
+* Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.
+
+- class

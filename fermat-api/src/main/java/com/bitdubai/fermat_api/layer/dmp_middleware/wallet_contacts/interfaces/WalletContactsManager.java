@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.*;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager</code>
@@ -13,6 +13,12 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.*
  */
 public interface WalletContactsManager {
 
+    /**
+     * Throw the method <code>getWalletContactsRegistry</code> you can get an instance of Wallet Contacts Registry.
+     *
+     * @return an instance of WalletContactsRegistry.
+     * @throws CantGetWalletContactRegistryException is thrown if something goes wrong.
+     */
     WalletContactsRegistry getWalletContactsRegistry() throws CantGetWalletContactRegistryException;
 
 }

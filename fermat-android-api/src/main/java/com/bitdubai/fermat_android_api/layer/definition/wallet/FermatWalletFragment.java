@@ -16,7 +16,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.Su
 /**
  * Created by Matias Furszyfer on 2015.26.21..
  */
-public class FermatWalletFragment extends Fragment{
+public class FermatWalletFragment extends Fragment {
 
     /**
      * FLAGS
@@ -42,18 +42,6 @@ public class FermatWalletFragment extends Fragment{
             context = (WizardConfiguration) getActivity();
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to FermatActivity");
-        }
-    }
-
-    protected void startWizard(WizardTypes key) {
-        if (context != null && isAttached) {
-            context.showWizard(key);
-        }
-    }
-
-    protected void dismissWizard() {
-        if (context != null && isAttached) {
-            context.dismissWizard();
         }
     }
 

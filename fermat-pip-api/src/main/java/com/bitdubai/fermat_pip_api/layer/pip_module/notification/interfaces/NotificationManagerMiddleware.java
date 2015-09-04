@@ -21,5 +21,7 @@ public interface NotificationManagerMiddleware {
 
     public void addObserver(Observer observer);
 
+    public void deleteObserver(Observer observer);
+
 
 }

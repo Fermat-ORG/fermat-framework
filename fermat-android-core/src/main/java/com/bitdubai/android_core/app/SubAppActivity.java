@@ -417,9 +417,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
 
                         intent = new Intent(this, SubAppActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
 
                         break;
 
@@ -441,9 +442,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
 
                         intent = new Intent(this, SubAppActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
                         break;
 
                     //wallet publisher
@@ -452,18 +454,20 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                         getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_PUBLISHER);
                         getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
                         break;
 
                     case CWP_WALLET_RUNTIME_STORE_MAIN:
                         getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_STORE);
                         getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
                         intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        finish();
                         break;
                 }
 
@@ -500,13 +504,15 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             //Activities activityType = Activities.getValueFromString(this.actionKey);
 
+
             WalletNavigationStructure walletNavigationStructure= getWalletRuntimeManager().getWallet(installedWallet.getWalletPublicKey());
 
             intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
             intent.putExtra(WalletActivity.INSTALLED_WALLET, installedWallet);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finish();
 
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -526,10 +532,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
 
                 intent = new Intent(this, com.bitdubai.android_core.app.EditableWalletActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
 
             }catch (Exception e){
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -565,9 +572,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
             intent.putExtra(SubAppActivity.INSTALLED_SUB_APP, installedSubApp);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finish();
 
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
