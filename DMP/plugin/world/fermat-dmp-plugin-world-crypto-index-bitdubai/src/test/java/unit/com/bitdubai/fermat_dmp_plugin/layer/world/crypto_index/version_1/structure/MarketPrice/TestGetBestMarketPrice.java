@@ -2,6 +2,7 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.version_1.s
 
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.MarketPrice;
 
+import org.fest.assertions.api.Assertions;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -19,5 +20,6 @@ public class TestGetBestMarketPrice {
     public void getBestMarketPriceTest(){
     bestMarketPrice=marketPrice.getBestMarketPrice("BTC","USD");
         System.out.println(bestMarketPrice);
+        Assertions.assertThat(bestMarketPrice).isNotNull();
     }
 }

@@ -14,16 +14,14 @@ import org.junit.Test;
 public class TestGetHistoricalExchangeRate {
 
     MarketPrice marketPrice = new MarketPrice();
-    private String url="http://api.cryptocoincharts.info/tradingPair/btc_usd";
     private double marketExchangeRate=0;
     private CryptoCurrency c=null;
     private FiatCurrency f=null;
     private long time;
-    private String x=null;
 
     public void setValue() throws InvalidParameterException {
-        c= CryptoCurrency.getByCode(c.getByCode("BTC").getCode().toString());
-        f= FiatCurrency.getByCode(f.getByCode("USD").getCode().toString());
+        c= CryptoCurrency.getByCode("BTC");
+        f= FiatCurrency.getByCode("USD");
     }
     @Test
     public void getHistoricalExchangeRateTest() throws InvalidParameterException {

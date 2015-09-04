@@ -31,12 +31,12 @@ public class HTTPJson {
         inputStream = null;
         jsonObject = null;
         inputStream=getInputStream(url);
-        bufferedReader = getReader(inputStream);
+        bufferedReader = getBufferedReader(inputStream);
         jsonObject=getJsonObject(bufferedReader);
         return jsonObject;
     }
 
-    private InputStream getInputStream(String url){
+    public InputStream getInputStream(String url){
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
             HttpGet httpGet = new HttpGet(url);
@@ -48,7 +48,7 @@ public class HTTPJson {
         }
         return inputStream;
     }
-    private BufferedReader getReader(InputStream is){
+    public BufferedReader getBufferedReader(InputStream is){
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(
                     is, "iso-8859-1"), 8);
@@ -58,7 +58,7 @@ public class HTTPJson {
 
         return bufferedReader;
     }
-    private JSONObject getJsonObject(BufferedReader reader){
+    public JSONObject getJsonObject(BufferedReader reader){
         StringBuilder stringBuilder = new StringBuilder();
         String line;
         try {

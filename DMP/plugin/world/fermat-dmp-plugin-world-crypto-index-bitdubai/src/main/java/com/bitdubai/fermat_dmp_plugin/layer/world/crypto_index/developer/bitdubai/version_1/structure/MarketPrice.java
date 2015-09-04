@@ -11,6 +11,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -30,8 +31,8 @@ public class MarketPrice implements MarketRateProvider {
      * **/
     @Override
     public double getHistoricalExchangeRate(CryptoCurrency c, FiatCurrency f, long time) {
-            String crypto= c.getCode();
-            String fiat = f.getCode();
+            String crypto= c.getCode().toString();
+            String fiat = f.getCode().toString();
             marketExchangeRate=null;
             marketExchangeRate=getBestMarketPrice(crypto, fiat);
         return marketExchangeRate;
@@ -54,6 +55,7 @@ public class MarketPrice implements MarketRateProvider {
         priceList.add(jsonService.getJSONFromUrl(urlAPI4).getString("last"));
         priceList.add(jsonService.getJSONFromUrl(urlAPI5).getString("price"));
         Collections.sort(priceList);
+        //Collections.reverse(priceList);
         marketExchangeRate= Double.valueOf(priceList.get(priceList.size()-1));
         return marketExchangeRate;
     }
