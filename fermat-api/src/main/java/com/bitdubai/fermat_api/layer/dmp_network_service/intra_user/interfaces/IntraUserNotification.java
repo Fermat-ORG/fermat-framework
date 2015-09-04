@@ -14,12 +14,18 @@ public interface IntraUserNotification {
      *
      * @return the public key
      */
-    public String getPublicKeyOfTheIntraUserSendingUsANotification();
+    String getPublicKeyOfTheIntraUserSendingUsANotification();
+
+    String getPublicKeyOfTheIntraUserToConnect();
+
+    String getIntraUserToConnectAlias();
+
+    byte[] getIntraUserToConnectProfileImage();
 
     /**
      * The method <code>getNotificationDescriptor</code> tells us the nature of the notification
      *
      * @return the descriptor of the notification
      */
-    public IntraUserNotificationDescriptor getNotificationDescriptor();
+    IntraUserNotificationDescriptor getNotificationDescriptor();
 }

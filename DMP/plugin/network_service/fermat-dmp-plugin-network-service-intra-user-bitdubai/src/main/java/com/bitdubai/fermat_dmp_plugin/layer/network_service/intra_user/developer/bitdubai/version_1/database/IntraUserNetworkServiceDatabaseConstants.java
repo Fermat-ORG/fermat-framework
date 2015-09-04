@@ -55,10 +55,11 @@ public class IntraUserNetworkServiceDatabaseConstants {
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_NAME = "intra_user_network_service_cache";
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_ID_COLUMN_NAME = "id";
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME = "intra_user_alias";
-    public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_PROFILE_PICTURE_COLUMN_NAME = "profile_picture";
+    //public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_PROFILE_PICTURE_COLUMN_NAME = "profile_picture";
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME = "intra_user_public_key";
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME = "intra_user_logged_in_public_key";
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME = "created_time";
+    public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME = "request_descriptor";
 
 
 }

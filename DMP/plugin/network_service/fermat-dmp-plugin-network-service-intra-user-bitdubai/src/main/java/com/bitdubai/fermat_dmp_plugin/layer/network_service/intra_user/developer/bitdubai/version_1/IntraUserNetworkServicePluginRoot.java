@@ -18,10 +18,17 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserNotificationDescriptor;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorConfirmNotificationsIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorDenyConnectingIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorGetNotificationsIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
@@ -40,6 +47,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionAcceptedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionCancelledEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionDeniedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorRequestConnectionEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -52,6 +63,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 
 
 import java.util.ArrayList;
@@ -465,18 +477,35 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
 
     @Override
     public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException {
-        return null;
+        //TODO Harcode
+
+        List<IntraUser> intraUserList = new ArrayList<IntraUser>();
+
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Matias") );
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Leon") );
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Natalia") );
+        return intraUserList;
     }
 
     @Override
     public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException {
       try
       {
-          //Save request
-
-          //fire event to intra user
+          //Save request fire event to intra user
           UUID requestId = UUID.randomUUID();
-          getIntraUserNetworkServiceDao().saveAskIntraUserForAcceptanceRequest(requestId,intraUserLoggedInPublicKey, intraUserLoggedInName,  intraUserToAddPublicKey,  myProfileImage);
+          getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToAddPublicKey, IntraUserNotificationDescriptor.ASKFORACCEPTANCE);
+
+          PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_REQUESTED_CONNECTION);
+          IntraUserActorRequestConnectionEvent intraUserActorRequestConnectionEvent = (IntraUserActorRequestConnectionEvent) platformEvent;
+
+          intraUserActorRequestConnectionEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
+          intraUserActorRequestConnectionEvent.setIntraUserToAddPublicKey(intraUserToAddPublicKey);
+          intraUserActorRequestConnectionEvent.setIntraUserToAddName(intraUserLoggedInName);
+          intraUserActorRequestConnectionEvent.setIntraUserProfileImage(myProfileImage);
+
+          eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
+
+
       }
       catch (CantExecuteDatabaseOperationException e)
       {
@@ -489,32 +518,158 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     }
 
     @Override
-    public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) {
+    public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws ErrorAcceptIntraUserException {
 
+        try
+        {
+
+            //Save request fire event to intra user
+            UUID requestId = UUID.randomUUID();
+            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToAddPublicKey, IntraUserNotificationDescriptor.ACCEPTED);
+
+            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED);
+            IntraUserActorConnectionAcceptedEvent intraUserActorConnectionAcceptedEvent = (IntraUserActorConnectionAcceptedEvent) platformEvent;
+
+            intraUserActorConnectionAcceptedEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
+            intraUserActorConnectionAcceptedEvent.setIntraUserToAddPublicKey(intraUserToAddPublicKey);
+
+
+            eventManager.raiseEvent(intraUserActorConnectionAcceptedEvent);
+
+        }
+        catch (CantExecuteDatabaseOperationException e)
+        {
+            throw new ErrorAcceptIntraUserException("ERROR ACCEPTED CONNECTION TO INTRAUSER",e,"","Error to save record on database");
+        }
+        catch (Exception e)
+        {
+            throw new ErrorAcceptIntraUserException("ERROR ACCEPTED CONNECTION TO INTRAUSER",e, "", "Generic Exception");
+        }
     }
 
     @Override
-    public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) {
+    public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws ErrorDenyConnectingIntraUserException{
 
+        try
+        {
+            //Save request fire event to intra user
+            UUID requestId = UUID.randomUUID();
+            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToRejectPublicKey, IntraUserNotificationDescriptor.DENIED);
+
+            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_DENIED);
+            IntraUserActorConnectionDeniedEvent intraUserActorConnectionDeniedEvent = (IntraUserActorConnectionDeniedEvent) platformEvent;
+
+            intraUserActorConnectionDeniedEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
+            intraUserActorConnectionDeniedEvent.setIntraUserToAddPublicKey(intraUserToRejectPublicKey);
+
+
+            eventManager.raiseEvent(intraUserActorConnectionDeniedEvent);
+
+        }
+        catch (CantExecuteDatabaseOperationException e)
+        {
+            throw new ErrorDenyConnectingIntraUserException("ERROR DENY CONNECTION TO INTRAUSER",e,"","Error to save record on database");
+        }
+        catch (Exception e)
+        {
+            throw new ErrorDenyConnectingIntraUserException("ERROR DENY CONNECTION TO INTRAUSER",e, "", "Generic Exception");
+        }
     }
 
     @Override
     public void disconnectIntraUSer(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws ErrorDisconnectingIntraUserException {
 
+        try
+        {
+            //Save request fire event to intra user
+            UUID requestId = UUID.randomUUID();
+            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED);
+
+
+            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) platformEvent;
+
+            intraUserActorConnectionCancelledEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
+            intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToDisconnectPublicKey);
+
+
+            eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
+        }
+        catch (CantExecuteDatabaseOperationException e)
+        {
+            throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ",e,"","Error to save record on database");
+        }
+        catch (Exception e)
+        {
+            throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ",e, "", "Generic Exception");
+        }
     }
 
     @Override
     public void cancelIntraUSer(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws ErrorCancellingIntraUserException {
 
+        try
+        {
+            //Save request fire event to intra user
+            UUID requestId = UUID.randomUUID();
+            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL);
+
+
+            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) platformEvent;
+
+            intraUserActorConnectionCancelledEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
+            intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToCancelPublicKey);
+
+
+            eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
+
+        }
+        catch (CantExecuteDatabaseOperationException e)
+        {
+            throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ",e,"","Error to save record on database");
+        }
+        catch (Exception e)
+        {
+            throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ",e, "", "Generic Exception");
+        }
     }
 
     @Override
-    public List<IntraUserNotification> getNotifications(){
-        return new ArrayList<IntraUserNotification>();
+    public List<IntraUserNotification> getNotifications() throws ErrorGetNotificationsIntraUserException
+    {
+        try
+        {
+            return  getIntraUserNetworkServiceDao().getAllRequestCacheRecord();
+
+        }
+        catch (CantExecuteDatabaseOperationException e)
+        {
+            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
+        }
+        catch (Exception e)
+        {
+            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
+        }
+
     }
 
     @Override
-    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) {
+    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException {
+
+        try
+        {
+            //delete request record for database
+            getIntraUserNetworkServiceDao().deleteRequestRecord(intraUserLogedInPublicKey,intraUserInvolvedPublicKey);
+        }
+        catch (CantExecuteDatabaseOperationException e)
+        {
+            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
+        }
+        catch (Exception e)
+        {
+            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
+        }
 
     }
 
@@ -590,7 +745,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     }
 
     private IntraUserNetworkServiceDao getIntraUserNetworkServiceDao() throws CantExecuteDatabaseOperationException {
-        IntraUserNetworkServiceDao intraUserNetworkServiceDao = new IntraUserNetworkServiceDao(pluginDatabaseSystem, pluginId);
+        IntraUserNetworkServiceDao intraUserNetworkServiceDao = new IntraUserNetworkServiceDao(pluginDatabaseSystem, pluginId, this.dataBase);
         return intraUserNetworkServiceDao;
     }
 }
