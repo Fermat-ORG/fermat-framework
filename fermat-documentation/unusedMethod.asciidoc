@@ -80,6 +80,21 @@
 
     private ImageMiddlewareImpl constructImageMiddlewareFrom(DatabaseTableRecord record) throws FileNotFoundException, CantCreateFileException
 
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_store/developer/bitdubai/version_1/structure/WalletStoreModuleManager.java
+
+    private InstallationStatus getSkinInstallationStatus(UUID skinId) throws CantGetItemInformationException
+
+    private InstallationStatus getLanguageInstallationStatus(UUID languageId) throws CantGetItemInformationException
+
+    private WalletStoreSkin getWalletStoreSkin(final Skin skin, final InstallationStatus installationStatus)
+
+    private com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner(UUID designerId) throws CantGetDesignerException
+
+    private WalletStoreLanguage getWalletStoreLanguage(final Language language, final InstallationStatus installationStatus)
+
+    private DeveloperIdentity getDeveloper(UUID developerId) throws CantGetDeveloperException
+
+
 
 - Method Public
 * /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_store/developer/bitdubai/version_1/structure/networkService/database/IncomingMessageDAO.java
@@ -228,6 +243,18 @@
 
     public void delete(Long id) throws CantDeleteRecordDataBaseException
 
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-skin-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_skin/developer/bitdubai/version_1/database/WalletSkinMiddlewareDao.java
+
+    public void updateSkin(WalletSkin walletSkin) throws CantUpdateSkinException, SkinNotFoundException
+
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_store/developer/bitdubai/version_1/structure/database/WalletStoreMiddlewareDatabaseDao.java
+
+    public void setPluginId(UUID pluginId)
+
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_store/developer/bitdubai/version_1/structure/WalletStoreModuleManager.java
+
+    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException
+
 
 
 
@@ -251,6 +278,19 @@
 * /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_language/developer/bitdubai/version_1/utils/RepositoryManager.java
 * /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_manager/developer/bitdubai/version_1/structure/WalletManagerMiddlewareInstallationInformation.java
 * /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/navigation_structure/developer/bitdubai/version_1/developerUtils/WalletnavigationStructureMiddlewareDeveloperDatabaseFactory.java
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-settings-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_settings/developer/bitdubai/version_1/structure/WalletSettingsConstants.java
+* /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-skin-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_skin/developer/bitdubai/version_1/utils/RepositoryManager.java
+* /DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/intra_user/developer/bitdubai/version_1/structure/IntraUsersModuleLoginConstants.java
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/event_handlers/NavigationStructureUpdatedEventHandler.java
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/event_handlers/UserCreatedEventHandler.java
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/event_handlers/UserLoggedInEventHandler.java
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/event_handlers/WalletCreatedEventHandler.java
+* /DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/event_handlers/WalletResourcesInstalledEventHandler.java
+
+
+
+
+
 
 
 
