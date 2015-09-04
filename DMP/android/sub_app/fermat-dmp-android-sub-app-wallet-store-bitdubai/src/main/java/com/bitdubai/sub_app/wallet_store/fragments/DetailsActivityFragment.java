@@ -80,7 +80,7 @@ public class DetailsActivityFragment extends FermatFragment {
 
         ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
         final WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
-        String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
+        final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
 
 
         FermatTextView developerName = (FermatTextView) rootView.findViewById(R.id.wallet_developer_name);
