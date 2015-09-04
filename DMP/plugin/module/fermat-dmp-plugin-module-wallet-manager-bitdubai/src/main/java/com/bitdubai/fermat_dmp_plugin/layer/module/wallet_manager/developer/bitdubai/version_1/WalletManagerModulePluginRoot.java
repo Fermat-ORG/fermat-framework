@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_except
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
@@ -616,6 +617,37 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
     public void enableWallet() throws CantEnableWalletException{
 
     }
+
+    @Override
+    public InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
+
+
+        //TODO: Hardcoded for testing purpose, hice esto que va a andar cuando la tengamos instalada.  mati
+//        com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet = walletMiddlewareManager.getInstalledWallet(walletPublicKey);
+//
+//            InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),wallet.getWalletType(),
+//                    wallet.getSkinsId(),
+//                    wallet.getLanguagesId(),
+//                    wallet.getWalletIcon(),
+//                    wallet.getWalletName(),
+//                    wallet.getWalletPublicKey(),
+//                    wallet.getWalletPlatformIdentifier(),
+//                    wallet.getWalletVersion());
+
+
+        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                WalletType.REFERENCE,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "reference_wallet_icon",
+                "Bitcoin Reference Wallet",
+                "reference_wallet",
+                "wallet_platform_identifier",
+                new Version(1,0,0));
+
+        return installedWallet;
+    }
+
     /**
      *
      * @param deviceUserPublicKey

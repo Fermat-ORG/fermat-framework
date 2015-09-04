@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
@@ -113,6 +114,59 @@ public class WalletManagerMiddlewareDao {
         }
 
         return lstInstalledWallet;
+    }
+
+    public  InstalledWallet getInstalledWallet(String walletPublicKey) throws CantGetInstalledWalletsException {
+        InstalledWallet installedWallet = null;
+        try{
+            database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
+
+            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME,walletPublicKey,DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+
+
+
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+
+            if(!records.isEmpty()) {
+
+                DatabaseTableRecord databaseTableRecord = records.get(0);
+
+
+                installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.getByCode(databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME)),
+                        getInstalledSkins(databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        getInstalledLanguages(databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME)),
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME),
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME),
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME),
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME),
+                        new Version(1,0,0),
+                        WalletType.valueOf(databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME)),
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME),
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
+                        databaseTableRecord.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME));
+            }
+
+
+            return installedWallet;
+
+        } catch (CantLoadTableToMemoryException e1) {
+            e1.printStackTrace();
+        } catch (InvalidParameterException e1) {
+            e1.printStackTrace();
+        } catch (CantExecuteDatabaseOperationException e1) {
+            e1.printStackTrace();
+        }
+
+        database.closeDatabase();
+
+
+        return installedWallet;
     }
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {

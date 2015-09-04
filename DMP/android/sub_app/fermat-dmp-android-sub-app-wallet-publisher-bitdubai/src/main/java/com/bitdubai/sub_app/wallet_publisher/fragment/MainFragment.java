@@ -23,17 +23,14 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.sub_app.wallet_publisher.R;
-import com.bitdubai.sub_app.wallet_publisher.adapters.InformationPublishedComponentAdapter;
 import com.bitdubai.sub_app.wallet_publisher.adapters.WalletFactoryProjectsAdapter;
 import com.bitdubai.sub_app.wallet_publisher.interfaces.PopupMenu;
 import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;
@@ -170,6 +167,8 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
         if (menuItem.getItemId() == R.id.action_more
                 && project != null) {
             Toast.makeText(getActivity(), "Starting wizard to publish wallet: " + project.getName(), Toast.LENGTH_SHORT).show();
+            /* Startin Wizard to Publish this Project */
+            startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, subAppsSession, subAppSettings, subAppResourcesProviderManager, project);
             return true;
         }
         Toast.makeText(getActivity(), "Starting wizard to publish...", Toast.LENGTH_SHORT).show();

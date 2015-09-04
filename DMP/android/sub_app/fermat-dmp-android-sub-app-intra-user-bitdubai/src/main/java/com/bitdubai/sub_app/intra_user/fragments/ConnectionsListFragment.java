@@ -363,7 +363,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
     @Override
     public boolean onQueryTextSubmit(String name) {
-
+        swipeRefreshLayout.setRefreshing(true);
         IntraUserSearch intraUserSearch = intraUserModuleManager.searchIntraUser();
         intraUserSearch.setNameToSearch(name);
         //TODO: cuando esté el network service, esto va a descomentarse
@@ -377,6 +377,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
         ((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(true);
         adapter.changeDataSet(IntraUserConnectionListItem.getTestDataExample(getResources()));
+        swipeRefreshLayout.setRefreshing(false);
 
         return true;
     }

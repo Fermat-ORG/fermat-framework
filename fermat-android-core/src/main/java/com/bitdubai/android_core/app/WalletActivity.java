@@ -47,6 +47,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     public static final String INSTALLED_WALLET="installedWallet";
 
     public static final String WALLET_PUBLIC_KEY="walletPublicKey";
+    private static final String WALLET_TYPE = "walletType";
+    private static final String WALLET_CATEGORY = "walletCategory";
 
     private InstalledWallet lastWallet;
 
@@ -59,6 +61,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
 
         try {
@@ -74,6 +79,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
+
 
     /**
      * Initialize the contents of the Activity's standard options menu
@@ -189,9 +195,10 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
             resetThisActivity();
             Intent intent = new Intent(this, SubAppActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finish();
         }
 
 
@@ -289,13 +296,19 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         WalletSession walletSession = null;
         try {
             Bundle bundle = getIntent().getExtras();
-            lastWallet = (InstalledWallet) bundle.getSerializable(INSTALLED_WALLET);
-
-            if (getWalletSessionManager().isWalletOpen(lastWallet.getWalletPublicKey())) {
-                walletSession = getWalletSessionManager().getWalletSession(lastWallet.getWalletPublicKey());
-            } else {
-                WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
-                walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),walletSettings, getWalletResourcesProviderManager(), getErrorManager());
+            if(bundle!=null) {
+                if (bundle.containsKey(INSTALLED_WALLET)) {
+                    lastWallet = (InstalledWallet) bundle.getSerializable(INSTALLED_WALLET);
+                }else if (bundle.containsKey(WALLET_PUBLIC_KEY)){
+                    String walletPublicKey = (String) bundle.get(WALLET_PUBLIC_KEY);
+                    lastWallet = getWalletManager().getInstalledWallet(walletPublicKey);
+                }
+                if (getWalletSessionManager().isWalletOpen(lastWallet.getWalletPublicKey())) {
+                    walletSession = getWalletSessionManager().getWalletSession(lastWallet.getWalletPublicKey());
+                } else {
+                    WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
+                    walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),walletSettings, getWalletResourcesProviderManager(), getErrorManager());
+                }
             }
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_android_api.layer.definition.wallet;
+package com.bitdubai.fermat_android_api.ui.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
@@ -13,14 +14,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.S
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
- * Common Android Fragment Base
+ * Wizard Page Fragment
  *
- * @author Matias Furszy
  * @author Francisco Vasquez
- * @version 1.1
+ * @version 1.0
  */
-public abstract class FermatFragment extends Fragment {
-
+public abstract class FermatWizardPageFragment extends Fragment
+        implements WizardPageListener {
     /**
      * FLAGS
      */
@@ -32,33 +32,6 @@ public abstract class FermatFragment extends Fragment {
     protected SubAppsSession subAppsSession;
     protected SubAppSettings subAppSettings;
     protected SubAppResourcesProviderManager subAppResourcesProviderManager;
-
-    /**
-     * REFERENCES
-     */
-    protected WizardConfiguration context;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        try {
-            context = (WizardConfiguration) getActivity();
-        } catch (Exception ex) {
-            throw new ClassCastException("cannot convert the current context to FermatActivity");
-        }
-    }
-
-    /**
-     * Start a configuration Wizard
-     *
-     * @param key  Enum Wizard registered type
-     * @param args Object[] where you're be able to passing arguments like session, settings, resources, module, etc...
-     */
-    protected void startWizard(WizardTypes key, Object... args) {
-        if (context != null && isAttached) {
-            context.showWizard(key, args);
-        }
-    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -98,21 +71,4 @@ public abstract class FermatFragment extends Fragment {
     public void setSubAppResourcesProviderManager(SubAppResourcesProviderManager subAppResourcesProviderManager) {
         this.subAppResourcesProviderManager = subAppResourcesProviderManager;
     }
-
-    /**
-     * Change activity
-     */
-    protected final void changeActivity(Activities activity) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activity.getCode());
-    }
-
-    /**
-     * Change activity
-     */
-    protected final void changeFragment(String fragment) {
-        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, null);
-    }
-
-
 }
-
