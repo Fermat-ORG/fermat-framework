@@ -51,13 +51,12 @@ public class CreateDatabaseTest extends TestCase {
 
     private ExtraUserActorDatabaseFactory testDatabaseFactory;
 
-    private void setUpIds(){
+    private void setUpIds() {
         testOwnerId = UUID.randomUUID();
-
     }
 
-    private void setUpMockitoGeneralRules() throws Exception{
-        when(mockPluginDatabaseSystem.createDatabase(testOwnerId,testOwnerId.toString())).thenReturn(mockDatabase);
+    private void setUpMockitoGeneralRules() throws Exception {
+        when(mockPluginDatabaseSystem.createDatabase(testOwnerId, testOwnerId.toString())).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(testOwnerId, ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenReturn(mockExtraUserTableFactory);
         when(mockDatabase.getTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenReturn(mockTable);
@@ -65,13 +64,13 @@ public class CreateDatabaseTest extends TestCase {
     }
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         setUpIds();
         setUpMockitoGeneralRules();
     }
 
     @Test
-    public void CreateDatabase_DatabaseAndTablesProperlyCreated_ReturnsDatabase() throws Exception{
+    public void CreateDatabase_DatabaseAndTablesProperlyCreated_ReturnsDatabase() throws Exception {
         testDatabaseFactory = new ExtraUserActorDatabaseFactory(mockPluginDatabaseSystem);
 
         Database checkDatabase = testDatabaseFactory.createDatabase(testOwnerId, testOwnerId.toString());
@@ -80,7 +79,7 @@ public class CreateDatabaseTest extends TestCase {
     }
 
     @Test
-    public void CreateDatabase_PluginSystemCantCreateDatabase_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_PluginSystemCantCreateDatabase_ThrowsCantCreateDatabaseException() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(testOwnerId, testOwnerId.toString())).thenThrow(new CantCreateDatabaseException("MOCK", null, null, null));
 
         testDatabaseFactory = new ExtraUserActorDatabaseFactory(mockPluginDatabaseSystem);
@@ -93,7 +92,7 @@ public class CreateDatabaseTest extends TestCase {
     }
 
     @Test
-    public void CreateDatabase_CantCreateIntraUserTable_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_CantCreateIntraUserTable_ThrowsCantCreateDatabaseException() throws Exception {
 
         when(mockDatabaseFactory.newTableFactory(testOwnerId, ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenThrow(new InvalidOwnerIdException("MOCK", null, null, null));
         testDatabaseFactory = new ExtraUserActorDatabaseFactory(mockPluginDatabaseSystem);
@@ -105,24 +104,20 @@ public class CreateDatabaseTest extends TestCase {
                 .isInstanceOf(CantCreateDatabaseException.class);
     }
 
-
-
     @Test
-    public void CreateDatabase_ConflictedIdWhenCreatingIntraUserTable_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_ConflictedIdWhenCreatingIntraUserTable_ThrowsCantCreateDatabaseException() throws Exception {
         when(mockDatabaseFactory.newTableFactory(testOwnerId, ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenThrow(new InvalidOwnerIdException("MOCK", null, null, null));
         testDatabaseFactory = new ExtraUserActorDatabaseFactory(mockPluginDatabaseSystem);
 
-        catchException(testDatabaseFactory).createDatabase(testOwnerId,testOwnerId.toString());
+        catchException(testDatabaseFactory).createDatabase(testOwnerId, testOwnerId.toString());
 
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantCreateDatabaseException.class);
     }
 
-
-
     @Test
-    public void CreateDatabase_GeneralExceptionThrown_ThrowsCantCreateDatabaseException() throws Exception{
+    public void CreateDatabase_GeneralExceptionThrown_ThrowsCantCreateDatabaseException() throws Exception {
         when(mockDatabase.getDatabaseFactory()).thenReturn(null);
 
         testDatabaseFactory = new ExtraUserActorDatabaseFactory(mockPluginDatabaseSystem);

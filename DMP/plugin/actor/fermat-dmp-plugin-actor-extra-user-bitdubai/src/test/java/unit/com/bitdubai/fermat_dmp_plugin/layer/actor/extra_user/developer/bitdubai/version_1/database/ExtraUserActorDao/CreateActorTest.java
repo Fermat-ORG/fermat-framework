@@ -1,8 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDao;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateExtraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -14,12 +12,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.
 
 import junit.framework.TestCase;
 
-import org.fest.assertions.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
@@ -34,8 +30,7 @@ import static org.mockito.Mockito.when;
  * Created by natalia on 03/09/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CreateActorTest extends TestCase
-{
+public class CreateActorTest extends TestCase {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -60,25 +55,23 @@ public class CreateActorTest extends TestCase
 
     private String actorPublicKey;
 
-    private void setUpMockitoGeneralRules() throws Exception{
+    private void setUpMockitoGeneralRules() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(pluginId, ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenReturn(mockIntraUserTableFactory);
         when(mockDatabase.getTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenReturn(mockTable);
         when(mockTable.getEmptyRecord()).thenReturn(mockTableRecord);
         when(mockTable.getRecords()).thenReturn(mockRecords);
-
     }
 
     @Before
-    public void setUp() throws Exception
-    {
-        pluginId= UUID.randomUUID();
+    public void setUp() throws Exception {
+        pluginId = UUID.randomUUID();
 
         actorPublicKey = UUID.randomUUID().toString();
 
         when(mockPluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
-        extraUserActorDao = new ExtraUserActorDao(mockPluginDatabaseSystem,  pluginId);
+        extraUserActorDao = new ExtraUserActorDao(mockPluginDatabaseSystem, pluginId);
         extraUserActorDao.initialize();
         setUpMockitoGeneralRules();
     }
@@ -94,13 +87,8 @@ public class CreateActorTest extends TestCase
     @Test
     public void createActorTest_CreateError_throwsCantCreateExtraUserException() throws Exception {
 
-
         catchException(extraUserActorDao).createActor(null, actorPublicKey, 12562);
         assertThat(caughtException())
                 .isNotNull().isInstanceOf(CantCreateExtraUserException.class);
-
-
     }
-
-
 }

@@ -42,14 +42,13 @@ public class GetDatabaseTableContentTest extends TestCase {
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
-      @Mock
+    @Mock
     DeveloperDatabase developerDatabase;
 
     @Mock
     DeveloperDatabaseTable developerDatabaseTable;
 
     private ExtraUserActorPluginRoot pluginRoot;
-
 
     @Test
     public void getDatabaseTableContent_GetListOk() throws Exception {
@@ -62,9 +61,6 @@ public class GetDatabaseTableContentTest extends TestCase {
         pluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         pluginRoot.setId(UUID.randomUUID());
 
-        assertThat(pluginRoot.getDatabaseTableContent(developerObjectFactory,developerDatabase, developerDatabaseTable)).isInstanceOf(List.class);
-
-
+        assertThat(pluginRoot.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable)).isInstanceOf(List.class);
     }
-
 }

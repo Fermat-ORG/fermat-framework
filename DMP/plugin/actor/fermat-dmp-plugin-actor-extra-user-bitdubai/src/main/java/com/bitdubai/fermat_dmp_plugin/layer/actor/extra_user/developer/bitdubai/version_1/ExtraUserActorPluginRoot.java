@@ -413,7 +413,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
-            String[] correctedClass = className.split((Pattern.quote("$")));
+            String[] correctedClass = className.split(Pattern.quote("$"));
             return ExtraUserActorPluginRoot.newLoggingLevel.get(correctedClass[0]);
 
         } catch (Exception exception) {

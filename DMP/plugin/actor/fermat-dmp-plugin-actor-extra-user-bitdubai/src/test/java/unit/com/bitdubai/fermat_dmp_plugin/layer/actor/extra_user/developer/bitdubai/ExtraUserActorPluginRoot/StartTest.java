@@ -37,8 +37,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class StartTest extends TestCase
-{
+public class StartTest extends TestCase {
 
     /**
      * DealsWithEvents Interface member variables.
@@ -69,9 +68,9 @@ public class StartTest extends TestCase
     DatabaseFactory mockDatabaseFactory;
 
 
-    DatabaseTable mockDatabaseTable= Mockito.mock(DatabaseTable.class);
-    DatabaseTableRecord mockDatabaseTableRecord=Mockito.mock(DatabaseTableRecord.class);
-    Database mockDatabase= Mockito.mock(Database.class);
+    DatabaseTable mockDatabaseTable = Mockito.mock(DatabaseTable.class);
+    DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
+    Database mockDatabase = Mockito.mock(Database.class);
 
 
     private ExtraUserActorPluginRoot extraUserActorPluginRoot;
@@ -82,7 +81,7 @@ public class StartTest extends TestCase
     @Before
     public void setUp() throws Exception {
 
-        pluginId= UUID.randomUUID();
+        pluginId = UUID.randomUUID();
 
 
         extraUserActorPluginRoot = new ExtraUserActorPluginRoot();
@@ -93,27 +92,22 @@ public class StartTest extends TestCase
         extraUserActorPluginRoot.setId(pluginId);
 
         setUpMockitoRules();
-
-
     }
 
-    public void setUpMockitoRules()  throws Exception{
-
+    public void setUpMockitoRules() throws Exception {
 
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseTable.getEmptyRecord()).thenReturn(mockDatabaseTableRecord);
         when(mockDatabase.getTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenReturn(mockDatabaseTable);
         when(mockPluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
-
         when(mockExtraUserActorDatabaseFactory.createDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
-
-         }
+    }
 
     @Test
     public void pauseTest_StopOk_ThrowsCantStartPluginException() throws Exception {
 
         extraUserActorPluginRoot.pause();
-        ServiceStatus serviceStatus=extraUserActorPluginRoot.getStatus();
+        ServiceStatus serviceStatus = extraUserActorPluginRoot.getStatus();
         Assertions.assertThat(serviceStatus).isEqualTo(ServiceStatus.PAUSED);
     }
 
@@ -121,7 +115,7 @@ public class StartTest extends TestCase
     public void stopTest_StopOk_ThrowsCantStartPluginException() throws Exception {
 
         extraUserActorPluginRoot.stop();
-        ServiceStatus serviceStatus=extraUserActorPluginRoot.getStatus();
+        ServiceStatus serviceStatus = extraUserActorPluginRoot.getStatus();
         Assertions.assertThat(serviceStatus).isEqualTo(ServiceStatus.STOPPED);
     }
 
@@ -129,22 +123,19 @@ public class StartTest extends TestCase
     public void startTest_StartedOk_ThrowsCantStartPluginException() throws Exception {
 
         extraUserActorPluginRoot.start();
-        ServiceStatus serviceStatus=extraUserActorPluginRoot.getStatus();
+        ServiceStatus serviceStatus = extraUserActorPluginRoot.getStatus();
         Assertions.assertThat(serviceStatus).isEqualTo(ServiceStatus.STARTED);
     }
-
 
     @Test
     public void startTest_CanStarted_throwsCantStartPluginException() throws Exception {
 
         extraUserActorPluginRoot.setPluginDatabaseSystem(null);
 
-
         catchException(extraUserActorPluginRoot).start();
 
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantStartPluginException.class);
-
     }
 }

@@ -1,8 +1,5 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.ExtraUserActorPluginRoot;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -45,8 +42,7 @@ import static org.mockito.Mockito.when;
  * Created by natalia on 03/09/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CreateActorTest extends TestCase
-{
+public class CreateActorTest extends TestCase {
 
     /**
      * DealsWithEvents Interface member variables.
@@ -88,9 +84,9 @@ public class CreateActorTest extends TestCase
     @Mock
     private PluginBinaryFile mockBinaryFile;
 
-    DatabaseTable mockDatabaseTable= Mockito.mock(DatabaseTable.class);
-    DatabaseTableRecord mockDatabaseTableRecord=Mockito.mock(DatabaseTableRecord.class);
-    Database mockDatabase= Mockito.mock(Database.class);
+    DatabaseTable mockDatabaseTable = Mockito.mock(DatabaseTable.class);
+    DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
+    Database mockDatabase = Mockito.mock(Database.class);
 
 
     private ExtraUserActorPluginRoot extraUserActorPluginRoot;
@@ -101,7 +97,7 @@ public class CreateActorTest extends TestCase
     @Before
     public void setUp() throws Exception {
 
-        pluginId= UUID.randomUUID();
+        pluginId = UUID.randomUUID();
 
         extraUserActorPluginRoot = new ExtraUserActorPluginRoot();
         extraUserActorPluginRoot.setErrorManager(mockErrorManager);
@@ -113,12 +109,9 @@ public class CreateActorTest extends TestCase
         setUpMockitoRules();
 
         extraUserActorPluginRoot.start();
-
-
     }
 
-    public void setUpMockitoRules()  throws Exception{
-
+    public void setUpMockitoRules() throws Exception {
 
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseTable.getEmptyRecord()).thenReturn(mockDatabaseTableRecord);
@@ -127,18 +120,17 @@ public class CreateActorTest extends TestCase
 
         when(mockExtraUserActorDatabaseFactory.createDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
 
-         when(mockPluginFileSystem.createTextFile(any(UUID.class),
-                 anyString(),
-                 anyString(),
-                 any(FilePrivacy.class),
-                 any(FileLifeSpan.class))).thenReturn(mockFile);
+        when(mockPluginFileSystem.createTextFile(any(UUID.class),
+                anyString(),
+                anyString(),
+                any(FilePrivacy.class),
+                any(FileLifeSpan.class))).thenReturn(mockFile);
 
         when(mockPluginFileSystem.createBinaryFile(any(UUID.class),
                 anyString(),
                 anyString(),
                 any(FilePrivacy.class),
                 any(FileLifeSpan.class))).thenReturn(mockBinaryFile);
-
     }
 
     @Test
@@ -157,16 +149,13 @@ public class CreateActorTest extends TestCase
                 .isNotNull();
     }
 
-
     @Test
     public void createActorTest_CanCreate_throwsCantCreateExtraUserExceptionn() throws Exception {
-
 
         catchException(extraUserActorPluginRoot).createActor(null, extraUserImageProfile);
 
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantCreateExtraUserException.class);
-
     }
 }

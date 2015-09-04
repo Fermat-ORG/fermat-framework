@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
  * Created by natalia on 03/09/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class InitializeDatabaseTest  extends TestCase {
+public class InitializeDatabaseTest extends TestCase {
 
     @Mock
     private DeveloperObjectFactory developerObjectFactory;
@@ -38,7 +38,6 @@ public class InitializeDatabaseTest  extends TestCase {
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
     private ExtraUserActorDeveloperDatabaseFactory extraUserActorDeveloperDatabaseFactory;
-
 
 
     @Test

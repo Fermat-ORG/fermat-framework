@@ -4,9 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserActorPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import junit.framework.TestCase;
@@ -44,7 +42,6 @@ public class GetDatabaseTableListTest extends TestCase {
     @Mock
     DeveloperDatabase developerDatabase;
 
-
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
@@ -61,16 +58,11 @@ public class GetDatabaseTableListTest extends TestCase {
 
         pluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         pluginRoot.setId(UUID.randomUUID());
-
     }
 
     @Test
     public void getDatabaseListTest_GetListOk() throws Exception {
 
-        assertThat(pluginRoot.getDatabaseTableList(developerObjectFactory,developerDatabase )).isInstanceOf(List.class);
-
-
-
+        assertThat(pluginRoot.getDatabaseTableList(developerObjectFactory, developerDatabase)).isInstanceOf(List.class);
     }
-
 }

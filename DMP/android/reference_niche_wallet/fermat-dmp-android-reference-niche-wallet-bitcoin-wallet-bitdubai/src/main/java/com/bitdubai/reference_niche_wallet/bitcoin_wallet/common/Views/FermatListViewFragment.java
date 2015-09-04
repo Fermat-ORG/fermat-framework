@@ -8,4 +8,5 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFrag
 public interface FermatListViewFragment {
 
     ContactsFragment.ListFilter instanceOfListFilter();
+
 }
