@@ -249,7 +249,7 @@ public abstract class AbstractItem<T> {
      *
      *  <p>Method that set the item features.
      *
-     *  @param Item features.
+     *  @param features features.
      * */
     public void setFeatures (Map<Features, Object> features) {
 
