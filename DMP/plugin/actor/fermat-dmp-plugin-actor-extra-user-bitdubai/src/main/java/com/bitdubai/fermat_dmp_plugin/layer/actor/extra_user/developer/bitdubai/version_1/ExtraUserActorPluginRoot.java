@@ -179,7 +179,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
 
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Extra User Created Successfully.", null, null);
-        return new ExtraUserActorRecord(publicKey,privateKey, actorName);
+        return new ExtraUserActorRecord(publicKey, privateKey, actorName);
     }
 
     @Override
