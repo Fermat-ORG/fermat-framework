@@ -10,10 +10,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
  */
 public interface WizardConfiguration {
 
-    void showWizard(WizardTypes key);
+    //void showWizard(WizardTypes key);
 
     void showWizard(WizardTypes key, Object... args);
-
-    void dismissWizard();
 
 }

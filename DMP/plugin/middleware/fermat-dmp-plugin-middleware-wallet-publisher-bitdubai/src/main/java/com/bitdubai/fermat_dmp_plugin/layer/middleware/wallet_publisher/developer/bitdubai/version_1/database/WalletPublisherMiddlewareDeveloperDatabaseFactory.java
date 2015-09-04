@@ -125,60 +125,60 @@ public class WalletPublisherMiddlewareDeveloperDatabaseFactory implements DealsW
         /**
          * Table INFORMATION PUBLISHED COMPONENTS columns.
          */
-        List<String> iNFORMATIONPUBLISHEDCOMPONENTSColumns = new ArrayList<String>();
+        List<String> InformationPublishedComponentsColumns = new ArrayList<String>();
 
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_ID_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_NAME_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DESCRIPTIONS_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        iNFORMATIONPUBLISHEDCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ID_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_ID_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_WFP_NAME_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_DESCRIPTIONS_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_ICON_IMG_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_MAIN_SCREEN_SHOT_IMG_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_VIDEO_URL_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_STATUS_TIMESTAMP_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLICATION_TIMESTAMP_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        InformationPublishedComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_SIGNATURE_COLUMN_NAME);
         /**
          * Table INFORMATION PUBLISHED COMPONENTS addition.
          */
-        DeveloperDatabaseTable iNFORMATIONPUBLISHEDCOMPONENTSTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_TABLE_NAME, iNFORMATIONPUBLISHEDCOMPONENTSColumns);
+        DeveloperDatabaseTable iNFORMATIONPUBLISHEDCOMPONENTSTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_TABLE_NAME, InformationPublishedComponentsColumns);
         tables.add(iNFORMATIONPUBLISHEDCOMPONENTSTable);
 
         /**
          * Table COMPONENT VERSIONS DETAILS columns.
          */
-        List<String> cOMPONENTVERSIONSDETAILSColumns = new ArrayList<String>();
+        List<String> componentVersionsDetailsColumns = new ArrayList<String>();
 
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_SCREEN_SIZE_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_TIMESTAMP_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_WALLET_VERSION_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_WALLET_VERSION_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_PLATFORM_VERSION_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_PLATFORM_VERSION_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_OBSERVATIONS_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_CATALOG_ID_COLUMN_NAME);
-        cOMPONENTVERSIONSDETAILSColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_COMPONENT_ID_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_SCREEN_SIZE_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_VERSION_TIMESTAMP_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_WALLET_VERSION_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_WALLET_VERSION_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_INITIAL_PLATFORM_VERSION_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FINAL_PLATFORM_VERSION_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_OBSERVATIONS_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_CATALOG_ID_COLUMN_NAME);
+        componentVersionsDetailsColumns.add(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_COMPONENT_ID_COLUMN_NAME);
         /**
          * Table COMPONENT VERSIONS DETAILS addition.
          */
-        DeveloperDatabaseTable cOMPONENTVERSIONSDETAILSTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME, cOMPONENTVERSIONSDETAILSColumns);
+        DeveloperDatabaseTable cOMPONENTVERSIONSDETAILSTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletPublisherMiddlewareDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME, componentVersionsDetailsColumns);
         tables.add(cOMPONENTVERSIONSDETAILSTable);
 
         /**
          * Table SCREENS SHOTS COMPONENTS columns.
          */
-        List<String> sCREENSSHOTSCOMPONENTSColumns = new ArrayList<String>();
+        List<String> screensShotsComponentsColumns = new ArrayList<String>();
 
-        sCREENSSHOTSCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME);
-        sCREENSSHOTSCOMPONENTSColumns.add(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME);
+        screensShotsComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME);
+        screensShotsComponentsColumns.add(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME);
         /**
          * Table SCREENS SHOTS COMPONENTS addition.
          */
-        DeveloperDatabaseTable sCREENSSHOTSCOMPONENTSTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_TABLE_NAME, sCREENSSHOTSCOMPONENTSColumns);
+        DeveloperDatabaseTable sCREENSSHOTSCOMPONENTSTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_TABLE_NAME, screensShotsComponentsColumns);
         tables.add(sCREENSSHOTSCOMPONENTSTable);
 
 

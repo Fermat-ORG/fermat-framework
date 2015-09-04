@@ -238,8 +238,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         };
 
         final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
-
-        worker.run();
+        worker.execute();
     }
 
     private void showDetailsActivityFragment(WalletStoreListItem item) {
@@ -272,8 +271,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         };
 
         final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
-
-        worker.run();
+        worker.execute();
     }
 
     @NonNull
