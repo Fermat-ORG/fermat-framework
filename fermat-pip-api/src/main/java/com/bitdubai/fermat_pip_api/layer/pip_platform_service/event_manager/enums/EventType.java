@@ -354,6 +354,11 @@ public enum EventType {
     WALLET_WENT_ONLINE("WWO") {
         public EventListener getListener(EventMonitor eventMonitor) { return new WalletWentOnlineEventListener(this, eventMonitor); }
         public PlatformEvent getEvent() { return new WalletWentOnlineEvent(this); }
+    },
+
+    INCOMING_MONEY_NOTIFICATION("IMN"){
+        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingMoneyNotificationEventListener(this, eventMonitor); }
+        public PlatformEvent getEvent() { return new IncomingMoneyNotificationEvent(this);}
     };
 
 
