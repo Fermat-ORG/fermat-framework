@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.all_definition.digital_asset;
 
 import com.bitdubai.fermat_api.all_definition.contracts.Contract;
 import com.bitdubai.fermat_api.all_definition.contracts.ContractProperty;
+import com.bitdubai.fermat_api.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import com.bitdubai.fermat_api.all_definition.digital_asset.enums.ContractPropertyName;
 
 import java.sql.Date;
@@ -22,9 +23,9 @@ public class DigitalAssetContract implements Contract {
      */
     public DigitalAssetContract() {
         properties = new ArrayList<>();
-        redeemable = new ContractProperty(ContractPropertyName.REDEEMABLE.toString(), Boolean.TRUE);
-        transferable = new ContractProperty(ContractPropertyName.TRANSFERABLE.toString(), Boolean.TRUE);
-        expirationDate= new ContractProperty(ContractPropertyName.EXPIRATION_DATE.toString(), Date.valueOf(""));
+        redeemable = new ContractProperty(ContractPropertyName.REDEEMABLE.toString(), null);
+        transferable = new ContractProperty(ContractPropertyName.TRANSFERABLE.toString(), null);
+        expirationDate= new ContractProperty(ContractPropertyName.EXPIRATION_DATE.toString(), null);
         properties.add(redeemable);
         properties.add(transferable);
         properties.add(expirationDate);
@@ -36,11 +37,16 @@ public class DigitalAssetContract implements Contract {
     }
 
     @Override
-    public void setContractProperty(String name, Object value) {
-        for (int i=0;i<properties.size();i++){
-            if (properties.get(i).getName() == name){
-                properties.get(i).setValue(value);
+    public void setContractProperty(ContractProperty contractProperty) throws CantDefineContractPropertyException {
+        boolean isExistingProperty = false;
+        for (ContractProperty property : properties){
+            if (contractProperty.getName() == property.getName()){
+                property.setValue(contractProperty.getValue());
+                isExistingProperty = true;
             }
+
+            if (!isExistingProperty)
+                throw new CantDefineContractPropertyException(CantDefineContractPropertyException.DEFAULT_MESSAGE, null, "Property " + contractProperty.toString() + " does not exists in the contract.", null);
         }
     }
 }

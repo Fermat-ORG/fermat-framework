@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.all_definition.contracts;
 
+import com.bitdubai.fermat_api.all_definition.contracts.exceptions.CantDefineContractPropertyException;
+
 import java.util.List;
 
 
@@ -8,5 +10,5 @@ import java.util.List;
  */
 public interface Contract {
     List<ContractProperty> getContractProperties();
-    void setContractProperty (String property, Object value);
+    void setContractProperty (ContractProperty contractProperty) throws CantDefineContractPropertyException;
 }
