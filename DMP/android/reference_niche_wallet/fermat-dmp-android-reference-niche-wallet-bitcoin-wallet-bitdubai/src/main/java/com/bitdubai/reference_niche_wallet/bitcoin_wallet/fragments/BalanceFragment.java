@@ -54,7 +54,7 @@ public class BalanceFragment extends FermatWalletFragment {
     private final String CRYPTO_WALLET_PARAM = "cryptoWalletParam";
 
     /**
-     *  Screen members
+     * Screen members
      */
 
     private View rootView;
@@ -63,7 +63,7 @@ public class BalanceFragment extends FermatWalletFragment {
     private TextView txtViewBalance;
 
     /**
-     *  Platform members
+     * Platform members
      */
 
     long balanceAvailable;
@@ -77,7 +77,7 @@ public class BalanceFragment extends FermatWalletFragment {
     private CryptoWallet cryptoWallet;
 
     /**
-     *  Resources
+     * Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
 
@@ -100,19 +100,15 @@ public class BalanceFragment extends FermatWalletFragment {
     List<CryptoWalletTransaction> lstCryptoWalletTransactions;
 
 
-    ListView list;
-    CustomAdapter adapter;
-    public  ArrayList<ListComponent> CustomListViewValuesArr = new ArrayList<ListComponent>();
-
-
     /**
-     *  Create a new instance of BalanceFragment and set referenceWalletSession and platforms plugin inside
+     * Create a new instance of BalanceFragment and set referenceWalletSession and platforms plugin inside
+     *
      * @param position
-     * @param walletSession   An object that contains all session data
+     * @param walletSession An object that contains all session data
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position,ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static BalanceFragment newInstance(int position, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
         BalanceFragment balanceFragment = new BalanceFragment();
         balanceFragment.setReferenceWalletSession(walletSession);
         balanceFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
@@ -120,7 +116,6 @@ public class BalanceFragment extends FermatWalletFragment {
     }
 
     /**
-     *
      * @param savedInstanceState
      */
     public void onCreate(Bundle savedInstanceState) {
@@ -156,14 +151,12 @@ public class BalanceFragment extends FermatWalletFragment {
              * Get BookBalance
              */
             bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
-        }
-         catch (CantGetCryptoWalletException e) {
-             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-         }
-        catch (CantGetBalanceException e){
+        } catch (CantGetCryptoWalletException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        } catch (CantGetBalanceException e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         } catch (Exception ex) {
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -186,7 +179,6 @@ public class BalanceFragment extends FermatWalletFragment {
     }
 
     /**
-     *
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -237,40 +229,20 @@ public class BalanceFragment extends FermatWalletFragment {
                 }
             });
 
-
             List<CustomComponentsObjects> lstData = new ArrayList<CustomComponentsObjects>();
 
-            //when we have transactions
-        /*
-        for (CryptoWalletTransaction cryptoWalletTransaction:cryptoWalletTransactions){
-            lstData.add(new ListComponent(cryptoWalletTransaction.getInvolvedActorName(), cryptoWalletTransaction.getBitcoinWalletTransaction().getMemo(),"person1"));
-        }
-        */
-
-            WalletSettings walletSettings = (WalletSettings)referenceWalletSession.getWalletSettings();
             ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
-            //this.referenceWalletPreferenceSettings = walletSettings.getPreferenceSettings(referenceWalletPreferenceSettings);
             this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
             lstCryptoWalletTransactions = cryptoWallet.getTransactions(referenceWalletPreferenceSettings.getTransactionsToShow(), 0, walletPublicKey);
 
-
-            // testing purpose
-//        lstData.add(new ListComponent("Matias Furszyfer", "Buy one glass of water 10btc","person1"));
-//        lstData.add(new ListComponent("Juan Lwon", "Sell a house in 200 btc","person12"));
-//        lstData.add(new ListComponent("George Gonzalez", "Buy Venezuela in 3 btc","person12"));
-//        lstData.add(new ListComponent("Fer Lewn", "Paid 30 btc","person12"));
-
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
-                if(cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())){
+                if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
                     ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
                     lstData.add(listComponent);
                 }
-
             }
 
-
             Resources res = getResources();
-
 
             CustomComponentMati custonMati = (CustomComponentMati) rootView.findViewById(R.id.custonMati);
 
@@ -279,7 +251,6 @@ public class BalanceFragment extends FermatWalletFragment {
             custonMati.setWalletResources(referenceWalletSession.getWalletResourcesProviderManager());
             custonMati.setWalletSettings(referenceWalletPreferenceSettings);
             custonMati.setDataList(lstData);
-
 
             custonMati.setLastTransactionsEvent(new View.OnClickListener() {
                 @Override
@@ -291,12 +262,12 @@ public class BalanceFragment extends FermatWalletFragment {
             custonMati.setSeeAlltransactionsEvent(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                            ((FermatScreenSwapper) getActivity()).changeActivity("CWRWBWBV1T");
+                    ((FermatScreenSwapper) getActivity()).changeActivity("CWRWBWBV1T");
                 }
             });
-        } catch (CantGetTransactionsException e){
+        } catch (CantGetTransactionsException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -304,88 +275,60 @@ public class BalanceFragment extends FermatWalletFragment {
         return rootView;
     }
 
-
-
-
-    private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
-        if (cryptoWalletTransaction.getContactId() != null) {
-            try {
-                CryptoWalletWalletContact walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
-                return walletContactRecord.getActorName();
-            } catch (Exception e) {
-                System.out.println("esta es para vos mati.");
-            }
-        } else if (cryptoWalletTransaction.getInvolvedActor() != null) {
-            return cryptoWalletTransaction.getInvolvedActor().getName();
-        }
-        return "Unknow";
-    }
-
-    /*
-        Method to change the balance type
+    /**
+     * Method to change the balance type
      */
     private void changeBalanceType() {
 
-        ReferenceWalletSession referenceWalletSession =(ReferenceWalletSession) this.referenceWalletSession;
-        try
-        {
-            if(referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+        ReferenceWalletSession referenceWalletSession = this.referenceWalletSession;
+        try {
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
                 txtViewTypeBalance.setText(R.string.book_balance);
                 referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
-            }else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())){
+            } else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
                 txtViewTypeBalance.setText(R.string.available_balance);
                 referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
-
         }
 
     }
 
-    /*
-        Method to change the balance amount
+    /**
+     * Method to change the balance amount
      */
     private void changeBalance() {
         try {
-            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())){
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-            }else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())){
+            } else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
                 txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
     }
 
-
-
-
     /**
-     *  Method to run the swipeRefreshLayout
+     * Method to run the swipeRefreshLayout
      */
-    private void refreshBalanceContent(){
+    private void refreshBalanceContent() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 refreshBalance();
-                //transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTransactions);
-                //listViewTransactions.setAdapter(transactionArrayAdapter);
                 swipeLayout.setRefreshing(false);
             }
         }, 3000);
-
     }
 
     /**
-     *  Method to refresh amount of BookBalance and AvailableBalance
+     * Method to refresh amount of BookBalance and AvailableBalance
      */
     private void refreshBalance() {
         try {
@@ -394,26 +337,23 @@ public class BalanceFragment extends FermatWalletFragment {
 
             bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
 
-
-            if(referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())){
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-            }else if(referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())){
+            } else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
                 txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
             }
-
-        }catch (CantGetBalanceException e)
-        {
+        } catch (CantGetBalanceException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        } catch (Exception ex){
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
 
-
     /**
-     *  Set Wallet Session object
+     * Set Wallet Session object
+     *
      * @param referenceWalletSession
      */
     public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
