@@ -469,6 +469,20 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getNotificationManager().addObserver(this);
+    }
 
     /**
      * @param tabs
@@ -958,14 +972,14 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     @Override
     public void launchWalletNotification(String walletPublicKey,String notificationTitle, String notificationImageText, String notificationTextBody) {
-        try {
-            getWalletRuntimeManager().getWallet(walletPublicKey).getLastActivity();
+        //try {
+            //getWalletRuntimeManager().getWallet(walletPublicKey).getLastActivity();
+            System.out.println("ESTOYYYYYYYYYYYY EN EL FERMAT ACTIVITY");
+            notificateWallet(walletPublicKey, notificationTitle, notificationImageText, notificationTextBody);
 
-            notificateWallet(walletPublicKey,notificationTitle, notificationImageText, notificationTextBody);
-
-        } catch (WalletRuntimeExceptions walletRuntimeExceptions) {
-            walletRuntimeExceptions.printStackTrace();
-        }
+        //} catch (WalletRuntimeExceptions walletRuntimeExceptions) {
+        //    walletRuntimeExceptions.printStackTrace();
+       // }
 
     }
     public void notificateWallet(String walletPublicKey,String notificationTitle, String notificationImageText, String notificationTextBody) {
