@@ -965,7 +965,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public void launchWalletNotification(String walletPublicKey,String notificationTitle, String notificationImageText, String notificationTextBody) {
         //try {
             //getWalletRuntimeManager().getWallet(walletPublicKey).getLastActivity();
-            System.out.println("ESTOYYYYYYYYYYYY EN EL FERMAT ACTIVITY");
             notificateWallet(walletPublicKey, notificationTitle, notificationImageText, notificationTextBody);
 
         //} catch (WalletRuntimeExceptions walletRuntimeExceptions) {
