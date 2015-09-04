@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterDebitException;
@@ -16,12 +17,17 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.TransactionExecutorFactory;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingMoneyNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 
 /**
  * Created by eze on 2015.06.22.
  *
  */
-public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWallet, DealsWithCryptoAddressBook {
+public class IncomingExtraUserTransactionHandler implements DealsWithEvents,DealsWithBitcoinWallet, DealsWithCryptoAddressBook {
 
     /*
      * DealsWithBitcoinWallet Interface member variables
@@ -32,6 +38,11 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
     * DealsWithCryptoAddressBook member variables
     */
     private CryptoAddressBookManager cryptoAddressBookManager;
+
+    /**
+     * DealsWithEventManager
+     */
+    private EventManager eventManager;
 
     /*
      * DealsWithBitcoinWallet Interface method implementation
@@ -60,6 +71,16 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
                 TransactionExecutor executor = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
 
                 executor.executeTransaction(transaction);
+
+                /**
+                 *  Fire event notification
+                 */
+
+                PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
+                IncomingMoneyNotificationEvent incomingMoneyNotificationEvent=  (IncomingMoneyNotificationEvent) platformEvent;
+                incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_EXTRA_USER);
+                eventManager.raiseEvent(platformEvent);
+
             } catch (CryptoAddressBookRecordNotFoundException exception) {
                 //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
                 throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
@@ -70,5 +91,10 @@ public class IncomingExtraUserTransactionHandler implements DealsWithBitcoinWall
             //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
             throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
         }
+    }
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 }

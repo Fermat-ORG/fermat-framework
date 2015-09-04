@@ -307,7 +307,7 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
 
     public void raiseEvent() {
         /**
-         *  Fire event Wallet resource installed
+         *  Fire event notification
          */
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
