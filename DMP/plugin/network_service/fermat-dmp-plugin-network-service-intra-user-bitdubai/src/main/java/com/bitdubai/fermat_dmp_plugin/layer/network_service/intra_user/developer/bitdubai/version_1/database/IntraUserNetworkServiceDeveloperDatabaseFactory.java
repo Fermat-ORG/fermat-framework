@@ -118,9 +118,11 @@ public class IntraUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
         List<String> intraUserColumns = new ArrayList<String>();
 
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_ID_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME);
 
 
         /**

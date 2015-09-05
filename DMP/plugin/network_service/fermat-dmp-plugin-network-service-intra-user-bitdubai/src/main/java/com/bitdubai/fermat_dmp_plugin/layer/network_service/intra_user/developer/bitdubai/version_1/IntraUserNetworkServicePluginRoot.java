@@ -25,6 +25,8 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.E
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorConfirmNotificationsIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorDenyConnectingIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorGetNotificationsIntraUserException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -83,7 +85,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDevelopers, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, IntraUserManager,NetworkService, Service, Plugin {
+public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDevelopers, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, IntraUserManager,NetworkService, Service, Plugin {
 
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
@@ -109,6 +111,11 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
      * DealsWithPluginDatabaseSystem Interface member variable
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithPluginFileSystem Interface member variable
+     */
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
@@ -407,6 +414,11 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+            this.pluginFileSystem = pluginFileSystem;
+    }
+
     /**
      * (non-Javadoc)
      * @see NetworkService#getId()
@@ -472,7 +484,14 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
 
     @Override
     public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
-        return null;
+        //TODO Harcode
+
+        List<IntraUser> intraUserList = new ArrayList<IntraUser>();
+
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Nicolas") );
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Nora") );
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Natalia") );
+        return intraUserList;
     }
 
     @Override
@@ -484,6 +503,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Matias") );
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Leon") );
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Natalia") );
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Ezequiel") );
         return intraUserList;
     }
 
@@ -493,7 +513,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
       {
           //Save request fire event to intra user
           UUID requestId = UUID.randomUUID();
-          getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToAddPublicKey, IntraUserNotificationDescriptor.ASKFORACCEPTANCE);
+          getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserLoggedInName,intraUserToAddPublicKey, IntraUserNotificationDescriptor.ASKFORACCEPTANCE,myProfileImage);
 
           PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_REQUESTED_CONNECTION);
           IntraUserActorRequestConnectionEvent intraUserActorRequestConnectionEvent = (IntraUserActorRequestConnectionEvent) platformEvent;
@@ -503,7 +523,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
           intraUserActorRequestConnectionEvent.setIntraUserToAddName(intraUserLoggedInName);
           intraUserActorRequestConnectionEvent.setIntraUserProfileImage(myProfileImage);
 
-          eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
+         // eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
 
 
       }
@@ -525,7 +545,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
 
             //Save request fire event to intra user
             UUID requestId = UUID.randomUUID();
-            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToAddPublicKey, IntraUserNotificationDescriptor.ACCEPTED);
+            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey,"", intraUserToAddPublicKey, IntraUserNotificationDescriptor.ACCEPTED,new byte[0]);
 
             PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED);
             IntraUserActorConnectionAcceptedEvent intraUserActorConnectionAcceptedEvent = (IntraUserActorConnectionAcceptedEvent) platformEvent;
@@ -534,7 +554,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             intraUserActorConnectionAcceptedEvent.setIntraUserToAddPublicKey(intraUserToAddPublicKey);
 
 
-            eventManager.raiseEvent(intraUserActorConnectionAcceptedEvent);
+            //eventManager.raiseEvent(intraUserActorConnectionAcceptedEvent);
 
         }
         catch (CantExecuteDatabaseOperationException e)
@@ -554,7 +574,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
         {
             //Save request fire event to intra user
             UUID requestId = UUID.randomUUID();
-            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToRejectPublicKey, IntraUserNotificationDescriptor.DENIED);
+            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToRejectPublicKey, IntraUserNotificationDescriptor.DENIED,new byte[0]);
 
             PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_DENIED);
             IntraUserActorConnectionDeniedEvent intraUserActorConnectionDeniedEvent = (IntraUserActorConnectionDeniedEvent) platformEvent;
@@ -563,7 +583,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             intraUserActorConnectionDeniedEvent.setIntraUserToAddPublicKey(intraUserToRejectPublicKey);
 
 
-            eventManager.raiseEvent(intraUserActorConnectionDeniedEvent);
+           // eventManager.raiseEvent(intraUserActorConnectionDeniedEvent);
 
         }
         catch (CantExecuteDatabaseOperationException e)
@@ -583,7 +603,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
         {
             //Save request fire event to intra user
             UUID requestId = UUID.randomUUID();
-            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED);
+            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED,new byte[0]);
 
 
             PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
@@ -593,7 +613,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToDisconnectPublicKey);
 
 
-            eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
+           // eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
         }
         catch (CantExecuteDatabaseOperationException e)
         {
@@ -612,7 +632,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
         {
             //Save request fire event to intra user
             UUID requestId = UUID.randomUUID();
-            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL);
+            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL,new byte[0]);
 
 
             PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
@@ -622,7 +642,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToCancelPublicKey);
 
 
-            eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
+           // eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
 
         }
         catch (CantExecuteDatabaseOperationException e)
@@ -705,8 +725,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             /*
              * Open new database connection
              */
-
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             this.dataBase.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -745,7 +764,9 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     }
 
     private IntraUserNetworkServiceDao getIntraUserNetworkServiceDao() throws CantExecuteDatabaseOperationException {
-        IntraUserNetworkServiceDao intraUserNetworkServiceDao = new IntraUserNetworkServiceDao(pluginDatabaseSystem, pluginId, this.dataBase);
+        IntraUserNetworkServiceDao intraUserNetworkServiceDao = new IntraUserNetworkServiceDao(pluginDatabaseSystem,this.pluginFileSystem, pluginId, this.dataBase);
         return intraUserNetworkServiceDao;
     }
+
+
 }

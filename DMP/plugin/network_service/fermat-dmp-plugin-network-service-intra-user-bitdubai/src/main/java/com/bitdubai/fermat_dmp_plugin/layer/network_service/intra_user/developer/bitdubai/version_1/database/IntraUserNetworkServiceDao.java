@@ -97,7 +97,7 @@ public class IntraUserNetworkServiceDao {
             /**
              * Persist profile image on a file
              */
-        if(!profileImage.equals(null))
+
             persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
             closeDatabase();
@@ -152,13 +152,13 @@ public class IntraUserNetworkServiceDao {
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 //create list of IntraUserNotifications
-                byte[] progileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME));
+                byte[] profileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME));
 
                 IntraUserNotification intraUserNotification = new IntraUserNetworkServiceNotification(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME),
                         record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME),
                         record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME),
                         IntraUserNotificationDescriptor.getByCode(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME)),
-                        progileImage);
+                        profileImage);
 
                 intraUserNotificationList.add(intraUserNotification) ;
 
