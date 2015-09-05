@@ -23,3 +23,9 @@
 
 1. *__Market Money:__* monedas cuyo valor es determinado por el mercado
 2. *__Fiat Money:__* monedas cuyo valor es determinado por legislacion de un pais
+
+
+Relacion Identidnad Wallet - idenpendiente de si una 
+Sale Request
+Log trasacciones sobre el contrato (Tanto Broker como Customer)
+Modulo de Notificaciones
