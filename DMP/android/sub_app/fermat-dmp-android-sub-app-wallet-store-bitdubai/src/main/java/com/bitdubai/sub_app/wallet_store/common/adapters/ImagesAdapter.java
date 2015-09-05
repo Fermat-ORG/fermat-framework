@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_store.common.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,13 +15,13 @@ import java.util.ArrayList;
 /**
  * Created by nelson on 27/08/15.
  */
-public class ImagesAdapter extends FermatAdapter<Drawable, ImagesAdapter.ViewHolder> {
+public class ImagesAdapter extends FermatAdapter<Bitmap, ImagesAdapter.ViewHolder> {
 
     public ImagesAdapter(Context context) {
         super(context);
     }
 
-    public ImagesAdapter(Context context, ArrayList<Drawable> dataSet) {
+    public ImagesAdapter(Context context, ArrayList<Bitmap> dataSet) {
         super(context, dataSet);
     }
 
@@ -35,8 +36,8 @@ public class ImagesAdapter extends FermatAdapter<Drawable, ImagesAdapter.ViewHol
     }
 
     @Override
-    protected void bindHolder(ViewHolder holder, Drawable data, int position) {
-        holder.walletScreenshot.setImageDrawable(data);
+    protected void bindHolder(ViewHolder holder, Bitmap data, int position) {
+        holder.walletScreenshot.setImageBitmap(data);
     }
 
     class ViewHolder extends FermatViewHolder{

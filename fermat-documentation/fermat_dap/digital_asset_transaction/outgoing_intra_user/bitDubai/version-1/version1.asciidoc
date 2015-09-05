@@ -1,0 +1,10 @@
+[[digital-asset-transaction-outgoing-intra-user-BitDubai-V1]]
+= Version 1
+    Por definir.
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

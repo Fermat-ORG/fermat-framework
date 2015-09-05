@@ -990,6 +990,94 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
              * End of Wallet Accounts tabs.
              */
 
+
+            /**
+             * Start Intra user sub app
+             */
+
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CWP_INTRA_USER);
+            listSubApp.put(SubApps.CWP_INTRA_USER, runtimeSubApp);
+
+
+            //Activity 1
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+            runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setColor("#b46a54");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+
+            statusBar.setColor("#FF0B46F0");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Intra User connections");
+
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+//            runtimeTabStrip = new TabStrip();
+//            runtimeTabStrip.setTabsColor("#d07b62");
+//            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+//            runtimeTabStrip.setTabsIndicateColor("#b46a54");
+            //mati
+            runtimeSearchView = new SearchView();
+            runtimeSearchView.setLabel("Search");
+            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
+
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            runtimeMainMenu = new MainMenu();
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Settings");
+            runtimeMainMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setMainMenu(runtimeMainMenu);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
+
+            //Activity 2
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setColor("#b46a54");
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#b46a54");
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Wallet Store");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeSearchView = new SearchView();
+            runtimeSearchView.setLabel("Search");
+            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey(), runtimeFragment);
+
+            //Activity 3
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY);
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setColor("#b46a54");
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#b46a54");
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Wallet Store");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeSearchView = new SearchView();
+            runtimeSearchView.setLabel("Search");
+            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
+
+            /**
+             * End of intra user sub app
+             */
+
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);

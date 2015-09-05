@@ -88,10 +88,11 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
             if(applicationState==ApplicationSession.STATE_NOT_CREATED) {
                 mDialog = new ProgressDialog(this);
                 mDialog.setMessage("Please wait...");
+                mDialog.setCancelable(false);
                 mDialog.show();
                 GetTask getTask = new GetTask(this,this);
                 getTask.setCallBack(this);
-                Executors.newSingleThreadExecutor().execute(getTask);
+                getTask.execute();
             }else if (applicationState == ApplicationSession.STATE_STARTED ){
                 fermatInit();
             }
@@ -132,7 +133,10 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
      */
     @Override
     public void onErrorOccurred(Exception ex) {
+        mDialog.dismiss();
         ex.printStackTrace();
+        Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
+                Toast.LENGTH_LONG).show();
     }
 
     class GetTask extends FermatWorker{

@@ -6,6 +6,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Fermat Background Worker
@@ -69,6 +71,18 @@ public abstract class FermatWorker extends Thread {
             }
         }
         super.run();
+    }
+
+
+    /**
+     * Execute this thread with single thread executor service
+     *
+     * @return ExecutorService Reference to handled this thread. <b>Use executor.shutDown for stop the current thread instance</b>
+     */
+    public ExecutorService execute() {
+        ExecutorService exec = Executors.newSingleThreadExecutor();
+        exec.execute(this);
+        return exec;
     }
 
     /**
