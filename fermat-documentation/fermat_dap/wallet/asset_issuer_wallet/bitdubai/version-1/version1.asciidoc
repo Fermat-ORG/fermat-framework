@@ -7,6 +7,8 @@ de esa manera el componente podra emitir todo los movimientos registrados en el 
 
 
 == Plug-in Description
+Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
+la plataforma DAP y la vault de donde sale la dirección.
 
 == Plug-in Structure
 
@@ -19,6 +21,13 @@ de esa manera el componente podra emitir todo los movimientos registrados en el 
     Se crearan las siguientes Interfaces:
       assetissuerwallet:
          Implementara todo el objeto que manipulara la información de la Asset.
+            *Metodos sugeridos:*
+
+            String getWalletPublicKey();
+            String getDigitalAssetPublicKey();
+            long getBalance()  throws CantCalculateBalanceException;
+            void debit(); //Debemos de definir la estructura de la transaccion
+            void credit(); //Debemos de definir la estructura de la transaccion
 
       assetissuerwalletmanager:
          Implementara la interfaz publica hacia los otros pluggins.
