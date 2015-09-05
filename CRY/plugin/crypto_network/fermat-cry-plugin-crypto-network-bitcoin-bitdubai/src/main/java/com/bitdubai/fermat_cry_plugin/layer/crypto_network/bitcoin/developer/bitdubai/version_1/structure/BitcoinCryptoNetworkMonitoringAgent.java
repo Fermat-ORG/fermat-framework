@@ -256,8 +256,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          */
         private void doTheMainTask() throws CantConnectToBitcoinNetwork {
             try {
-                peers.startAsync();
-                peers.awaitRunning();
+                peers.start();
                 peers.downloadBlockChain();
             } catch (Exception exception) {
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
