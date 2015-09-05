@@ -1,93 +1,83 @@
 package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
-import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetException;
+import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
+//import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/09/15.
  */
-public class DigitalAssetCryptoTransactionFactory implements CryptoVaultManager, DealsWithErrors{
+public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
+    CryptoVaultManager cryptoVaultManager;
     ErrorManager errorManager;
-    @Override
-    public void connectToBitcoin() throws VaultNotConnectedToNetworkException {
 
-    }
+    public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException {
 
-    @Override
-    public void disconnectFromBitcoin() {
+        setCryptoVaultManager(cryptoVaultManager);
 
-    }
-
-    @Override
-    public CryptoAddress getAddress() {
-
-        //TODO: avoid null in full implementation
-        CryptoAddress digitalAssetCryptoAddress=null;
-        try{
-
-            if(digitalAssetCryptoAddress==null){
-                throw new ObjectNotSetException("digitalAssetCryptoAddress is null");
-            }
-
-        } catch(ObjectNotSetException exception){
-            //TODO:Implement catch
-            //this.errorManager.reportUnexpectedPluginException(Plugins.,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        }
-        catch (Exception e) {
-            //TODO:Implement catch
-            //FermatException e = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + developerDatabase.getName(),"Check the cause");
-            //this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-
-        }
-
-        return digitalAssetCryptoAddress;
-    }
-
-    @Override
-    public List<CryptoAddress> getAddresses(int amount) {
-        return null;
-    }
-
-    @Override
-    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        return null;
-    }
-
-    @Override
-    public boolean isValidAddress(CryptoAddress addressTo) {
-        return false;
-    }
-
-    @Override
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException {
-        return null;
-    }
-
-    @Override
-    public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
-        return null;
     }
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
 
+        this.errorManager=errorManager;
+
     }
+
+    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException{
+
+        if(cryptoVaultManager==null){
+
+            throw new CantSetObjectException("CryptoVaultManager is null");
+
+        }
+        this.cryptoVaultManager=cryptoVaultManager;
+
+    }
+
+    public void createDigitalAssetCryptoTransaction(DigitalAsset digitalAsset) throws CantCreateDigitalAssetException{
+
+        /**
+         * TODO:
+         * Se solicita a la Crypto Vault la creación de una transaction bitcoin a través del Outoing Intra user. Este hash se define como la GenesisTransaction
+         en el Digital Asset.
+         * Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
+         la plataforma DAP y la vault de donde sale la dirección.
+         * Se completa la crypto transacción especificando el GenesisAmount.
+         * Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_RETURN de la crypto transacción.
+         * Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.
+         * Se asocia la metadata a la genesis transaction.
+         * El Digital Asset es considerado creado, en este paso el estado (State) del Asset se fija en _final_. Una vez que el Digital Asset entra en estado _final_ se considera creado,
+         en este estado, sus propiedades no deben ser modificadas por ningún actor de la plataforma, ya que esto modificaría la relación entre la metadata propia del Digital Asset y
+         su respectiva GenesisTransaction.
+         * El Digital Asset se considera _available_ cuando la transacción bitcoin es detectada como entrante por el Incoming Crypto.
+         * Todos los Digital Assets generados deben ser transferidos al plugin AssetDistribution, este plugin se encargará de realizar la transferencia, de acuerdo a los
+         criterios establecidos por AssetIssuer.
+         * */
+
+        try{
+
+            //We need to get a new GenesisAddress:
+            this.cryptoVaultManager.connectToBitcoin();
+            CryptoAddress genesisAddress=this.cryptoVaultManager.getAddress();
+            digitalAsset.setGenesisAddress(genesisAddress);
+            //TODO: hacer una prueba para la solicitud de direcciones
+            //We need to complete the transaction
+
+            this.cryptoVaultManager.disconnectFromBitcoin();
+
+        } catch (VaultNotConnectedToNetworkException exception) {
+            throw new CantCreateDigitalAssetException(exception, "Creating a new Digital Asset Transaction - Connecting to Network", "Vault is not connected");
+        }
+
+    }
+
 }

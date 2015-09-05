@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -9,9 +10,17 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetException;
 import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -24,8 +33,10 @@ import java.util.logging.Logger;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithErrors,  DealsWithPluginDatabaseSystem, Plugin, Service {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors,  DealsWithPluginDatabaseSystem, Plugin, Service {
 
+    CryptoVaultManager cryptoVaultManager;
+    DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     ErrorManager errorManager;
     EventManager eventManager;
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -66,7 +77,10 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public void setEventManager(EventManager eventManager) {
+
+
         this.eventManager=eventManager;
+
     }
 
     @Override
@@ -74,6 +88,15 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         //delete this
         printSomething("Starting plugin");
         //TODO: implement this method
+        try{
+            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.cryptoVaultManager);
+
+        }catch(CantSetObjectException exception){
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "CryptoVaultManager is null");
+        }catch(Exception exception){
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Starting Asset Issuing plugin", "Unexpected exception");
+        }
+
     }
 
     @Override
@@ -101,4 +124,32 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         LOG.info("ASSET_ISSUING: "+information);
     }
 
+    @Override
+    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
+        this.cryptoVaultManager=cryptoVaultManager;
+    }
+
+    @Override
+    public void createDigitalAsset(String publicKey, String name, String description, List<Resource> resources, DigitalAssetContract digitalAssetContract, long genesisAmount) throws CantCreateDigitalAssetException {
+
+        try{
+
+            DigitalAsset newDigitalAsset=new DigitalAsset();
+            newDigitalAsset.setPublicKey(publicKey);
+            newDigitalAsset.setName(name);
+            newDigitalAsset.setDescription(description);
+            newDigitalAsset.setResources(resources);
+            newDigitalAsset.setContract(digitalAssetContract);
+            newDigitalAsset.setGenesisAmount(genesisAmount);
+
+            this.digitalAssetCryptoTransactionFactory.createDigitalAssetCryptoTransaction(newDigitalAsset);
+
+        }catch(Exception exception){
+
+            throw new CantCreateDigitalAssetException(FermatException.wrapException(exception), "Creating a new Digital Asset Transaction", "Unexpected Exception");
+
+        }
+
+
+    }
 }
