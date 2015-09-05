@@ -27,9 +27,9 @@ public interface BitcoinWalletTransactionRecord {
 
     public String getTransactionHash();
 
-    public UUID getActorTo();
+    public String getActorToPublicKey();
 
-    public UUID getActorFrom();
+    public String getActorFromPublicKey();
 
     public Actors getActorToType();
 

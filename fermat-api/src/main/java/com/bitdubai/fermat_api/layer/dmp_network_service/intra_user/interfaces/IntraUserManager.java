@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorDisconnectingIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorInIntraUserSearchException;
@@ -28,7 +29,7 @@ public interface IntraUserManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    public List<IntraUser> getIntraUsersSuggestions() throws ErrorSearchingSuggestionsException;
+    public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException;
 
     /**
      * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.
@@ -38,7 +39,7 @@ public interface IntraUserManager {
      * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
      * @param myProfileImage             The profile image of the user sending the request
      */
-    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddNameName, String intraUserToAddPublicKey, byte[] myProfileImage);
+    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddNameName, String intraUserToAddPublicKey, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException;
 
     /**
      * The method <code>acceptIntraUser</code> send an acceptance message of a connection request.

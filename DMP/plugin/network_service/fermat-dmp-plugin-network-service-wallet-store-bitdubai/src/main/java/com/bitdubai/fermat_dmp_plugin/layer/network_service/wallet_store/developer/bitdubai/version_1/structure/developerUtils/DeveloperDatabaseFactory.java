@@ -47,9 +47,8 @@ public class DeveloperDatabaseFactory {
         /**
          * Designer table
          */
-        DeveloperDatabaseTable  designerTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME, designerTableColumns);
+        DeveloperDatabaseTable designerTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME, designerTableColumns);
         tables.add(designerTable);
-
 
         /**
          * Developer table columns
@@ -62,7 +61,7 @@ public class DeveloperDatabaseFactory {
         /**
          * Developer table
          */
-        DeveloperDatabaseTable  developerTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME, developerTableColumns);
+        DeveloperDatabaseTable developerTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME, developerTableColumns);
         tables.add(developerTable);
 
         /**
@@ -80,15 +79,11 @@ public class DeveloperDatabaseFactory {
         itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME);
         itemTableColumns.add(WalletStoreCatalogDatabaseConstants.ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME);
 
-
-
-
         /**
          * item table
          */
-        DeveloperDatabaseTable  itemTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.ITEM_TABLE_NAME, itemTableColumns );
-        tables.add(itemTable );
-
+        DeveloperDatabaseTable itemTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.ITEM_TABLE_NAME, itemTableColumns);
+        tables.add(itemTable);
 
         /**
          * translator columns
@@ -98,15 +93,11 @@ public class DeveloperDatabaseFactory {
         translatorTableColumns.add(WalletStoreCatalogDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME);
         translatorTableColumns.add(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME);
 
-
-
-
         /**
          * translator table
          */
-        DeveloperDatabaseTable  translatorTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME, translatorTableColumns);
+        DeveloperDatabaseTable translatorTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME, translatorTableColumns);
         tables.add(translatorTable);
-
 
         /**
          * Walletlanguage columns
@@ -123,13 +114,11 @@ public class DeveloperDatabaseFactory {
         walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME);
         walletLanguageTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME);
 
-
         /**
          * walletLanguage table
          */
-        DeveloperDatabaseTable  walletLanguageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TABLE_NAME, walletLanguageTableColumns);
-        tables.add(walletLanguageTable );
-
+        DeveloperDatabaseTable walletLanguageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TABLE_NAME, walletLanguageTableColumns);
+        tables.add(walletLanguageTable);
 
         /**
          * WalletSkin columns
@@ -147,19 +136,16 @@ public class DeveloperDatabaseFactory {
         //New column on 06/08/2015
         walletSkinTableColumns.add(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SCREEN_SIZE);
 
-
-
         /**
          * walletSkin table
          */
-        DeveloperDatabaseTable  walletSkinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME, walletSkinTableColumns);
+        DeveloperDatabaseTable walletSkinTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME, walletSkinTableColumns);
         tables.add(walletSkinTable);
 
         return tables;
     }
 
-
-    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,  Database database, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -183,12 +169,12 @@ public class DeveloperDatabaseFactory {
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        for (DatabaseTableRecord row: records){
+        for (DatabaseTableRecord row : records) {
             /**
              * for each row in the table list
              */
             List<String> developerRow = new ArrayList<String>();
-            for (DatabaseRecord field : row.getValues()){
+            for (DatabaseRecord field : row.getValues()) {
                 /**
                  * I get each row and save them into a List<String>
                  */

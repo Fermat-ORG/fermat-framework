@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_android_api.ui.util;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 
@@ -17,6 +18,10 @@ import java.util.concurrent.Executors;
  */
 public abstract class FermatWorker extends Thread {
 
+    private final String TAG = "FermatWorker";
+    /**
+     * References Fields
+     */
     private Activity context;
     private FermatWorkerCallBack callBack;
 
@@ -56,7 +61,11 @@ public abstract class FermatWorker extends Thread {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.onPostExecute(result);
+                        try {
+                            callBack.onPostExecute(result);
+                        } catch (Exception ex) {
+                            Log.i(TAG, "Cannot call onPostExecute method...", ex);
+                        }
                     }
                 });
             }
@@ -65,7 +74,11 @@ public abstract class FermatWorker extends Thread {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.onErrorOccurred(ex);
+                        try {
+                            callBack.onErrorOccurred(ex);
+                        } catch (Exception ex) {
+                            Log.i(TAG, "Cannot call onErrorOccurred...", ex);
+                        }
                     }
                 });
             }

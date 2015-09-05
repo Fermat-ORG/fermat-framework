@@ -98,7 +98,6 @@ public class WalletStoreNetworkServiceDatabaseFactory implements DealsWithPlugin
             /**
              * Configure the Outgoing messages table.
              */
-//            table = ((DatabaseFactory) database).newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
             table = databaseFactory.newTableFactory(ownerId, WalletStoreNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
 
             table.addColumn(WalletStoreNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);

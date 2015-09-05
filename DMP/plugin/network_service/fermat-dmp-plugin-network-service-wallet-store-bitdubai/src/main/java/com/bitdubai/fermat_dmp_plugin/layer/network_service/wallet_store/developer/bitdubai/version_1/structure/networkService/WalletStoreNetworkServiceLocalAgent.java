@@ -44,13 +44,13 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
      * Constructor with parameters
      *
      * @param remoteNetworkServicePublicKey
-     * @param errorManager instance
-     * @param outgoingMessageDao instance
+     * @param errorManager                  instance
+     * @param outgoingMessageDao            instance
      */
     public WalletStoreNetworkServiceLocalAgent(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDAO outgoingMessageDao) {
-        this.remoteNetworkServicePublicKey   = remoteNetworkServicePublicKey;
-        this.errorManager                    = errorManager;
-        this.eventManager                    = eventManager;
+        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
     }
 
@@ -61,7 +61,7 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
      *
      * @param message the message to send
      */
-    public void sendMessage(Message message){
+    public void sendMessage(Message message) {
 
         try {
 
@@ -87,14 +87,13 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
     }
 
 
-
     /**
      * Notify the client when a incoming message is receive by the incomingTemplateNetworkServiceMessage
      * ant fire a new event
      *
      * @param incomingTemplateNetworkServiceMessage received
      */
-    private void onMessageReceived(WalletStoreNetworkServiceMessage incomingTemplateNetworkServiceMessage){
+    private void onMessageReceived(WalletStoreNetworkServiceMessage incomingTemplateNetworkServiceMessage) {
 
         /**
          * Put the message on a event and fire new event
@@ -111,7 +110,7 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
      * when new message is received
      *
      * @param observable the observable object
-     * @param data the data update
+     * @param data       the data update
      */
     @Override
     public void update(Observable observable, Object data) {
@@ -123,6 +122,7 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
 
     /**
      * Return the public key of the remote network service
+     *
      * @return
      */
     public String getRemoteNetworkServicePublicKey() {

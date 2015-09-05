@@ -65,6 +65,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by rodrigo on 7/29/15.
@@ -84,6 +85,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager = deviceUserManager;
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("MAP_SETDUM:"+this.deviceUserManager);
     }
 
     /**
@@ -105,6 +108,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
     @Override
     public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
         this.walletManagerManager = walletManagerManager;
+        Logger LOG = Logger.getGlobal();
+        LOG.info("MAP_SETWMM:"+this.walletManagerManager);
     }
 
     /**
@@ -522,13 +527,19 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
      * @param version
      * @throws CantStartInstallationException
      */
-    public void installWallet(WalletCategory walletCategory,  UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
+    public void installWallet(WalletCategory walletCategory, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
         try {
+            Logger LOG = Logger.getGlobal();
+
+            LOG.info("MAP_CATALOGUE:"+walletCatalogueId);
+            LOG.info("MAP_WMNS:"+walletStoreManagerNetworkService);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
             CatalogItem catalogItem = walletStoreManagerNetworkService.getCatalogItem(walletCatalogueId);
             DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
+            LOG.info("MAP_WMM:"+walletManagerManager);
             WalletInstallationProcess walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
-            DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
+            LOG.info("MAP_DUM:"+deviceUserManager);
+            //DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
             Skin skin = getWalletSkinFromWalletCatalogueId(walletCatalogueId);
             Language language = getWalletLanguageFromWalletCatalogueId(walletCatalogueId);
 
@@ -536,21 +547,34 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             For now, we'll pass null to the  walletPrivateKey, walletIconName, skinPreview method arguments
             TODO: Get the real values for this null objects.
             */
+
+            LOG.info("MAP_STORE_MODULE:"+walletInstallationProcess);
+            LOG.info("MAP_NAME:"+catalogItem.getName());
+            LOG.info("MAP_NAME:"+catalogItem.getId());
+            LOG.info("MAP_VERSION:"+detailedCatalogItem.getVersion());
+            LOG.info("MAP_SCREENS:"+skin.getScreenSize().getCode());
+            LOG.info("MAP_SKIN_VERSION:"+skin.getVersion());
+            LOG.info("MAP_SKIN_NAME:"+skin.getSkinName());
+            LOG.info("MAP_LANGUAGE_VERSION:"+language.getVersion());
+            LOG.info("MAP_LANGUAGE_NAME:"+language.getLanguageName());
+            LOG.info("MAP_LANGUAGE_LABEL:"+language.getLanguageLabel());
+            LOG.info("MAP_DEVELOPER:"+detailedCatalogItem.getDeveloper().getAlias());
+            LOG.info("MAP_VERSION:"+version);
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
-                    catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
+                    catalogItem.getId().toString(), null, /*deviceUser.getPublicKey()*/"testPublicKey", null,
                     walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
                     skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
                     language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
-                    detailedCatalogItem.getDeveloper().getAlias(), version.toString());
+                    detailedCatalogItem.getDeveloper().getAlias(), version.toString()/*"1.0.0"*/);
         } catch (CantSetInstallationStatusException exception) {
             throw new CantStartInstallationException(CantSetInstallationStatusException.DEFAULT_MESSAGE, exception, "Cannot set the instalation status", "Please, check the cause");
         } catch (CantGetCatalogItemException exception) {
             throw new CantStartInstallationException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, "Cannot get the catalog items", "Please, check the cause");
         } catch (CantFindProcessException exception) {
             throw new CantStartInstallationException(CantFindProcessException.DEFAULT_MESSAGE, exception, "Cannot get the WalletInstallationProcess", "Please, check the cause");
-        } catch (CantGetLoggedInDeviceUserException exception) {
+        } /*catch (CantGetLoggedInDeviceUserException exception) {
             throw new CantStartInstallationException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, exception, "Cannot get the Device user", "Please, check the cause");
-        } catch (CantGetSkinException exception) {
+        }*/ catch (CantGetSkinException exception) {
             throw new CantStartInstallationException(CantGetSkinException.DEFAULT_MESSAGE, exception, "Cannot get the wallet Skin", "Please, check the cause");
         } catch (CantGetLanguageException exception) {
             throw new CantStartInstallationException(CantGetLanguageException.DEFAULT_MESSAGE, exception, "Cannot get the wallet language", "Please, check the cause");

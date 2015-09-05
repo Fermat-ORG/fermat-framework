@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
 
@@ -16,11 +16,11 @@ import java.util.UUID;
 public class TransactionExecutorFactory {
 
     private BitcoinWalletManager bitcoinWalletManager;
-    private ActorAddressBookManager actorAddressBookManager;
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
-    public TransactionExecutorFactory(final BitcoinWalletManager bitcoinWalletManager,final ActorAddressBookManager actorAddressBookManager){
+    public TransactionExecutorFactory(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager){
         this.bitcoinWalletManager = bitcoinWalletManager;
-        this.actorAddressBookManager = actorAddressBookManager;
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
     public TransactionExecutor newTransactionExecutor(final ReferenceWallet walletType, final String walletPublicKey) throws CantLoadWalletException{
@@ -40,7 +40,7 @@ public class TransactionExecutorFactory {
     }
 
     private TransactionExecutor createBitcoinBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletException {
-        return new BitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.loadWallet(walletPublicKey),this.actorAddressBookManager);
+        return new BitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.loadWallet(walletPublicKey), this.cryptoAddressBookManager);
     }
 
 }

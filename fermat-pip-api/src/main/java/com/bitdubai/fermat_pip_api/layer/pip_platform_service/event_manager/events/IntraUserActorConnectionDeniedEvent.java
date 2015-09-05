@@ -7,14 +7,13 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 /**
  * Created by natalia on 17/08/15.
  */
-public class IntraUserActorConnectionDeniedEvent implements PlatformEvent {
-    private EventType eventType;
-    private EventSource eventSource;
+public class IntraUserActorConnectionDeniedEvent extends AbstractPlatformEvent{
+
     String intraUserLoggedInPublicKey;
     String intraUserToAddPublicKey;
 
     public IntraUserActorConnectionDeniedEvent(EventType eventType){
-        this.eventType = eventType;
+        super(eventType);
     }
 
     /**
@@ -26,23 +25,9 @@ public class IntraUserActorConnectionDeniedEvent implements PlatformEvent {
      */
     public IntraUserActorConnectionDeniedEvent(EventType eventType, String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) {
 
-        this.eventType = eventType;
+        super(eventType);
         this.intraUserLoggedInPublicKey = intraUserLoggedInPublicKey;
         this.intraUserToAddPublicKey = intraUserToAddPublicKey;
-    }
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
-
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
     }
 
     /**

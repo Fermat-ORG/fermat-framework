@@ -27,15 +27,38 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetsVaultPluginRoot implements AssetsVaultManager,   Plugin, Service {
+public class AssetsVaultPluginRoot implements AssetsVaultManager,  CryptoVault, DealsWithBitcoinCryptoNetwork, Plugin, Service {
+
+    Wallet vault;
 
     /**
-     * AssetsVaultManager variables and implementation
+     * CryptoVaultvariables and implementation
      */
+    @Override
+    public void setUserPublicKey(String userPublicKey) {
 
+    }
 
+    @Override
+    public String getUserPublicKey() {
+        return "assets";
+    }
 
-     /**
+    @Override
+    public Object getWallet() {
+        return vault;
+    }
+
+    /**
+     * DealsWithBitcoinCryptoNetwork interface implementation
+     */
+    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+    @Override
+    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
+        this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
+    }
+
+    /**
      * Plugin interface imeplementation
      * @param pluginId
      */
@@ -53,6 +76,18 @@ public class AssetsVaultPluginRoot implements AssetsVaultManager,   Plugin, Serv
     @Override
     public void start() throws CantStartPluginException {
         System.out.println("Asset Vault starting...");
+
+        vault = new Wallet(RegTestParams.get());
+        System.out.println(vault.freshReceiveAddress().toString());
+
+        try {
+
+            bitcoinCryptoNetworkManager.setVault(this);
+            bitcoinCryptoNetworkManager.connectToBitcoinNetwork();
+        } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
+            cantConnectToBitcoinNetwork.printStackTrace();
+        }
+
         this.serviceStatus = ServiceStatus.STARTED;
         System.out.println("Asset Vault started.");
     }

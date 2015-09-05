@@ -46,11 +46,11 @@ public interface CryptoWalletWalletContact {
     CryptoAddress getReceivedCryptoAddress();
 
     /**
-     * Return the actorId
+     * Return the actor public key
      *
      * @return UUID
      */
-    UUID getActorId();
+    String getActorPublicKey();
 
     /**
      * Return the actorName

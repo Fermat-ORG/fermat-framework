@@ -26,7 +26,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
 
     private CryptoAddress receivedCryptoAddress;
 
-    private UUID actorId;
+    private String actorPublicKey;
 
     private String actorName;
 
@@ -36,9 +36,9 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         this.contactId = walletContactRecord.getContactId();
         this.walletPublicKey = walletContactRecord.getWalletPublicKey();
         this.actorType = walletContactRecord.getActorType();
-        this.receivedCryptoAddress = walletContactRecord.getReceivedCryptoAddress();
-        this.actorId = walletContactRecord.getActorId();
-        this.actorName = walletContactRecord.getActorName();
+        this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses().get(0);
+        this.actorPublicKey = walletContactRecord.getActorPublicKey();
+        this.actorName = walletContactRecord.getActorAlias();
         this.profilePicture = profilePicture != null ? profilePicture.clone() : null;
     }
 
@@ -67,8 +67,8 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     }
 
     @Override
-    public UUID getActorId() {
-        return actorId;
+    public String getActorPublicKey() {
+        return actorPublicKey;
     }
 
     @Override
