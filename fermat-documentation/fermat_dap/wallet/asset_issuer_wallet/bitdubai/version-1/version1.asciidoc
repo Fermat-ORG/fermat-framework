@@ -9,6 +9,7 @@ de esa manera el componente podra emitir todo los movimientos registrados en el 
 == Plug-in Description
 Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
 la plataforma DAP y la vault de donde sale la dirección.
+Definir en que momento quedara como disponible.
 
 == Plug-in Structure
 
