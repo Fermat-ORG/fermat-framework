@@ -59,7 +59,7 @@ public interface CryptoWallet extends Serializable{
                                                   String actorName,
                                                   Actors actorType,
                                                   ReferenceWallet referenceWallet,
-                                                  String walletPublicKey) throws CantCreateWalletContactException;
+                                                  String walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
      * Create a new contact with a photo for an specific wallet
@@ -72,12 +72,13 @@ public interface CryptoWallet extends Serializable{
      * @param photo bite array with photo information
      * @return an instance of the created publick key
      * @throws CantCreateWalletContactException if something goes wrong
+     * @throws ContactNameAlreadyExistsException if the name of the contact already exists
      */
-    CryptoWalletWalletContact createWalletContact(CryptoAddress receivedCryptoAddress,
-                                                  String actorName, Actors actorType,
-                                                  ReferenceWallet referenceWallet,
-                                                  String walletPublicKey,
-                                                  byte[] photo) throws CantCreateWalletContactException;
+    CryptoWalletWalletContact createWalletContactWithPhoto(CryptoAddress receivedCryptoAddress,
+                                                           String actorName, Actors actorType,
+                                                           ReferenceWallet referenceWallet,
+                                                           String walletPublicKey,
+                                                           byte[] photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
      * updates the photo of an actor

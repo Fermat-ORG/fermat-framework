@@ -1,17 +1,28 @@
 package com.bitdubai.sub_app.intra_user.fragments;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.PaintActionBar;
@@ -24,8 +35,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
@@ -43,6 +57,7 @@ import com.bitdubai.sub_app.intra_user.util.CommonLogger;
 import com.intra_user.bitdubai.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -53,6 +68,12 @@ import static android.widget.Toast.makeText;
  */
 
 public class ConnectionsListFragment extends FermatListFragment<IntraUserConnectionListItem> implements FermatListItemListeners<IntraUserConnectionListItem>, SearchView.OnQueryTextListener, SearchView.OnCloseListener, ActionBar.OnNavigationListener {
+
+    private final int POPUP_MENU_WIDHT = 325;
+
+    int MAX = 5;
+    int OFFSET= 0;
+
 
     IntraUserModuleManager intraUserModuleManager;
     private ErrorManager errorManager;
@@ -77,11 +98,17 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
             intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
             isStartList = true;
 
+            mNotificationsCount = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET).size();
+
 //            System.out.println("ACAAAAAA");
 //            System.out.println(System.currentTimeMillis());
-           // paintCheckBoxInActionBar();
+//            paintCheckBoxInActionBar();
 //            System.out.println(System.currentTimeMillis());
 //            System.out.println("ACAAAAAA");
+
+            // TODO: display unread notifications.
+            // Run a task to fetch the notifications count
+            new FetchCountTask().execute();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -111,6 +138,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
         // Update LayerDrawable's BadgeDrawable
         Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
+
 
 
 //        List<String> lst = new ArrayList<String>();
@@ -143,9 +171,20 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 //                Toast.makeText(getActivity(),"Intra user request",Toast.LENGTH_SHORT).show();
 //            }
             if (item.getItemId() == R.id.action_notifications) {
-                // TODO: display unread notifications.
-                // Run a task to fetch the notifications count
-                new FetchCountTask().execute();
+
+
+                List<IntraUserInformation> lstIntraUserRequestWaiting = null;
+                try {
+                    lstIntraUserRequestWaiting = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET);
+
+
+                    View view = getActivity().findViewById(R.id.action_notifications);
+                    showListMenu(view,lstIntraUserRequestWaiting);
+
+                } catch (CantGetIntraUsersListException e) {
+                    e.printStackTrace();
+                }
+
                 return true;
             }
 
@@ -306,7 +345,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     public void onItemClickListener(IntraUserConnectionListItem data, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Hubo un problema");
-        builder.setMessage("No se pudieron obtener los detalles de la wallet seleccionada");
+        builder.setMessage("No se pudieron obtener los detalles de la connexión seleccionada");
         builder.setPositiveButton("OK", null);
         builder.show();
     }
@@ -324,7 +363,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
     @Override
     public boolean onQueryTextSubmit(String name) {
-
+        swipeRefreshLayout.setRefreshing(true);
         IntraUserSearch intraUserSearch = intraUserModuleManager.searchIntraUser();
         intraUserSearch.setNameToSearch(name);
         //TODO: cuando esté el network service, esto va a descomentarse
@@ -338,6 +377,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
         ((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(true);
         adapter.changeDataSet(IntraUserConnectionListItem.getTestDataExample(getResources()));
+        swipeRefreshLayout.setRefreshing(false);
 
         return true;
     }
@@ -391,13 +431,143 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         protected Integer doInBackground(Void... params) {
             // example count. This is where you'd
             // query your data store for the actual count.
-            mNotificationsCount+=1;
             return mNotificationsCount;
         }
 
         @Override
         public void onPostExecute(Integer count) {
             updateNotificationsBadge(count);
+        }
+    }
+
+//    private static final String TITLE = "title";
+//    private static final String ICON = "icon";
+//
+//    private List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+//
+//    // Use this to add items to the list that the ListPopupWindow will use
+//    private void addItem(String title, int iconResourceId) {
+//        HashMap<String, Object> map = new HashMap<String, Object>();
+//        map.put(TITLE, title);
+//        map.put(ICON, iconResourceId);
+//        data.add(map);
+//    }
+
+    // Call this when you want to show the ListPopupWindow
+    private void showListMenu(View anchor,List<IntraUserInformation> lstIntraUserRequestWaiting) {
+        ListPopupWindow popupWindow = new ListPopupWindow(getActivity());
+
+        popupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+//        ListAdapter adapter = new SimpleAdapter(
+//                context,
+//                data,
+//                android.R.layout.activity_list_item, // You may want to use your own cool layout
+//                new String[] {TITLE, ICON}, // These are just the keys that the data uses
+//                new int[] {android.R.id.text1, android.R.id.icon}); // The view ids to map the data to
+
+        CustomListAdapter customListAdapter = new CustomListAdapter(getActivity(),lstIntraUserRequestWaiting);
+
+
+        popupWindow.setAnchorView(anchor);
+        popupWindow.setAdapter(customListAdapter);
+        popupWindow.setWidth(POPUP_MENU_WIDHT); // note: don't use pixels, use a dimen resource
+        popupWindow.getAnchorView().setBackgroundColor(Color.parseColor("#5C92BBBC"));
+        popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                changeActivity(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY);
+            }
+        }); // the callback for when a list item is selected
+        popupWindow.show();
+    }
+    public class CustomListAdapter extends ArrayAdapter<IntraUserInformation> {
+
+        private final Activity context;
+        private final List<IntraUserInformation> lstIntraUserRequest;
+
+        public CustomListAdapter(Activity context, List<IntraUserInformation> lstIntraUserRequest) {
+            super(context, R.layout.intra_user_notification_list_item, lstIntraUserRequest);
+            this.context = context;
+            this.lstIntraUserRequest = lstIntraUserRequest;
+
+        }
+        @Override
+        public View getView(int position, View view, ViewGroup parent) {
+
+            final IntraUserInformation intraUser = lstIntraUserRequest.get(position);
+
+            LayoutInflater inflater = context.getLayoutInflater();
+            View rowView= inflater.inflate(R.layout.intra_user_notification_list_item, null, true);
+            TextView textView_name = (TextView) rowView.findViewById(R.id.textView_name);
+            TextView textView_phrase = (TextView) rowView.findViewById(R.id.textView_phrase);
+            ImageView imageView_profile = (ImageView) rowView.findViewById(R.id.imageView_profile);
+
+
+            ImageView imageView_accept = (ImageView) rowView.findViewById(R.id.imageView_accept);
+
+            imageView_accept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        intraUserModuleManager.acceptIntraUser(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage());
+                    } catch (CantAcceptRequestException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            ImageView imageView_denied = (ImageView) rowView.findViewById(R.id.imageView_denied);
+
+            imageView_denied.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        intraUserModuleManager.denyConnection(intraUser.getPublicKey());
+                    } catch (IntraUserConectionDenegationFailedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
+
+
+
+            //txtTitle.setTextColor(Color.WHITE);
+            textView_name.setText(intraUser.getName());
+
+            switch (position){
+                case 0:
+                    imageView_profile.setImageResource(R.drawable.mati_profile);
+                    break;
+                case 1:
+                    imageView_profile.setImageResource(R.drawable.caroline_profile_picture);
+                    break;
+                case 2:
+                    imageView_profile.setImageResource(R.drawable.brant_profile_picture);
+                    break;
+                case 3:
+                    imageView_profile.setImageResource(R.drawable.louis_profile_picture);
+                    break;
+                case 4:
+                    imageView_profile.setImageResource(R.drawable.madaleine_profile_picture);
+                    break;
+            }
+
+
+            //imageView_profile.setImageBitmap(UtilsFuncs.getRoundedShape(BitmapFactory.decodeByteArray(intraUser.getProfileImage(), 0, intraUser.getProfileImage().length)));
+            //textView_phrase.setText(lstIntraUserRequest.get(position).getName());
+            //txtTitle.setText(LogLevel.MINIMAL_LOGGING.toString());
+
+
+
+//                setLogLevelImage();
+//                if(imageId[position]!=0){
+//                    imageView.setImageResource(R.drawable.ic_action_accept_grey);
+//                }
+
+            return rowView;
         }
     }
 }

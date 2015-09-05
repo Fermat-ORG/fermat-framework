@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 
 import junit.framework.TestCase;
@@ -20,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 import static com.googlecode.catchexception.CatchException.*;
@@ -28,12 +26,6 @@ import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListWalletContactsScrollingTest extends TestCase {
-
-    /**
-     * DealsWithActorAddressBook interface Mocked
-     */
-    @Mock
-    ActorAddressBookManager actorAddressBookManager;
 
     /**
      * DealsWithErrors interface Mocked
@@ -66,7 +58,6 @@ public class ListWalletContactsScrollingTest extends TestCase {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
-        walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
         walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);

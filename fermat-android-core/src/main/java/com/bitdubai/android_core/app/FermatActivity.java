@@ -50,6 +50,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -64,9 +65,11 @@ import com.bitdubai.fermat_android_api.engine.PaintActionBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 
@@ -74,6 +77,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Wall
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -85,6 +90,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
 import static android.widget.Toast.*;
@@ -94,7 +101,7 @@ import static java.lang.System.gc;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActionBar {
+public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActionBar,Observer {
 
     private static final String TAG = "fermat-core";
     private MainMenu mainMenu;
@@ -128,6 +135,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 
         try {
@@ -185,6 +193,17 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return super.onCreateOptionsMenu(menu);
 
     }
+
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+
 
 
     /**
@@ -448,6 +467,26 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getNotificationManager().addObserver(this);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        getNotificationManager().deleteObserver(this);
+    }
 
     /**
      * @param tabs
@@ -875,6 +914,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public WalletPublisherModuleManager getWalletPublisherManager() {
         return (WalletPublisherModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE);
     }
+    /**
+     * Get NotificationManager
+     */
+    public NotificationManagerMiddleware getNotificationManager() {
+        return (NotificationManagerMiddleware) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION);
+    }
+
 
 
     /**
@@ -916,9 +962,41 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     @Override
-    public void launchNotification(String notificationTitle, String notificationImageText, String notificationTextBody) {
-        notificate(notificationTitle, notificationImageText, notificationTextBody);
+    public void launchWalletNotification(String walletPublicKey,String notificationTitle, String notificationImageText, String notificationTextBody) {
+        //try {
+            //getWalletRuntimeManager().getWallet(walletPublicKey).getLastActivity();
+            notificateWallet(walletPublicKey, notificationTitle, notificationImageText, notificationTextBody);
+
+        //} catch (WalletRuntimeExceptions walletRuntimeExceptions) {
+        //    walletRuntimeExceptions.printStackTrace();
+       // }
+
     }
+    public void notificateWallet(String walletPublicKey,String notificationTitle, String notificationImageText, String notificationTextBody) {
+        //Log.i(TAG, "Got a new result: " + notification_title);
+        Resources r = getResources();
+        Intent intent = new Intent(this, WalletActivity.class);
+        intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, walletPublicKey);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+
+        PendingIntent pi = PendingIntent
+                .getActivity(this, 0, intent, 0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(notificationTitle)
+                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                .setContentTitle(notificationImageText)
+                .setContentText(notificationTextBody)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, notification);
+
+    }
+
 
     public void notificate(String notificationTitle, String notificationImageText, String notificationTextBody) {
         //Log.i(TAG, "Got a new result: " + notification_title);
@@ -937,10 +1015,31 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 getSystemService(NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notification);
-//
-//        prefs.edit()
-//            .putString(FlickrFetchr.PREF_LAST_RESULT_ID, resultId)
-//    .commit();
+
     }
 
+    @Override
+    public void update(Observable observable, Object o) {
+        try {
+
+            for (NotificationEvent notificationEvent : getNotificationManager().getPoolNotification()) {
+
+                switch (NotificationType.getByCode(notificationEvent.getNotificationType())) {
+                    case INCOMING_MONEY:
+                        launchWalletNotification(notificationEvent.getWalletPublicKey(),notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case INCOMING_CONNECTION:
+                        break;
+                    case MONEY_REQUEST:
+                        break;
+
+                }
+
+            }
+
+        }catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
