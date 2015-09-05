@@ -1,9 +1,9 @@
 [[wallet-asset-issuer-BitDubai-V1]]
 == Version 1
-    El componente asset issuer wallet registrara todas las transacciones contables que ocurran en la Reference Asset Issuer Wallet, y almacenara dicha transacción en la base de datos,
-  de esa manera el componente podra emitir todo los movimientos registrados en el Asset Issuer Wallet.
-    Todas las transacciones deberan de pasar por el componente "Transacction" que sera en el que determine si la operacion debera ser persitida en la base de datos del componente asset
-  issuer wallet.
+El componente asset issuer wallet registrara todas las transacciones contables que ocurran en la Reference Asset Issuer Wallet, y almacenara dicha transacción en la base de datos,
+de esa manera el componente podra emitir todo los movimientos registrados en el Asset Issuer Wallet.
+ Todas las transacciones deberan de pasar por el componente "Transacction" que sera en el que determine si la operacion debera ser persitida en la base de datos del componente asset
+ issuer wallet.
 
 
 == Plug-in Description
