@@ -36,6 +36,7 @@ This is the simplified specification of the Crypto Broker Platform plugins
 
 ### Middleware
 * **Customers**: administra y subclasifica a los Crypto Customers de un Crypto Broker
+* **Crypto Broker identity wallet linker**: relaciona una Crypto Broker Identity con una Crypto Broker Wallet.
 
 ### Actor
 * **Crypto Broker**: administra la relacion con los Brokers (establecer conexion, listar contactos de este tipo, etc)
@@ -81,6 +82,9 @@ This is the simplified specification of the Crypto Broker Platform plugins
  * **Bank**: gestiona el balance bancario del Crypto Broker (puede estar relacionado a multiples cuentas bancarias).
 * **CRYPTO CUSTOMER**
  * **Crypto Customer**: gestiona el balance crypto del Crypto Customer.
+
+### Request
+* **Sale**: gestiona la solicitud de compra del Crypto Customer al Crypto Broker
 
 ### Identity
 * **Crypto Broker**: gestiona la Clave Privada y Publica del Broker asociadas con un alias.
