@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.Outgoing
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletCryptoModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 
@@ -22,11 +21,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class PluginInterfaceImplementationTest extends TestCase {
 
-    /**
-     * DealsWithActorAddressBook interface Mocked
-     */
-    @Mock
-    ActorAddressBookManager actorAddressBookManager;
 
     /**
      * DealsWithBitcoinWallet interface Mocked
@@ -76,7 +70,6 @@ public class PluginInterfaceImplementationTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         cryptoWalletWalletModulePluginRoot = new CryptoWalletCryptoModulePluginRoot();
-        cryptoWalletWalletModulePluginRoot.setActorAddressBookManager(actorAddressBookManager);
         cryptoWalletWalletModulePluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
         cryptoWalletWalletModulePluginRoot.setCryptoVaultManager(cryptoVaultManager);
         cryptoWalletWalletModulePluginRoot.setErrorManager(errorManager);

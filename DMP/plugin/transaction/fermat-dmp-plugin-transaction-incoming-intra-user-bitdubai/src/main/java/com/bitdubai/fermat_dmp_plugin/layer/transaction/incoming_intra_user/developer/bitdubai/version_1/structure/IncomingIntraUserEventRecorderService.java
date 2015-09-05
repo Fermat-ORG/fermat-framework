@@ -27,15 +27,15 @@ public class IncomingIntraUserEventRecorderService {
 
     private IncomingIntraUserRegistry incomingIntraUserRegistry;
 
-    private EventManager eventManager;
+    private EventManager        eventManager;
     private List<EventListener> listenersRegistered = new ArrayList<>();
 
     private ServiceStatus serviceStatus;
 
     public IncomingIntraUserEventRecorderService(final EventManager eventManager, final IncomingIntraUserRegistry incomingIntraUserRegistry){
-        this.eventManager = eventManager;
+        this.eventManager              = eventManager;
         this.incomingIntraUserRegistry = incomingIntraUserRegistry;
-        this.serviceStatus = ServiceStatus.CREATED;
+        this.serviceStatus             = ServiceStatus.CREATED;
     }
 
 

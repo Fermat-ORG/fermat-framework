@@ -39,14 +39,21 @@ public class PluginsIdentityManager implements DealsWithPlatformFileSystem, Seri
         try {
             try {
                 String[] stringPluginIdPairs = getPluginIdsFile().getContent().split("\\|");
-
+                boolean changed = false;
                 for (String stringPluginIdPair : stringPluginIdPairs) {
                     if (!stringPluginIdPair.equals("")) {
                         String[] pluginIdPair = stringPluginIdPair.split(";");
-                        pluginIdsMap.put(Plugins.getByKey(pluginIdPair[0]), UUID.fromString(pluginIdPair[1]));
+                        try {
+                            pluginIdsMap.put(Plugins.getByKey(pluginIdPair[0]), UUID.fromString(pluginIdPair[1]));
+                        } catch (InvalidParameterException e) {
+                            changed = true;
+                        }
                     }
                 }
-            } catch (CantCreateFileException | InvalidParameterException e) {
+                if (changed)
+                    savePluginIdsFile(getPluginIdsFile());
+
+            } catch (CantCreateFileException | CantPersistFileException e) {
                 e.printStackTrace();
                 throw new CantInitializePluginsManagerException(CantInitializePluginsManagerException.DEFAULT_MESSAGE, e, "", "I don't know really what happened.");
             }

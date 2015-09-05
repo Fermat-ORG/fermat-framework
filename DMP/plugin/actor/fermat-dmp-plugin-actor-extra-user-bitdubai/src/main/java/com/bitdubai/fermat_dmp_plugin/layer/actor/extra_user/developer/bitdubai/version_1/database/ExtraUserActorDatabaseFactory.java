@@ -1,4 +1,4 @@
-package   com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -13,10 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.Extra UserActorDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.Extra UserActorDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/09/15.
  *
  * @version 1.0
@@ -47,53 +47,36 @@ public class ExtraUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
-        Database database;
-
-        /**
-         * I will create the database where I am going to store the information of this wallet.
-         */
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         try {
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
-        }
+            Database database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
 
-        /**
-         * Next, I will add the needed tables.
-         */
-        try {
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
-            /**
-             * Create Extra User table.
-             */
             table = databaseFactory.newTableFactory(ownerId, ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME);
 
             table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
-            table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_NOMBRE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ExtraUserActorDatabaseConstants.EXTRA_USER_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 
             table.addIndex(ExtraUserActorDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUMN);
 
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
+            databaseFactory.createTable(ownerId, table);
+
+            return database;
+        } catch (CantCreateTableException cantCreateTableException) {
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
-            /**
-             * This shouldn't happen here because I was the one who gave the owner id to the database file system,
-             * but anyway, if this happens, I can not continue.
-             */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+        } catch (Exception e) {
+
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "General exception.");
         }
-        return database;
     }
 
     /**
