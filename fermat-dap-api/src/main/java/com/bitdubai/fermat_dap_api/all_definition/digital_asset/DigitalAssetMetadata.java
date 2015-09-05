@@ -12,15 +12,15 @@ public class DigitalAssetMetadata {
 
     public DigitalAssetMetadata(DigitalAsset digitalAsset) {
         this.digitalAsset = digitalAsset;
-        digitalAsset.setState(State.FINAL);
-        hash = generateHash();
     }
 
-    String generateHash(){
+    private String  generateHash(){
+        digitalAsset.setState(State.FINAL);
         return CryptoHasher.performSha256(digitalAsset.toString());
     }
 
     public String getDigitalAssetHash() {
+        hash = generateHash();
         return hash;
     }
 }

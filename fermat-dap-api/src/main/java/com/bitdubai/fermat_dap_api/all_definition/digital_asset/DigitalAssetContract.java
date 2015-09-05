@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_api.all_definition.digital_asset;
 import com.bitdubai.fermat_dap_api.all_definition.contracts.Contract;
 import com.bitdubai.fermat_dap_api.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.all_definition.contracts.exceptions.CantDefineContractPropertyException;
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.ContractPropertyName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +21,9 @@ public class DigitalAssetContract implements Contract {
      */
     public DigitalAssetContract() {
         properties = new ArrayList<>();
-        redeemable = new ContractProperty(ContractPropertyName.REDEEMABLE.toString(), null);
-        transferable = new ContractProperty(ContractPropertyName.TRANSFERABLE.toString(), null);
-        expirationDate= new ContractProperty(ContractPropertyName.EXPIRATION_DATE.toString(), null);
+        redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
+        transferable = new ContractProperty(DigitalAssetContractPropertiesConstants.TRANSFERABLE, null);
+        expirationDate= new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE.toString(), null);
         properties.add(redeemable);
         properties.add(transferable);
         properties.add(expirationDate);
@@ -47,5 +46,16 @@ public class DigitalAssetContract implements Contract {
             if (!isExistingProperty)
                 throw new CantDefineContractPropertyException(CantDefineContractPropertyException.DEFAULT_MESSAGE, null, "Property " + contractProperty.toString() + " does not exists in the contract.", null);
         }
+    }
+
+    @Override
+    public ContractProperty getContractProperty(String propertyName) {
+        ContractProperty returnedContractProperty = null;
+        for (ContractProperty contractProperty : properties){
+            if (contractProperty.getName() == propertyName)
+                returnedContractProperty = contractProperty;
+        }
+
+        return returnedContractProperty;
     }
 }
