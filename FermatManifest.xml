@@ -3433,7 +3433,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Outgoing Asset Issuer"
+							name="Asset Distribution"
 							description=""
 							difficulty="10"
 							code-level="development"
