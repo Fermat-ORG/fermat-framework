@@ -21,8 +21,8 @@ import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUse
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+
+
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -97,8 +97,6 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    // DealsWithlogManager interface member variable.
-    private LogManager logManager = null;
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -116,12 +114,13 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
      * @throws CantGetUserIntraUserIdentitiesException
      */
     @Override
-    public List<IntraUserIdentity> getIntraUsersFromCurrentDeviceUser() throws CantGetUserIntraUserIdentitiesException {
+    public List<IntraUserIdentity> getAllIntraUsersFromCurrentDeviceUser() throws CantGetUserIntraUserIdentitiesException {
 
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            return intraUserIdentityDao.getIntraUserFromCurrentDeviceUser(loggedUser);
+            return intraUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
+
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantGetUserIntraUserIdentitiesException("CAN'T GET INTRA USER IDENTITYS", e, "Error get logged user device", "");
         } catch (CantGetIntraUserIdentitiesException e) {
@@ -171,7 +170,6 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
         }
 
     }
-
     /**
      * Service Interface implementation.
      */
@@ -240,7 +238,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        Database database;
+
         try {
             IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             dbFactory.initializeDatabase();

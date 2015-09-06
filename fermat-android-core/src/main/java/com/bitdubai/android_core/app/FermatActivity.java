@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,19 +18,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ActionMenuView;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
@@ -48,9 +48,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -61,12 +61,15 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
+import com.bitdubai.fermat_android_api.engine.PaintActionBar;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 
@@ -74,18 +77,21 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Wall
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
+import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
-import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
 import static android.widget.Toast.*;
@@ -95,7 +101,7 @@ import static java.lang.System.gc;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications {
+public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActionBar,Observer {
 
     private static final String TAG = "fermat-core";
     private MainMenu mainMenu;
@@ -114,7 +120,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * WizardTypes
      */
     private Map<WizardTypes, Wizard> wizards;
-    private WizardFragment wizardFragment;
 
     /**
      * Activity type
@@ -130,6 +135,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 
         try {
@@ -156,9 +162,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public boolean onCreateOptionsMenu(Menu menu) {
 
         try {
-            if(mainMenu!=null){
-                for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem: mainMenu.getMenuItems()){
-                    MenuItem item = menu.add (menuItem.getLabel());
+            //mainMenu = getActivityUsedType().getMainMenu();
+            if (mainMenu != null) {
+                for (com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem : mainMenu.getMenuItems()) {
+                    MenuItem item = menu.add(menuItem.getLabel());
+
 //                item.setOnMenuItemClickListener (new ActionMenuView.OnMenuItemClickListener(){
 //                    @Override
 //                    public boolean onMenuItemClick (MenuItem item){
@@ -168,11 +176,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //                    }
 //                });
                 }
+                //getMenuInflater().inflate(R.menu.wallet_store_activity_wallet_menu, menu);
+
             }
 
 
             return true;
-
 
 
         } catch (Exception e) {
@@ -185,6 +194,17 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     }
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+
+
 
     /**
      * This hook is called whenever an item in your options menu is selected.
@@ -195,9 +215,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
 
         try {
 
@@ -255,11 +272,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
-    private void paintMainMenu(MainMenu mainMenu) {
-
-    }
-
-    private void setMainMenu(MainMenu mainMenu){
+    private void setMainMenu(MainMenu mainMenu) {
         this.mainMenu = mainMenu;
     }
 
@@ -291,12 +304,21 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 getActionBar().setTitle(title);
                 getActionBar().show();
                 setActionBarProperties(title, activity);
+                paintToolbarIcon(titleBar);
             } else {
                 getActionBar().hide();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void paintToolbarIcon(TitleBar titleBar) {
+        if (titleBar.getIconName() != null) {
+
+            getActionBar().setIcon(R.drawable.world);
+        }
+
     }
 
     /**
@@ -445,6 +467,26 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
+    /**
+     * Dispatch onResume() to fragments.  Note that for better inter-operation
+     * with older versions of the platform, at the point of this call the
+     * fragments attached to the activity are <em>not</em> resumed.  This means
+     * that in some cases the previous state may still be saved, not allowing
+     * fragment transactions that modify the state.  To correctly interact
+     * with fragments in their proper state, you should instead override
+     * {@link #onResumeFragments()}.
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getNotificationManager().addObserver(this);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        getNotificationManager().deleteObserver(this);
+    }
 
     /**
      * @param tabs
@@ -528,7 +570,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     window.setStatusBarColor(Color.TRANSPARENT);
 
                     gc();
-                    InputStream inputStream= getAssets().open("drawables/home3.png");
+                    InputStream inputStream = getAssets().open("drawables/home3.png");
 
 
                     window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
@@ -738,6 +780,16 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
 
+    @Override
+    public void paintComboBoxInActionBar(ArrayAdapter adapter, ActionBar.OnNavigationListener listener) {
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        //ArrayAdapter<String> itemsAdapter =
+        //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
+        getActionBar().setListNavigationCallbacks(adapter, listener);
+        adapter.notifyDataSetChanged();
+    }
+
+
     /**
      * Get wallet session manager
      *
@@ -850,7 +902,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     /**
-     *  Get IntraUserModuleManager
+     * Get IntraUserModuleManager
      */
     public IntraUserModuleManager getIntraUserModuleManager() {
         return (IntraUserModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
@@ -862,6 +914,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public WalletPublisherModuleManager getWalletPublisherManager() {
         return (WalletPublisherModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE);
     }
+    /**
+     * Get NotificationManager
+     */
+    public NotificationManagerMiddleware getNotificationManager() {
+        return (NotificationManagerMiddleware) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION);
+    }
+
 
 
     /**
@@ -880,32 +939,19 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     /**
      * Launch wizard configuration from key
      *
-     * @param key Name of FermatWizard Enum
+     * @param key  Name of FermatWizard Enum
+     * @param args Object... arguments to passing to the wizard fragment
      */
     @Override
-    public void showWizard(WizardTypes key) {
+    public void showWizard(WizardTypes key, Object... args) {
         if (wizards == null)
             throw new NullPointerException("the wizard is null");
         Wizard wizard = wizards.get(key);
         if (wizard != null) {
-            dismissWizard();
-            wizardFragment = new WizardFragment();
-            wizardFragment.setWizard(wizard);
-            wizardFragment.setCancelable(true);
-            wizardFragment.show(getFragmentManager(), WizardFragment.class.getName());
+            /* Starting Wizard Activity */
+            WizardActivity.open(this, args, wizard);
         } else {
             Log.e(TAG, "Wizard not found...");
-        }
-    }
-
-    /**
-     * Dismiss Wizard Fragment if needed and release variable
-     */
-    @Override
-    public void dismissWizard() {
-        if (wizardFragment != null) {
-            wizardFragment.dismiss();
-            wizardFragment = null;
         }
     }
 
@@ -916,9 +962,41 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     @Override
-    public void launchNotification(String notificationTitle, String notificationImageText, String notificationTextBody) {
-        notificate(notificationTitle, notificationImageText, notificationTextBody);
+    public void launchWalletNotification(String walletPublicKey,String notificationTitle, String notificationImageText, String notificationTextBody) {
+        //try {
+            //getWalletRuntimeManager().getWallet(walletPublicKey).getLastActivity();
+            notificateWallet(walletPublicKey, notificationTitle, notificationImageText, notificationTextBody);
+
+        //} catch (WalletRuntimeExceptions walletRuntimeExceptions) {
+        //    walletRuntimeExceptions.printStackTrace();
+       // }
+
     }
+    public void notificateWallet(String walletPublicKey,String notificationTitle, String notificationImageText, String notificationTextBody) {
+        //Log.i(TAG, "Got a new result: " + notification_title);
+        Resources r = getResources();
+        Intent intent = new Intent(this, WalletActivity.class);
+        intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, walletPublicKey);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+
+        PendingIntent pi = PendingIntent
+                .getActivity(this, 0, intent, 0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(notificationTitle)
+                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                .setContentTitle(notificationImageText)
+                .setContentText(notificationTextBody)
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, notification);
+
+    }
+
 
     public void notificate(String notificationTitle, String notificationImageText, String notificationTextBody) {
         //Log.i(TAG, "Got a new result: " + notification_title);
@@ -937,9 +1015,31 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 getSystemService(NOTIFICATION_SERVICE);
 
         notificationManager.notify(0, notification);
-//
-//        prefs.edit()
-//            .putString(FlickrFetchr.PREF_LAST_RESULT_ID, resultId)
-//    .commit();
+
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        try {
+
+            for (NotificationEvent notificationEvent : getNotificationManager().getPoolNotification()) {
+
+                switch (NotificationType.getByCode(notificationEvent.getNotificationType())) {
+                    case INCOMING_MONEY:
+                        launchWalletNotification(notificationEvent.getWalletPublicKey(),notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case INCOMING_CONNECTION:
+                        break;
+                    case MONEY_REQUEST:
+                        break;
+
+                }
+
+            }
+
+        }catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+
     }
 }

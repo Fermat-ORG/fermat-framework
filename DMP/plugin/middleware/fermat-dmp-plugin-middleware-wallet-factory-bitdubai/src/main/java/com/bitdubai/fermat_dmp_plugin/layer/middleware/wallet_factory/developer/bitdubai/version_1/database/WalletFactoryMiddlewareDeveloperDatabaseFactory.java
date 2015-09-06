@@ -69,7 +69,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME);
             database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -91,7 +91,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
                   /*
                    * We create the new database
                    */
-                database = walletFactoryMiddlewareDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = walletFactoryMiddlewareDatabaseFactory.createDatabase(pluginId, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME);
                 database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
@@ -108,7 +108,7 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Factory", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME));
         return databases;
     }
 
@@ -126,8 +126,11 @@ public class WalletFactoryMiddlewareDeveloperDatabaseFactory implements DealsWit
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME);
         projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME);
+        projectColumns.add(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME);
         /**
          * Table Project addition.
          */

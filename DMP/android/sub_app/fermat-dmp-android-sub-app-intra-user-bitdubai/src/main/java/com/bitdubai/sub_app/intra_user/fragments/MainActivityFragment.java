@@ -26,7 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.intra_user.common.DetailedCatalogItemLoader;
 import com.bitdubai.sub_app.intra_user.common.DetailedCatalogItemLoaderListener;
-import com.bitdubai.sub_app.intra_user.common.adapters.WalletStoreCatalogueAdapter;
+
 import com.bitdubai.sub_app.intra_user.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user.util.CommonLogger;
@@ -106,7 +106,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new WalletStoreCatalogueAdapter(getActivity(), catalogueItemList);
+            //adapter = new WalletStoreCatalogueAdapter(getActivity(), catalogueItemList);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;

@@ -1,15 +1,13 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 
 import junit.framework.TestCase;
 
@@ -21,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 import static com.googlecode.catchexception.CatchException.*;
@@ -31,22 +28,16 @@ import static org.fest.assertions.api.Assertions.*;
 public class ListWalletContactsScrollingTest extends TestCase {
 
     /**
-     * DealsWithActorAddressBook interface Mocked
-     */
-    @Mock
-    ActorAddressBookManager actorAddressBookManager;
-
-    /**
      * DealsWithErrors interface Mocked
      */
     @Mock
     ErrorManager errorManager;
 
     /**
-     * DealsWithWalletAddressBook interface Mocked
+     * DealsWithCryptoAddressBook interface Mocked
      */
     @Mock
-    WalletAddressBookManager walletAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithWalletContacts interface Mocked
@@ -60,16 +51,15 @@ public class ListWalletContactsScrollingTest extends TestCase {
 
     String walletPublicKey;
 
-    WalletModuleCryptoWallet walletModuleCryptoWallet;
+    CryptoWalletWalletModuleManager walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
-        walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
+        walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setErrorManager(errorManager);
-        walletModuleCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
+        walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
         walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
         walletModuleCryptoWallet.initialize();
     }
@@ -93,7 +83,7 @@ public class ListWalletContactsScrollingTest extends TestCase {
 
     @Test
     public void ListWalletContacts_RegistryIsNotInitialized_CantGetAllWalletContactsException() throws Exception {
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
+        walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
 
         catchException(walletModuleCryptoWallet).listWalletContactsScrolling(walletPublicKey, 1, 10);
         assertThat(caughtException())

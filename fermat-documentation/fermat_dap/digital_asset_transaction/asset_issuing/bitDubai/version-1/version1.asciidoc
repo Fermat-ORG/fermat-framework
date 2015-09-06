@@ -4,6 +4,7 @@
     Esta información, no solo contendrá el detalle de la transacción asociada al asset, deberá incluir la información multimedia que sirva para la construcción de la UI del Asset en el dispositivo.
 == Plug-in Description
 
+
 == Plug-in Structure
 
 == Events

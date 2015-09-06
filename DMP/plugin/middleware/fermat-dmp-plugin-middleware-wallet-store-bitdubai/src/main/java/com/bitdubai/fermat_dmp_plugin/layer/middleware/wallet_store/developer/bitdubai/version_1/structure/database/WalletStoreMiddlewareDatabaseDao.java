@@ -58,6 +58,7 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
 
     /**
      * Constructor
+     *
      * @param errorManager
      * @param pluginDatabaseSystem
      * @param logManager
@@ -103,21 +104,21 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
         try {
             return pluginDatabaseSystem.openDatabase(pluginId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.DATABASE_NAME);
-        } catch (CantOpenDatabaseException  | DatabaseNotFoundException exception) {
-            throw  new CantExecuteDatabaseOperationException(exception, null, "Error in database plugin.");
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantExecuteDatabaseOperationException(exception, null, "Error in database plugin.");
         }
     }
 
-    private DatabaseTable getDatabaseTable(String tableName){
+    private DatabaseTable getDatabaseTable(String tableName) {
         DatabaseTable table = database.getTable(tableName);
         return table;
     }
 
-    private Map<DatabaseTable, DatabaseTableRecord> addCatalogItemInformationToDatabaseTableRecords (CatalogItemInformation catalogItemInformation) throws InvalidParameterException {
+    private Map<DatabaseTable, DatabaseTableRecord> addCatalogItemInformationToDatabaseTableRecords(CatalogItemInformation catalogItemInformation) throws InvalidParameterException {
         Map<DatabaseTable, DatabaseTableRecord> records = new HashMap<DatabaseTable, DatabaseTableRecord>();
 
         UUID walletId = catalogItemInformation.getCatalogItemId(CatalogItems.WALLET);
-        if (walletId != null){
+        if (walletId != null) {
             DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME).getEmptyRecord();
             record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_ID_COLUMN_NAME, walletId);
             record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(walletId).getCode());
@@ -125,7 +126,7 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
         }
 
         UUID languageId = catalogItemInformation.getCatalogItemId(CatalogItems.LANGUAGE);
-        if (languageId != null){
+        if (languageId != null) {
             DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME).getEmptyRecord();
             record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME, languageId);
             record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(languageId).getCode());
@@ -133,7 +134,7 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
         }
 
         UUID skinId = catalogItemInformation.getCatalogItemId(CatalogItems.SKIN);
-        if (skinId != null){
+        if (skinId != null) {
             DatabaseTableRecord record = getDatabaseTable(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME).getEmptyRecord();
             record.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, skinId);
             record.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_INSTALATIONSTATUS_COLUMN_NAME, catalogItemInformation.getInstallationStatus(skinId).getCode());
@@ -146,10 +147,10 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
         return records;
     }
 
-    private DatabaseTransaction addCatalogItemInformationInTransaction (DatabaseOperations databaseOperation, DatabaseTransaction transaction, CatalogItemInformation catalogItemInformation) throws CantExecuteDatabaseOperationException {
-        try{
-            for (Map.Entry entry : addCatalogItemInformationToDatabaseTableRecords(catalogItemInformation).entrySet()){
-                switch (databaseOperation){
+    private DatabaseTransaction addCatalogItemInformationInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, CatalogItemInformation catalogItemInformation) throws CantExecuteDatabaseOperationException {
+        try {
+            for (Map.Entry entry : addCatalogItemInformationToDatabaseTableRecords(catalogItemInformation).entrySet()) {
+                switch (databaseOperation) {
                     case INSERT:
                         transaction.addRecordToInsert((DatabaseTable) entry.getKey(), (DatabaseTableRecord) entry.getValue());
                         break;
@@ -161,11 +162,11 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
                         transaction.addRecordToUpdate(table, record);
                         break;
                     default:
-                        throw new CantExecuteDatabaseOperationException(null,databaseOperation.toString(),"invalid database operation");
+                        throw new CantExecuteDatabaseOperationException(null, databaseOperation.toString(), "invalid database operation");
                 }
             }
         } catch (InvalidParameterException e) {
-            throw new CantExecuteDatabaseOperationException(e,null,null);
+            throw new CantExecuteDatabaseOperationException(e, null, null);
         }
 
         return transaction;
@@ -173,30 +174,32 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
 
     /**
      * Persist the change or insert into the database
+     *
      * @param databaseOperation
      * @param catalogItemInformation
      * @throws CantExecuteDatabaseOperationException
      */
-    public void persistCatalogItemInformation (DatabaseOperations databaseOperation, CatalogItemInformation catalogItemInformation) throws CantExecuteDatabaseOperationException {
-        try{
+    public void persistCatalogItemInformation(DatabaseOperations databaseOperation, CatalogItemInformation catalogItemInformation) throws CantExecuteDatabaseOperationException {
+        try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
             transaction = addCatalogItemInformationInTransaction(databaseOperation, transaction, catalogItemInformation);
             database.executeTransaction(transaction);
-        } catch (Exception exception){
+        } catch (Exception exception) {
             throw new CantExecuteDatabaseOperationException(exception, null, null);
         }
     }
 
     /**
      * returns the catalogItemInformation object from the database
+     *
      * @param catalogItemsIds
      * @return
      */
-    public CatalogItemInformation getCatalogItemInformationFromDatabase (Map<CatalogItems, UUID> catalogItemsIds) throws CantExecuteDatabaseOperationException {
+    public CatalogItemInformation getCatalogItemInformationFromDatabase(Map<CatalogItems, UUID> catalogItemsIds) throws CantExecuteDatabaseOperationException {
         database = openDatabase();
         CatalogItemInformation catalogItemInformation = new CatalogItemInformation();
-        for (Map.Entry<CatalogItems, UUID> entry : catalogItemsIds.entrySet()){
+        for (Map.Entry<CatalogItems, UUID> entry : catalogItemsIds.entrySet()) {
             catalogItemInformation.setCatalogItemId(entry.getKey(), entry.getValue());
             try {
                 catalogItemInformation.setInstallationStatus(entry.getValue(), getCatalogItemFromDatabaseTableRecord(entry.getKey(), entry.getValue()));
@@ -210,9 +213,9 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
         return catalogItemInformation;
     }
 
-    private DatabaseTableRecord getCatalogItemInformationIntoRecord(CatalogItems catalogItem,  UUID itemId) throws InconsistentDatabaseResultException, CantExecuteDatabaseOperationException, InvalidParameterException {
+    private DatabaseTableRecord getCatalogItemInformationIntoRecord(CatalogItems catalogItem, UUID itemId) throws InconsistentDatabaseResultException, CantExecuteDatabaseOperationException, InvalidParameterException {
         DatabaseTable databaseTable;
-        switch (catalogItem){
+        switch (catalogItem) {
             case LANGUAGE:
                 databaseTable = getDatabaseTable(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME);
                 databaseTable.setStringFilter(WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME, itemId.toString(), DatabaseFilterType.EQUAL);
@@ -228,7 +231,7 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
             default:
                 throw new InvalidParameterException("Invalid CatalogItem argument.", null, null, null);
         }
-        try{
+        try {
             databaseTable.loadToMemory();
 
             if (databaseTable.getRecords().size() != 1)
@@ -240,11 +243,11 @@ public class WalletStoreMiddlewareDatabaseDao implements DealsWithErrors, DealsW
         }
     }
 
-    private InstallationStatus getCatalogItemFromDatabaseTableRecord(CatalogItems catalogItem,  UUID itemId) throws CantExecuteDatabaseOperationException {
+    private InstallationStatus getCatalogItemFromDatabaseTableRecord(CatalogItems catalogItem, UUID itemId) throws CantExecuteDatabaseOperationException {
         InstallationStatus installationStatus;
         try {
             DatabaseTableRecord record = getCatalogItemInformationIntoRecord(catalogItem, itemId);
-            switch (catalogItem){
+            switch (catalogItem) {
                 case WALLET:
                     installationStatus = InstallationStatus.getByCode(record.getStringValue(WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_INSTALATIONSTATUS_COLUMN_NAME));
                     break;

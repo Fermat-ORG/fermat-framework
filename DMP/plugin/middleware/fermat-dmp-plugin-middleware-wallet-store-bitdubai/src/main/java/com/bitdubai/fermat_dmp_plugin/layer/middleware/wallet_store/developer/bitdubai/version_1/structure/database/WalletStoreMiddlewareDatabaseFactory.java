@@ -60,7 +60,6 @@ public class WalletStoreMiddlewareDatabaseFactory implements DealsWithPluginData
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, null);
         }
 
-
         /**
          * Next, I will add the needed tables.
          */
@@ -75,7 +74,6 @@ public class WalletStoreMiddlewareDatabaseFactory implements DealsWithPluginData
 
             //todo corregir implementacion de la factory
             table = databaseFactory.newTableFactory(ownerId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME);
-//            table = ((DatabaseFactory) database).newTableFactory(ownerId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_TABLE_NAME);
 
             table.addColumn(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_INSTALATIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -83,13 +81,11 @@ public class WalletStoreMiddlewareDatabaseFactory implements DealsWithPluginData
             table.addIndex(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.WALLETSTATUS_FIRST_KEY_COLUMN);
 
             databaseFactory.createTable(ownerId, table);
-//            ((DatabaseFactory) database).createTable(ownerId, table);
 
             /**
              * Create SkinStatus table.
              */
             table = databaseFactory.newTableFactory(ownerId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME);
-//            table = ((DatabaseFactory) database).newTableFactory(ownerId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_TABLE_NAME);
 
             table.addColumn(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_INSTALATIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -97,13 +93,11 @@ public class WalletStoreMiddlewareDatabaseFactory implements DealsWithPluginData
             table.addIndex(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.SKINSTATUS_FIRST_KEY_COLUMN);
 
             databaseFactory.createTable(ownerId, table);
-//            ((DatabaseFactory) database).createTable(ownerId, table);
 
             /**
              * Create LanguageStatus table.
              */
             table = databaseFactory.newTableFactory(ownerId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME);
-//            table = ((DatabaseFactory) database).newTableFactory(ownerId, com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_TABLE_NAME);
 
             table.addColumn(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_INSTALATIONSTATUS_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
@@ -111,7 +105,6 @@ public class WalletStoreMiddlewareDatabaseFactory implements DealsWithPluginData
             table.addIndex(com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants.LANGUAGESTATUS_FIRST_KEY_COLUMN);
 
             databaseFactory.createTable(ownerId, table);
-//            ((DatabaseFactory) database).createTable(ownerId, table);
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
