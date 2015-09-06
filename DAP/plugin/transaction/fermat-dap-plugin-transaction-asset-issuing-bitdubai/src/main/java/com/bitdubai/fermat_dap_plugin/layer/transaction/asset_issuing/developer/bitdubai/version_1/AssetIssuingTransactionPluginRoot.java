@@ -9,10 +9,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
@@ -20,6 +24,7 @@ import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAssetCont
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetException;
 import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -33,8 +38,9 @@ import java.util.logging.Logger;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors,  DealsWithPluginDatabaseSystem, Plugin, Service {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook,DealsWithCryptoVault, DealsWithEvents, DealsWithErrors,  DealsWithPluginDatabaseSystem, Plugin, Service {
 
+    CryptoAddressBookManager cryptoAddressBookManager;
     CryptoVaultManager cryptoVaultManager;
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     ErrorManager errorManager;
@@ -89,7 +95,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         printSomething("Starting plugin");
         //TODO: implement this method
         try{
-            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.cryptoVaultManager);
+            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.cryptoVaultManager, this.cryptoAddressBookManager);
 
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "CryptoVaultManager is null");
@@ -150,6 +156,28 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
         }
 
+    }
 
+    @Override
+    public void setActors(String deliveredByActorPublicKey, Actors deliveredByType, String deliveredToActorPublicKey, Actors deliveredToType) throws CantSetObjectException {
+
+        if(deliveredByActorPublicKey==null||deliveredToActorPublicKey==null||deliveredByType==null||deliveredToType==null){
+            throw new CantSetObjectException("Actor component is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setActors(deliveredByActorPublicKey, deliveredByType, deliveredToActorPublicKey, deliveredToType);
+
+    }
+
+    @Override
+    public void setWallet(String walletPublicKey, ReferenceWallet walletType) throws CantSetObjectException {
+        if(walletPublicKey==null||walletType==null){
+            throw new CantSetObjectException("Wallet component is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setWallet( walletPublicKey, walletType);
+    }
+
+    @Override
+    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+        this.cryptoAddressBookManager=cryptoAddressBookManager;
     }
 }

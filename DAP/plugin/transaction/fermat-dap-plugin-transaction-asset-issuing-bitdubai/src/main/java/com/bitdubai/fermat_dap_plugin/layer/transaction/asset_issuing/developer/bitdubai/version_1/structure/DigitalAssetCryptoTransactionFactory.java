@@ -1,13 +1,19 @@
 package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetException;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 //import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -16,11 +22,20 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
  */
 public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
+    CryptoAddressBookManager cryptoAddressBookManager;
     CryptoVaultManager cryptoVaultManager;
+    DigitalAsset digitalAsset;
     ErrorManager errorManager;
+    String deliveredByActorPublicKey;
+    Actors deliveredByType;
+    String deliveredToActorPublicKey;
+    Actors deliveredToType;
+    String walletPublicKey;
+    ReferenceWallet walletType;
 
-    public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException {
+    public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager, CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException {
 
+        setCryptoAddressBookManagerManager(cryptoAddressBookManager);
         setCryptoVaultManager(cryptoVaultManager);
 
     }
@@ -29,6 +44,17 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     public void setErrorManager(ErrorManager errorManager) {
 
         this.errorManager=errorManager;
+
+    }
+
+    public void setCryptoAddressBookManagerManager(CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException{
+
+        if(cryptoAddressBookManager==null){
+
+            throw new CantSetObjectException("CryptoAddressBookManager is null");
+
+        }
+        this.cryptoAddressBookManager=cryptoAddressBookManager;
 
     }
 
@@ -43,14 +69,58 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
+    private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
+
+        try{
+            CryptoAddress genesisAddress=this.cryptoVaultManager.getAddress();
+            digitalAsset.setGenesisAddress(genesisAddress);
+        }catch(Exception exception){
+            throw new CantSetObjectException(exception, "Setting GenesisAddress to DigitalAsset","Unexpected exception");
+        }
+
+    }
+
+    public void setActors(String deliveredByActorPublicKey, Actors deliveredByType, String deliveredToActorPublicKey, Actors deliveredToType){
+
+        this.deliveredByActorPublicKey=deliveredByActorPublicKey;
+        this.deliveredByType=deliveredByType;
+        this.deliveredToActorPublicKey=deliveredToActorPublicKey;
+        this.deliveredToType=deliveredToType;
+
+    }
+
+    public void setWallet(String walletPublicKey, ReferenceWallet walletType){
+        this.walletPublicKey=walletPublicKey;
+        this.walletType=walletType;
+    }
+
+    private void areObjectsSettled() throws ObjectNotSetException{
+
+        if(deliveredByActorPublicKey==null){
+            throw new ObjectNotSetException("deliveredByActorPublicKey is not set");
+        }
+        if(deliveredByType==null){
+            throw new ObjectNotSetException("deliveredByType is not set");
+        }
+        if(deliveredToActorPublicKey==null){
+            throw new ObjectNotSetException("deliveredToActorPublicKey is not set");
+        }
+        if(deliveredToType==null){
+            throw new ObjectNotSetException("deliveredToType is not set");
+        }
+        if(walletPublicKey==null){
+            throw new ObjectNotSetException("deliveredToActorPublicKey is not set");
+        }
+        if(walletType==null){
+            throw new ObjectNotSetException("deliveredToType is not set");
+        }
+
+    }
+
     public void createDigitalAssetCryptoTransaction(DigitalAsset digitalAsset) throws CantCreateDigitalAssetException{
 
         /**
          * TODO:
-         * Se solicita a la Crypto Vault la creación de una transaction bitcoin a través del Outoing Intra user. Este hash se define como la GenesisTransaction
-         en el Digital Asset.
-         * Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
-         la plataforma DAP y la vault de donde sale la dirección.
          * Se completa la crypto transacción especificando el GenesisAmount.
          * Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_RETURN de la crypto transacción.
          * Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.
@@ -65,17 +135,35 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         try{
 
+            this.digitalAsset=digitalAsset;
+            //Check if the Actors are set
+            areObjectsSettled();
             //We need to get a new GenesisAddress:
             this.cryptoVaultManager.connectToBitcoin();
-            CryptoAddress genesisAddress=this.cryptoVaultManager.getAddress();
-            digitalAsset.setGenesisAddress(genesisAddress);
+            setDigitalAssetGenesisAmount();
+            this.cryptoAddressBookManager.registerCryptoAddress(
+                    this.digitalAsset.getGenesisAddress(),
+                    this.deliveredByActorPublicKey,
+                    this.deliveredByType,
+                    this.deliveredToActorPublicKey,
+                    this.deliveredToType,
+                    Platforms.DIGITAL_ASSET_PLATFORM,
+                    Vaults.BITCOIN_VAULT,
+                    this.walletPublicKey,
+                    this.walletType);
             //TODO: hacer una prueba para la solicitud de direcciones
             //We need to complete the transaction
 
             this.cryptoVaultManager.disconnectFromBitcoin();
 
-        } catch (VaultNotConnectedToNetworkException exception) {
+        } catch(VaultNotConnectedToNetworkException exception) {
             throw new CantCreateDigitalAssetException(exception, "Creating a new Digital Asset Transaction - Connecting to Network", "Vault is not connected");
+        } catch(CantSetObjectException exception){
+            throw new CantCreateDigitalAssetException(exception, "Creating a new Digital Asset Transaction - Setting GenesisAddress", "Unexpected Exception");
+        } catch(ObjectNotSetException exception){
+            throw new CantCreateDigitalAssetException(exception, "Creating a new Digital Asset Transaction - Checking if actors are set", "Some actor is not set");
+        } catch(CantRegisterCryptoAddressBookRecordException exception){
+            throw new CantCreateDigitalAssetException(exception, "Creating a new Digital Asset Transaction - Registring cryptoAddres in AddressBook", "Please, Cceck the cause");
         }
 
     }
