@@ -30,3 +30,8 @@ El objetivo de esta técnica es evitar que los métodos getters devuelvan null, 
 
 * Validar todos los SET y GET con THROWS para asegurar que tengan valores y no se generen
 Excepciones desencadenadas de NULL
+
+
+= Refactor Pendientes por hacer:
+
+* Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.

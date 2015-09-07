@@ -390,9 +390,3 @@
 
 
 
-
-= Refactor Pendientes por hacer:
-
-* Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.
-
-- class
