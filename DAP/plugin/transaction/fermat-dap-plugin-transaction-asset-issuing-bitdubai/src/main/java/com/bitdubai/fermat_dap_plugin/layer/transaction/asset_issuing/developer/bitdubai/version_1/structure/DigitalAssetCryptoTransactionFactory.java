@@ -132,7 +132,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          * Todos los Digital Assets generados deben ser transferidos al plugin AssetDistribution, este plugin se encargará de realizar la transferencia, de acuerdo a los
          criterios establecidos por AssetIssuer.
          * */
-
+//TODO: crear un monitot/agente que coordine la construccion de un asset y retome en caso que exista una interrupción del proceso
         try{
 
             this.digitalAsset=digitalAsset;
