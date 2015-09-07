@@ -396,10 +396,3 @@
 * Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.
 
 - class
-
-= Consideraciones para DAP
-
-* Crear una DAPException para poder manejar todo tipo de Exception que se presente
-
-* Validar todos los SET y GET con THROWS para asegurar que tengan valores y no se generen
-Excepciones desencadenadas de NULL

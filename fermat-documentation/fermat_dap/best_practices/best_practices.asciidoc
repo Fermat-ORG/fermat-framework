@@ -22,3 +22,11 @@ public void getSomething() throws ObjectNotSetException{
 }
 ```
 El objetivo de esta técnica es evitar que los métodos getters devuelvan null, para ello se debe realizar una verificación previa antes de devolver algún objeto.
+
+
+= Consideraciones para DAP
+
+* Crear una DAPException para poder manejar todo tipo de Exception que se presente
+
+* Validar todos los SET y GET con THROWS para asegurar que tengan valores y no se generen
+Excepciones desencadenadas de NULL
