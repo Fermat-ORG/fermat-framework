@@ -72,9 +72,11 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
      * CryptoAddressBook Interface implementation.
      */
     public void initialize() throws CantInitializeCryptoAddressBookCryptoModuleDatabaseException {
-        try {
+        try
+        {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
-        } catch (DatabaseNotFoundException e) {
+        }
+        catch (DatabaseNotFoundException e) {
             try {
                 CryptoAddressBookCryptoModuleDatabaseFactory databaseFactory = new CryptoAddressBookCryptoModuleDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
@@ -82,6 +84,9 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
                 throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             }
         } catch (CantOpenDatabaseException e) {
+            throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+
+        } catch (Exception e) {
             throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         }
     }
