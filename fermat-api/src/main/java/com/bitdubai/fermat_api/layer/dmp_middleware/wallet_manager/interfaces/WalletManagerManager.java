@@ -130,4 +130,10 @@ public interface WalletManagerManager {
      */
     public void renameWallet(UUID walletIdInTheDevice, String newName) throws CantRenameWalletException;
 
+    /**
+     *  get Installed wallet
+     * @return
+     */
+
+    InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException;
 }

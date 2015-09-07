@@ -13,6 +13,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.dev
 public class IncomingIntraUserTransactionDatabaseConstants {
 
     /**
+     * Incoming Intra User database name.
+     */
+    static final String INCOMING_INTRA_USER_DATABASE = "incoming_intra_user_database";
+
+    /**
      * Incoming Intra User Registry database table definition.
      */
     static final String INCOMING_INTRA_USER_REGISTRY_TABLE_NAME = "incoming_intra_user_registry";
@@ -49,12 +54,17 @@ public class IncomingIntraUserTransactionDatabaseConstants {
      */
     static final String INCOMING_INTRA_USER_CRYPTO_METADATA_TABLE_NAME = "incoming_intra_user_crypto_metadata";
 
+    static final String INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME = "id";
     static final String INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_REQUEST_FLAG_COLUMN_NAME = "payment_request_flag";
     static final String INCOMING_INTRA_USER_CRYPTO_METADATA_REQUEST_ID_COLUMN_NAME = "request_id";
     static final String INCOMING_INTRA_USER_CRYPTO_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME = "sender_public_key";
     static final String INCOMING_INTRA_USER_CRYPTO_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME = "destination_public_key";
     static final String INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME = "associated_crypto_transaction_hash";
     static final String INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME = "payment_description";
+    static final String INCOMING_INTRA_USER_CRYPTO_METADATA_ACTION_COLUMN_NAME = "action";
+    static final String INCOMING_INTRA_USER_CRYPTO_METADATA_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
+    static final String INCOMING_INTRA_USER_CRYPTO_METADATA_TRANSACTION_STATUS_COLUMN_NAME = "transaction_status";
+    static final String INCOMING_INTRA_USER_CRYPTO_METADATA_TIMESTAMP_COLUMN_NAME = "timestamp";
 
     static final String INCOMING_INTRA_USER_CRYPTO_METADATA_FIRST_KEY_COLUMN = "associated_crypto_transaction_hash";
 }

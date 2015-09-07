@@ -21,4 +21,3 @@ public class ClassesFullPathTest {
         assertThat(pluginRoot.getClassesFullPath()).isInstanceOf(List.class);
     }
 }
-

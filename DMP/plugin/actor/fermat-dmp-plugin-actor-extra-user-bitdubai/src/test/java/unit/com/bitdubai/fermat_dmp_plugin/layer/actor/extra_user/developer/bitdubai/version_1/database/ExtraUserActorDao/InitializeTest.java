@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDao;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantInitializeExtraUserActorDatabaseException;
@@ -81,7 +80,6 @@ public class InitializeTest extends TestCase
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantInitializeExtraUserActorDatabaseException.class);
-
     }
 
     @Test
@@ -91,7 +89,5 @@ public class InitializeTest extends TestCase
 
         catchException(extraUserActorDao).initialize();
         assertThat(CatchException.<Exception>caughtException()).isNull();
-
-
     }
 }

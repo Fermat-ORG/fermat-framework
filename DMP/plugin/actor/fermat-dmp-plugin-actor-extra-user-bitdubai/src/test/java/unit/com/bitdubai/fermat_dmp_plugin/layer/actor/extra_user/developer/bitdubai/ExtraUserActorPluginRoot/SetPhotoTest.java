@@ -1,9 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.ExtraUserActorPluginRoot;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSetPhotoException;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -23,7 +20,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import junit.framework.TestCase;
 
-import org.fest.assertions.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,8 +43,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class SetPhotoTest extends TestCase
-{
+public class SetPhotoTest extends TestCase {
 
     /**
      * DealsWithEvents Interface member variables.
@@ -100,7 +95,7 @@ public class SetPhotoTest extends TestCase
     private PluginBinaryFile mockBinaryFile;
 
 
-    Database mockDatabase= Mockito.mock(Database.class);
+    Database mockDatabase = Mockito.mock(Database.class);
 
 
     private ExtraUserActorPluginRoot extraUserActorPluginRoot;
@@ -113,7 +108,7 @@ public class SetPhotoTest extends TestCase
     @Before
     public void setUp() throws Exception {
 
-        pluginId= UUID.randomUUID();
+        pluginId = UUID.randomUUID();
         actorPublicKey = UUID.randomUUID().toString();
         extraUserActorPluginRoot = new ExtraUserActorPluginRoot();
         extraUserActorPluginRoot.setErrorManager(mockErrorManager);
@@ -125,12 +120,9 @@ public class SetPhotoTest extends TestCase
         setUpMockitoRules();
 
         extraUserActorPluginRoot.start();
-
-
     }
 
-    public void setUpMockitoRules()  throws Exception{
-
+    public void setUpMockitoRules() throws Exception {
 
         when(mockPluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
 
@@ -139,7 +131,7 @@ public class SetPhotoTest extends TestCase
         when(mockDatabase.getTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenReturn(mockTable);
 
         when(mockTable.getRecords()).thenReturn(mockRecords);
-        Mockito.doReturn(mockTableRecord).when(mockRecords).get(anyInt());
+        when(mockRecords.get(anyInt())).thenReturn(mockTableRecord);
 
         when(mockPluginFileSystem.getBinaryFile(any(UUID.class),
                 anyString(),
@@ -152,9 +144,7 @@ public class SetPhotoTest extends TestCase
                 anyString(),
                 any(FilePrivacy.class),
                 any(FileLifeSpan.class))).thenReturn(mockFile);
-
     }
-
 
     @Test
     public void getActorByPublicKeyTest_GetOk_ThrowsCantSetPhotoException() throws Exception {
@@ -164,16 +154,13 @@ public class SetPhotoTest extends TestCase
                 .isNull();
     }
 
-
     @Test
     public void getActorByPublicKeyActorTest_CanGet_throwsCantSetPhotoException() throws Exception {
-
 
         catchException(extraUserActorPluginRoot).setPhoto(null, extraUserImageProfile);
 
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantSetPhotoException.class);
-
     }
 }

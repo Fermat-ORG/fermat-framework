@@ -179,7 +179,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
 
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Extra User Created Successfully.", null, null);
-        return new ExtraUserActorRecord(publicKey,privateKey, actorName);
+        return new ExtraUserActorRecord(publicKey, privateKey, actorName);
     }
 
     @Override
@@ -248,6 +248,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
     public void setPhoto(String actorPublicKey, byte[] photo) throws CantSetPhotoException, ExtraUserNotFoundException {
         try {
             extraUserActorDao.getActorByPublicKey(actorPublicKey);
+
             PluginBinaryFile pluginBinaryFile = this.pluginFileSystem.getBinaryFile(
                     pluginId,
                     DeviceDirectory.LOCAL_USERS.getName() + "/" + EXTRA_USERS_PROFILE_IMAGE_DIRECTORY_NAME,
@@ -258,6 +259,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
             pluginBinaryFile.loadFromMedia();
             pluginBinaryFile.setContent(photo);
             pluginBinaryFile.persistToMedia();
+
         } catch (ExtraUserNotFoundException | CantCreateFileException | CantGetExtraUserException | CantPersistFileException | CantLoadFileException e) {
             throw new CantSetPhotoException(CantSetPhotoException.DEFAULT_MESSAGE, e, null, null);
         } catch (FileNotFoundException e){
@@ -289,11 +291,9 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
             file.setContent(privateKey);
 
             file.persistToMedia();
-        } catch (CantPersistFileException e) {
-            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error persist file.", null);
 
-        } catch (CantCreateFileException e) {
-            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating file.", null);
+        } catch (CantPersistFileException | CantCreateFileException e) {
+            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating or persisting file.", null);
         } catch (Exception e) {
             throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
@@ -362,6 +362,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
 
     @Override
     public List<String> getClassesFullPath() {
+
         List<String> returnedClasses = new ArrayList<>();
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserActorPluginRoot");
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserActorRecord");
@@ -369,36 +370,18 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseFactory");
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDao");
 
-        /**
-         * I return the values.
-         */
         return returnedClasses;
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         try {
-
-            /**
-             * I will check the current values and update the LogLevel in those which is different
-             */
-            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                /**
-                 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-                 */
-                if (ExtraUserActorPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    ExtraUserActorPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    ExtraUserActorPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                } else {
-                    ExtraUserActorPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                }
-            }
-
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet())
+                ExtraUserActorPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
         } catch (Exception exception) {
             FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + ExtraUserActorPluginRoot.newLoggingLevel, "Check the cause");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ACTOR_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
-
     }
 
     /**
@@ -409,17 +392,9 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
      */
     public static LogLevel getLogLevelByClass(String className) {
         try {
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
+            String[] correctedClass = className.split(Pattern.quote("$"));
             return ExtraUserActorPluginRoot.newLoggingLevel.get(correctedClass[0]);
-
         } catch (Exception exception) {
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
             return DEFAULT_LOG_LEVEL;
         }
     }

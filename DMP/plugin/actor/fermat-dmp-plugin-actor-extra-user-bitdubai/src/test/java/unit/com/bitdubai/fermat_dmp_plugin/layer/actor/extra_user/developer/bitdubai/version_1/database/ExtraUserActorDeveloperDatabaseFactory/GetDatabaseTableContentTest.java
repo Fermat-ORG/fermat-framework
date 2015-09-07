@@ -44,15 +44,5 @@ public class GetDatabaseTableContentTest extends TestCase {
         extraUserActorDeveloperDatabaseFactory = new ExtraUserActorDeveloperDatabaseFactory(mockPluginDatabaseSystem, testOwnerId);
 
         extraUserActorDeveloperDatabaseFactory.initializeDatabase();
-
-       /*  List<String> fieldNames = new ArrayList<String>();
-        fieldNames.add("Name1");
-        fieldNames.add("Name2");
-        fieldNames.add("Name3");
-
-       DeveloperDatabaseTable DeveloperDatabaseTable = new DeveloperModuleDeveloperDatabaseTable("tabla", fieldNames);
-
-        assertThat(intraUserActorDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, DeveloperDatabaseTable)).isInstanceOf(List.class);*/
     }
-
 }

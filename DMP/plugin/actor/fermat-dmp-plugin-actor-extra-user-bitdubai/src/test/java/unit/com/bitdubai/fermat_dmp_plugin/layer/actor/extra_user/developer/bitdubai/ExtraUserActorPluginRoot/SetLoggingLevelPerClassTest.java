@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -67,8 +66,5 @@ public class SetLoggingLevelPerClassTest {
         newLoggingLevel.put(eccKeyPair.getPrivateKey(), LogLevel.AGGRESSIVE_LOGGING);
 
         pluginRoot.setLoggingLevelPerClass(newLoggingLevel);
-
-
-
     }
 }

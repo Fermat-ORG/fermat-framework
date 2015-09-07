@@ -30,6 +30,7 @@ import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
@@ -50,6 +51,8 @@ public class DetailsActivityFragment extends FermatFragment {
     private WalletStoreModuleManager moduleManager;
 
     private ErrorManager errorManager;
+
+    private ExecutorService executor;
 
 
     /**
@@ -128,7 +131,10 @@ public class DetailsActivityFragment extends FermatFragment {
 
                 InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(getActivity(), errorManager);
                 InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, subAppsSession);
-                installWalletWorker.run();
+                if (executor != null)
+                    executor.shutdownNow();
+                executor = null;
+                executor = installWalletWorker.execute();
             }
         });
 
@@ -145,7 +151,10 @@ public class DetailsActivityFragment extends FermatFragment {
                     UninstallWalletWorkerCallback callback = new UninstallWalletWorkerCallback(getActivity(), errorManager);
                     UUID catalogueId = catalogItem.getId();
                     UninstallWalletWorker installWalletWorker = new UninstallWalletWorker(getActivity(), callback, moduleManager, catalogueId);
-                    installWalletWorker.run();
+                    if (executor != null)
+                        executor.shutdownNow();
+                    executor = null;
+                    executor = installWalletWorker.execute();
                 }
             });
         }

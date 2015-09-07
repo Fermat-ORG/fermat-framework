@@ -62,11 +62,12 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+            } catch (Exception z) {
+                throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
             }
         } catch (CantOpenDatabaseException e) {
             throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new CantInitializeExtraUserActorDatabaseException(CantInitializeExtraUserActorDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
@@ -85,10 +86,10 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
 
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
-                String name = record.getStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_NOMBRE_COLUMN_NAME);
+                String name = record.getStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME);
                 return new ExtraUserActorRecord(actorPublicKey,"", name);
             } else
-                throw new ExtraUserNotFoundException(ExtraUserNotFoundException.DEFAULT_MESSAGE, null, "", "There's no record with that actorPublicKey.");
+                throw  new ExtraUserNotFoundException(ExtraUserNotFoundException.DEFAULT_MESSAGE, null, "", "There's no record with that actorPublicKey.");
 
         }
         catch (CantLoadTableToMemoryException e) {
@@ -99,7 +100,10 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
         }
     }
 
-    public void createActor(String actorName, String actorPublicKey, long timeStamp) throws CantCreateExtraUserException {
+    public void createActor(String actorName,
+                            String actorPublicKey,
+                            long timeStamp) throws CantCreateExtraUserException {
+
         if (actorName == null) {
             throw new CantCreateExtraUserException(CantCreateExtraUserException.DEFAULT_MESSAGE, null, "", "actorName, can not be null");
         }
@@ -109,9 +113,9 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
 
             DatabaseTableRecord entityRecord = extraUserTable.getEmptyRecord();
 
-            entityRecord.setStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_NOMBRE_COLUMN_NAME,                actorName);
+            entityRecord.setStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME,                  actorName);
             entityRecord.setStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey);
-            entityRecord.setLongValue(ExtraUserActorDatabaseConstants.EXTRA_USER_TIME_STAMP_COLUMN_NAME, timeStamp);
+            entityRecord.setLongValue(  ExtraUserActorDatabaseConstants.EXTRA_USER_TIME_STAMP_COLUMN_NAME,            timeStamp);
 
             extraUserTable.insertRecord(entityRecord);
 

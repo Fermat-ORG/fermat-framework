@@ -27,6 +27,7 @@ import java.util.UUID;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.when;
 
 /**
@@ -35,8 +36,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class GetActorByPublicKeyTest extends TestCase
-{
+public class GetActorByPublicKeyTest extends TestCase {
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -61,22 +61,21 @@ public class GetActorByPublicKeyTest extends TestCase
 
     private String actorPublicKey;
 
-    private void setUpMockitoGeneralRules() throws Exception{
+    private void setUpMockitoGeneralRules() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
-          when(mockDatabase.getTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenReturn(mockTable);
-         when(mockTable.getRecords()).thenReturn(mockRecords);
-        Mockito.doReturn(mockTableRecord).when(mockRecords).get(0);
+        when(mockDatabase.getTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME)).thenReturn(mockTable);
+        when(mockTable.getRecords()).thenReturn(mockRecords);
+        when(mockRecords.get(anyInt())).thenReturn(mockTableRecord);
     }
 
     @Before
-    public void setUp() throws Exception
-    {
-        pluginId= UUID.randomUUID();
+    public void setUp() throws Exception {
+        pluginId = UUID.randomUUID();
 
         actorPublicKey = UUID.randomUUID().toString();
 
         when(mockPluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
-        extraUserActorDao = new ExtraUserActorDao(mockPluginDatabaseSystem,  pluginId);
+        extraUserActorDao = new ExtraUserActorDao(mockPluginDatabaseSystem, pluginId);
         extraUserActorDao.initialize();
         setUpMockitoGeneralRules();
     }
@@ -88,19 +87,13 @@ public class GetActorByPublicKeyTest extends TestCase
 
         Assertions.assertThat(actor)
                 .isNotNull();
-
     }
 
     @Test
     public void getActorByPublicKeyTest_GetError_throwsCantGetExtraUserException() throws Exception {
 
-
         catchException(extraUserActorDao).getActorByPublicKey(null);
         assertThat(caughtException())
                 .isNotNull().isInstanceOf(CantGetExtraUserException.class);
-
-
     }
-
-
 }

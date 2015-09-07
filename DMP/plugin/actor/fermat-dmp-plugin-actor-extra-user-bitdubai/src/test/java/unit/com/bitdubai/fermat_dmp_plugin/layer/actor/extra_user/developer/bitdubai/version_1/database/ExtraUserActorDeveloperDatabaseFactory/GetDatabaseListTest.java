@@ -47,9 +47,5 @@ public class GetDatabaseListTest extends TestCase {
         extraUserActorDeveloperDatabaseFactory.initializeDatabase();
 
         assertThat(extraUserActorDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory)).isInstanceOf(List.class);
-
-
-
     }
-
 }

@@ -1,14 +1,12 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
@@ -53,20 +51,12 @@ public abstract class FermatFragment extends Fragment {
     /**
      * Start a configuration Wizard
      *
-     * @param key Enum Wizard registered type
+     * @param key  Enum Wizard registered type
+     * @param args Object[] where you're be able to passing arguments like session, settings, resources, module, etc...
      */
-    protected void startWizard(WizardTypes key) {
+    protected void startWizard(WizardTypes key, Object... args) {
         if (context != null && isAttached) {
-            context.showWizard(key);
-        }
-    }
-
-    /**
-     * Dismiss active wizard configuration
-     */
-    protected void dismissWizard() {
-        if (context != null && isAttached) {
-            context.dismissWizard();
+            context.showWizard(key, args);
         }
     }
 
@@ -110,16 +100,17 @@ public abstract class FermatFragment extends Fragment {
     }
 
     /**
-     *  Change activity
+     * Change activity
      */
-    protected final void changeActivity(Activities activity){
-        ((FermatScreenSwapper)getActivity()).changeActivity(activity.getCode());
+    protected final void changeActivity(Activities activity) {
+        ((FermatScreenSwapper) getActivity()).changeActivity(activity.getCode());
     }
+
     /**
-     *  Change activity
+     * Change activity
      */
-    protected final void changeFragment(String fragment){
-        ((FermatScreenSwapper)getActivity()).changeScreen(fragment,null);
+    protected final void changeFragment(String fragment) {
+        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, null);
     }
 
 
