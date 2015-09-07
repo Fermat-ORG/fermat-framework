@@ -20,8 +20,11 @@ public class DigitalAsset  implements Serializable{
     String description;
     List<Resource> resources;
     DigitalAssetContract contract;
-    long genesisAmount;
     int quantity;
+    long unitValue;
+    long genesisAmount;
+    long transactionFee;
+
 
 
     /**
@@ -29,7 +32,7 @@ public class DigitalAsset  implements Serializable{
      */
     String genesisTransaction;
     CryptoAddress genesisAddress;
-    long transactionFee;
+
     State state;
 
     /**
@@ -128,6 +131,14 @@ public class DigitalAsset  implements Serializable{
 
     public void setTransactionFee(long transactionFee) {
         this.transactionFee = transactionFee;
+    }
+
+    public long getUnitValue() {
+        return unitValue;
+    }
+
+    public void setUnitValue(long unitValue) {
+        this.unitValue = unitValue;
     }
 
     /**
