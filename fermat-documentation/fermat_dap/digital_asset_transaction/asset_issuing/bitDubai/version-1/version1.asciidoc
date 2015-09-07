@@ -64,7 +64,7 @@ Al iniciar el plugin este instancia al objeto DigitalAssetCryptoTransactionFacto
 DigitalAssetCryptoTransactionFactory (DACTF) usará una instancia del CryptoVaultManager para crear la genesis transaction, la cual quedará registrada en el CryptoAddressBook por medio de CryptoAddressBookManager, que se va a asociar al objeto Digital Asset y así crear un nuevo DigitalAssetMetadata, este último objeto debe generase al concluir
 el proceso de creación del digital Asset, ya que este es quien ajustaría el estado a _final_, una vez que se encuentra en este estado ya no se debe modificar ninguna característica del Digital Asset.
 
-= Pasos detallados:
+=== Pasos detallados:
 1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
  realizarán distintas especificaciones del asset y el contrato inicial.
 
