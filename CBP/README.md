@@ -29,7 +29,7 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * **Wallet Manager**: gestor de las Wallets instaladas
 
 ### Contract
-* **Crypto Broker Fiat Money Buy**: contrato de compra de Crypto de un Crypto Customer
+* **Crypto Broker Market Money Buy**: contrato de compra de Crypto de un Crypto Customer
 * **Crypto Broker Fiat Money Buy**: contrato de compra de Fiat Cash de un Crypto Customer
 * **Crypto Customer Market Money Sale**: contrato de venta de Crypto de un Crypto Customer
 * **Crypto Customer Fiat Money Sale**: contrato de venta de Fiat Cash de un Crypto Customer

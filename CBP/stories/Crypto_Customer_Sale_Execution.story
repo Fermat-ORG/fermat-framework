@@ -3,20 +3,19 @@ Historia: Crypto Customer Sale Execution
 Como deseo poder finalizar la compra establecida en la negociación con un Crypto Customer
  Como un Crypto Broker
 
-Utilizando el plugin Receive Crypto
-  Y el plugin Receive Cash On Hand
-  Y el plugin Receive Cash Delivery
-  Y el plugin Receive Offline Bank Deposit
-  Y el plugin Send Crypto
-  Y el plugin Give Cash On Hand
-  Y el plugin Send Cash Delivery
-  Y el plugin Make Offline Bank Deposit
-  Y el plugin Crypto Customer Crypto Sale
-  Y el plugin Crypto Customer Cash Sale
-  Y el plugin Crypto Customer Bank Sale
-  Y el plugin Wallet Crypto Broker
-  Y el plugin Wallet Cash
-  Y el plugin Wallet Bank
+Utilizando la Crypto Broker Wallet SubApp 
+  Y el plugin Receive Crypto Crypto Transaction 
+  Y el plugin Send Crypto Crypto Transaction
+  Y el plugin Give Cash On Hand Fiat Cash Transaction
+  Y el plugin Send Cash Delivery Fiat Cash Transaction
+  Y el plugin Crypto Broker Market Crypto Wallet
+  Y el plugin Crypto Broker Fiat Cash Wallet
+  Y el plugin Crypto Customer Market Money Sale
+  Y el plugin Crypto Customer Fiat Money Sale
+  Y el plugin Receive Fiat Cash On Hand Fiat Cash Transaction
+  Y el plugin Receive Fiat Cash Delivery Fiat Cash Transaction
+  Y el plugin Receive Offline Fiat Bank Transfer Fiat Bank Transaction
+
 
 Escenario: Crypto Broker recibe Market Crypto del Crypto Customer.
   Dado que ya se cerro una negociacion con el Crypto Customer
