@@ -153,7 +153,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
         iconScreenBytes = (byte[]) data.get(PublishFactoryProjectStep1.WALLET_ICON_KEY);
         screenShootsBytes = (ArrayList) data.get(PublishFactoryProjectStep1.SCREEN_SHOOTS_KEY);
         identity = (PublisherIdentity) data.get(PublishFactoryProjectStep2.PUBLISHER_IDENTITY_KEY);
-        videoUrlString = data.get(PublishFactoryProjectStep2.VIDEO_URL_KEY).toString();
+        videoUrlString = data.get(PublishFactoryProjectStep2.VIDEO_URL_KEY) != null ? data.get(PublishFactoryProjectStep2.VIDEO_URL_KEY).toString() : "";
         initialVersion = (Version) data.get(PublishFactoryProjectStep2.INIT_PLATFORM_KEY);
         finalVersion = (Version) data.get(PublishFactoryProjectStep2.FINAL_PLATFORM_KEY);
 
