@@ -20,14 +20,9 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     }
     
     public DeveloperBitDubai(){
-    
-        /**
-         * I will Choose from the different versions of my implementation which one to start. NOw there is only one, so it is easy to choose.
-         */
-        
         plugin = new MoneyRequestNetworkServicePluginRoot();
-
     }
+
     @Override
     public int getAmountToPay() {
         return 100;

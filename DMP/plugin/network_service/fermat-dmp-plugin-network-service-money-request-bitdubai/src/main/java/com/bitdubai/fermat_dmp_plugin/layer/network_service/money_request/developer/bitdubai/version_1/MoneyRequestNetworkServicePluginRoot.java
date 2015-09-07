@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.money_request.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -59,7 +60,7 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
      */
 
     EventManager eventManager;
-
+    ErrorManager errorManager;
     /**
      * Plugin interface menber varuiables. 
      */
@@ -100,32 +101,24 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
      */
     
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
         EventListener eventListener;
         EventHandler eventHandler;
-        
-        
         this.serviceStatus = ServiceStatus.STARTED;
-        
     }
     
     @Override
     public void pause(){
-        
         this.serviceStatus = ServiceStatus.PAUSED;
-        
     }
     
     @Override
     public void resume() {
-        
         this.serviceStatus = ServiceStatus.STARTED;
-        
     }
     
     @Override
     public void stop(){
-
         /**
          * I will remove the evnt listeners registered with the event manager. 
          */
@@ -133,9 +126,7 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
         for (EventListener eventListener : listenersAdded){
             eventManager.removeListener(eventListener);
         }
-        
         listenersAdded.clear();
-        
         this.serviceStatus = ServiceStatus.STOPPED;
     }
     
@@ -143,7 +134,6 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     public ServiceStatus getStatus(){
         return this.serviceStatus;
     }
-
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -168,7 +158,7 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
 
     @Override
     public void setErrorManager(ErrorManager errorManager){
-
+        this.errorManager = errorManager;
     }
 
     /**
@@ -182,7 +172,7 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
 
     @Override
     public UUID getId() {
-        return null;
+        return this.pluginId;
     }
 
     /*
