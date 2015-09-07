@@ -1,11 +1,13 @@
 package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetTransactionException;
+import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -162,14 +164,26 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         return genesisAmount;
     }
 
+    private void checkCryptoWalletBalance() throws CryptoWalletBalanceInsufficientException, CantGetBalanceException {
+
+        String digitalAssetPublicKey=this.digitalAsset.getPublicKey();
+        long digitalAssetGenesisAmount=this.digitalAsset.getGenesisAmount();
+        long cryptoWalletBalance=this.cryptoWallet.getAvailableBalance(digitalAssetPublicKey);
+
+        if(digitalAssetGenesisAmount>cryptoWalletBalance){
+
+            throw new CryptoWalletBalanceInsufficientException("The current balance in Wallet "+digitalAssetPublicKey+" is "+cryptoWalletBalance+" the amount needed is "+digitalAssetGenesisAmount);
+
+        }
+
+    }
+
+    //This method can change in the future, I prefer design an monitor to create Digital Asset.
     public void createDigitalAssetCryptoTransaction(DigitalAsset digitalAsset) throws CantCreateDigitalAssetTransactionException {
 
         /**
          * TODO:
-         2) A través del método getAvailableBalance de la CryptoWallet, se debe validar que el GenesisAmount informado por la subApp del Asset Issuer no excede el balance
-         disponible.
-
-         3) Al estar todo completado para emitir el Asset, se persiste el DA (en DB o archivo, creo que sería mejor archivo) y TranscationStatus para a estar en estado FormingGenesis.
+         * 3) Al estar todo completado para emitir el Asset, se persiste el DA (en DB o archivo, creo que sería mejor archivo) y TranscationStatus para a estar en estado FormingGenesis.
 
          4) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
          para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se persiste este valor.
@@ -196,8 +210,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             this.digitalAsset=digitalAsset;
             //Check if the Actors are set
             areObjectsSettled();
+            //Check if the CryptoWallet has the needed amount
+            checkCryptoWalletBalance();
             //We need to get a new GenesisAddress:
-            this.cryptoVaultManager.connectToBitcoin();
+            //this.cryptoVaultManager.connectToBitcoin();
             setDigitalAssetGenesisAmount();
 
             /*this.cryptoAddressBookManager.registerCryptoAddress(
@@ -215,15 +231,19 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
             this.cryptoVaultManager.disconnectFromBitcoin();
 
-        } catch(VaultNotConnectedToNetworkException exception) {
+        } /*catch(VaultNotConnectedToNetworkException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Connecting to Network", "Vault is not connected");
-        } catch(CantSetObjectException exception){
+        }*/ catch(CantSetObjectException exception){
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Setting GenesisAddress", "Unexpected Exception");
         } catch(ObjectNotSetException exception){
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if actors are set", "Some actor is not set");
         } /*catch(CantRegisterCryptoAddressBookRecordException exception){
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Registring cryptoAddres in AddressBook", "Please, Cceck the cause");
-        }*/
+        }*/ catch (CantGetBalanceException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if the balance is sufficient", "Can't get the Crypto Wallet balance");
+        } catch (CryptoWalletBalanceInsufficientException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if the balance is sufficient", "The balance is insufficient");
+        }
 
     }
 
