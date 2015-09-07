@@ -1,4 +1,5 @@
-Scenario: Publicacion de Informacion del broker
+# Este escenario esta mal estructurado
+Escenario: Publicacion de Informacion del broker
   Dado que como Crypto Broker deseo darme a conocer en la comunidad para ofercer mis servicios
   Cuando decido publicar mi identidad como broker para ser descubierto por un Crypto Customer
   Entonces voy a la Subapp del Crypto Broker
@@ -28,6 +29,7 @@ Using the Crypto Broker SubApp Android
   And the Fiat Index World Java Plugin
   And the Market Index World Java Plugin
 
+#Este escenario esta mal estructurado
 Scenario: Public Information Publish
   Given I have Crypto Broker Identity
   When I decide to publish my Crypto Broker Identity in the Crypto Broker SubApp
@@ -44,8 +46,8 @@ Scenario: Public Information Publish
 
 Scenario: Business Transaction Public Information Update
   Given I have performed a "Business Transaction"
-  When the "Business Transaction" is completed
-    And the Crypto Broker Agent consolidates the data of the Business Transactions
+    And the "Business Transaction" is completed
+  When the Crypto Broker Agent consolidates the data of the Business Transactions
   Then the Crypto Broker Agent should update the exchange rates between my "Stocked Fiat Money" and the "Fiat Money Type for Price Reference" in my Crypto Broker Public Identity
     And the Crypto Broker Agent should update the exchange rates between my "Stocked Fiat Money" and the "Fiat Money Type for Price Reference" in my Crypto Broker Public Identity
     And the Crypto Broker Agent should publish this update through the Crypto Broker Network Service
