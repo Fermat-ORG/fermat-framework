@@ -1,7 +1,7 @@
 [[wallet-module-asset-issuer-BitDubai-V1]]
 == Version 1
 Esta Plugin Asset Issuer implementara todo la logica para que permita creación, listados y modificación del Asset, contenida en el objeto "DigitalAsset", para que sea persitido
-en la base de datos del Plug-in.
+en la base de datos del Plug-in, toda esta informacion sera introducida desde la interfaz de usuario de la Reference Wallet Asset Issuer.
 
 == Plug-in Description
 El Issuer podra modificar toda la información, siempre y cuando se encuentre en el State "DRAFT".

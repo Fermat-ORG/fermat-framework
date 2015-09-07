@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
@@ -12,14 +13,26 @@ import java.sql.Timestamp;
 public interface AssetIssuer {
 
     String getwalletPublicKey();
+    void setwalletPublicKey(String publicKey);
 
     Timestamp getCreationTimestamp();
+    void setCreationTimestamp(Timestamp creationTimestamp);
 
-    String getAssetUserIdentityPublicKey();
+    String getActorIssuer(String issuerIdentityPublicKey,
+                          Actors typeActorIssuer
+
+    );
+    void setActorIssuer(String issuerIdentityPublicKey,
+                        Actors typeActorIssuer
+
+    );
 
     DigitalAsset getDigitalAsset();
+    void setDigitalAsset(DigitalAsset digitalAsset);
 
     WalletCategory getWalletCategory();
+    void setWalletCategory(WalletCategory walletCategory);
 
     WalletType getWalletType();
+    void setWalletType(WalletType walletType);
 }
