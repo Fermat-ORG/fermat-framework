@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.CreateWalletFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.SetupNavigationFragment;
+import com.bitdubai.sub_app.wallet_publisher.wizard.StartPublishFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ import java.util.List;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class WizardFragment extends DialogFragment implements View.OnClickListener {
+public class WizardFragment extends android.support.v4.app.DialogFragment implements View.OnClickListener {
 
     private static final String TAG = "WizardFragment";
     /**
@@ -48,7 +49,7 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
      * DATA
      */
     private Wizard wizard;
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<android.support.v4.app.Fragment> fragments = new ArrayList<>();
     private int position = -1;
     /**
      * UI
@@ -57,6 +58,10 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
     private ViewPager viewPager;
     private FermatTextView back;
     private FermatTextView next;
+    /**
+     * ARGUMENTS
+     */
+    private Object[] args;
 
     /**
      * Set Wizard FragmentsEnumType
@@ -70,7 +75,7 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenTheme);
+        //setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenTheme);
         setupFragments();
         if (fragments == null || fragments.size() == 0) {
             // nothing to see here...
@@ -88,10 +93,11 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
         return dialog;
     }
 
+    /*
     @Override
     public void setStyle(int style, int theme) {
         super.setStyle(R.style.FullScreenDialog, theme);
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,8 +107,8 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
             // load ui
             viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
             viewPager.setPageTransformer(true, new DepthPageTransformer());
-            WizardPageAdapter adapter = new WizardPageAdapter(getChildFragmentManager(), fragments);
-            viewPager.setAdapter(adapter);
+            //WizardPageAdapter adapter = new WizardPageAdapter(getChildFragmentManager(), fragments);
+            //viewPager.setAdapter(adapter);
             viewPager.setCurrentItem(0);
             position = 0;
             viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -147,7 +153,7 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
                 back.setVisibility(View.INVISIBLE);
 
             if (fragments.size() > 1 && next != null) {
-                next.setText("Next");
+                next.setText("Next >>");
                 next.setVisibility(View.VISIBLE);
             } else if (next != null) {
                 next.setText("Finish");
@@ -180,11 +186,13 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
             for (WizardPage page : wizard.getPages()) {
                 switch (page.getType()) {
                     case CWP_WALLET_FACTORY_CREATE_STEP_1:
-                        fragments.add(new CreateWalletFragment());
+                        //fragments.add(new CreateWalletFragment());
                         break;
                     case CWP_WALLET_FACTORY_CREATE_STEP_2:
-                        fragments.add(new SetupNavigationFragment());
+                        //fragments.add(new SetupNavigationFragment());
                         break;
+                    case CWP_WALLET_PUBLISHER_PUBLISH_STEP_1:
+                        //fragments.add(StartPublishFragment.newInstance(args));
                     default:
                         break;
                 }
@@ -289,5 +297,14 @@ public class WizardFragment extends DialogFragment implements View.OnClickListen
             view.setVisibility(View.INVISIBLE);
         else
             return;
+    }
+
+    /**
+     * Setting arguments like session, module, etc..
+     *
+     * @param args Object... Arguments
+     */
+    public void setArgs(Object[] args) {
+        this.args = args;
     }
 }

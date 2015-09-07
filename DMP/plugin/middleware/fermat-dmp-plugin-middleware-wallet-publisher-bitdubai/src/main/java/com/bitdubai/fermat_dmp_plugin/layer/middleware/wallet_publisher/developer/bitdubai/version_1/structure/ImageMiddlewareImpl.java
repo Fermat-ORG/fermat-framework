@@ -36,12 +36,12 @@ public class ImageMiddlewareImpl implements Image {
     /**
      * Represent the data
      */
-    public byte [] data;
+    public byte[] data;
 
     /**
      * Constructor
      */
-    public ImageMiddlewareImpl(){
+    public ImageMiddlewareImpl() {
         super();
     }
 
@@ -98,6 +98,7 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
+     *
      * @see Image#getData()
      */
     @Override
@@ -116,6 +117,7 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#equals(Object)
      */
     @Override
@@ -128,6 +130,7 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#hashCode()
      */
     @Override
@@ -137,6 +140,7 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

@@ -2,7 +2,7 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSingIntraUserMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSignIntraUserMessageException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityIdentity;
 import com.googlecode.catchexception.CatchException;
@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
@@ -34,7 +33,7 @@ public class createMessageSignatureTest{
     }
 
     @Test
-    public void createMessageSignature() throws CantSingIntraUserMessageException {
+    public void createMessageSignature() throws CantSignIntraUserMessageException {
         ECCKeyPair eccKeyPair = new ECCKeyPair();
         String hashMessage = CryptoHasher.performSha256("prueba");
         IntraUserIdentityIdentity identity_1 = new IntraUserIdentityIdentity("alias_1", eccKeyPair.getPrivateKey(), eccKeyPair.getPublicKey(), new byte[10], mockPluginFileSystem, pluginId);
@@ -43,10 +42,10 @@ public class createMessageSignatureTest{
     }
 
     @Test
-    public void createMessageSignatureExceptionTest() throws CantSingIntraUserMessageException {
+    public void createMessageSignatureExceptionTest() throws CantSignIntraUserMessageException {
         IntraUserIdentityIdentity identity_1 = new IntraUserIdentityIdentity("alias_1", "publicKey_1", "privateKey_1", new byte[10], mockPluginFileSystem, pluginId);
 
         catchException(identity_1).createMessageSignature("Prueba");
-        assertThat(CatchException.<Exception>caughtException()).isInstanceOf(CantSingIntraUserMessageException.class);
+        assertThat(CatchException.<Exception>caughtException()).isInstanceOf(CantSignIntraUserMessageException.class);
     }
 }

@@ -602,7 +602,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Conected with Wallet Resource to unistalld resources
              */
-           walletResources.unninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(),true);
+           walletResources.unninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true);
             /**
              * I delete skin from database
              */
@@ -643,7 +643,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              */
             //TODO: Falta que reciba el Public key de la wallet y la lista de skins y language instalados
 
-            walletResources.unninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(),true);
+            walletResources.unninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true);
 
             /**
              * Delete wallet for DataBase
@@ -710,6 +710,29 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         catch (Exception exception){
             throw new CantRenameWalletException("CAN'T RENAME REQUESTED ALIAS",FermatException.wrapException(exception), null, null);
         }
+
+    }
+
+    /**
+     * get Installed wallet
+     *
+     * @return
+     */
+    @Override
+    public InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
+
+        try{
+            WalletManagerMiddlewareDao walletManagerMiddlewareDao = new WalletManagerMiddlewareDao(pluginDatabaseSystem,pluginId);
+            return walletManagerMiddlewareDao.getInstalledWallet(walletPublicKey);
+
+        } catch (CantGetInstalledWalletsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
+        } catch (CantExecuteDatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
+        }
+
 
     }
 

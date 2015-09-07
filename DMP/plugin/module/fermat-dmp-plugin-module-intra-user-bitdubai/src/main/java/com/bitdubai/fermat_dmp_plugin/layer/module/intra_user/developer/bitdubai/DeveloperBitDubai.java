@@ -15,14 +15,8 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     Plugin plugin;
 
     public DeveloperBitDubai () {
-
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
         plugin = new IntraUserModulePluginRoot();
     }
-
 
     @Override
     public Plugin getPlugin() {
@@ -31,21 +25,21 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     @Override
     public int getAmountToPay() {
-        return 0;
+        return 100;
     }
 
     @Override
     public CryptoCurrency getCryptoCurrency() {
-        return null;
+        return CryptoCurrency.BITCOIN;
     }
 
     @Override
     public String getAddress() {
-        return null;
+        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
-        return null;
+        return TimeFrequency.MONTHLY;
     }
 }

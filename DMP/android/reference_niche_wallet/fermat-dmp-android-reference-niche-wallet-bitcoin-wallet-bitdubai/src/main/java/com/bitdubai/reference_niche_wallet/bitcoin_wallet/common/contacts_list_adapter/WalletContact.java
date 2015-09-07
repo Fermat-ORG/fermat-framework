@@ -4,16 +4,19 @@ import java.util.UUID;
 
 public class WalletContact {
 
-    public UUID actorId;
+    public UUID contactId;
+
+    public String actorPublicKey;
 
     public String name;
 
     public String address;
 
-    public WalletContact(String name, String address, UUID actorId) {
+    public WalletContact(UUID contactId, String actorPublicKey, String name, String address) {
+        this.contactId = contactId;
+        this.actorPublicKey = actorPublicKey;
         this.name = name;
         this.address = address;
-        this.actorId = actorId;
     }
 
     @Override

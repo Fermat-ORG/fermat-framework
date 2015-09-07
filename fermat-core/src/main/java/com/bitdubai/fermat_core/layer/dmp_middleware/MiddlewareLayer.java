@@ -45,6 +45,8 @@ public class MiddlewareLayer implements PlatformLayer {
 
     private Plugin mWalletStorePlugin;
 
+    private Plugin mNotificationPlugin;
+
 
     @Override
     public void start() throws CantStartLayerException {
@@ -70,6 +72,7 @@ public class MiddlewareLayer implements PlatformLayer {
         mWalletSkinPlugin = getPlugin(new WalletSkinSubsystem());
 
         mWalletStorePlugin = getPlugin(new WalletStoreSubsystem());
+
 
     }
 
@@ -125,4 +128,5 @@ public class MiddlewareLayer implements PlatformLayer {
     public Plugin getWalletStorePlugin() {
         return mWalletStorePlugin;
     }
+
 }

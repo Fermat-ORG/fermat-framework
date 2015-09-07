@@ -2,7 +2,7 @@ package com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSingIntraUserMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSignIntraUserMessageException;
 
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity</code>
@@ -42,7 +42,7 @@ public interface IntraUserIdentity {
      * This method let an intra user sign a message with his unique private key
      * @param message the message to sign
      * @return the signature
-     * @throws CantSingIntraUserMessageException
+     * @throws CantSignIntraUserMessageException
      */
-    String createMessageSignature(String message) throws CantSingIntraUserMessageException;
+    String createMessageSignature(String message) throws CantSignIntraUserMessageException;
 }

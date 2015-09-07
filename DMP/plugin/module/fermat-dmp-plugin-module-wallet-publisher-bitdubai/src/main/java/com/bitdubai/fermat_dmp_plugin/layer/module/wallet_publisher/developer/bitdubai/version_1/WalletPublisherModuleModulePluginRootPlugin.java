@@ -51,16 +51,14 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot</code> is
  * the responsible to communicate the user interface whit the middleware layer.
  * <p/>
- *
+ * <p/>
  * Created by loui on 05/02/15.
  * Update by Roberto Requena - (rart3001@gmail.com) on 04/08/2015
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherModuleModulePluginRootPlugin implements Service, DealsWithPlatformInfo, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherModuleManager
-{
-
+public class WalletPublisherModuleModulePluginRootPlugin implements Service, DealsWithPlatformInfo, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherModuleManager {
     /**
      * Represent the logManager
      */
@@ -94,7 +92,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
     /**
      * Represent the listenersAdded
      */
-    private List<EventListener>  listenersAdded;
+    private List<EventListener> listenersAdded;
 
     /**
      * Represent the walletPublisherMiddlewarePlugin
@@ -131,10 +129,8 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
         /*
          * Validate If all resources are not null
          */
-        if (logManager                                  == null ||
-                errorManager                            == null ||
-                    errorManager                        == null ||
-                        walletPublisherMiddlewarePlugin == null ) {
+        if (logManager == null || errorManager == null ||
+                walletPublisherMiddlewarePlugin == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -157,6 +153,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#start()
      */
     @Override
@@ -176,6 +173,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#pause()
      */
     @Override
@@ -185,22 +183,21 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#resume()
      */
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#stop()
      */
     @Override
     public void stop() {
-
         /**
          * I will remove all the event listeners registered with the event manager.
          */
@@ -216,6 +213,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see Service#getStatus()
      */
     @Override
@@ -235,6 +233,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see DealsWithErrors#setErrorManager(ErrorManager)
      */
     @Override
@@ -245,6 +244,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see DealsWithWalletFactory#setWalletFactoryProjectManager(WalletFactoryProjectManager)
      */
     @Override
@@ -254,6 +254,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see DealsWithPlatformInfo#setPlatformInfoManager(PlatformInfoManager)
      */
     @Override
@@ -263,6 +264,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see Plugin#setId(UUID)
      */
     @Override
@@ -273,6 +275,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see DealsWithLogger#setLogManager(LogManager)
      */
     @Override
@@ -282,6 +285,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see LogManagerForDevelopers#getClassesFullPath()
      */
     @Override
@@ -297,6 +301,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see LogManagerForDevelopers#setLoggingLevelPerClass(Map<String, LogLevel>)
      */
     @Override
@@ -321,6 +326,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#getProjectsReadyToPublish()
      */
     @Override
@@ -332,6 +338,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see DealsWithWalletPublisherMiddlewarePlugin#setWalletPublisherMiddlewarePlugin(WalletPublisherMiddlewarePlugin)
      */
     @Override
@@ -341,6 +348,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#getPublishedComponents(PublisherIdentity)
      */
     @Override
@@ -350,6 +358,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#getPublishedWallets(PublisherIdentity)
      */
     @Override
@@ -359,6 +368,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#getPublishedSkins(PublisherIdentity)
      */
     @Override
@@ -368,6 +378,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#getPublishedLanguages(PublisherIdentity)
      */
     @Override
@@ -377,6 +388,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#getInformationPublishedComponentWithDetails(UUID)
      */
     @Override
@@ -386,6 +398,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#publishSkin(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
     @Override
@@ -396,7 +409,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0, 0, 0), new Version(0, 0, 0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
@@ -415,6 +428,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#publishLanguage(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
     @Override
@@ -425,7 +439,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0,0,0), new Version(0,0,0),  new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0, 0, 0), new Version(0, 0, 0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
@@ -444,6 +458,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
+     *
      * @see WalletPublisherModuleManager#publishWallet(WalletFactoryProject, byte[], byte[], List, URL, String, Version, Version, PublisherIdentity)
      */
     public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException {
@@ -453,7 +468,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(0,0,0), new Version(0,0,0), initialPlatformVersion, finalPlatformVersion,  new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(0, 0, 0), new Version(0, 0, 0), initialPlatformVersion, finalPlatformVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
@@ -493,14 +508,14 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
         /*
          * Construct a string with all the data
          */
-        StringBuffer stringDataToSing =  new StringBuffer("");
+        StringBuffer stringDataToSing = new StringBuffer("");
 
         stringDataToSing.append(walletFactoryProject.getProjectPublicKey());
         stringDataToSing.append(walletFactoryProject.getName());
         stringDataToSing.append(icon);
         stringDataToSing.append(mainScreenShot);
 
-        for (byte[] data :screenShotDetails){
+        for (byte[] data : screenShotDetails) {
             stringDataToSing.append(data);
         }
 
@@ -522,9 +537,10 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
 
     /**
      * (non-Javadoc)
-     * @see  @see WalletPublisherModuleManager#getPlatformVersions()
+     *
+     * @see @see WalletPublisherModuleManager#getPlatformVersions()
      */
-    public List<Version> getPlatformVersions() throws com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException{
+    public List<Version> getPlatformVersions() throws com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException {
 
         List<Version> versions = new ArrayList<>();
         try {
@@ -534,10 +550,10 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
         } catch (CantLoadPlatformInformationException e) {
             e.printStackTrace();
 
-            new com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException( e.getLocalizedMessage(), e, "Wallet Publisher", "");
+            new com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException(e.getLocalizedMessage(), e, "Wallet Publisher", "");
         }
 
-        return  versions;
+        return versions;
 
     }
 

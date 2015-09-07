@@ -10,6 +10,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Fermat Adapter
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  */
 public abstract class FermatAdapter<M, H extends FermatViewHolder> extends RecyclerView.Adapter<H> {
 
-    protected ArrayList<M> dataSet;
+    protected List<M> dataSet;
     protected Context context;
     protected FermatListItemListeners<M> eventListeners;
 
@@ -82,7 +83,7 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
      *
      * @param dataSet new ArrayList of model to change
      */
-    public void changeDataSet(ArrayList<M> dataSet) {
+    public void changeDataSet(List<M> dataSet) {
         this.dataSet = dataSet;
         notifyDataSetChanged();
     }
@@ -128,4 +129,7 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
      * @param position position to render
      */
     protected abstract void bindHolder(H holder, M data, int position);
+
+
+
 }

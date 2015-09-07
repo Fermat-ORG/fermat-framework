@@ -19,6 +19,7 @@ import java.util.UUID;
  *
  * Created by loui on 18/02/15.
  * Reviewed by Leon Acosta - (laion.cj91@gmail.com) on 08/06/15.
+ *
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -46,7 +47,7 @@ public interface WalletContactsRegistry {
                                                           Integer max,
                                                           Integer offset) throws CantGetAllWalletContactsException;
 
-    WalletContactRecord createWalletContact(UUID actorId,
+    WalletContactRecord createWalletContact(String actorPublicKey,
                                             String actorName,
                                             Actors actorType,
                                             CryptoAddress receivedCryptoAddress,
@@ -62,7 +63,7 @@ public interface WalletContactsRegistry {
 
     List<WalletContactRecord> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException;
 
-    WalletContactRecord getWalletContactByActorId(UUID actorId) throws CantGetWalletContactException, WalletContactNotFoundException;
+    WalletContactRecord getWalletContactByActorPublicKey(String actorPublicKey) throws CantGetWalletContactException, WalletContactNotFoundException;
 
     WalletContactRecord getWalletContactByContactId(UUID contactId) throws CantGetWalletContactException, WalletContactNotFoundException;
 }

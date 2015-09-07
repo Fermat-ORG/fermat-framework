@@ -20,9 +20,9 @@ public interface BitcoinWalletTransaction {
 
     public CryptoAddress getAddressTo();
 
-    public UUID getActorTo();
+    public String getActorToPublicKey();
 
-    public UUID getActorFrom();
+    public String getActorFromPublicKey();
 
     public Actors getActorToType();
 
