@@ -18,14 +18,19 @@ import com.bitdubai.android_core.app.common.version_1.util.DepthPageTransformer;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.CreateWalletFragment;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.SetupNavigationFragment;
-import com.bitdubai.sub_app.wallet_publisher.wizard.StartPublishFragment;
+import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectStep1;
+import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectStep2;
+import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectSummary;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Wizard Activity
@@ -33,7 +38,7 @@ import java.util.List;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class WizardActivity extends FragmentActivity implements View.OnClickListener {
+public class WizardActivity extends FragmentActivity implements FermatWizardActivity, View.OnClickListener {
 
     private static final String TAG = "WizardActivity";
     /**
@@ -44,6 +49,7 @@ public class WizardActivity extends FragmentActivity implements View.OnClickList
     /**
      * DATA
      */
+    private Map<String, Object> dataHash;
     private List<Fragment> fragments = new ArrayList<>();
     private int position = -1;
     /**
@@ -77,10 +83,6 @@ public class WizardActivity extends FragmentActivity implements View.OnClickList
             // load ui
             viewPager = (ViewPager) findViewById(R.id.viewpager);
             viewPager.setPageTransformer(true, new DepthPageTransformer());
-            WizardPageAdapter adapter = new WizardPageAdapter(getFragmentManager(), fragments);
-            viewPager.setAdapter(adapter);
-            viewPager.setCurrentItem(0);
-            position = 0;
             viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -104,9 +106,13 @@ public class WizardActivity extends FragmentActivity implements View.OnClickList
                         next.setText("Next >>");
                     if (position > 0 && isNext) {
                         // Save last page before moving to the next slide
-                        WizardPageListener page =
+                        WizardPageListener lastPage =
                                 (WizardPageListener) fragments.get(position - 1);
-                        page.savePage();
+                        lastPage.savePage();
+                        // notify fragment active
+                        WizardPageListener page = (WizardPageListener) fragments.get(position);
+                        page.onActivated(getData());
+                        setWizardActivity(page.getTitle());
                     }
                 }
 
@@ -115,6 +121,11 @@ public class WizardActivity extends FragmentActivity implements View.OnClickList
                     // do nothing...
                 }
             });
+            WizardPageAdapter adapter = new WizardPageAdapter(getFragmentManager(), fragments);
+            viewPager.setAdapter(adapter);
+            viewPager.setCurrentItem(0);
+            position = 0;
+
             back = (FermatTextView) findViewById(R.id.back);
             next = (FermatTextView) findViewById(R.id.next);
 
@@ -148,7 +159,14 @@ public class WizardActivity extends FragmentActivity implements View.OnClickList
                         fragments.add(new SetupNavigationFragment());
                         break;
                     case CWP_WALLET_PUBLISHER_PUBLISH_STEP_1:
-                        fragments.add(StartPublishFragment.newInstance(args));
+                        fragments.add(PublishFactoryProjectStep1.newInstance(args));
+                        break;
+                    case CWP_WALLET_PUBLISHER_PUBLISH_STEP_2:
+                        fragments.add(PublishFactoryProjectStep2.newInstance(args));
+                        break;
+                    case CWP_WALLET_PUBLISHER_PUBLISH_STEP_3:
+                        fragments.add(PublishFactoryProjectSummary.newInstance(args));
+                        break;
                     default:
                         break;
                 }
@@ -256,5 +274,36 @@ public class WizardActivity extends FragmentActivity implements View.OnClickList
         super.onDestroy();
         args = null;
         wizarType = null;
+    }
+
+    @Override
+    public Map<String, Object> getData() {
+        return dataHash;
+    }
+
+    @Override
+    public void putData(String key, Object data) {
+        if (dataHash == null)
+            dataHash = new HashMap<>();
+        dataHash.put(key, data);
+    }
+
+    @Override
+    public void putData(Map<String, Object> data) {
+        if (dataHash == null)
+            dataHash = new HashMap<>();
+        dataHash.putAll(data);
+    }
+
+    @Override
+    public void setData(Map<String, Object> data) {
+        dataHash = data;
+    }
+
+    @Override
+    public void setWizardActivity(CharSequence title) {
+        if (title == null || getActionBar() == null)
+            return;
+        getActionBar().setTitle(title);
     }
 }
