@@ -72,16 +72,16 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * **Receive Fiat Cash Delivery**: recepcion de Fiat Cash a traves de un tercero.
 
 ### Fiat Bank Transaction
-* **Make Offline Fiat Bank Deposit**: registro manual de un deposito hecho con Fiat en una cuenta bancaria.
-* **Receive Offline Fiat Bank Deposit**: registro manual de recepcion de un deposito hecho con Fiat en una cuenta bancaria.
+* **Make Offline Fiat Bank Transfer**: registro manual de un deposito hecho con Fiat en una cuenta bancaria.
+* **Receive Offline Fiat Bank Transfer**: registro manual de recepcion de un deposito hecho con Fiat en una cuenta bancaria.
 
 ### Wallet (reutilizamos las wallets crypto del CCP?)
 * **CRYPTO BROKER**
- * **Crypto Broker**: gestiona el balance crypto del Crypto Broker.
- * **Cash**: gestiona el balance efectivo del Crypto Broker.
- * **Bank**: gestiona el balance bancario del Crypto Broker (puede estar relacionado a multiples cuentas bancarias).
+ * **Market Crypto**: gestiona el balance crypto del Crypto Broker.
+ * **Fiat Cash**: gestiona el balance efectivo del Crypto Broker.
+ * **Fiat Bank**: gestiona el balance bancario del Crypto Broker (puede estar relacionado a multiples cuentas bancarias).
 * **CRYPTO CUSTOMER**
- * **Crypto Customer**: gestiona el balance crypto del Crypto Customer.
+ * **Market Crypto**: gestiona el balance crypto del Crypto Customer.
 
 ### Request
 * **Crypto Broker Buy**: gestiona la solicitud de compra del Crypto Customer al Crypto Broker

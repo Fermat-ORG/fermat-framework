@@ -18,61 +18,74 @@ Utilizando el plugin Receive Crypto
   Y el plugin Wallet Cash
   Y el plugin Wallet Bank
 
-Escenario: Crypto Broker recibe Crypto currency del Crypto Customer.
+Escenario: Crypto Broker recibe Market Crypto del Crypto Customer.
   Dado que ya se cerro una negociacion con el Crypto Customer
-    Y se establecio que el modo de pago va a ser Crypto Currency
+    Y se establecio que el modo de pago va a ser una transferencia de Market Crypto
     Y el Crypto Customer envio la Crypto Currency que se acepto como pago
-  Cuando la Crypto Broker Wallet reciba el pago
-  Entonces la Crypto Broker Wallet debe registrar el pago usando el plugin Receive Crypto
-    Y la Crypto Broker Wallet debe actualizar el balance usando el plugin Wallet Crypto Broker
-    Y la Crypto Broker Wallet recibe la notificacion de recepcion de pago en Crypto Currency
-    Y la Crypto Broker Wallet actualiza el "Sale Negotiation Contract" como RECIBIDO
-    Y se registra esta actualizacion en el Log
+  Cuando el Receive Crypto Crypto Transaction registre un pago a la direccion de la operacion
+  Entonces Receive Crypto Crypto Transaction debe notificar a la "Crypto Wallet" de la transaccion
+    Y la Crypto Broker Market Crypto Wallet debe registrar la transaccion como un credito
+    Y la Crypto Broker Market Crypto Wallet debe actualizar su balance
+    Y el "Sale Negotiation Contract" debe recibir la notificacion de la transaccion
+    Y el "Sale Negotiation Contract" verifica que el monto de la transaccion sea el monto acordado
+    Y el "Sale Negotation Contract" actualiza su estado como PENDIENTE_ENTREGA
+    Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
+Contratos:
+|!Sale Negotation Contract          |
+|Crypto Customer Market Money Sale  |
+|Crypto Customer Fiat Money Sale    |
 
-Escenario: Crypto Broker envio Crypto currency del Crypto Customer.
+Escenario: Crypto Broker envia el Market Crypto al Crypto Customer.
   Dado que ya se cerro una negociacion con el Crypto Customer
-    Y se establecio que la mercaderia a entregar va a ser Crypto Currency
-  Cuando el Crypto Broker envia la mercaderia a travez de la Crypto Broker Wallet
-  Entonces la Crypto Broker Wallet debe registrar el envio usando el plugin Send Crypto
-    Y la Crypto Broker Wallet debe actualizar el balance usando el plugin Wallet Crypto Broker
-    Y la Crypto Broker Wallet actualiza el "Sale Negotiation Contract" como ENTREGADO
-    Y se registra esta actualizacion en el Log
+    Y se establecio que la mercaderia a entregar va a ser Market Crypto
+  Cuando el Crypto Broker envia la mercaderia a traves de la Crypto Broker Wallet
+  Entonces la Crypto Broker Wallet debe registrar el envio usando el plugin Send Crypto Crypto Transaction
+    Y la Crypto Broker Market Crypto Wallet debe debitar el monto del balance
+    Y la Crypto Broker Wallet actualiza el "Sale Negotiation Contract" como COMPLETADO
+    Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
 
-
-Escenario: Crypto Broker recibe pago Offline del Crypto Customer.
+Escenario: Crypto Broker recibe pago utilizando Fiat Cash del Crypto Customer
   Dado que ya se cerro una negociacion con el Crypto Customer
-    Y se establecio que el modo de pago va a ser Offline
-    Y se notifico al Crypto Broker que el pago se a de realizar a travez de "Tipo Pago Offline"
-  Cuando el Crypto Broker procede a ingresar la informacion del "Tipo Pago Offline" en la Crypto Broker Wallet
-  Entonces la Crypto Broker Wallet debe registrar el pago usando el "Plugin de Recepcion Offline"
-    Y la Crypto Broker Wallet debe actualizar el balance usando el "Crypto Wallet Transaction Offline"
-    Y la Crypto Broker Wallet actualiza el "Sale Negotiation Contract" como RECIBIDO
-    Y se registra esta actualizacion en el Log
+    Y se establecio que el modo de pago va a ser Fiat Cash
+    Y se especificaron las condiciones del "Tipo de Pago"
+  Cuando el Crypto Broker procede a ingresar la informacion del pago en la Crypto Broker Wallet
+  Entonces la Crypto Broker Wallet debe registrar el pago usando una "Fiat Cash Transaction"
+    Y la "Fiat Cash Transaction" debe registrar un credito en la Crypto Broker Fiat Cash Wallet
+    Y la Crypto Broker Wallet actualiza el estado  del "Sale Negotiation Contract" como PENDIENTE_ENTREGA
+    Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
 Permutacion:
-|Tipo Pago Offline     |Plugin de Recepcion Offline   |Crypto Wallet Transaction Offline
-|Cash On Hand          |Receive Cash On Hand          |Cash
-|Cash Delivery         |Receive Cash Delivery         |Bank
-|Offline Bank Deposit  |Receive Offline Bank Deposit  |
+|!Tipo Pago             |!Fiat Cash Transaction                             |
+|Cash On Hand           |Receive Fiat Cash On Hand Fiat Cash Transaction    |
+|Cash Delivery          |Receive Fiat Cash Delivery Fiat Cash Transaction   |
 
-Escenario: Crypto Broker envio de mercancia a travez de Cash on Hand o Cash Delivery                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                currency del Crypto Customer.
+Escenario: Crypto Broker recibe pago utilizando Fiat Bank del Crypto Customer
+  Dado que ya se cerro una negociacion con el Crypto Customer
+    Y se establecio que el modo de pago va a ser Fiat Bank
+  Cuando el Crypto Broker procede a ingresar la informacion del pago en la Crypto Broker Wallet
+  Entonces la Crypto Broker Wallet debe registrar el pago a traves del plugin Receive Offline Fiat Bank Transfer Fiat Bank Transaction
+    Y la Receive Offline Fiat Bank Transfer Fiat Bank Transaction debe registrar un credito en la Crypto Broker Fiat Cash Wallet
+    Y el "Sale Negotiation Contract" actualiza su estado como PENDIENTE_ENTREGA
+    Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
+
+Escenario: Crypto Broker envio de mercancia Fiat Cash                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 currency del Crypto Customer.
   Dado que ya se cerro una negociacion con el Crypto Customer
     Y se establecio que la mercaderia se va a entregar por Cash on Hand o Cash Delivery
-    Y el Crypto Broker hace entrego la mercaderia
-  Cuando Crypto Broker procede a registrar el envio de la mercaderia
+    Y hago entrega de la mercaderia
+  Cuando procedo a registrar el envio de la mercaderia en la Crypto Broker Wallet
   Entonces la Crypto Broker Wallet debe registrar el envio usando el "Plugin de Envio Cash"
-    Y la Crypto Broker Wallet debe actualizar el balance usando el plugin Wallet Cash
-    Y la Crypto Broker Wallet actualiza el "Sale Negotiation Contract" como ENTREGADO
-    Y se registra esta actualizacion en el Log
-|Plugin de Envio Cash   |
-|Give Cash On Hand      |
-|Send Cash Delivery     |
+    Y el "Plugin de Envio Cash" debe registrar un debito en la Crypto Broker Fiat Cash Wallet
+    Y el "Sale Negotiation Contract" actualiza su estado como COMPLETADO
+    Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
+|!Plugin de Envio Cash                    |
+|Give Cash On Hand Fiat Cash Transaction  |
+|Send Cash Delivery Fiat Cash Transaction |
 
-Escenario: Crypto Broker envio mercaderia a travez de Bank                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          currency del Crypto Customer.
+Escenario: Crypto Broker envio mercaderia a Fiat Bank                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          currency del Crypto Customer.
   Dado que ya se cerro una negociacion con el Crypto Customer
-    Y se establecio que la mercaderia se va a entregar por Bank
-  Cuando el Crypto Broker registra que realizo el envio por Bank
-  Entonces la Crypto Broker Wallet debe registrar el envio usando el plugin Make Offline Bank Deposit
-    Y la Crypto Broker Wallet debe actualizar el balance usando el plugin Wallet Bank
-    Y la Crypto Broker Wallet actualiza el "Sale Negotiation Contract" como ENTREGADO
-    Y se registra esta actualizacion en el Log
+    Y se establecio que la mercaderia se va a entregar por Bank Deposit
+  Cuando procedo a registrar el Bank Deposit en la Crypto Broker Wallet
+  Entonces la Crypto Broker Wallet debe registrar el envio usando el plugin Make Offline Bank Transfer Fiat Bank Transaction
+    Y la Make Offline Bank Transfer Fiat Bank Transaction debe realizar un debito en la cuenta registrada en el Crypto Broker Fiat Bank Wallet
+    Y el "Sale Negotiation Contract" actualiza su estado como COMPLETADO
+    Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
     Y la Crypto Broker Wallet envia la notificacion con la informacion del envio de la mercaderia a traves del plugin Crypto Customer Network Service
