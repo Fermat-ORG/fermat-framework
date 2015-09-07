@@ -77,19 +77,19 @@ disponible.
 4) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
 para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se persiste este valor.
 
-5) Se llama al método requestAddressToKnownUser de la CryptoWallet y se persistirá este valor en la GenesisAddress.
+5) Se llama al método requestGenesisAddress de la AssetWallet y se persistirá este valor en la GenesisAddress.
 
 6) Se creará el objeto DigitalAssetMetadata y se generará el hash del DA con el método getDigitalAssetHash. La transacción pasaría a estar en estado PendingSubmitCryptoNetwork.
 
 7) Se enviará la transacción a través de la cryptoVault utilizando el metodo send de la CryptoWallet. La transacción pasa a estado PendingRecieveCryptoNetwork
 
-8) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y esperamos a la generación
-de un bloque que confirme la transacción.
+8) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
+balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet.
 
-9) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingCreditIssuerWallet y se genera el crédito en la Issuer Wallet llamando a un método
-a crear por Franklin.
+9) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingCreditIssuerWallet y se genera el crédito  en el Available balance en la
+Issuer Wallet llamando a un método a crear por Franklin.
 
-10) La issuerWallet genera un crédito en el balance de la wallet y persiste el objeto DigitalAssetMetadata, quedando como dueño del DA.
+10) La issuerWallet genera un crédito en el available balance de la wallet.
 
 11) La transacción finaliza.
 
