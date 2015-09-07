@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -35,6 +36,7 @@ import java.util.logging.Logger;
 public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors,  DealsWithPluginDatabaseSystem, Plugin, Service {
 
     //CryptoAddressBookManager cryptoAddressBookManager;
+    CryptoWallet cryptoWallet;
     CryptoVaultManager cryptoVaultManager;
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     ErrorManager errorManager;
@@ -186,4 +188,10 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
         this.cryptoAddressBookManager=cryptoAddressBookManager;
     }*/
+    @Override
+    public void setCryptoWallet(CryptoWallet cryptoWallet){
+
+        this.cryptoWallet=cryptoWallet;
+    }
+
 }

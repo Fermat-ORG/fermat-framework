@@ -1,15 +1,12 @@
 package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetTransactionException;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
-//import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -19,21 +16,32 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
  */
 public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
-    CryptoAddressBookManager cryptoAddressBookManager;
+    //CryptoAddressBookManager cryptoAddressBookManager;
     CryptoVaultManager cryptoVaultManager;
+    CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
-    String deliveredByActorPublicKey;
+    /*String deliveredByActorPublicKey;
     Actors deliveredByType;
     String deliveredToActorPublicKey;
     Actors deliveredToType;
     String walletPublicKey;
-    ReferenceWallet walletType;
+    ReferenceWallet walletType;*/
+    final long MINIMAL_TRANSACTION_FEE=300;
+    /**
+     * Minimal Asset quiantity to send
+     */
+    final int MINIMAL_QUANTITY=1;
+    /**
+     * Assuming that the DigitalAsset.UnitValue=0.
+     * */
+    //final long MINIMAL_GENESIS_AMOUNT=MINIMAL_TRANSACTION_FEE*MINIMAL_QUANTITY;
 
-    public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
+    public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
 
         //setCryptoAddressBookManagerManager(cryptoAddressBookManager);
         setCryptoVaultManager(cryptoVaultManager);
+        setCryptoWallet(cryptoWallet);
 
     }
 
@@ -44,16 +52,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
-    /*public void setCryptoAddressBookManagerManager(CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException{
-
-        if(cryptoAddressBookManager==null){
-
-            throw new CantSetObjectException("CryptoAddressBookManager is null");
-
+    public void setCryptoWallet(CryptoWallet cryptoWallet) throws CantSetObjectException{
+        if(cryptoWallet==null){
+            throw new CantSetObjectException("CryptoWallet is null");
         }
-        this.cryptoAddressBookManager=cryptoAddressBookManager;
-
-    }*/
+        this.cryptoWallet=cryptoWallet;
+    }
 
     public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException{
 
@@ -69,8 +73,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
 
         try{
-            CryptoAddress genesisAddress=this.cryptoVaultManager.getAddress();
-            digitalAsset.setGenesisAddress(genesisAddress);
+            //CryptoAddress genesisAddress=this.cryptoVaultManager.getAddress();
+            //digitalAsset.setGenesisAddress(genesisAddress);
         }catch(Exception exception){
             throw new CantSetObjectException(exception, "Setting GenesisAddress to DigitalAsset","Unexpected exception");
         }
@@ -111,17 +115,57 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         if(walletType==null){
             throw new ObjectNotSetException("deliveredToType is not set");
         }*/
+        if(this.digitalAsset.getContract()==null){
+            throw new ObjectNotSetException("Digital Asset Contract is not set");
+        }
+        if(this.digitalAsset.getResources()==null){
+            throw new ObjectNotSetException("Digital Asset Resources is not set");
+        }
+        if(this.digitalAsset.getDescription()==null){
+            throw new ObjectNotSetException("Digital Asset Description is not set");
+        }
+        long digitalAssetTransactionFee=this.digitalAsset.getTransactionFee();
+        if(digitalAssetTransactionFee<MINIMAL_TRANSACTION_FEE){
+            throw new ObjectNotSetException("Digital Asset Genesis Transaction Fee is insufficient: "+digitalAssetTransactionFee);
+        }
+        int digitalAssetQuantity=this.digitalAsset.getQuantity();
+        if(digitalAssetQuantity<MINIMAL_QUANTITY){
+            throw new ObjectNotSetException("Digital Asset quantity is insufficient: "+digitalAssetQuantity);
+        }
+        if(this.digitalAsset.getName()==null){
+            throw new ObjectNotSetException("Digital Asset Name is not set");
+        }
+        if(this.digitalAsset.getPublicKey()==null){
+            throw new ObjectNotSetException("Digital Asset PublicKey is not set");
+        }
+        if(this.digitalAsset.getState()==null){
+            //throw new ObjectNotSetException("Digital Asset State is not set");
+            digitalAsset.setState(State.DRAFT);
+        }
+        checkGenesisAmount();
 
+    }
+
+    private void checkGenesisAmount() throws ObjectNotSetException{
+        long digitalAssetGenesisAmount=this.digitalAsset.getGenesisAmount();
+        long calculatedDigitalAssetGenesisAmount=calculateGenesisAmount();
+        if(calculatedDigitalAssetGenesisAmount!=digitalAssetGenesisAmount){
+            throw new ObjectNotSetException("The Genesis Amount set in Digital Asset is incorrect: '"+digitalAssetGenesisAmount+"' is set in object, Asset Issuing plugin calculates in '"+calculatedDigitalAssetGenesisAmount+"'");
+        }
+    }
+
+    private long calculateGenesisAmount(){
+        int digitalAssetQuantity=this.digitalAsset.getQuantity();
+        long digitalAssetTransactionFee=this.digitalAsset.getTransactionFee();
+        long digitalAssetUnitValue=this.digitalAsset.getUnitValue();
+        long genesisAmount=((long)digitalAssetQuantity*digitalAssetUnitValue)+(digitalAssetQuantity*digitalAssetTransactionFee);
+        return genesisAmount;
     }
 
     public void createDigitalAssetCryptoTransaction(DigitalAsset digitalAsset) throws CantCreateDigitalAssetTransactionException {
 
         /**
          * TODO:
-         1) El Asset Issuing Manager a través de un método llamado IssueAsset(DigitalAsset digitalAsset) recibe de la Issuer SubApp el DigitalAsset. El primer paso
-         es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction
-         y GenesisAddress.
-
          2) A través del método getAvailableBalance de la CryptoWallet, se debe validar que el GenesisAmount informado por la subApp del Asset Issuer no excede el balance
          disponible.
 
