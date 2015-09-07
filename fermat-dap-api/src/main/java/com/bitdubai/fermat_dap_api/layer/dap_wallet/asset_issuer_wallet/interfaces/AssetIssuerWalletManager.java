@@ -5,7 +5,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfa
  */
 public interface AssetIssuerWalletManager {
 
-    AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey);
+    AssetIssuerWalletBalance loadAssetIssuerWallet(String walletPublicKey);
 
-    void createWalletAssetIssuer (String walletPublicKey);
+    void createWalletAssetIssuer (String walletPublicKey, String assetIssuerPublicKey);
 }
