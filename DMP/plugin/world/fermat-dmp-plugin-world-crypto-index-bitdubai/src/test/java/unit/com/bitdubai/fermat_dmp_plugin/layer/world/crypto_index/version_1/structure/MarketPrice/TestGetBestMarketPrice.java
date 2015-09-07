@@ -5,9 +5,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import org.fest.assertions.api.Assertions;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by francisco on 31/08/15.
@@ -18,7 +15,7 @@ public class TestGetBestMarketPrice {
     double bestMarketPrice;
     @Test
     public void getBestMarketPriceTest(){
-    bestMarketPrice=marketPrice.getBestMarketPrice("BTC","USD");
+        bestMarketPrice=marketPrice.getBestMarketPrice("BTC","USD");
         System.out.println(bestMarketPrice);
         Assertions.assertThat(bestMarketPrice).isNotNull();
     }

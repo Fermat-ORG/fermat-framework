@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.MarketPrice;
 
 import org.fest.assertions.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -19,14 +20,14 @@ public class TestGetHistoricalExchangeRate {
     private FiatCurrency f=null;
     private long time;
 
+    @Before
     public void setValue() throws InvalidParameterException {
         c= CryptoCurrency.getByCode("BTC");
         f= FiatCurrency.getByCode("USD");
     }
     @Test
-    public void getHistoricalExchangeRateTest() throws InvalidParameterException {
-        setValue();
-       marketExchangeRate=marketPrice.getHistoricalExchangeRate(c,f,time);
+    public void getHistoricalExchangeRateTest() {
+        marketExchangeRate=marketPrice.getHistoricalExchangeRate(c,f,time);
         System.out.println("El precio: " + marketExchangeRate);
         Assertions.assertThat(marketExchangeRate).isNotEqualTo(null);
     }

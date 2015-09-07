@@ -31,11 +31,11 @@ public class GetBufferedReaderTest {
    HTTPJson httpJson = new HTTPJson();
 
     @Before
-    public void setValues() {
+    public void setValues() throws Exception {
        inputStreamTest =httpJson.getInputStream("https://www.google.com");
     }
     @Test
-    public void TestGetBufferedReader_successful() {
+    public void TestGetBufferedReader_successful() throws Exception {
 
         bufferedReaderTest = httpJson.getBufferedReader(inputStreamTest);
         Assertions.assertThat(bufferedReaderTest).isNotNull();

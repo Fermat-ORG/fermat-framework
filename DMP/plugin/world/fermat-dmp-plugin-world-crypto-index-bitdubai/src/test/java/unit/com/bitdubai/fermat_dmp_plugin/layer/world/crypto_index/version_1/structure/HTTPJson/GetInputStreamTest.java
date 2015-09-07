@@ -17,7 +17,7 @@ public class GetInputStreamTest {
     HTTPJson httpJson = new HTTPJson();
 
     @Test
-    public void TestGetInputStream_successful(){
+    public void TestGetInputStream_successful() throws Exception{
         inputStreamTest=httpJson.getInputStream("https://www.google.com");
         Assertions.assertThat(inputStreamTest).isNotNull();
     }

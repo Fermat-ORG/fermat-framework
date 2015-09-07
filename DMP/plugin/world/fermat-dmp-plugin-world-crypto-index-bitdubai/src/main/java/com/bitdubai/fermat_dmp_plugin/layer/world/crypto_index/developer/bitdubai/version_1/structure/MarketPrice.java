@@ -2,6 +2,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdub
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exception.CantGetBufferedReader;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exception.CantGetInputStream;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exception.CantGetJsonObject;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketRateProvider;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BtceServiceAPI;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BterServiceAPI;
@@ -49,13 +52,17 @@ public class MarketPrice implements MarketRateProvider {
         String urlAPI4=cexioServiceAPI.getUrlAPI(crypto, fiat);
         String urlAPI5=cryptocoinchartsServiceAPI.getUrlAPI(crypto, fiat);
 
-        priceList.add(jsonService.getJSONFromUrl(urlAPI1).getJSONObject(crypto.toLowerCase() + "_" + fiat.toLowerCase()).get("last").toString());
-        priceList.add(jsonService.getJSONFromUrl(urlAPI2).get("last").toString());
-        priceList.add(jsonService.getJSONFromUrl(urlAPI3).getJSONObject("ticker").get("lastprice").toString());
-        priceList.add(jsonService.getJSONFromUrl(urlAPI4).getString("last"));
-        priceList.add(jsonService.getJSONFromUrl(urlAPI5).getString("price"));
+
+            priceList.add(jsonService.getJSONFromUrl(urlAPI1).getJSONObject(crypto.toLowerCase() + "_" + fiat.toLowerCase()).get("last").toString());
+            priceList.add(jsonService.getJSONFromUrl(urlAPI2).get("last").toString());
+            priceList.add(jsonService.getJSONFromUrl(urlAPI3).getJSONObject("ticker").get("lastprice").toString());
+            priceList.add(jsonService.getJSONFromUrl(urlAPI4).getString("last"));
+            priceList.add(jsonService.getJSONFromUrl(urlAPI5).getString("price"));
+
+
+
         Collections.sort(priceList);
-        //Collections.reverse(priceList);
+
         marketExchangeRate= Double.valueOf(priceList.get(priceList.size()-1));
         return marketExchangeRate;
     }
