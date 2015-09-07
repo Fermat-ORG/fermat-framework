@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer
 
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
@@ -23,6 +24,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
+    PluginFileSystem pluginFileSystem;
     /*String deliveredByActorPublicKey;
     Actors deliveredByType;
     String deliveredToActorPublicKey;
@@ -39,11 +41,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
      * */
     //final long MINIMAL_GENESIS_AMOUNT=MINIMAL_TRANSACTION_FEE*MINIMAL_QUANTITY;
 
-    public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
+    public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
 
         //setCryptoAddressBookManagerManager(cryptoAddressBookManager);
         setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(cryptoWallet);
+        setPluginFileSystem(pluginFileSystem);
 
     }
 
@@ -59,6 +62,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSetObjectException("CryptoWallet is null");
         }
         this.cryptoWallet=cryptoWallet;
+    }
+
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
+        if(pluginFileSystem==null){
+            throw new CantSetObjectException("pluginFileSystem is null");
+        }
+        this.pluginFileSystem=pluginFileSystem;
     }
 
     public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException{

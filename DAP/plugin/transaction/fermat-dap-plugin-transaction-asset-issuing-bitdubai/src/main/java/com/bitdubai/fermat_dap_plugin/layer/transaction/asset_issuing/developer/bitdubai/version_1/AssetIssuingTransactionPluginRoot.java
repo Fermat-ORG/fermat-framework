@@ -13,11 +13,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetTransactionException;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantIssueDigitalAsset;
+import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantIssueDigitalAssetException;
 import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
@@ -33,7 +35,7 @@ import java.util.logging.Logger;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors,  DealsWithPluginDatabaseSystem, Plugin, Service {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin, Service {
 
     //CryptoAddressBookManager cryptoAddressBookManager;
     CryptoWallet cryptoWallet;
@@ -42,6 +44,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     ErrorManager errorManager;
     EventManager eventManager;
     PluginDatabaseSystem pluginDatabaseSystem;
+    PluginFileSystem pluginFileSystem;
     UUID pluginId;
 
     //TODO: Delete this log object
@@ -91,7 +94,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         printSomething("Starting plugin");
         //TODO: implement this method
         try{
-            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.cryptoVaultManager/*, this.cryptoAddressBookManager*/);
+            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.cryptoVaultManager, this.cryptoWallet, this.pluginFileSystem/*, this.cryptoAddressBookManager*/);
 
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "CryptoVaultManager is null");
@@ -132,14 +135,14 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void issueAsset(DigitalAsset digitalAssetToIssue) throws CantIssueDigitalAsset {
+    public void issueAsset(DigitalAsset digitalAssetToIssue) throws CantIssueDigitalAssetException {
 
         try {
             this.digitalAssetCryptoTransactionFactory.createDigitalAssetCryptoTransaction(digitalAssetToIssue);
         } catch (CantCreateDigitalAssetTransactionException exception) {
-            throw new CantIssueDigitalAsset(exception, "Creating a Digital Asster Transaction", "Check the cause");
+            throw new CantIssueDigitalAssetException(exception, "Creating a Digital Asster Transaction", "Check the cause");
         } catch(Exception exception){
-            throw new CantIssueDigitalAsset(FermatException.wrapException(exception), "Issuing a Digital Asset Transaction", "Unexpected Exception");
+            throw new CantIssueDigitalAssetException(FermatException.wrapException(exception), "Issuing a Digital Asset Transaction", "Unexpected Exception");
         }
 
     }
@@ -194,4 +197,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         this.cryptoWallet=cryptoWallet;
     }
 
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem=pluginFileSystem;
+    }
 }
