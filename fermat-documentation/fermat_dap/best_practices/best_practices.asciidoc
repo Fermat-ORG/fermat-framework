@@ -24,7 +24,7 @@ public void getSomething() throws ObjectNotSetException{
 El objetivo de esta técnica es evitar que los métodos getters devuelvan null, para ello se debe realizar una verificación previa antes de devolver algún objeto.
 
 
-= Consideraciones para DAP
+== Consideraciones para DAP
 
 * Crear una DAPException para poder manejar todo tipo de Exception que se presente
 
@@ -32,6 +32,6 @@ El objetivo de esta técnica es evitar que los métodos getters devuelvan null, 
 Excepciones desencadenadas de NULL
 
 
-= Refactor Pendientes por hacer:
+== Refactor Pendientes por hacer:
 
 * Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.
