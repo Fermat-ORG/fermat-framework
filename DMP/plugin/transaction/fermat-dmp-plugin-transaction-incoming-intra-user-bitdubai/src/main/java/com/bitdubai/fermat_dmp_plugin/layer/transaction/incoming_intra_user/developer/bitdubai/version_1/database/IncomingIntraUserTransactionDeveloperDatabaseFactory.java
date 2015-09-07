@@ -159,12 +159,18 @@ public class IncomingIntraUserTransactionDeveloperDatabaseFactory implements Dea
          */
         List<String> incomingIntraUserCryptoMetadataColumns = new ArrayList<String>();
 
+        incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME);
         incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_REQUEST_FLAG_COLUMN_NAME);
         incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_REQUEST_ID_COLUMN_NAME);
         incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME);
         incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
         incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME);
         incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME);
+        incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ACTION_COLUMN_NAME);
+        incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PROTOCOL_STATUS_COLUMN_NAME);
+        incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TRANSACTION_STATUS_COLUMN_NAME);
+        incomingIntraUserCryptoMetadataColumns.add(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TIMESTAMP_COLUMN_NAME);
+
         /**
          * Table Incoming Intra User Crypto Metadata addition.
          */

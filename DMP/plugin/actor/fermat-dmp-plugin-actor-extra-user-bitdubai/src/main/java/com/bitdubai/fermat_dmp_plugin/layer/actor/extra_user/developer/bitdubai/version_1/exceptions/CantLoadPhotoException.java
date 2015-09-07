@@ -19,16 +19,4 @@ public class CantLoadPhotoException extends FermatException {
     public CantLoadPhotoException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-    public CantLoadPhotoException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantLoadPhotoException(final String message) {
-        this(message, null);
-    }
-
-    public CantLoadPhotoException() {
-        this(DEFAULT_MESSAGE);
-    }
 }

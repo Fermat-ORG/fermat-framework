@@ -24,6 +24,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp" />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:src="@drawable/no_request"/>
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>
