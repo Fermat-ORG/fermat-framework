@@ -523,7 +523,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
           intraUserActorRequestConnectionEvent.setIntraUserToAddName(intraUserLoggedInName);
           intraUserActorRequestConnectionEvent.setIntraUserProfileImage(myProfileImage);
 
-         // eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
+         eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
 
 
       }
@@ -554,7 +554,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             intraUserActorConnectionAcceptedEvent.setIntraUserToAddPublicKey(intraUserToAddPublicKey);
 
 
-            //eventManager.raiseEvent(intraUserActorConnectionAcceptedEvent);
+            eventManager.raiseEvent(intraUserActorConnectionAcceptedEvent);
 
         }
         catch (CantExecuteDatabaseOperationException e)
@@ -583,7 +583,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             intraUserActorConnectionDeniedEvent.setIntraUserToAddPublicKey(intraUserToRejectPublicKey);
 
 
-           // eventManager.raiseEvent(intraUserActorConnectionDeniedEvent);
+            eventManager.raiseEvent(intraUserActorConnectionDeniedEvent);
 
         }
         catch (CantExecuteDatabaseOperationException e)
@@ -613,7 +613,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToDisconnectPublicKey);
 
 
-           // eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
+            eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
         }
         catch (CantExecuteDatabaseOperationException e)
         {
@@ -642,7 +642,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToCancelPublicKey);
 
 
-           // eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
+            eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
 
         }
         catch (CantExecuteDatabaseOperationException e)
@@ -725,7 +725,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             /*
              * Open new database connection
              */
-             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+              this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             this.dataBase.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
