@@ -8,9 +8,18 @@ Using the Crypto Broker Wallet Android plugin
   And the Crypto Customer Actor plugin
   And the Crypto Broker Network Service Java plugin
   And the Crypto Customer Network Service Java plugin
-  
+
+Scenario: The Crypto Broker receives a Buy Negotiation Request
+  Given I receive a "Buy Negotiation Request" from a Crypto Customer
+  When I decide in which Crypto Broker Wallet I will process the Request
+  Then the Crypto Broker Wallet should create a "Sale Negotiation Contract" according the "Type of Merchandise" requested
+Permutations:
+|Type of Merchandise  |Sale Negotiation Contract              |
+|Market Money         |Market Money Buy Negotiation Contract  |
+|Fiat Money           |Fiat Money Buy Negotiation Contract    |  
+
 Scenario: The Crypto Broker replies a request of Buy Negotiation
-  Given I receives a request to start a Negotiation from a Crypto Customer through the Crypto Customer Actor Plugin
+  Given I receive a request to start a Negotiation from a Crypto Customer through the Crypto Customer Actor Plugin
     And I decide in which of my wallets place the Buy Negotiation depending of the "Type of Merchandise" the Crypto Customer is requesting
   When I create a Sale Negotiation in the Crypto Broker Wallet
     And I set in the Crypto Broker Wallet the price for the "Type of Merchandise" the Crypto Customer is requesting
@@ -18,15 +27,15 @@ Scenario: The Crypto Broker replies a request of Buy Negotiation
   Then the Crypto Broker Wallet should Updated a "Sale Negotiation Contract"
     And it should send a message to the Crypto Customer through the Crypto Customer Network Service with the "Contract" Information
     And it should be added to a list of Pending Sale Negotiations in the Crypto Broker Wallet
-    And it should add a regiter in the "Buy Negotiation Contract" Transactions Log 
+    And it should add a regiter in the "Buy Negotiation Contract" Transactions Log
 Permutations:
 |Type of Merchandise  |Sale Negotiation Contract              |Payment Type   |Currency for the Payment
 |Market Money         |Market Money Buy Negotiation Contract  |Bank           |Market Money
 |Fiat Money           |Fiat Money Buy Negotiation Contract    |Cash on Hand   |Fiat Money
-|                     |                                       |Crypto         | 
+|                     |                                       |Crypto         |
 
 Scenario: The Crypto Broker postpone the request of Sale Negotiation
-  Given I receives a request to start a Negotiation from a Crypto Customer through the Crypto Customer Actor Plugin
+  Given I receive a request to start a Negotiation from a Crypto Customer through the Crypto Customer Actor Plugin
     And I decide to postpone the request to start the Negotiation
   When I postpone a Sale Negotiation in the Crypto Broker Wallet
   Then the Crypto Broker Wallet should Updated a "Buy Negotiation Contract" regitrer the postpone
