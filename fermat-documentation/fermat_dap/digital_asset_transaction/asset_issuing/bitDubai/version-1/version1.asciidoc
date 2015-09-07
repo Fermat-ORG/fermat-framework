@@ -51,12 +51,15 @@ Asset Issuing debera seguir los siguientes pasos para construir un Digital Asset
 * Se reciben la información multimedia y las características de la transacción propias del Digital Asset de parte del module de la subApp AssetIssuer.
 * Se solicita a la Crypto Vault la creación de una transaction bitcoin a través del Outoing Intra user. Este hash se define como la GenesisTransaction
 en el Digital Asset.
-* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
+* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issuer Actor,
 la plataforma DAP y la vault de donde sale la dirección.
 * Se completa la crypto transacción especificando el GenesisAmount.
+//¿cual plugin debo invocar para llevar a cabo esta transacción, Outoing Intra user?
 * Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_RETURN de la crypto transacción.
-* Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.
+//¿Esta es la función que se encuentra en el DigitalAssetMetadata?
+* Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network. Esto se realiza por medio de la CryptoVault.
 * Se asocia la metadata a la genesis transaction.
+//TODO: definir el componente que debe realizar esta acción.
 * El Digital Asset es considerado creado, en este paso el estado (State) del Asset se fija en _final_. Una vez que el Digital Asset entra en estado _final_ se considera creado,
 en este estado, sus propiedades no deben ser modificadas por ningún actor de la plataforma, ya que esto modificaría la relación entre la metadata propia del Digital Asset y
 su respectiva GenesisTransaction.
@@ -64,8 +67,14 @@ su respectiva GenesisTransaction.
 * Todos los Digital Assets generados deben ser transferidos al plugin AssetDistribution, este plugin se encargará de realizar la transferencia, de acuerdo a los
 criterios establecidos por AssetIssuer.
 
+Al iniciar el plugin este instancia al objeto DigitalAssetCryptoTransactionFactory, el cual será el encargado de tomar el Digital Asset creado por AssetIssuingTransactionPluginRoot con los datos provenientes de la UI a través del AssetIssuerModule.
+DigitalAssetCryptoTransactionFactory (DACTF) usará una instancia del CryptoVaultManager para crear la genesis transaction, la cual quedará registrada en el CryptoAddressBook por medio de CryptoAddressBookManager, que se va a asociar al objeto Digital Asset y así crear un nuevo DigitalAssetMetadata, este último objeto debe generase al concluir
+el proceso de creación del digital Asset, ya que este es quien ajustaría el estado a _final_, una vez que se encuentra en este estado ya no se debe modificar ninguna característica del Digital Asset.
+
+
 == Plug-in Structure
 
 == Events
 
 == Implementation Details
+
