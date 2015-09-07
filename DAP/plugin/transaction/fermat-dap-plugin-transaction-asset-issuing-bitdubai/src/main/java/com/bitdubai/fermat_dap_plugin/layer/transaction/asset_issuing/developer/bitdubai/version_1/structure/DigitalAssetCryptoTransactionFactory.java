@@ -141,6 +141,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //We need to get a new GenesisAddress:
             this.cryptoVaultManager.connectToBitcoin();
             setDigitalAssetGenesisAmount();
+            //TODO no usar addressBook
             this.cryptoAddressBookManager.registerCryptoAddress(
                     this.digitalAsset.getGenesisAddress(),
                     this.deliveredByActorPublicKey,

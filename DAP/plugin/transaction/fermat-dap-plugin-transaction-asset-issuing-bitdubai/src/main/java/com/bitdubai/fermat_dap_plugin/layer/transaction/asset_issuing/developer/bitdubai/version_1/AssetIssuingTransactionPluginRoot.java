@@ -135,6 +135,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         this.cryptoVaultManager=cryptoVaultManager;
     }
 
+    //TODO: crear un método que solicite DigitalAsset en vez de los datos por separado
     @Override
     public void createDigitalAsset(String publicKey, String name, String description, List<Resource> resources, DigitalAssetContract digitalAssetContract, long genesisAmount) throws CantCreateDigitalAssetException {
 
