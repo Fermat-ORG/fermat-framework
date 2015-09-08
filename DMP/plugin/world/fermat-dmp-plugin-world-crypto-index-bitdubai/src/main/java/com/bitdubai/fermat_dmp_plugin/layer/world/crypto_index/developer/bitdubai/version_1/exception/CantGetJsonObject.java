@@ -17,7 +17,7 @@ public class CantGetJsonObject extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CANT GET JSON OBJECT";
 
-    public CantGetJsonObject(String message, Exception cause, String context, String possibleReason) {
+    public CantGetJsonObject(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

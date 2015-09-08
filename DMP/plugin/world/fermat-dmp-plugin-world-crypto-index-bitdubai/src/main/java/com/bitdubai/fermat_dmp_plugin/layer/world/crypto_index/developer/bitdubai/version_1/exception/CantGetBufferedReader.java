@@ -18,7 +18,7 @@ public class CantGetBufferedReader extends FermatException {
 
     public static final String DEFAULT_MESSAGE ="CANT GET BUFFEREDREADER";
 
-    public CantGetBufferedReader(String message, Exception cause, String context, String possibleReason) {
+    public CantGetBufferedReader(final String message, final Exception cause,final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

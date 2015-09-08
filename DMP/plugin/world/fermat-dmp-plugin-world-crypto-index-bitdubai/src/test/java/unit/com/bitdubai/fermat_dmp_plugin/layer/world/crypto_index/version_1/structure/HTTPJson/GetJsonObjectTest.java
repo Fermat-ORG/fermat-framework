@@ -10,12 +10,15 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.InputStream;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
+
 /**
  * Created by francisco on 03/09/15.
  */
 public class GetJsonObjectTest {
 
-    private BufferedReader bufferedReaderTest;
+    private BufferedReader bufferedReaderTest, bufferedReaderTestExceptios;
     private InputStream inputStreamTest;
     private JSONObject jsonObjectTest;
     HTTPJson htppJson = new HTTPJson();
@@ -26,9 +29,13 @@ public class GetJsonObjectTest {
         bufferedReaderTest=htppJson.getBufferedReader(inputStreamTest);
     }
     @Test
-    public void TestGetJsonObject_successful() throws Exception{
-        jsonObjectTest=htppJson.getJsonObject(bufferedReaderTest);
+    public void TestGetJsonObject_successful() throws Exception {
+        jsonObjectTest = htppJson.getJsonObject(bufferedReaderTest);
         Assertions.assertThat(jsonObjectTest).isNotNull();
-
+    }
+    @Test
+    public void TestGetJsonObject_ThrowCantGetJsonObject() throws Exception{
+        catchException(htppJson).getJsonObject(bufferedReaderTestExceptios);
+        Assertions.assertThat(caughtException()).isNotNull();
     }
 }

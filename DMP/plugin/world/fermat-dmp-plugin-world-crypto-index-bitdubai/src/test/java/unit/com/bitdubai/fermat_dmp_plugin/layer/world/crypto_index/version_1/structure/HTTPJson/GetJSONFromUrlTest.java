@@ -19,7 +19,7 @@ public class GetJSONFromUrlTest {
     HTTPJson htppJson = new HTTPJson();
 
         @Test
-    public void TestGetJSONFromUrl_successful() throws Exception{
+    public void TestGetJSONFromUrl_successful(){
         jsonObjectTest=htppJson.getJSONFromUrl("http://api.cryptocoincharts.info/tradingPair/btc_usd");
             String json;
             String jsonExpectedValue="btc/usd";

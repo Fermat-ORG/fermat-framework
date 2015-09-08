@@ -29,9 +29,14 @@ public class MarketPrice implements MarketRateProvider {
     CexioServiceAPI cexioServiceAPI = new CexioServiceAPI();
     CryptocoinchartsServiceAPI cryptocoinchartsServiceAPI = new CryptocoinchartsServiceAPI();
     String url = null;
-        /**
-     *
-     * **/
+
+    /**
+     * Through getBestMarketPrice method, the best market price returns
+     * @param c
+     * @param f
+     * @param time
+     * @return
+     */
     @Override
     public double getHistoricalExchangeRate(CryptoCurrency c, FiatCurrency f, long time) {
             String crypto= c.getCode().toString();
@@ -41,6 +46,13 @@ public class MarketPrice implements MarketRateProvider {
         return marketExchangeRate;
     }
 
+    /**
+     *The url obtained providers is stored in different variable type String.
+     * These are added to a list so, then it is sorted from lowest to highest, and thus return the best market price.
+     * @param crypto
+     * @param fiat
+     * @return
+     */
     public double getBestMarketPrice (String crypto, String fiat ){
         marketExchangeRate=null;
         url=null;

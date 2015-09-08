@@ -35,6 +35,11 @@ public class HTTPJson implements DealsWithErrors {
 
     ErrorManager errorManager;
 
+    /**
+     * this method is responsible for implementing all the methods of the class and return a JSON object
+     * @param url
+     * @return
+     */
     public JSONObject getJSONFromUrl(String url) {
         bufferedReader = null;
         inputStream = null;
@@ -56,7 +61,7 @@ public class HTTPJson implements DealsWithErrors {
         }
         return jsonObject;
     }
-
+    /**InputStream This method returns the HTTP object variable from the url**/
     public InputStream getInputStream(String url) throws CantGetInputStream{
         try {
             DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -65,23 +70,29 @@ public class HTTPJson implements DealsWithErrors {
             HttpEntity httpEntity = httpResponse.getEntity();
             inputStream = httpEntity.getContent();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new  CantGetInputStream(CantGetInputStream.DEFAULT_MESSAGE,e,"Probably the url is invalid",null);
         }
 
         return inputStream;
     }
+    /**
+     * The objective of this method is to return a variable of type BufferedReader to read the content of the url. In this case JSON is a text format.
+     * **/
     public BufferedReader getBufferedReader(InputStream is) throws CantGetBufferedReader{
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(
                     is, "iso-8859-1"), 8);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            throw new CantGetBufferedReader(CantGetBufferedReader.DEFAULT_MESSAGE,e,"Probably the InputStream parameter is not correct",null);
+          new CantGetBufferedReader(CantGetBufferedReader.DEFAULT_MESSAGE,e,"Probably the InputStream parameter is not correct",null);
         }
 
         return bufferedReader;
     }
+
+    /**
+     * En este método se espera el ingreso de un parámetro del tipo BufferedReader para que el mismo sea leído, colocado en formato json y guardado como un JsonObject
+
+     */
     public JSONObject getJsonObject(BufferedReader reader) throws CantGetJsonObject{
         StringBuilder stringBuilder = new StringBuilder();
         String line;
@@ -93,8 +104,7 @@ public class HTTPJson implements DealsWithErrors {
             json = stringBuilder.toString();
             jsonObject = new JSONObject(json);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new CantGetJsonObject(CantGetJsonObject.DEFAULT_MESSAGE,e,"Probably the Json object obtained not correct or is not within the expected format",null);
+          throw new CantGetJsonObject(CantGetJsonObject.DEFAULT_MESSAGE,e,"Probably the Json object obtained not correct or is not within the expected format",null);
         }
 
 

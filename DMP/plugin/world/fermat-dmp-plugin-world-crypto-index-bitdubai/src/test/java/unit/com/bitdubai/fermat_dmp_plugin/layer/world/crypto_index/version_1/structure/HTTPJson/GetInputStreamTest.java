@@ -8,6 +8,10 @@ import org.junit.Test;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 /**
  * Created by francisco on 03/09/15.
  */
@@ -20,5 +24,10 @@ public class GetInputStreamTest {
     public void TestGetInputStream_successful() throws Exception{
         inputStreamTest=httpJson.getInputStream("https://www.google.com");
         Assertions.assertThat(inputStreamTest).isNotNull();
+    }
+    @Test
+    public void TestGetInputStream_ThrowCantGetInputStream() throws Exception{
+        catchException(httpJson).getInputStream("");
+      assertThat(caughtException()).isNotNull();
     }
 }
