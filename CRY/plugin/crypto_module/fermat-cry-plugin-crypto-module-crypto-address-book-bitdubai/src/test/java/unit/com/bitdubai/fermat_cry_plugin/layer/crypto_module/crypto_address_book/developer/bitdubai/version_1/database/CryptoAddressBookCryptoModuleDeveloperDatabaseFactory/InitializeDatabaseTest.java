@@ -40,7 +40,7 @@ public class InitializeDatabaseTest {
 
 
     @Before
-    public void SetUp() throws CantCreateDatabaseException,  CantOpenDatabaseException, DatabaseNotFoundException {
+    public void setUp() throws CantCreateDatabaseException,  CantOpenDatabaseException, DatabaseNotFoundException {
         UUID testOwnerId = UUID.randomUUID();
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);

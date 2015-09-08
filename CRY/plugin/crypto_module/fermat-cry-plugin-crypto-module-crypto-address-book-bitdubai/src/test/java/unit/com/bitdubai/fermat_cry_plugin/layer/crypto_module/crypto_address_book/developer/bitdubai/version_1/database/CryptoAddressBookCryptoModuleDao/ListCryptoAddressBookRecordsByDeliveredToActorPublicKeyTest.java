@@ -84,7 +84,11 @@ public class ListCryptoAddressBookRecordsByDeliveredToActorPublicKeyTest extends
 
     private void setUpIds(){
         testOwnerId = UUID.randomUUID();
+        mockActors = Actors.INTRA_USER;
+        mockPlatforms = Platforms.CRYPTO_BROKER_PLATFORM;
+        mockVaults = Vaults.BITCOIN_VAULT;
 
+        mockReferenceWallet = ReferenceWallet.COMPOSITE_WALLET_MULTI_ACCOUNT;
 
     }
 

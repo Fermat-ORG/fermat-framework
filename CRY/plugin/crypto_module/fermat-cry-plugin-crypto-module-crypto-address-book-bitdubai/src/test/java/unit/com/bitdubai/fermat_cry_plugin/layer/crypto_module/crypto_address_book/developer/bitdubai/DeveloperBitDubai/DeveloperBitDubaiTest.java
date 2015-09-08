@@ -42,7 +42,7 @@ public class DeveloperBitDubaiTest {
     }
 
     @Test
-    public void GetPluging() {
+    public void getPluging() {
         assertThat(developTest.getPlugin()).isInstanceOf(CryptoAddressBookCryptoModulePluginRoot.class);
     }
 }

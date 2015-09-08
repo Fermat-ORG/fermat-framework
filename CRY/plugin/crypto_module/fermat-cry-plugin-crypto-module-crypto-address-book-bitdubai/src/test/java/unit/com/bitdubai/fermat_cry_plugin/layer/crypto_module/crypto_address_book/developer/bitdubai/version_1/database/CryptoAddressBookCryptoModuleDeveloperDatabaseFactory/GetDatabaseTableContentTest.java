@@ -1,6 +1,7 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDeveloperDatabaseFactory;
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -21,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,14 +62,14 @@ public class GetDatabaseTableContentTest extends TestCase {
     private CryptoAddressBookCryptoModuleDeveloperDatabaseFactory databaseFactory;
 
     @Before
-    public void SetUp() throws CantCreateDatabaseException, CantInitializeCryptoAddressBookCryptoModuleDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException {
+    public void setUp() throws CantCreateDatabaseException, CantInitializeCryptoAddressBookCryptoModuleDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException {
         UUID testOwnerId = UUID.randomUUID();
+        databaseTableRecordList = Arrays.asList(mockDatabaseTableRecord, mockDatabaseTableRecord, mockDatabaseTableRecord);
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
         when(mockTable.getRecords()).thenReturn(databaseTableRecordList);
-
-        databaseFactory = new CryptoAddressBookCryptoModuleDeveloperDatabaseFactory(mockPluginDatabaseSystem, testOwnerId);
+         databaseFactory = new CryptoAddressBookCryptoModuleDeveloperDatabaseFactory(mockPluginDatabaseSystem, testOwnerId);
 
         databaseFactory.initializeDatabase();
 
@@ -75,15 +77,8 @@ public class GetDatabaseTableContentTest extends TestCase {
     @Test
     public void getDatabaseTableContentTest() throws CantOpenDatabaseException, DatabaseNotFoundException, CantInitializeCryptoAddressBookCryptoModuleDatabaseException {
 
-        List<String> fieldNames = new ArrayList<String>();
-        fieldNames.add("Name1");
-        fieldNames.add("Name2");
-        fieldNames.add("Name3");
-
-//TODO Ejecucion con OK error en for each sobre los records hay que ver como se mockea eso
-        // assertThat(intraUserIdentityDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable)).isInstanceOf(List.class);
-        catchException(databaseFactory).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        assertThat(caughtException()).isNotNull().isInstanceOf(Exception.class);
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = databaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        assertThat(developerDatabaseTableRecordList).isNotNull();
 
 
     }

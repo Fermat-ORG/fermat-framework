@@ -66,7 +66,7 @@ public class CreateDatabaseTest  extends TestCase {
     }
 
     @Test
-    public void CreateDatabase_DatabaseAndTablesProperlyCreated_ReturnsDatabase() throws Exception{
+    public void createDatabase_DatabaseAndTablesProperlyCreated_ReturnsDatabase() throws Exception{
         testDatabaseFactory = new CryptoAddressBookCryptoModuleDatabaseFactory(mockPluginDatabaseSystem);
         testDatabaseFactory.setPluginDatabaseSystem(mockPluginDatabaseSystem);
         Database checkDatabase = testDatabaseFactory.createDatabase(testOwnerId, testOwnerId.toString());
@@ -75,7 +75,8 @@ public class CreateDatabaseTest  extends TestCase {
     }
 
     @Test
-    public void CreateDatabase_PluginSystemCantCreateDatabase_ThrowsCantCreateDatabaseException() throws Exception{
+    public void createDatabase_PluginSystemCantCreateDatabase_ThrowsCantCreateDatabaseException() throws Exception{
+
         when(mockPluginDatabaseSystem.createDatabase(testOwnerId, testOwnerId.toString())).thenThrow(new CantCreateDatabaseException("MOCK", null, null, null));
 
         testDatabaseFactory = new CryptoAddressBookCryptoModuleDatabaseFactory(mockPluginDatabaseSystem);
@@ -88,7 +89,7 @@ public class CreateDatabaseTest  extends TestCase {
     }
 
     @Test
-    public void CreateDatabase_CantCreateTables_ThrowsCantCreateDatabaseException() throws Exception{
+    public void createDatabase_CantCreateTables_ThrowsCantCreateDatabaseException() throws Exception{
 
         when(mockDatabaseFactory.newTableFactory(testOwnerId, CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(null);
         testDatabaseFactory = new CryptoAddressBookCryptoModuleDatabaseFactory(mockPluginDatabaseSystem);
@@ -103,7 +104,7 @@ public class CreateDatabaseTest  extends TestCase {
 
 
     @Test
-    public void CreateDatabase_ConflictedIdWhenCreatingTables_ThrowsCantCreateDatabaseException() throws Exception{
+    public void createDatabase_ConflictedIdWhenCreatingTables_ThrowsCantCreateDatabaseException() throws Exception{
         when(mockDatabaseFactory.newTableFactory(testOwnerId, CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(null);
         testDatabaseFactory = new CryptoAddressBookCryptoModuleDatabaseFactory(mockPluginDatabaseSystem);
         testDatabaseFactory.setPluginDatabaseSystem(mockPluginDatabaseSystem);
@@ -117,7 +118,7 @@ public class CreateDatabaseTest  extends TestCase {
 
 
     @Test
-    public void CreateDatabase_GeneralExceptionThrown_ThrowsCantCreateDatabaseException() throws Exception{
+    public void createDatabase_GeneralExceptionThrown_ThrowsCantCreateDatabaseException() throws Exception{
         when(mockDatabase.getDatabaseFactory()).thenReturn(null);
 
         testDatabaseFactory = new CryptoAddressBookCryptoModuleDatabaseFactory(mockPluginDatabaseSystem);

@@ -1,11 +1,10 @@
-package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
+package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.CryptoAddressBookCryptoModulePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -13,23 +12,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.CryptoAddressBookCryptoModulePluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDatabaseConstants;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.structure.CryptoAddressBookCryptoModuleRecord;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import junit.framework.TestCase;
 
-import org.fest.assertions.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -39,18 +37,21 @@ import java.util.UUID;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-
 
 /**
  * Created by natalia on 08/09/15.
  */
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, Vaults.class, ReferenceWallet.class})
 
-public class RegisterCryptoAddressTest  extends TestCase {
+public class RegisterCryptoAddressTest extends TestCase {
 
+    @Mock
+    ErrorManager errorManager;
 
+    @Mock
+    LogManager logManager;
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
     @Mock
@@ -72,14 +73,13 @@ public class RegisterCryptoAddressTest  extends TestCase {
     @Mock
     private CryptoAddressBookRecord mockCryptoAddressBookRecord;
 
-    private UUID testOwnerId;
+    private UUID pluginId;
 
-    private CryptoAddressBookCryptoModuleDao cryptoAddressBookCryptoModuleDao;
+    CryptoAddressBookCryptoModulePluginRoot cryptoAddressBookCryptoModulePluginRoot;
 
 
     private void setUpIds(){
-        testOwnerId = UUID.randomUUID();
-
+        pluginId = UUID.randomUUID();
 
     }
 
@@ -96,19 +96,19 @@ public class RegisterCryptoAddressTest  extends TestCase {
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
 
-        Mockito.when(mockPluginDatabaseSystem.createDatabase(testOwnerId, testOwnerId.toString())).thenReturn(mockDatabase);
+        Mockito.when(mockPluginDatabaseSystem.createDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
 
-        Mockito.when(mockPluginDatabaseSystem.openDatabase(testOwnerId, testOwnerId.toString())).thenReturn(mockDatabase);
+        Mockito.when(mockPluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
 
         Mockito.when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
-        Mockito.when(mockDatabaseFactory.newTableFactory(testOwnerId, CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(mockTableFactory);
+        Mockito.when(mockDatabaseFactory.newTableFactory(pluginId, CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(mockTableFactory);
 
         Mockito.when(mockDatabase.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(mockTable);
         Mockito.when(mockTable.getEmptyRecord()).thenReturn(mockRecord);
 
-        Mockito.when(mockCryptoAddressBookRecord.getCryptoAddress().getAddress()).thenReturn("address");
+       Mockito.when(mockCryptoAddressBookRecord.getCryptoAddress().getAddress()).thenReturn("address");
         Mockito.when(mockCryptoAddressBookRecord.getCryptoAddress().getCryptoCurrency()).thenReturn(CryptoCurrency.BITCOIN);
-       }
+    }
 
     @Before
     public void setUp() throws Exception{
@@ -116,8 +116,18 @@ public class RegisterCryptoAddressTest  extends TestCase {
 
         setUpIds();
         setUpMockitoGeneralRules();
-        cryptoAddressBookCryptoModuleDao = new CryptoAddressBookCryptoModuleDao(mockPluginDatabaseSystem,testOwnerId);
-        cryptoAddressBookCryptoModuleDao.initialize();
+
+        cryptoAddressBookCryptoModulePluginRoot = new CryptoAddressBookCryptoModulePluginRoot();
+        cryptoAddressBookCryptoModulePluginRoot = new CryptoAddressBookCryptoModulePluginRoot();
+
+        cryptoAddressBookCryptoModulePluginRoot.setErrorManager(errorManager);
+        cryptoAddressBookCryptoModulePluginRoot.setId(pluginId);
+
+        cryptoAddressBookCryptoModulePluginRoot.setLogManager(logManager);
+
+        cryptoAddressBookCryptoModulePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+
+        cryptoAddressBookCryptoModulePluginRoot.start();
     }
 
 
@@ -126,7 +136,15 @@ public class RegisterCryptoAddressTest  extends TestCase {
     public void registerCryptoAddressTest_GetOk_Trows_CantCantRegisterCryptoAddressBookRecordException() throws Exception{
 
 
-        catchException(cryptoAddressBookCryptoModuleDao).registerCryptoAddress(mockCryptoAddressBookRecord);
+        catchException(cryptoAddressBookCryptoModulePluginRoot).registerCryptoAddress(mockCryptoAddress,
+                "actorkey",
+                Actors.EXTRA_USER,
+                "actorToKey",
+                Actors.INTRA_USER,
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Vaults.BITCOIN_VAULT,
+                "",
+                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
         assertThat(caughtException())
                 .isNull();
@@ -136,7 +154,15 @@ public class RegisterCryptoAddressTest  extends TestCase {
     @Test
     public void registerCryptoAddressTest_GetErrorCryptoNull_Trows_CantRegisterCryptoAddressBookRecordException() throws Exception{
 
-        catchException(cryptoAddressBookCryptoModuleDao).registerCryptoAddress(null);
+        catchException(cryptoAddressBookCryptoModulePluginRoot).registerCryptoAddress(null,
+                "actorkey",
+                Actors.EXTRA_USER,
+                "actorToKey",
+                Actors.INTRA_USER,
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Vaults.BITCOIN_VAULT,
+                "",
+                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
         assertThat(caughtException())
                 .isNotNull().isInstanceOf(CantRegisterCryptoAddressBookRecordException.class);

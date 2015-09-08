@@ -36,7 +36,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 
@@ -89,7 +91,11 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
 
     private void setUpIds(){
         testOwnerId = UUID.randomUUID();
+        mockActors = Actors.INTRA_USER;
+        mockPlatforms = Platforms.CRYPTO_BROKER_PLATFORM;
+        mockVaults = Vaults.BITCOIN_VAULT;
 
+        mockReferenceWallet = ReferenceWallet.COMPOSITE_WALLET_MULTI_ACCOUNT;
 
     }
 
@@ -104,8 +110,8 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
         Mockito.when(mockDatabase.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(mockTable);
         Mockito.when(mockTable.getRecords()).thenReturn(mockRecords);
         Mockito.when(mockRecord.getStringValue(anyString())).thenReturn(UUID.randomUUID().toString());
-        Mockito.doReturn(mockRecord).when(mockRecords).get(0);
 
+        when(mockRecords.get(anyInt())).thenReturn(mockRecord);
         Mockito.when(mockCryptoAddress.getAddress()).thenReturn("address");
         Mockito.when(mockCryptoAddress.getCryptoCurrency()).thenReturn(mockCryptoCurrency);
 
@@ -161,7 +167,7 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
     @Test
     public void getCryptoAddressBookRecordByCryptoAddressTest_GetErrorEmptyRecord_Trows_CantGetCryptoAddressBookRecordException() throws Exception {
 
-        Mockito.doReturn(null).when(mockRecords).get(0);
+        when(mockRecords.get(anyInt())).thenReturn(null);
 
         catchException(cryptoAddressBookCryptoModuleDao).getCryptoAddressBookRecordByCryptoAddress(mockCryptoAddress);
 

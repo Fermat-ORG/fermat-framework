@@ -44,7 +44,7 @@ public class GetDatabaseListTest
     private CryptoAddressBookCryptoModuleDeveloperDatabaseFactory databaseFactory;
 
     @Before
-    public void SetUp() throws CantCreateDatabaseException, CantInitializeCryptoAddressBookCryptoModuleDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException {
+    public void setUp() throws CantCreateDatabaseException, CantInitializeCryptoAddressBookCryptoModuleDatabaseException, CantOpenDatabaseException, DatabaseNotFoundException {
         UUID testOwnerId = UUID.randomUUID();
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);

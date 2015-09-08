@@ -72,6 +72,9 @@ public class InitializeTest  extends TestCase {
     public void initializeTest_InitOk_Trows_CantInitializeCryptoAddressBookCryptoModuleDatabaseException() throws Exception{
         cryptoAddressBookCryptoModuleDao = new CryptoAddressBookCryptoModuleDao(mockPluginDatabaseSystem,testOwnerId);
 
+        cryptoAddressBookCryptoModuleDao.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        cryptoAddressBookCryptoModuleDao.setPluginId(testOwnerId);
+
         catchException(cryptoAddressBookCryptoModuleDao).initialize();
 
         assertThat(caughtException())
@@ -84,6 +87,8 @@ public class InitializeTest  extends TestCase {
 
 
         cryptoAddressBookCryptoModuleDao = new CryptoAddressBookCryptoModuleDao(mockPluginDatabaseSystem,testOwnerId);
+        cryptoAddressBookCryptoModuleDao.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        cryptoAddressBookCryptoModuleDao.setPluginId(testOwnerId);
 
         catchException(cryptoAddressBookCryptoModuleDao).initialize();
 

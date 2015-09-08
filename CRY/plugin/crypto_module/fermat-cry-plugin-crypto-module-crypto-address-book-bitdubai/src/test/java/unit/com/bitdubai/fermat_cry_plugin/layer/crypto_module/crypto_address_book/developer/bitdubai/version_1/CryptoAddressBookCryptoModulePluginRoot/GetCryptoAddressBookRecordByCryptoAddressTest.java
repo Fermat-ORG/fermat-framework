@@ -1,9 +1,11 @@
-package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
+package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.CryptoAddressBookCryptoModulePluginRoot;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -12,14 +14,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantListCryptoAddressBookRecordsException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.CryptoAddressBookCryptoModulePluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDatabaseConstants;
-
-import junit.framework.TestCase;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import org.fest.assertions.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +33,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,17 +41,21 @@ import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 /**
  * Created by natalia on 08/09/15.
  */
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, Vaults.class, ReferenceWallet.class})
 
-public class ListCryptoAddressBookRecordsByWalletPublicKeyTest extends TestCase {
+public class GetCryptoAddressBookRecordByCryptoAddressTest {
+    @Mock
+    ErrorManager errorManager;
 
+    @Mock
+    LogManager logManager;
 
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
@@ -69,6 +75,9 @@ public class ListCryptoAddressBookRecordsByWalletPublicKeyTest extends TestCase 
     @Mock
     private DatabaseTableRecord mockRecord;
 
+    @Mock
+    private CryptoAddressBookCryptoModuleDao cryptoAddressBookCryptoModuleDao;
+
     private CryptoCurrency mockCryptoCurrency;
 
     private Actors mockActors;
@@ -79,34 +88,39 @@ public class ListCryptoAddressBookRecordsByWalletPublicKeyTest extends TestCase 
 
     private ReferenceWallet mockReferenceWallet;
 
-    private UUID testOwnerId;
 
-    private CryptoAddressBookCryptoModuleDao cryptoAddressBookCryptoModuleDao;
+    CryptoAddressBookCryptoModulePluginRoot cryptoAddressBookCryptoModulePluginRoot;
 
+    private UUID pluginId;
 
-    private void setUpIds(){
-        testOwnerId = UUID.randomUUID();
+    @Before
+    public void setUp() throws Exception{
+
         mockActors = Actors.INTRA_USER;
         mockPlatforms = Platforms.CRYPTO_BROKER_PLATFORM;
         mockVaults = Vaults.BITCOIN_VAULT;
 
         mockReferenceWallet = ReferenceWallet.COMPOSITE_WALLET_MULTI_ACCOUNT;
 
-    }
+        pluginId = UUID.randomUUID();
+        cryptoAddressBookCryptoModulePluginRoot = new CryptoAddressBookCryptoModulePluginRoot();
 
-    private void setUpMockitoGeneralRules() throws Exception{
+        cryptoAddressBookCryptoModulePluginRoot.setErrorManager(errorManager);
+        cryptoAddressBookCryptoModulePluginRoot.setId(pluginId);
+
+        cryptoAddressBookCryptoModulePluginRoot.setLogManager(logManager);
+
+        cryptoAddressBookCryptoModulePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+
+
+        when(mockPluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
+        when(mockPluginDatabaseSystem.createDatabase(pluginId, pluginId.toString())).thenReturn(mockDatabase);
+
         mockCryptoCurrency = CryptoCurrency.BITCOIN;
-
-        mockRecords = Arrays.asList(mockRecord, mockRecord, mockRecord);
-        Mockito.when(mockPluginDatabaseSystem.createDatabase(testOwnerId, testOwnerId.toString())).thenReturn(mockDatabase);
-
-        Mockito.when(mockPluginDatabaseSystem.openDatabase(testOwnerId, testOwnerId.toString())).thenReturn(mockDatabase);
-
-        Mockito.when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
-        Mockito.when(mockDatabaseFactory.newTableFactory(testOwnerId, CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(mockTableFactory);
         Mockito.when(mockDatabase.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(mockTable);
         Mockito.when(mockTable.getRecords()).thenReturn(mockRecords);
         Mockito.when(mockRecord.getStringValue(anyString())).thenReturn(UUID.randomUUID().toString());
+        when(mockRecords.get(anyInt())).thenReturn(mockRecord);
 
         Mockito.when(mockCryptoAddress.getAddress()).thenReturn("address");
         Mockito.when(mockCryptoAddress.getCryptoCurrency()).thenReturn(mockCryptoCurrency);
@@ -125,40 +139,28 @@ public class ListCryptoAddressBookRecordsByWalletPublicKeyTest extends TestCase 
         PowerMockito.when(mockReferenceWallet.getByCode(anyString())).thenReturn(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
 
+
+        cryptoAddressBookCryptoModulePluginRoot.start();
+
+
     }
-
-    @Before
-    public void setUp() throws Exception{
-
-
-        setUpIds();
-        setUpMockitoGeneralRules();
-        cryptoAddressBookCryptoModuleDao = new CryptoAddressBookCryptoModuleDao(mockPluginDatabaseSystem,testOwnerId);
-        cryptoAddressBookCryptoModuleDao.initialize();
-    }
-
-
 
     @Test
-    public void listCryptoAddressBookRecordsByWalletPublicKeyTest_GetOk_Trows_CantListCryptoAddressBookRecordsException() throws Exception{
+    public void getCryptoAddressBookRecordByCryptoAddressTest_GetOk_TrowsCantGetCryptoAddressBookRecordException() throws Exception {
 
-
-        List<CryptoAddressBookRecord> cryptoAddressBookRecordList = cryptoAddressBookCryptoModuleDao.listCryptoAddressBookRecordsByWalletPublicKey(UUID.randomUUID().toString());
-
-        Assertions.assertThat(cryptoAddressBookRecordList)
+        CryptoAddressBookRecord cryptoAddressBookRecord= cryptoAddressBookCryptoModulePluginRoot.getCryptoAddressBookRecordByCryptoAddress(mockCryptoAddress);
+        Assertions.assertThat(cryptoAddressBookRecord)
                 .isNotNull();
     }
 
-
     @Test
-    public void listCryptoAddressBookRecordsByWalletPublicKeyTest_GetErrorCryptoNull_Trows_CantListCryptoAddressBookRecordsException() throws Exception{
+    public void getCryptoAddressBookRecordByCryptoAddressTest_GetError_TrowsCantGetCryptoAddressBookRecordException() throws Exception {
 
-        catchException(cryptoAddressBookCryptoModuleDao).listCryptoAddressBookRecordsByWalletPublicKey(null);
+        catchException(cryptoAddressBookCryptoModulePluginRoot).getCryptoAddressBookRecordByCryptoAddress(null);
 
         assertThat(caughtException())
-                .isNotNull().isInstanceOf(CantListCryptoAddressBookRecordsException.class);
+                .isNotNull().isInstanceOf(CantGetCryptoAddressBookRecordException.class);
     }
-
 
 
 }
