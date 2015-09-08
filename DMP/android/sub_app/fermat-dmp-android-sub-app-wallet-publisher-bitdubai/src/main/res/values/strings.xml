@@ -104,4 +104,6 @@
     <string name="title_activity_requests_received">Requests Received</string>
     <string name="title_activity_activity_main">Main Activity</string>
 
+    <string name="wizard_step_1_current_platform">Current Platform: v%1$s</string>
+
 </resources>

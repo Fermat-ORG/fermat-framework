@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wallet_store_activities_background"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    android:paddingBottom="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Video Url"
+                android:textColor="@color/gray"
+                app:typeface="CAVIAR_DREAMS_BOLD"
+                tools:ignore="HardcodedText" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/video_url"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_section"
+                android:elevation="4dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:hint="http://www.youtuble.com/?QRHSG7821"
+                android:inputType="textUri"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                android:textSize="12sp"
+                app:typeface="CAVIAR_DREAMS_ITALIC"
+                tools:ignore="HardcodedText,NestedWeights,UnusedAttribute" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Initial Platform"
+                android:textColor="@color/gray"
+                app:typeface="CAVIAR_DREAMS_BOLD"
+                tools:ignore="HardcodedText" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/init_major"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_section"
+                    android:elevation="4dp"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="12sp"
+                    app:typeface="CAVIAR_DREAMS_ITALIC"
+                    tools:ignore="HardcodedText,NestedWeights,UnusedAttribute" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center|bottom"
+                    android:text="."
+                    android:textColor="@color/gray"
+                    app:typeface="CAVIAR_DREAMS_BOLD" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/init_minor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_section"
+                    android:elevation="4dp"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="12sp"
+                    app:typeface="CAVIAR_DREAMS_ITALIC"
+                    tools:ignore="HardcodedText,NestedWeights,UnusedAttribute" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center|bottom"
+                    android:text="."
+                    android:textColor="@color/gray"
+                    app:typeface="CAVIAR_DREAMS_BOLD" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/init_patch"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_section"
+                    android:elevation="4dp"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="12sp"
+                    app:typeface="CAVIAR_DREAMS_ITALIC"
+                    tools:ignore="HardcodedText,NestedWeights,UnusedAttribute" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Final Platform"
+                android:textColor="@color/gray"
+                app:typeface="CAVIAR_DREAMS_BOLD"
+                tools:ignore="HardcodedText" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/final_major"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_section"
+                    android:elevation="4dp"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="12sp"
+                    app:typeface="CAVIAR_DREAMS_ITALIC"
+                    tools:ignore="HardcodedText,NestedWeights,UnusedAttribute" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center|bottom"
+                    android:text="."
+                    android:textColor="@color/gray"
+                    app:typeface="CAVIAR_DREAMS_BOLD" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/final_minor"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_section"
+                    android:elevation="4dp"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="12sp"
+                    app:typeface="CAVIAR_DREAMS_ITALIC"
+                    tools:ignore="HardcodedText,NestedWeights,UnusedAttribute" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center|bottom"
+                    android:text="."
+                    android:textColor="@color/gray"
+                    app:typeface="CAVIAR_DREAMS_BOLD" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                    android:id="@+id/final_patch"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_section"
+                    android:elevation="4dp"
+                    android:gravity="center"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/gray"
+                    android:textSize="12sp"
+                    app:typeface="CAVIAR_DREAMS_ITALIC"
+                    tools:ignore="HardcodedText,NestedWeights,UnusedAttribute" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
