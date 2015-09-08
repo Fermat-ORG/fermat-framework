@@ -11,8 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -23,6 +25,8 @@ import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantIssueDigitalAsse
 import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -46,6 +50,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
+    ServiceStatus serviceStatus= ServiceStatus.CREATED;
+    Database assetIssuingDatabase;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -92,7 +98,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     public void start() throws CantStartPluginException {
         //delete this
         printSomething("Starting plugin");
-        //TODO: implement this method
+        //TODO: open/create database
         try{
             this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId, this.cryptoVaultManager, this.cryptoWallet, this.pluginFileSystem/*, this.cryptoAddressBookManager*/);
 
@@ -106,22 +112,22 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public void pause() {
-//TODO: implement this method
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-//TODO: implement this method
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
-    public void stop() {
-//TODO: implement this method
+    public void stop(){
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override
     public ServiceStatus getStatus() {
-        return null;
+        return this.serviceStatus;
     }
 
     //TODO: DELETE THIS USELESS METHOD
@@ -149,7 +155,6 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public void setCryptoWallet(CryptoWallet cryptoWallet){
-
         this.cryptoWallet=cryptoWallet;
     }
 
@@ -157,4 +162,10 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem=pluginFileSystem;
     }
+
+    private void createAssetIssuingTransactionDatabase() throws CantCreateDatabaseException {
+        AssetIssuingTransactionDatabaseFactory databaseFactory = new AssetIssuingTransactionDatabaseFactory(this.pluginDatabaseSystem);
+        assetIssuingDatabase = databaseFactory.createDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
+    }
+
 }

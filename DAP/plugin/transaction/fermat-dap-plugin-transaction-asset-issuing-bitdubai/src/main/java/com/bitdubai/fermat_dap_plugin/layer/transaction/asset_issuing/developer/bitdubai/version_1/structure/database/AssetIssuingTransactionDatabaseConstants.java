@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_api.layer.transaction.asset_issuing.developer.bitdubai.version_1.database.AssetIssuingtransactionDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_dap_api.layer.transaction.asset_issuing.developer.bitdubai.version_1.database.AssetIssuingTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
@@ -12,6 +12,7 @@ package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer
  */
 public class AssetIssuingTransactionDatabaseConstants {
 
+    public static final String DIGITAL_ASSET_TRANSACTION_DATABASE = "digital_asset_database";
     /**
      * Digital Asset Transaction database table definition.
      */
