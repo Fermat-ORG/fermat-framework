@@ -10,6 +10,7 @@ import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantCreateAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantSaveAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuer;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 
 import java.util.UUID;
 import java.util.logging.ErrorManager;
@@ -18,7 +19,7 @@ import java.util.logging.ErrorManager;
  * Created by franklin on 07/09/15.
  */
 //Falta implementar DealsWithError
-public class AssetIssuerManager implements DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class AssetIssuerManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
     /**
      * AssetIssuerManager member variables
      */
@@ -27,7 +28,7 @@ public class AssetIssuerManager implements DealsWithLogger, DealsWithPluginDatab
     /**
      * DealsWithErrors interface member variables
      */
-    ErrorManager errorManager;
+    com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager;
 
     /**
      * DealsWithLogger interface mmeber variables
@@ -52,13 +53,19 @@ public class AssetIssuerManager implements DealsWithLogger, DealsWithPluginDatab
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public AssetIssuerManager(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetIssuerManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
     }
+
+    @Override
+    public void setErrorManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;

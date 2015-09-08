@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
@@ -26,8 +27,12 @@ import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantCrea
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantSaveAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuerManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.ErrorManager;
@@ -35,16 +40,16 @@ import java.util.logging.ErrorManager;
 /**
  * Created by rodrigo on 9/7/15.
  */
-public class AssetIssuerModulePluginRoot implements  AssetIssuerManager, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
+public class AssetIssuerModulePluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithEvents, AssetIssuerManager, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
     /**
      * DealsWithAssetIssuing Interface member variables.
      */
     private DealsWithAssetIssuing dealsWithAssetIssuing;
 
     /**
-     * DealsWithErrors Interface member variables.
+     * DealsWithErrors interface member variables
      */
-    private ErrorManager errorManager;
+    com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager;
 
     /**
      * DealsWithDatabaseSystem Interface member variables.
@@ -66,11 +71,18 @@ public class AssetIssuerModulePluginRoot implements  AssetIssuerManager, Plugin,
      */
     LogManager logManager;
 
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    EventManager eventManager;
+
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<EventListener> listenersAdded = new ArrayList<>();
+
     private com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager getAssetIssuerManager(){
         com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager assetIssuerManager = new com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
         return assetIssuerManager;
     }
-
 
     @Override
     public void setId(UUID pluginId) {
@@ -103,8 +115,24 @@ public class AssetIssuerModulePluginRoot implements  AssetIssuerManager, Plugin,
     }
 
     @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
+
+    @Override
+    public void setErrorManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    @Override
     public void start() throws CantStartPluginException {
         //TODO: Implement
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -179,4 +207,5 @@ public class AssetIssuerModulePluginRoot implements  AssetIssuerManager, Plugin,
     public void IssueAsset(AssetIssuer assetIssuer) {
         getAssetIssuerManager().IssueAsset(assetIssuer.getDigitalAsset());
     }
+
 }
