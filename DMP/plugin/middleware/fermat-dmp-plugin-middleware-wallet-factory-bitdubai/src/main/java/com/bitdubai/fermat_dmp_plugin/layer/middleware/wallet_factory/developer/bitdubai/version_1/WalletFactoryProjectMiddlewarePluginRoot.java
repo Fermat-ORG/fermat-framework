@@ -332,7 +332,12 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
     @Override
     public void markProkectAsPublished(WalletFactoryProject walletFactoryProject) throws CantChangeProjectStateException {
-
+        walletFactoryProject.setProjectState(WalletFactoryProjectState.PUBLISHED);
+        try {
+            this.saveWalletFactoryProjectChanges(walletFactoryProject);
+        } catch (Exception e) {
+            throw new CantChangeProjectStateException(CantChangeProjectStateException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     private void test(){
