@@ -2,11 +2,15 @@ package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer
 
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
+import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetTransactionException;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
@@ -14,16 +18,19 @@ import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import java.util.UUID;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/09/15.
  */
 public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
-    
+
     CryptoVaultManager cryptoVaultManager;
     CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
     PluginFileSystem pluginFileSystem;
+    UUID pluginId;
 
     final long MINIMAL_TRANSACTION_FEE=300;
     /**
@@ -34,8 +41,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
      * Assuming that the DigitalAsset.UnitValue=0.
      * */
     //final long MINIMAL_GENESIS_AMOUNT=MINIMAL_TRANSACTION_FEE*MINIMAL_QUANTITY;
+    final String LOCAL_STORAGE_PATH="digital-asset/";
+    String digitalAssetLocalFilePath;
 
-    public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
+    public DigitalAssetCryptoTransactionFactory(UUID pluginID, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
 
         setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(cryptoWallet);
@@ -55,6 +64,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSetObjectException("CryptoWallet is null");
         }
         this.cryptoWallet=cryptoWallet;
+    }
+
+    public void setPluginId(UUID pluginId) throws CantSetObjectException{
+        if(pluginId==null){
+            throw new CantSetObjectException("PluginId is null");
+        }
+        this.pluginId=pluginId;
     }
 
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
@@ -149,6 +165,25 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
+    private void persistInLocalStorage() throws CantCreateDigitalAssetFileException {
+        //Path structure: digital-asset/walletPublicKey/name.xml
+        try{
+
+            String digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+this.digitalAsset.getPublicKey();
+            String digitalAssetFileName=this.digitalAsset.getName()+".xml";
+            this.digitalAssetLocalFilePath=digitalAssetFileStoragePath+"/"+digitalAssetFileName;
+            String digitalAssetInnerXML=digitalAsset.toString();
+            PluginTextFile digitalAssetFile=this.pluginFileSystem.createTextFile(this.pluginId, digitalAssetFileStoragePath,digitalAssetFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            digitalAssetFile.setContent(digitalAssetInnerXML);
+
+        }catch(CantCreateFileException exception){
+            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Can't create '"+this+digitalAssetLocalFilePath+"' file");
+        }catch(Exception exception){
+            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Unexpected Exception");
+        }
+
+    }
+
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
     public void createDigitalAssetCryptoTransaction(DigitalAsset digitalAsset) throws CantCreateDigitalAssetTransactionException {
 
@@ -215,23 +250,27 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             areObjectsSettled();
             //Check if the CryptoWallet has the needed amount
             checkCryptoWalletBalance();
+            //Persist Digital Asset to local storage
+            persistInLocalStorage();
             //We need to get a new GenesisAddress:
             //this.cryptoVaultManager.connectToBitcoin();
-            setDigitalAssetGenesisAmount();
+            //setDigitalAssetGenesisAmount();
 
             //TODO: hacer una prueba para la solicitud de direcciones
             //We need to complete the transaction
 
             this.cryptoVaultManager.disconnectFromBitcoin();
 
-        }  catch(CantSetObjectException exception){
+        }  /*catch(CantSetObjectException exception){
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Setting GenesisAddress", "Unexpected Exception");
-        } catch(ObjectNotSetException exception){
+        }*/ catch(ObjectNotSetException exception){
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if actors are set", "Some actor is not set");
         }  catch (CantGetBalanceException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if the balance is sufficient", "Can't get the Crypto Wallet balance");
         } catch (CryptoWalletBalanceInsufficientException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if the balance is sufficient", "The balance is insufficient");
+        } catch (CantCreateDigitalAssetFileException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Persisting Digital Asset in local Storage", "A local storage procedure exception");
         }
 
     }
