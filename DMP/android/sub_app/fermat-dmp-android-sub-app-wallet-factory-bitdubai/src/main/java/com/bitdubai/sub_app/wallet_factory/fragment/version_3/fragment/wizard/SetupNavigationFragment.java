@@ -46,6 +46,11 @@ public class SetupNavigationFragment extends FermatWizardPageFragment {
     }
 
     @Override
+    public void onWizardFinish(Map<String, Object> data) {
+
+    }
+
+    @Override
     public void onActivated(Map<String, Object> data) {
 
     }

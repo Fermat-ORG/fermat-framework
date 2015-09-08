@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static com.bitdubai.sub_app.wallet_publisher.util.CommonLogger.exception;
+import static com.bitdubai.sub_app.wallet_publisher.util.CommonLogger.info;
 
 /**
  * Publishing Factory Project Summary
@@ -184,14 +185,25 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
 
     @Override
     public void savePage() {
-        if (dialog != null)
-            dialog.dismiss();
-        dialog = null;
-        dialog = new ProgressDialog(getActivity());
-        dialog.setMessage("Please wait...");
-        dialog.setCancelable(false);
-        dialog.show();
-        worker.execute();
+        // do nothing...
+    }
+
+    @Override
+    public void onWizardFinish(Map<String, Object> data) {
+        getActivity()
+                .runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dialog != null)
+                            dialog.dismiss();
+                        dialog = null;
+                        dialog = new ProgressDialog(getActivity());
+                        dialog.setMessage("Please wait...");
+                        dialog.setCancelable(false);
+                        dialog.show();
+                        worker.execute();
+                    }
+                });
     }
 
     @Override
@@ -214,6 +226,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
         public void onPostExecute(Object... result) {
             if (isAttached) {
                 dialog.dismiss();
+                getActivity().finish();
             }
         }
 
@@ -230,6 +243,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
 
         @Override
         protected Object doInBackground() throws Exception {
+            info(TAG, "Publishing Wallet...");
             manager.publishWallet(project, iconScreenBytes, mainScreenBytes, screenShootsBytes, new URL(videoUrlString),
                     "Hello World Observation", initialVersion, finalVersion, identity);
             return true;

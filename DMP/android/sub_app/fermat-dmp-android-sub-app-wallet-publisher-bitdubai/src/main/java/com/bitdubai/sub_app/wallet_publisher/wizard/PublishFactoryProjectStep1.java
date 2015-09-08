@@ -368,6 +368,11 @@ public class PublishFactoryProjectStep1 extends FermatWizardPageFragment impleme
         mParent.putData(data);
     }
 
+    @Override
+    public void onWizardFinish(Map<String, Object> data) {
+
+    }
+
     private static int position = -1;
     private ImageView screenShotItemView;
 

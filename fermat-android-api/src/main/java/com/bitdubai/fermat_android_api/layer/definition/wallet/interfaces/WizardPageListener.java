@@ -23,6 +23,14 @@ public interface WizardPageListener {
     void savePage();
 
     /**
+     * Execute Finish Method
+     *
+     * @param data Custom key -> object temp shared data between pages
+     */
+    void onWizardFinish(Map<String, Object> data);
+
+
+    /**
      * It's called on WizardActivity Fragment Page Changed to notify when the fragment is active
      *
      * @param data Custom key -> object temp shared data between pages

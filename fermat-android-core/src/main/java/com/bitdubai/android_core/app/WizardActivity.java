@@ -230,8 +230,10 @@ public class WizardActivity extends FragmentActivity implements FermatWizardActi
                         public void run() {
                             dialog.dismiss();
                             if (pos == -1) {
-                                // close this wizard
-                                finish();
+                                WizardPageListener page =
+                                        (WizardPageListener) fragments.get(fragments.size() - 1);
+                                page.onWizardFinish(dataHash);
+                                //finish();
                             } else if (pos > -1) {
                                 if (viewPager != null) {
                                     viewPager.setCurrentItem(pos);
