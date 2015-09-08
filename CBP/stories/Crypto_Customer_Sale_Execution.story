@@ -3,8 +3,8 @@ Historia: Crypto Customer Sale Execution
 Como deseo poder finalizar la compra establecida en la negociación con un Crypto Customer
  Como un Crypto Broker
 
-Utilizando la Crypto Broker Wallet SubApp 
-  Y el plugin Receive Crypto Crypto Transaction 
+Utilizando la Crypto Broker Wallet SubApp
+  Y el plugin Receive Crypto Crypto Transaction
   Y el plugin Send Crypto Crypto Transaction
   Y el plugin Give Cash On Hand Fiat Cash Transaction
   Y el plugin Send Cash Delivery Fiat Cash Transaction
@@ -16,13 +16,23 @@ Utilizando la Crypto Broker Wallet SubApp
   Y el plugin Receive Fiat Cash Delivery Fiat Cash Transaction
   Y el plugin Receive Offline Fiat Bank Transfer Fiat Bank Transaction
 
+Escenario: Negociacion ha pasado la Fecha del Vencimiento de Pago
+  Dado que ya se cerro una negociacion con el Crypto Broker
+    Y el estado de la Negociacion es PENDIENTE_PAGO
+  Cuando la fecha ha pasado la Fecha de Vencimiento de Pago establecida en la Negociacion
+  Entonces el "Sale Negotation Contract plugin" debe cambiar el estado a NEGOCIACION
+    Y se registra esta actualizacion en el Log Transaccional del "Sale Negotation Contract plugin"
+    Y se envia una notificacion de cambio de estado a NEGOCIACION a traves de la Crypto Customer Network Service
+|!Sale Negotation Contract plugin           |
+|Crypto Customer Market Money Sale Contract |
+|Crypto Customer Fiat Money Sale Contract   |
 
 Escenario: Crypto Broker recibe Market Crypto del Crypto Customer.
   Dado que ya se cerro una negociacion con el Crypto Customer
     Y se establecio que el modo de pago va a ser una transferencia de Market Crypto
     Y el Crypto Customer envio la Crypto Currency que se acepto como pago
   Cuando el Receive Crypto Crypto Transaction registre un pago a la direccion de la operacion
-  Entonces Receive Crypto Crypto Transaction debe notificar a la "Crypto Wallet" de la transaccion
+  Entonces Receive Crypto Crypto Transaction debe notificar a la Crypto Broker Market Crypto Wallet de la transaccion
     Y la Crypto Broker Market Crypto Wallet debe registrar la transaccion como un credito
     Y la Crypto Broker Market Crypto Wallet debe actualizar su balance
     Y el "Sale Negotiation Contract" debe recibir la notificacion de la transaccion
@@ -40,7 +50,7 @@ Escenario: Crypto Broker envia el Market Crypto al Crypto Customer.
   Cuando el Crypto Broker envia la mercaderia a traves de la Crypto Broker Wallet
   Entonces la Crypto Broker Wallet debe registrar el envio usando el plugin Send Crypto Crypto Transaction
     Y la Crypto Broker Market Crypto Wallet debe debitar el monto del balance
-    Y la Crypto Broker Wallet actualiza el "Sale Negotiation Contract" como COMPLETADO
+    Y la Crypto Broker Wallet actualiza el "Sale Negotiation Contract" como ENTREGADO
     Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
 
 Escenario: Crypto Broker recibe pago utilizando Fiat Cash del Crypto Customer
@@ -73,8 +83,9 @@ Escenario: Crypto Broker envio de mercancia Fiat Cash                           
   Cuando procedo a registrar el envio de la mercaderia en la Crypto Broker Wallet
   Entonces la Crypto Broker Wallet debe registrar el envio usando el "Plugin de Envio Cash"
     Y el "Plugin de Envio Cash" debe registrar un debito en la Crypto Broker Fiat Cash Wallet
-    Y el "Sale Negotiation Contract" actualiza su estado como COMPLETADO
+    Y el "Sale Negotiation Contract" actualiza su estado como ENTREGADO
     Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
+    Y el "Sale Negotiation Contract" envia la notificacion de cambio de estado a ENTREGADO a traves del plugin Crypto Customer Network Service
 |!Plugin de Envio Cash                    |
 |Give Cash On Hand Fiat Cash Transaction  |
 |Send Cash Delivery Fiat Cash Transaction |
@@ -82,9 +93,20 @@ Escenario: Crypto Broker envio de mercancia Fiat Cash                           
 Escenario: Crypto Broker envio mercaderia a Fiat Bank                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          currency del Crypto Customer.
   Dado que ya se cerro una negociacion con el Crypto Customer
     Y se establecio que la mercaderia se va a entregar por Bank Deposit
-  Cuando procedo a registrar el Bank Deposit en la Crypto Broker Wallet
+  Cuando procedo a registrar el Bank Transfer en la Crypto Broker Wallet
   Entonces la Crypto Broker Wallet debe registrar el envio usando el plugin Make Offline Bank Transfer Fiat Bank Transaction
     Y la Make Offline Bank Transfer Fiat Bank Transaction debe realizar un debito en la cuenta registrada en el Crypto Broker Fiat Bank Wallet
-    Y el "Sale Negotiation Contract" actualiza su estado como COMPLETADO
+    Y el "Sale Negotiation Contract" actualiza su estado como ENTREGADO
     Y se registra esta actualizacion en el Log Transaccional del "Sale Negotiation Contract"
-    Y la Crypto Broker Wallet envia la notificacion con la informacion del envio de la mercaderia a traves del plugin Crypto Customer Network Service
+    Y el "Sale Negotiation Contract" envia la notificacion de cambio de estado a ENTREGADO a traves del plugin Crypto Customer Network Service
+
+Escenario: Negociacion con Mercaderia Entregada no es confirmada por el Crypto Customer
+  Dado que ya se cerro una negociacion con el Crypto Broker
+    Y el estado de la Negociacion es ENTREGADO
+  Cuando la fecha ha pasado la Fecha de Entrega de Mercaderia establecida en la Negociacion
+  Entonces el "Sale Negotation Contract plugin" debe cambiar el estado a COMPLETADO_SIN_CONFIRMACION
+    Y se registra esta actualizacion en el Log Transaccional del "Sale Negotation Contract plugin"
+    Y se envia una notificacion de estado COMPLETADO_SIN_CONFIRMACION a traves de la Crypto Customer Network Service
+|!Sale Negotation Contract plugin           |
+|Crypto Customer Market Money Sale Contract |
+|Crypto Customer Fiat Money Sale Contract   |
