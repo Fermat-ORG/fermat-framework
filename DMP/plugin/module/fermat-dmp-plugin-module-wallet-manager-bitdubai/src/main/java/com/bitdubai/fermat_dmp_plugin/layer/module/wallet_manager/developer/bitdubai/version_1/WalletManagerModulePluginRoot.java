@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_except
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
@@ -63,19 +64,18 @@ import java.util.UUID;
 /**
  * Created by ciencias on 21.01.15.
  */
-
 /**
  * This plug serves as an interface between the SubApp and WalletManager Middleware.
  * It allows you to retrieve information from the wallets installed and create clones.
- * <p/>
- * <p/>
+ *
+ *
  * Created by ciencias on 21.01.15.
  * Modified by Natalia on 04/08/2015
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager, LogManagerForDevelopers, Plugin, Service, WalletManagerModule, WalletManager {
+public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
 
 
     /**
@@ -253,17 +253,16 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
 
     @Override
     public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     @Override
     public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
+
         /**
          * I will remove all the event listeners registered with the event manager.
          */
@@ -281,6 +280,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
     }
 
 
+
     /**
      * WalletManager Interface implementation.
      */
@@ -289,16 +289,22 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
      * This method let the client create a new wallet of a type already intalled by the user.
      *
      * @param walletIdInTheDevice The identifier of the wallet to copy
-     * @param newName             the name to give to the wallet
+     * @param newName the name to give to the wallet
      * @throws NewWalletCreationFailedException
      */
-    public void createNewWallet(UUID walletIdInTheDevice, String newName) throws NewWalletCreationFailedException {
-        try {
-            walletMiddlewareManager.createNewWallet(walletIdInTheDevice, newName);
-        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException e) {
-            throw new NewWalletCreationFailedException("CAN'T CREATE NEW WALLET", e, "", "");
-        } catch (Exception e) {
-            throw new NewWalletCreationFailedException("CAN'T CREATE NEW WALLET", FermatException.wrapException(e), "", "");
+    public void createNewWallet(UUID walletIdInTheDevice, String newName) throws NewWalletCreationFailedException
+    {
+        try
+        {
+            walletMiddlewareManager.createNewWallet(walletIdInTheDevice,newName);
+        }
+        catch(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException e)
+        {
+            throw  new NewWalletCreationFailedException("CAN'T CREATE NEW WALLET",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new NewWalletCreationFailedException("CAN'T CREATE NEW WALLET",FermatException.wrapException(e),"","");
         }
     }
 
@@ -308,15 +314,16 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
      * @return A list with the installed wallets information
      * @throws WalletsListFailedToLoadException
      */
-    public List<InstalledWallet> getInstalledWallets() throws WalletsListFailedToLoadException {
+    public List<InstalledWallet> getInstalledWallets() throws WalletsListFailedToLoadException{
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
 
-        try {
+        try
+        {
 
             List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> installetMiddlewareWallets = walletMiddlewareManager.getInstalledWallets();
-            for (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet : installetMiddlewareWallets) {
+            for (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet : installetMiddlewareWallets){
 
-                InstalledWallet installedWallet = new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(), wallet.getWalletType(),
+                InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),wallet.getWalletType(),
                         wallet.getSkinsId(),
                         wallet.getLanguagesId(),
                         wallet.getWalletIcon(),
@@ -330,10 +337,13 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
             }
 
 
-        } catch (CantListWalletsException e) {
-            throw new WalletsListFailedToLoadException("CAN'T GET THE INSTALLED WALLETS", e, "", "");
-        } catch (Exception e) {
-            throw new WalletsListFailedToLoadException("CAN'T GET THE INSTALLED WALLETS", FermatException.wrapException(e), "", "");
+        }
+        catch (CantListWalletsException e) {
+            throw  new WalletsListFailedToLoadException("CAN'T GET THE INSTALLED WALLETS",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new WalletsListFailedToLoadException("CAN'T GET THE INSTALLED WALLETS", FermatException.wrapException(e),"","");
         }
 
         return lstInstalledWallet;
@@ -347,13 +357,18 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
      * @param walletIdInTheDevice the identifier of the wallet to delete
      * @throws WalletRemovalFailedException
      */
-    public void removeWallet(UUID walletIdInTheDevice) throws WalletRemovalFailedException {
-        try {
+    public void removeWallet(UUID walletIdInTheDevice) throws WalletRemovalFailedException{
+        try
+        {
             walletMiddlewareManager.removeWallet(walletIdInTheDevice);
-        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRemoveWalletException e) {
-            throw new WalletRemovalFailedException("CAN'T CREATE NEW WALLET", e, "", "");
-        } catch (Exception e) {
-            throw new WalletRemovalFailedException("CAN'T CREATE NEW WALLET", FermatException.wrapException(e), "", "");
+        }
+        catch(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRemoveWalletException e)
+        {
+            throw  new WalletRemovalFailedException("CAN'T CREATE NEW WALLET",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new WalletRemovalFailedException("CAN'T CREATE NEW WALLET",FermatException.wrapException(e),"","");
         }
     }
 
@@ -361,18 +376,25 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
      * This method let us change the name (alias) of a given wallet.
      *
      * @param walletIdInTheDevice the identifier of the wallet to rename
-     * @param newName             the new name for the wallet
+     * @param newName the new name for the wallet
      * @throws WalletRenameFailedException
      */
-    public void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException {
-        try {
+    public void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException
+    {
+        try
+        {
             walletMiddlewareManager.renameWallet(walletIdInTheDevice, newName);
-        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRenameWalletException e) {
-            throw new WalletRenameFailedException("CAN'T RENAME WALLET", e, "", "");
-        } catch (Exception e) {
-            throw new WalletRenameFailedException("CAN'T RENAME WALLET", FermatException.wrapException(e), "", "");
+        }
+        catch(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantRenameWalletException e)
+        {
+            throw  new WalletRenameFailedException("CAN'T RENAME WALLET",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new WalletRenameFailedException("CAN'T RENAME WALLET",FermatException.wrapException(e),"","");
         }
     }
+
 
 
     /**
@@ -487,10 +509,9 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
      * DealsWithWalletManager methods implementation.
      */
     @Override
-    public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager){
         this.walletMiddlewareManager = walletManagerManager;
     }
-
     /**
      * DealsWithLogger Interface implementation.
      */
@@ -539,16 +560,16 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
     }
 
     //TODO: revisar si esta interface Wallet Manager se va a usar (Natalia)
-
     /**
      * WalletManager Interface implementation.
      */
 
 
+
     //TODO: Analizar este metodo deberia reemplazarce por el metodo getInstalledWallets de la interface WalletManagerModule que ya esta implementado (Natalia)
     public List<InstalledWallet> getUserWallets() {
         // Harcoded para testear el circuito más arriba
-        InstalledWallet installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
                 WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
@@ -556,7 +577,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
                 "Bitcoin Reference Wallet",
                 "reference_wallet",
                 "wallet_platform_identifier",
-                new Version(1, 0, 0)
+                new Version(1,0,0)
         );
 
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
@@ -593,11 +614,42 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
     }
 
     @Override
-    public void enableWallet() throws CantEnableWalletException {
+    public void enableWallet() throws CantEnableWalletException{
 
     }
 
+    @Override
+    public InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
+
+
+        //TODO: Hardcoded for testing purpose, hice esto que va a andar cuando la tengamos instalada.  mati
+//        com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet = walletMiddlewareManager.getInstalledWallet(walletPublicKey);
+//
+//            InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),wallet.getWalletType(),
+//                    wallet.getSkinsId(),
+//                    wallet.getLanguagesId(),
+//                    wallet.getWalletIcon(),
+//                    wallet.getWalletName(),
+//                    wallet.getWalletPublicKey(),
+//                    wallet.getWalletPlatformIdentifier(),
+//                    wallet.getWalletVersion());
+
+
+        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                WalletType.REFERENCE,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "reference_wallet_icon",
+                "Bitcoin Reference Wallet",
+                "reference_wallet",
+                "wallet_platform_identifier",
+                new Version(1,0,0));
+
+        return installedWallet;
+    }
+
     /**
+     *
      * @param deviceUserPublicKey
      * @throws CantLoadWalletsException
      */

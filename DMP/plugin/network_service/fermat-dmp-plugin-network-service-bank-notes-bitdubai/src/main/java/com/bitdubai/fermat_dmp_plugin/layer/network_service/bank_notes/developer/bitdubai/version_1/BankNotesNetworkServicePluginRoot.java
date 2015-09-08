@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.bank_notes.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -22,16 +23,16 @@ import java.util.UUID;
  */
 
 /**
- * This plugin is in charge of finding the banks notes of a certain country, downloading them and storing them in the 
+ * This plugin is in charge of finding the banks notes of a certain country, downloading them and storing them in the
  * local device.
- * 
+ * <p/>
  * Initially it will look into a centralized place, but afterwords it will implement a method to download it from peers.
- * 
+ * <p/>
  * * * * *
- * * * 
+ * * *
  */
 
-public class BankNotesNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class BankNotesNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.
@@ -44,6 +45,7 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
      */
     EventManager eventManager;
 
+    ErrorManager errorManager;
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -55,42 +57,33 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
     UUID pluginId;
 
 
-
     /**
      * Service Interface implementation.
      */
-    
+
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
         EventListener eventListener;
         EventHandler eventHandler;
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
-
-
         /**
          * I will remove all the event listeners registered with the event manager.
          */
@@ -98,10 +91,8 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
         for (EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }
-
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -115,9 +106,9 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
 
     @Override
     public UUID getId() {
-        return null;
+        return pluginId;
     }
-    
+
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -126,7 +117,6 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
-
 
     /**
      * DealWithEvents Interface implementation.
@@ -137,16 +127,14 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
         this.eventManager = eventManager;
     }
 
-
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
-
 
     /**
      * DealsWithPluginIdentity methods implementation.
@@ -156,7 +144,4 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
-
-
 }

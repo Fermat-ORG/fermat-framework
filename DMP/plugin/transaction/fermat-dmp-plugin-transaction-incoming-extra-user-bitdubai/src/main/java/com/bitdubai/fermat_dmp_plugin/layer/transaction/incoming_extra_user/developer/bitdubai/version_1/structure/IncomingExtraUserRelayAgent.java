@@ -16,6 +16,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
 
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 
-public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, DealsWithErrors, DealsWithRegistry , DealsWithCryptoAddressBook,TransactionAgent {
+public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, DealsWithErrors,DealsWithEvents, DealsWithRegistry , DealsWithCryptoAddressBook,TransactionAgent {
 
 
     /*
@@ -64,6 +66,11 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
      */
     private CryptoAddressBookManager cryptoAddressBookManager;
 
+    /**
+     * DealsWithEventManager
+     */
+    private EventManager eventManager;
+
 
     /**
      * TransactionAgent Member Variables.
@@ -71,14 +78,16 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     private Thread agentThread;
     private RelayAgent relayAgent;
 
+
     /**
      * The Specialized Constructor
      */
-    public IncomingExtraUserRelayAgent(final BitcoinWalletManager bitcoinWalletManager, final ErrorManager errorManager, final IncomingExtraUserRegistry registry, final CryptoAddressBookManager cryptoAddressBookManager){
+    public IncomingExtraUserRelayAgent(final BitcoinWalletManager bitcoinWalletManager, final ErrorManager errorManager, EventManager eventManager,final IncomingExtraUserRegistry registry, final CryptoAddressBookManager cryptoAddressBookManager){
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.errorManager = errorManager;
         this.registry = registry;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
+        this.eventManager = eventManager;
     }
 
 
@@ -121,7 +130,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     @Override
     public void start() throws CantStartAgentException {
 
-        relayAgent = new RelayAgent(bitcoinWalletManager, cryptoAddressBookManager, errorManager, registry);
+        relayAgent = new RelayAgent(bitcoinWalletManager, cryptoAddressBookManager, errorManager,eventManager, registry);
         try {
             relayAgent.initialize();
             agentThread = new Thread(this.relayAgent);
@@ -143,25 +152,32 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             this.relayAgent.stop();
     }
 
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
 
 
     private static class RelayAgent implements Runnable  {
+
 
         private AtomicBoolean running = new AtomicBoolean(false);
 
         private final BitcoinWalletManager bitcoinWalletManager;
         private final CryptoAddressBookManager cryptoAddressBookManager;
         private final ErrorManager errorManager;
+        private final EventManager eventManager;
         private final IncomingExtraUserRegistry registry;
         private IncomingExtraUserTransactionHandler transactionHandler;
 
         private static final int SLEEP_TIME = 5000;
 
-        public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager, final IncomingExtraUserRegistry registry){
+        public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingExtraUserRegistry registry){
             this.bitcoinWalletManager = bitcoinWalletManager;
             this.cryptoAddressBookManager = cryptoAddressBookManager;
             this.errorManager = errorManager;
             this.registry = registry;
+            this.eventManager = eventManager;
         }
 
         public boolean isRunning(){
@@ -179,6 +195,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             transactionHandler = new IncomingExtraUserTransactionHandler();
             transactionHandler.setBitcoinWalletManager(this.bitcoinWalletManager);
             transactionHandler.setCryptoAddressBookManager(this.cryptoAddressBookManager);
+            transactionHandler.setEventManager(eventManager);
         }
 
         /**

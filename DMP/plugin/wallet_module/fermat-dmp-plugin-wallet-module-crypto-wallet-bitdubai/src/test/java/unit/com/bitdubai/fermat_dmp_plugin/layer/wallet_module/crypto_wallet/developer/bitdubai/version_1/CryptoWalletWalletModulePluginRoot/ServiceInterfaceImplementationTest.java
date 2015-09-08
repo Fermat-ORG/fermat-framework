@@ -7,7 +7,6 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletCryptoModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 
 import junit.framework.TestCase;
@@ -18,16 +17,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.doThrow;
+import java.util.UUID;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceInterfaceImplementationTest extends TestCase {
-
-    /**
-     * DealsWithActorAddressBook interface Mocked
-     */
-    @Mock
-    ActorAddressBookManager actorAddressBookManager;
 
     /**
      * DealsWithBitcoinWallet interface Mocked
@@ -77,7 +71,6 @@ public class ServiceInterfaceImplementationTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         cryptoWalletWalletModulePluginRoot = new CryptoWalletCryptoModulePluginRoot();
-        cryptoWalletWalletModulePluginRoot.setActorAddressBookManager(actorAddressBookManager);
         cryptoWalletWalletModulePluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
         cryptoWalletWalletModulePluginRoot.setCryptoVaultManager(cryptoVaultManager);
         cryptoWalletWalletModulePluginRoot.setErrorManager(errorManager);
@@ -89,6 +82,6 @@ public class ServiceInterfaceImplementationTest extends TestCase {
 
     @Test
     public void testSetId() throws Exception {
-        cryptoWalletWalletModulePluginRoot.setId(null);
+        cryptoWalletWalletModulePluginRoot.setId(UUID.randomUUID());
     }
 }

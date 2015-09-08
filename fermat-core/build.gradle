@@ -123,6 +123,7 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
 
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
 
+    compile project(':fermat-pip-plugin-module-notification-bitdubai')
 
     // DMP Projects (Addons)
 

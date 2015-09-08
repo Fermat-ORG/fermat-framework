@@ -326,7 +326,7 @@ public class CryptoAddressBookCryptoModulePluginRoot implements Crypto, CryptoAd
      */
     public static LogLevel getLogLevelByClass(String className) {
         try {
-            String[] correctedClass = className.split((Pattern.quote("$")));
+            String[] correctedClass = className.split(Pattern.quote("$"));
             return CryptoAddressBookCryptoModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             return DEFAULT_LOG_LEVEL;

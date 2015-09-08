@@ -8,9 +8,11 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChainListener;
+import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.GetDataMessage;
 import org.bitcoinj.core.Message;
 import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.ScriptException;
 import org.bitcoinj.core.Sha256Hash;
@@ -19,6 +21,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.VerificationException;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -98,24 +101,6 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
         return true;
     }
 
-
-    /**
-     * PeerEventListener intercace implementation
-     * @param peer
-     * @param block
-     * @param blocksLeft
-     */
-    @Override
-    public void onBlocksDownloaded(Peer peer, Block block, int blocksLeft) {
-        StringBuilder logAggresive = new StringBuilder("New Block downloaded from Peer  " + peer.toString());
-        logAggresive.append(System.getProperty("line.separator"));
-        logAggresive.append("Blocks Left: " + blocksLeft);
-        logAggresive.append(System.getProperty("line.separator"));
-        logAggresive.append("Blocks info: " + block.toString());
-        LogLevel logLevel = BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName());
-        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "Block Downloaded", "Block downloaded. Blocks left " + blocksLeft, logAggresive.toString());
-    }
-
     /**
      * PeerEventListener intercace implementation
      * @param peer
@@ -180,5 +165,15 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
     @Override
     public List<Message> getData(Peer peer, GetDataMessage m) {
         return null;
+    }
+
+    @Override
+    public void onPeersDiscovered(Set<PeerAddress> peerAddresses) {
+
+    }
+
+    @Override
+    public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int blocksLeft) {
+
     }
 }

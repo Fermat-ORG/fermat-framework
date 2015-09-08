@@ -19,16 +19,4 @@ public class CantPersistPhotoException extends FermatException {
     public CantPersistPhotoException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-    public CantPersistPhotoException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantPersistPhotoException(final String message) {
-        this(message, null);
-    }
-
-    public CantPersistPhotoException() {
-        this(DEFAULT_MESSAGE);
-    }
 }

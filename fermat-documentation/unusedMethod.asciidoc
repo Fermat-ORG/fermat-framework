@@ -52,6 +52,9 @@
 
 * /DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-publisher-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_publisher/developer/bitdubai/version_1/structure/InformationPublishedComponentMiddlewareImpl.java
 
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-template-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/template/developer/bitdubai/version_1/structure/TemplateNetworkServiceMessage.java
+
+
 
 
 - Method Private
@@ -93,6 +96,14 @@
     private WalletStoreLanguage getWalletStoreLanguage(final Language language, final InstallationStatus installationStatus)
 
     private DeveloperIdentity getDeveloper(UUID developerId) throws CantGetDeveloperException
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-transmission-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/crypto_transmission/developer/bitdubai/version_1/CryptoTransmissionNetworkServicePluginRoot.java
+
+    private void moneyReceived()
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_resources/developer/bitdubai/version_1/database/NetworkServicesWalletResourcesDAO.java
+
+    private Repository getRepository(String repositoryName,UUID skinId) throws CantGetRepositoryPathRecordException, com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException
 
 
 
@@ -255,6 +266,89 @@
 
     public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException
 
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-transmission-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/crypto_transmission/developer/bitdubai/version_1/CryptoTransmissionNetworkServicePluginRoot.java
+
+    public void sendMoney()
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/IncomingMessageDataAccessObject.java
+
+    public IncomingIntraUserNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<IncomingIntraUserNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<IncomingIntraUserNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException
+
+    public List<IncomingIntraUserNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/IntraUserNetworkServiceLocal.java
+
+    public void sendMessage(Message message)
+
+    public String getRemoteNetworkServicePublicKey()
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/IntraUserNetworkServiceManager.java
+
+    public void connectTo(String remoteNetworkServicePublicKey)
+
+    public void closeConnection(String remoteNetworkServicePublicKey)
+
+    public IntraUserNetworkServiceLocal getIntraUserNetworkServiceLocalInstance(String remoteNetworkServicePublicKey)
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/IntraUserNetworkServiceMessage.java
+
+    public void setSignature(String signature)
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/OutgoingMessageDataAccessObject.java
+
+    public OutgoingIntraUserNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<OutgoingIntraUserNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<OutgoingIntraUserNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-template-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/template/developer/bitdubai/version_1/database/IncomingMessageDao.java
+
+    public IncomingTemplateNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<IncomingTemplateNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<IncomingTemplateNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException
+
+    public List<IncomingTemplateNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void update(IncomingTemplateNetworkServiceMessage entity) throws CantUpdateRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-template-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/template/developer/bitdubai/version_1/database/OutgoingMessageDao.java
+
+    public OutgoingTemplateNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException
+
+    public List<OutgoingTemplateNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException
+
+    public List<OutgoingTemplateNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException
+
+    public void delete(Long id) throws CantDeleteRecordDataBaseException
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-template-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/template/developer/bitdubai/version_1/structure/TemplateNetworkServiceLocal.java
+
+    public void sendMessage(Message message)
+
+    public String getRemoteNetworkServicePublicKey()
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-template-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/template/developer/bitdubai/version_1/structure/TemplateNetworkServiceManager.java
+
+    public void connectTo(String remoteNetworkServicePublicKey)
+
+    public void closeConnection(String remoteNetworkServicePublicKey)
+
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/wallet_resources/developer/bitdubai/version_1/database/NetworkServicesWalletResourcesDAO.java
+
+    public void createRepository(Repository repository,UUID skinId) throws CantCreateRepositoryException
 
 
 
@@ -286,6 +380,9 @@
 * /DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/event_handlers/UserLoggedInEventHandler.java
 * /DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/event_handlers/WalletCreatedEventHandler.java
 * /DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/event_handlers/WalletResourcesInstalledEventHandler.java
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/crypto_addresses/developer/bitdubai/version_1/event_handlers/IntraUserCreatedEventHandler.java
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/event_handlers/UserLoggedInEventHandler.java
+* /DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/event_handlers/UserLoggedOutEventHandler.java
 
 
 
@@ -293,16 +390,3 @@
 
 
 
-
-= Refactor Pendientes por hacer:
-
-* Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.
-
-- class
-
-= Consideraciones para DAP
-
-* Crear una DAPException para poder manejar todo tipo de Exception que se presente
-
-* Validar todos los SET y GET con THROWS para asegurar que tengan valores y no se generen
-Excepciones desencadenadas de NULL

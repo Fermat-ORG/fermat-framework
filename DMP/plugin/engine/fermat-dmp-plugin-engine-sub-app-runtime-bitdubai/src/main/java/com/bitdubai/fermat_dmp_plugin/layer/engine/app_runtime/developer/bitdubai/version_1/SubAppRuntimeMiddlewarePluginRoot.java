@@ -596,6 +596,10 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_2);
             runtimeWizard.addPage(runtimeWizardPage);
 
+            runtimeWizardPage = new WizardPage();
+            runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_3);
+            runtimeWizard.addPage(runtimeWizardPage);
+
             runtimeActivity.addWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, runtimeWizard);
 
             runtimeSideMenu = new SideMenu();
@@ -1083,13 +1087,13 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             //Activity 3
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY);
+            runtimeActivity.setType(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY);
             subAppIntraUser.addActivity(runtimeActivity);
-            runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setColor("#FF0B46F0");
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#b46a54");
+            statusBar.setColor("#FF0B46F0");
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Wallet Store");
+            runtimeTitleBar.setLabel("Connections Request");
             runtimeActivity.setTitleBar(runtimeTitleBar);
             runtimeSearchView = new SearchView();
             runtimeSearchView.setLabel("Search");

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -90,30 +91,23 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-
         EventListener eventListener;
         EventHandler eventHandler;
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override

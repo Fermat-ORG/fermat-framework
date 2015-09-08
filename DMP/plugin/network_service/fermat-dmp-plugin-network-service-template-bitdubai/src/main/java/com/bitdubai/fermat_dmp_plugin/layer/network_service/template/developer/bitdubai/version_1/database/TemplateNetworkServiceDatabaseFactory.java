@@ -21,8 +21,9 @@ import java.util.UUID;
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
- *
+ * <p/>
  * Created by Roberto Requena - (rrequena) on 21/07/15.
+ *
  * @version 1.0
  */
 public class TemplateNetworkServiceDatabaseFactory {
@@ -59,8 +60,7 @@ public class TemplateNetworkServiceDatabaseFactory {
 
             database = this.pluginDatabaseSystem.createDatabase(ownerId, TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
-        }
-        catch (CantCreateDatabaseException cantCreateDatabaseException){
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
             /**
              * I can not handle this situation.
@@ -73,9 +73,6 @@ public class TemplateNetworkServiceDatabaseFactory {
          * Next, I will add the needed tables.
          */
         try {
-
-            //DatabaseTableFactory table;
-
             /**
              * Configure the Incoming messages table.
              */
@@ -83,61 +80,52 @@ public class TemplateNetworkServiceDatabaseFactory {
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             table = databaseFactory.newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
-//            table = ((DatabaseFactory) database).newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          DatabaseDataType.STRING,       100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME,        DatabaseDataType.STRING,       100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME,       DatabaseDataType.STRING,       255, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME,               DatabaseDataType.STRING,       100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME,             DatabaseDataType.STRING,        10, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.TRUE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             try {
 
                 //Create the incoming messages table.
                 databaseFactory.createTable(ownerId, table);
-//                ((DatabaseFactory) database).createTable(ownerId, table);
-            }
-            catch (CantCreateTableException cantCreateTableException) {
+            } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException();
             }
 
             /**
              * Configure the Outgoing messages table.
              */
-//            table = ((DatabaseFactory) database).newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
             table = databaseFactory.newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          DatabaseDataType.STRING,       100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME,        DatabaseDataType.STRING,       100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME,       DatabaseDataType.STRING,       255, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_TYPE_COLUMN_NAME,               DatabaseDataType.STRING,       100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME,             DatabaseDataType.STRING,        10, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_ID_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.TRUE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 50, Boolean.FALSE);
+            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             try {
 
                 //Create the outgoing messages table.
                 databaseFactory.createTable(ownerId, table);
-//                ((DatabaseFactory) database).createTable(ownerId, table);
-            }
-            catch (CantCreateTableException cantCreateTableException) {
+            } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException();
             }
-
-        }
-        catch (InvalidOwnerIdException invalidOwnerId) {
+        } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException();
         }
-
         return database;
     }
 }

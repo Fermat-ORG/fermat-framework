@@ -17,6 +17,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.MoneyReceivedEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,7 @@ import java.util.UUID;
  * Created by loui on 20/02/15.
  */
 
-public class MoneyNetworkServicePluginRoot implements Service, NetworkService, MoneyNetworkServiceManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class MoneyNetworkServicePluginRoot implements Service, NetworkService, MoneyNetworkServiceManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.
@@ -38,6 +39,7 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
      */
     EventManager eventManager;
 
+    ErrorManager errorManager;
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -48,17 +50,17 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
      */
     UUID pluginId;
 
-    
+
     /**
      * MoneyPluginRoot Interface implementation.
      */
 
-    public void sendMoney(){
+    public void sendMoney() {
 
 
     }
 
-    private void moneyReceived(){
+    private void moneyReceived() {
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
         ((MoneyReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
@@ -75,32 +77,23 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
         /**
          * I will initialize the handling of platform events.
          */
-
         EventListener eventListener;
         EventHandler eventHandler;
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
-
-
         /**
          * I will remove all the event listeners registered with the event manager.
          */
@@ -111,7 +104,6 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
 
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -126,11 +118,10 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
 
     @Override
     public UUID getId() {
-        return null;
+        return this.pluginId;
     }
-    
 
-    
+
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -151,12 +142,12 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
 
 
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
 
@@ -168,7 +159,6 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
 
 
 }

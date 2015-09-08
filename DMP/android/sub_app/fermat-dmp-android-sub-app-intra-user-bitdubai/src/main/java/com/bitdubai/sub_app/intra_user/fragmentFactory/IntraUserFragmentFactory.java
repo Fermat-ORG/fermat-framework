@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.sub_app.intra_user.fragments.ConnectionsListFragment;
+import com.bitdubai.sub_app.intra_user.fragments.ConnectionsRequestListFragment;
 import com.bitdubai.sub_app.intra_user.fragments.DetailsActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.MainActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.MoreDetailsActivityFragment;
@@ -40,7 +41,7 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 currentFragment = RegisterIntraUserFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_PAID_FRAGMENT:
-                currentFragment = ConnectionsListFragment.newInstance();
+                currentFragment = ConnectionsRequestListFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");

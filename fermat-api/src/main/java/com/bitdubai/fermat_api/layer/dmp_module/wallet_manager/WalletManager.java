@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
@@ -21,4 +22,6 @@ public interface WalletManager {
     void createDefaultWallets (String deviceUserPublicKey) throws CantCreateDefaultWalletsException;
     
     void enableWallet() throws CantEnableWalletException;
+
+    InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException;
 }

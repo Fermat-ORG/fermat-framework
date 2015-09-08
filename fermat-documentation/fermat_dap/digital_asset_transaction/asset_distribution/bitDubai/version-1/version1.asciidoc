@@ -1,0 +1,59 @@
+[[digital-asset-transaction-incoming-issuer-BitDubai-V1]]
+= Version 1
+    Por definir.
+== Plug-in Description
+
+=== Pasos detallados
+Escenario:
+
+Nos encontramos con balance positivo en la Asset Wallet de al menos un asset disponible. Esto significa que disponemos del objeto DigitalAssetMetadata persistido
+en la wallet y bitcoins en la Asset Vault suficientes para transferir el asset la cantidad de veces que sea necesaria.
+
+Un agente de la Reference Asset Issuer Wallet, llamará a intervalos regulares al Asset User NetworkService para obtener la lista de Asset Users conectados.
+Esta información será mostrada por pantalla para aquellos usuarios online y los que se han conectado, por ejemplo, en las últimas 24 hrs.
+
+Es decir, tenemos balance positivo y una lista de usuarios a quienes enviar el asset.
+
+En la reference Wallet del Asset Issuer se ha seleccionado enviar el asset (o los assets) a ciertos usuarios, lo cual inicia la transacción Asset Distribution
+con los siguientes pasos:
+
+1) Se llama al método distributeAsset (String assetPublicKey, List<AssetUser> assetUsers) que inicia la transacción recibiendo el id del asset a distribuir y
+la lista de usuarios a distribuir. El estado de la transacción se actualiza a PendingVerify
+
+2) Se debe verificar que el Asset no ha sido modificado externamente y que sigue siendo válido comparando el Hash del Asset con el Hash guardado en la Genesis Transaction.
+Para ello, se obtiene el hash de la genesis transaction invocando al método getAssetHash(transactionId genesisTransaction).
+
+Si la comparación entre el DigitalAssetMetadata es igual a la obtenida por la Asset Vault, entonces el asset es válido sigue siendo válido.
+
+3) Debemos verificar que seguimos disponiendo fondos suficientes en la Asset Vault para transferir los assets invocando al método getVaultBalance de la Asset Vault
+ y verificando que disponemos de un balance superior al GenesisAmount del DA.
+
+ En esta etapa, el asset es válido para ser transferido y la transacción pasa a estado VerifyCompleted.
+
+4) Lo siguiente ocurre por cada AssetUser a quien se transfiera. El objeto assetUser va a tener la propiedad CryptoAddress con la dirección bitcoin propia.
+La Asset Distribution debe mantener un estado separado para cada usuario.
+
+*Desde el Asset Issuer*
+
+A través del Asset Transmission NetworkService, va a transmitir el AssetMetadata especificando el AssetUser llamando al método:
+distributeAssetToAssetUser(DigitalAssetMetadata, AssetUser).
+
+Si el método termina correctamente, significa esencialmente que :
+
+* el NetworkService se pudo conectar con el dispositivo del user.
+* el DigitalAssetMetadata fue aceptado por el dispositivo del usuario.
+
+Si la conexión con el AssetUser no estaba abierta, entonces esta transmisión será marcada como fallida y se tendrá que reintentar más adelante.
+Si el DigitalAssetMetadata no fue aceptado, esta transmisión será marcada como erronea y no se volverá a reintentar.
+
+*Desde el Asset Usser*
+
+5) Transmitida la metadata del DA se procederá a realizar la transmisión bitcoin del asset de la siguiente forma:
+
+
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

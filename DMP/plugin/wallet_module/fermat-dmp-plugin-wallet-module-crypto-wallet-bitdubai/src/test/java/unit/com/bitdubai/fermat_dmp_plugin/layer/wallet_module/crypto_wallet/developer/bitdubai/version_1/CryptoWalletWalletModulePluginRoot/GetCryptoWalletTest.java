@@ -10,9 +10,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletCryptoModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetWalletAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 
@@ -28,12 +25,6 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetCryptoWalletTest extends TestCase {
-
-    /**
-     * DealsWithActorAddressBook interface Mocked
-     */
-    @Mock
-    ActorAddressBookManager actorAddressBookManager;
 
     /**
      * DealsWithBitcoinWallet interface Mocked
@@ -89,7 +80,6 @@ public class GetCryptoWalletTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         cryptoWalletWalletModulePluginRoot = new CryptoWalletCryptoModulePluginRoot();
-        cryptoWalletWalletModulePluginRoot.setActorAddressBookManager(actorAddressBookManager);
         cryptoWalletWalletModulePluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
         cryptoWalletWalletModulePluginRoot.setCryptoVaultManager(cryptoVaultManager);
         cryptoWalletWalletModulePluginRoot.setErrorManager(errorManager);
@@ -107,22 +97,8 @@ public class GetCryptoWalletTest extends TestCase {
     }
 
     @Test(expected=CantGetCryptoWalletException.class)
-    public void testGetCryptoWallet_CantGetActorAddressBookRegistryException() throws Exception {
-        doThrow(new CantGetActorAddressBookRegistryException()).when(actorAddressBookManager).getActorAddressBookRegistry();
-
-        cryptoWalletWalletModulePluginRoot.getCryptoWallet();
-    }
-
-    @Test(expected=CantGetCryptoWalletException.class)
     public void testGetCryptoWallet_CantGetWalletContactRegistryException() throws Exception {
         doThrow(new CantGetWalletContactRegistryException()).when(walletContactsManager).getWalletContactsRegistry();
-
-        cryptoWalletWalletModulePluginRoot.getCryptoWallet();
-    }
-
-    @Test(expected=CantGetCryptoWalletException.class)
-    public void testGetCryptoWallet_CantGetWalletAddressBookRegistryException() throws Exception {
-        doThrow(new CantGetWalletAddressBookRegistryException()).when(cryptoAddressBookManager).getWalletAddressBookRegistry();
 
         cryptoWalletWalletModulePluginRoot.getCryptoWallet();
     }
