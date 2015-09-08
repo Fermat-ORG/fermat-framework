@@ -9,11 +9,22 @@ import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIss
 /**
  * Created by franklin on 07/09/15.
  */
-public class AssetIssuerWallet extends DigitalAsset implements AssetIssuer {
+public class AssetIssuerWallet  implements AssetIssuer {
     String assetUserIdentityPublicKey;
     WalletCategory walletCategory;
     WalletType walletType;
+    DigitalAsset digitalAsset;
 
+
+    @Override
+    public String getWalletPublicKey() {
+        return null;
+    }
+
+    @Override
+    public void setWalletPublicKey(String walletPublicKey) {
+
+    }
 
     @Override
     public String getAssetUserIdentityPublicKey() {
@@ -43,5 +54,15 @@ public class AssetIssuerWallet extends DigitalAsset implements AssetIssuer {
     @Override
     public void setWalletType(WalletType walletType) {
         this.walletType = walletType;
+    }
+
+    @Override
+    public DigitalAsset getDigitalAsset() {
+        return this.digitalAsset;
+    }
+
+    @Override
+    public void setDigitalAsset(DigitalAsset digitalAsset) {
+        this.digitalAsset = digitalAsset;
     }
 }

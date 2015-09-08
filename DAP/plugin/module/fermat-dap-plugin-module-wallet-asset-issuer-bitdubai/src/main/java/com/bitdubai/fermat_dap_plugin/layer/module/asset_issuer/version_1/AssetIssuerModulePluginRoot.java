@@ -22,6 +22,8 @@ import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantCreateAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantSaveAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuerManager;
 
@@ -146,7 +148,12 @@ public class AssetIssuerModulePluginRoot implements  AssetIssuerManager, Plugin,
     }
 
     @Override
-    public void createAssetIssuer(AssetIssuer assetIssuer) {
+    public void createAssetIssuer(AssetIssuer assetIssuer)  throws CantCreateAssetIssuerException {
+
+    }
+
+    @Override
+    public void saveAssetIssuer(AssetIssuer assetIssuer) throws CantSaveAssetIssuerException {
 
     }
 
@@ -155,21 +162,21 @@ public class AssetIssuerModulePluginRoot implements  AssetIssuerManager, Plugin,
 
     }
 
-    //Para verificar en la wallet si tiene fondo suficiente
+    //Implementara el metodo de la capa transaccional a traves del DealsWithAssetIssuing
     @Override
-    public boolean verifiedGenesisAmount(long genesisAmount) {
-        return getAssetIssuerManager().verifiedGenesisAmount(genesisAmount);
-    }
-
-    //Sera pedido por la interfaz del usuario pero debemos buscarlo ya que sera calculado en la crpytoVault
-    @Override
-    public long getEstimatedFeeValue(long transactionFee) {
-        return getAssetIssuerManager().getEstimatedFeeValue(transactionFee);
+    public boolean verifiedGenesisAmount(AssetIssuer assetIssuer) {
+        return getAssetIssuerManager().verifiedGenesisAmount(assetIssuer.getDigitalAsset());
     }
 
     //Implementara el metodo de la capa transaccional a traves del DealsWithAssetIssuing
     @Override
-    public void IssueAsset(DigitalAsset digitalAsset) {
-        getAssetIssuerManager().IssueAsset(digitalAsset);
+    public long getEstimatedFeeValue(AssetIssuer assetIssuer) {
+        return getAssetIssuerManager().getEstimatedFeeValue(assetIssuer.getDigitalAsset());
+    }
+
+    //Implementara el metodo de la capa transaccional a traves del DealsWithAssetIssuing
+    @Override
+    public void IssueAsset(AssetIssuer assetIssuer) {
+        getAssetIssuerManager().IssueAsset(assetIssuer.getDigitalAsset());
     }
 }

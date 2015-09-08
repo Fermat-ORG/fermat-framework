@@ -11,7 +11,6 @@ public interface AssetIssuer {
     //Propiedades que le sera pedidas a la interfaz del usuario desde el module de la sup app.
     //Esta interfaz tendra que contener todos las propiedades que se van a pedir en la sub app, para que se guarde el objeto digital asset
     //en su creacion, y manipular toda la informacion y workflow respectivo.
-    //Falta los seters
     String getWalletPublicKey();
     void setWalletPublicKey(String walletPublicKey);
 

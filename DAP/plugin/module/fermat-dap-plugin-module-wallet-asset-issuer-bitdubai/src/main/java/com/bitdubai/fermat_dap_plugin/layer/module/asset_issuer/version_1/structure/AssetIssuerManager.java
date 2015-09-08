@@ -7,6 +7,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantCreateAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantSaveAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuer;
 
 import java.util.UUID;
 import java.util.logging.ErrorManager;
@@ -77,12 +80,24 @@ public class AssetIssuerManager implements DealsWithLogger, DealsWithPluginDatab
 
     }
 
-    public long getEstimatedFeeValue(long transactionFee) {
+    public long getEstimatedFeeValue(DigitalAsset digitalAsset) {
         return 0;
     }
 
-    public boolean verifiedGenesisAmount(long genesisAmount) {
+    public boolean verifiedGenesisAmount(DigitalAsset digitalAsset) {
         return false;
+    }
+
+    public void createAssetIssuer(AssetIssuer assetIssuer) throws CantCreateAssetIssuerException {
+
+    }
+
+    public void saveAssetIssuer(AssetIssuer assetIssuer) throws CantSaveAssetIssuerException {
+
+    }
+
+    public void removeAssetIssuer(AssetIssuer assetIssuer) {
+
     }
 
 }
