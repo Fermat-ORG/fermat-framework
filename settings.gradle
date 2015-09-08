@@ -1,5 +1,5 @@
 
-include ':fermat-android-core'
+include ':fermat-android-core', ':fermat-dap-plugin-module-wallet-asset-issuer-bitdubai'
 include ':fermat-android-api'
 
 include ':fermat-api'
@@ -417,6 +417,10 @@ project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai').pr
 //project(':functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai')
 
 // DAP Projects
+
+// module
+include ':fermat-dap-plugin-module-wallet-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-module-wallet-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-module-wallet-asset-issuer-bitdubai')
 
 // transaction
 include ':fermat-dap-plugin-transaction-asset-issuing-bitdubai'
