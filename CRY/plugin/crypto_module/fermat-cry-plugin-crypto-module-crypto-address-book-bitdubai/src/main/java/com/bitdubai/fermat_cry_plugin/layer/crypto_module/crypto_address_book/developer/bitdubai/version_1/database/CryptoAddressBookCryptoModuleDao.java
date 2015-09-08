@@ -117,6 +117,9 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
         } catch (InvalidCryptoAddressBookRecordParametersException exception) {
             throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
         }
+        catch (Exception exception) {
+            throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
+        }
     }
 
     public List<CryptoAddressBookRecord> listCryptoAddressBookRecordsByWalletPublicKey(String walletPublicKey) throws CantListCryptoAddressBookRecordsException {
@@ -144,6 +147,8 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
         } catch (InvalidParameterException exception) {
             throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         } catch (InvalidCryptoAddressBookRecordParametersException exception) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
+        } catch (Exception exception) {
             throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
         }
     }

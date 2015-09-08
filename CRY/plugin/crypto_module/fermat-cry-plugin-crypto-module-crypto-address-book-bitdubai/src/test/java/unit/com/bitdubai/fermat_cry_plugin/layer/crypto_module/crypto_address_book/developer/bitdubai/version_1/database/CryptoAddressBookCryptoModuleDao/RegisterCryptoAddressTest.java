@@ -1,12 +1,11 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
 
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -15,43 +14,41 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFa
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDatabaseConstants;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.structure.CryptoAddressBookCryptoModuleRecord;
 
 import junit.framework.TestCase;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
-
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-
-
 import java.util.List;
 import java.util.UUID;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
 
 /**
- * Created by natalia on 07/09/15.
+ * Created by natalia on 08/09/15.
  */
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, Vaults.class, ReferenceWallet.class})
 
-public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
+public class RegisterCryptoAddressTest  extends TestCase {
 
 
     @Mock
@@ -72,15 +69,12 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
     @Mock
     private DatabaseTableRecord mockRecord;
 
+    @Mock
+    private CryptoAddressBookRecord mockCryptoAddressBookRecord;
+
     private CryptoCurrency mockCryptoCurrency;
 
-    private Actors mockActors;
 
-    private Platforms mockPlatforms;
-
-    private Vaults mockVaults;
-
-    private ReferenceWallet mockReferenceWallet;
 
     private UUID testOwnerId;
 
@@ -95,35 +89,31 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
 
     private void setUpMockitoGeneralRules() throws Exception{
         mockCryptoCurrency = CryptoCurrency.BITCOIN;
+
+        mockCryptoAddressBookRecord = new CryptoAddressBookCryptoModuleRecord(mockCryptoAddress,
+                "actorkey",
+                Actors.EXTRA_USER,
+                "actorToKey",
+                Actors.INTRA_USER,
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                Vaults.BITCOIN_VAULT,
+                "",
+                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+
+
         Mockito.when(mockPluginDatabaseSystem.createDatabase(testOwnerId, testOwnerId.toString())).thenReturn(mockDatabase);
 
         Mockito.when(mockPluginDatabaseSystem.openDatabase(testOwnerId, testOwnerId.toString())).thenReturn(mockDatabase);
 
         Mockito.when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         Mockito.when(mockDatabaseFactory.newTableFactory(testOwnerId, CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(mockTableFactory);
+
         Mockito.when(mockDatabase.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME)).thenReturn(mockTable);
-        Mockito.when(mockTable.getRecords()).thenReturn(mockRecords);
-        Mockito.when(mockRecord.getStringValue(anyString())).thenReturn(UUID.randomUUID().toString());
-        Mockito.doReturn(mockRecord).when(mockRecords).get(0);
+        Mockito.when(mockTable.getEmptyRecord()).thenReturn(mockRecord);
 
-        Mockito.when(mockCryptoAddress.getAddress()).thenReturn("address");
-        Mockito.when(mockCryptoAddress.getCryptoCurrency()).thenReturn(mockCryptoCurrency);
-
-
-        mockStatic(CryptoCurrency.class);
-
-        PowerMockito.when(mockCryptoCurrency.getByCode(anyString())).thenReturn(CryptoCurrency.BITCOIN);
-        mockStatic(Actors.class);
-        PowerMockito.when(mockActors.getByCode(anyString())).thenReturn(Actors.INTRA_USER);
-        mockStatic(Platforms.class);
-        PowerMockito.when(mockPlatforms.getByCode(anyString())).thenReturn(Platforms.CRYPTO_CURRENCY_PLATFORM);
-        mockStatic(Vaults.class);
-        PowerMockito.when(mockVaults.getByCode(anyString())).thenReturn(Vaults.BITCOIN_VAULT);
-        mockStatic(ReferenceWallet.class);
-        PowerMockito.when(mockReferenceWallet.getByCode(anyString())).thenReturn(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-
-
-    }
+        Mockito.when(mockCryptoAddressBookRecord.getCryptoAddress().getAddress()).thenReturn("address");
+        Mockito.when(mockCryptoAddressBookRecord.getCryptoAddress().getCryptoCurrency()).thenReturn(CryptoCurrency.BITCOIN);
+       }
 
     @Before
     public void setUp() throws Exception{
@@ -138,34 +128,25 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
 
 
     @Test
-    public void getCryptoAddressBookRecordByCryptoAddressTest_GetOk_Trows_CantGetCryptoAddressBookRecordException() throws Exception{
+    public void registerCryptoAddressTest_GetOk_Trows_CantCantRegisterCryptoAddressBookRecordException() throws Exception{
 
 
-        CryptoAddressBookRecord cryptoAddressBookRecord= cryptoAddressBookCryptoModuleDao.getCryptoAddressBookRecordByCryptoAddress(mockCryptoAddress);
-
-        Assertions.assertThat(cryptoAddressBookRecord)
-                .isNotNull();
-    }
-
-
-     @Test
-    public void getCryptoAddressBookRecordByCryptoAddressTest_GetErrorCryptoNull_Trows_CantGetCryptoAddressBookRecordException() throws Exception{
-
-        catchException(cryptoAddressBookCryptoModuleDao).getCryptoAddressBookRecordByCryptoAddress(null);
+        catchException(cryptoAddressBookCryptoModuleDao).registerCryptoAddress(mockCryptoAddressBookRecord);
 
         assertThat(caughtException())
-                .isNotNull().isInstanceOf(CantGetCryptoAddressBookRecordException.class);
+                .isNull();
     }
 
 
     @Test
-    public void getCryptoAddressBookRecordByCryptoAddressTest_GetErrorEmptyRecord_Trows_CantGetCryptoAddressBookRecordException() throws Exception {
+    public void registerCryptoAddressTest_GetErrorCryptoNull_Trows_CantRegisterCryptoAddressBookRecordException() throws Exception{
 
-        Mockito.doReturn(null).when(mockRecords).get(0);
-
-        catchException(cryptoAddressBookCryptoModuleDao).getCryptoAddressBookRecordByCryptoAddress(mockCryptoAddress);
+        catchException(cryptoAddressBookCryptoModuleDao).registerCryptoAddress(null);
 
         assertThat(caughtException())
-                .isNotNull().isInstanceOf(CantGetCryptoAddressBookRecordException.class);
+                .isNotNull().isInstanceOf(CantRegisterCryptoAddressBookRecordException.class);
     }
+
+
+
 }
