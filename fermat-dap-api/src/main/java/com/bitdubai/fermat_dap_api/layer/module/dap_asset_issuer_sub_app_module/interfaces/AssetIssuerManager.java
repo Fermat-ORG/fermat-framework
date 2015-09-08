@@ -1,6 +1,5 @@
-package com.bitdubai.fermat_dap_api.layer.dap_asset_issuer.interfaces;
+package com.bitdubai.fermat_dap_api.layer.module.dap_asset_issuer_sub_app_module.interfaces;
 
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 
 import java.util.List;

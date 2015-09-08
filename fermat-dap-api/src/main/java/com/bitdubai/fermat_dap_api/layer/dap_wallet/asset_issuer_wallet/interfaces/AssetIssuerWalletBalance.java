@@ -17,4 +17,6 @@ public interface AssetIssuerWalletBalance {
     void debit(AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord); //Debemos de definir la estructura de la transaccion
 
     void credit(AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord); //Debemos de definir la estructura de la transaccion
+
+
 }

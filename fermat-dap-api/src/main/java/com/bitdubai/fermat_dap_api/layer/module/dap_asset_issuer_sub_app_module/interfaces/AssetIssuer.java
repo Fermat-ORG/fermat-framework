@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_asset_issuer.interfaces;
+package com.bitdubai.fermat_dap_api.layer.module.dap_asset_issuer_sub_app_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;

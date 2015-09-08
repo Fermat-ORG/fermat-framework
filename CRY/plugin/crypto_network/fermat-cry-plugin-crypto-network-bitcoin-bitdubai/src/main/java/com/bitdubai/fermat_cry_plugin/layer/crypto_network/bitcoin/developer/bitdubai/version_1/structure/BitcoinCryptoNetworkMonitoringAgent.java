@@ -147,8 +147,8 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         /**
          * will stop the bitcoin monitoring agent.
          */
-        peers.stopAsync();
-        peers.awaitTerminated();
+        if (peers.isRunning())
+            peers.stop();
     }
 
     /**
