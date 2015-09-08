@@ -1,5 +1,4 @@
 
-include ':fermat-android-core', ':fermat-dap-plugin-module-wallet-asset-issuer-bitdubai'
 include ':fermat-android-api'
 
 include ':fermat-api'
@@ -449,3 +448,4 @@ project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new Fi
 
 include ':fermat-dap-plugin-actor-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-issuer-bitdubai')
+

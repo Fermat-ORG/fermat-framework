@@ -82,7 +82,7 @@ El DigitalAsset.transactionFee es un valor que calculará la cryptoVault a trav�
 
 La Issuer subApp no permitirá iniciar el proceso de issuing del Asset si no dispone los fondos disponibles para cubrir el GenesisAmount.
 
-La transacción de Asset Issuing se dará inicio a través del mñetodo IssueAsset(DigitalAsset digitalAsset).
+La transacción de Asset Issuing se dará inicio a través del método IssueAsset(DigitalAsset digitalAsset).
 
 El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
 GenesisAddress.
