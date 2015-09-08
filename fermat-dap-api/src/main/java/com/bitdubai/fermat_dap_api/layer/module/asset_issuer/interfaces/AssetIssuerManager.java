@@ -18,4 +18,6 @@ public interface AssetIssuerManager {
 
     void createAssetIssuer(AssetIssuer assetIssuer);
     void removeAssetIssuer(AssetIssuer assetIssuer);
+
+    boolean verifiedGenesisAmount(long genesisAmount);
 }

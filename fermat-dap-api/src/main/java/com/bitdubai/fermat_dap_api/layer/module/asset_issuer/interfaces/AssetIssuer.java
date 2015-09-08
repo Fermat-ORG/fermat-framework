@@ -9,15 +9,20 @@ import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
  */
 public interface AssetIssuer {
     //Esta interfaz tendra que contener todos las propiedades que se van a pedir en la sub app, para que se guarde el objeto digital asset
-    //en su creacion.
+    //en su creacion, y manipular toda la informacion y workflow respectivo.
     //Falta los seters
-    String getwalletPublicKey();
+    String getWalletPublicKey();
+    void setWalletPublicKey(String walletPublicKey);
 
     String getAssetUserIdentityPublicKey();
+    void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
 
     DigitalAsset getDigitalAsset();
+    void setDigitialAsset(DigitalAsset digitialAsset);
 
     WalletCategory getWalletCategory();
+    void setWalletCategory(WalletCategory walletCategory);
 
     WalletType getWalletType();
+    void setWalletType(WalletType walletType);
 }
