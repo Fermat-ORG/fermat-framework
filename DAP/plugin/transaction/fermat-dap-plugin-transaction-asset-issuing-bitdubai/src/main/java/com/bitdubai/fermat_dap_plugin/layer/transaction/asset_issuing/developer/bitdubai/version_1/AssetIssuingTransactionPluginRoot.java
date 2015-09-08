@@ -15,12 +15,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetTransactionException;
+import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantIssueDigitalAssetException;
 import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
@@ -98,15 +101,33 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     public void start() throws CantStartPluginException {
         //delete this
         printSomething("Starting plugin");
-        //TODO: open/create database
+
         try{
-            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId, this.cryptoVaultManager, this.cryptoWallet, this.pluginFileSystem/*, this.cryptoAddressBookManager*/);
+            this.assetIssuingDatabase.openDatabase();
+            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId,
+                    this.cryptoVaultManager,
+                    this.cryptoWallet,
+                    this.pluginDatabaseSystem,
+                    this.pluginFileSystem/*, this.cryptoAddressBookManager*/);
+
+        }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
+            //TODO: delete this printStackTrace in production
+            exception.printStackTrace();
+            //printSomething(exception.toString());
+            try {
+                createAssetIssuingTransactionDatabase();
+            } catch (CantCreateDatabaseException innerException) {
+                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin - "+exception, "Cannot open or create the plugin database");
+            }
 
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "CryptoVaultManager is null");
+        }catch(CantExecuteDatabaseOperationException exception){
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetCryptoTransactionFactory", "Error in constructor method AssetIssuingTransactionDao");
         }catch(Exception exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Starting Asset Issuing plugin", "Unexpected exception");
         }
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 

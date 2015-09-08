@@ -106,10 +106,10 @@ public class WalletManagerMiddlewareDao {
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
             database.closeDatabase();
-            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE", e, null, null);
+            throw new CantGetInstalledWalletsException("ERROR GET INSTALLED WALLETS FROM DATABASE", e, null, null);
         } catch (Exception exception) {
             database.closeDatabase();
-            throw new CantGetInstalledWalletsException("ERROR GET INTALLEd WALLETS FROM DATABASE", FermatException.wrapException(exception), null, null);
+            throw new CantGetInstalledWalletsException("ERROR GET INSTALLED WALLETS FROM DATABASE", FermatException.wrapException(exception), null, null);
         }
 
         return lstInstalledWallet;
