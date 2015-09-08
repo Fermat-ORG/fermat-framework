@@ -445,6 +445,3 @@ project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new Fi
 
 include ':fermat-dap-plugin-actor-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-issuer-bitdubai')
-
-include ':fermat-dap-plugin-asset-issuer'
-project(':fermat-dap-plugin-asset-issuer').projectDir = new File('DAP/plugin/middleware/fermat-dap-plugin-asset-issuer')
