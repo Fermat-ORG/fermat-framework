@@ -6199,6 +6199,12 @@
 						</mantainers>
 						<certifications>
 						</certifications>
+						<life_cycle>
+							<status name="Concept" reached="2015-06-01"></status>
+							<status name="Development" target="2015-09-01" reached="2015-07-01" ></status>
+							<status name="QA" target="2015-09-01" reached="2015-07-01" ></status>
+							<status name="Production" target="2015-09-01" reached="2015-07-01" ></status>
+						</life_cycle>
 					</plugin>
 					<plugin
 							name="Litecoin"
