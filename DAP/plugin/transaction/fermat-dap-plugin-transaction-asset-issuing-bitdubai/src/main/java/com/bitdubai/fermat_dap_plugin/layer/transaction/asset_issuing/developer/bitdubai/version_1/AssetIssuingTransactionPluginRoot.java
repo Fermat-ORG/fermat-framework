@@ -146,51 +146,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }
 
     }
-    /*@Override
-    public void createDigitalAsset(String publicKey, String name, String description, List<Resource> resources, DigitalAssetContract digitalAssetContract, long genesisAmount) throws CantCreateDigitalAssetTransactionException {
 
-        try{
-
-            DigitalAsset newDigitalAsset=new DigitalAsset();
-            newDigitalAsset.setPublicKey(publicKey);
-            newDigitalAsset.setName(name);
-            newDigitalAsset.setDescription(description);
-            newDigitalAsset.setResources(resources);
-            newDigitalAsset.setContract(digitalAssetContract);
-            newDigitalAsset.setGenesisAmount(genesisAmount);
-
-            this.digitalAssetCryptoTransactionFactory.createDigitalAssetCryptoTransaction(newDigitalAsset);
-
-        }catch(Exception exception){
-
-            throw new CantCreateDigitalAssetTransactionException(FermatException.wrapException(exception), "Creating a new Digital Asset Transaction", "Unexpected Exception");
-
-        }
-
-    }*/
-
-    /*@Override
-    public void setActors(String deliveredByActorPublicKey, Actors deliveredByType, String deliveredToActorPublicKey, Actors deliveredToType) throws CantSetObjectException {
-
-        if(deliveredByActorPublicKey==null||deliveredToActorPublicKey==null||deliveredByType==null||deliveredToType==null){
-            throw new CantSetObjectException("Actor component is null");
-        }
-        this.digitalAssetCryptoTransactionFactory.setActors(deliveredByActorPublicKey, deliveredByType, deliveredToActorPublicKey, deliveredToType);
-
-    }
-
-    @Override
-    public void setWallet(String walletPublicKey, ReferenceWallet walletType) throws CantSetObjectException {
-        if(walletPublicKey==null||walletType==null){
-            throw new CantSetObjectException("Wallet component is null");
-        }
-        this.digitalAssetCryptoTransactionFactory.setWallet( walletPublicKey, walletType);
-    }
-
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
-        this.cryptoAddressBookManager=cryptoAddressBookManager;
-    }*/
     @Override
     public void setCryptoWallet(CryptoWallet cryptoWallet){
 

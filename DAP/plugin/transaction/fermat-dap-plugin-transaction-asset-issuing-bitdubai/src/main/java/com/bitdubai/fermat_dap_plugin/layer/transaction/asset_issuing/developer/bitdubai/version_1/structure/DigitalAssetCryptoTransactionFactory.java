@@ -18,19 +18,13 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/09/15.
  */
 public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
-
-    //CryptoAddressBookManager cryptoAddressBookManager;
+    
     CryptoVaultManager cryptoVaultManager;
     CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
     PluginFileSystem pluginFileSystem;
-    /*String deliveredByActorPublicKey;
-    Actors deliveredByType;
-    String deliveredToActorPublicKey;
-    Actors deliveredToType;
-    String walletPublicKey;
-    ReferenceWallet walletType;*/
+
     final long MINIMAL_TRANSACTION_FEE=300;
     /**
      * Minimal Asset quiantity to send
@@ -43,7 +37,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     public DigitalAssetCryptoTransactionFactory(CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
 
-        //setCryptoAddressBookManagerManager(cryptoAddressBookManager);
         setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(cryptoWallet);
         setPluginFileSystem(pluginFileSystem);
@@ -93,40 +86,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
-    /*public void setActors(String deliveredByActorPublicKey, Actors deliveredByType, String deliveredToActorPublicKey, Actors deliveredToType){
-
-        this.deliveredByActorPublicKey=deliveredByActorPublicKey;
-        this.deliveredByType=deliveredByType;
-        this.deliveredToActorPublicKey=deliveredToActorPublicKey;
-        this.deliveredToType=deliveredToType;
-
-    }*/
-
-    /*public void setWallet(String walletPublicKey, ReferenceWallet walletType){
-        this.walletPublicKey=walletPublicKey;
-        this.walletType=walletType;
-    }*/
-
     private void areObjectsSettled() throws ObjectNotSetException{
 
-        /*if(deliveredByActorPublicKey==null){
-            throw new ObjectNotSetException("deliveredByActorPublicKey is not set");
-        }
-        if(deliveredByType==null){
-            throw new ObjectNotSetException("deliveredByType is not set");
-        }
-        if(deliveredToActorPublicKey==null){
-            throw new ObjectNotSetException("deliveredToActorPublicKey is not set");
-        }
-        if(deliveredToType==null){
-            throw new ObjectNotSetException("deliveredToType is not set");
-        }
-        if(walletPublicKey==null){
-            throw new ObjectNotSetException("deliveredToActorPublicKey is not set");
-        }
-        if(walletType==null){
-            throw new ObjectNotSetException("deliveredToType is not set");
-        }*/
         if(this.digitalAsset.getContract()==null){
             throw new ObjectNotSetException("Digital Asset Contract is not set");
         }
@@ -193,26 +154,58 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         /**
          * TODO:
-         * 3) Al estar todo completado para emitir el Asset, se persiste el DA (en DB o archivo, creo que sería mejor archivo) y TranscationStatus para a estar en estado FormingGenesis.
+         1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
+         realizarán distintas especificaciones del asset y el contrato inicial.
 
-         4) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
-         para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se persiste este valor.
+         La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
+         el uso de los siguientes campos:
+         * Cantidad de Assets que se están creando (DigitalAsset.quantity)
+         * Valor de cada Asset. (DigitalAsset.unitValue)
+         * Valor del Fee de cada transacción. (DigitalAsset.transactionFee).
 
-         5) Se llama al método requestGenesisAddress de la AssetWallet y se persistirá este valor en la GenesisAddress.
+         El valor del GenesisAmount se calculará de la siguiente forma:
 
-         6) Se creará el objeto DigitalAssetMetadata y se generará el hash del DA con el método getDigitalAssetHash. La transacción pasaría a estar en estado PendingSubmitCryptoNetwork.
+         *DigitalAsset.quantity * DigitalAsset.unitValue + ( DigitalAsset.transactionFee * DigitalAsset.quantity)*
 
-         7) Se enviará la transacción a través de la cryptoVault utilizando el metodo send de la CryptoWallet. La transacción pasa a estado PendingRecieveCryptoNetwork
+         El DigitalAsset.transactionFee es un valor que calculará la cryptoVault a través del método getEstimatedFeeValue.
 
-         8) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
-         balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet.
+         La Issuer subApp no permitirá iniciar el proceso de issuing del Asset si no dispone los fondos disponibles para cubrir el GenesisAmount.
 
-         9) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingCreditIssuerWallet y se genera el crédito  en el Available balance en la
-         Issuer Wallet llamando a un método a crear por Franklin.
+         La transacción de Asset Issuing se dará inicio a través del mñetodo IssueAsset(DigitalAsset digitalAsset).
 
-         10) La issuerWallet genera un crédito en el available balance de la wallet.
+         El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
+         GenesisAddress.
 
-         11) La transacción finaliza.
+
+         2) Al estar todo completado para emitir el Asset, se persiste el DA (en archivo) y se actualiza el TransactionStatus a FormingGenesis.
+
+         3) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
+         para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se actualiza este valor en el DA y se persisten los cambios.
+
+         4) Se llama al método requestGenesisAddress de la AssetWallet y se persistirá este valor en la GenesisAddress. Esta solicitud de dirección
+         debe ser registrada en el CryptoAddressBook a través del método registerCryptoAddress.
+
+         5) Se creará el objeto DigitalAssetMetadata y se generará el hash del DA con el método getDigitalAssetHash. La transacción pasaría a estar en estado PendingSubmitCryptoNetwork.
+
+         6) Se enviará la transacción a través de la cryptoVault utilizando el metodo send de la CryptoWallet y se pasan los siguientes valores:
+
+         * transactionId: el obtenido en el paso 3.
+         * addressTo: la obtenida en el paso 4.
+         * OP_RETURN: el hash del objeto DigitalAssetMetadata (DigitalAssetMetadata.getDigitalAssetHash())
+         * Amount: el valor calculado en el punto 1.
+
+         La transacción pasa a estado PendingReceiveCryptoNetwork
+
+         7) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
+         balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet. La transacción debe escuchar los eventos
+         del incoming crypto.
+
+         8) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingConfirmationIssuerWallet y se genera el crédito  en el Available balance en la
+         Issuer Wallet.
+
+         9) La issuerWallet genera un crédito en el available balance de la wallet y confirma que toma posesión del DA.
+
+         10) La transacción finaliza y actualiza a Finalized.
          * */
 //TODO: crear un monitot/agente que coordine la construccion de un asset y retome en caso que exista una interrupción del proceso
         try{
@@ -226,30 +219,16 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //this.cryptoVaultManager.connectToBitcoin();
             setDigitalAssetGenesisAmount();
 
-            /*this.cryptoAddressBookManager.registerCryptoAddress(
-                    this.digitalAsset.getGenesisAddress(),
-                    this.deliveredByActorPublicKey,
-                    this.deliveredByType,
-                    this.deliveredToActorPublicKey,
-                    this.deliveredToType,
-                    Platforms.DIGITAL_ASSET_PLATFORM,
-                    Vaults.BITCOIN_VAULT,
-                    this.walletPublicKey,
-                    this.walletType);*/
             //TODO: hacer una prueba para la solicitud de direcciones
             //We need to complete the transaction
 
             this.cryptoVaultManager.disconnectFromBitcoin();
 
-        } /*catch(VaultNotConnectedToNetworkException exception) {
-            throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Connecting to Network", "Vault is not connected");
-        }*/ catch(CantSetObjectException exception){
+        }  catch(CantSetObjectException exception){
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Setting GenesisAddress", "Unexpected Exception");
         } catch(ObjectNotSetException exception){
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if actors are set", "Some actor is not set");
-        } /*catch(CantRegisterCryptoAddressBookRecordException exception){
-            throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Registring cryptoAddres in AddressBook", "Please, Cceck the cause");
-        }*/ catch (CantGetBalanceException exception) {
+        }  catch (CantGetBalanceException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if the balance is sufficient", "Can't get the Crypto Wallet balance");
         } catch (CryptoWalletBalanceInsufficientException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if the balance is sufficient", "The balance is insufficient");
