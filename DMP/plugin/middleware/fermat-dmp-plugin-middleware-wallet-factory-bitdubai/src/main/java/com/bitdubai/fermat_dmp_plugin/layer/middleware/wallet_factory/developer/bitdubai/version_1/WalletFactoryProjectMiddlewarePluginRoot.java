@@ -13,7 +13,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantChangeProjectStateException;
@@ -25,6 +32,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -325,13 +333,19 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
     @Override
     public void markProkectAsPublished(WalletFactoryProject walletFactoryProject) throws CantChangeProjectStateException {
-
+        walletFactoryProject.setProjectState(WalletFactoryProjectState.PUBLISHED);
+        try {
+            this.saveWalletFactoryProjectChanges(walletFactoryProject);
+        } catch (Exception e) {
+            throw new CantChangeProjectStateException(CantChangeProjectStateException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     private void test(){
         try {
             WalletFactoryProject walletFactoryProject = createEmptyWalletFactoryProject();
             walletFactoryProject.setName("Mi primer project");
+            walletFactoryProject.setWalletCategory(WalletCategory.BRANDED_REFERENCE_WALLET);
             walletFactoryProject.setDescription("Wallet Factory de prueba cargado desde el Middleware a modo de ejemplo");
             walletFactoryProject.setProjectState(WalletFactoryProjectState.CLOSED);
             walletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
@@ -339,7 +353,54 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             walletFactoryProject.setSize(300);
             walletFactoryProject.setProjectPublickKey("newPublicKey");
             walletFactoryProject.setWalletType(WalletType.REFERENCE);
+            Skin skin = new Skin();
+            skin.setId(UUID.randomUUID());
+            skin.setName("SkinTest");
+            skin.setScreenSize(ScreenSize.MEDIUM);
+            skin.setDesigner(new DesignerIdentity() {
+                @Override
+                public String getAlias() {
+                    return "diseñador";
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return "nula";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws CantSingMessageException {
+                    return "";
+                }
+            });
+            skin.setSize(100);
+            skin.setVersion(new Version("1.0.0"));
+            walletFactoryProject.setDefaultSkin(skin);
+
+            com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language language = new com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language();
+            language.setName("TestLanguage");
+            language.setId(UUID.randomUUID());
+            language.setVersion(new Version(1, 0, 0));
+            language.setSize(100);
+            language.setTranslator(new TranslatorIdentity() {
+                @Override
+                public String getAlias() {
+                    return "Translator";
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return "nula";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                    return "";
+                }
+            });
+            walletFactoryProject.setDefaultLanguage(language);
             this.saveWalletFactoryProjectChanges(walletFactoryProject);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

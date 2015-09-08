@@ -36,7 +36,8 @@ La Asset Distribution debe mantener un estado separado para cada usuario.
 *Desde el Asset Issuer*
 
 A través del Asset Transmission NetworkService, va a transmitir el AssetMetadata especificando el AssetUser llamando al método:
-distributeAssetToAssetUser(DigitalAssetMetadata, AssetUser).
+distributeAssetToAssetUser(DigitalAssetMetadata, AssetUser, newTransactionId). Esta llamada será en forma asincrónica por lo tanto es
+necesario suministrar un nuevo ID para identificar a esta solicitud y luego poder recibir la respuesta.
 
 Si el método termina correctamente, significa esencialmente que :
 
