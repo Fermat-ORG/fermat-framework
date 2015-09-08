@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
@@ -40,9 +41,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
 
+    TransactionStatus transactionStatus;
+
     final long MINIMAL_TRANSACTION_FEE=300;
     /**
-     * Minimal Asset quiantity to send
+     * Minimal Asset quantity to send
      */
     final int MINIMAL_QUANTITY=1;
     /**
@@ -119,6 +122,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSetObjectException(exception, "Setting GenesisAddress to DigitalAsset","Unexpected exception");
         }
 
+    }
+
+    //This method can be used by a future monitor agent
+    public void setTransactionStatus(TransactionStatus transactionStatus){
+        this.transactionStatus=transactionStatus;
     }
 
     private void areObjectsSettled() throws ObjectNotSetException{
