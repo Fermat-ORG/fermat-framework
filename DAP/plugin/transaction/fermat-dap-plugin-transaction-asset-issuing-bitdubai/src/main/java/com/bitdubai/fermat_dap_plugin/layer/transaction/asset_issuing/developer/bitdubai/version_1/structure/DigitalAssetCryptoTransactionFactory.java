@@ -44,11 +44,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     final String LOCAL_STORAGE_PATH="digital-asset/";
     String digitalAssetLocalFilePath;
 
-    public DigitalAssetCryptoTransactionFactory(UUID pluginID, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
+    public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
 
         setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(cryptoWallet);
         setPluginFileSystem(pluginFileSystem);
+        setPluginId(pluginId);
 
     }
 
@@ -94,6 +95,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
 
         try{
+            //TODO: Implement this method with new CryptoVault version
             //CryptoAddress genesisAddress=this.cryptoVaultManager.getAddress();
             //digitalAsset.setGenesisAddress(genesisAddress);
         }catch(Exception exception){

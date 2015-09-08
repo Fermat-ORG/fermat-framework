@@ -94,7 +94,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         printSomething("Starting plugin");
         //TODO: implement this method
         try{
-            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.cryptoVaultManager, this.cryptoWallet, this.pluginFileSystem/*, this.cryptoAddressBookManager*/);
+            this. digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId, this.cryptoVaultManager, this.cryptoWallet, this.pluginFileSystem/*, this.cryptoAddressBookManager*/);
 
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "CryptoVaultManager is null");
