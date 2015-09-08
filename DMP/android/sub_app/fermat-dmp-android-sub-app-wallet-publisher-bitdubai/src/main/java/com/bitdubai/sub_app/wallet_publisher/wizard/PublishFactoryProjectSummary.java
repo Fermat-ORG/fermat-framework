@@ -198,6 +198,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
                             dialog.dismiss();
                         dialog = null;
                         dialog = new ProgressDialog(getActivity());
+                        dialog.setTitle("Publishing...");
                         dialog.setMessage("Please wait...");
                         dialog.setCancelable(false);
                         dialog.show();
