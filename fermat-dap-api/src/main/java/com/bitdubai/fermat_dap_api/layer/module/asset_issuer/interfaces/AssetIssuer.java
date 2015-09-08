@@ -11,14 +11,11 @@ public interface AssetIssuer {
     //Esta interfaz tendra que contener todos las propiedades que se van a pedir en la sub app, para que se guarde el objeto digital asset
     //en su creacion, y manipular toda la informacion y workflow respectivo.
     //Falta los seters
-    String getWalletPublicKey();
-    void setWalletPublicKey(String walletPublicKey);
+    //String getWalletPublicKey();
+    //void setWalletPublicKey(String walletPublicKey);
 
     String getAssetUserIdentityPublicKey();
     void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
-
-    DigitalAsset getDigitalAsset();
-    void setDigitialAsset(DigitalAsset digitialAsset);
 
     WalletCategory getWalletCategory();
     void setWalletCategory(WalletCategory walletCategory);

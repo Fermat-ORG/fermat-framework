@@ -4,6 +4,20 @@ Esta Plugin Asset Issuer implementara todo la logica para que permita creación,
 en la base de datos del Plug-in, toda esta informacion sera introducida desde la interfaz de usuario de la Reference Wallet Asset Issuer.
 
 == Plug-in Description
+
+El Issuer debe determinar que el Asset contega la informacion referida al GenesisAmount, donde debe de colocar:
+* Cantidad de Assets que se están creando.
+* Valor de cada Asset.
+* Valor del Fee de cada transacción.
+De esa manera se procede a calular el total del GenesisAmount de la siguiente manera:
+*DigitalAsset.quantity * DigitalAsset.unitValue + ( DigitalAsset.transactionFee * DigitalAsset.quantity)*
+
+El Issuer tiene que determinar la siguiente información:
+*Tiene suficiente saldo en la Wallet Bitcoin para cubrir el GenesisAmount, mediante un metodo, definir donde va a buscar este valor.
+*Buscar el transactionFee es un valor que calculará la cryptoVault a través del método getEstimatedFeeValue.
+
+Cuando el Issuer lo determine y este correctamente el objeto
+
 El Issuer podra modificar toda la información, siempre y cuando se encuentre en el State "DRAFT".
 Una vez que el Issuer determine que ya el Asset esta listo para que se arme la transacción bitcoin, se solicita a la Crypto Vault la creación de una transaction bitcoin a través
 del Outoing Intra user. Este hash se define como la GenesisTransaction en el Digital Asset, y se debe de setear la propiedad genesisTransaction, para que sea modificada en la base de datos

@@ -13,9 +13,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
+import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.DealsWithAssetIssuing;
+import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuerManager;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +33,12 @@ import java.util.logging.ErrorManager;
 /**
  * Created by rodrigo on 9/7/15.
  */
-public class AssetIssuerModulePluginRoot implements Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
+public class AssetIssuerModulePluginRoot implements  AssetIssuerManager, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
+    /**
+     * DealsWithAssetIssuing Interface member variables.
+     */
+    private DealsWithAssetIssuing dealsWithAssetIssuing;
+
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -44,6 +58,16 @@ public class AssetIssuerModulePluginRoot implements Plugin, DatabaseManagerForDe
      * DealsWithPluginIdentity Interface member variables.
      */
     private UUID pluginId;
+
+    /**
+     * DealsWithLogger interface member variable
+     */
+    LogManager logManager;
+
+    private com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager getAssetIssuerManager(){
+        com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager assetIssuerManager = new com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+        return assetIssuerManager;
+    }
 
 
     @Override
@@ -99,5 +123,53 @@ public class AssetIssuerModulePluginRoot implements Plugin, DatabaseManagerForDe
     @Override
     public ServiceStatus getStatus() {
         return null;
+    }
+
+    @Override
+    public List<AssetIssuer> getAllAssetIssuer() {
+        return null;
+    }
+
+    @Override
+    public List<AssetIssuer> getAssetIssuerByIssuer(String issuerPublicKey) {
+        return null;
+    }
+
+    @Override
+    public List<AssetIssuer> getAssetIssuerByState(State state) {
+        return null;
+    }
+
+    @Override
+    public AssetIssuer createEmptyAssetIssuer() {
+        return null;
+    }
+
+    @Override
+    public void createAssetIssuer(AssetIssuer assetIssuer) {
+
+    }
+
+    @Override
+    public void removeAssetIssuer(AssetIssuer assetIssuer) {
+
+    }
+
+    //Para verificar en la wallet si tiene fondo suficiente
+    @Override
+    public boolean verifiedGenesisAmount(long genesisAmount) {
+        return getAssetIssuerManager().verifiedGenesisAmount(genesisAmount);
+    }
+
+    //Sera pedido por la interfaz del usuario pero debemos buscarlo ya que sera calculado en la crpytoVault
+    @Override
+    public long getEstimatedFeeValue(long transactionFee) {
+        return getAssetIssuerManager().getEstimatedFeeValue(transactionFee);
+    }
+
+    //Implementara el metodo de la capa transaccional a traves del DealsWithAssetIssuing
+    @Override
+    public void IssueAsset(DigitalAsset digitalAsset) {
+        getAssetIssuerManager().IssueAsset(digitalAsset);
     }
 }
