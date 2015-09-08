@@ -34,7 +34,7 @@ import java.util.UUID;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IncomingMessageDataAccessObject</code> have
  * all methods implementation to access the data base (CRUD)
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 24/06/15.
  *
  * @version 1.0
@@ -66,6 +66,7 @@ public class IncomingMessageDataAccessObject {
 
     /**
      * Return the Database
+     *
      * @return Database
      */
     Database getDataBase() {
@@ -74,6 +75,7 @@ public class IncomingMessageDataAccessObject {
 
     /**
      * Return the DatabaseTable
+     *
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
@@ -83,13 +85,13 @@ public class IncomingMessageDataAccessObject {
     /**
      * Method that find an IncomingIntraUserNetworkServiceMessage by id in the data base.
      *
-     *  @param id Long id.
-     *  @return IncomingIntraUserNetworkServiceMessage found.
-     *  @throws CantReadRecordDataBaseException
+     * @param id Long id.
+     * @return IncomingIntraUserNetworkServiceMessage found.
+     * @throws CantReadRecordDataBaseException
      */
-    public IncomingIntraUserNetworkServiceMessage findById (String id) throws CantReadRecordDataBaseException {
+    public IncomingIntraUserNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException {
 
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
@@ -100,7 +102,7 @@ public class IncomingMessageDataAccessObject {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable incomingMessageTable =  getDatabaseTable();
+            DatabaseTable incomingMessageTable = getDatabaseTable();
             incomingMessageTable.setStringFilter(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
@@ -113,7 +115,7 @@ public class IncomingMessageDataAccessObject {
             /*
              * 3 - Convert into IncomingIntraUserNetworkServiceMessage objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 3.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
@@ -134,15 +136,17 @@ public class IncomingMessageDataAccessObject {
         }
 
         return incomingIntraUserNetworkServiceMessage;
-    };
+    }
+
+    ;
 
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All IncomingIntraUserNetworkServiceMessage.
-     *  @throws CantReadRecordDataBaseException
+     * @return All IncomingIntraUserNetworkServiceMessage.
+     * @throws CantReadRecordDataBaseException
      */
-    public List<IncomingIntraUserNetworkServiceMessage> findAll () throws CantReadRecordDataBaseException {
+    public List<IncomingIntraUserNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException {
 
 
         List<IncomingIntraUserNetworkServiceMessage> list = null;
@@ -152,7 +156,7 @@ public class IncomingMessageDataAccessObject {
             /*
              * 1 - load the data base to memory
              */
-            DatabaseTable networkIntraUserTable =  getDatabaseTable();
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
             networkIntraUserTable.loadToMemory();
 
             /*
@@ -169,7 +173,7 @@ public class IncomingMessageDataAccessObject {
             /*
              * 4 - Convert into IncomingIntraUserNetworkServiceMessage objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 4.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
@@ -199,22 +203,25 @@ public class IncomingMessageDataAccessObject {
          * return the list
          */
         return list;
-    };
+    }
+
+    ;
 
 
-    /** Method that list the all entities on the data base. The valid value of
+    /**
+     * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>IntraUserNetworkServiceDatabaseConstants</code>
      *
-     *  @see com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants
-     *  @return All IncomingIntraUserNetworkServiceMessage.
-     *  @throws CantReadRecordDataBaseException
+     * @return All IncomingIntraUserNetworkServiceMessage.
+     * @throws CantReadRecordDataBaseException
+     * @see com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants
      */
-    public List<IncomingIntraUserNetworkServiceMessage> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<IncomingIntraUserNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
-                    columnValue == null ||
-                        columnValue.isEmpty()){
+                columnValue == null ||
+                columnValue.isEmpty()) {
 
             throw new IllegalArgumentException("The filter are required, can not be null or empty");
         }
@@ -227,7 +234,7 @@ public class IncomingMessageDataAccessObject {
             /*
              * 1 - load the data base to memory with filters
              */
-            DatabaseTable networkIntraUserTable =  getDatabaseTable();
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
             networkIntraUserTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             networkIntraUserTable.loadToMemory();
 
@@ -245,7 +252,7 @@ public class IncomingMessageDataAccessObject {
             /*
              * 4 - Convert into IncomingIntraUserNetworkServiceMessage objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 4.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
@@ -275,21 +282,23 @@ public class IncomingMessageDataAccessObject {
          * return the list
          */
         return list;
-    };
+    }
+
+    ;
 
 
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>IntraUserNetworkServiceDatabaseConstants</code>
      *
-     *  @see com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants
-     *  @return All IncomingIntraUserNetworkServiceMessage.
-     *  @throws CantReadRecordDataBaseException
+     * @return All IncomingIntraUserNetworkServiceMessage.
+     * @throws CantReadRecordDataBaseException
+     * @see com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants
      */
-    public List<IncomingIntraUserNetworkServiceMessage> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<IncomingIntraUserNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
-                filters.isEmpty()){
+                filters.isEmpty()) {
 
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
@@ -304,9 +313,9 @@ public class IncomingMessageDataAccessObject {
             /*
              * 1- Prepare the filters
              */
-            DatabaseTable networkIntraUserTable =  getDatabaseTable();
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
 
-            for (String key: filters.keySet()){
+            for (String key : filters.keySet()) {
 
                 DatabaseTableFilter newFilter = networkIntraUserTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
@@ -337,7 +346,7 @@ public class IncomingMessageDataAccessObject {
             /*
              * 5 - Convert into IncomingIntraUserNetworkServiceMessage objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 5.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
@@ -367,17 +376,19 @@ public class IncomingMessageDataAccessObject {
          * return the list
          */
         return list;
-    };
+    }
+
+    ;
 
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param entity IncomingIntraUserNetworkServiceMessage to create.
-     *  @throws CantInsertRecordDataBaseException
+     * @param entity IncomingIntraUserNetworkServiceMessage to create.
+     * @throws CantInsertRecordDataBaseException
      */
-    public void create (IncomingIntraUserNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
+    public void create(IncomingIntraUserNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
 
-        if (entity == null){
+        if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
@@ -412,12 +423,12 @@ public class IncomingMessageDataAccessObject {
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity IncomingIntraUserNetworkServiceMessage to update.
-     *  @throws CantUpdateRecordDataBaseException
+     * @param entity IncomingIntraUserNetworkServiceMessage to update.
+     * @throws CantUpdateRecordDataBaseException
      */
     public void update(IncomingIntraUserNetworkServiceMessage entity) throws CantUpdateRecordDataBaseException {
 
-        if (entity == null){
+        if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
@@ -450,12 +461,12 @@ public class IncomingMessageDataAccessObject {
     /**
      * Method that delete a entity in the data base.
      *
-     *  @param id Long id.
-     *  @throws CantDeleteRecordDataBaseException
+     * @param id Long id.
+     * @throws CantDeleteRecordDataBaseException
      */
-    public void delete (Long id)  throws CantDeleteRecordDataBaseException{
+    public void delete(Long id) throws CantDeleteRecordDataBaseException {
 
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("The id is required can not be null");
         }
 
@@ -486,25 +497,24 @@ public class IncomingMessageDataAccessObject {
 
 
     /**
-     *
      * @param record with values from the table
      * @return IncomingIntraUserNetworkServiceMessage setters the values from table
      */
-    private IncomingIntraUserNetworkServiceMessage constructFrom(DatabaseTableRecord record){
+    private IncomingIntraUserNetworkServiceMessage constructFrom(DatabaseTableRecord record) {
 
         IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = new IncomingIntraUserNetworkServiceMessage();
 
         try {
-
             incomingIntraUserNetworkServiceMessage.setId(record.getLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME));
             incomingIntraUserNetworkServiceMessage.setSender(UUID.fromString(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME)));
-            incomingIntraUserNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));;
+            incomingIntraUserNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));
+            ;
             incomingIntraUserNetworkServiceMessage.setTextContent(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
             incomingIntraUserNetworkServiceMessage.setMessageType(MessagesTypes.getByCode(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME)));
             incomingIntraUserNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-            incomingIntraUserNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));;
+            incomingIntraUserNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
+            ;
             incomingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.getByCode(record.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
-
         } catch (InvalidParameterException e) {
 
             //this should not happen, but if it happens return null
@@ -521,7 +531,7 @@ public class IncomingMessageDataAccessObject {
      * @param incomingIntraUserNetworkServiceMessage the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage){
+    private DatabaseTableRecord constructFrom(IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage) {
 
         /*
          * Create the record to the entity
@@ -531,15 +541,14 @@ public class IncomingMessageDataAccessObject {
         /*
          * Set the entity values
          */
-        entityRecord.setLongValue  (com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME,                 incomingIntraUserNetworkServiceMessage.getId());
-        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          incomingIntraUserNetworkServiceMessage.getSender().toString());
-        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME,        incomingIntraUserNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME,       incomingIntraUserNetworkServiceMessage.getTextContent());
-        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME,               incomingIntraUserNetworkServiceMessage.getMessageType().getCode());
-        entityRecord.setLongValue  (com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getShippingTimestamp().getTime());
-        entityRecord.setLongValue  (com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME,             incomingIntraUserNetworkServiceMessage.getStatus().getCode());
-
+        entityRecord.setLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getId());
+        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getSender().toString());
+        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getReceiver().toString());
+        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getTextContent());
+        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getMessageType().getCode());
+        entityRecord.setLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getShippingTimestamp().getTime());
+        entityRecord.setLongValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getDeliveryTimestamp().getTime());
+        entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getStatus().getCode());
         /*
          * return the new table record
          */
