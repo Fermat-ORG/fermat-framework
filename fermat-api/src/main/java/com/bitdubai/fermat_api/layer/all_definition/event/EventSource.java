@@ -11,6 +11,7 @@ public enum EventSource {
     COMMUNICATION_CLOUD_PLUGIN ("CCL"),
     NETWORK_SERVICE_TEMPLATE_PLUGIN ("NTP"),
     NETWORK_SERVICE_INTRA_USER_PLUGIN ("NIU"),
+    NETWORK_SERVICE_CRYPTO_TRANSMISSION ("NCT"),
     NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN ("NWR"),
     NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN ("NWC"),
     MIDDLEWARE_APP_RUNTIME_PLUGIN ("MAR"),
@@ -26,7 +27,8 @@ public enum EventSource {
     DISCOUNT_WALLET_BASIC_WALLET_PLUGIN ("DWB"),
     DEVICE_CONNECTIVITY ("DCO"),
     CRYPTO_ROUTER ("CCR"),
-    CRYPTO_VAULT ("CCV");
+    CRYPTO_VAULT ("CCV"),
+    INCOMING_EXTRA_USER("IEU");
 
 
     private final String code;
@@ -50,6 +52,8 @@ public enum EventSource {
                 return EventSource.NETWORK_SERVICE_INTRA_USER_PLUGIN;
             case "NWR":
                 return EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN;
+            case "NCT":
+                return EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION;
             case "NWC":
                 return EventSource.NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN;
             case "MAR":
@@ -80,6 +84,9 @@ public enum EventSource {
                 return EventSource.CRYPTO_ROUTER;
             case "CCV":
                 return EventSource.CRYPTO_VAULT;
+            case "IEU":{
+                return INCOMING_EXTRA_USER;
+            }
             //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
 

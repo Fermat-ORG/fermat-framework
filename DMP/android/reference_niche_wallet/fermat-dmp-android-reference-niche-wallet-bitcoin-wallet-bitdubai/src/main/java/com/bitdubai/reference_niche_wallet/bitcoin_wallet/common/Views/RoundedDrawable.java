@@ -1,8 +1,5 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views;
 
-/**
- * Created by ronner on 10/08/15.
- */
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -17,8 +14,11 @@ import android.view.View;
 
 /**
  * A Drawable that draws an oval with given {@link Bitmap}
+ *
+ * Created by ronner on 10/08/15.
  */
 public class RoundedDrawable extends Drawable {
+
     private final Bitmap mBitmap;
     private final Paint mPaint;
     private final RectF mRectF;
@@ -39,7 +39,7 @@ public class RoundedDrawable extends Drawable {
 
         // NOTE: we assume bitmap is properly scaled to current density
         mBitmapWidth = mBitmap.getWidth();
-        mBitmapHeight =mBitmap.getHeight();
+        mBitmapHeight = mBitmap.getHeight();
 
         mWidth = view.getWidth();
         mHeight = view.getHeight();
@@ -47,8 +47,7 @@ public class RoundedDrawable extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
-        //canvas.drawOval(mRectF, mPaint);
-        canvas.drawCircle(mWidth/2,mHeight/2,mWidth/2,mPaint);
+        canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth / 2, mPaint);
     }
 
     @Override

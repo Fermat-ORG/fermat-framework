@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.intra_user.IntraUserSubsystem;
+import com.bitdubai.fermat_core.layer.dmp_module.notification.NotificationSubSystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_factory.WalletFactorySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_publisher.WalletPublisherSubsystem;
@@ -31,6 +32,8 @@ public class ModuleLayer implements PlatformLayer {
 
     Plugin mWalletStore;
 
+    Plugin mNotification;
+
     @Override
     public void start() throws CantStartLayerException {
 
@@ -45,6 +48,8 @@ public class ModuleLayer implements PlatformLayer {
         mWalletRuntime = getPlugin(new WalletRuntimeSubsystem());
 
         mWalletStore = getPlugin(new WalletStoreSubsystem());
+
+        mNotification = getPlugin(new NotificationSubSystem());
 
     }
 
@@ -79,5 +84,9 @@ public class ModuleLayer implements PlatformLayer {
 
     public Plugin getWalletStore() {
         return mWalletStore;
+    }
+
+    public Plugin getNotification() {
+        return mNotification;
     }
 }

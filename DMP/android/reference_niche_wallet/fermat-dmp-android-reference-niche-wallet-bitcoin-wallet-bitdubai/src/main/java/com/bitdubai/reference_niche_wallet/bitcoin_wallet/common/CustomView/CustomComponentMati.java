@@ -240,7 +240,6 @@ public class CustomComponentMati extends LinearLayout implements Animation.Anima
         Bitmap imageBitmap = null;
             Drawable drawableImage = null;
             if(image!=null){
-                //drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
                 imageBitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
                 imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);
             }else{

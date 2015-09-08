@@ -5,9 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
@@ -43,7 +41,7 @@ public class StopTest {
     @Mock
     private BitcoinWalletManager mockBitcoinWalletManager;
     @Mock
-    private WalletAddressBookManager mockWalletAddressBookManager;
+    private CryptoAddressBookManager mockCryptoAddressBookManager;
 
     private MockErrorManager mockErrorManager = new MockErrorManager();
 
@@ -60,7 +58,7 @@ public class StopTest {
     @Test
     public void Stop_AgentStops_TheThreadIsStoppedInmediately() throws Exception{
 
-        testRelayAgent = new IncomingExtraUserRelayAgent(mockBitcoinWalletManager, mockActorAddressBookManager, mockErrorManager, testRegistry, mockWalletAddressBookManager);
+        testRelayAgent = new IncomingExtraUserRelayAgent(mockBitcoinWalletManager, mockActorAddressBookManager, mockErrorManager, testRegistry, mockCryptoAddressBookManager);
 
         testRelayAgent.start();
         Thread.sleep(100);

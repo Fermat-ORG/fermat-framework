@@ -7,26 +7,12 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 /**
  * Created by loui on 20/02/15.
  */
-public class IncomingCryptoIdentifiedFromExtraUserEvent implements PlatformEvent {
-    private EventType eventType;
-    private EventSource eventSource;
+public class IncomingCryptoIdentifiedFromExtraUserEvent extends AbstractPlatformEvent {
 
-    public IncomingCryptoIdentifiedFromExtraUserEvent(EventType eventType){
-        this.eventType = eventType;
+      public IncomingCryptoIdentifiedFromExtraUserEvent(EventType eventType) {
+        super(eventType);
     }
 
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
 
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
 
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
-    }
 }

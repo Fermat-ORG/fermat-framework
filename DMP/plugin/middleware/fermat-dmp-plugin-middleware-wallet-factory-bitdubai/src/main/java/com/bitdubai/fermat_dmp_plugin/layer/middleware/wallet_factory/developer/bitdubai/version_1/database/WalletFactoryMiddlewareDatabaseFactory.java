@@ -47,7 +47,7 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
@@ -79,8 +79,11 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
 
             table.addIndex(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FIRST_KEY_COLUMN);
 
@@ -89,7 +92,8 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+            /**
              * Create skin table.
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.SKIN_TABLE_NAME);
@@ -105,7 +109,9 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create language table.
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_TABLE_NAME);
@@ -121,7 +127,9 @@ public class WalletFactoryMiddlewareDatabaseFactory implements DealsWithPluginDa
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create navigation_structure table.
              */
             table = databaseFactory.newTableFactory(ownerId, WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_TABLE_NAME);

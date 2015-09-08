@@ -102,7 +102,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
 
 
     @Override
-    public void send(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException {
+    public void send(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException {
         /*
          * TODO: Create a class fir tge selection of the correct wallet
          *       We will have as parameter the walletPublicKey and walletType
@@ -123,7 +123,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
             if (cryptoAmount > funds) {
                 throw new InsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
             }
-            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
         } catch (InsufficientFundsException exception) {
             throw exception;
         } catch (CantInitializeDaoException e) {

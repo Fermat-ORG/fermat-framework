@@ -23,8 +23,10 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.D
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.DealsWithAssetsVault;
+import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
@@ -90,8 +92,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.DealsWithExtraUsers;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.DealsWithExtraUsers;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_core.layer.dmp_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer.dmp_transaction.TransactionLayer;
@@ -105,10 +107,7 @@ import com.bitdubai.fermat_core.layer.pip_user.UserLayer;
 import com.bitdubai.fermat_core.layer.pip_license.LicenseLayer;
 import com.bitdubai.fermat_core.layer.dmp_world.WorldLayer;
 import com.bitdubai.fermat_core.layer.cry_crypto_network.CryptoNetworkLayer;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.CryptoNetworks;
 import com.bitdubai.fermat_core.layer.cry_cypto_vault.CryptoVaultLayer;
 import com.bitdubai.fermat_core.layer.cry_crypto_module.CryptoLayer;
@@ -650,7 +649,7 @@ public class Platform implements Serializable {
              * -------------------------------
              */
             Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
-            injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_USER_EXTRA_USER);
+            injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
 
              /*
              * Plugin Intra User PIP
@@ -669,19 +668,11 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(cryptoNetwork, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
 
             /*
-             *  Plugin Wallet Address Book Crypto  *
+             *  Plugin Crypto Address Book         *
              * ------------------------------------*
              */
-            Plugin walletAddressBookCrypto = ((CryptoLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_LAYER)).getmWalletAddressBook();
-            injectPluginReferencesAndStart(walletAddressBookCrypto, Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO);
-
-            /*
-             *  Plugin Actor Address Book Crypto
-             * ------------------------------
-             */
-            Plugin actorAddressBookCrypto = ((CryptoLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_LAYER)).getmUserAddressBook();
-            injectPluginReferencesAndStart(actorAddressBookCrypto, Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO);
-
+            Plugin cryptoAddressBookCrypto = ((CryptoLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_LAYER)).getCryptoAddressBook();
+            injectPluginReferencesAndStart(cryptoAddressBookCrypto, Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK);
 
             /*
              * Plugin Bank Notes Network Service
@@ -812,6 +803,13 @@ public class Platform implements Serializable {
             Plugin walletStoreModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getWalletStore();
             injectPluginReferencesAndStart(walletStoreModule, Plugins.BITDUBAI_WALLET_STORE_MODULE);
 
+            /**
+             *
+             * Plugin notification
+             *
+             */
+            Plugin notification = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getNotification();
+            injectPluginReferencesAndStart(notification, Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION);
 
               /*
              * Plugin Wallet Navigation Structure Middleware
@@ -1073,6 +1071,8 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
 
+
+
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
             LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
@@ -1085,22 +1085,17 @@ public class Platform implements Serializable {
      * Method that inject all references to another plugin that required a
      * plugin to work
      *
-     * @param plugin
-     * @param descriptor
+     * @param plugin whom I'll start
+     * @param descriptor descriptor of this plugin
      */
     private void injectPluginReferencesAndStart(Plugin plugin, Plugins descriptor) {
 
         /*
-         * Get the errorm manager instance
+         * Get the error manager instance
          */
         ErrorManager errorManager = (ErrorManager) corePlatformContext.getAddon(Addons.ERROR_MANAGER);
 
         try {
-
-            if (plugin instanceof DealsWithActorAddressBook) {
-                ((DealsWithActorAddressBook) plugin).setActorAddressBookManager((ActorAddressBookManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO));
-            }
-
             if (plugin instanceof DealsWithBitcoinWallet) {
                 ((DealsWithBitcoinWallet) plugin).setBitcoinWalletManager((BitcoinWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET));
             }
@@ -1130,7 +1125,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithExtraUsers) {
-                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_USER_EXTRA_USER));
+                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_EXTRA_USER));
             }
 
             if (plugin instanceof DealsWithLogger) {
@@ -1157,8 +1152,8 @@ public class Platform implements Serializable {
                 ((DealsWithToolManager) plugin).setToolManager((ToolManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
             }
 
-            if (plugin instanceof DealsWithWalletAddressBook) {
-                ((DealsWithWalletAddressBook) plugin).setWalletAddressBookManager((WalletAddressBookManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO));
+            if (plugin instanceof DealsWithCryptoAddressBook) {
+                ((DealsWithCryptoAddressBook) plugin).setCryptoAddressBookManager((CryptoAddressBookManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK));
             }
 
             if (plugin instanceof DealsWithWalletContacts) {
@@ -1245,6 +1240,7 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithWalletSettings) {
                 ((DealsWithWalletSettings) plugin).setWalletSettingsManager((WalletSettingsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE));
             }
+
 
 
 

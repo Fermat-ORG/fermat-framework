@@ -13,12 +13,12 @@ import java.util.List;
 public interface IntraUserIdentityManager {
 
     /**
-     * The method <code>getIntraUsersFromCurrentDeviceUser</code> will give us a list of all the intra users associated to the actual Device User logged in
+     * The method <code>getAllIntraUsersFromCurrentDeviceUser</code> will give us a list of all the intra users associated to the actual Device User logged in
      *
      * @return the list of intra users associated to the current logged in Device User.
      * @throws CantGetUserIntraUserIdentitiesException
      */
-    List<IntraUserIdentity> getIntraUsersFromCurrentDeviceUser() throws CantGetUserIntraUserIdentitiesException;
+    List<IntraUserIdentity> getAllIntraUsersFromCurrentDeviceUser() throws CantGetUserIntraUserIdentitiesException;
 
     /**
      * The method <code>createNewIntraUser</code> creates a new Developer Identity for the logged in Device User and returns the
@@ -30,5 +30,7 @@ public interface IntraUserIdentityManager {
      * @throws CantCreateNewIntraUserException
      */
     IntraUserIdentity createNewIntraUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserException;
+
+
 
 }

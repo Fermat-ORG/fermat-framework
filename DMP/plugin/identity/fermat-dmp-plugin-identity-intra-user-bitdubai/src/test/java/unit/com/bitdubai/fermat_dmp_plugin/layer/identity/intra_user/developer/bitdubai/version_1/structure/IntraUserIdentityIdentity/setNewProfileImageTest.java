@@ -3,7 +3,7 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSingIntraUserMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSignIntraUserMessageException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -46,7 +46,7 @@ public class setNewProfileImageTest extends TestCase {
     }
 
     @Test
-    public void setNewProfileImageTest() throws CantSingIntraUserMessageException, CantSetNewProfileImageException, CantShowProfileImageException {
+    public void setNewProfileImageTest() throws CantSignIntraUserMessageException, CantSetNewProfileImageException, CantShowProfileImageException {
         byte[] ProfileImage = new byte[10];
 
         ECCKeyPair eccKeyPair = new ECCKeyPair();
