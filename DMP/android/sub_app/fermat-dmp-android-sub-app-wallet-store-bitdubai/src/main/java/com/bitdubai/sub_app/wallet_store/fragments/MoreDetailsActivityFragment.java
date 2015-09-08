@@ -1,6 +1,10 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
 
+import android.app.ActionBar;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -57,6 +61,15 @@ public class MoreDetailsActivityFragment extends FermatFragment {
         final WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
         final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
 
+        ActionBar actionBar = getActivity().getActionBar();
+        if(actionBar != null){
+            int color = getResources().getColor(R.color.wallet_store_activities_background);
+            actionBar.setBackgroundDrawable(new ColorDrawable(color));
+            actionBar.setTitle(catalogItem.getWalletName());
+            if(!actionBar.isShowing()) {
+                actionBar.show();
+            }
+        }
 
         FermatTextView elevatorPitch = (FermatTextView) layout.findViewById(R.id.elevator_pitch);
         elevatorPitch.setText("Elevator Pitch de la Wallet.\nElevetor Pitch de la Wallet Linea 2.");
