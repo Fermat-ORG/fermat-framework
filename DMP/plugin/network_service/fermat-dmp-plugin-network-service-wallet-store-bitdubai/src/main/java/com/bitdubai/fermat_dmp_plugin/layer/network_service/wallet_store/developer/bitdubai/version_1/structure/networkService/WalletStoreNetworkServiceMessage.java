@@ -68,15 +68,15 @@ public class WalletStoreNetworkServiceMessage implements Message, Serializable {
     /**
      * Constructor
      */
-    public WalletStoreNetworkServiceMessage(){
+    public WalletStoreNetworkServiceMessage() {
         super();
         this.deliveryTimestamp = null;
-        this.id           = null;
-        this.receiver     = null;
-        this.sender       = null;
-        this.shippingTimestamp = new Timestamp(System.currentTimeMillis())  ;
-        this.status       = null;
-        this.textContent  = null;
+        this.id = null;
+        this.receiver = null;
+        this.sender = null;
+        this.shippingTimestamp = new Timestamp(System.currentTimeMillis());
+        this.status = null;
+        this.textContent = null;
         this.messageType = null;
     }
 
@@ -86,12 +86,12 @@ public class WalletStoreNetworkServiceMessage implements Message, Serializable {
     public WalletStoreNetworkServiceMessage(Timestamp deliveryTimestamp, Long id, UUID receiver, UUID sender, Timestamp shippingTimestamp, MessagesStatus status, String textContent, MessagesTypes messageType) {
         super();
         this.deliveryTimestamp = deliveryTimestamp;
-        this.id           = id;
-        this.receiver     = receiver;
-        this.sender       = sender;
+        this.id = id;
+        this.receiver = receiver;
+        this.sender = sender;
         this.shippingTimestamp = shippingTimestamp;
-        this.status       = status;
-        this.textContent  = textContent;
+        this.status = status;
+        this.textContent = textContent;
         this.messageType = messageType;
     }
 
@@ -197,10 +197,11 @@ public class WalletStoreNetworkServiceMessage implements Message, Serializable {
 
     /**
      * (non-Javadoc)
+     *
      * @see Message#toJson()
      */
     @Override
-    public String toJson(){
+    public String toJson() {
 
         Gson gson = new Gson();
         return gson.toJson(this);
@@ -208,10 +209,11 @@ public class WalletStoreNetworkServiceMessage implements Message, Serializable {
 
     /**
      * (non-Javadoc)
+     *
      * @see Message#fromJson(String)
      */
     @Override
-    public WalletStoreNetworkServiceMessage fromJson(String json){
+    public WalletStoreNetworkServiceMessage fromJson(String json) {
 
         Gson gson = new Gson();
         return gson.fromJson(json, WalletStoreNetworkServiceMessage.class);
@@ -230,7 +232,7 @@ public class WalletStoreNetworkServiceMessage implements Message, Serializable {
     /**
      * Get the textContent
      *
-     * @return  the textContent
+     * @return the textContent
      */
     @Override
     public String getTextContent() {
@@ -258,6 +260,7 @@ public class WalletStoreNetworkServiceMessage implements Message, Serializable {
 
     /**
      * Set the type message
+     *
      * @param messageType the type message
      */
     public void setMessageType(MessagesTypes messageType) {
@@ -276,6 +279,7 @@ public class WalletStoreNetworkServiceMessage implements Message, Serializable {
 
     /**
      * Set the signature message
+     *
      * @param signature of the message
      */
     public void setSignature(String signature) {

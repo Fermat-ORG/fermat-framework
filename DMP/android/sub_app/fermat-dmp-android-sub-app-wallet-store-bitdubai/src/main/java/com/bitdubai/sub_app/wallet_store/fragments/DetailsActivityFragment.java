@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
 
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,13 +16,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorker;
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorkerCallback;
-import com.bitdubai.sub_app.wallet_store.common.UtilsFuncs;
+import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.common.workers.UninstallWalletWorker;
@@ -31,14 +31,12 @@ import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 import static android.support.v7.widget.LinearLayoutManager.HORIZONTAL;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.DEVELOPER_NAME;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.LANGUAGE_ID;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.PREVIEW_IMGS;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.SKIN_ID;
-import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.WALLET_VERSION;
 
 
 /**
@@ -54,6 +52,8 @@ public class DetailsActivityFragment extends FermatFragment {
     private WalletStoreModuleManager moduleManager;
 
     private ErrorManager errorManager;
+
+    private ExecutorService executor;
 
 
     /**
@@ -80,7 +80,7 @@ public class DetailsActivityFragment extends FermatFragment {
 
         ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
         final WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
-        String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
+        final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
 
 
         FermatTextView developerName = (FermatTextView) rootView.findViewById(R.id.wallet_developer_name);
@@ -115,7 +115,16 @@ public class DetailsActivityFragment extends FermatFragment {
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "To MoreDetailActivity", Toast.LENGTH_SHORT).show();
+                final MoreDetailsActivityFragment fragment = MoreDetailsActivityFragment.newInstance();
+                fragment.setSubAppsSession(subAppsSession);
+                fragment.setSubAppSettings(subAppSettings);
+                fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
+
+                final FragmentTransaction FT = getActivity().getFragmentManager().beginTransaction();
+                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                FT.replace(R.id.activity_container, fragment);
+                FT.addToBackStack(null);
+                FT.commit();
             }
         });
 
@@ -132,7 +141,10 @@ public class DetailsActivityFragment extends FermatFragment {
 
                 InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(getActivity(), errorManager);
                 InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, subAppsSession);
-                installWalletWorker.run();
+                if (executor != null)
+                    executor.shutdownNow();
+                executor = null;
+                executor = installWalletWorker.execute();
             }
         });
 
@@ -149,7 +161,10 @@ public class DetailsActivityFragment extends FermatFragment {
                     UninstallWalletWorkerCallback callback = new UninstallWalletWorkerCallback(getActivity(), errorManager);
                     UUID catalogueId = catalogItem.getId();
                     UninstallWalletWorker installWalletWorker = new UninstallWalletWorker(getActivity(), callback, moduleManager, catalogueId);
-                    installWalletWorker.run();
+                    if (executor != null)
+                        executor.shutdownNow();
+                    executor = null;
+                    executor = installWalletWorker.execute();
                 }
             });
         }

@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletWalletModulePluginRoot;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletWalletModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletCryptoModulePluginRoot;
 
 import org.junit.Test;
 
@@ -25,8 +25,8 @@ public class GetClassesFullPathTest {
     @Test
     public void generateClassesTree() throws ClassNotFoundException, FermatException {
 
-        List<Class<?>> classes = find(CryptoWalletWalletModulePluginRoot.class.getPackage().getName());
-        CryptoWalletWalletModulePluginRoot root = new CryptoWalletWalletModulePluginRoot();
+        List<Class<?>> classes = find(CryptoWalletCryptoModulePluginRoot.class.getPackage().getName());
+        CryptoWalletCryptoModulePluginRoot root = new CryptoWalletCryptoModulePluginRoot();
         for (String myClass : root.getClassesFullPath()) {
             /**
              * True if it exists

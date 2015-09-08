@@ -5,10 +5,9 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 
 import junit.framework.TestCase;
 
@@ -29,22 +28,16 @@ import static org.mockito.Mockito.doThrow;
 public class UpdateWalletContactTest extends TestCase {
 
     /**
-     * DealsWithActorAddressBook interface Mocked
-     */
-    @Mock
-    ActorAddressBookManager actorAddressBookManager;
-
-    /**
      * DealsWithErrors interface Mocked
      */
     @Mock
     ErrorManager errorManager;
 
     /**
-     * DealsWithWalletAddressBook interface Mocked
+     * DealsWithCryptoAddressBook interface Mocked
      */
     @Mock
-    WalletAddressBookManager walletAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithWalletContacts interface Mocked
@@ -60,7 +53,7 @@ public class UpdateWalletContactTest extends TestCase {
     CryptoAddress receivedCryptoAddress;
     String actorName;
 
-    WalletModuleCryptoWallet walletModuleCryptoWallet;
+    CryptoWalletWalletModuleManager walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
@@ -68,10 +61,9 @@ public class UpdateWalletContactTest extends TestCase {
         contactId = UUID.randomUUID();
         receivedCryptoAddress = new CryptoAddress("asdasdasd", CryptoCurrency.BITCOIN);
         actorName = "Vigo Mortensen";
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
-        walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
+        walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setErrorManager(errorManager);
-        walletModuleCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
+        walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
         walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
         walletModuleCryptoWallet.initialize();
     }

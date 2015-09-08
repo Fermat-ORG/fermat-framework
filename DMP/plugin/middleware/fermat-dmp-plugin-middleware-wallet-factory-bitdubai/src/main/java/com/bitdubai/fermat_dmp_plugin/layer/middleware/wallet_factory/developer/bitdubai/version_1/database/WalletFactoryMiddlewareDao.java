@@ -521,26 +521,39 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         WalletFactoryProject walletFactoryProject = getEmptyWalletFactoryProject();
         walletFactoryProject.setProjectPublickKey(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME));
         walletFactoryProject.setName(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME));
-        walletFactoryProject.setDescription(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME));
-        walletFactoryProject.setProjectState(WalletFactoryProjectState.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME)));
-        try {
-            walletFactoryProject.setWalletType(WalletType.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME)));
-        } catch (InvalidParameterException e) {
-            // If I couldn't get the walletType I will define it Reference and continue
-            walletFactoryProject.setWalletType(WalletType.REFERENCE);
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME) != null)
+            walletFactoryProject.setDescription(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME));
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME) != null)
+            walletFactoryProject.setProjectState(WalletFactoryProjectState.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME)));
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME) != null){
+            try {
+                walletFactoryProject.setWalletType(WalletType.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME)));
+            } catch (InvalidParameterException e) {
+                // If I couldn't get the walletType I will define it Reference and continue
+                walletFactoryProject.setWalletType(WalletType.REFERENCE);
+            }
         }
 
-        try {
-            walletFactoryProject.setWalletCategory(WalletCategory.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME)));
-        } catch (InvalidParameterException e) {
-            walletFactoryProject.setWalletCategory(WalletCategory.REFERENCE_WALLET);
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME) != null){
+            try {
+                walletFactoryProject.setWalletCategory(WalletCategory.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME)));
+            } catch (InvalidParameterException e) {
+                walletFactoryProject.setWalletCategory(WalletCategory.REFERENCE_WALLET);
+            }
         }
 
-        walletFactoryProject.setFactoryProjectType(FactoryProjectType.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME)));
-
-        walletFactoryProject.setCreationTimestamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME)));
-        walletFactoryProject.setLastModificationTimeststamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME)));
-        walletFactoryProject.setSize(projectsRecord.getIntegerValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME));
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME) != null)
+            try {
+                walletFactoryProject.setFactoryProjectType(FactoryProjectType.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME)));
+            } catch (InvalidParameterException e) {
+                walletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
+            }
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME) != null)
+            walletFactoryProject.setCreationTimestamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME)));
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME) != null)
+            walletFactoryProject.setLastModificationTimeststamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME)));
+        if (projectsRecord.getIntegerValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME) != null)
+            walletFactoryProject.setSize(projectsRecord.getIntegerValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME));
 
         return walletFactoryProject;
     }
@@ -551,54 +564,60 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      * @throws CantLoadTableToMemoryException
      * @throws DatabaseOperationException
      */
-    public List<WalletFactoryProject> getWalletFactoryProjects (DatabaseTableFilter filter) throws CantLoadTableToMemoryException, DatabaseOperationException {
-        List<WalletFactoryProject> walletFactoryProjects = new ArrayList<>();
+    public List<WalletFactoryProject> getWalletFactoryProjects (DatabaseTableFilter filter) throws DatabaseOperationException {
+        Database database= null;
+        try{
+            database = openDatabase();
 
-        // I will add the WalletFactoryProject header information from the database
-        for (DatabaseTableRecord projectsRecord : getWalletFactoryProjectsData(filter)){
-            WalletFactoryProject walletFactoryProject = getWalletFactoryProjectHeader (projectsRecord);
+            List<WalletFactoryProject> walletFactoryProjects = new ArrayList<>();
 
-            // I will add the Skin information from database
-            List<Skin> skins = new ArrayList<>();
-            for (DatabaseTableRecord skinRecords : getSkinsData (walletFactoryProject.getProjectPublicKey())){
-                Skin skin = new Skin();
-                skin.setId(skinRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME));
-                boolean isDefaultSkin = Boolean.valueOf(skinRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_DEFAULT_COLUMN_NAME));
-                if (isDefaultSkin)
-                    walletFactoryProject.setDefaultSkin(skin);
-                else
-                    skins.add(skin);
+            // I will add the WalletFactoryProject header information from the database
+            for (DatabaseTableRecord projectsRecord : getWalletFactoryProjectsData(filter)){
+                WalletFactoryProject walletFactoryProject = getWalletFactoryProjectHeader (projectsRecord);
+
+                // I will add the Skin information from database
+                List<Skin> skins = new ArrayList<>();
+                for (DatabaseTableRecord skinRecords : getSkinsData (walletFactoryProject.getProjectPublicKey())){
+                    Skin skin = new Skin();
+                    skin.setId(skinRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME));
+                    boolean isDefaultSkin = Boolean.valueOf(skinRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_DEFAULT_COLUMN_NAME));
+                    if (isDefaultSkin)
+                        walletFactoryProject.setDefaultSkin(skin);
+                    else
+                        skins.add(skin);
+                }
+                walletFactoryProject.setSkins(skins);
+
+                // I will add the language information from database
+                List<Language> languages = new ArrayList<>();
+                for (DatabaseTableRecord languageRecords : getLanguagesData(walletFactoryProject.getProjectPublicKey())){
+                    Language language = new Language();
+                    language.setId(languageRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME));
+                    boolean isDefaultLanguage = Boolean.valueOf(languageRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_DEFAULT_COLUMN_NAME));
+                    if (isDefaultLanguage)
+                        walletFactoryProject.setDefaultLanguage(language);
+                    else
+                        languages.add(language);
+                }
+                walletFactoryProject.setLanguages(languages);
+
+                // I will add the navigation structure information from the database
+                DatabaseTableRecord navigationStructureRecord = getNavigationStructureData(walletFactoryProject.getProjectPublicKey());
+                if (navigationStructureRecord != null){
+                    WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
+                    navigationStructure.setPublicKey(navigationStructureRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME));
+                    walletFactoryProject.setNavigationStructure(navigationStructure);
+                }
+
+                // At this point I have all the info from the database, I will add it to the list I will be returning.
+                walletFactoryProjects.add(walletFactoryProject);
             }
-            walletFactoryProject.setSkins(skins);
-
-            // I will add the language information from database
-            List<Language> languages = new ArrayList<>();
-            for (DatabaseTableRecord languageRecords : getLanguagesData(walletFactoryProject.getProjectPublicKey())){
-                Language language = new Language();
-                language.setId(languageRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME));
-                boolean isDefaultLanguage = Boolean.valueOf(languageRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_DEFAULT_COLUMN_NAME));
-                if (isDefaultLanguage)
-                    walletFactoryProject.setDefaultLanguage(language);
-                else
-                    languages.add(language);
-            }
-            walletFactoryProject.setLanguages(languages);
-
-            // I will add the navigation structure information from the database
-            DatabaseTableRecord navigationStructureRecord = getNavigationStructureData(walletFactoryProject.getProjectPublicKey());
-            if (navigationStructureRecord != null){
-                WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
-                navigationStructure.setPublicKey(navigationStructureRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME));
-                walletFactoryProject.setNavigationStructure(navigationStructure);
-            }
-
-            // At this point I have all the info from the database, I will add it to the list I will be returning.
-            walletFactoryProjects.add(walletFactoryProject);
+            database.closeDatabase();
+            return walletFactoryProjects;
+        } catch (Exception e){
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get projects from the database with filter: " + filter.toString(), null);
         }
-
-        return walletFactoryProjects;
     }
-
-
-
 }

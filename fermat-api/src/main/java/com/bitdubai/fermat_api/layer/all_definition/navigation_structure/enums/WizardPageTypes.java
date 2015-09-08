@@ -6,10 +6,15 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
  * @author Francisco Vásquez
  * @version 1.0
  */
+@SuppressWarnings("SpellCheckingInspection")
 public enum WizardPageTypes {
 
     CWP_WALLET_FACTORY_CREATE_STEP_1("CWFCS1"),
-    CWP_WALLET_FACTORY_CREATE_STEP_2("CWFCS2");
+    CWP_WALLET_FACTORY_CREATE_STEP_2("CWFCS2"),
+
+    CWP_WALLET_PUBLISHER_PUBLISH_STEP_1("CWPPS1"),
+    CWP_WALLET_PUBLISHER_PUBLISH_STEP_2("CWPPS2"),
+    CWP_WALLET_PUBLISHER_PUBLISH_STEP_3("CWPPS3");
 
     private String code;
 
@@ -31,6 +36,12 @@ public enum WizardPageTypes {
                 return WizardPageTypes.CWP_WALLET_FACTORY_CREATE_STEP_1;
             case "CWFCS2":
                 return WizardPageTypes.CWP_WALLET_FACTORY_CREATE_STEP_2;
+            case "CWPPS1":
+                return WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_1;
+            case "CWPPS2":
+                return WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_2;
+            case "CWPPS3":
+                return WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_3;
             default:
                 break;
         }

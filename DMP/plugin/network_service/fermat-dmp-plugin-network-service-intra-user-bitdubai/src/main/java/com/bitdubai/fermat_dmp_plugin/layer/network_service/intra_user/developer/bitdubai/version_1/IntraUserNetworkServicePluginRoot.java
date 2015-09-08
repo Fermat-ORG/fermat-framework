@@ -10,9 +10,18 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
@@ -37,9 +46,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserEstablishedRequestedNetworkServiceConnectionHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IntraUserNetworkServiceCommunicationManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
@@ -62,7 +71,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, Plugin {
+public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDevelopers, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, IntraUserManager,NetworkService, Service, Plugin {
 
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
@@ -107,7 +116,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     /**
      * Holds the intraUserNetworkServiceManagersCache
      */
-    private Map<UUID, IntraUserNetworkServiceManager>  intraUserNetworkServiceManagersCache;
+    private Map<UUID, IntraUserNetworkServiceCommunicationManager>  intraUserNetworkServiceManagersCache;
 
     /**
      * Represent the dataBase
@@ -128,75 +137,42 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         this.intraUserNetworkServiceManagersCache = new HashMap<>();
     }
 
+
     /**
-     * Initialize the event listener and configure
+     * DatabaseManagerForDevelopers Interface implementation.
      */
-    private void initializeListener(IntraUserNetworkServiceManager intraUserNetworkServiceManager){
 
-        /*
-         * Listen and handle incoming network service connection request event
-         */
-        EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
-        eventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
 
-        /*
-         * Listen and handle established network service connection event
-         */
-        eventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
-        eventListener.setEventHandler(new IntraUserEstablishedRequestedNetworkServiceConnectionHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+
+        IntraUserNetworkServiceDeveloperDatabaseFactory dbFactory = new IntraUserNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+
+
     }
 
-    /**
-     * This method initialize the database
-     *
-     * @throws CantInitializeNetworkIntraUserDataBaseException
-     */
-    private void initializeDb() throws CantInitializeNetworkIntraUserDataBaseException {
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        IntraUserNetworkServiceDeveloperDatabaseFactory dbFactory = new IntraUserNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+
         try {
-            /*
-             * Open new database connection
-             */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COINAPULT_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-        } catch (DatabaseNotFoundException e) {
-
-            /*
-             * The database no exist may be the first time the plugin is running on this device,
-             * We need to create the new database
-             */
-            IntraUserNetworkServiceDatabaseFactory intraUserNetworkServiceDatabaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                /*
-                 * We create the new database
-                 */
-                this.dataBase = intraUserNetworkServiceDatabaseFactory.createDatabase(pluginId);
-
-            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-            }
+            IntraUserNetworkServiceDeveloperDatabaseFactory dbFactory = new IntraUserNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeNetworkIntraUserDataBaseException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
-
+        // If we are here the database could not be opened, so we return an empry list
+        return new ArrayList<>();
     }
+
+
 
     /**
      * Service Interface implementation.
@@ -213,7 +189,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 /*
                  * Create a new key pair for this execution
                  */
-                eccKeyPair = new ECCKeyPair();
+               // eccKeyPair = new ECCKeyPair();
 
                 /*
                  * Initialize the data base
@@ -443,12 +419,12 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      * @param pluginClientId the plugin client id
      * @return IntraUserNetworkServiceManager the intra user network service manager
      */
-    public IntraUserNetworkServiceManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
+    public IntraUserNetworkServiceCommunicationManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
 
         /*
          * Create a new instance
          */
-        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
+        IntraUserNetworkServiceCommunicationManager manager = new IntraUserNetworkServiceCommunicationManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
@@ -473,7 +449,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      * @param pluginClientId
      * @return IntraUserNetworkServiceManager
      */
-    public IntraUserNetworkServiceManager getIntraUserNetworkServiceManager(UUID pluginClientId){
+    public IntraUserNetworkServiceCommunicationManager getIntraUserNetworkServiceManager(UUID pluginClientId){
 
         return  intraUserNetworkServiceManagersCache.get(pluginClientId);
     }
@@ -488,13 +464,28 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     }
 
     @Override
-    public List<IntraUser> getIntraUsersSuggestions() throws ErrorSearchingSuggestionsException {
+    public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException {
         return null;
     }
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) {
+    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedInName, String intraUserToAddPublicKey, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException {
+      try
+      {
+          //Save request
 
+          //fire event to intra user
+          UUID requestId = UUID.randomUUID();
+          getIntraUserNetworkServiceDao().saveAskIntraUserForAcceptanceRequest(requestId,intraUserLoggedInPublicKey, intraUserLoggedInName,  intraUserToAddPublicKey,  myProfileImage);
+      }
+      catch (CantExecuteDatabaseOperationException e)
+      {
+            throw new ErrorAskIntraUserForAcceptanceException("ERROR ASK INTRAUSER FOR ACCEPTANCE",e,"","Error to save record on database");
+      }
+      catch (Exception e)
+      {
+          throw new ErrorAskIntraUserForAcceptanceException("ERROR ASK INTRAUSER FOR ACCEPTANCE",e, "", "Generic Exception");
+      }
     }
 
     @Override
@@ -525,5 +516,81 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     @Override
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) {
 
+    }
+
+    /**
+     * Initialize the event listener and configure
+     */
+    private void initializeListener(IntraUserNetworkServiceCommunicationManager intraUserNetworkServiceManager){
+
+        /*
+         * Listen and handle incoming network service connection request event
+         */
+        EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
+        eventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        /*
+         * Listen and handle established network service connection event
+         */
+        eventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
+        eventListener.setEventHandler(new IntraUserEstablishedRequestedNetworkServiceConnectionHandler(this));
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+    }
+
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeNetworkIntraUserDataBaseException
+     */
+    private void initializeDb() throws CantInitializeNetworkIntraUserDataBaseException {
+        try {
+            /*
+             * Open new database connection
+             */
+
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase.closeDatabase();
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            IntraUserNetworkServiceDatabaseFactory intraUserNetworkServiceDatabaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.dataBase = intraUserNetworkServiceDatabaseFactory.createDatabase(pluginId);
+                this.dataBase.closeDatabase();
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
+    }
+
+    private IntraUserNetworkServiceDao getIntraUserNetworkServiceDao() throws CantExecuteDatabaseOperationException {
+        IntraUserNetworkServiceDao intraUserNetworkServiceDao = new IntraUserNetworkServiceDao(pluginDatabaseSystem, pluginId);
+        return intraUserNetworkServiceDao;
     }
 }

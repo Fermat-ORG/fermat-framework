@@ -19,17 +19,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NewNetworkServiceMessageReceivedEvent implements PlatformEvent {
-
-    /**
-     *  Represent the eventType
-     */
-    private EventType eventType;
-
-    /**
-     *  Represent the eventSource
-     */
-    private EventSource eventSource;
+public class NewNetworkServiceMessageReceivedEvent extends AbstractPlatformEvent {
 
     /**
      *  Represent the data
@@ -42,50 +32,9 @@ public class NewNetworkServiceMessageReceivedEvent implements PlatformEvent {
      * @param eventType type of the event
      */
     public NewNetworkServiceMessageReceivedEvent(EventType eventType){
-        this.eventType = eventType;
+        super(eventType);
     }
 
-    /**
-     * Constructor with parameters
-     *
-     * @param eventSource the event source
-     * @param eventType   the event type
-     */
-    public NewNetworkServiceMessageReceivedEvent(EventSource eventSource, EventType eventType) {
-
-        this.eventSource = eventSource;
-        this.eventType   = eventType;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#getEventType()
-     */
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#setSource(EventSource)
-     */
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#getSource()
-     */
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
-    }
 
     /**
      * Return the data object that contains message received

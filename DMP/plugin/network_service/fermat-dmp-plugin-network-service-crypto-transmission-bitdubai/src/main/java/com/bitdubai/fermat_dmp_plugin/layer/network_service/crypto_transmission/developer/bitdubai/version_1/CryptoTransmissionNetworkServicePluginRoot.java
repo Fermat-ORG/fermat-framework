@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.MoneyReceivedEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +27,7 @@ import java.util.UUID;
  * Created by natalia on 01/08/2015
  */
 
-public class CryptoTransmissionNetworkServicePluginRoot implements Service, NetworkService, MoneyNetworkServiceManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class CryptoTransmissionNetworkServicePluginRoot implements Service, NetworkService, MoneyNetworkServiceManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.
@@ -37,7 +39,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
-
+    ErrorManager errorManager;
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -48,17 +50,17 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
      */
     UUID pluginId;
 
-    
+
     /**
      * MoneyPluginRoot Interface implementation.
      */
 
-    public void sendMoney(){
+    public void sendMoney() {
 
 
     }
 
-    private void moneyReceived(){
+    private void moneyReceived() {
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
         ((MoneyReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
@@ -71,36 +73,27 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
      */
 
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
         /**
          * I will initialize the handling of platform events.
          */
-
         EventListener eventListener;
         EventHandler eventHandler;
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
-
-
         /**
          * I will remove all the event listeners registered with the event manager.
          */
@@ -108,10 +101,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
         for (EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }
-
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -126,11 +117,10 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
 
     @Override
     public UUID getId() {
-        return null;
+        return this.pluginId;
     }
-    
 
-    
+
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -151,14 +141,13 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
 
 
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
-
 
     /**
      * DealsWithPluginIdentity methods implementation.
@@ -168,7 +157,6 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
 
 
 }
