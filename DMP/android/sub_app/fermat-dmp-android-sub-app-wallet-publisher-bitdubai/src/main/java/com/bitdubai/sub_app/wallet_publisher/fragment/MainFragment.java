@@ -6,6 +6,7 @@
  */
 package com.bitdubai.sub_app.wallet_publisher.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,8 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
@@ -70,6 +73,8 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     private ArrayList<WalletFactoryProject> projects;
     private WalletFactoryProject project;
 
+    private ProgressDialog dialog;
+
     /**
      * Factory instance method
      *
@@ -94,14 +99,55 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
              */
             walletPublisherModuleManager = ((WalletPublisherSubAppSession) subAppsSession).getWalletPublisherManager();
             /*Getting WFP */
-            projects = (ArrayList<WalletFactoryProject>) walletPublisherModuleManager.getProjectsReadyToPublish();
+            //projects = (ArrayList<WalletFactoryProject>) walletPublisherModuleManager.getProjectsReadyToPublish();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
         //// TODO: 01/09/15  remove this block
+        /*
         if (projects == null || projects.size() == 0)
             projects = getFakesProjects();
+            */
         CommonLogger.debug(TAG, String.format("Initial Projects ready to publish %d", projects != null ? projects.size() : 0));
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (dialog != null)
+            dialog.dismiss();
+        dialog = null;
+        dialog = new ProgressDialog(getActivity());
+        dialog.setTitle("Loading Projects Available to Publish");
+        dialog.setMessage("Please wait...");
+        dialog.show();
+        new FermatWorker(getActivity(), new FermatWorkerCallBack() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onPostExecute(Object... result) {
+                if (isAttached) {
+                    dialog.dismiss();
+                    dialog = null;
+                    if (adapter != null)
+                        adapter.changeDataSet((ArrayList<WalletFactoryProject>) result[0]);
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                if (isAttached) {
+                    dialog.dismiss();
+                    dialog = null;
+                    Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }) {
+
+            @Override
+            protected Object doInBackground() throws Exception {
+                return walletPublisherModuleManager.getProjectsReadyToPublish();
+            }
+        }.execute();
     }
 
     /**
