@@ -31,3 +31,6 @@ por plugin AssetDistribution.
 == Events
 
 == Implementation Details
+Tendremos las siguientes interfaces:
+*AssetIssuer: Implementara todas la propiedades necesarias para que el usuario desde la UI, pueda pasar los valores al objeto y dicha informacion sera persistida en la base de datos.
+*AssetIssuerManager: Implementata los metodos para el manejo y comportamiento del Plugging, estos metodos son los siguientes:
