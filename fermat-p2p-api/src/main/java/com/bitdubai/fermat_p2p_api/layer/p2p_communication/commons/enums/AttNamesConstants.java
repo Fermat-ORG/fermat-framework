@@ -19,7 +19,7 @@ public class AttNamesConstants {
     /**
      * Represent the value of HEADER_ATT_NAME_TI
      */
-    public static final String HEADER_ATT_NAME_TI = "temp-i";
+    public static final String HEADER_ATT_NAME_TI = "tmp-i";
 
     /**
      * Represent the value of JSON_ATT_NAME_IDENTITY
@@ -29,5 +29,16 @@ public class AttNamesConstants {
     /**
      * Represent the value of JSON_ATT_NAME_SERVER_IDENTITY
      */
-    public static final String JSON_ATT_NAME_SERVER_IDENTITY = "serv-i";
+    public static final String JSON_ATT_NAME_SERVER_IDENTITY = "srv-i";
+
+    /**
+     * Represent the value of JSON_ATT_NAME_COMPONENT_TYPE
+     */
+    public static final String JSON_ATT_NAME_COMPONENT_TYPE = "comp-type";
+
+    /**
+     * Represent the value of JSON_ATT_NAME_COMPONENT_TYPE
+     */
+    public static final String JSON_ATT_NAME_NETWORK_SERVICE_TYPE = "ns-type";
+
 }

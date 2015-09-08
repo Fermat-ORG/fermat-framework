@@ -63,11 +63,6 @@ public class FermatPacketCommunication implements FermatPacket, Serializable {
 	private String signature;
 
     /**
-     * Represent the networkServices
-     */
-    private NetworkServiceType networkServiceType;
-
-    /**
      * Constructor
      */
     public FermatPacketCommunication() {
@@ -77,7 +72,6 @@ public class FermatPacketCommunication implements FermatPacket, Serializable {
         this.fermatPacketType = null;
         this.messageContent = null;
         this.signature = null;
-        this.networkServiceType = null;
     }
 
     /**
@@ -88,16 +82,14 @@ public class FermatPacketCommunication implements FermatPacket, Serializable {
      * @param fermatPacketType
      * @param messageContent
      * @param signature
-     * @param networkServiceType
      */
-    public FermatPacketCommunication(String destination, String sender, FermatPacketType fermatPacketType, String messageContent, String signature, NetworkServiceType networkServiceType) {
+    public FermatPacketCommunication(String destination, String sender, FermatPacketType fermatPacketType, String messageContent, String signature) {
         this.id = UUID.randomUUID();
         this.destination = destination;
         this.sender = sender;
         this.fermatPacketType = fermatPacketType;
         this.messageContent = messageContent;
         this.signature = signature;
-        this.networkServiceType = networkServiceType;
     }
 
     /**
@@ -183,24 +175,6 @@ public class FermatPacketCommunication implements FermatPacket, Serializable {
 
     /**
      * (non-Javadoc)
-     * @see FermatPacket#getNetworkServiceType()
-     */
-    @Override
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
-
-    /**
-     * Set the  Network Service Type
-     *
-     * @param networkServicesType
-     */
-    public void setNetworkServiceType(NetworkServiceType networkServicesType) {
-        this.networkServiceType = networkServicesType;
-    }
-
-    /**
-     * (non-Javadoc)
      * @see FermatPacket#getMessageContent()
      */
     @Override
@@ -253,8 +227,7 @@ public class FermatPacketCommunication implements FermatPacket, Serializable {
                 Objects.equals(getDestination(), that.getDestination()) &&
                 Objects.equals(getFermatPacketType(), that.getFermatPacketType()) &&
                 Objects.equals(getMessageContent(), that.getMessageContent()) &&
-                Objects.equals(getSignature(), that.getSignature()) &&
-                Objects.equals(getNetworkServiceType(), that.getNetworkServiceType());
+                Objects.equals(getSignature(), that.getSignature());
     }
 
     /**
@@ -263,7 +236,7 @@ public class FermatPacketCommunication implements FermatPacket, Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSender(), getDestination(), getFermatPacketType(), getMessageContent(), getSignature(), getNetworkServiceType());
+        return Objects.hash(getId(), getSender(), getDestination(), getFermatPacketType(), getMessageContent(), getSignature());
     }
 
     /**
@@ -278,8 +251,7 @@ public class FermatPacketCommunication implements FermatPacket, Serializable {
                 ", sender='" + sender + '\'' +
                 ", fermatPacketType=" + fermatPacketType +
                 ", messageContent=" + messageContent +
-                ", signature='" + signature + '\'' +
-                ", networkServiceType=" + networkServiceType +
+                ", signature='" + signature +
                 '}';
     }
 }

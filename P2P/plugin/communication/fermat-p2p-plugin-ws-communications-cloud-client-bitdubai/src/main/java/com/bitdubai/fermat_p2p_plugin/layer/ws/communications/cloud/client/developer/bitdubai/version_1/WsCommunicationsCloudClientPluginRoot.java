@@ -15,7 +15,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClient;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -23,11 +30,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
-import org.java_websocket.drafts.Draft;
-import org.java_websocket.drafts.Draft_17;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +54,22 @@ import java.util.regex.Pattern;
  */
 public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
+
+    /**
+     * Represent the WS_PROTOCOL
+     */
+    private static final String WS_PROTOCOL = "ws://";
+
+    /**
+     * Represent the DEFAULT_PORT
+     */
+    private static final int DEFAULT_PORT = 9090;
+
+    /**
+     * Represent the SERVER_IP
+     */
+    private static final String SERVER_IP = "192.168.43.206";// "192.168.0.7";
+
     /**
      * Represents the value of DISABLE_CLIENT
      */
@@ -59,11 +79,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Represents the value of ENABLE_CLIENT
      */
     public static final Boolean ENABLE_CLIENT = Boolean.FALSE;
-
-    /**
-     * Represents the numbers of the port that the services is listening
-     */
-    private static final int LISTENING_PORT = 9090;
 
     /**
      * Represent the status of this service
@@ -97,9 +112,14 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     private ExecutorService executorService;
 
     /**
-     * Represent the disableServerFlag
+     * Represent the disableClientFlag
      */
-    private Boolean disableServerFlag;
+    private Boolean disableClientFlag;
+
+    /**
+     * Represent the wsCommunicationsCloudClientConnection
+     */
+    private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
 
     /**
@@ -107,7 +127,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
-        this.disableServerFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
+        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
     }
 
     /**
@@ -120,23 +140,65 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
         try {
 
-            if (disableServerFlag) {
+            if (disableClientFlag) {
                 System.out.println("WsCommunicationsCloudClientPluginRoot - Local Client is Disable, no started");
                 return;
             }
 
             System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
 
-            WebSocketImpl.DEBUG = true;
+            WebSocketImpl.DEBUG = false;
 
-            Draft draft = new Draft_17();
-            URI uri = new URI("ws://192.168.0.7:9090/");
-            WsCommunicationsCloudClient wsCommunicationsCloudClient = WsCommunicationsCloudClient.constructWsCommunicationsCloudClientFactory(uri, draft);
-            wsCommunicationsCloudClient.connect();
+            URI uri = new URI(WsCommunicationsCloudClientPluginRoot.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.DEFAULT_PORT);
 
+          /*  Draft draft = new Draft_17();
+            WsCommunicationsCloudClientChannel wsCommunicationsCloudClientChannel = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, draft);
+            wsCommunicationsCloudClientChannel.registerFermatPacketProcessorServerSideObject(new ServerHandshakeRespondPacketProcessor());
+            wsCommunicationsCloudClientChannel.registerFermatPacketProcessorServerSideObject(new ServerHandshakeRespondPacketProcessor());
+            wsCommunicationsCloudClientChannel.registerFermatPacketProcessorServerSideObject(new RequestListComponentRegisterPacketProcessor());
+            wsCommunicationsCloudClientChannel.registerFermatPacketProcessorServerSideObject(new MessageTransmitPacketProcessor());
+            wsCommunicationsCloudClientChannel.connect(); */
+
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri);
+            wsCommunicationsCloudClientConnection.initializeAndConnect();
+
+              new Thread(new Runnable() {
+
+                boolean continuar = Boolean.TRUE;
+
+                @Override
+                public void run() {
+
+                    while (continuar){
+
+                        if (wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().isRegister()){
+
+                          //  wsCommunicationsCloudClientConnection.requestListComponentRegistered(wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getPlatformComponentProfile());
+
+
+                            FermatMessage fermatMessage = null;
+                            try {
+                                fermatMessage = FermatMessageCommunicationFactory.constructFermatMessageEncryptedAndSinged( wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(), wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getServerIdentity(), "PRUEBA MSJ", FermatMessageContentType.TEXT, wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+                            } catch (FMPException e) {
+                                e.printStackTrace();
+                            }
+
+                            wsCommunicationsCloudClientConnection.sendMessage(fermatMessage);
+
+                            continuar = Boolean.FALSE;
+                        }
+                    }
+
+                    if (!continuar){
+                        return;
+                    }
+
+                }
+            }).start();
 
         } catch (Exception e) {
             e.printStackTrace();
+            wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().close();
             throw new RuntimeException(e);
         }
 
@@ -320,16 +382,16 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      *
      * @return Boolean
      */
-    public Boolean getDisableServerFlag() {
-        return disableServerFlag;
+    public Boolean getDisableClientFlag() {
+        return disableClientFlag;
     }
 
     /**
      * Set Disable Server Flag
      *
-     * @param disableServerFlag
+     * @param disableClientFlag
      */
-    public void setDisableServerFlag(Boolean disableServerFlag) {
-        this.disableServerFlag = disableServerFlag;
+    public void setDisableClientFlag(Boolean disableClientFlag) {
+        this.disableClientFlag = disableClientFlag;
     }
 }

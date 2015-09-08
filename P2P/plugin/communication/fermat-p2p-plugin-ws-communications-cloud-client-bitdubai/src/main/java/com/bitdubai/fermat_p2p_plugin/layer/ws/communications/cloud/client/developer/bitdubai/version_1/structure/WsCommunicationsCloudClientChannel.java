@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
@@ -19,22 +20,21 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
-import java.nio.channels.NotYetConnectedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClient</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WsCommunicationsCloudClient extends WebSocketClient {
+public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
     /**
      * Represent the value of DEFAULT_CONNECTION_TIMEOUT
@@ -57,6 +57,11 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
     private String serverIdentity;
 
     /**
+     * Represent the platformComponentProfile
+     */
+    private PlatformComponentProfile platformComponentProfile;
+
+    /**
      * Holds the packet processors objects
      */
     private Map<FermatPacketType, List<FermatPacketProcessor>> packetProcessorsRegister;
@@ -74,21 +79,22 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
      * @param headers
      * @param connectTimeout
      */
-    private WsCommunicationsCloudClient(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity) {
+    private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity) {
         super(serverUri, draft, headers, connectTimeout);
         this.clientIdentity = new ECCKeyPair();
         this.temporalIdentity = temporalIdentity;
+        this.packetProcessorsRegister = new ConcurrentHashMap<>();
         isRegister = Boolean.FALSE;
     }
 
     /**
-     * Factory method to create new instance of WsCommunicationsCloudClient
+     * Factory method to create new instance of WsCommunicationsCloudClientChannel
      *
      * @param serverUri
      * @param draft
-     * @return WsCommunicationsCloudClient instance
+     * @return WsCommunicationsCloudClientChannel instance
      */
-    public static WsCommunicationsCloudClient constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft){
+    public static WsCommunicationsCloudClientChannel constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft){
 
         /*
          * Create a new temporal identity
@@ -114,7 +120,7 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
         /*
          * Construct the instance with the required parameters
          */
-        return new WsCommunicationsCloudClient(serverUri, draft, headers, WsCommunicationsCloudClient.DEFAULT_CONNECTION_TIMEOUT, tempIdentity);
+        return new WsCommunicationsCloudClientChannel(serverUri, draft, headers, WsCommunicationsCloudClientChannel.DEFAULT_CONNECTION_TIMEOUT, tempIdentity);
     }
 
     /**
@@ -124,7 +130,7 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handShakeData) {
 
-        System.out.println(" WsCommunicationsCloudClient - Starting method onOpen");
+        System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
         System.out.print("Server hand Shake Data = " + handShakeData);
     }
 
@@ -135,8 +141,8 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
 
-        System.out.println(" WsCommunicationsCloudClient - Starting method onMessage(String)");
-        System.out.println(" WsCommunicationsCloudClient - message " + message);
+        System.out.println(" WsCommunicationsCloudClientChannel - Starting method onMessage(String)");
+        System.out.println(" WsCommunicationsCloudClientChannel - message " + message);
 
         FermatPacket fermatPacket = null;
 
@@ -149,6 +155,7 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
              * Decode the message with the temporal identity
              */
             fermatPacket = FermatPacketDecoder.decode(message, temporalIdentity.getPrivateKey());
+            System.out.println(" WsCommunicationsCloudClientChannel - decode message " + FermatPacketDecoder.decode(message, temporalIdentity.getPrivateKey()));
 
         }else {
 
@@ -156,6 +163,7 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
              * Decode the message with the client identity
              */
             fermatPacket = FermatPacketDecoder.decode(message, clientIdentity.getPrivateKey());
+            System.out.println(" WsCommunicationsCloudClientChannel - decode message " + FermatPacketDecoder.decode(message, clientIdentity.getPrivateKey()));
         }
 
         /*
@@ -163,9 +171,9 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
          */
         for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacket.getFermatPacketType())) {
 
-            /*
-             * Processor make his job
-             */
+        /*
+         * Processor make his job
+         */
             fermatPacketProcessor.processingPackage(fermatPacket);
         }
 
@@ -177,8 +185,10 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
      */
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println(" WsCommunicationsCloudClient - Starting method onClose");
-
+        System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
+        System.out.println(" code   = " + code);
+        System.out.println(" reason = " + reason);
+        System.out.println(" remote = " + remote);
     }
 
     /**
@@ -187,8 +197,9 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
      */
     @Override
     public void onError(Exception ex) {
-        System.out.println(" WsCommunicationsCloudClient - Starting method onError");
+        System.out.println(" WsCommunicationsCloudClientChannel - Starting method onError");
         ex.printStackTrace();
+        getConnection().close();
     }
 
     /**
@@ -200,7 +211,7 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
         /*
          * Set server reference
          */
-        fermatPacketProcessor.setWsCommunicationsCloudClient(this);
+        fermatPacketProcessor.setWsCommunicationsCloudClientChannel(this);
 
         //Validate if a previous list created
         if (packetProcessorsRegister.containsKey(fermatPacketProcessor.getFermatPacketType())){
@@ -257,5 +268,46 @@ public class WsCommunicationsCloudClient extends WebSocketClient {
      */
     public void setServerIdentity(String serverIdentity) {
         this.serverIdentity = serverIdentity;
+    }
+
+    /**
+     * Clean all packet processors registered
+     */
+    public void cleanPacketProcessorsRegistered(){
+        packetProcessorsRegister.clear();
+    }
+
+
+    /**
+     * Get the PlatformComponentProfile
+     *
+     * @return PlatformComponentProfile
+     */
+    public PlatformComponentProfile getPlatformComponentProfile() {
+        return platformComponentProfile;
+    }
+
+    /**
+     * Set the PlatformComponentProfile
+     * @param platformComponentProfile
+     */
+    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
+        this.platformComponentProfile = platformComponentProfile;
+    }
+
+    /**
+     * Get the isRegister value
+     * @return boolean
+     */
+    public boolean isRegister() {
+        return isRegister;
+    }
+
+    /**
+     * Set the isRegister
+     * @param isRegister
+     */
+    public void setIsRegister(boolean isRegister) {
+        this.isRegister = isRegister;
     }
 }

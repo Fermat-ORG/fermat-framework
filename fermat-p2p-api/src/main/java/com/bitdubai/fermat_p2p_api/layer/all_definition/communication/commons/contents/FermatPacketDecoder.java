@@ -8,7 +8,6 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.c
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder</code> is
@@ -30,21 +29,15 @@ public class FermatPacketDecoder {
      */
     public static FermatPacket decode(String fermatPacketEncode, String privateKey)  {
 
-        try {
+        /*
+        * Decode the string into a json string representation
+        */
+        String fermatPacketJsonDecode = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketEncode, privateKey);
 
-            /*
-            * Decode the string into a json string representation
-            */
-            String fermatPacketJsonDecode = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketEncode, privateKey);
-
-            /**
-             * Construct the fermat packet object with the decode json string
-             */
-            return  FermatPacketCommunicationFactory.constructFermatPacketFromJsonString(fermatPacketJsonDecode);
-
-        } catch (FMPException e) {
-            throw new RuntimeException(e);
-        }
+        /**
+         * Construct the fermat packet object with the decode json string
+         */
+        return  FermatPacketCommunicationFactory.constructFermatPacketFromJsonString(fermatPacketJsonDecode);
 
     }
 }

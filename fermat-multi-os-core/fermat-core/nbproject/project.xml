@@ -362,15 +362,15 @@
                 <package>com.bitdubai.fermat_pip_addon.layer._4_hardware.local_device.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fermat_pip_addon.layer._4_hardware.remote_device.remote_device.developer.bitdubai</package>
                 <package>com.bitdubai.fermat_pip_addon.layer._4_hardware.remote_device.remote_device.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai.version_1.structure</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1.structure</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.intra_user.developer.bitdubai</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.intra_user.developer.bitdubai.version_1</package>
-                <package>com.bitdubai.fermat_pip_addon.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.device_user.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.device_user.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.device_user.developer.bitdubai.version_1.structure</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.extra_user.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.extra_user.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.extra_user.developer.bitdubai.version_1.structure</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.intra_user.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.intra_user.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.identityPublicKey.intra_user.developer.bitdubai.version_1.event_handlers</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.exceptions</package>
@@ -526,8 +526,8 @@
                 <binary-origin>release/modules/ext/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-identity-intra-user-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-identity-intra-user-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-identityPublicKey-intra-user-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-identityPublicKey-intra-user-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-p2p-plugin-communication-cloud-server-bitdubai-1.6.1.jar</runtime-relative-path>
@@ -614,8 +614,8 @@
                 <binary-origin>release/modules/ext/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai-1.1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-identity-extra-user-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-identity-extra-user-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-identityPublicKey-extra-user-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-identityPublicKey-extra-user-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-dmp-plugin-module-wallet-factory-bitdubai-1.0.jar</runtime-relative-path>

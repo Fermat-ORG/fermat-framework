@@ -537,8 +537,8 @@
                 <binary-origin>release/modules/ext/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-identity-intra-user-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-identity-intra-user-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-identityPublicKey-intra-user-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-identityPublicKey-intra-user-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-p2p-plugin-communication-cloud-server-bitdubai-1.6.1.jar</runtime-relative-path>
@@ -625,8 +625,8 @@
                 <binary-origin>release/modules/ext/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai-1.1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/fermat-dmp-plugin-identity-extra-user-bitdubai-1.0.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/fermat-dmp-plugin-identity-extra-user-bitdubai-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/fermat-dmp-plugin-identityPublicKey-extra-user-bitdubai-1.0.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/fermat-dmp-plugin-identityPublicKey-extra-user-bitdubai-1.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/fermat-dmp-plugin-module-wallet-factory-bitdubai-1.0.jar</runtime-relative-path>

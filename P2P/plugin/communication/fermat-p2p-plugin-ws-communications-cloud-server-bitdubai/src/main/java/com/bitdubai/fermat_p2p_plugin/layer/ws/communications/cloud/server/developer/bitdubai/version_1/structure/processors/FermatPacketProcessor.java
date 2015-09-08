@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
@@ -49,7 +50,7 @@ public abstract class FermatPacketProcessor {
     /**
      * Method that contain the logic to process the packet
      */
-    public abstract void processingPackage(WebSocket clientConnection, FermatPacket fermatPacket);
+    public abstract void processingPackage(final WebSocket clientConnection, final FermatPacket receiveFermatPacket, final ECCKeyPair serverIdentity);
 
     /**
      * Return the FermatPacketType that it processes

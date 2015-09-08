@@ -8,7 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClient;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel;
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.FermatPacketProcessor</code> define
@@ -23,31 +23,31 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 public abstract class FermatPacketProcessor {
 
     /**
-     * Represent the wsCommunicationsCloudClient
+     * Represent the wsCommunicationsCloudClientChannel
      */
-    private WsCommunicationsCloudClient wsCommunicationsCloudClient;
+    private WsCommunicationsCloudClientChannel wsCommunicationsCloudClientChannel;
 
     /**
-     * Get the WsCommunicationsCloudClient
+     * Get the WsCommunicationsCloudClientChannel
      *
-     * @return WsCommunicationsCloudClient
+     * @return WsCommunicationsCloudClientChannel
      */
-    protected WsCommunicationsCloudClient getWsCommunicationsCloudClient() {
-        return wsCommunicationsCloudClient;
+    protected WsCommunicationsCloudClientChannel getWsCommunicationsCloudClientChannel() {
+        return wsCommunicationsCloudClientChannel;
     }
 
     /**
-     * Set the WsCommunicationsCloudClient
-     * @param wsCommunicationsCloudClient
+     * Set the WsCommunicationsCloudClientChannel
+     * @param wsCommunicationsCloudClientChannel
      */
-    public void setWsCommunicationsCloudClient(WsCommunicationsCloudClient wsCommunicationsCloudClient) {
-        this.wsCommunicationsCloudClient = wsCommunicationsCloudClient;
+    public void setWsCommunicationsCloudClientChannel(WsCommunicationsCloudClientChannel wsCommunicationsCloudClientChannel) {
+        this.wsCommunicationsCloudClientChannel = wsCommunicationsCloudClientChannel;
     }
 
     /**
      * Method that contain the logic to process the packet
      */
-    public abstract void processingPackage(FermatPacket fermatPacket);
+    public abstract void processingPackage(final FermatPacket receiveFermatPacket);
 
     /**
      * Return the FermatPacketType that it processes

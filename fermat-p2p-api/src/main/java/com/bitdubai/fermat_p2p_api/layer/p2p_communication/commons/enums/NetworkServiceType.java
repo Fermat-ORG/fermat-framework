@@ -47,15 +47,6 @@ public enum NetworkServiceType {
     }
 
     /**
-     * (no-javadoc)
-     * @see Object#toString()
-     */
-    @Override
-    public String toString() {
-        return this.code;
-    }
-
-    /**
      * Return the NetworkServiceType represented by the code pass as parameter
      *
      * @param code

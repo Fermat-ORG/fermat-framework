@@ -17,6 +17,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.MessageTransmitPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -157,9 +160,13 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                              continue;
                          }
 
-                        WebSocketImpl.DEBUG = true;
+                        WebSocketImpl.DEBUG = false;
                         InetSocketAddress inetSocketAddress = new InetSocketAddress(address, WsCommunicationCloudServer.DEFAULT_PORT);
                         WsCommunicationCloudServer wsCommunicationCloudServer = new WsCommunicationCloudServer(inetSocketAddress);
+                        wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentRegistrationRequestPacketProcessor());
+                        wsCommunicationCloudServer.registerFermatPacketProcessor(new MessageTransmitPacketProcessor());
+                        wsCommunicationCloudServer.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
+
                         wsCommunicationCloudServer.start();
 
 

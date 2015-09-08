@@ -68,13 +68,6 @@ public interface FermatPacket {
 	public String getSignature();
 
     /**
-     * Get the network service type of the packet
-     *
-     * @return NetworkServiceType
-     */
-	public NetworkServiceType getNetworkServiceType();
-
-    /**
      * Convert this object to json string
      *
      * @return String json

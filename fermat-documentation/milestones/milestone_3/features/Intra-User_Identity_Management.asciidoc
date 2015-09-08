@@ -33,10 +33,10 @@
   * Es la interfaz gráfica que nos permite administrar las identidades Intra-User.
   * Es el punto de contacto con el usuario final.
   * Poseerá las actividades/fragmentos que sean necesarios para la administración de este tipo de identidad:
-    * Creación de Intra-User identity:
+    * Creación de Intra-User identityPublicKey:
       * Solicitará el ingreso de forma obligatoria de un valor para el alias del Intra-User.
       * Permitirá la carga opcional de una imagen para el Intra-User.
-    * Visualizacion de Intra-User identity:
+    * Visualizacion de Intra-User identityPublicKey:
       * Mostrará el alias y la imagen del Intra-User.
       * Permitirá desde aquí modificar la foto de perfil del Intra-User.
     * Lista de Intra-User identities:

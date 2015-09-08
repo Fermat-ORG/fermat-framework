@@ -10,12 +10,13 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.server.CommunicationCloudServer;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -57,14 +58,43 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     private Map<String, WebSocket> registeredClientConnectionsCache;
 
     /**
-     * Holds the identity of the server by client
+     * Holds the identity of the server by client the client connection hash
      */
     private Map<Integer, ECCKeyPair> serverIdentityByClientCache;
+
+    /**
+     * Holds the identity of the client by his connection hash
+     */
+    private Map<Integer, String> clientIdentityByClientConnectionCache;
 
     /**
      * Holds the packet processors objects
      */
     private Map<FermatPacketType, List<FermatPacketProcessor>> packetProcessorsRegister;
+
+
+    //TODO: THE REGISTERED COMPONENT WOULD BE HOLD IN DATA BASE AND NO IN MEMORY, FOR SEARCH IN FUTURE
+
+    /**
+     * Holds all the registered Communications Cloud Server by his client connection hash
+     */
+    private Map<Integer, PlatformComponentProfile> registeredCommunicationsCloudServerCache;
+
+    /**
+     * Holds all the registered Communications Cloud Client by his client connection hash
+     */
+    private Map<Integer, PlatformComponentProfile> registeredCommunicationsCloudClientCache;
+
+    /**
+     * Holds all the Platform Component Profile register by type
+     */
+    private Map<PlatformComponentType, Map<NetworkServiceType, List<PlatformComponentProfile>>> registeredPlatformComponentProfileCache;
+
+    /**
+     * Holds all FermatPacket the type MESSAGE_TRANSMIT
+     */
+    private List<FermatPacket> messagesCache;
+
 
     /**
      * Constructor with parameter
@@ -72,10 +102,15 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      */
     public WsCommunicationCloudServer(InetSocketAddress address) {
         super(address);
-        this.pendingRegisterClientConnectionsCache = new ConcurrentHashMap<>();
-        this.registeredClientConnectionsCache      = new ConcurrentHashMap<>();
-        this.serverIdentityByClientCache           = new ConcurrentHashMap<>();
-        this.packetProcessorsRegister = new ConcurrentHashMap<>();
+        this.pendingRegisterClientConnectionsCache    = new ConcurrentHashMap<>();
+        this.registeredClientConnectionsCache         = new ConcurrentHashMap<>();
+        this.serverIdentityByClientCache              = new ConcurrentHashMap<>();
+        this.clientIdentityByClientConnectionCache = new ConcurrentHashMap<>();
+        this.packetProcessorsRegister                 = new ConcurrentHashMap<>();
+        this.registeredCommunicationsCloudServerCache = new ConcurrentHashMap<>();
+        this.registeredCommunicationsCloudClientCache = new ConcurrentHashMap<>();
+        this.registeredPlatformComponentProfileCache  = new ConcurrentHashMap<>();
+        this.messagesCache                            = new ArrayList<>();
     }
 
     /**
@@ -97,7 +132,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                 handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI) != ""){
 
             /*
-             * Get the temporal identity of the CommunicationsCloudClient componet
+             * Get the temporal identity of the CommunicationsCloudClientConnection componet
              */
             JsonParser parser = new JsonParser();
             JsonObject temporalIdentity = parser.parse(handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI)).getAsJsonObject();
@@ -108,6 +143,11 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
              */
             ECCKeyPair serverIdentity = new ECCKeyPair();
 
+
+            System.out.println(" WsCommunicationCloudServer - private key for this connection = "+serverIdentity.getPrivateKey());
+            System.out.println(" WsCommunicationCloudServer - public key for this connection = "+serverIdentity.getPublicKey());
+
+
             /*
              * Get json representation for the serverIdentity
              */
@@ -117,7 +157,11 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
             /*
              * Construct a fermat packet whit the server identity
              */
-            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(temporalClientIdentity, serverIdentity.getPublicKey(), FermatPacketType.SERVER_HANDSHAKE_RESPOND, jsonObject.toString(), NetworkServiceType.UNDEFINED, serverIdentity.getPrivateKey());
+            FermatPacket fermatPacket = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(temporalClientIdentity,                   //Destination
+                                                                                                                 serverIdentity.getPublicKey(),            //Sender
+                                                                                                                 jsonObject.toString(),                    //Message Content
+                                                                                                                 FermatPacketType.SERVER_HANDSHAKE_RESPOND,//Packet type
+                                                                                                                 serverIdentity.getPrivateKey());          //Sender private key
 
             /*
              * Send the encode packet to the client
@@ -134,6 +178,11 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
              */
             serverIdentityByClientCache.put(clientConnection.hashCode(), serverIdentity);
 
+            /**
+             * Add to the cache of client identity for his client connection
+             */
+            clientIdentityByClientConnectionCache.put(clientConnection.hashCode(), temporalClientIdentity);
+
         }else {
 
             clientConnection.closeConnection(404, "DENIED, NOT VALID HANDSHAKE");
@@ -148,10 +197,10 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     public void onClose(WebSocket clientConnection, int code, String reason, boolean remote) {
 
         System.out.println(" WsCommunicationCloudServer - Starting method onClose");
-        System.out.println( clientConnection + " is disconnect!" );
-        System.out.println( " code   = "+code );
-        System.out.println( " reason = "+reason );
-        System.out.println( " remote = "+remote );
+        System.out.println(clientConnection + " is disconnect!");
+        System.out.println(" code   = " + code);
+        System.out.println(" reason = " + reason);
+        System.out.println(" remote = " + remote);
 
     }
 
@@ -163,8 +212,21 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     public void onMessage(WebSocket clientConnection, String message) {
 
         System.out.println(" WsCommunicationCloudServer - Starting method onMessage");
+        System.out.println(" WsCommunicationCloudServer - message = " + message);
+        System.out.println(" WsCommunicationCloudServer - server identity for this connection = " + serverIdentityByClientCache.get(clientConnection.hashCode()).getPrivateKey());
 
-        FermatPacket fermatPacket = FermatPacketDecoder.decode(message,serverIdentityByClientCache.get(clientConnection.hashCode()).getPrivateKey());
+        /*
+         * Get the server identity for this client connection
+         */
+        ECCKeyPair serverIdentity = serverIdentityByClientCache.get(clientConnection.hashCode());
+
+        /*
+         * Decode the message into a fermatPacket
+         */
+        FermatPacket fermatPacket = FermatPacketDecoder.decode(message, serverIdentity.getPrivateKey());
+
+        System.out.println(" WsCommunicationCloudServer - fermatPacket = "+fermatPacket);
+        System.out.println(" WsCommunicationCloudServer - fermatPacket.getFermatPacketType() = " + fermatPacket.getFermatPacketType());
 
         /*
          * Call the processors for this packet
@@ -174,7 +236,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
             /*
              * Processor make his job
              */
-            fermatPacketProcessor.processingPackage(clientConnection, fermatPacket);
+            fermatPacketProcessor.processingPackage(clientConnection, fermatPacket, serverIdentity);
         }
 
     }
@@ -188,7 +250,23 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" WsCommunicationCloudServer - Starting method onError");
         ex.printStackTrace();
-        clientConnection.closeConnection(505, "- ERROR -");
+
+        /*
+         * Clean all the caches, remove data bind whit this connection
+         */
+        pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+        registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+        serverIdentityByClientCache.remove(clientConnection.hashCode());
+        clientIdentityByClientConnectionCache.remove(clientConnection.hashCode());
+        registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
+        registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
+
+        //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
+
+        /*
+         * Close the connection
+         */
+        clientConnection.closeConnection(505, "- ERROR :"+ex.getLocalizedMessage());
     }
 
 
@@ -196,7 +274,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      * This method register a FermatPacketProcessor object with this
      * server
      */
-    public void registerFermatPacketProcessorServerSideObject(FermatPacketProcessor fermatPacketProcessor) {
+    public void registerFermatPacketProcessor(FermatPacketProcessor fermatPacketProcessor) {
 
         /*
          * Set server reference
@@ -225,8 +303,75 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
             packetProcessorsRegister.put(fermatPacketProcessor.getFermatPacketType(), fermatPacketProcessorList);
         }
 
+        System.out.println(" WsCommunicationCloudServer - packetProcessorsRegister = " + packetProcessorsRegister.size());
+
     }
 
+    /**
+     * Get the ClientIdentityByClientConnectionCache
+     *
+     * @return Map<Integer, String>
+     */
+    public Map<Integer, String> getClientIdentityByClientConnectionCache() {
+        return clientIdentityByClientConnectionCache;
+    }
 
+    /**
+     * Get the PendingRegisterClientConnectionsCache
+     *
+     * @return Map<String, WebSocket>
+     */
+    public Map<String, WebSocket> getPendingRegisterClientConnectionsCache() {
+        return pendingRegisterClientConnectionsCache;
+    }
 
+    /**
+     * Get the RegisteredClientConnectionsCache
+     *
+     * @return Map<String, WebSocket>
+     */
+    public Map<String, WebSocket> getRegisteredClientConnectionsCache() {
+        return registeredClientConnectionsCache;
+    }
+
+    /**
+     * Get the ServerIdentityByClientCache
+     * @return Map<Integer, ECCKeyPair>
+     */
+    public Map<Integer, ECCKeyPair> getServerIdentityByClientCache() {
+        return serverIdentityByClientCache;
+    }
+
+    /**
+     * Get the RegisteredPlatformComponentProfileCache
+     * @return Map<PlatformComponentType, Map<NetworkServiceType, List<PlatformComponentProfile>>>
+     */
+    public Map<PlatformComponentType, Map<NetworkServiceType, List<PlatformComponentProfile>>> getRegisteredPlatformComponentProfileCache() {
+        return registeredPlatformComponentProfileCache;
+    }
+
+    /**
+     * Get the RegisteredCommunicationsCloudServerCache
+     * @return Map<Integer, PlatformComponentProfile>
+     */
+    public Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudServerCache() {
+        return registeredCommunicationsCloudServerCache;
+    }
+
+    /**
+     * Get the RegisteredCommunicationsCloudClientCache
+     * @return Map<Integer, PlatformComponentProfile>
+     */
+    public Map<Integer, PlatformComponentProfile> getRegisteredCommunicationsCloudClientCache() {
+        return registeredCommunicationsCloudClientCache;
+    }
+
+    /**
+     * Get the MessagesCache
+     *
+     * @return List<FermatPacket>
+     */
+    public List<FermatPacket> getMessagesCache() {
+        return messagesCache;
+    }
 }

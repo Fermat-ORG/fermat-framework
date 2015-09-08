@@ -47,15 +47,6 @@ public enum PlatformComponentType {
     }
 
     /**
-     * (no-javadoc)
-     * @see Object#toString()
-     */
-    @Override
-    public String toString() {
-        return this.code;
-    }
-
-    /**
      * Return the PlatformComponentType represented by the code pass as parameter
      *
      * @param code
@@ -65,9 +56,9 @@ public enum PlatformComponentType {
 
         switch (code){
 
-            case "COMP_REG_REQ"     : return PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT;
-            case "LIST_COMP_REG"    : return PlatformComponentType.COMMUNICATION_CLOUD_SERVER_COMPONENT;
-            case "COMP_DISC_REQ"    : return PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+            case "COM_CLD_CLI_COMP" : return PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT;
+            case "COM_CLD_SER_COMP" : return PlatformComponentType.COMMUNICATION_CLOUD_SERVER_COMPONENT;
+            case "NS_COMP"          : return PlatformComponentType.NETWORK_SERVICE_COMPONENT;
             default: throw new IllegalArgumentException();
         }
     }

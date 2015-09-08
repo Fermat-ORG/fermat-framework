@@ -4,15 +4,16 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client;
+package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.PlatformComponentProfile</code> represent
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile</code> represent
  * the profile of the platform component, that is use to register like a platform component whit the web socket communication cloud server.
  * <p/>
  *
@@ -28,7 +29,7 @@ public interface PlatformComponentProfile {
      *
      * @return String
      */
-    public String getIdentity();
+    public String getIdentityPublicKey();
 
     /**
      * Get the alias
@@ -47,30 +48,23 @@ public interface PlatformComponentProfile {
     /**
      * Get the latitude for geo localization
      *
-     * @return String
+     * @return Double
      */
-    public String getLatitude();
+    public Double getLatitude();
 
     /**
      * Get the longitude for geo localization
      *
-     * @return String
+     * @return Double
      */
-    public String getLongitude();
-
-    /**
-     * Get the InetAddress
-     *
-     * @return InetAddress
-     */
-    public InetAddress getInetAddress();
+    public Double getLongitude();
 
     /**
      * Return the platform component type
      *
      * @return PlatformComponentType
      */
-    public PlatformComponentType getComponentType();
+    public PlatformComponentType getPlatformComponentType();
 
     /**
      * Get the network service type of the packet

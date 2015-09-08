@@ -33,16 +33,15 @@ public class FermatPacketCommunicationFactory {
      * @param sender
      * @param fermatPacketType
      * @param messageContentJsonString
-     * @param networkServiceType
      * @param privateKey
      * @return FermatPacket
      */
-    public static FermatPacket constructFermatPacketEncryptedAndSinged(final String destination, final String sender, final FermatPacketType fermatPacketType, final String messageContentJsonString, final NetworkServiceType networkServiceType, final String privateKey) {
+    public static FermatPacket constructFermatPacketEncryptedAndSinged(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String privateKey) {
 
         String messageHash = AsymmectricCryptography.encryptMessagePublicKey(messageContentJsonString, destination);
         String signature = AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
 
-        return new FermatPacketCommunication(destination, sender, fermatPacketType, messageHash, signature, networkServiceType);
+        return new FermatPacketCommunication(destination, sender, fermatPacketType, messageHash, signature);
     }
 
     /**
@@ -52,12 +51,11 @@ public class FermatPacketCommunicationFactory {
      * @param sender
      * @param fermatPacketType
      * @param messageContentJsonString
-     * @param networkServiceType
      *
      * @return FermatPacket
      */
-    public static FermatPacket constructFermatPacket(final String destination, final String sender, final FermatPacketType fermatPacketType, final String messageContentJsonString, final NetworkServiceType networkServiceType) {
-        return new FermatPacketCommunication(destination, sender, fermatPacketType, messageContentJsonString, null, networkServiceType);
+    public static FermatPacket constructFermatPacket(final String destination, final String sender, final String messageContentJsonString,  final FermatPacketType fermatPacketType) {
+        return new FermatPacketCommunication(destination, sender, fermatPacketType, messageContentJsonString, null);
     }
 
 
@@ -66,9 +64,9 @@ public class FermatPacketCommunicationFactory {
      *
      * @param jsonPacketData
      * @return FermatPacketCommunication
-     * @throws FMPException
+     * @throws RuntimeException
      */
-	public static FermatPacket constructFermatPacketFromJsonString(String jsonPacketData) throws FMPException {
+	public static FermatPacket constructFermatPacketFromJsonString(String jsonPacketData) {
 
         try {
 
@@ -89,7 +87,7 @@ public class FermatPacketCommunicationFactory {
 
         }catch (Exception exception){
 
-            throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, exception, null, "The packet data is not properly assembled");
+            throw new RuntimeException ("The packet data is not properly assembled", exception);
         }
 
 	}
