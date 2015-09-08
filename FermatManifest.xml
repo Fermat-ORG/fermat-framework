@@ -3342,6 +3342,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Nindriago" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3357,6 +3358,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Nindriago" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3372,6 +3374,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Nindriago" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3384,16 +3387,18 @@
 			<layer name="Middleware" language="java">
 				<plugins>
 					<plugin
-						name="Asset destina "
+						name="Asset Recipients"
 						description=""
-						difficulty="4"
+						difficulty="8"
 						code-level="development"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
