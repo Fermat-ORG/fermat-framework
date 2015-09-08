@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
@@ -332,13 +333,19 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
     @Override
     public void markProkectAsPublished(WalletFactoryProject walletFactoryProject) throws CantChangeProjectStateException {
-
+        walletFactoryProject.setProjectState(WalletFactoryProjectState.PUBLISHED);
+        try {
+            this.saveWalletFactoryProjectChanges(walletFactoryProject);
+        } catch (Exception e) {
+            throw new CantChangeProjectStateException(CantChangeProjectStateException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     private void test(){
         try {
             WalletFactoryProject walletFactoryProject = createEmptyWalletFactoryProject();
             walletFactoryProject.setName("Mi primer project");
+            walletFactoryProject.setWalletCategory(WalletCategory.BRANDED_REFERENCE_WALLET);
             walletFactoryProject.setDescription("Wallet Factory de prueba cargado desde el Middleware a modo de ejemplo");
             walletFactoryProject.setProjectState(WalletFactoryProjectState.CLOSED);
             walletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
@@ -372,6 +379,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
             com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language language = new com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language();
             language.setName("TestLanguage");
+            language.setId(UUID.randomUUID());
             language.setVersion(new Version(1, 0, 0));
             language.setSize(100);
             language.setTranslator(new TranslatorIdentity() {
