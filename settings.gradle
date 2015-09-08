@@ -2,6 +2,7 @@
 include ':fermat-android-api'
 
 include ':fermat-api'
+include ':fermat-android-core'
 include ':fermat-core'
 include ':fermat-cry-api'
 include ':fermat-dap-api'
