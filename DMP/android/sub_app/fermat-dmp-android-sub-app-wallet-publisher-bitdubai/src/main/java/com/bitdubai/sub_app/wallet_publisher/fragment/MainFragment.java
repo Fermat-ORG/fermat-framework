@@ -166,8 +166,8 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_more
                 && project != null) {
-            Toast.makeText(getActivity(), "Starting wizard to publish wallet: " + project.getName(), Toast.LENGTH_SHORT).show();
-            /* Startin Wizard to Publish this Project */
+            //Toast.makeText(getActivity(), "Starting wizard to publish wallet: " + project.getName(), Toast.LENGTH_SHORT).show();
+            /* Starting Wizard to Publish this Project */
             startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, subAppsSession, subAppSettings, subAppResourcesProviderManager, project);
             return true;
         }

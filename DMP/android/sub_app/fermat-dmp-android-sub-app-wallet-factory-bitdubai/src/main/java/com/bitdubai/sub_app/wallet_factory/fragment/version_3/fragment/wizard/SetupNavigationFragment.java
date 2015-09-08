@@ -12,6 +12,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wizard
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWizardPageFragment;
 import com.bitdubai.sub_app.wallet_factory.R;
 
+import java.util.Map;
+
 /**
  * Created by francisco on 05/08/15.
  */
@@ -41,5 +43,20 @@ public class SetupNavigationFragment extends FermatWizardPageFragment {
     @Override
     public void savePage() {
 
+    }
+
+    @Override
+    public void onWizardFinish(Map<String, Object> data) {
+
+    }
+
+    @Override
+    public void onActivated(Map<String, Object> data) {
+
+    }
+
+    @Override
+    public CharSequence getTitle() {
+        return "";
     }
 }

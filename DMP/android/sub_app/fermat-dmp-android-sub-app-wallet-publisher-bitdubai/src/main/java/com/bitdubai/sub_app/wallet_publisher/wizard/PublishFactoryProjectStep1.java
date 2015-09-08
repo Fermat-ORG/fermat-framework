@@ -24,38 +24,53 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWizardPageFragment;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.wallet_publisher.R;
 import com.bitdubai.sub_app.wallet_publisher.adapters.ScreenShootAdapter;
 import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;
-import com.bitdubai.sub_app.wallet_publisher.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.bitdubai.sub_app.wallet_publisher.util.CommonLogger.error;
+import static com.bitdubai.sub_app.wallet_publisher.util.CommonLogger.exception;
+import static com.bitdubai.sub_app.wallet_publisher.util.CommonLogger.info;
+import static java.lang.String.format;
 
 /**
  * Publish Started
  */
-public class StartPublishFragment extends FermatWizardPageFragment implements ScreenShootAdapter.OnScreenShootItemClickListener {
+@SuppressWarnings("FieldCanBeLocal")
+public class PublishFactoryProjectStep1 extends FermatWizardPageFragment implements ScreenShootAdapter.OnScreenShootItemClickListener {
 
     private static ScreenShootEnumType screenShootEnumType;
 
     /**
      * Constants
      */
-    private final String TAG = "StartPublishFragment";
+    private final String TAG = "PublishStep1";
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
+
+    public static final String SCREEN_SHOOTS_KEY = "ScreenShoots";
+    public static final String MAIN_SCREEN_KEY = "MainScreenShoot";
+    public static final String WALLET_ICON_KEY = "WalletIconKey";
+
     /**
      * MODULE
      */
     private WalletPublisherModuleManager manager;
+    private Map<String, Object> data;
 
     /**
      * WFP
@@ -70,6 +85,7 @@ public class StartPublishFragment extends FermatWizardPageFragment implements Sc
 
     private FermatTextView walletName;
     private FermatTextView walletDescription;
+    private FermatTextView walletType;
     private FermatTextView walletPlatform;
 
     private ImageView walletMainScreen;
@@ -85,10 +101,10 @@ public class StartPublishFragment extends FermatWizardPageFragment implements Sc
      * @param args Object[] passing session[0], settings[1], resourceManager[2], wfp[3]
      * @return fragment object
      */
-    public static StartPublishFragment newInstance(Object[] args) {
+    public static PublishFactoryProjectStep1 newInstance(Object[] args) {
         if (args == null || args.length == 0)
             throw new NullPointerException("arguments cannot be null or empty");
-        StartPublishFragment f = new StartPublishFragment();
+        PublishFactoryProjectStep1 f = new PublishFactoryProjectStep1();
         f.setSubAppsSession((SubAppsSession) args[0]);
         f.setSubAppSettings((SubAppSettings) args[1]);
         f.setSubAppResourcesProviderManager((SubAppResourcesProviderManager) args[2]);
@@ -101,15 +117,53 @@ public class StartPublishFragment extends FermatWizardPageFragment implements Sc
         super.onCreate(savedInstanceState);
         try {
             manager = ((WalletPublisherSubAppSession) subAppsSession).getWalletPublisherManager();
+            mParent.setWizardActivity(getTitle());
         } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            exception(TAG, ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public void onActivated(Map<String, Object> data) {
+        if (data == null)
+            return;
+        // refreshing data
+        this.data = data;
+        onViewCreated(rootView, null);
+    }
+
+    @Override
+    public CharSequence getTitle() {
+        return "Publishing WPF - Store Listening Step 1";
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (data != null) {
+            if (data.containsKey(WALLET_ICON_KEY) && data.get(WALLET_ICON_KEY) != null) {
+                byte[] bytes = (byte[]) data.get(WALLET_ICON_KEY);
+                walletIcon.setImageDrawable(new BitmapDrawable(getResources(),
+                        BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
+            }
+            if (data.containsKey(MAIN_SCREEN_KEY) && data.get(MAIN_SCREEN_KEY) != null) {
+                byte[] bytes = (byte[]) data.get(MAIN_SCREEN_KEY);
+                walletMainScreen.setImageDrawable(new BitmapDrawable(getResources(),
+                        BitmapFactory.decodeByteArray(bytes, 0, bytes.length)));
+            }
+            if (data.containsKey(SCREEN_SHOOTS_KEY) && data.get(SCREEN_SHOOTS_KEY) != null) {
+                screenShoots = (ArrayList) data.get(SCREEN_SHOOTS_KEY);
+                if (adapter != null)
+                    adapter.changeDataSet(screenShoots);
+            }
         }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallet_publisher_wizard_step_1, container, false);
+        rootView = inflater.inflate(R.layout.wizard_step_1, container, false);
 
         walletName = (FermatTextView) rootView.findViewById(R.id.wallet_name);
         walletName.setText(project.getName());
@@ -117,8 +171,24 @@ public class StartPublishFragment extends FermatWizardPageFragment implements Sc
         walletDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
         walletDescription.setText(project.getDescription());
 
+        walletType = (FermatTextView) rootView.findViewById(R.id.wallet_type);
+        walletType.setText(project.getWalletType().name());
+
         walletPlatform = (FermatTextView) rootView.findViewById(R.id.wallet_platform);
-        walletPlatform.setText(project.getWalletType().name());
+        walletPlatform.setVisibility(View.GONE);
+        try {
+            List<Version> platforms = manager.getPlatformVersions();
+            if (platforms != null && platforms.size() > 0) {
+                Version version = platforms.get(0);
+                walletPlatform.setText(
+                        format(getString(R.string.wizard_step_1_current_platform), version.toString()));
+                walletPlatform.setVisibility(View.VISIBLE);
+                info(TAG, String.format("Current Platform Version: %s", version.toString()));
+            } else
+                error(TAG, "No version info available...");
+        } catch (NullPointerException | CantLoadPlatformInformationException ex) {
+            exception(TAG, ex.getMessage(), ex);
+        }
 
         walletIcon = (ImageView) rootView.findViewById(R.id.wallet_icon);
         walletIcon.setOnClickListener(new View.OnClickListener() {
@@ -205,10 +275,7 @@ public class StartPublishFragment extends FermatWizardPageFragment implements Sc
                     break;
             }
             if (imageBitmap != null && screenShootEnumType == ScreenShootEnumType.SCREEN_SHOOT) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                screenShoots.set(position, byteArray);
+                screenShoots.set(position, toByteArray(imageBitmap));
                 adapter.changeDataSet(screenShoots);
                 adapter.notifyDataSetChanged();
             }
@@ -221,7 +288,7 @@ public class StartPublishFragment extends FermatWizardPageFragment implements Sc
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Select contact picture");
+        menu.setHeaderTitle("Choose mode");
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
@@ -261,13 +328,48 @@ public class StartPublishFragment extends FermatWizardPageFragment implements Sc
         this.project = project;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean validate() {
+        try {
+            if (data.get(MAIN_SCREEN_KEY) == null)
+                throw new NullPointerException("Main ScreenShoot is null");
+            if (data.get(WALLET_ICON_KEY) == null)
+                throw new NullPointerException("Wallet Icon is null");
+
+            ArrayList<byte[]> screenShoots = (ArrayList) data.get(SCREEN_SHOOTS_KEY);
+            if (screenShoots == null || screenShoots.size() == 0)
+                throw new NullPointerException("ScreenShoots are null");
+
+            for (byte[] byteArray : screenShoots) {
+                if (byteArray == null || byteArray.length == 0)
+                    throw new NullPointerException("Some screen shoot is missing...");
+            }
+            return true;
+        } catch (Exception ex) {
+            exception(TAG, ex.getMessage(), ex);
+        }
         return false;
     }
 
     @Override
     public void savePage() {
+        if (mParent == null)
+            return;
+        if (data == null)
+            data = new HashMap<>();
+
+        if (walletMainScreen.getDrawable() != null)
+            data.put(MAIN_SCREEN_KEY, toByteArray(((BitmapDrawable) walletMainScreen.getDrawable()).getBitmap()));
+        if (walletIcon.getDrawable() != null)
+            data.put(WALLET_ICON_KEY, toByteArray(((BitmapDrawable) walletIcon.getDrawable()).getBitmap()));
+        data.put(SCREEN_SHOOTS_KEY, screenShoots);
+
+        mParent.putData(data);
+    }
+
+    @Override
+    public void onWizardFinish(Map<String, Object> data) {
 
     }
 
@@ -285,5 +387,17 @@ public class StartPublishFragment extends FermatWizardPageFragment implements Sc
 
     private enum ScreenShootEnumType {
         WALLET_ICON, WALLET_MAIN_SCREEN, SCREEN_SHOOT
+    }
+
+    /**
+     * Bitmap to byte[]
+     *
+     * @param bitmap Bitmap
+     * @return byte array
+     */
+    private byte[] toByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 }
