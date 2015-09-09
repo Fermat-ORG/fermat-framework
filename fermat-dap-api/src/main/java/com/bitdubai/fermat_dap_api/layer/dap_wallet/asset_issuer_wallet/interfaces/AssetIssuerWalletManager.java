@@ -7,5 +7,5 @@ public interface AssetIssuerWalletManager {
 
     AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey);
 
-    void createWalletAssetIssuer (String walletPublicKey);
+    void createWalletAssetIssuer (String walletPublicKey, String assetIssuerPublicKey);
 }

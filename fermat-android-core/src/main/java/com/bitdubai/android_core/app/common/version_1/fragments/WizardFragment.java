@@ -2,8 +2,6 @@ package com.bitdubai.android_core.app.common.version_1.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,16 +15,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.adapters.WizardPageAdapter;
 import com.bitdubai.android_core.app.common.version_1.util.DepthPageTransformer;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.CreateWalletFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.SetupNavigationFragment;
-import com.bitdubai.sub_app.wallet_publisher.wizard.StartPublishFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,7 +186,7 @@ public class WizardFragment extends android.support.v4.app.DialogFragment implem
                         //fragments.add(new SetupNavigationFragment());
                         break;
                     case CWP_WALLET_PUBLISHER_PUBLISH_STEP_1:
-                        //fragments.add(StartPublishFragment.newInstance(args));
+                        //fragments.add(PublishFactoryProjectStep1.newInstance(args));
                     default:
                         break;
                 }
