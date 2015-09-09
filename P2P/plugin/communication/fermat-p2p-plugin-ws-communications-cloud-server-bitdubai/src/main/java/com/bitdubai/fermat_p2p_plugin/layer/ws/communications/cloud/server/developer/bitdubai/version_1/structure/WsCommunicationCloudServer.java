@@ -120,6 +120,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     @Override
     public void onOpen(WebSocket clientConnection, ClientHandshake handshake) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onOpen");
         System.out.println(" WsCommunicationCloudServer - New Client: "+clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
         System.out.println(" WsCommunicationCloudServer - Handshake Resource Descriptor = " + handshake.getResourceDescriptor());
@@ -196,6 +197,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     @Override
     public void onClose(WebSocket clientConnection, int code, String reason, boolean remote) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onClose");
         System.out.println(clientConnection + " is disconnect!");
         System.out.println(" code   = " + code);
@@ -209,10 +211,11 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      * @see WebSocketServer#onMessage(WebSocket, String)
      */
     @Override
-    public void onMessage(WebSocket clientConnection, String message) {
+    public void onMessage(WebSocket clientConnection, String fermatPacketEncode) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onMessage");
-        System.out.println(" WsCommunicationCloudServer - message = " + message);
+        System.out.println(" WsCommunicationCloudServer - encode fermatPacket = " + fermatPacketEncode);
         System.out.println(" WsCommunicationCloudServer - server identity for this connection = " + serverIdentityByClientCache.get(clientConnection.hashCode()).getPrivateKey());
 
         /*
@@ -221,11 +224,11 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         ECCKeyPair serverIdentity = serverIdentityByClientCache.get(clientConnection.hashCode());
 
         /*
-         * Decode the message into a fermatPacket
+         * Decode the fermatPacketEncode into a fermatPacket
          */
-        FermatPacket fermatPacket = FermatPacketDecoder.decode(message, serverIdentity.getPrivateKey());
+        FermatPacket fermatPacket = FermatPacketDecoder.decode(fermatPacketEncode, serverIdentity.getPrivateKey());
 
-        System.out.println(" WsCommunicationCloudServer - fermatPacket = "+fermatPacket);
+        System.out.println(" WsCommunicationCloudServer - decode fermatPacket = "+fermatPacket);
         System.out.println(" WsCommunicationCloudServer - fermatPacket.getFermatPacketType() = " + fermatPacket.getFermatPacketType());
 
         /*
@@ -248,6 +251,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     @Override
     public void onError(WebSocket clientConnection, Exception ex) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onError");
         ex.printStackTrace();
 

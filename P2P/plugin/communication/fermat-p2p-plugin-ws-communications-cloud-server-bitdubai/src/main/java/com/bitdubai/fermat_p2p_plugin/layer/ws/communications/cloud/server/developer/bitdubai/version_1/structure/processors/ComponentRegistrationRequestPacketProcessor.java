@@ -43,6 +43,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
     @Override
     public void processingPackage(final WebSocket clientConnection,final FermatPacket receiveFermatPacket, final ECCKeyPair serverIdentity) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentRegistrationRequestPacketProcessor - processingPackage");
 
         /*

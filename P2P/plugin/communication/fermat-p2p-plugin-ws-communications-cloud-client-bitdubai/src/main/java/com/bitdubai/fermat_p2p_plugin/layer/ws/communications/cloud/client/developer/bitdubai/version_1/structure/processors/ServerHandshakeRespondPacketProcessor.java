@@ -37,6 +37,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
     @Override
     public void processingPackage(final FermatPacket receiveFermatPacket) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ServerHandshakeRespondPacketProcessor - processingPackage");
 
         /* -----------------------------------------------------------------------------------------

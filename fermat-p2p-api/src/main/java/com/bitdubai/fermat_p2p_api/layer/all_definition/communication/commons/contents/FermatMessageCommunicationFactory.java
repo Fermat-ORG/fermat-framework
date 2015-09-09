@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -29,27 +30,6 @@ public class FermatMessageCommunicationFactory {
 
     /**
      * Construct a FermatMessage encrypted with the destination identity public key and signed
-     * whit the private key passed as an argument, and status pending to send
-     *
-     * @param sender
-     * @param receiver
-     * @param content
-     * @param fermatMessageContentType
-     * @param privateKey
-     * @return
-     * @throws FMPException
-     */
-    public static FermatMessage constructFermatMessageEncryptedAndSinged(final String sender, final String receiver, final byte[] content, final FermatMessageContentType fermatMessageContentType, String privateKey) throws FMPException{
-
-        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(new String(content, StandardCharsets.UTF_8), receiver);
-        String signature   = AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
-
-        return new FermatMessageCommunication(messageHash.getBytes(), null, fermatMessageContentType, FermatMessagesStatus.PENDING_TO_SEND, receiver, sender, new Timestamp(System.currentTimeMillis()), signature);
-    }
-
-
-    /**
-     * Construct a FermatMessage encrypted with the destination identity public key and signed
      * whit the private key passed as an argument
      *
      * @param sender
@@ -60,12 +40,12 @@ public class FermatMessageCommunicationFactory {
      * @return
      * @throws FMPException
      */
-    public static FermatMessage constructFermatMessageEncryptedAndSinged(final String sender, final String receiver, final String content, final FermatMessageContentType fermatMessageContentType, String privateKey) throws FMPException{
+    public static FermatMessage constructFermatMessageEncryptedAndSinged(final PlatformComponentProfile sender, final PlatformComponentProfile receiver, final String content, final FermatMessageContentType fermatMessageContentType, String privateKey) throws FMPException{
 
-        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(content, receiver);
+        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(content, receiver.getIdentityPublicKey());
         String signature   = AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
 
-        return new FermatMessageCommunication(messageHash.getBytes(), null, fermatMessageContentType, FermatMessagesStatus.PENDING_TO_SEND, receiver, sender, new Timestamp(System.currentTimeMillis()), signature);
+        return new FermatMessageCommunication(messageHash, null, fermatMessageContentType, FermatMessagesStatus.PENDING_TO_SEND, receiver.getIdentityPublicKey(), sender.getIdentityPublicKey(), new Timestamp(System.currentTimeMillis()), signature, receiver.getCommunicationCloudClientIdentity());
     }
 
 

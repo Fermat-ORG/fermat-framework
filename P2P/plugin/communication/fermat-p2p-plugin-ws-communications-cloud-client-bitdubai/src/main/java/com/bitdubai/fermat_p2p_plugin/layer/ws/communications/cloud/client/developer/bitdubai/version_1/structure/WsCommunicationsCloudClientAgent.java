@@ -50,7 +50,7 @@ public class WsCommunicationsCloudClientAgent extends Thread {
         /*
          * While is no connect
          */
-        while (!isConnected){
+      //  while (!isConnected){
 
             /*
              * If the connection is not open and not connecting
@@ -80,12 +80,13 @@ public class WsCommunicationsCloudClientAgent extends Thread {
 
                 }catch (Exception e){
                     e.printStackTrace();
-                    this.interrupt();
+                    wsCommunicationsCloudClientChannel.getConnection().close();
+                    interrupt();
                 }
 
             }
 
-        }
+  //      }
 
     }
 }

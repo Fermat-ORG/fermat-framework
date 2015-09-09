@@ -6,8 +6,13 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 
@@ -31,12 +36,33 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
     @Override
     public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("MessageTransmitPacketProcessor - processingPackage");
+
+         /*
+         * Get the FermatMessage from the message content and decrypt
+         */
+        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+
+        /*
+         * Construct the fermat message object
+         */
+        FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
+
+       /*
+        * Construct a new fermat packet whit the same message and different destination
+        */
+        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(fermatMessage.getCommunicationCloudClientIdentity(), //Destination
+                                                                                                                    serverIdentity.getPublicKey(),                       //Sender
+                                                                                                                    fermatMessage.toJson(),                              //Message Content
+                                                                                                                    FermatPacketType.MESSAGE_TRANSMIT,                   //Packet type
+                                                                                                                    serverIdentity.getPrivateKey());                     //Sender private key
 
         /*
          * Get the connection of the destination
          */
-        WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getDestination());
+        WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(fermatPacketRespond.getDestination());
+
 
         System.out.println("MessageTransmitPacketProcessor - clientConnectionDestination "+clientConnectionDestination);
 
@@ -50,7 +76,7 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
            /*
             * Send the encode packet to the destination
             */
-            clientConnectionDestination.send(FermatPacketEncoder.encode(receiveFermatPacket));
+            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }else {
 
@@ -61,7 +87,7 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
              *
              * TODO: IMPLEMENTAR UN MECANISMO PARA DESPUES ENTREGAR ESTOS MENSAJES
              */
-            getWsCommunicationCloudServer().getMessagesCache().add(receiveFermatPacket);
+            getWsCommunicationCloudServer().getMessagesCache().add(fermatPacketRespond);
 
         }
 

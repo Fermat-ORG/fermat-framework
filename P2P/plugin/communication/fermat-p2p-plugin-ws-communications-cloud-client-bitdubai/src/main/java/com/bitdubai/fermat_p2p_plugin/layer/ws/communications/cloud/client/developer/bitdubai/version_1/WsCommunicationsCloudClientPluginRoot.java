@@ -68,7 +68,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the SERVER_IP
      */
-    private static final String SERVER_IP = "192.168.43.206";// "192.168.0.7";
+    private static final String SERVER_IP = "192.168.43.206";
+    //private static final String SERVER_IP = "192.168.0.7";
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -151,50 +152,33 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
             URI uri = new URI(WsCommunicationsCloudClientPluginRoot.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.DEFAULT_PORT);
 
-          /*  Draft draft = new Draft_17();
-            WsCommunicationsCloudClientChannel wsCommunicationsCloudClientChannel = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, draft);
-            wsCommunicationsCloudClientChannel.registerFermatPacketProcessorServerSideObject(new ServerHandshakeRespondPacketProcessor());
-            wsCommunicationsCloudClientChannel.registerFermatPacketProcessorServerSideObject(new ServerHandshakeRespondPacketProcessor());
-            wsCommunicationsCloudClientChannel.registerFermatPacketProcessorServerSideObject(new RequestListComponentRegisterPacketProcessor());
-            wsCommunicationsCloudClientChannel.registerFermatPacketProcessorServerSideObject(new MessageTransmitPacketProcessor());
-            wsCommunicationsCloudClientChannel.connect(); */
-
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 
-              new Thread(new Runnable() {
 
-                boolean continuar = Boolean.TRUE;
+            /* ONLY FOR TEST
 
-                @Override
-                public void run() {
+                new Thread(new Runnable() {
 
-                    while (continuar){
+                    boolean continuar = Boolean.TRUE;
 
-                        if (wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().isRegister()){
+                    @Override
+                    public void run() {
 
-                          //  wsCommunicationsCloudClientConnection.requestListComponentRegistered(wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getPlatformComponentProfile());
+                        while (continuar){
 
+                            if (wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().isRegister()){
 
-                            FermatMessage fermatMessage = null;
-                            try {
-                                fermatMessage = FermatMessageCommunicationFactory.constructFermatMessageEncryptedAndSinged( wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(), wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getServerIdentity(), "PRUEBA MSJ", FermatMessageContentType.TEXT, wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
-                            } catch (FMPException e) {
-                                e.printStackTrace();
+                                wsCommunicationsCloudClientConnection.requestListComponentRegistered(wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getPlatformComponentProfile());
+
+                                continuar = Boolean.FALSE;
                             }
-
-                            wsCommunicationsCloudClientConnection.sendMessage(fermatMessage);
-
-                            continuar = Boolean.FALSE;
                         }
-                    }
 
-                    if (!continuar){
-                        return;
                     }
+                }).start();
 
-                }
-            }).start();
+            */
 
         } catch (Exception e) {
             e.printStackTrace();

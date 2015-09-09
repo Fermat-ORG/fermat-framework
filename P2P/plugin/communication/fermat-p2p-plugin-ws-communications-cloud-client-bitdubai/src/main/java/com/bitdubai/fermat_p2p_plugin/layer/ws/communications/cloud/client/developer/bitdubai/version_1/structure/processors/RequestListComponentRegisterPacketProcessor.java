@@ -8,15 +8,21 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -43,6 +49,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
 
         /*
@@ -52,7 +59,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
-
         /*
          * Construct the json object
          */
@@ -61,12 +67,48 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          /*
          * Get the list
          */
-       // List<PlatformComponentProfile> list = gson.fromJson(messageContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfile>>(){}.getType());
+        List<PlatformComponentProfile> list = gson.fromJson(messageContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>(){}.getType());
 
 
-       // System.out.println("WsCommunicationsCloudClientPluginRoot - list = "+list);
+        System.out.println("WsCommunicationsCloudClientPluginRoot - list = "+list);
 
 
+        /*
+         * ONLY FOR TEST SEND MESSAGE TO ALL COMPONENT REGISTER IN THE SERVER
+
+
+            String messageContent = "*******************************************************************************************\n " +
+                                    "* HELLO THUNDER COINS TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
+                                    "******************************************************************************************* ";
+
+            for (PlatformComponentProfile platformComponentProfileDestination:list) {
+
+                FermatMessage fermatMessage = null;
+                try {
+
+                    fermatMessage = FermatMessageCommunicationFactory.constructFermatMessageEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getPlatformComponentProfile(),
+                                                                                                                platformComponentProfileDestination,
+                                                                                                                messageContent,
+                                                                                                                FermatMessageContentType.TEXT,
+                                                                                                                getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+
+                    FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getServerIdentity(),                  //Destination
+                                                                                                                                getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(),   //Sender
+                                                                                                                                fermatMessage.toJson(),                                                  //Message Content
+                                                                                                                                FermatPacketType.MESSAGE_TRANSMIT,                                       //Packet type
+                                                                                                                                getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey()); //Sender private key
+
+                    getWsCommunicationsCloudClientChannel().send(FermatPacketEncoder.encode(fermatPacketRequest));
+
+
+
+                } catch (FMPException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        */
 
         //TODO: ATTACH THIS TO A EVENT AND FIRED
 

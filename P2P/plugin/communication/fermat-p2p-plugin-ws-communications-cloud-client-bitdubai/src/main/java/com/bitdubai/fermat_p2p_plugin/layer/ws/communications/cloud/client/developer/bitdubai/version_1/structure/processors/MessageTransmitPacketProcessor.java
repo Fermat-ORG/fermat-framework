@@ -7,14 +7,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.google.gson.Gson;
-
-import org.java_websocket.WebSocket;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.MessageTransmitPacketProcessor</code> implement
@@ -34,6 +31,7 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("MessageTransmitPacketProcessor - processingPackage");
 
         /*
@@ -44,22 +42,16 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
         System.out.println("MessageTransmitPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
-         * Construct the gson object
-         */
-        Gson gson = new Gson();
-
-        /*
          * Get the message object
          */
-        FermatMessage fermatMessage = gson.fromJson(messageContentJsonStringRepresentation, FermatMessage.class);
+        FermatMessage fermatMessage = new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
 
         System.out.println("MessageTransmitPacketProcessor - fermatMessage = "+fermatMessage);
-
+        System.out.println("MessageTransmitPacketProcessor - fermatMessage.getContent() ");
+        System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(fermatMessage.getContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey()));
 
         //TODO: ATTACH THIS TO A EVENT AND FIRED
-
-
     }
 
     /**

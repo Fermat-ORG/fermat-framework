@@ -51,7 +51,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     /**
      * Represent the content
      */
-    private byte[] content;
+    private String content;
 
     /**
      * Represent the shipping timestamp of the message
@@ -79,6 +79,11 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     private FermatMessageContentType fermatMessageContentType;
 
     /**
+     * Represent the communicationCloudClientIdentity
+     */
+    private String communicationCloudClientIdentity;
+
+    /**
      * Constructor
      */
     public FermatMessageCommunication() {
@@ -98,7 +103,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      * @param shippingTimestamp
      * @param signature
      */
-    public FermatMessageCommunication(byte[] content, Timestamp deliveryTimestamp, FermatMessageContentType fermatMessageContentType, FermatMessagesStatus fermatMessagesStatus, String receiver, String sender, Timestamp shippingTimestamp, String signature) {
+    public FermatMessageCommunication(String content, Timestamp deliveryTimestamp, FermatMessageContentType fermatMessageContentType, FermatMessagesStatus fermatMessagesStatus, String receiver, String sender, Timestamp shippingTimestamp, String signature, String communicationCloudClientIdentity) {
 
         this.id = UUID.randomUUID();
         this.content = content;
@@ -109,6 +114,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         this.sender = sender;
         this.shippingTimestamp = shippingTimestamp;
         this.signature = signature;
+        this.communicationCloudClientIdentity = communicationCloudClientIdentity;
     }
 
     /**
@@ -116,17 +122,8 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      * @see FermatMessage#getContent()
      */
     @Override
-    public byte[] getContent() {
+    public String getContent(){
         return content;
-    }
-
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getStringContent()
-     */
-    @Override
-    public String getStringContent(){
-        return new String(content, StandardCharsets.UTF_8);
     }
 
     /**
@@ -134,7 +131,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      *
      * @param content
      */
-    public void setContent(byte[] content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
@@ -273,6 +270,17 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         this.signature = signature;
     }
 
+
+    /**
+     * Return the public key that represent the identity of the Web Socket Communication Cloud Client,
+     * that this component use like communication channel
+     *
+     * @return String
+     */
+    public String getCommunicationCloudClientIdentity(){
+        return communicationCloudClientIdentity;
+    }
+
     /**
      * (no-javadoc)
      * @see FermatMessage#toJson()
@@ -312,6 +320,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
                 Objects.equals(getDeliveryTimestamp(), that.getDeliveryTimestamp()) &&
                 Objects.equals(getFermatMessagesStatus(), that.getFermatMessagesStatus()) &&
                 Objects.equals(getSignature(), that.getSignature()) &&
+                Objects.equals(getCommunicationCloudClientIdentity(), that.getCommunicationCloudClientIdentity()) &&
                 Objects.equals(getFermatMessageContentType(), that.getFermatMessageContentType());
     }
 
@@ -321,7 +330,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSender(), getReceiver(), getContent(), getShippingTimestamp(), getDeliveryTimestamp(), getFermatMessagesStatus(), getSignature(), getFermatMessageContentType());
+        return Objects.hash(getId(), getSender(), getReceiver(), getContent(), getShippingTimestamp(), getDeliveryTimestamp(), getFermatMessagesStatus(), getSignature(), getFermatMessageContentType(), getCommunicationCloudClientIdentity());
     }
 
     /**
@@ -331,7 +340,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     @Override
     public String toString() {
         return "FermatMessageCommunication{" +
-                "content=" + Arrays.toString(content) +
+                "content=" + content +
                 ", id=" + id +
                 ", sender='" + sender + '\'' +
                 ", receiver='" + receiver + '\'' +
@@ -339,6 +348,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
                 ", deliveryTimestamp=" + deliveryTimestamp +
                 ", fermatMessagesStatus=" + fermatMessagesStatus +
                 ", signature='" + signature + '\'' +
+                ", communicationCloudClientIdentity='" + communicationCloudClientIdentity + '\'' +
                 ", fermatMessageContentType=" + fermatMessageContentType +
                 '}';
     }

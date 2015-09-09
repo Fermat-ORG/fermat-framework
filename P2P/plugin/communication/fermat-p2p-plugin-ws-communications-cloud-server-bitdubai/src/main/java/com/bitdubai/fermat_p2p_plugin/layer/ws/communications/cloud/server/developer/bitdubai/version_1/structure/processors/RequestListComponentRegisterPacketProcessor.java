@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.WebSocket;
 
@@ -44,6 +46,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
     @Override
     public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
 
         /*
@@ -98,14 +101,21 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         }
 
         System.out.println("RequestListComponentRegisterPacketProcessor - list.size()    = "+list.size());
-        System.out.println("RequestListComponentRegisterPacketProcessor - gson.toJson(list)    = "+gson.toJson(list));
+
+        /*
+         * Convert to json representation
+         */
+        String jsonListRepresentation = gson.toJson(list, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - gson.toJson(list)    = "+jsonListRepresentation);
+
 
          /*
          * Construct a fermat packet whit the list
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
                                                                                                                     serverIdentity.getPublicKey(),                      //Sender
-                                                                                                                    gson.toJson(list),                                  //Message Content
+                                                                                                                    jsonListRepresentation,                                  //Message Content
                                                                                                                     FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
                                                                                                                     serverIdentity.getPrivateKey());                    //Sender private key
 

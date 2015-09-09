@@ -43,18 +43,11 @@ public interface FermatMessage {
     public String getReceiver();
 
     /**
-     * Get the Byte Content
-     *
-     * @return byte[]
-     */
-    public byte[] getContent();
-
-    /**
-     * Get the String Content
+     * Get the Content
      *
      * @return String
      */
-    public String getStringContent();
+    public String getContent();
 
     /**
      * Get the delivery timestamp

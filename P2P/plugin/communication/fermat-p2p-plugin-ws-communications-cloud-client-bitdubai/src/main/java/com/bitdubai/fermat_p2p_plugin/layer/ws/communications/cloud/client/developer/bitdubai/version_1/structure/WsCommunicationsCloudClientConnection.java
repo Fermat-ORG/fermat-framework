@@ -126,6 +126,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
      */
     public void registerComponentInCommunicationCloudServer(PlatformComponentProfile platformComponentProfile){
 
+        System.out.println("WsCommunicationsCloudClientConnection - registerComponentInCommunicationCloudServer");
+
         /*
          * Validate parameter
          */
@@ -195,6 +197,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
      */
     public void sendMessage(FermatMessage fermatMessage){
 
+        System.out.println("WsCommunicationsCloudClientConnection - sendMessage");
+
         /*
          * Validate parameter
          */
@@ -203,14 +207,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
         }
 
          /*
-         * Construct a fermat packet whit the server identity
+         * Construct a fermat packet whit the message to transmit
          */
-        FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(fermatMessage.getReceiver(),                                             //Destination
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),                                               //Sender
+        FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                                                                                                                     fermatMessage.toJson(),                                                  //Message Content
                                                                                                                     FermatPacketType.MESSAGE_TRANSMIT,                                       //Packet type
                                                                                                                     wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
-
         /*
          * Send the encode packet to the server
          */

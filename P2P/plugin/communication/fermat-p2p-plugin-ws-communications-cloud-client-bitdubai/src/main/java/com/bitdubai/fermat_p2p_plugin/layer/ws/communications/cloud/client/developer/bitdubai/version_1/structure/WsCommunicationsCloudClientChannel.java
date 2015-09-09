@@ -130,8 +130,9 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handShakeData) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
-        System.out.print("Server hand Shake Data = " + handShakeData);
+        System.out.println("Server hand Shake Data = " + handShakeData);
     }
 
     /**
@@ -139,10 +140,11 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * @see WebSocketClient#onMessage(String)
      */
     @Override
-    public void onMessage(String message) {
+    public void onMessage(String fermatPacketEncode) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onMessage(String)");
-        System.out.println(" WsCommunicationsCloudClientChannel - message " + message);
+        System.out.println(" WsCommunicationsCloudClientChannel - encode fermatPacket " + fermatPacketEncode);
 
         FermatPacket fermatPacket = null;
 
@@ -154,16 +156,16 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             /**
              * Decode the message with the temporal identity
              */
-            fermatPacket = FermatPacketDecoder.decode(message, temporalIdentity.getPrivateKey());
-            System.out.println(" WsCommunicationsCloudClientChannel - decode message " + FermatPacketDecoder.decode(message, temporalIdentity.getPrivateKey()));
+            fermatPacket = FermatPacketDecoder.decode(fermatPacketEncode, temporalIdentity.getPrivateKey());
+            System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + FermatPacketDecoder.decode(fermatPacketEncode, temporalIdentity.getPrivateKey()));
 
         }else {
 
             /**
              * Decode the message with the client identity
              */
-            fermatPacket = FermatPacketDecoder.decode(message, clientIdentity.getPrivateKey());
-            System.out.println(" WsCommunicationsCloudClientChannel - decode message " + FermatPacketDecoder.decode(message, clientIdentity.getPrivateKey()));
+            fermatPacket = FermatPacketDecoder.decode(fermatPacketEncode, clientIdentity.getPrivateKey());
+            System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + FermatPacketDecoder.decode(fermatPacketEncode, clientIdentity.getPrivateKey()));
         }
 
         /*
@@ -185,6 +187,8 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     @Override
     public void onClose(int code, String reason, boolean remote) {
+
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
         System.out.println(" code   = " + code);
         System.out.println(" reason = " + reason);
@@ -197,6 +201,8 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     @Override
     public void onError(Exception ex) {
+
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onError");
         ex.printStackTrace();
         getConnection().close();

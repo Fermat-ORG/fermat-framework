@@ -33,13 +33,40 @@ public class FermatPacketCommunicationFactory {
      * @param sender
      * @param fermatPacketType
      * @param messageContentJsonString
-     * @param privateKey
+     * @param clientPrivateKeyToSing
      * @return FermatPacket
      */
-    public static FermatPacket constructFermatPacketEncryptedAndSinged(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String privateKey) {
+    public static FermatPacket constructFermatPacketEncryptedAndSinged(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String clientPrivateKeyToSing) {
 
         String messageHash = AsymmectricCryptography.encryptMessagePublicKey(messageContentJsonString, destination);
-        String signature = AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
+        String signature = AsymmectricCryptography.createMessageSignature(messageHash, clientPrivateKeyToSing);
+
+        return new FermatPacketCommunication(destination, sender, fermatPacketType, messageHash, signature);
+    }
+
+
+    /**
+     * Construct a FermatPacket encrypted with the specify identity public key and signed
+     * whit the private key passed as an argument, this method is use to create a FermatPacket
+     * the type FermatPacketType.MESSAGE_TRANSMIT, because the destination if different to the
+     * server.
+     *
+     * In this case the Communication Cloud Server is a intermediary, is used as a bridge
+     * to pass messages between components. For this reason the package has
+     * to be encrypted with your public key.
+     *
+     * @param destination
+     * @param sender
+     * @param messageContentJsonString
+     * @param fermatPacketType
+     * @param clientPrivateKeyToSing
+     * @param publicKeyToEncrypt
+     * @return
+     */
+    public static FermatPacket constructFermatPacketEncryptedAndSingedForMsjTransmit(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String clientPrivateKeyToSing, final String publicKeyToEncrypt) {
+
+        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(messageContentJsonString, publicKeyToEncrypt);
+        String signature = AsymmectricCryptography.createMessageSignature(messageHash, clientPrivateKeyToSing);
 
         return new FermatPacketCommunication(destination, sender, fermatPacketType, messageHash, signature);
     }

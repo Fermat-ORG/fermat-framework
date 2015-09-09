@@ -32,6 +32,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
+        System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("CompleteRegistrationComponentPacketProcessor - processingPackage");
 
         /*
