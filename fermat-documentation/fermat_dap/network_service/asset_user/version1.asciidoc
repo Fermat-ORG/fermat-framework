@@ -3,6 +3,11 @@
 
 == Plug-in Description
 
+1) Al iniciarse, notifica al Communication Server de su conexión.
+
+2) Cuando recibe del communication Server el mensaje de registrar una nueva dirección de Bitcoin, valida que la propiedad NotifyBitcoinAddress
+está en true y solicita una nueva dirección de Bitcoin a la Asset Vault a través del getBitcoinAddress y registra este pedido en CryptoAddressBook.
+
 == Plug-in Structure
 
 == Events

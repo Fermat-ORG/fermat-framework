@@ -180,6 +180,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
             */
 
+
         } catch (Exception e) {
             e.printStackTrace();
             wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().close();
