@@ -68,6 +68,8 @@ el proceso de creación del digital Asset, ya que este es quien ajustaría el es
 1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
  realizarán distintas especificaciones del asset y el contrato inicial.
 
+
+
  La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
  el uso de los siguientes campos:
 * Cantidad de Assets que se están creando (DigitalAsset.quantity)
@@ -82,11 +84,13 @@ El DigitalAsset.transactionFee es un valor que calculará la cryptoVault a trav�
 
 La Issuer subApp no permitirá iniciar el proceso de issuing del Asset si no dispone los fondos disponibles para cubrir el GenesisAmount.
 
+Todos los procesos de generación y edicion del Asset serán persistidos en el plugin Middleware Asset Factory. Al momento de finalizar con la
+edición y dar comienzo a la transacción de Asset Issuing, el mismo ya dejará de estar editable en la sub App del issuer.
+
 La transacción de Asset Issuing se dará inicio a través del método IssueAsset(DigitalAsset digitalAsset).
 
-El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
+1) El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
 GenesisAddress.
-
 
 2) Al estar todo completado para emitir el Asset, se persiste el DA (en archivo) y se actualiza el TransactionStatus a FormingGenesis.
 
