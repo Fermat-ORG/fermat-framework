@@ -10,8 +10,8 @@ import java.util.UUID;
  */
 public interface AssetIssuerWalletTransactionRecord {
 
-    //Definir bien
-    String getAssetIssuerPublicKey();
+    //TODO: Definir bien las propiedades
+    String getAssetIssuingPublicKey();
 
     CryptoAddress getAddressFrom();
     String getActorFromPublicKey();
