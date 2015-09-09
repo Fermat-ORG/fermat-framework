@@ -460,13 +460,13 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
         if (!isAttached || empty == null)
             return;
         if (projects == null || projects.isEmpty()) {
-            if (empty.getVisibility() == View.VISIBLE) {
+            if (empty.getVisibility() == View.GONE || empty.getVisibility() == View.INVISIBLE) {
                 empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_in));
-                empty.setVisibility(View.GONE);
+                empty.setVisibility(View.VISIBLE);
             }
-        } else if (empty.getVisibility() == View.GONE) {
+        } else if (empty.getVisibility() == View.VISIBLE) {
             empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_out));
-            empty.setVisibility(View.VISIBLE);
+            empty.setVisibility(View.GONE);
         }
     }
 
