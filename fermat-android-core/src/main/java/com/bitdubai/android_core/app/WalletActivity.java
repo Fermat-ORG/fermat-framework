@@ -202,7 +202,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         }
 
 
-//        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
+//        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getFermatPacketType()!= Activities.CWP_WALLET_MANAGER_MAIN){
 //            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
 //            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
 //            resetThisActivity();
