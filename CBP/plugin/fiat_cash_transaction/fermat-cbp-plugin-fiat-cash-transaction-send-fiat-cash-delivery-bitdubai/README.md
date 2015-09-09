@@ -5,7 +5,7 @@ This is the simplified specification of the Crypto Broker Platform plugins
 ## Android
 
 ### Wallet
-* [Crypto Broker](android/reference_wallet/fermat-android-reference-wallet-crypto-broker-bitdubai/): frontend de las actividades financieras de un Crypto Broker(vender crypto, vender cash, inyeccion de capital) y provee un balance contable unificado
+* **Crypto Broker**: frontend de las actividades financieras de un Crypto Broker(vender crypto, vender cash, inyeccion de capital) y provee un balance contable unificado
 * **Crypto Customer**: frontend de las actividades financieras de un Crypto Customer(comprar crypto, comprar cash) y provee un balance contable unificado
 
 ### SubApp
