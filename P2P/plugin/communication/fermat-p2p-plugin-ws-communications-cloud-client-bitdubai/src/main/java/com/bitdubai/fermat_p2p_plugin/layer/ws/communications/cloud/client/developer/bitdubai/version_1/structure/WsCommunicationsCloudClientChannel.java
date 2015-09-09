@@ -133,6 +133,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
         System.out.println("Server hand Shake Data = " + handShakeData);
+        System.out.println("Server getReadyState() = " + getReadyState());
     }
 
     /**
@@ -190,9 +191,9 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
-        System.out.println(" code   = " + code);
-        System.out.println(" reason = " + reason);
-        System.out.println(" remote = " + remote);
+        System.out.println(" WsCommunicationsCloudClientChannel -  code   = " + code + " reason = " + reason +" remote = " + remote);
+        System.out.println(" WsCommunicationsCloudClientChannel -  getReadyState() = " + getReadyState());
+
     }
 
     /**
