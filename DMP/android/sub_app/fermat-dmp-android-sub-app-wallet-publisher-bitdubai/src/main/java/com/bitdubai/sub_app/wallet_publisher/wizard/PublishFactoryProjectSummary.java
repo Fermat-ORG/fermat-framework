@@ -236,7 +236,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
         public void onErrorOccurred(Exception ex) {
             if (isAttached) {
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "Error Triying to publish this project...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Error Trying to publish this project...", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -246,6 +246,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
         @Override
         protected Object doInBackground() throws Exception {
             info(TAG, "Publishing Wallet...");
+            videoUrlString = "https://www.youtube.com/watch?v=GS2JXAZhrYY";//// TODO: 08/09/15 remove this line
             URL url = new URL(videoUrlString);
             manager.publishWallet(project, iconScreenBytes, mainScreenBytes, screenShootsBytes, url,
                     "Hello World Observation", initialVersion, finalVersion, identity);
