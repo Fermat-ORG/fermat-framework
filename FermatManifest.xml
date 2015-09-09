@@ -6092,8 +6092,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-				</plugins>
-				<plugins>
 					<plugin
 						name="Redeem Point Address Book"
 						description=""
