@@ -2,6 +2,7 @@ package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.clou
 
 import java.util.concurrent.ExecutorService;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
@@ -10,12 +11,12 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 
 public class MockCloudFMPConnectionManagerServer extends
 		CloudFMPConnectionManager {
-	
+
 	public MockCloudFMPConnectionManagerServer(
 			CommunicationChannelAddress address, ExecutorService executor,
 			String privateKey, String publicKey)
 			throws IllegalArgumentException {
-		super(address, executor, privateKey, publicKey, CloudFMPConnectionManagerMode.FMP_SERVER);
+		super(address, executor, new ECCKeyPair(privateKey, publicKey), CloudFMPConnectionManagerMode.FMP_SERVER);
 	}
 
 	@Override

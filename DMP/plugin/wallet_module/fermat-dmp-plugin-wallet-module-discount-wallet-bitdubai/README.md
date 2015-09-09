@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-niche-type-wallet-discount-wallet-bitdubai
+# fermat-dmp-plugin-niche-fermatPacketType-wallet-discount-wallet-bitdubai

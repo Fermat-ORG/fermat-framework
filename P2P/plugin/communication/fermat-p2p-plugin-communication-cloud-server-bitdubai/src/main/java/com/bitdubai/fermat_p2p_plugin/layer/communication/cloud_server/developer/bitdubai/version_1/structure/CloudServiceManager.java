@@ -126,8 +126,8 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 
             String message = CloudCommunicationException.DEFAULT_MESSAGE;
             FermatException cause = fMPException;
-            String context = "Packet Data: " + dataPacket.toString();
-            String possibleReason = "Something failed in the processing of one of the different PacketType, you should check the FMPException that is linked below";
+            String context = "FermatPacketCommunication Data: " + dataPacket.toString();
+            String possibleReason = "Something failed in the processing of one of the different FermatPacketType, you should check the FMPException that is linked below";
             throw new CloudCommunicationException(message, cause, context, possibleReason);
 
         }catch(NoSuchElementException ex){
@@ -514,7 +514,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		String message = IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE;
 		FermatException cause = null;
 		String context = "Supposed Destination: " + supposedDestination;
-		context += "Packet Info: " + packet.toString();
+		context += "FermatPacketCommunication Info: " + packet.toString();
 		String possibleReason = "This is a very weird error, we should check the sender to see if it's registered, we should be aware of this";
 		return new IncorrectFMPPacketDestinationException(message, cause, context, possibleReason);
 	}
