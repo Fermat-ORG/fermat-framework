@@ -77,9 +77,9 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * ONLY FOR TEST SEND MESSAGE TO ALL COMPONENT REGISTER IN THE SERVER
 
 
-            String messageContent = "*******************************************************************************************\n " +
+            String messageContent = "***********************************************************************************************\n " +
                                     "* HELLO THUNDER COINS TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
-                                    "******************************************************************************************* ";
+                                    "*********************************************************************************************** ";
 
             for (PlatformComponentProfile platformComponentProfileDestination:list) {
 
@@ -108,9 +108,9 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
                 }
 
             }
-
-
 */
+
+
         //TODO: ATTACH THIS TO A EVENT AND FIRED
 
 

@@ -178,7 +178,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
                     }
                 }).start();
 
-*/
+            */
+
 
         } catch (Exception e) {
             e.printStackTrace();
