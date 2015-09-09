@@ -128,8 +128,10 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 if (isAttached) {
                     dialog.dismiss();
                     dialog = null;
-                    if (adapter != null)
-                        adapter.changeDataSet((ArrayList<WalletFactoryProject>) result[0]);
+                    if (adapter != null) {
+                        projects = (ArrayList<WalletFactoryProject>) result[0];
+                        adapter.changeDataSet(projects);
+                    }
                 }
             }
 
@@ -274,7 +276,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     @Override
     public ArrayList<WalletFactoryProject> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<WalletFactoryProject> items = null;
-
         return items; //todo: implement paging with refresh types and pos(values: 0 if the request is NEW and Last Item size if the request is OLD)
     }
 

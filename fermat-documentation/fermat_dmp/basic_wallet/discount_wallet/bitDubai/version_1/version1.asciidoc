@@ -244,9 +244,9 @@ chunk exchange rate*
 
 Now we can write the algorithm
 
-1. Check that N >= 0, if not we end the execution with an error message
+1. Check that N >= 0, if not we end the execution with an error fermatMessage
 2. Check that the available amount >= N, if not end the execution with
-an error message
+an error fermatMessage
 3. Take the chunks from the ValueChunks table with state UNSPENT and
 store them in a list.
 4. Sort the chunks of the list putting the chunks generated at lower
@@ -289,7 +289,7 @@ some details to make the ideas clearer. Some of this details that we
 should remark are:
 
 * The crypto currency can be different from Bitcoin, but a single wallet
-will work with only one type of crypto currency from the beginning of it
+will work with only one fermatPacketType of crypto currency from the beginning of it
 existence to the end.
 * The same observation holds for fiat currency. A wallet can use other
 currencies different than the US dollar but it will manage only one kind
@@ -425,8 +425,8 @@ covered by real value.
 The final approach of the implementation will then be (steps 1 and 2 can
 still use N):
 
-1. Check that N >= 0, if not we end the execution with an error message
-2. Check that the available amount >= N, if not end the execution with an error message
+1. Check that N >= 0, if not we end the execution with an error fermatMessage
+2. Check that the available amount >= N, if not end the execution with an error fermatMessage
 3. Take the chunks from the ValueChunks table with state UNSPENT and store them in a list.
 4. Sort the chunks of the list putting the chunks generated at lower exchange rate at the beginning of the list. The exchange rate of a chunk (fa,ca,state) is equal to the quotient fa/ca.
 5. Now iterate over this sorted list until you cryptoToPay is 0 (this condition will eventually hold because of the steps 1 and 2). Inside this loop proceed as follow:
