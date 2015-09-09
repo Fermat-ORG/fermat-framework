@@ -66,17 +66,17 @@ public class IntraUserNetworkServiceCommunicationManager {
      * Constructor with parameters
      *
      * @param communicationLayerManager a communicationLayerManager instance
-     * @param errorManager a errorManager instance
+     * @param errorManager              a errorManager instance
      */
     public IntraUserNetworkServiceCommunicationManager(ECCKeyPair eccKeyPair, CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
-        this.eccKeyPair                               = eccKeyPair;
-        this.communicationLayerManager                = communicationLayerManager;
-        this.errorManager                             = errorManager;
-        this.eventManager                             = eventManager;
-        this.incomingMessageDataAccessObject          = new IncomingMessageDataAccessObject(dataBase, errorManager);
-        this.outgoingMessageDataAccessObject          = new OutgoingMessageDataAccessObject(dataBase, errorManager);
-        this.intraUserNetworkServiceLocalsCache       = new HashMap<>();
+        this.eccKeyPair = eccKeyPair;
+        this.communicationLayerManager = communicationLayerManager;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.incomingMessageDataAccessObject = new IncomingMessageDataAccessObject(dataBase, errorManager);
+        this.outgoingMessageDataAccessObject = new OutgoingMessageDataAccessObject(dataBase, errorManager);
+        this.intraUserNetworkServiceLocalsCache = new HashMap<>();
         this.intraUserNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
 
@@ -87,7 +87,7 @@ public class IntraUserNetworkServiceCommunicationManager {
      * @param remoteNetworkServicePublicKey the remote Network Service public key
      * @return IntraUserNetworkServiceLocal a new instance
      */
-    public void connectTo(String remoteNetworkServicePublicKey){
+    public void connectTo(String remoteNetworkServicePublicKey) {
 
         try {
 
@@ -108,7 +108,7 @@ public class IntraUserNetworkServiceCommunicationManager {
      *
      * @param remoteNetworkServicePublicKey he remote network service public key
      */
-    public void closeConnection(String remoteNetworkServicePublicKey){
+    public void closeConnection(String remoteNetworkServicePublicKey) {
 
         //Remove the instance and stop his threads
         intraUserNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
@@ -118,7 +118,7 @@ public class IntraUserNetworkServiceCommunicationManager {
     /**
      * Close all previous connections
      */
-    public void closeAllConnection(){
+    public void closeAllConnection() {
 
         for (String key : intraUserNetworkServiceRemoteAgentsCache.keySet()) {
 
@@ -131,10 +131,10 @@ public class IntraUserNetworkServiceCommunicationManager {
     /**
      * Method to accept incoming connection request
      *
-     * @param communicationChannel the communication channel
+     * @param communicationChannel          the communication channel
      * @param remoteNetworkServicePublicKey the remote network service public key
      */
-    public void  acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey){
+    public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey) {
 
         try {
 
@@ -190,10 +190,10 @@ public class IntraUserNetworkServiceCommunicationManager {
      * Handles events that indicate a connection to been established between two intra user
      * network services and prepares all objects to work with this new connection
      *
-     * @param communicationChannel the communication channel
+     * @param communicationChannel          the communication channel
      * @param remoteNetworkServicePublicKey the remote network service public key
      */
-    public void handleEstablishedRequestedNetworkServiceConnection(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey){
+    public void handleEstablishedRequestedNetworkServiceConnection(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey) {
 
         try {
 
@@ -234,7 +234,7 @@ public class IntraUserNetworkServiceCommunicationManager {
 
             }
 
-        }catch (CommunicationException communicationException) {
+        } catch (CommunicationException communicationException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
     }
@@ -245,7 +245,7 @@ public class IntraUserNetworkServiceCommunicationManager {
      * @param remoteNetworkServicePublicKey the remote network service public key
      * @return IntraUserNetworkServiceLocal the local instance that represent
      */
-    public IntraUserNetworkServiceLocal getIntraUserNetworkServiceLocalInstance(String remoteNetworkServicePublicKey){
+    public IntraUserNetworkServiceLocal getIntraUserNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance
         return intraUserNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
@@ -254,7 +254,7 @@ public class IntraUserNetworkServiceCommunicationManager {
     /**
      * Pause the manager
      */
-    public void pause(){
+    public void pause() {
 
         for (String key : intraUserNetworkServiceRemoteAgentsCache.keySet()) {
 
@@ -267,7 +267,7 @@ public class IntraUserNetworkServiceCommunicationManager {
     /**
      * Resume the manager
      */
-    public void resume(){
+    public void resume() {
 
         for (String key : intraUserNetworkServiceRemoteAgentsCache.keySet()) {
 
@@ -276,5 +276,4 @@ public class IntraUserNetworkServiceCommunicationManager {
         }
 
     }
-
 }
