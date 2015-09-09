@@ -69,9 +69,10 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
         /*
          * If the connection to client destination available
          */
-        if (clientConnectionDestination != null){
+        if (clientConnectionDestination != null && clientConnectionDestination.isOpen()){
 
-            System.out.println("MessageTransmitPacketProcessor - sending to destination "+receiveFermatPacket.getDestination());
+            System.out.println("MessageTransmitPacketProcessor - sending to destination "+fermatPacketRespond.getDestination());
+
 
            /*
             * Send the encode packet to the destination
