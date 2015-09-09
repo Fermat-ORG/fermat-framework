@@ -79,3 +79,16 @@ Permutations:
 |Market Money         |Market Money Buy Negotiation Contract  |Market Crypto      |Crypto Broker Market Crypto Buy  |
 |Fiat Money           |Fiat Money Buy Negotiation Contract    |Fiat Cash          |Crypto Broker Fiat Cash Buy      |
 |Fiat Money           |Fiat Money Buy Negotiation Contract    |Fiat Bank          |Crypto Broker Fiat Bank Buy      |
+
+Scenario: The Crypto Customer rejects the terms of the "Buy Negotiation Contract"
+  Given I have updated a "Buy Negotiation Contract" in the Crypto Customer Wallet
+    And it has been reviewed and updated by the Crypto Broker
+    And it has been reviewed and update by the me
+  When I rejects the terms of the "Buy Negotiation Contract"
+  Then the Buy Negotiation should be marked as CANCELADO
+    And it should send a message through the Crypto Broker Network Service to the Crypto Broker marking the Buy Negotiation as CANCELADO
+Permutations:
+|Type of Merchandise  |Buy Negotiation Contract               |
+|Market Money         |Market Money Buy Negotiation Contract  |
+|Fiat Money           |Fiat Money Buy Negotiation Contract    |
+|Fiat Money           |Fiat Money Buy Negotiation Contract    |
