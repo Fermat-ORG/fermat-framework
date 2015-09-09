@@ -86,15 +86,16 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
                 FermatMessage fermatMessage = null;
                 try {
 
-                    fermatMessage = FermatMessageCommunicationFactory.constructFermatMessageEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getPlatformComponentProfile(),
-                                                                                                                platformComponentProfileDestination,
-                                                                                                                messageContent,
-                                                                                                                FermatMessageContentType.TEXT,
-                                                                                                                getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+                    fermatMessage = FermatMessageCommunicationFactory.constructFermatMessageEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getPlatformComponentProfile(), //Sender
+                                                                                                                platformComponentProfileDestination,                                  //Receiver
+                                                                                                                messageContent,                                                      //Message Content
+                                                                                                                FermatMessageContentType.TEXT,                                       //Type
+                                                                                                                getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey()); //Sender private key
+
 
                     FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getServerIdentity(),                  //Destination
                                                                                                                                 getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                                fermatMessage.toJson(),                                                  //Message Content
+                                                                                                                                fermatMessage.toJson(),                                                  //packet Content
                                                                                                                                 FermatPacketType.MESSAGE_TRANSMIT,                                       //Packet type
                                                                                                                                 getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey()); //Sender private key
 
@@ -108,8 +109,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
             }
 
-        */
 
+*/
         //TODO: ATTACH THIS TO A EVENT AND FIRED
 
 
