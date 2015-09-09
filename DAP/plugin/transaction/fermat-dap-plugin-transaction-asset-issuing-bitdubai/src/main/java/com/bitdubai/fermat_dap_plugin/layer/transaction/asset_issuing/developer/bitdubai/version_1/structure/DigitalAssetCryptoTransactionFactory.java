@@ -37,7 +37,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
-    PluginDatabaseSystem pluginDatabaseSystem;
+    //PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
 
@@ -57,11 +57,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
-        setCryptoVaultManager(cryptoVaultManager);
-        setCryptoWallet(cryptoWallet);
-        setPluginFileSystem(pluginFileSystem);
-        setPluginId(pluginId);
-        setPluginDatabaseSystem(pluginDatabaseSystem);
+        //setCryptoVaultManager(cryptoVaultManager);
+        //setCryptoWallet(cryptoWallet);
+        //setPluginFileSystem(pluginFileSystem);
+        //setPluginId(pluginId);
+        //setPluginDatabaseSystem(pluginDatabaseSystem);
         assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 
     }
@@ -73,44 +73,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
-    public void setCryptoWallet(CryptoWallet cryptoWallet) throws CantSetObjectException{
-        if(cryptoWallet==null){
-            throw new CantSetObjectException("CryptoWallet is null");
-        }
-        this.cryptoWallet=cryptoWallet;
-    }
 
-    public void setPluginId(UUID pluginId) throws CantSetObjectException{
-        if(pluginId==null){
-            throw new CantSetObjectException("PluginId is null");
-        }
-        this.pluginId=pluginId;
-    }
-
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem)throws CantSetObjectException{
-        if(pluginDatabaseSystem==null){
-            throw new CantSetObjectException("pluginDatabaseSystem is null");
-        }
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
-    }
-
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
-        if(pluginFileSystem==null){
-            throw new CantSetObjectException("pluginFileSystem is null");
-        }
-        this.pluginFileSystem=pluginFileSystem;
-    }
-
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException{
-
-        if(cryptoVaultManager==null){
-
-            throw new CantSetObjectException("CryptoVaultManager is null");
-
-        }
-        this.cryptoVaultManager=cryptoVaultManager;
-
-    }
 
     private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
 
@@ -125,7 +88,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }
 
     //This method can be used by a future monitor agent
-    public void setTransactionStatus(TransactionStatus transactionStatus){
+    public void setTransactionStatus(TransactionStatus transactionStatus) throws ObjectNotSetException{
+        if(transactionStatus==null){
+            throw new ObjectNotSetException("Transaction Status is null");
+        }
         this.transactionStatus=transactionStatus;
     }
 
