@@ -6093,6 +6093,25 @@
 						</certifications>
 					</plugin>
 				</plugins>
+				<plugins>
+					<plugin
+						name="Redeem Point Address Book"
+						description=""
+						difficulty="5"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
 			</layer>
 
 			<layer name="Crypto Vault" language="java">
