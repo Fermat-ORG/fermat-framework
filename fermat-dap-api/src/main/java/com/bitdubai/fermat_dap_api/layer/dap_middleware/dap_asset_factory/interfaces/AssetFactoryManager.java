@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.inter
 
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
@@ -13,15 +14,17 @@ import java.util.List;
  */
 public interface AssetFactoryManager {
     //Geters Asset Factory
-    List<AssetFactory> getAllAssetIssuer() throws CantGetAssetFactoryException;
-    List<AssetFactory> getAssetIssuerByIssuer(String issuerPublicKey) throws CantGetAssetFactoryException;
-    List<AssetFactory> getAssetIssuerByState(State state) throws CantGetAssetFactoryException;
+    List<AssetFactory> getAssetFactoryrByPublicKey(String publicKey) throws CantGetAssetFactoryException;
+    List<AssetFactory> getAllAssetFactory() throws CantGetAssetFactoryException;
+    List<AssetFactory> getAssetFactoryrByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException;
+    List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException;
 
     //CRUD
-    AssetFactory createEmptyAssetIssuer();
-    void createAssetIssuer(AssetFactory assetFactory) throws CantCreateAssetFactoryException;
-    void saveAssetIssuer(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
-    void removeAssetIssuer(AssetFactory assetFactory) throws CantDeleteAsserFactoryException;
+    AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException;
+    void createAssetFactory(AssetFactory assetFactory) throws CantCreateAssetFactoryException;
+    void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
+    void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException;
+
 
     //Deals
     //TODO: Revisar
