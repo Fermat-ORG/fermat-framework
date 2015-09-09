@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_dap_plugin.layer.actor.issuer.developer.bitdubai.version_1.ActorIssuerPluginRoot;
 
 /**
- * Created by Nerio on 07/09/15.
+ * Created by Nerio on 09/09/15.
  */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
