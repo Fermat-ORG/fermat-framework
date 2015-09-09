@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service;
 
 
-
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
@@ -21,7 +20,7 @@ import java.util.UUID;
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
  * is the implementation of the message<p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 09/06/15.
  *
  * @version 1.0
@@ -84,15 +83,15 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     /**
      * Constructor
      */
-    public IntraUserNetworkServiceMessage(){
+    public IntraUserNetworkServiceMessage() {
         super();
         this.deliveryTimestamp = null;
-        this.id           = null;
-        this.receiver     = null;
-        this.sender       = null;
-        this.shippingTimestamp = new Timestamp(System.currentTimeMillis())  ;
-        this.status       = null;
-        this.textContent  = null;
+        this.id = null;
+        this.receiver = null;
+        this.sender = null;
+        this.shippingTimestamp = new Timestamp(System.currentTimeMillis());
+        this.status = null;
+        this.textContent = null;
         this.messageType = null;
     }
 
@@ -102,12 +101,12 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     public IntraUserNetworkServiceMessage(Timestamp deliveryTimestamp, Long id, UUID receiver, UUID sender, Timestamp shippingTimestamp, MessagesStatus status, String textContent, MessagesTypes messageType) {
         super();
         this.deliveryTimestamp = deliveryTimestamp;
-        this.id           = id;
-        this.receiver     = receiver;
-        this.sender       = sender;
+        this.id = id;
+        this.receiver = receiver;
+        this.sender = sender;
         this.shippingTimestamp = shippingTimestamp;
-        this.status       = status;
-        this.textContent  = textContent;
+        this.status = status;
+        this.textContent = textContent;
         this.messageType = messageType;
     }
 
@@ -223,10 +222,11 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
 
     /**
      * (non-Javadoc)
+     *
      * @see Message#toJson()
      */
     @Override
-    public String toJson(){
+    public String toJson() {
 
         Gson gson = new Gson();
         return gson.toJson(this);
@@ -234,10 +234,11 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
 
     /**
      * (non-Javadoc)
+     *
      * @see Message#fromJson(String)
      */
     @Override
-    public IntraUserNetworkServiceMessage fromJson(String json){
+    public IntraUserNetworkServiceMessage fromJson(String json) {
 
         Gson gson = new Gson();
         return gson.fromJson(json, IntraUserNetworkServiceMessage.class);
@@ -247,7 +248,7 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     /**
      * Get the textContent
      *
-     * @return  the textContent
+     * @return the textContent
      */
     @Override
     public String getTextContent() {
@@ -275,6 +276,7 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
 
     /**
      * Set the type message
+     *
      * @param messageType the type message
      */
     public void setMessageType(MessagesTypes messageType) {
@@ -293,6 +295,7 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
 
     /**
      * Set the signature message
+     *
      * @param signature of the message
      */
     public void setSignature(String signature) {
