@@ -13,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
@@ -73,6 +75,10 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     private ArrayList<WalletFactoryProject> projects;
     private WalletFactoryProject project;
 
+    /**
+     * UI
+     */
+    private LinearLayout empty;
     private ProgressDialog dialog;
 
     /**
@@ -121,6 +127,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
         dialog.setTitle("Loading Projects Available to Publish");
         dialog.setMessage("Please wait...");
         dialog.show();
+        showView(false, empty);
         new FermatWorker(getActivity(), new FermatWorkerCallBack() {
             @SuppressWarnings("unchecked")
             @Override
@@ -132,6 +139,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                         projects = (ArrayList<WalletFactoryProject>) result[0];
                         adapter.changeDataSet(projects);
                     }
+                    showEmpty();
                 }
             }
 
@@ -141,6 +149,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                     dialog.dismiss();
                     dialog = null;
                     Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    showEmpty();
                 }
             }
         }) {
@@ -161,6 +170,8 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     protected void initViews(View layout) {
         super.initViews(layout);
         CommonLogger.info(TAG, "Setting up other views");
+        empty = (LinearLayout) layout.findViewById(R.id.empty);
+        empty.setVisibility(View.GONE);
     }
 
     @Override
@@ -441,6 +452,41 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
         return items;
     }
 
+
+    /**
+     * Show or hide empty view if needed
+     */
+    public void showEmpty() {
+        if (!isAttached || empty == null)
+            return;
+        if (projects == null || projects.isEmpty()) {
+            if (empty.getVisibility() == View.VISIBLE) {
+                empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_in));
+                empty.setVisibility(View.GONE);
+            }
+        } else if (empty.getVisibility() == View.GONE) {
+            empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_out));
+            empty.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Show or Hide any view
+     *
+     * @param show true if you want to show the view, otherwise false
+     * @param view View object to show or hide
+     */
+    public void showView(boolean show, View view) {
+        if (view == null)
+            return;
+        view.setAnimation(AnimationUtils
+                .loadAnimation(getActivity(), show ? R.anim.abc_fade_in : R.anim.abc_fade_out));
+        if (show && (view.getVisibility() == View.GONE || view.getVisibility() == View.INVISIBLE)) {
+            view.setVisibility(View.VISIBLE);
+        } else if (!show && view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        }
+    }
 
 }
 // Publisher Identity
