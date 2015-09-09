@@ -1221,7 +1221,7 @@
 							name="Platform Info"
 							description=""
 							difficulty="0"
-							code-level="concept"
+							code-level="production"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
