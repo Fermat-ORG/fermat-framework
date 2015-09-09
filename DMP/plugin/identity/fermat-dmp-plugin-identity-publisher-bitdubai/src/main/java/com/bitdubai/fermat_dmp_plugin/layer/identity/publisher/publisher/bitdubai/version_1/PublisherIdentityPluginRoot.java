@@ -419,12 +419,8 @@ public class PublisherIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-
-
         PublisherIdentityDeveloperDataBaseFactory dbFactory = new PublisherIdentityDeveloperDataBaseFactory(this.pluginId.toString(), PublisherIdentityDatabaseConstants.PUBLISHER_DB_NAME);
         return dbFactory.getDatabaseList(developerObjectFactory);
-
-
     }
 
     @Override

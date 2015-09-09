@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.dev
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -12,11 +11,11 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -24,21 +23,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIncomingIntraUserCryptoRegistryException;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantReadEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserExpectedTransactionNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.EventWrapper;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by eze on 2015.09.03..
+ * The class <code>com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.database.IncomingIntraUserDao</code>
+ * hide all the details of the access to the plugin's databases.
  */
 public class IncomingIntraUserDao {
 
@@ -146,21 +144,39 @@ public class IncomingIntraUserDao {
         updateTransactionToState(transaction, TransactionStatus.RESPONSIBLE, ProtocolStatus.TO_BE_APPLIED);
     }
 
+    public void updateTransactionToApplied(UUID id) throws CantLoadTableToMemoryException, IncomingIntraUserExpectedTransactionNotFoundException, CantUpdateRecordException {
+        DatabaseTable registryTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME);
+        DatabaseTableRecord recordToUpdate = getTransactionRecordFromId(id,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME);
 
+        recordToUpdate.setStringValue(
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME,
+                ProtocolStatus.APPLIED.getCode()
+        );
+        registryTable.updateRecord(recordToUpdate);
+    }
+
+    // TODO: Completar método cuando escriba el Relay Agent. El tipo de retorno va a cambiar
+    public List<Transaction<CryptoTransaction>> getAllTransactionsToBeApplied(){
+        return null;
+    }
 
 
 
     private void saveTransactionInState(Transaction<CryptoTransaction> transaction, TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws CantInsertRecordException {
-        DatabaseTable registryTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME);
+        DatabaseTable registryTable           = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME);
         DatabaseTableRecord transactionRecord = registryTable.getEmptyRecord();
         fillRegistryTableRecordFromCryptoTransaction(transactionRecord, transaction, transactionStatus, protocolStatus);
         registryTable.insertRecord(transactionRecord);
     }
 
     private void updateTransactionToState(Transaction<CryptoTransaction> transaction, TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws CantLoadTableToMemoryException, CantUpdateRecordException, IncomingIntraUserExpectedTransactionNotFoundException {
-        DatabaseTable registryTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME);
+        DatabaseTable registryTable        = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME);
+        DatabaseTableRecord recordToUpdate = getTransactionRecordFromId(transaction.getTransactionID(),
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME);
 
-        DatabaseTableRecord recordToUpdate = getTransactionRecordFromId(transaction.getTransactionID());
         recordToUpdate.setStringValue(
                 IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TRANSACTION_STATUS_COLUMN_NAME,
                 transactionStatus.getCode()
@@ -173,9 +189,9 @@ public class IncomingIntraUserDao {
         registryTable.updateRecord(recordToUpdate);
     }
 
-    private DatabaseTableRecord getTransactionRecordFromId(UUID id) throws CantLoadTableToMemoryException, IncomingIntraUserExpectedTransactionNotFoundException {
-        DatabaseTable registryTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME);
-        registryTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+    private DatabaseTableRecord getTransactionRecordFromId(UUID id,String tableName, String columnName) throws CantLoadTableToMemoryException, IncomingIntraUserExpectedTransactionNotFoundException {
+        DatabaseTable registryTable = database.getTable(tableName);
+        registryTable.setUUIDFilter(columnName, id, DatabaseFilterType.EQUAL);
 
         registryTable.loadToMemory();
         registryTable.clearAllFilters();
@@ -215,7 +231,10 @@ public class IncomingIntraUserDao {
     public List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws InvalidParameterException, CantLoadTableToMemoryException {
 
         List<Transaction<CryptoTransaction>> returnList = new ArrayList<>();
-        List<DatabaseTableRecord> records = getAllRecordsInState(transactionStatus, protocolStatus);
+        List<DatabaseTableRecord> records               = getAllRecordsInState(transactionStatus, protocolStatus,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TRANSACTION_STATUS_COLUMN_NAME,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME);
 
         for (DatabaseTableRecord r : records)
             returnList.add(getTransactionFromRecord(r));
@@ -223,15 +242,18 @@ public class IncomingIntraUserDao {
         return returnList;
     }
 
-    private List<DatabaseTableRecord> getAllRecordsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws CantLoadTableToMemoryException {
-        DatabaseTable registryTable = this.database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TABLE_NAME);
+    private List<DatabaseTableRecord> getAllRecordsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus,
+                                                           String tableName,
+                                                           String transactionStatusColumnName,
+                                                           String protocolStatusColumnName) throws CantLoadTableToMemoryException {
+        DatabaseTable registryTable = this.database.getTable(tableName);
 
-        registryTable.setStringFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TRANSACTION_STATUS_COLUMN_NAME,
+        registryTable.setStringFilter(transactionStatusColumnName,
                 transactionStatus.getCode(),
                 DatabaseFilterType.EQUAL
         );
 
-        registryTable.setStringFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME,
+        registryTable.setStringFilter(protocolStatusColumnName,
                 protocolStatus.getCode(),
                 DatabaseFilterType.EQUAL
         );
@@ -268,5 +290,102 @@ public class IncomingIntraUserDao {
         );
     }
 
-}
 
+    /*
+     * Crypto Metadata methods
+     */
+    public void saveFermatTransactionAsAcknowledgedToBeNotified(Transaction<FermatCryptoTransaction> transaction) throws CantInsertRecordException {
+        saveFermatTransactionInState(transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED);
+    }
+
+    public boolean isANewFermatTransaction(Transaction<FermatCryptoTransaction> transaction) throws CantLoadTableToMemoryException {
+        DatabaseTable cryptoMetadataTable = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TABLE_NAME);
+        cryptoMetadataTable.setUUIDFilter(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+        cryptoMetadataTable.loadToMemory();
+        cryptoMetadataTable.clearAllFilters();
+        return cryptoMetadataTable.getRecords().isEmpty();
+    }
+
+    public void saveFermatTransactionInState(Transaction<FermatCryptoTransaction> transaction, TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws CantInsertRecordException {
+        DatabaseTable cryptoMetadataTable     = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TABLE_NAME);
+        DatabaseTableRecord transactionRecord = cryptoMetadataTable.getEmptyRecord();
+        fillCryptoMetadataTableRecordFromFermantCryptoTransaction(transactionRecord, transaction, transactionStatus, protocolStatus);
+        cryptoMetadataTable.insertRecord(transactionRecord);
+    }
+
+    public static final String TRUE  = "T";
+    public static final String FALSE = "F";
+
+    private void fillCryptoMetadataTableRecordFromFermantCryptoTransaction(DatabaseTableRecord recordToFill, Transaction<FermatCryptoTransaction> transaction, TransactionStatus transactionStatus, ProtocolStatus protocolStatus){
+        String flag = transaction.getInformation().isAnswerToAPaymentRequest() ? TRUE : FALSE;
+
+        recordToFill.setUUIDValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME, transaction.getTransactionID());
+        recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_REQUEST_FLAG_COLUMN_NAME, flag);
+        recordToFill.setUUIDValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_REQUEST_ID_COLUMN_NAME, transaction.getInformation().getRequestId());
+        recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME, transaction.getInformation().getSenderPublicKey());
+        recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, transaction.getInformation().getDestinationPublicKey());
+        recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME,transaction.getInformation().getAssociatedCryptoTransactionHash());
+        recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME,transaction.getInformation().getPaymentDescription());
+        recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ACTION_COLUMN_NAME,transaction.getAction().getCode());
+        recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PROTOCOL_STATUS_COLUMN_NAME,protocolStatus.getCode());
+        recordToFill.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TRANSACTION_STATUS_COLUMN_NAME,transactionStatus.getCode());
+        recordToFill.setLongValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TIMESTAMP_COLUMN_NAME, transaction.getTimestamp());
+    }
+
+    public void updateFermatCryptoTransactionToResponsibleToBeApplied(Transaction<FermatCryptoTransaction> fermatCryptoTransactionTransaction) throws IncomingIntraUserExpectedTransactionNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
+        updateFermatCryptoTransactionToState(fermatCryptoTransactionTransaction,TransactionStatus.RESPONSIBLE, ProtocolStatus.TO_BE_APPLIED);
+    }
+
+    private void updateFermatCryptoTransactionToState(Transaction<FermatCryptoTransaction> transaction, TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws CantLoadTableToMemoryException, CantUpdateRecordException, IncomingIntraUserExpectedTransactionNotFoundException {
+        DatabaseTable cryptoMetadataTable  = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TABLE_NAME);
+        DatabaseTableRecord recordToUpdate = getTransactionRecordFromId(transaction.getTransactionID(),
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TABLE_NAME,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ID_COLUMN_NAME);
+
+        recordToUpdate.setStringValue(
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TRANSACTION_STATUS_COLUMN_NAME,
+                transactionStatus.getCode()
+        );
+
+        recordToUpdate.setStringValue(
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PROTOCOL_STATUS_COLUMN_NAME,
+                protocolStatus.getCode()
+        );
+        cryptoMetadataTable.updateRecord(recordToUpdate);
+    }
+
+
+    public List<Transaction<FermatCryptoTransaction>> getAllFermatCryptoTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws InvalidParameterException, CantLoadTableToMemoryException {
+
+        List<Transaction<FermatCryptoTransaction>> returnList = new ArrayList<>();
+        List<DatabaseTableRecord> records               = getAllRecordsInState(transactionStatus, protocolStatus,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TABLE_NAME,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TRANSACTION_STATUS_COLUMN_NAME,
+                IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PROTOCOL_STATUS_COLUMN_NAME);
+
+        for (DatabaseTableRecord r : records)
+            returnList.add(getFermatCryptoTransactionFromRecord(r));
+
+        return returnList;
+    }
+
+    private Transaction<FermatCryptoTransaction> getFermatCryptoTransactionFromRecord(DatabaseTableRecord databaseTableRecord) throws InvalidParameterException {
+
+        boolean flag = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_REQUEST_FLAG_COLUMN_NAME).equals(TRUE);
+        UUID requestId = flag ? databaseTableRecord.getUUIDValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_REQUEST_ID_COLUMN_NAME) : null;
+        String senderPublicKey = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME);;
+        String destinationPublicKey = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
+        String associatedCryptoTransactionHash = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME);;
+        String paymentDescription = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME);;
+
+        FermatCryptoTransaction fermatCryptoTransaction = new FermatCryptoTransaction(flag,requestId,senderPublicKey,destinationPublicKey,associatedCryptoTransactionHash,paymentDescription);
+        Action action = Action.getByCode(databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ACTION_COLUMN_NAME));
+
+        return new Transaction<>(
+                databaseTableRecord.getUUIDValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_ID_COLUMN_NAME),
+                fermatCryptoTransaction,
+                action,
+                databaseTableRecord.getLongValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_TIMESTAMP_COLUMN_NAME)
+        );    }
+
+}

@@ -235,7 +235,7 @@ public class DeviceConnectivityAgent  implements ConnectivityAgent,DealsWithErro
 
                     if (activeNetwork != connectionIfo.getType() ){
                         activeNetwork = connectionIfo.getType();
-                        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.DEVICE_CONNECTIVITY_NETWORK_CHANGE);
+                        PlatformEvent platformEvent = eventManager.getNewEvent(null);
                         platformEvent.setSource(EventSource.DEVICE_CONNECTIVITY);
                         eventManager.raiseEvent(platformEvent);
                     }
