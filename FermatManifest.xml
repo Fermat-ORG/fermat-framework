@@ -3387,7 +3387,7 @@
 			<layer name="Middleware" language="java">
 				<plugins>
 					<plugin
-						name="Asset Recipients"
+						name="Asset Factory"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -3395,7 +3395,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="acostarodrigo"></mantainer>
@@ -3625,7 +3625,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Rart3001" scope="implementation" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
