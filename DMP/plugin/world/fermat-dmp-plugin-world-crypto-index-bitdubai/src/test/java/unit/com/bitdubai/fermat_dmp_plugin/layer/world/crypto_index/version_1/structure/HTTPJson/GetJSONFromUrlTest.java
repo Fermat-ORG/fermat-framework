@@ -4,11 +4,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 
 import org.fest.assertions.api.Assertions;
 import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
 
 /**
  * Created by francisco on 03/09/15.
@@ -25,5 +24,10 @@ public class GetJSONFromUrlTest {
             String jsonExpectedValue="btc/usd";
             json=jsonObjectTest.getString("id");
             Assertions.assertThat(json).isEqualTo(jsonExpectedValue);
+    }
+
+    public void TestGetJSONFromUrl_ThrowException(){
+        catchException(htppJson).getJSONFromUrl("");
+        Assertions.assertThat(caughtException()).isNotNull();//.isInstanceOf(CantGetInputStream.class);
     }
 }

@@ -33,9 +33,9 @@ public class GetJsonObjectTest {
         jsonObjectTest = htppJson.getJsonObject(bufferedReaderTest);
         Assertions.assertThat(jsonObjectTest).isNotNull();
     }
-    @Test
+
     public void TestGetJsonObject_ThrowCantGetJsonObject() throws Exception{
         catchException(htppJson).getJsonObject(bufferedReaderTestExceptios);
-        Assertions.assertThat(caughtException()).isNotNull();
+        Assertions.assertThat((Throwable) caughtException()).isNotNull();
     }
 }

@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.CryptoCur
 import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.FiatCurrencyNotSupportedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -18,7 +20,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Even
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -42,25 +46,32 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
     /**
      * UsesFileSystem Interface member variables.
      */
-    PluginFileSystem pluginFileSystem;
+   PluginFileSystem pluginFileSystem;
 
     /**
      * DealWithEvents Interface member variables.
      */
+    /**
+     * DealsWithLogger interface member variable
+     */
+    private LogManager logManager;
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    private ErrorManager errorManager;
     EventManager eventManager;
 
     /**
      * Plugin Interface member variables.
      */
     UUID pluginId;
-
-
     @Override
     public void start() {
         /**
          * I will initialize the handling of platform events.
          */
-
         EventListener eventListener;
         EventHandler eventHandler;
 
@@ -129,26 +140,20 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
-
     /**
      *DealWithErrors Interface implementation.
      */
-
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
     }
 
     /**
      * DealsWithPluginIdentity methods implementation.
      */
-
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
-
     @Override
     public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
         return 0;

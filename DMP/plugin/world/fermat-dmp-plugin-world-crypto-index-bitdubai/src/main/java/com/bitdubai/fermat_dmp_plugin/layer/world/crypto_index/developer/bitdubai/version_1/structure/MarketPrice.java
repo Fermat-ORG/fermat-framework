@@ -29,7 +29,6 @@ public class MarketPrice implements MarketRateProvider {
     CexioServiceAPI cexioServiceAPI = new CexioServiceAPI();
     CryptocoinchartsServiceAPI cryptocoinchartsServiceAPI = new CryptocoinchartsServiceAPI();
     String url = null;
-
     /**
      * Through getBestMarketPrice method, the best market price returns
      * @param c
@@ -45,7 +44,6 @@ public class MarketPrice implements MarketRateProvider {
             marketExchangeRate=getBestMarketPrice(crypto, fiat);
         return marketExchangeRate;
     }
-
     /**
      *The url obtained providers is stored in different variable type String.
      * These are added to a list so, then it is sorted from lowest to highest, and thus return the best market price.
@@ -64,17 +62,13 @@ public class MarketPrice implements MarketRateProvider {
         String urlAPI4=cexioServiceAPI.getUrlAPI(crypto, fiat);
         String urlAPI5=cryptocoinchartsServiceAPI.getUrlAPI(crypto, fiat);
 
-
             priceList.add(jsonService.getJSONFromUrl(urlAPI1).getJSONObject(crypto.toLowerCase() + "_" + fiat.toLowerCase()).get("last").toString());
             priceList.add(jsonService.getJSONFromUrl(urlAPI2).get("last").toString());
             priceList.add(jsonService.getJSONFromUrl(urlAPI3).getJSONObject("ticker").get("lastprice").toString());
             priceList.add(jsonService.getJSONFromUrl(urlAPI4).getString("last"));
             priceList.add(jsonService.getJSONFromUrl(urlAPI5).getString("price"));
 
-
-
         Collections.sort(priceList);
-
         marketExchangeRate= Double.valueOf(priceList.get(priceList.size()-1));
         return marketExchangeRate;
     }

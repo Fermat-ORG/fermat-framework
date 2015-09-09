@@ -52,7 +52,7 @@ public class GetBufferedReaderTest {
         bufferedReaderTest = httpJson.getBufferedReader(inputStreamTest);
         assertThat(bufferedReaderTest).isNotNull();
     }
-    @Test
+
     public void TestGetBufferedReader_ThrowsCantGetBufferedReader() throws Exception{
         catchException(httpJson).getBufferedReader(null);
         assertThat(caughtException()).isNotNull();

@@ -28,13 +28,9 @@ public class HTTPJson implements DealsWithErrors {
     private InputStream inputStream;
     private JSONObject jsonObject;
     private String json = "";
-
     public HTTPJson() {
-
     }
-
     ErrorManager errorManager;
-
     /**
      * this method is responsible for implementing all the methods of the class and return a JSON object
      * @param url
@@ -72,7 +68,6 @@ public class HTTPJson implements DealsWithErrors {
         } catch (IOException e) {
             throw new  CantGetInputStream(CantGetInputStream.DEFAULT_MESSAGE,e,"Probably the url is invalid",null);
         }
-
         return inputStream;
     }
     /**
@@ -85,10 +80,8 @@ public class HTTPJson implements DealsWithErrors {
         } catch (UnsupportedEncodingException e) {
           new CantGetBufferedReader(CantGetBufferedReader.DEFAULT_MESSAGE,e,"Probably the InputStream parameter is not correct",null);
         }
-
         return bufferedReader;
     }
-
     /**
      * En este método se espera el ingreso de un parámetro del tipo BufferedReader para que el mismo sea leído, colocado en formato json y guardado como un JsonObject
 
@@ -106,9 +99,7 @@ public class HTTPJson implements DealsWithErrors {
         } catch (IOException e) {
           throw new CantGetJsonObject(CantGetJsonObject.DEFAULT_MESSAGE,e,"Probably the Json object obtained not correct or is not within the expected format",null);
         }
-
-
-        return jsonObject;
+       return jsonObject;
     }
 
     @Override
