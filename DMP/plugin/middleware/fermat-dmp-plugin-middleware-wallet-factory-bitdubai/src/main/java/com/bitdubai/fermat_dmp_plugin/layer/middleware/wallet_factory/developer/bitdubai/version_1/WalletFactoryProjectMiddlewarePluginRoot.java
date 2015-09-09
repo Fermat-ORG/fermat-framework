@@ -122,7 +122,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
         }
 
         //Start Test
-        test();
+        //test();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
