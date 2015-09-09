@@ -328,7 +328,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, localStoragePath,screenSize);
+            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize);
 
             /**
              *  download language
@@ -491,6 +491,154 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     public WalletInstalationProgress getWalletInstalationProgress(){
         return  walletInstalationProgress;
     }
+
+
+    /**
+     * <p>This method read wallet manifest file to get resources names, to download from repository.
+     * <p>Save file in device memory
+     *
+     * @throws CantCheckResourcesException
+     */
+
+
+    @Override
+    public UUID getResourcesId() {
+        return null;
+    }
+
+    @Override
+    public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
+        String content = "";
+        try {
+            //get repo name
+            Repository repository = repositoriesName.get(skinId);//= Repositories.getValueFromType(walletType);
+            //get image from disk
+            PluginTextFile layoutFile;
+
+            String path = repository.getPath() + "/skins/" + repository.getSkinName() + "/";
+
+            layoutFile = pluginFileSystem.getTextFile(pluginId, path, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            content = layoutFile.getContent();
+        } catch (FileNotFoundException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error write layout file resource  ", "");
+
+        } catch (CantCreateFileException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error created image file resource ", "");
+
+        }
+
+        return (Skin) XMLParser.parseXML(content, new Skin());
+    }
+
+    @Override
+    public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
+        return null;
+    }
+
+
+    /**
+     * <p>This method return a image file saved in device memory
+     *
+     * @param imageName Name of resource image file
+     * @return byte image object
+     * @throws CantGetResourcesException
+     */
+
+
+    @Override
+    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetResourcesException {
+
+        // Testing purpose
+        return imagenes.get(imageName);
+
+        //TODO: despues tengo que ir a buscar al archivo, esto está así por tema de testeo, abajo está el codigo que lo hace
+        /*
+        Repository repository= repositoriesName.get(skinId);
+
+        PluginBinaryFile imageFile = null;
+
+        String filename= skinId.toString()+"_"+imageName;
+
+        String path = repository.getPath()+"/skins/"+repository.getSkinName()+"/";
+
+        try {
+            imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return imageFile.getContent();
+        */
+    }
+
+    @Override
+    public byte[] getVideoResource(String videoName, UUID skinId) throws CantGetResourcesException {
+        return new byte[0];
+    }
+
+    @Override
+    public byte[] getSoundResource(String soundName, UUID skinId) throws CantGetResourcesException {
+        return new byte[0];
+    }
+
+    @Override
+    public String getFontStyle(String styleName, UUID skinId) {
+        return null;
+    }
+
+
+    /**
+     * <p>This method return a layout file saved in device memory
+     *
+     * @param layoutName Name of layout resource file
+     * @return string layout object
+     * @throws CantGetResourcesException
+     */
+    @Override
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
+
+        String content = "";
+        try {
+            //get repo name
+            String reponame = "";//= Repositories.getValueFromType(walletType);
+            //get image from disk
+            PluginTextFile layoutFile;
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, layoutName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            content = layoutFile.getContent();
+        } catch (FileNotFoundException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error write layout file resource  ", "");
+
+        } catch (CantCreateFileException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error created image file resource ", "");
+
+        }
+
+        return content;
+    }
+
+
+    // Private instances methods declarations.
+
+
     private void UnninstallWallet(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String navigationStructureVersion,boolean isLastWallet){
         String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
@@ -532,7 +680,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
 
             String navigationStructureName="navigation_structure.xml";
-            deleteXML(navigationStructureName,skinId,linkToNavigationStructure);
+            deleteXML(navigationStructureName, skinId, linkToNavigationStructure);
 
 
             /**
@@ -562,7 +710,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         }
     }
-
 
 
     private void downloadResourcesFromRepo(String linkToRepo, Skin skin, String localStoragePath,String screenSize) {
@@ -936,149 +1083,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    /**
-     * <p>This method read wallet manifest file to get resources names, to download from repository.
-     * <p>Save file in device memory
-     *
-     * @throws CantCheckResourcesException
-     */
-
-
-    @Override
-    public UUID getResourcesId() {
-        return null;
-    }
-
-    @Override
-    public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
-        String content = "";
-        try {
-            //get repo name
-            Repository repository = repositoriesName.get(skinId);//= Repositories.getValueFromType(walletType);
-            //get image from disk
-            PluginTextFile layoutFile;
-
-            String path = repository.getPath() + "/skins/" + repository.getSkinName() + "/";
-
-            layoutFile = pluginFileSystem.getTextFile(pluginId, path, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
-            content = layoutFile.getContent();
-        } catch (FileNotFoundException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error write layout file resource  ", "");
-
-        } catch (CantCreateFileException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error created image file resource ", "");
-
-        }
-
-        return (Skin) XMLParser.parseXML(content, new Skin());
-    }
-
-    @Override
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return null;
-    }
-
-
-    /**
-     * <p>This method return a image file saved in device memory
-     *
-     * @param imageName Name of resource image file
-     * @return byte image object
-     * @throws CantGetResourcesException
-     */
-
-
-    @Override
-    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetResourcesException {
-
-        // Testing purpose
-        return imagenes.get(imageName);
-
-        //TODO: despues tengo que ir a buscar al archivo, esto está así por tema de testeo, abajo está el codigo que lo hace
-        /*
-        Repository repository= repositoriesName.get(skinId);
-
-        PluginBinaryFile imageFile = null;
-
-        String filename= skinId.toString()+"_"+imageName;
-
-        String path = repository.getPath()+"/skins/"+repository.getSkinName()+"/";
-
-        try {
-            imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        }
-
-
-
-        return imageFile.getContent();
-        */
-    }
-
-    @Override
-    public byte[] getVideoResource(String videoName, UUID skinId) throws CantGetResourcesException {
-        return new byte[0];
-    }
-
-    @Override
-    public byte[] getSoundResource(String soundName, UUID skinId) throws CantGetResourcesException {
-        return new byte[0];
-    }
-
-    @Override
-    public String getFontStyle(String styleName, UUID skinId) {
-        return null;
-    }
-
-
-    /**
-     * <p>This method return a layout file saved in device memory
-     *
-     * @param layoutName Name of layout resource file
-     * @return string layout object
-     * @throws CantGetResourcesException
-     */
-    @Override
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
-
-        String content = "";
-        try {
-            //get repo name
-            String reponame = "";//= Repositories.getValueFromType(walletType);
-            //get image from disk
-            PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, layoutName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
-            content = layoutFile.getContent();
-        } catch (FileNotFoundException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error write layout file resource  ", "");
-
-        } catch (CantCreateFileException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error created image file resource ", "");
-
-        }
-
-        return content;
-    }
-
-    // Private instances methods declarations.
 
     /**
      * <p>This method connects to the repository and download string file resource for wallet on byte (Private Method)
