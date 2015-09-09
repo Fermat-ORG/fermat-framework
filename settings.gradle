@@ -1,15 +1,13 @@
-
 include ':fermat-android-api'
+include ':fermat-android-core'
 
 include ':fermat-api'
-include ':fermat-android-core'
 include ':fermat-core'
 include ':fermat-cry-api'
 include ':fermat-dap-api'
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
 include ':fermat-wpd-api'
-
 
 // CRY Projects
 
@@ -31,7 +29,6 @@ project(':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai').project
 // Milestone 1 project:
 include ':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
 project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai').projectDir = new File('CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
-
 
 // OSA Projects (Android)
 
@@ -109,11 +106,6 @@ project(':fermat-pip-android-sub-app-developer-bitdubai').projectDir = new File(
 include ':fermat-pip-android-sub-app-sub-app-manager-bitdubai'
 project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-sub-app-manager-bitdubai')
 
-
-
-
-
-
 // P2P Projects
 
 include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
@@ -127,7 +119,6 @@ project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai').projectDir
 
 include ':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai'
 project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
-
 
 // DMP Projects (Plugins)
 
@@ -271,7 +262,6 @@ project(':fermat-dmp-plugin-module-wallet-publisher-bitdubai').projectDir = new 
 include ':fermat-dmp-plugin-module-wallet-store-bitdubai'
 project(':fermat-dmp-plugin-module-wallet-store-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai')
 
-
 // Milestone 1 project:
 include ':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai'
 project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai').projectDir = new File('DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
@@ -294,7 +284,6 @@ project(':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai').projectDir = n
 include ':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai'
 project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai').projectDir = new File('DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
 
-
 // Milestone 1 project:
 include ':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
 project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai').projectDir = new File('DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
@@ -302,12 +291,10 @@ project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai').projectDir = 
 include ':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
 project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai').projectDir = new File('DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
 
-
 // DMP Projects (Addons)
 
 include ':fermat-dmp-addon-license-wallet-bitdubai'
 project(':fermat-dmp-addon-license-wallet-bitdubai').projectDir = new File('DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai')
-
 
 // DMP Projects (Wallets)
 
@@ -359,7 +346,6 @@ project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai').projectDir = ne
 include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
 
-
 // Milestone 2 project middlware:
 
 include ':fermat-dmp-plugin-middleware-wallet-skin-bitdubai'
@@ -386,7 +372,6 @@ project(':fermat-dmp-plugin-middleware-wallet-settings-bitdubai').projectDir = n
 // Intra user
 include ':fermat-dmp-android-sub-app-intra-user-bitdubai'
 project(':fermat-dmp-android-sub-app-intra-user-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai')
-
 
 // Milestone 2 project network service:
 
@@ -441,9 +426,11 @@ project(':fermat-dap-plugin-transaction-outgoing-intra-user-bitdubai').projectDi
 include ':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai'
 project(':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-outgoing-issuer-bitdubai')
 
+// network-service
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
 project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
 
+// identity
 include ':fermat-dap-plugin-identity-issuer-bitdubai'
 project(':fermat-dap-plugin-identity-issuer-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-issuer-bitdubai')
 
@@ -453,6 +440,12 @@ project(':fermat-dap-plugin-identity-user-bitdubai').projectDir = new File('DAP/
 include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
 project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
 
+// actor
 include ':fermat-dap-plugin-actor-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-issuer-bitdubai')
 
+include ':fermat-dap-plugin-actor-user-bitdubai'
+project(':fermat-dap-plugin-actor-user-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-user-bitdubai')
+
+include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
+project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')

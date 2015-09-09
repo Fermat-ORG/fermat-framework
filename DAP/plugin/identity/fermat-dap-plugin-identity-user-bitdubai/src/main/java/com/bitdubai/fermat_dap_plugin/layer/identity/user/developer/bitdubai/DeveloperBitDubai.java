@@ -15,9 +15,9 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     Plugin plugin;
 
 
-/*    public DeveloperBitDubai () {
+    public DeveloperBitDubai () {
         plugin = new IdentityUserPluginRoot();
-    }*/
+    }
 
     @Override
     public Plugin getPlugin() {
