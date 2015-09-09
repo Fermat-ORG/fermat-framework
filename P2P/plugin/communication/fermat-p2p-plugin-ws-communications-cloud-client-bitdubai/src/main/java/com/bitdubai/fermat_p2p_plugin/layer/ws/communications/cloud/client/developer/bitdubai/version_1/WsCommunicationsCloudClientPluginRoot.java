@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.server.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot</code> is
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
@@ -68,8 +68,9 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the SERVER_IP
      */
-    private static final String SERVER_IP = "192.168.43.206";
+    //private static final String SERVER_IP = "192.168.43.206";
     //private static final String SERVER_IP = "192.168.0.7";
+    private static final String SERVER_IP = "52.11.156.16"; //AWS
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -156,7 +157,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 
 
-            /* ONLY FOR TEST
+            /* ONLY FOR TEST */
 
                 new Thread(new Runnable() {
 
@@ -178,7 +179,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
                     }
                 }).start();
 
-            */
+
 
         } catch (Exception e) {
             e.printStackTrace();
