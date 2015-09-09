@@ -131,11 +131,11 @@ public class IntraUserNetworkServiceDatabaseFactory {
             table = databaseFactory.newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_NAME);
 
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_ID_COLUMN_NAME,              DatabaseDataType.STRING,       100, Boolean.TRUE);
-            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME,       DatabaseDataType.STRING,       100, Boolean.FALSE);
-            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_PROFILE_PICTURE_COLUMN_NAME, DatabaseDataType.STRING,       100, Boolean.FALSE);
-            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME,       DatabaseDataType.STRING,       50, Boolean.FALSE);
+           table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.STRING,100, Boolean.FALSE);
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME,    DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME,    DatabaseDataType.STRING,  20, Boolean.FALSE);
 
             try {
 

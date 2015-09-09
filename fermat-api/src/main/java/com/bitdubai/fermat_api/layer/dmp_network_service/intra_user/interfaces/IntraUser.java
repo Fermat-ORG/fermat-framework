@@ -22,12 +22,6 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraU
  */
 public interface IntraUser {
 
-    /**
-     * Return the address
-     *
-     * @return String
-     */
-    public String getAddress();
 
     /**
      *
@@ -47,55 +41,5 @@ public interface IntraUser {
      * @return String
      */
     public String getName ();
-
-
-    /**
-     * Return the lastLocation
-     *
-     * @return String
-     */
-    public String getLastLocation ();
-
-    /**
-     * Return the status
-     *
-     * @return TemplateStatus
-     */
-    public IntraUserStatus getStatus ();
-
-    /**
-     * Return the SmallProfilePicture
-     *
-     * @return String
-     */
-    public String getSmallProfilePicture ();
-
-    /**
-     * Return the MediumProfilePicture
-     *
-     * @return String
-     */
-    public String getMediumProfilePicture ();
-
-    /**
-     * Return the BigProfilePicture
-     *
-     * @return String
-     */
-    public String getBigProfilePicture ();
-
-    /**
-     * Return the createdTime
-     *
-     * @return String
-     */
-    public Long getCreatedTime();
-
-    /**
-     * Return the updateTime
-     *
-     * @return String
-     */
-    public Long getUpdateTime();
 
 }
