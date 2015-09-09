@@ -4,4 +4,4 @@ frontend de las actividades financieras de un Crypto Broker(vender crypto, vende
 
 ## Developer
 
-bitDubai - [http://bitdubai.com/](http://bitdubai.com/)
+**bitDubai** - [http://bitdubai.com/](http://bitdubai.com/)
