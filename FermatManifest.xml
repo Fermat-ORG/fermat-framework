@@ -1220,7 +1220,7 @@
 					<addon
 							name="Platform Info"
 							description=""
-							difficulty="0"
+							difficulty="2"
 							code-level="production"
 							>
 						<authors>
