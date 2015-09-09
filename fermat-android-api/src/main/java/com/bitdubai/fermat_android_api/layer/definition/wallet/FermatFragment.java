@@ -102,8 +102,8 @@ public abstract class FermatFragment extends Fragment {
     /**
      * Change activity
      */
-    protected final void changeActivity(Activities activity) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activity.getCode());
+    protected final void changeActivity(Activities activity,  Object... args) {
+        ((FermatScreenSwapper) getActivity()).changeActivity(activity.getCode(), args);
     }
 
     /**
