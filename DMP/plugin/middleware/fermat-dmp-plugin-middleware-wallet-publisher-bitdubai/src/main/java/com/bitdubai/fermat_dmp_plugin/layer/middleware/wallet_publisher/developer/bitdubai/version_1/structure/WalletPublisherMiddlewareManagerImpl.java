@@ -196,7 +196,6 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publisherIdentityPublicKey);
             filters.put(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_COMPONENT_TYPE_COLUMN_NAME, FactoryProjectType.LANGUAGE.getCode());
 
-
             /*
              * Load the data from data base
              */
@@ -391,7 +390,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             componentVersionDetailMiddlewareImpl.setInitialPlatformVersion(initialPlatformVersion);
             componentVersionDetailMiddlewareImpl.setFinalPlatformVersion(finalPlatformVersion);
             componentVersionDetailMiddlewareImpl.setObservations(observations);
-            componentVersionDetailMiddlewareImpl.setScreenSize(walletFactoryProject.getSkins().get(0).getScreenSize());
+            componentVersionDetailMiddlewareImpl.setScreenSize(walletFactoryProject.getDefaultSkin().getScreenSize());
             componentVersionDetailMiddlewareImpl.setComponentId(informationPublishedComponentMiddlewareImpl.getId());
             componentVersionDetailMiddlewareImpl.setCatalogId(catalogItem.getId());
 
@@ -485,14 +484,14 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
          */
         Skin skin = walletFactoryProject.getDefaultSkin();
         com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin defaultSkin = constructSkinObject(catalogId,
-                skin,
-                version,
-                mainScreenShot,
-                screenShotDetails,
-                (!videoPreviews.isEmpty()),
-                videoPreviews,
-                initialWalletVersion,
-                finalWalletVersion);
+                                                                                                                        skin,
+                                                                                                                        version,
+                                                                                                                        mainScreenShot,
+                                                                                                                        screenShotDetails,
+                                                                                                                        (!videoPreviews.isEmpty()),
+                                                                                                                        videoPreviews,
+                                                                                                                        initialWalletVersion,
+                                                                                                                        finalWalletVersion);
 
 
         /*
@@ -505,14 +504,14 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
              * Construct
              */
             com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skinCatalogItem = constructSkinObject(catalogId,
-                    skinItem,
-                    version,
-                    mainScreenShot,
-                    screenShotDetails,
-                    (!videoPreviews.isEmpty()),
-                    videoPreviews,
-                    initialWalletVersion,
-                    finalWalletVersion);
+                                                                                                                                skinItem,
+                                                                                                                                version,
+                                                                                                                                mainScreenShot,
+                                                                                                                                screenShotDetails,
+                                                                                                                                (!videoPreviews.isEmpty()),
+                                                                                                                                videoPreviews,
+                                                                                                                                initialWalletVersion,
+                                                                                                                                finalWalletVersion);
 
             /*
              * Add to the list
@@ -526,11 +525,11 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
          */
         Language language = walletFactoryProject.getDefaultLanguage();
         com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language defaultLanguage = constructLanguageObject(catalogId,
-                language,
-                version,
-                videoPreviews,
-                initialWalletVersion,
-                finalWalletVersion);
+                                                                                                                                    language,
+                                                                                                                                    version,
+                                                                                                                                    videoPreviews,
+                                                                                                                                    initialWalletVersion,
+                                                                                                                                    finalWalletVersion);
         /*
          * Create other supported languages list
          */
@@ -541,11 +540,11 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             * Construct
             */
             com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language languageCatalogItem = constructLanguageObject(catalogId,
-                    languageItem,
-                    version,
-                    videoPreviews,
-                    initialWalletVersion,
-                    finalWalletVersion);
+                                                                                                                                            languageItem,
+                                                                                                                                            version,
+                                                                                                                                            videoPreviews,
+                                                                                                                                            initialWalletVersion,
+                                                                                                                                            finalWalletVersion);
             /*
              * Add to the list
              */
@@ -556,20 +555,20 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
          * Construct the catalog item instance
          */
         return walletStoreManager.constructCatalogItem(catalogId,
-                walletFactoryProject.getSize(),
-                walletFactoryProject.getName(),
-                walletFactoryProject.getDescription(),
-                walletCategory,
-                icon,
-                version,
-                initialPlatformVersion,
-                finalPlatformVersion,
-                otherSkinSupportedList,
-                defaultSkin,
-                defaultLanguage,
-                walletFactoryProject.getNavigationStructure().getDeveloper(),
-                otherLanguageSupportedList,
-                publisherWebsiteUrl);
+                                                        walletFactoryProject.getSize(),
+                                                        walletFactoryProject.getName(),
+                                                        walletFactoryProject.getDescription(),
+                                                        walletCategory,
+                                                        icon,
+                                                        version,
+                                                        initialPlatformVersion,
+                                                        finalPlatformVersion,
+                                                        otherSkinSupportedList,
+                                                        defaultSkin,
+                                                        defaultLanguage,
+                                                        walletFactoryProject.getNavigationStructure().getDeveloper(),
+                                                        otherLanguageSupportedList,
+                                                        publisherWebsiteUrl);
     }
 
     /**
@@ -591,19 +590,19 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         * Construct the new instance
         */
         return walletStoreManager.constructSkin(skin.getId(),
-                skin.getName(),
-                catalogId,
-                skin.getScreenSize(),
-                version,
-                initialWalletVersion,
-                finalWalletVersion,
-                mainScreenShot,
-                screenShotDetails,
-                hasVideoPreview,
-                videoPreviews,
-                skin.getSize(),
-                skin.getDesigner(),
-                Boolean.TRUE);
+                                                skin.getName(),
+                                                catalogId,
+                                                skin.getScreenSize(),
+                                                version,
+                                                initialWalletVersion,
+                                                finalWalletVersion,
+                                                mainScreenShot,
+                                                screenShotDetails,
+                                                hasVideoPreview,
+                                                videoPreviews,
+                                                skin.getSize(),
+                                                skin.getDesigner(),
+                                                Boolean.TRUE);
 
     }
 
@@ -623,16 +622,16 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         * Construct the new instance
         */
         return walletStoreManager.constructLanguage(language.getId(),
-                language.getType(),
-                language.getName(),
-                catalogId,
-                version,
-                initialWalletVersion,
-                finalWalletVersion,
-                videoPreviews,
-                language.getSize(),
-                language.getTranslator(),
-                Boolean.TRUE);
+                                                    language.getType(),
+                                                    language.getName(),
+                                                    catalogId,
+                                                    version,
+                                                    initialWalletVersion,
+                                                    finalWalletVersion,
+                                                    videoPreviews,
+                                                    language.getSize(),
+                                                    language.getTranslator(),
+                                                    Boolean.TRUE);
 
     }
 
