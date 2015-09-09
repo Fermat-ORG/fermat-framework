@@ -3,13 +3,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 
+import java.sql.Timestamp;
+
 /**
  * Created by franklin on 07/09/15.
  */
 public interface AssetFactory {
-    //Propiedades que le sera pedidas a la interfaz del usuario desde el module de la sup app.
-    //Esta interfaz tendra que contener todos las propiedades que se van a pedir en la sub app, para que se guarde el objeto digital asset
-    //en su creacion, y manipular toda la informacion y workflow respectivo.
+
     String getWalletPublicKey();
     void setWalletPublicKey(String walletPublicKey);
 
@@ -21,6 +21,12 @@ public interface AssetFactory {
 
     WalletType getWalletType();
     void setWalletType(WalletType walletType);
+
+    Timestamp getCreationTimestamp();
+    void setCreationTimestamp(Timestamp timestamp);
+
+    Timestamp getLastModificationTimestamp();
+    void setLastModificationTimeststamp(Timestamp timestamp);
 
     DigitalAsset getDigitalAsset();
     void setDigitalAsset(DigitalAsset digitalAsset);
