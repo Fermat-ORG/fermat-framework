@@ -31,6 +31,7 @@ import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSessio
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import static com.bitdubai.sub_app.wallet_publisher.util.CommonLogger.exception;
 import static com.bitdubai.sub_app.wallet_publisher.util.CommonLogger.info;
@@ -202,7 +203,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
                         dialog.setMessage("Please wait...");
                         dialog.setCancelable(false);
                         dialog.show();
-                        worker.execute();
+                        Executors.newSingleThreadExecutor().execute(worker);
                     }
                 });
     }
@@ -235,7 +236,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
         public void onErrorOccurred(Exception ex) {
             if (isAttached) {
                 dialog.dismiss();
-                Toast.makeText(getActivity(), "Error Triying to publish this project...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Error Trying to publish this project...", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -245,7 +246,9 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
         @Override
         protected Object doInBackground() throws Exception {
             info(TAG, "Publishing Wallet...");
-            manager.publishWallet(project, iconScreenBytes, mainScreenBytes, screenShootsBytes, new URL(videoUrlString),
+            videoUrlString = "https://www.youtube.com/watch?v=GS2JXAZhrYY";//// TODO: 08/09/15 remove this line
+            URL url = new URL(videoUrlString);
+            manager.publishWallet(project, iconScreenBytes, mainScreenBytes, screenShootsBytes, url,
                     "Hello World Observation", initialVersion, finalVersion, identity);
             return true;
         }

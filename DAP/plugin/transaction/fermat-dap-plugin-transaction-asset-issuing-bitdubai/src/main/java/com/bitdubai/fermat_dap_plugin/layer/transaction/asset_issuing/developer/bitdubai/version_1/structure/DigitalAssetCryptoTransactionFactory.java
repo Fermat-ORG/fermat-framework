@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer
 
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -10,11 +11,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantCreateDigitalAssetTransactionException;
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.TransactionStatus;
+import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -25,16 +30,22 @@ import java.util.UUID;
  */
 public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
+    private AssetIssuingTransactionDao assetIssuingTransactionDao;
+    String digitalAssetFileName;
+    String digitalAssetFileStoragePath;
     CryptoVaultManager cryptoVaultManager;
     CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
+    PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
 
+    TransactionStatus transactionStatus;
+
     final long MINIMAL_TRANSACTION_FEE=300;
     /**
-     * Minimal Asset quiantity to send
+     * Minimal Asset quantity to send
      */
     final int MINIMAL_QUANTITY=1;
     /**
@@ -44,11 +55,14 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     final String LOCAL_STORAGE_PATH="digital-asset/";
     String digitalAssetLocalFilePath;
 
-    public DigitalAssetCryptoTransactionFactory(UUID pluginID, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException {
+    public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(cryptoWallet);
         setPluginFileSystem(pluginFileSystem);
+        setPluginId(pluginId);
+        setPluginDatabaseSystem(pluginDatabaseSystem);
+        assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 
     }
 
@@ -73,6 +87,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.pluginId=pluginId;
     }
 
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem)throws CantSetObjectException{
+        if(pluginDatabaseSystem==null){
+            throw new CantSetObjectException("pluginDatabaseSystem is null");
+        }
+        this.pluginDatabaseSystem=pluginDatabaseSystem;
+    }
+
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
         if(pluginFileSystem==null){
             throw new CantSetObjectException("pluginFileSystem is null");
@@ -94,12 +115,18 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
 
         try{
+            //TODO: Implement this method with new CryptoVault version
             //CryptoAddress genesisAddress=this.cryptoVaultManager.getAddress();
             //digitalAsset.setGenesisAddress(genesisAddress);
         }catch(Exception exception){
             throw new CantSetObjectException(exception, "Setting GenesisAddress to DigitalAsset","Unexpected exception");
         }
 
+    }
+
+    //This method can be used by a future monitor agent
+    public void setTransactionStatus(TransactionStatus transactionStatus){
+        this.transactionStatus=transactionStatus;
     }
 
     private void areObjectsSettled() throws ObjectNotSetException{
@@ -151,6 +178,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         return genesisAmount;
     }
 
+    private void persistFormingGenesisDigitalAsset() throws CantPersistDigitalAssetException {
+
+        this.assetIssuingTransactionDao.persistFormingDigitalAsset(digitalAsset.getPublicKey(), this.digitalAssetFileStoragePath);
+
+    }
+
     private void checkCryptoWalletBalance() throws CryptoWalletBalanceInsufficientException, CantGetBalanceException {
 
         String digitalAssetPublicKey=this.digitalAsset.getPublicKey();
@@ -165,15 +198,20 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
+    private void setDigitalAssetLocalFilePath(){
+
+        this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+this.digitalAsset.getPublicKey();
+        this.digitalAssetFileName=this.digitalAsset.getName()+".xml";
+        this.digitalAssetLocalFilePath=digitalAssetFileStoragePath+"/"+digitalAssetFileName;
+
+    }
+
     private void persistInLocalStorage() throws CantCreateDigitalAssetFileException {
         //Path structure: digital-asset/walletPublicKey/name.xml
         try{
-
-            String digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+this.digitalAsset.getPublicKey();
-            String digitalAssetFileName=this.digitalAsset.getName()+".xml";
-            this.digitalAssetLocalFilePath=digitalAssetFileStoragePath+"/"+digitalAssetFileName;
+            setDigitalAssetLocalFilePath();
             String digitalAssetInnerXML=digitalAsset.toString();
-            PluginTextFile digitalAssetFile=this.pluginFileSystem.createTextFile(this.pluginId, digitalAssetFileStoragePath,digitalAssetFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile digitalAssetFile=this.pluginFileSystem.createTextFile(this.pluginId, this.digitalAssetFileStoragePath, this.digitalAssetFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             digitalAssetFile.setContent(digitalAssetInnerXML);
 
         }catch(CantCreateFileException exception){
@@ -252,6 +290,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             checkCryptoWalletBalance();
             //Persist Digital Asset to local storage
             persistInLocalStorage();
+            //Persists state in database
+            persistFormingGenesisDigitalAsset();
             //We need to get a new GenesisAddress:
             //this.cryptoVaultManager.connectToBitcoin();
             //setDigitalAssetGenesisAmount();
@@ -271,6 +311,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Checking if the balance is sufficient", "The balance is insufficient");
         } catch (CantCreateDigitalAssetFileException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Persisting Digital Asset in local Storage", "A local storage procedure exception");
+        } catch (CantPersistDigitalAssetException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception, "Creating a new Digital Asset Transaction - Persisting Forming Digital Asset in database", "A database procedure exception");
         }
 
     }

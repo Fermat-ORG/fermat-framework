@@ -14,6 +14,11 @@ public class EncryptMessagePublicKeyTest extends AsymmetricCryptographyUnitTest{
 	public void EncryptMessagePublicKey_ValidParameters_NotNull() {
 		assertThat(AsymmectricCryptography.encryptMessagePublicKey(testPlainMessage, testPublicKey)).isNotNull();		
 	}
+
+	@Test
+	public void EncryptJsonMessagePublicKey_ValidParameters_NotNull() {
+		assertThat(AsymmectricCryptography.encryptMessagePublicKey(testJsonStringMessage, testPublicKey)).isNotNull();
+	}
 	
 	@Test
 	public void EncryptMessagePublicKey_ValidParameters_BigIntegerBytesValue() {

@@ -146,7 +146,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
 
             // I will add all the skins defined, if there are more than one.
-            if (!walletFactoryProject.getSkins().isEmpty()){
+            if (walletFactoryProject.getSkins() != null){
                 for (Skin skin : walletFactoryProject.getSkins()){
                     DatabaseTableRecord skinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), skin.getId(), false);
                     filter.setValue(skin.getId().toString());
@@ -191,7 +191,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             }
 
             //I will add any other language defined
-            if (!walletFactoryProject.getLanguages().isEmpty()){
+            if (walletFactoryProject.getLanguages() != null){
                 for (Language language : walletFactoryProject.getLanguages()){
                     DatabaseTableRecord record = getLanguageDataRecord(walletFactoryProject.getProjectPublicKey(), language.getId(), false);
                     filter.setValue(language.getId().toString());

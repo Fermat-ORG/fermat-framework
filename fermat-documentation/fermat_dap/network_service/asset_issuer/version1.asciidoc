@@ -3,6 +3,17 @@
 
 == Plug-in Description
 
+1) Al iniciarse, solicita al Communication Server la lista de Asset Users que han notificado al servidor de su conexión.
+
+2) Persiste en su base de datos aquellos nuevos Asset Users de los cuales no dispone registros conjuntamente con la dirección Bitcoin
+de la Asset Vault.
+
+3) Limpia de su base de datos, aquellos Asset Users que no se han conectado por ejemplo, en la última semana.
+
+4) Actualiza la información de conexión con la fecha actual.
+
+
+
 == Plug-in Structure
 
 == Events
