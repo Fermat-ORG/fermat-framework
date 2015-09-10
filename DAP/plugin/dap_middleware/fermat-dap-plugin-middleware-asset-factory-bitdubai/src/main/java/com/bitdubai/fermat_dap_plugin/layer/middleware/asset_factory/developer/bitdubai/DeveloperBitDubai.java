@@ -1,11 +1,12 @@
-package com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer;
+package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.developer.bitdubai;
+
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.AssetFactoryPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.developer.bitdubai.version_1.AssetFactoryPluginRoot;
 
 /**
  * Created by rodrigo on 9/7/15.

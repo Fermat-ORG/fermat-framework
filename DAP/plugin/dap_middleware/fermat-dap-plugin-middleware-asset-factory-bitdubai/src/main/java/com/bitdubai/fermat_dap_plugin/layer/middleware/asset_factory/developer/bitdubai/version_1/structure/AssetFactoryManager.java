@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;

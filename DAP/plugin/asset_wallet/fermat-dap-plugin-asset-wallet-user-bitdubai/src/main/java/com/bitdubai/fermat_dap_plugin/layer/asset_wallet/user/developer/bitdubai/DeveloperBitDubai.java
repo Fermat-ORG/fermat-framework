@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_dap_plugin.layer.asset_wallet.issuer.developer.bitdubai.version_1.AssetWalletIssuerPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.asset_wallet.user.developer.bitdubai.version_1.AssetWalletUserPluginRoot;
 
 
 /**
@@ -16,7 +16,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     Plugin plugin;
 
     public DeveloperBitDubai() {
-        plugin = new AssetWalletIssuerPluginRoot();
+        plugin = new AssetWalletUserPluginRoot();
     }
 
     @Override

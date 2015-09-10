@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.version_1;
+package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
