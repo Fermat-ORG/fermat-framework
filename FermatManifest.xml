@@ -4451,7 +4451,56 @@
 						<certifications>
 						</certifications>
 					</plugin>
+					<plugin
+						name="Broker To Broker"
+						description=""
+						difficulty="0"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Broker To Wholesaler"
+						description=""
+						difficulty="0"
+						code-level="concept"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
 
+			<layer name="Request" language="java">
+				<plugins>
+					<plugin
+						name="Crypto Broker Purchase"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
 				</plugins>
 			</layer>
 
@@ -4491,7 +4540,7 @@
 						name="Crypto Broker Identity Wallet Linker"
 						description=""
 						difficulty="4"
-						code-level="concept"
+						code-level="development"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4505,10 +4554,45 @@
 				</plugins>
 			</layer>
 
+			<layer name="Agent" language="java">
+				<plugins>
+					<plugin
+						name="Crypto Broker"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
 			<layer name="Business Transaction" language="java">
 				<plugins>
 					<plugin
-							name="Crypto Initial Balance"
+						name="Crypto Broker Market Crypto Stock Replenish"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Crypto Broker Fiat Cash Stock Replenish"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -4523,7 +4607,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Cash Fiat Initial Balance"
+							name="Crypto Broker Fiat Bank Stock Replenish"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -4538,69 +4622,9 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Broker Crypto Sale"
+							name="Crypto Customer Market Crypto Sale"
 							description=""
 							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Broker Cash Fiat Sale"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Broker Crypto Purchase"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Broker Cash Fiat Pruchase"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Retail Crypto Sale"
-							description=""
-							difficulty="10"
 							code-level="development"
 							>
 						<authors>
@@ -4613,11 +4637,71 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Retail Cash Fiat Sale"
+						name="Crypto Customer Fiat Cash Sale"
+						description=""
+						difficulty="0"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Customer Fiat Bank Sale"
+						description=""
+						difficulty="0"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+							name="Crypto Broker Market Crypto Purchase"
 							description=""
-							difficulty="10"
+							difficulty="0"
 							code-level="development"
 							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Broker Fiat Cash Purchase"
+						description=""
+						difficulty="0"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Broker Fiat Bank Purchase"
+						description=""
+						difficulty="0"
+						code-level="development"
+						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4660,7 +4744,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Digital Money Transaction" language="java">
+			<layer name="Market Crypto Transaction" language="java">
 				<plugins>
 					<plugin
 							name="Send Crypto"
@@ -4695,7 +4779,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Cash Transaction" language="java">
+			<layer name="Fiat Cash Transaction" language="java">
 				<plugins>
 					<plugin
 							name="Give Cash On Hand"
@@ -4757,47 +4841,17 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-							name="Make Bank Deposit"
-							description=""
-							difficulty="10"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-							name="Receive Bank Deposit"
-							description=""
-							difficulty="10"
-							code-level="development"
-							>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 				</plugins>
 			</layer>
 
-			<layer name="Contract" language="java">
+			<layer name="Fiat Bank Transaction" language="java">
 				<plugins>
 					<plugin
-							name="Broker To Broker"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
+						name="Make Offline Fiat Bank Transfer"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4808,11 +4862,11 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Broker To Wholesaler"
-							description=""
-							difficulty="0"
-							code-level="concept"
-							>
+						name="Receive Offline Fiat Bank Transfer"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4828,7 +4882,7 @@
 			<layer name="Wallet" language="java">
 				<plugins>
 					<plugin
-							name="Crypto"
+							name="Crypto Broker Market Crypto"
 							description=""
 							difficulty="6"
 							code-level="development"
@@ -4843,7 +4897,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Cash"
+							name="Crypto Broker Fiat Cash"
 							description=""
 							difficulty="6"
 							code-level="development"
@@ -4858,11 +4912,26 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Bank"
+							name="Crypto Broker Fiat Bank"
 							description=""
 							difficulty="6"
 							code-level="development"
 							>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Customer Market Crypto"
+						description=""
+						difficulty="6"
+						code-level="development"
+						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4894,7 +4963,7 @@
 					</plugin>
 
 					<plugin
-							name="Crypto Broker Customer"
+							name="Crypto Customer"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -4929,7 +4998,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Crypto Broker Customer"
+							name="Crypto Customer"
 							description=""
 							difficulty="8"
 							code-level="development"

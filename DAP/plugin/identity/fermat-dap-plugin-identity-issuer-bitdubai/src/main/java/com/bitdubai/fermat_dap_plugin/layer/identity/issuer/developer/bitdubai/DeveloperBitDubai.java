@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
+import com.bitdubai.fermat_dap_plugin.layer.identity.issuer.developer.bitdubai.version_1.IdentityIssuerPluginRoot;
 
 /**
  * Created by Nerio on 07/09/15.
@@ -14,9 +15,9 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     Plugin plugin;
 
 
-/*    public DeveloperBitDubai () {
+    public DeveloperBitDubai () {
         plugin = new IdentityIssuerPluginRoot();
-    }*/
+    }
 
     @Override
     public Plugin getPlugin() {

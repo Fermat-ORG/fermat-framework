@@ -55,7 +55,7 @@
 * Send a Contact Request
  * The network service is called throw method <code>createContactRequest</code> and retrieve the next information:
    * walletPublicKey - wallet which is sending the request
-   * referenceWallet - type of reference wallet that is sending the request
+   * referenceWallet - fermatPacketType of reference wallet that is sending the request
    * cryptoAddressToSend - a cryptoaddress generated that is sended to the actor
    * intraUserToContactPublicKey - the intra-user with whom is wanted to be contacts
    * requesterIntraUserPublicKey - the intra-user public key that is sending the request
@@ -72,7 +72,7 @@
  * The information that receives is:
    * requestId - the id of the request sended before.
    * walletAcceptingTheRequestPublicKey - wallet which is accepting the request
-   * referenceWallet - type of reference wallet which is accepting the request
+   * referenceWallet - fermatPacketType of reference wallet which is accepting the request
    * cryptoAddressReceived - a cryptoaddress that is received
    * intraUserAcceptingTheRequestPublicKey - the intra-user public key that is accepting the request
  * The network sevice updates adding this data in the actions table and updates the State to: ACCEPTED.
@@ -90,7 +90,7 @@
  * The information that receives is:
    * requestId - the id of the request received.
    * walletPublicKey - wallet which that have sended the request
-   * referenceWallet - type of reference wallet that have sended the request
+   * referenceWallet - fermatPacketType of reference wallet that have sended the request
    * cryptoAddressReceived - a cryptoaddress generated that by the sender
    * intraUserToContactPublicKey - the intra-user with whom the actor wants to be contact
    * requesterIntraUserPublicKey - the intra-user public key that have sended the request
@@ -105,7 +105,7 @@
  * The network service is called throw method <code>acceptContactRequest</code> and receive by parameter the next information:
    * requestId - the id of the request received.
    * walletAcceptingTheRequestPublicKey - wallet that accepted the request
-   * referenceWallet - type of reference wallet that accepted the request
+   * referenceWallet - fermatPacketType of reference wallet that accepted the request
    * cryptoAddressToSend - a cryptoaddress to send to the counterparty
    * intraUserAcceptingTheRequestPublicKey - the intra-user that accepted the request
  * The network service will send the information to the counterparty.
@@ -119,7 +119,7 @@
 
 * List Contact Requests
  * The network service is called throw method <code>listContactRequests</code> and receive by parameter the next information:
-   * intraUserLoggedInPublicKey - is the intra-user identity public key of the logged in intra-user
+   * intraUserLoggedInPublicKey - is the intra-user identityPublicKey public key of the logged in intra-user
    * walletPublicKey - is the public Key of the wallet where the user is working in
    * contactRequestState - is the State of the contact requests that you want to list.
  * The network service will return the contact requests that match with that state, if the state is null, the method returns everything.
@@ -142,7 +142,7 @@
 
  -- sender fields
  * walletPublicKeyToSend - wallet which is sending the request
- * referenceWalletToSend - type of reference wallet that is sending the request
+ * referenceWalletToSend - fermatPacketType of reference wallet that is sending the request
  * cryptoAddressToSend - a cryptoaddress generated that is sended to the actor
  * requesterIntraUserPublicKey - the intra-user public key that is sending the request
  * requesterIntraUserName - the intra-user name that is sending the request
@@ -152,7 +152,7 @@
 
  -- receiver fields
  * walletAcceptingTheRequestPublicKey - wallet which is accepting the request
- * referenceWalletReceived - type of reference wallet which is accepting the request
+ * referenceWalletReceived - fermatPacketType of reference wallet which is accepting the request
  * cryptoAddressReceived - a cryptoaddress that is received when the intra-user accepts the request
  * intraUserAcceptingTheRequestPublicKey - the intra-user public key that is accepting the request
 
