@@ -18,6 +18,13 @@ Permutations:
   |Fiat Money           |Cash           |Stock Fiat Cash Business Transaction Java plugin      |Fiat Cash Wallet Java plugin     |
   |Fiat Money           |Bank           |Stock Fiat Bank Business Transaction Java plugin      |Fiat Bank Wallet Java plugin     |
 
+Eze, Manuel o Leon:
+Solicitud de Address al Crypto Vault
+Pensar la caida de dinero del extrauser
+Vault->Direccion->Billetera
+Incoming Crypto eventos
+Credito
+
 Scenario: Replenishment over an existing Stock
   Given I have a Stock in my Crypto Broker Wallet for a "Type of Merchandise"
     And the value of the Stock is "X"

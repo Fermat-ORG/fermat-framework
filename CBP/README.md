@@ -4,16 +4,20 @@ This is the simplified specification of the Crypto Broker Platform plugins
 
 ## Android
 
-### Wallet
+### Reference Wallet
 * [Crypto Broker](android/reference_wallet/fermat-android-reference-wallet-crypto-broker-bitdubai/): frontend de las actividades financieras de un Crypto Broker(vender crypto, vender cash, inyeccion de capital) y provee un balance contable unificado
 * [Crypto Customer](android/reference_wallet/fermat-android-reference-wallet-crypto-customer-bitdubai/): frontend de las actividades financieras de un Crypto Customer(comprar crypto, comprar cash) y provee un balance contable unificado
 
 ### SubApp
-* [Crypto Broker](android/sup_app/fermat-android-sub-app-crypto-broker-bitdubai/): frontend de la administracion de identidades de los Brokers, la relacion con otros brokers y descubrimiento de Brokers para los Customers (solicitudes de conexion, acuerdos especiales, etc)
-* [Crypto Customers](android/sup_app/fermat-android-sub-app-crypto-customer-bitdubai/): frontend de la administracion de identidades de los Customers y la relacion con otros Customers (notificaciones de un Broker, acuerdos especiales, etc)
-* [Customers](android/sup_app/fermat-android-sub-app-customers-bitdubai/): frontend de la gestion de contactos entre un Broker y sus Customers
-* [SubApp Manager](android/sup_app/fermat-android-sub-app-sub-app-manager-bitdubai/): frontend del gestor de las SubApps instaladas en el dispositivo
-* [Wallet Manager](android/sup_app/fermat-android-sub-app-wallet-manager/): frontend del gestor de las Wallets instaladas
+* [Crypto Broker Identity](android/sup_app/fermat-android-sub-app-crypto-broker-bitdubai/): frontend de la administracion de identidades de los Brokers, la relacion con otros brokers y descubrimiento de Brokers para los Customers (solicitudes de conexion, acuerdos especiales, etc)
+* [Crypto Broker Community]
+* [Customers]
+* [Crypto Customer Identity](android/sup_app/fermat-android-sub-app-crypto-customer-bitdubai/): frontend de la administracion de identidades de los Customers y la relacion con otros Customers (notificaciones de un Broker, acuerdos especiales, etc)
+* [Crypto Customer Community]
+
+## Desktop
+* [SubApp Manager](android/sup_app/fermat-android-desktop-sub-app-manager-bitdubai/): frontend del gestor de las SubApps instaladas en el dispositivo
+* [Wallet Manager](android/sup_app/fermat-android-desktop-wallet-manager/): frontend del gestor de las Wallets instaladas
 
 ## Plugins
 
@@ -39,7 +43,10 @@ This is the simplified specification of the Crypto Broker Platform plugins
 
 ### Middleware
 * [Customers](plugin/middleware/fermat-cbp-plugin-middleware-customers-bitdubai/): administra y subclasifica a los Crypto Customers de un Crypto Broker
-* [Crypto Broker Identity Wallet Linker](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-identity-wallet-linker-bitdubai/): relaciona una Crypto Broker Identity con una Crypto Broker Wallet. (no seria mejor llamar a esto Crypto Broker Wallet Settings?)
+* [Crypto Broker Identity Wallet](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-identity-wallet-linker-bitdubai/): relaciona una Crypto Broker Identity con una Crypto Broker Wallet. (no seria mejor llamar a esto Crypto Broker Wallet Settings?)
+* [Wallet Settings]: reutilizando el wpd
+* [Wallet Manager](plugin/middleware/fermat-cbp-plugin-middleware-wallet-manager-bitdubai/): conocimiento de como instalar y desinstalar una **CBP Wallet**
+* [Sub App Manager](plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai/)
 
 ### Actor
 * [Crypto Broker](plugin/actor/fermat-cbp-plugin-actor-crypto-broker-bitdubai/): administra la relacion con los Brokers (establecer conexion, listar contactos de este tipo, etc)
@@ -52,9 +59,9 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Fiat Index](plugin/world/fermat-cbp-plugin-world-fiat-index-bitdubai): establece la relacion de valor entre dos monedas Fiat (por ejemplo: bolivar vs dolar).
 
 ### Business Transaction
-* [Crypto Broker Market Crypto Stock Replenish](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-market-crypto-stock-replenish-bitdubai): recarga de stock Crypto de Market Money.
-  * [Crypto Broker Fiat Cash Stock Replenish](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-cash-stock-replenish-bitdubai): recarga de stock Cash de Fiat Money.
-* [Crypto Broker Fiat Bank Stock Replenish](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-bank-stock-replenish-bitdubai): recarga de stock Bank de Market Money.
+* [Crypto Market Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-market-crypto-stock-replenish-bitdubai): recarga de stock Crypto de Market Money.
+  * [Cash Fiat Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-cash-stock-replenish-bitdubai): recarga de stock Cash de Fiat Money.
+* [Bank Fiat Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-bank-stock-replenish-bitdubai): recarga de stock Bank de Market Money.
 * [Crypto Customer Market Crypto Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-market-crypto-sale-bitdubai): venta de monedas Crypto del Broker a otros actores.
 * [Crypto Customer Fiat Cash Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-fiat-cash-sale-bitdubai): venta de monedas Cash Fiat del Broker a otros actores.
 * [Crypto Customer Fiat Bank Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-fiat-bank-sale-bitdubai): venta de monedas Cash Fiat del Broker a otros actores.
