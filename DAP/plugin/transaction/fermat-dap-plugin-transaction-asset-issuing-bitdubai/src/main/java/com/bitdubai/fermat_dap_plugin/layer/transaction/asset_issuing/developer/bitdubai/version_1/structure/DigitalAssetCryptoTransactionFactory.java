@@ -193,7 +193,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         /**
          * TODO:
-         1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
+         1) La AssetFactory subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
          realizarán distintas especificaciones del asset y el contrato inicial.
 
          La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
