@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dap_api.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by franklin on 05/09/15.
+ * Created by franklin on 09/09/15.
  */
-public class CantCalculateBalanceException extends FermatException{
+public class CantCreateEmptyAssetFactoryException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,8 @@ public class CantCalculateBalanceException extends FermatException{
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCalculateBalanceException(String message, Exception cause, String context, String possibleReason) {
-        super(message, cause, context, possibleReason);
+    static final String DEFAULT_MESSAGE = "There was an error Create Empty Asset Factory.";
+    public CantCreateEmptyAssetFactoryException(String message, Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }
