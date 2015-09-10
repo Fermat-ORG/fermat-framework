@@ -136,26 +136,26 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         printSomething("Starting Asset Issuing plugin");
 
         try{
-            this.assetIssuingDatabase = pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
+            this.assetIssuingDatabase = this.pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
+        }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
+            //TODO: delete this printStackTrace in production
+            //exception.printStackTrace();
+            printSomething("CANNOT OPEN PLUGIN DATABASE: "+this.pluginId);
+            try {
+                printSomething("CREATING A PLUGIN DATABASE.");
+                createAssetIssuingTransactionDatabase();
+            } catch (CantCreateDatabaseException innerException) {
+                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin - "+exception, "Cannot open or create the plugin database");
+            }
+        }try{
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
                     this.cryptoVaultManager,
                     this.cryptoWallet,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.errorManager);
-
-        }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
-            //TODO: delete this printStackTrace in production
-            exception.printStackTrace();
-            //printSomething("MAP_NO PUEDO ABRIR DATABASE:"+exception.toString());
-            try {
-                //printSomething("MAP_ABRIENDO DATABASE:");
-                createAssetIssuingTransactionDatabase();
-            } catch (CantCreateDatabaseException innerException) {
-                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin - "+exception, "Cannot open or create the plugin database");
-            }
-
-        }catch(CantSetObjectException exception){
+        }
+        catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "Cannot set an object, probably is null");
         }catch(CantExecuteDatabaseOperationException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetCryptoTransactionFactory", "Error in constructor method AssetIssuingTransactionDao");
