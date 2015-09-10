@@ -7,6 +7,8 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service;
 
 /**
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserNetworkServiceMessage</code>
+ * represent a Incoming FermatMessage
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IncomingIntraUserNetworkServiceMessage</code>
  * represent a Incoming Message
  * <p/>
@@ -15,5 +17,5 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IncomingIntraUserNetworkServiceMessage extends com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IntraUserNetworkServiceMessage {
+public class IncomingIntraUserNetworkServiceMessage extends IntraUserNetworkServiceMessage {
 }

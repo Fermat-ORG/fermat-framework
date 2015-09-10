@@ -6,7 +6,7 @@ Every FMP compliant packet must contain the following three elements:
 
 1. Sender : the unique identification of the sender
 2. Action : this is the purpose identification of the packet
-3. Message : the content of the message to be interpreted according to the action
+3. Message : the content of the fermatMessage to be interpreted according to the action
 
 #The FMP interface
 
@@ -44,7 +44,7 @@ The different Actions that an FMP compliant packet and an FMP handler should sup
 
 ##interface FMPMessage
 
-The interface that specifies the content of an FMP compliant message, each message should vary according to the Action registered.
+The interface that specifies the content of an FMP compliant fermatMessage, each fermatMessage should vary according to the Action registered.
 
 #interface FMPIntraUserServerHandler
 
