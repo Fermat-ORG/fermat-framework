@@ -68,6 +68,8 @@ el proceso de creación del digital Asset, ya que este es quien ajustaría el es
 1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
  realizarán distintas especificaciones del asset y el contrato inicial.
 
+
+
  La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
  el uso de los siguientes campos:
 * Cantidad de Assets que se están creando (DigitalAsset.quantity)
@@ -82,13 +84,16 @@ El DigitalAsset.transactionFee es un valor que calculará la cryptoVault a trav�
 
 La Issuer subApp no permitirá iniciar el proceso de issuing del Asset si no dispone los fondos disponibles para cubrir el GenesisAmount.
 
+Todos los procesos de generación y edicion del Asset serán persistidos en el plugin Middleware Asset Factory. Al momento de finalizar con la
+edición y dar comienzo a la transacción de Asset Issuing, el mismo ya dejará de estar editable en la sub App del issuer.
+
 La transacción de Asset Issuing se dará inicio a través del método IssueAsset(DigitalAsset digitalAsset).
 
-El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
+1) El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
 GenesisAddress.
 
-
 2) Al estar todo completado para emitir el Asset, se persiste el DA (en archivo) y se actualiza el TransactionStatus a FormingGenesis.
+El asset guardado en la Asset Factory pasa a estado final y no puede volver a ser modificado en la subApp Issuer.
 
 3) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
 para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se actualiza este valor en el DA y se persisten los cambios.
@@ -110,6 +115,8 @@ La transacción pasa a estado PendingReceiveCryptoNetwork
 7) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
 balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet. La transacción debe escuchar los eventos
 del incoming crypto.
+
+
 
 8) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingConfirmationIssuerWallet y se genera el crédito  en el Available balance en la
 Issuer Wallet.
