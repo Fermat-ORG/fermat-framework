@@ -1,14 +1,14 @@
-package com.bitdubai.sub_app.wallet_factory.FragmentFactory;
+package com.bitdubai.sub_app.wallet_factory.factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.EditableWalletFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.MainFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ManagerFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.ProjectsFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.SendFragment;
-import com.bitdubai.sub_app.wallet_factory.preference_settings.WalletFactoryPreferenceSettings;
+import com.bitdubai.sub_app.wallet_factory.ui.fragments.EditableWalletFragment;
+import com.bitdubai.sub_app.wallet_factory.ui.fragments.MainFragment;
+import com.bitdubai.sub_app.wallet_factory.ui.fragments.ManagerFragment;
+import com.bitdubai.sub_app.wallet_factory.ui.fragments.ProjectsFragment;
+import com.bitdubai.sub_app.wallet_factory.ui.fragments.SendFragment;
+import com.bitdubai.sub_app.wallet_factory.settings.WalletFactoryPreferenceSettings;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 
 /**

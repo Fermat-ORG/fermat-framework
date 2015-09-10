@@ -1,7 +1,6 @@
-package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
+package com.bitdubai.sub_app.wallet_factory.ui.fragments;
 
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,11 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
-import com.squareup.picasso.Picasso;
 
 
 public class SendFragment extends FermatFragment {
