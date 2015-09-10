@@ -2,6 +2,24 @@
 = Version 1
 
 == Plug-in Description
+.Escenario:
+
+Nos encontramos en el dispositivo del usuario con al menos un asset disponible en su Asset User Wallet y los fondos necesarios en su Asset Vault
+para al menos pagar el fee de una transacción.
+
+El asset se encuentra confirmado y el Asset está disponible en el available Balance.
+
+En la Asset user Reference Wallet el usuario tiene disponibles algunos Redeem Point obtenidos automáticamente por el Redeem Point Network Service.
+El usuario selecciona el que tiene más cerca y se dirige a ese Redeem Point.
+
+El redeem point seleccionado, tiene direcciones bitcoin generadas en forma independiente, a partir de una extended key enviada por el issuer.
+
+Para redimir el asset en ese Reedem Point especifico el usuario pulsa la opcion Redeem habiendo seleccionado el Redeem Point correspondiente.
+
+La transacción Asset Redemption ejecuta los siguientes pasos:
+
+. *En el dispositivo del usuario*
+1)
 
 == Plug-in Structure
 
