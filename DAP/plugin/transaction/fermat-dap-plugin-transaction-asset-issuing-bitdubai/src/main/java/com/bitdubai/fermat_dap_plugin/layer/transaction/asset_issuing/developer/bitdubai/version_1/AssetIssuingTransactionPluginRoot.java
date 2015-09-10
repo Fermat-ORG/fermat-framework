@@ -108,10 +108,10 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public void start() throws CantStartPluginException {
         //delete this
-        printSomething("Starting plugin");
+        printSomething("Starting Asset Issuing plugin");
 
         try{
-            this.assetIssuingDatabase.openDatabase();
+            this.assetIssuingDatabase = pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
             //DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(/*, this.cryptoAddressBookManager*/);
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
                     this.cryptoVaultManager,
@@ -123,8 +123,9 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
             //TODO: delete this printStackTrace in production
             exception.printStackTrace();
-            //printSomething(exception.toString());
+            //printSomething("MAP_NO PUEDO ABRIR DATABASE:"+exception.toString());
             try {
+                //printSomething("MAP_ABRIENDO DATABASE:");
                 createAssetIssuingTransactionDatabase();
             } catch (CantCreateDatabaseException innerException) {
                 throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin - "+exception, "Cannot open or create the plugin database");

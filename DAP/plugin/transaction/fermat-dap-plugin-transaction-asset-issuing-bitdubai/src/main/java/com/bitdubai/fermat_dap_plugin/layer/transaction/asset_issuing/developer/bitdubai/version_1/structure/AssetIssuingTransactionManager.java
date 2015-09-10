@@ -50,14 +50,9 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                 this.cryptoWallet,
                 this.pluginDatabaseSystem,
                 this.pluginFileSystem);
+        this.digitalAssetCryptoTransactionFactory.setErrorManager(errorManager);
     }
 
-    /*private void setDigitalAssetCryptoTransactionFactory(DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory)throws CantSetObjectException{
-        if(digitalAssetCryptoTransactionFactory==null){
-            throw new CantSetObjectException("digitalAssetCryptoTransactionFactory is null");
-        }
-        this.digitalAssetCryptoTransactionFactory=digitalAssetCryptoTransactionFactory;
-    }*/
     @Override
     public void issueAsset(DigitalAsset digitalAssetToIssue) throws CantIssueDigitalAssetException {
         try {

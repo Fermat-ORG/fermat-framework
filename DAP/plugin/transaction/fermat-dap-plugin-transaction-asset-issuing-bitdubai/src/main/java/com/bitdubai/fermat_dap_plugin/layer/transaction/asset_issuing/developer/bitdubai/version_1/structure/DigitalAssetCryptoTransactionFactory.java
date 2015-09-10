@@ -57,11 +57,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
-        //setCryptoVaultManager(cryptoVaultManager);
-        //setCryptoWallet(cryptoWallet);
-        //setPluginFileSystem(pluginFileSystem);
-        //setPluginId(pluginId);
-        //setPluginDatabaseSystem(pluginDatabaseSystem);
+        this.cryptoVaultManager=cryptoVaultManager;
+        this.cryptoWallet=cryptoWallet;
+        this.pluginFileSystem=pluginFileSystem;
+        this.pluginId=pluginId;
+        //this.pluginDatabaseSystem=pluginDatabaseSystem;
         assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 
     }
