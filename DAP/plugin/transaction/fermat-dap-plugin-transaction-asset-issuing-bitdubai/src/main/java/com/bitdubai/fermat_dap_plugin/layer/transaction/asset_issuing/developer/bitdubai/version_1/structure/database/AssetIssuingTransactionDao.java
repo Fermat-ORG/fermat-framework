@@ -57,10 +57,13 @@ public class AssetIssuingTransactionDao {
             databaseTable.insertRecord(record);
             database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
+            database.closeDatabase();
             throw new CantPersistDigitalAssetException(exception,"Opening the Asset Issuing plugin database","Cannot open the Asset Issuing database");
         } catch (CantInsertRecordException exception) {
+            database.closeDatabase();
             throw new CantPersistDigitalAssetException(exception,"Persisting a forming genesis digital asset","Cannot insert a record in the Asset Issuing database");
         } catch (Exception exception){
+            database.closeDatabase();
             throw new CantPersistDigitalAssetException(exception, "Persisting a forming genesis digital asset", "Unexpected exception");
         }
 
