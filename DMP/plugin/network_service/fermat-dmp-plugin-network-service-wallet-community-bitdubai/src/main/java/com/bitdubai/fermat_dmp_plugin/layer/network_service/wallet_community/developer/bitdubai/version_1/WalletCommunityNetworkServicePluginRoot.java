@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -47,6 +48,7 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
+    ErrorManager errorManager;
 
     /**
      * UsesFileSystem Interface member variables.
@@ -65,7 +67,7 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
-    public void start() {
+    public void start()  throws CantStartPluginException {
         /**
          * I will initialize the handling of platform events.
          */
@@ -79,29 +81,21 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
-
-
         /**
          * I will remove all the event listeners registered with the event manager.
          */
@@ -126,7 +120,7 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
 
     @Override
     public UUID getId() {
-        return null;
+        return this.pluginId;
     }
     
     /**
@@ -155,7 +149,7 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
 

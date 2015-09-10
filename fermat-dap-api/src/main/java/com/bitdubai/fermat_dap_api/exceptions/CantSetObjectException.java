@@ -13,4 +13,8 @@ public class CantSetObjectException extends DAPException {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
+    public CantSetObjectException(final String message) {
+        this(null, DEFAULT_MESSAGE, message);
+    }
+
 }

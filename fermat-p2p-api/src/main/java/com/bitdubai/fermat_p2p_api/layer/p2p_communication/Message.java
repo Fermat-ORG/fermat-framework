@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message</code> represent
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.FermatMessage</code> represent
  * the message
  * <p/>
  *
@@ -47,10 +47,10 @@ public interface Message {
     public String toJson();
 
     /**
-     * Convert to FMPPacket from json
+     * Convert to FermatPacketCommunication from json
      *
      * @param json string object
-     * @return Message
+     * @return FermatMessage
      */
     public Message fromJson(String json);
     

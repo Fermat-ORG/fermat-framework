@@ -13,4 +13,8 @@ public class ObjectNotSetException extends DAPException {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
+    public ObjectNotSetException(final String message) {
+        this(null, DEFAULT_MESSAGE, message);
+    }
+
 }
