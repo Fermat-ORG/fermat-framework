@@ -16,14 +16,6 @@ public enum Fragments implements FermatFragments {
     CWP_SHOP_MANAGER_PAID("CSMP"),
     CWP_SHOP_MANAGER_ACCEPTED_NEARBY("CSMAN"),
 
-    CWP_WALLET_FACTORY_MANAGER_FRAGMENT("CWFMF"),
-    CWP_WALLET_FACTORY_PROJECTS_FRAGMENT("CWFPF"),
-    CWP_WALLET_FACTORY_SEND_FRAGMENT("CWFSF"),
-    CWP_WALLET_FACTORY_MAIN_FRAGMENT("CWFMF"),
-    CWP_WALLET_FACTORY_EDIT_MODE("CWFEM"),
-
-
-
     CWP_WALLET_PUBLISHER_MAIN_FRAGMENT("CWPMF"),
 
     CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT("CWSANF"),
@@ -115,8 +107,8 @@ public enum Fragments implements FermatFragments {
     /**
      * WAllet factory
      */
-    CWP_WALLET_FACTORY_MANAGER("CWFM"),
-    CWP_WALLET_FACTORY_PROJECTS("CWFP"),
+    CWP_WALLET_FACTORY_DEVELOPER_PROJECTS("CWFDP"),
+    CWP_WALLET_FACTORY_AVAILABLE_PROJECTS("CWFAP"),
 
     CWP_WALLET_FACTORY_WIZARD_CREATE_STEP_1("CWFWCS1"),
     CWP_WALLET_FACTORY_WIZARD_CREATE_STEP_2("CWFWCS2");
@@ -132,7 +124,7 @@ public enum Fragments implements FermatFragments {
         return this.code;
     }
 
-    public String getStringValue(){
+    public String getStringValue() {
         return this.code;
     }
 
@@ -147,7 +139,6 @@ public enum Fragments implements FermatFragments {
             }
         }*/
         switch (code) {
-
             case "CSL":
                 return Fragments.CWP_SHELL_LOGIN;
             case "CWMM":
@@ -264,10 +255,6 @@ public enum Fragments implements FermatFragments {
                 return Fragments.CWP_WALLET_STORE_MAIN;
             case "CWPM":
                 return Fragments.CWP_WALLET_PUBLISHER_MAIN;
-            case "CWFM":
-                return Fragments.CWP_WALLET_FACTORY_MANAGER;
-            case "CWFP":
-                return Fragments.CWP_WALLET_FACTORY_PROJECTS;
             case "CWDTDLF":
                 return CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT;
             case "CWDTDTLF":
