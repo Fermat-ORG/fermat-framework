@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_factory.preference_settings;
+package com.bitdubai.sub_app.wallet_factory.settings;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;

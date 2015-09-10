@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_factory.fragment.version_3.utils;
+package com.bitdubai.sub_app.wallet_factory.utils;
 
 /**
  * Created by Nicolas on 06/05/2015.

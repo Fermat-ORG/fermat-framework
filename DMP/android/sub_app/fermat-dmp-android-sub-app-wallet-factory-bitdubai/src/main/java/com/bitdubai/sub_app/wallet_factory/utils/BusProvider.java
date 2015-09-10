@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_factory.fragment.version_3.utils;
+package com.bitdubai.sub_app.wallet_factory.utils;
 
 import com.squareup.otto.Bus;
 
