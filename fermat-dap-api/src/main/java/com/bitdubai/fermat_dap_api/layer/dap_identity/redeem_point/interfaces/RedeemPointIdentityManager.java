@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface RedeemPointIdentityManager {
 
-    List<RedeemPointIdentity> getRedeemPointsFromCurrentDeviceUser() throws CantCreateNewRedeemPointException;
+    List<RedeemPointActor> getRedeemPointsFromCurrentDeviceUser() throws CantCreateNewRedeemPointException;
 
-    RedeemPointIdentity createNewRedeemPoint(String alias) throws CantCreateNewRedeemPointException;
+    RedeemPointActor createNewRedeemPoint(String alias) throws CantCreateNewRedeemPointException;
 
 
 }

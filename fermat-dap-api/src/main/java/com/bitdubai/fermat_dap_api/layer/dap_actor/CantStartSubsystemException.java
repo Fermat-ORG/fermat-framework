@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_identity;
+package com.bitdubai.fermat_dap_api.layer.dap_actor;
 
 import com.bitdubai.fermat_api.layer.DAPException;
 
@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
  */
 public class CantStartSubsystemException extends DAPException {
 
-    static final String DEFAULT_MESSAGE = "There was an error staring the DAPTransaction subsystem.";
+    static final String DEFAULT_MESSAGE = "WAS AN ERROR STARTING DAPActorSubsystem.";
 
     public CantStartSubsystemException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);

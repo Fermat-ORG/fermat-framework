@@ -6,6 +6,6 @@ package com.bitdubai.fermat_dap_api.layer.dap_identity.issuer.interfaces;
  */
 public interface DealsWithIdentityIssuer {
 
-    void setIssuerIdentityManager(IssuerIdentityManager issuerIdentityManager);
+    void setIssuerIdentityManager(IssuerActorManager issuerIdentityManager);
 
 }
