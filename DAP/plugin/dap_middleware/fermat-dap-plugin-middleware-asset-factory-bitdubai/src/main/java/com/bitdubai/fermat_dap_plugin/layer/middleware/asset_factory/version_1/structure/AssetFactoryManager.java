@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -7,9 +7,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantCreateAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantSaveAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuer;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 
 import java.util.UUID;
@@ -18,10 +15,9 @@ import java.util.logging.ErrorManager;
 /**
  * Created by franklin on 07/09/15.
  */
-//Falta implementar DealsWithError
-public class AssetIssuerManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class AssetFactoryManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
     /**
-     * AssetIssuerManager member variables
+     * AssetFactoryManager member variables
      */
     UUID pluginId;
 
@@ -53,7 +49,7 @@ public class AssetIssuerManager implements DealsWithErrors, DealsWithLogger, Dea
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public AssetIssuerManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetFactoryManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -79,32 +75,6 @@ public class AssetIssuerManager implements DealsWithErrors, DealsWithLogger, Dea
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
-    }
-    //Aca colocar todos los metodos con la logica propia que contendra el manejo del pluggin.
-    //Esta clase sera una instancia en un metodo del root del plugin
-
-    public void IssueAsset(DigitalAsset digitalAsset) {
-
-    }
-
-    public long getEstimatedFeeValue(DigitalAsset digitalAsset) {
-        return 0;
-    }
-
-    public boolean verifiedGenesisAmount(DigitalAsset digitalAsset) {
-        return false;
-    }
-
-    public void createAssetIssuer(AssetIssuer assetIssuer) throws CantCreateAssetIssuerException {
-
-    }
-
-    public void saveAssetIssuer(AssetIssuer assetIssuer) throws CantSaveAssetIssuerException {
-
-    }
-
-    public void removeAssetIssuer(AssetIssuer assetIssuer) {
-
     }
 
 }
