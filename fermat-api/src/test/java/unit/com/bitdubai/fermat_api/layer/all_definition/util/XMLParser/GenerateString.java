@@ -20,26 +20,14 @@ public class GenerateString {
 
     @Test
     public void parseSkin(){
+        identityTest designerIdentity = new identityTest();
+        designerIdentity.setPublicKey("asdasd");
+        designerIdentity.setAlias("asd");
         Skin skin = new Skin();
         skin.setId(UUID.randomUUID());
         skin.setName("SkinTest");
         skin.setScreenSize(ScreenSize.MEDIUM);
-        DesignerIdentity designerIdentity= new DesignerIdentity() {
-            @Override
-            public String getAlias() {
-                return "alias";
-            }
 
-            @Override
-            public String getPublicKey() {
-                return "pk";
-            }
-
-            @Override
-            public String createMessageSignature(String mensage) throws CantSingMessageException {
-                return "signature";
-            }
-        };
         skin.setDesigner(designerIdentity);
         skin.setSize(100);
         skin.setVersion(new Version("1.0.0"));
@@ -47,5 +35,12 @@ public class GenerateString {
         String skinXml = XMLParser.parseObject(skin);
         Assert.assertNotNull(skinXml);
         System.out.println(skinXml);
+
+        Skin skin2 = new Skin();
+        skin2 = (Skin) XMLParser.parseXML(skinXml, skin2);
+        Assert.assertNotNull(skin2);
+        System.out.println(skin2.getName());
     }
+
+
 }
