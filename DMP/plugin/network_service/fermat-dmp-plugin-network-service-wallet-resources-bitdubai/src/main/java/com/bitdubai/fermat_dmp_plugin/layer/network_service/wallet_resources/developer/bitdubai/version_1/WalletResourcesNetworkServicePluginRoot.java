@@ -1080,6 +1080,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Repository not exist or manifest file not exist");
 
         }
+         catch (Exception e) {
+
+            throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", e, "Error load manifest file ", "Generic Exception");
+
+        }
     }
 
 

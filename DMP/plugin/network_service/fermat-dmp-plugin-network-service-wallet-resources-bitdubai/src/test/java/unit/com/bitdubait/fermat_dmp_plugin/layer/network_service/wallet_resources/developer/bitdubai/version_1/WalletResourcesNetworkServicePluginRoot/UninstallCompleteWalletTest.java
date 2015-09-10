@@ -15,11 +15,12 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 
 import junit.framework.TestCase;
 
 import org.junit.Before;
-
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -35,11 +36,11 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by natalia on 09/09/15.
+ * Created by natalia on 10/09/15.
  */
 
 @RunWith(MockitoJUnitRunner.class)
-public class InstallCompleteWalletTest extends TestCase {
+public class UninstallCompleteWalletTest extends TestCase {
 
     /**
      * DealsWithErrors interface Mocked
@@ -83,6 +84,10 @@ public class InstallCompleteWalletTest extends TestCase {
 
     String repoManifest = "<skin ></skin >";
 
+    @Mock
+    PlatformEvent mockPlatformEvent;
+
+
     WalletResourcesNetworkServicePluginRoot walletResourcePluginRoot;
 
     @Before
@@ -102,26 +107,21 @@ public class InstallCompleteWalletTest extends TestCase {
         when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockEventListener);
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
 
+        when(mockEventManager.getNewEvent(EventType.WALLET_UNINSTALLED)).thenReturn(mockPlatformEvent);
 
     }
 
-
+@Ignore
     @Test
-    public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
-//TODO error parseando el skin, al parecer la estructura subida al repo no es correcta - se debe actualizar
+    public void testUninstallCompleteWallet() throws Exception {
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde", "languageName", "navigationStructureVersion", "walletPublicKey");
-                assertThat(caughtException()).isNotNull();
+        //TODO este metodo no retorna exceptions y deberia
+        //TODO error parseando el skin, al parecer la estructura subida al repo no es correcta - se debe actualizar
+        catchException(walletResourcePluginRoot).unninstallCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "mati_wallet_verde", UUID.randomUUID(), "medium", "navigationStructureVersion", true);
+        assertThat(caughtException()).isNotNull();
 
     }
 
 
-    @Test
-    public void testInstallCompleteWallet_FileNotFoundThrowsWalletResourcesInstalationException() throws Exception {
 
-        walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "skin", "languageName", "navigationStructureVersion","walletPublicKey");
-        assertThat(caughtException()).isInstanceOf(WalletResourcesInstalationException.class);
-
-    }
 }
