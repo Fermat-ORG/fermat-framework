@@ -44,7 +44,6 @@ This is the simplified specification of the Crypto Broker Platform plugins
 ### Middleware
 * [Customers](plugin/middleware/fermat-cbp-plugin-middleware-customers-bitdubai/): administra y subclasifica a los Crypto Customers de un Crypto Broker
 * [Crypto Broker Identity Wallet](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-identity-wallet-linker-bitdubai/): relaciona una Crypto Broker Identity con una Crypto Broker Wallet. (no seria mejor llamar a esto Crypto Broker Wallet Settings?)
-* [Wallet Settings]: reutilizando el wpd
 * [Wallet Manager](plugin/middleware/fermat-cbp-plugin-middleware-wallet-manager-bitdubai/): conocimiento de como instalar y desinstalar una **CBP Wallet**
 * [Sub App Manager](plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai/)
 
