@@ -280,6 +280,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
     @Override
     public List<WalletFactoryProject> getWalletFactoryProjectByState(WalletFactoryProjectState walletFactoryProjectState) throws CantGetWalletFactoryProjectException {
+        test();
         return walletFactoryProjectMiddlewareManager.getWalletFactoryProjectsByState(walletFactoryProjectState);
     }
 
@@ -357,22 +358,6 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             skin.setId(UUID.randomUUID());
             skin.setName("SkinTest");
             skin.setScreenSize(ScreenSize.MEDIUM);
-            skin.setDesigner(new DesignerIdentity() {
-                @Override
-                public String getAlias() {
-                    return "diseñador";
-                }
-
-                @Override
-                public String getPublicKey() {
-                    return "nula";
-                }
-
-                @Override
-                public String createMessageSignature(String mensage) throws CantSingMessageException {
-                    return "";
-                }
-            });
             skin.setSize(100);
             skin.setVersion(new Version("1.0.0"));
             walletFactoryProject.setDefaultSkin(skin);
@@ -382,22 +367,6 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             language.setId(UUID.randomUUID());
             language.setVersion(new Version(1, 0, 0));
             language.setSize(100);
-            language.setTranslator(new TranslatorIdentity() {
-                @Override
-                public String getAlias() {
-                    return "Translator";
-                }
-
-                @Override
-                public String getPublicKey() {
-                    return "nula";
-                }
-
-                @Override
-                public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
-                    return "";
-                }
-            });
             walletFactoryProject.setDefaultLanguage(language);
             this.saveWalletFactoryProjectChanges(walletFactoryProject);
 
