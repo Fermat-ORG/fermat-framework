@@ -1,4 +1,4 @@
-[[identity-asset-issuer-BitDubai-V1]]
+[[identityPublicKey-asset-issuer-BitDubai-V1]]
 = Version 1
 
 == Plug-in Description

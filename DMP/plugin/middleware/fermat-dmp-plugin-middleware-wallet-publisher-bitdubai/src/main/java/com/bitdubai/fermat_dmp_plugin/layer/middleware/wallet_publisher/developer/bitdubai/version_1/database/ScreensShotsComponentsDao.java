@@ -68,6 +68,7 @@ public class ScreensShotsComponentsDao {
 
     /**
      * Return the Database
+     *
      * @return Database
      */
     Database getDataBase() {
@@ -76,6 +77,7 @@ public class ScreensShotsComponentsDao {
 
     /**
      * Return the DatabaseTable
+     *
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
@@ -85,13 +87,13 @@ public class ScreensShotsComponentsDao {
     /**
      * Method that find an ImageMiddlewareImpl by id in the data base.
      *
-     *  @param id Long id.
-     *  @return ImageMiddlewareImpl found.
-     *  @throws CantReadRecordDataBaseException
+     * @param id Long id.
+     * @return ImageMiddlewareImpl found.
+     * @throws CantReadRecordDataBaseException
      */
-    public Image findById (String id) throws CantReadRecordDataBaseException {
+    public Image findById(String id) throws CantReadRecordDataBaseException {
 
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
@@ -103,7 +105,7 @@ public class ScreensShotsComponentsDao {
              * 1 - load the data base to memory with filter
              */
             getDataBase().openDatabase();
-            DatabaseTable incomingMessageTable =  getDatabaseTable();
+            DatabaseTable incomingMessageTable = getDatabaseTable();
             incomingMessageTable.setStringFilter(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
@@ -116,7 +118,7 @@ public class ScreensShotsComponentsDao {
             /*
              * 3 - Convert into ImageMiddlewareImpl objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 3.1 - Create and configure a  ImageMiddlewareImpl
@@ -155,7 +157,7 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -166,23 +168,25 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        }finally {
+        } finally {
 
-            if (getDataBase() != null){
+            if (getDataBase() != null) {
                 getDataBase().closeDatabase();
             }
         }
 
         return walletPublishedMiddlewareInformation;
-    };
+    }
+
+    ;
 
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All ImageMiddlewareImpl.
-     *  @throws CantReadRecordDataBaseException
+     * @return All ImageMiddlewareImpl.
+     * @throws CantReadRecordDataBaseException
      */
-    public List<Image> findAll () throws CantReadRecordDataBaseException {
+    public List<Image> findAll() throws CantReadRecordDataBaseException {
 
 
         List<Image> list = null;
@@ -193,7 +197,7 @@ public class ScreensShotsComponentsDao {
              * 1 - load the data base to memory
              */
             getDataBase().openDatabase();
-            DatabaseTable walletPublishedMiddlewareInformationTable =  getDatabaseTable();
+            DatabaseTable walletPublishedMiddlewareInformationTable = getDatabaseTable();
             walletPublishedMiddlewareInformationTable.loadToMemory();
 
             /*
@@ -210,7 +214,7 @@ public class ScreensShotsComponentsDao {
             /*
              * 4 - Convert into ImageMiddlewareImpl objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 4.1 - Create and configure a  ImageMiddlewareImpl
@@ -256,7 +260,7 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -267,9 +271,9 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        }finally {
+        } finally {
 
-            if (getDataBase() != null){
+            if (getDataBase() != null) {
                 getDataBase().closeDatabase();
             }
         }
@@ -278,22 +282,25 @@ public class ScreensShotsComponentsDao {
          * return the list
          */
         return list;
-    };
+    }
+
+    ;
 
 
-    /** Method that list the all entities on the data base. The valid value of
+    /**
+     * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>WalletPublisherMiddlewareDatabaseConstants</code>
      *
-     *  @see WalletPublisherMiddlewareDatabaseConstants
-     *  @return All ImageMiddlewareImpl.
-     *  @throws CantReadRecordDataBaseException
+     * @return All ImageMiddlewareImpl.
+     * @throws CantReadRecordDataBaseException
+     * @see WalletPublisherMiddlewareDatabaseConstants
      */
-    public List<Image> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<Image> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
                 columnValue == null ||
-                columnValue.isEmpty()){
+                columnValue.isEmpty()) {
 
             throw new IllegalArgumentException("The filter are required, can not be null or empty");
         }
@@ -307,7 +314,7 @@ public class ScreensShotsComponentsDao {
              * 1 - load the data base to memory with filters
              */
             getDataBase().openDatabase();
-            DatabaseTable walletPublishedMiddlewareInformationTable =  getDatabaseTable();
+            DatabaseTable walletPublishedMiddlewareInformationTable = getDatabaseTable();
             walletPublishedMiddlewareInformationTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             walletPublishedMiddlewareInformationTable.loadToMemory();
 
@@ -325,7 +332,7 @@ public class ScreensShotsComponentsDao {
             /*
              * 4 - Convert into ImageMiddlewareImpl objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 4.1 - Create and configure a  ImageMiddlewareImpl
@@ -381,9 +388,9 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        }finally {
+        } finally {
 
-            if (getDataBase() != null){
+            if (getDataBase() != null) {
                 getDataBase().closeDatabase();
             }
         }
@@ -392,7 +399,9 @@ public class ScreensShotsComponentsDao {
          * return the list
          */
         return list;
-    };
+    }
+
+    ;
 
 
     /**
@@ -403,10 +412,10 @@ public class ScreensShotsComponentsDao {
      * @return List<ImageMiddlewareImpl>
      * @throws CantReadRecordDataBaseException
      */
-    public List<Image> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<Image> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
-                filters.isEmpty()){
+                filters.isEmpty()) {
 
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
@@ -420,9 +429,9 @@ public class ScreensShotsComponentsDao {
              * 1- Prepare the filters
              */
             getDataBase().openDatabase();
-            DatabaseTable walletPublishedMiddlewareInformationTable =  getDatabaseTable();
+            DatabaseTable walletPublishedMiddlewareInformationTable = getDatabaseTable();
 
-            for (String key: filters.keySet()){
+            for (String key : filters.keySet()) {
 
                 DatabaseTableFilter newFilter = walletPublishedMiddlewareInformationTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
@@ -452,7 +461,7 @@ public class ScreensShotsComponentsDao {
             /*
              * 5 - Convert into ImageMiddlewareImpl objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 5.1 - Create and configure a  ImageMiddlewareImpl
@@ -475,7 +484,7 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -497,7 +506,7 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
 
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
@@ -508,9 +517,9 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        }finally {
+        } finally {
 
-            if (getDataBase() != null){
+            if (getDataBase() != null) {
                 getDataBase().closeDatabase();
             }
         }
@@ -519,17 +528,19 @@ public class ScreensShotsComponentsDao {
          * return the list
          */
         return list;
-    };
+    }
+
+    ;
 
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity ImageMiddlewareImpl to update.
-     *  @throws CantUpdateRecordDataBaseException
+     * @param entity ImageMiddlewareImpl to update.
+     * @throws CantUpdateRecordDataBaseException
      */
     public void update(ImageMiddlewareImpl entity) throws CantUpdateRecordDataBaseException {
 
-        if (entity == null){
+        if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
@@ -576,9 +587,9 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The database not exist";
             throw new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
 
-        }finally {
+        } finally {
 
-            if (getDataBase() != null){
+            if (getDataBase() != null) {
                 getDataBase().closeDatabase();
             }
         }
@@ -588,12 +599,12 @@ public class ScreensShotsComponentsDao {
     /**
      * Method that delete a entity in the data base.
      *
-     *  @param id Long id.
-     *  @throws CantDeleteRecordDataBaseException
+     * @param id Long id.
+     * @throws CantDeleteRecordDataBaseException
      */
-    public void delete (Long id) throws CantDeleteRecordDataBaseException {
+    public void delete(Long id) throws CantDeleteRecordDataBaseException {
 
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("The id is required can not be null");
         }
 
@@ -619,7 +630,7 @@ public class ScreensShotsComponentsDao {
             CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantDeleteRecordDataBaseException;
 
-        }catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + WalletPublisherMiddlewareDatabaseConstants.DATA_BASE_NAME);
@@ -639,9 +650,9 @@ public class ScreensShotsComponentsDao {
             CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantDeleteRecordDataBaseException;
 
-        }finally {
+        } finally {
 
-            if (getDataBase() != null){
+            if (getDataBase() != null) {
                 getDataBase().closeDatabase();
             }
         }
@@ -677,7 +688,7 @@ public class ScreensShotsComponentsDao {
      * @param imageImpl the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(ImageMiddlewareImpl imageImpl){
+    private DatabaseTableRecord constructFrom(ImageMiddlewareImpl imageImpl) {
 
         /*
          * Create the record to the entity
@@ -687,7 +698,7 @@ public class ScreensShotsComponentsDao {
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME,      imageImpl.getFileId().toString());
+        entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FILE_ID_COLUMN_NAME, imageImpl.getFileId().toString());
         entityRecord.setStringValue(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_COMPONENT_ID_COLUMN_NAME, imageImpl.getComponentId().toString());
 
         /*

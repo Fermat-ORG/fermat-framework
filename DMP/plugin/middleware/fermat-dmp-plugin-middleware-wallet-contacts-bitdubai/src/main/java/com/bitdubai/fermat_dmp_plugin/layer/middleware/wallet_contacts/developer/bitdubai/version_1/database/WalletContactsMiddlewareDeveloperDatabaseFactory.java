@@ -119,6 +119,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
          */
         List<String> walletContactsColumns = new ArrayList<String>();
 
+        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME);
         walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
         walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_TYPE_COLUMN_NAME);
         walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME);
@@ -136,7 +137,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
          */
         List<String> walletContactAddressesColumns = new ArrayList<String>();
 
-        walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_ACTOR_PUBLIC_KEY_COLUMN_NAME);
+        walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME);
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME);
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME);
         /**

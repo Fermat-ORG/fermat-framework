@@ -4,12 +4,12 @@
     <entry>
       <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Activities>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Activities>
       <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Activity>
-        <type>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS</type>
+        <fermatPacketType>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS</fermatPacketType>
         <fragments>
           <entry>
             <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>
             <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-              <type>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS</type>
+              <fermatPacketType>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS</fermatPacketType>
             </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
           </entry>
         </fragments>
@@ -27,18 +27,18 @@
     <entry>
       <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Activities>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Activities>
       <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Activity>
-        <type>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN</type>
+        <fermatPacketType>CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN</fermatPacketType>
         <fragments>
           <entry>
             <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>
             <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-              <type>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE</type>
+              <fermatPacketType>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE</fermatPacketType>
             </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
           </entry>
           <entry>
             <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS</com.bitdubai.fermat__api.layer.all__definition.navigation__structure.enums.Fragments>
             <com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
-              <type>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS</type>
+              <fermatPacketType>CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS</fermatPacketType>
             </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.Fragment>
           </entry>
         </fragments>
