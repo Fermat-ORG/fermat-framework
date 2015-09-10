@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard;
+package com.bitdubai.sub_app.wallet_factory.ui.wizards;
 
 
 import android.os.Bundle;

@@ -1,7 +1,6 @@
-package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
+package com.bitdubai.sub_app.wallet_factory.ui.fragments;
 
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
