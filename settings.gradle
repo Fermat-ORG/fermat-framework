@@ -408,6 +408,9 @@ project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai').pr
 //project(':functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai')
 
 // DAP Projects
+//asset wallet
+include ':fermat-dap-plugin-asset-wallet-issuer-bitdubai'
+project(':fermat-dap-plugin-asset-wallet-issuer-bitdubai').projectDir = new File('DAP/plugin/asset_wallet/fermat-dap-plugin-asset-wallet-issuer-bitdubai')
 
 // middleware
 include ':fermat-dap-plugin-middleware-asset-factory-bitdubai'
