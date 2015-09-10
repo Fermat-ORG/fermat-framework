@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface IssuerIdentityManager {
 
-    List<IssuerActor> getIssuersFromCurrentDeviceUser() throws CantCreateNewIssuerException;
+    List<IssuerIdentity> getIssuersFromCurrentDeviceUser() throws CantCreateNewIssuerException;
 
-    IssuerActor createNewIssuer(String alias) throws CantCreateNewIssuerException;
+    IssuerIdentity createNewIssuer(String alias) throws CantCreateNewIssuerException;
 
 }

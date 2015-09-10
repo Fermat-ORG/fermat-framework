@@ -5,6 +5,6 @@ package com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces;
  */
 public interface DealsWithIdentityRedeemPoint {
 
-    void setRedeemPointIdentityManager(RedeemPointActorManager redeemPointIdentityManager);
+    void setRedeemPointIdentityManager(RedeemPointIdentityManager redeemPointIdentityManager);
 
 }
