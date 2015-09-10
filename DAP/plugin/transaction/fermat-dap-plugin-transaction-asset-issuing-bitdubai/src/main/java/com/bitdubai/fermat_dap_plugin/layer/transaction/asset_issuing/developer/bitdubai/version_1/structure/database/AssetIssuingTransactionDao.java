@@ -45,7 +45,6 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    //TODO: to define and to implement the methods that handle the database
     public void persistFormingDigitalAsset(String digitalAssetPublicKey, String digitalAssetLocalStoragePath)throws CantPersistDigitalAssetException{
 
         try{
