@@ -34,6 +34,9 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Crypto Customer Market Money Sale](plugin/contract/fermat-cbp-plugin-contract-crypto-customer-market-money-sale-bitdubai/): contrato de venta de Crypto de un Crypto Customer
 * [Crypto Customer Fiat Money Sale](plugin/contract/fermat-cbp-plugin-contract-crypto-customer-fiat-money-sale-bitdubai/): contrato de venta de Fiat Cash de un Crypto Customer
 
+### Request
+* [Crypto Broker Purchase](plugin/request/fermat-cbp-plugin-request-crypto-broker-purchase-bitdubai): gestiona la solicitud de compra del Crypto Customer al Crypto Broker
+
 ### Middleware
 * [Customers](plugin/middleware/fermat-cbp-plugin-middleware-customers-bitdubai/): administra y subclasifica a los Crypto Customers de un Crypto Broker
 * [Crypto Broker Identity Wallet Linker](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-identity-wallet-linker-bitdubai/): relaciona una Crypto Broker Identity con una Crypto Broker Wallet. (no seria mejor llamar a esto Crypto Broker Wallet Settings?)
@@ -50,14 +53,14 @@ This is the simplified specification of the Crypto Broker Platform plugins
 
 ### Business Transaction
 * [Crypto Broker Market Crypto Stock Replenish](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-market-crypto-stock-replenish-bitdubai): recarga de stock Crypto de Market Money.
-* [Crypto Broker Fiat Cash Stock Replenish](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-cash-stock-replenish-bitdubai): recarga de stock Cash de Fiat Money.
+  * [Crypto Broker Fiat Cash Stock Replenish](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-cash-stock-replenish-bitdubai): recarga de stock Cash de Fiat Money.
 * [Crypto Broker Fiat Bank Stock Replenish](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-bank-stock-replenish-bitdubai): recarga de stock Bank de Market Money.
 * [Crypto Customer Market Crypto Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-market-crypto-sale-bitdubai): venta de monedas Crypto del Broker a otros actores.
 * [Crypto Customer Fiat Cash Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-fiat-cash-sale-bitdubai): venta de monedas Cash Fiat del Broker a otros actores.
 * [Crypto Customer Fiat Bank Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-fiat-bank-sale-bitdubai): venta de monedas Cash Fiat del Broker a otros actores.
-* [Crypto Broker Market Crypto Buy](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-market-crypto-buy-bitdubai): compra de monedas Crypto del Customer al Broker.
-* [Crypto Broker Fiat Cash Buy](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-cash-buy-bitdubai): compra de monedas Cash Fiat del Customer al Broker.
-* [Crypto Broker Fiat Bank Buy](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-bank-buy-bitdubai): compra de monedas Cash Fiat del Customer al Broker.
+* [Crypto Broker Market Crypto Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-market-crypto-purchase-bitdubai): compra de monedas Crypto del Customer al Broker.
+  * [Crypto Broker Fiat Cash Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-cash-purchase-bitdubai): compra de monedas Cash Fiat del Customer al Broker.
+* [Crypto Broker Fiat Bank Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-bank-purchase-bitdubai): compra de monedas Cash Fiat del Customer al Broker.
 
 ### Market Crypto Transaction
 * [Send Crypto](plugin/market_crypto_transaction/fermat-cbp-plugin-market-crypto-transaction-send-market-crypto-bitdubai): envio de monedas Crypto a traves del Blockchain.
@@ -73,14 +76,11 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Make Offline Fiat Bank Transfer](plugin/fiat_bank_transaction/fermat-cbp-plugin-fiat-bank-transaction-make-offline-fiat-bank-transfer-bitdubai): registro manual de un deposito hecho con Fiat en una cuenta bancaria.
 * [Receive Offline Fiat Bank Transfer](plugin/fiat_bank_transaction/fetmat-cbp-plugin-fiat-bank-transaction-receive-offline-fiat-bank-transfer-bitdubai): registro manual de recepcion de un deposito hecho con Fiat en una cuenta bancaria.
 
-### Wallet (reutilizamos las wallets crypto del CCP?)
+### Wallet
 * [Crypto Broker Market Crypto](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-market-crypto-bitdubai): gestiona el balance crypto del Crypto Broker.
 * [Crypto Broker Fiat Cash](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-fiat-cash-bitdubai): gestiona el balance efectivo del Crypto Broker.
 * [Crypto Broker Fiat Bank](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-fiat-bank-bitdubai): gestiona el balance bancario del Crypto Broker (puede estar relacionado a multiples cuentas bancarias).
 * [Crypto Customer Market Crypto](plugin/wallet/fermat-cbp-plugin-wallet-crypto-customer-market-crypto): gestiona el balance crypto del Crypto Customer.
-
-### Request
-* [Crypto Broker Buy](plugin/request/fermat-cbp-plugin-request-crypto-broker-buy-bitdubai): gestiona la solicitud de compra del Crypto Customer al Crypto Broker
 
 ### Identity
 * [Crypto Broker](plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai): gestiona la Clave Privada y Publica del Broker asociadas con un alias.
