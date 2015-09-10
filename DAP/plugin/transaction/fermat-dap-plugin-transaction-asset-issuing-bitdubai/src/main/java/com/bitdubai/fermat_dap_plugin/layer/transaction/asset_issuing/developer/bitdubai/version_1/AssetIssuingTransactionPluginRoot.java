@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -29,19 +30,23 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
 import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantIssueDigitalAssetException;
 import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -74,17 +79,37 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        AssetIssuingTransactionDeveloperDatabaseFactory assetIssuingTransactionDeveloperDatabaseFactory=new AssetIssuingTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return assetIssuingTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        return AssetIssuingTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        Database database;
+        try {
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
+            return AssetIssuingTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+        }catch (CantOpenDatabaseException cantOpenDatabaseException){
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            FermatException e = new CantDeliverDatabaseException("Cannot open the database",cantOpenDatabaseException,"DeveloperDatabase: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"DeveloperDatabase: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        } catch(Exception exception){
+            FermatException e = new CantDeliverDatabaseException("Unexpected Exception",exception,"DeveloperDatabase: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        // If we are here the database could not be opened, so we return an empty list
+        return new ArrayList<>();
     }
 
     @Override
@@ -111,27 +136,26 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         printSomething("Starting Asset Issuing plugin");
 
         try{
-            this.assetIssuingDatabase = pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
-            //DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(/*, this.cryptoAddressBookManager*/);
+            this.assetIssuingDatabase = this.pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
+        }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
+            //TODO: delete this printStackTrace in production
+            //exception.printStackTrace();
+            printSomething("CANNOT OPEN PLUGIN DATABASE: "+this.pluginId);
+            try {
+                printSomething("CREATING A PLUGIN DATABASE.");
+                createAssetIssuingTransactionDatabase();
+            } catch (CantCreateDatabaseException innerException) {
+                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin - "+exception, "Cannot open or create the plugin database");
+            }
+        }try{
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
                     this.cryptoVaultManager,
                     this.cryptoWallet,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.errorManager);
-
-        }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
-            //TODO: delete this printStackTrace in production
-            exception.printStackTrace();
-            //printSomething("MAP_NO PUEDO ABRIR DATABASE:"+exception.toString());
-            try {
-                //printSomething("MAP_ABRIENDO DATABASE:");
-                createAssetIssuingTransactionDatabase();
-            } catch (CantCreateDatabaseException innerException) {
-                throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin - "+exception, "Cannot open or create the plugin database");
-            }
-
-        }catch(CantSetObjectException exception){
+        }
+        catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "Cannot set an object, probably is null");
         }catch(CantExecuteDatabaseOperationException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetCryptoTransactionFactory", "Error in constructor method AssetIssuingTransactionDao");

@@ -112,7 +112,7 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
     }
 
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
+    public static List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
@@ -137,7 +137,7 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */

@@ -101,11 +101,12 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 defaultSkinFile =  pluginFileSystem.createTextFile(pluginId, walletFactoryProject.getProjectPublicKey(), defaultSkin.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             }
 
-            defaultSkinFile.setContent(XMLParser.parseObject(defaultSkin));
+            String skinXML = XMLParser.parseObject(defaultSkin);
+            defaultSkinFile.setContent(skinXML);
             defaultSkinFile.persistToMedia();
 
             // I will also save any other skin available
-            if (!walletFactoryProject.getSkins().isEmpty()){
+            if (walletFactoryProject.getSkins() !=null){
                 for (Skin skin : walletFactoryProject.getSkins()){
                     PluginTextFile skinFile;
                     try {
@@ -137,7 +138,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             defaultLanguageFile.persistToMedia();
 
             // I will also save any other skin available
-            if (!walletFactoryProject.getLanguages().isEmpty()){
+            if (walletFactoryProject.getLanguages() !=null){
                 for (Language language : walletFactoryProject.getLanguages()){
                     PluginTextFile languageFile;
                     try {
