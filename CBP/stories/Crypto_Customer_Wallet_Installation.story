@@ -5,7 +5,7 @@ In order to buy money from the Crypto Brokers who work through Fermat
 Using the Wallet Store SubApp
   And the Wallet Manager Desktop
   And the Wallet Manager Desktop Module plugin
-  And the **Wallet Manager Middleware** plugin
+  And the Wallet Manager Middleware plugin
   And the Wallet Resources Plugin
   And the Wallet Runtime (es independiente de la plataforma) 
   And the SubApp Manager Module Plugin
