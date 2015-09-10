@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -48,6 +49,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database.WalletFactoryMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryProjectMiddlewareManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.myDesignerIdentity;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.myTranslatorIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -281,7 +284,8 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     @Override
     public List<WalletFactoryProject> getWalletFactoryProjectByState(WalletFactoryProjectState walletFactoryProjectState) throws CantGetWalletFactoryProjectException {
         test();
-        return walletFactoryProjectMiddlewareManager.getWalletFactoryProjectsByState(walletFactoryProjectState);
+        List<WalletFactoryProject> projects = walletFactoryProjectMiddlewareManager.getWalletFactoryProjectsByState(walletFactoryProjectState);
+        return projects;
     }
 
     @Override
@@ -357,17 +361,42 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             Skin skin = new Skin();
             skin.setId(UUID.randomUUID());
             skin.setName("SkinTest");
+
+            myDesignerIdentity designerIdentity = new myDesignerIdentity();
+            designerIdentity.setAlias("Alias");
+            designerIdentity.setPublicKey("pubKey");
+            skin.setDesigner(designerIdentity);
             skin.setScreenSize(ScreenSize.MEDIUM);
             skin.setSize(100);
             skin.setVersion(new Version("1.0.0"));
             walletFactoryProject.setDefaultSkin(skin);
+            List<Skin> skins = new ArrayList<>();
+            skins.add(skin);
+            walletFactoryProject.setSkins(skins);
 
             com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language language = new com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language();
             language.setName("TestLanguage");
+            myTranslatorIdentity translatorIdentity = new myTranslatorIdentity();
+            translatorIdentity.setPublicKey("translatorPubKey");
+            translatorIdentity.setAlias("Alias");
+            language.setTranslator(translatorIdentity);
             language.setId(UUID.randomUUID());
             language.setVersion(new Version(1, 0, 0));
             language.setSize(100);
+
             walletFactoryProject.setDefaultLanguage(language);
+            List<com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language> languages = new ArrayList<>();
+            languages.add(language);
+            walletFactoryProject.setLanguages(languages);
+            walletFactoryProject.setLastModificationTimeststamp(new Timestamp(System.currentTimeMillis()));
+
+            WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
+            navigationStructure.setPublicKey("NavId");
+            navigationStructure.setSize(100);
+            navigationStructure.setWalletCategory("Sssd");
+
+            walletFactoryProject.setNavigationStructure(navigationStructure);
+
             this.saveWalletFactoryProjectChanges(walletFactoryProject);
 
         } catch (Exception e) {
