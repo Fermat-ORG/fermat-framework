@@ -4132,7 +4132,7 @@
 					</android>
 
 					<android
-							name="Crypto Broker Customer"
+							name="Crypto Customer"
 							description=""
 							difficulty="8"
 							code-level="development"
@@ -4169,7 +4169,7 @@
 							name="Suppliers"
 							description=""
 							difficulty="6"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4273,7 +4273,7 @@
 					</plugin>
 
 					<plugin
-							name="Crypto Broker Customer"
+							name="Crypto Customer"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -4289,7 +4289,7 @@
 					</plugin>
 
 					<plugin
-							name="Customer"
+							name="Customers"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -4305,10 +4305,10 @@
 					</plugin>
 
 					<plugin
-							name="Supplier"
+							name="Suppliers"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4372,7 +4372,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Crypto Broker Customer"
+							name="Crypto Customer"
 							description=""
 							difficulty="4"
 							code-level="development"
@@ -4386,6 +4386,72 @@
 						<certifications>
 						</certifications>
 					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Contract" language="java">
+				<plugins>
+					<plugin
+						name="Crypto Broker Market Money Buy"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="0"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Broker Fiat Money Buy"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="0"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Customer Market Money Sale"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="0"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Customer Fiat Money Sale"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="0"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+
 				</plugins>
 			</layer>
 
@@ -4410,7 +4476,7 @@
 							name="Wholesalers"
 							description=""
 							difficulty="4"
-							code-level="development"
+							code-level="concept"
 							>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4422,11 +4488,11 @@
 						</certifications>
 					</plugin>
 					<plugin
-							name="Quotes"
-							description=""
-							difficulty="6"
-							code-level="development"
-							>
+						name="Crypto Broker Identity Wallet Linker"
+						description=""
+						difficulty="4"
+						code-level="concept"
+						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>

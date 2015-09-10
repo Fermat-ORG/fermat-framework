@@ -15,7 +15,7 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [SubApp Manager](android/sup_app/fermat-android-sub-app-sub-app-manager-bitdubai/): frontend del gestor de las SubApps instaladas en el dispositivo
 * [Wallet Manager](android/sup_app/fermat-android-sub-app-wallet-manager/): frontend del gestor de las Wallets instaladas
 
-## Java
+## Plugins
 
 ### Wallet Module
 * [Crypto Broker](plugin/wallet_module/fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai/): gestion de la informacion y las actividades financieras de un Broker
