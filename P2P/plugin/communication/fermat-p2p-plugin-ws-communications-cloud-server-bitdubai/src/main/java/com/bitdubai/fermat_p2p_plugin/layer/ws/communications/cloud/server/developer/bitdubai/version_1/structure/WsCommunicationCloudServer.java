@@ -72,7 +72,6 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      */
     private Map<FermatPacketType, List<FermatPacketProcessor>> packetProcessorsRegister;
 
-
     //TODO: THE REGISTERED COMPONENT WOULD BE HOLD IN DATA BASE AND NO IN MEMORY, FOR SEARCH IN FUTURE
 
     /**
@@ -199,11 +198,8 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onClose");
-        System.out.println(clientConnection + " is disconnect!");
-        System.out.println(" code   = " + code);
-        System.out.println(" reason = " + reason);
-        System.out.println(" remote = " + remote);
-
+        System.out.println(" WsCommunicationCloudServer - " +clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code +" reason = " + reason +" remote = " + remote);
+        cleanReferences(clientConnection);
     }
 
     /**
@@ -255,24 +251,13 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         System.out.println(" WsCommunicationCloudServer - Starting method onError");
         ex.printStackTrace();
 
-        /*
-         * Clean all the caches, remove data bind whit this connection
-         */
-        pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-        registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-        serverIdentityByClientCache.remove(clientConnection.hashCode());
-        clientIdentityByClientConnectionCache.remove(clientConnection.hashCode());
-        registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
-        registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
-
-        //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
+        cleanReferences(clientConnection);
 
         /*
          * Close the connection
          */
-        clientConnection.closeConnection(505, "- ERROR :"+ex.getLocalizedMessage());
+        clientConnection.closeConnection(505, "- ERROR :" + ex.getLocalizedMessage());
     }
-
 
     /**
      * This method register a FermatPacketProcessor object with this
@@ -308,6 +293,66 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         }
 
         System.out.println(" WsCommunicationCloudServer - packetProcessorsRegister = " + packetProcessorsRegister.size());
+
+    }
+
+    /**
+     * Clean all reference from the connection
+     */
+    private void cleanReferences(WebSocket clientConnection){
+
+        /*
+         * Clean all the caches, remove data bind whit this connection
+         */
+        //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
+        removePlatformComponentRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+        pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+        registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+        serverIdentityByClientCache.remove(clientConnection.hashCode());
+        clientIdentityByClientConnectionCache.remove(clientConnection.hashCode());
+        registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
+        registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
+
+        System.out.println(" WsCommunicationCloudServer - pendingRegisterClientConnectionsCache.size() = " + pendingRegisterClientConnectionsCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredClientConnectionsCache.size() = "+registeredClientConnectionsCache.size());
+        System.out.println(" WsCommunicationCloudServer - serverIdentityByClientCache.size() = "+serverIdentityByClientCache.size());
+        System.out.println(" WsCommunicationCloudServer - clientIdentityByClientConnectionCache.size() = "+clientIdentityByClientConnectionCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudServerCache.size() = "+registeredCommunicationsCloudServerCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudClientCache.size() = "+registeredCommunicationsCloudClientCache.size());
+    }
+
+    /**
+     * This method unregister all platform component profile
+     * register
+     */
+    private void removePlatformComponentRegisteredByClientIdentity(String clientIdentity){
+
+        System.out.println(" WsCommunicationCloudServer - removePlatformComponentRegisterByClientIdentity ");
+
+        for (PlatformComponentType platformComponentType : registeredPlatformComponentProfileCache.keySet()) {
+
+            System.out.println(" WsCommunicationCloudServer - platformComponentType = "+platformComponentType);
+
+            for (NetworkServiceType networkServiceType : registeredPlatformComponentProfileCache.get(platformComponentType).keySet()) {
+
+                System.out.println(" WsCommunicationCloudServer - networkServiceType = "+networkServiceType);
+
+                for (PlatformComponentProfile platformComponentProfile : registeredPlatformComponentProfileCache.get(platformComponentType).get(networkServiceType)) {
+
+                    System.out.println(" WsCommunicationCloudServer - platformComponentProfile = "+platformComponentProfile.getCommunicationCloudClientIdentity());
+                    System.out.println(" WsCommunicationCloudServer - platformComponentProfile = "+clientIdentity);
+
+                    if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
+
+                        System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
+
+                        registeredPlatformComponentProfileCache.get(platformComponentType).get(networkServiceType).remove(platformComponentProfile);
+                    }
+                }
+
+            }
+
+        }
 
     }
 

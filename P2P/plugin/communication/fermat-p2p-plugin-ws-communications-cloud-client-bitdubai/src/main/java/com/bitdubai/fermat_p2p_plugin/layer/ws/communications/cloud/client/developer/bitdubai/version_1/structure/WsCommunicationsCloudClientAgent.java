@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import org.java_websocket.WebSocket;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientAgent</code>
  * <p/>
@@ -17,7 +19,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 public class WsCommunicationsCloudClientAgent extends Thread {
 
     /*
-     * Represent the sleep time for the read or send (2000 milliseconds)
+     * Represent the sleep time for the read or send (60000 milliseconds)
      */
     private static final long SLEEP_TIME = 60000;
 
@@ -37,6 +39,7 @@ public class WsCommunicationsCloudClientAgent extends Thread {
      */
     public WsCommunicationsCloudClientAgent(WsCommunicationsCloudClientChannel wsCommunicationsCloudClientChannel){
         this.wsCommunicationsCloudClientChannel = wsCommunicationsCloudClientChannel;
+        this.wsCommunicationsCloudClientChannel.setWsCommunicationsCloudClientAgent(this);
         this.isConnected = Boolean.FALSE;
     }
 
@@ -47,16 +50,24 @@ public class WsCommunicationsCloudClientAgent extends Thread {
     @Override
     public void run() {
 
+
         /*
          * While is no connect
          */
-      //  while (!isConnected){
+        while (!isConnected){
 
+            System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isOpen() = "+!wsCommunicationsCloudClientChannel.getConnection().isOpen());
+            System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isConnecting() = "+!wsCommunicationsCloudClientChannel.getConnection().isConnecting());
+            System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isClosing() = "+!wsCommunicationsCloudClientChannel.getConnection().isClosing());
+            System.out.println(" WsCommunicationsCloudClientAgent -  wsCommunicationsCloudClientChannel.getConnection().getReadyState() = "+wsCommunicationsCloudClientChannel.getConnection().getReadyState());
+            System.out.println(" WsCommunicationsCloudClientAgent -  wsCommunicationsCloudClientChannel.getConnection().isFlushAndClose() = " + wsCommunicationsCloudClientChannel.getConnection().isFlushAndClose());
             /*
-             * If the connection is not open and not connecting
+             * If the connection is not open and not connecting and not closing and is closed
              */
-            if (!wsCommunicationsCloudClientChannel.getConnection().isOpen()
-                    && !wsCommunicationsCloudClientChannel.getConnection().isConnecting()){
+            if (!wsCommunicationsCloudClientChannel.getConnection().isOpen()               &&
+                    !wsCommunicationsCloudClientChannel.getConnection().isConnecting()     &&
+                          !wsCommunicationsCloudClientChannel.getConnection().isClosing()  &&
+                                wsCommunicationsCloudClientChannel.getConnection().getReadyState() == WebSocket.READYSTATE.NOT_YET_CONNECTED){
 
                 try {
 
@@ -71,6 +82,8 @@ public class WsCommunicationsCloudClientAgent extends Thread {
                      */
                     if (!isConnected){
 
+                        System.out.println(" WsCommunicationsCloudClientAgent - sleep for = "+WsCommunicationsCloudClientAgent.SLEEP_TIME);
+
                         /**
                          * Sleep for the next try connection
                          */
@@ -84,9 +97,30 @@ public class WsCommunicationsCloudClientAgent extends Thread {
                     interrupt();
                 }
 
+            }else {
+
+                System.out.println(" WsCommunicationsCloudClientAgent - sleep for = 10000");
+
+                /**
+                 * Sleep for the next try connection
+                 */
+                try {
+                    sleep(new Long(10000).longValue());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
 
-  //      }
+        }
 
+    }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public void setIsConnected(boolean isConnected) {
+        this.isConnected = isConnected;
     }
 }

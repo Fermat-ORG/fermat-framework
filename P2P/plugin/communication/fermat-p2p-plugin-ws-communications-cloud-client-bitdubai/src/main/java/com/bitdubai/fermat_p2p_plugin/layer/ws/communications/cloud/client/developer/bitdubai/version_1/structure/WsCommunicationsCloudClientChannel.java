@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
@@ -40,6 +41,11 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * Represent the value of DEFAULT_CONNECTION_TIMEOUT
      */
     private static final int DEFAULT_CONNECTION_TIMEOUT = 10000;
+
+    /*
+     * Represent the wsCommunicationsCloudClientAgent
+     */
+    private WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent;
 
     /**
      * Represent the temporalIdentity
@@ -147,7 +153,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onMessage(String)");
         System.out.println(" WsCommunicationsCloudClientChannel - encode fermatPacket " + fermatPacketEncode);
 
-        FermatPacket fermatPacket = null;
+        FermatPacket fermatPacketReceive = null;
 
         /*
          * If the client is no register
@@ -157,7 +163,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             /**
              * Decode the message with the temporal identity
              */
-            fermatPacket = FermatPacketDecoder.decode(fermatPacketEncode, temporalIdentity.getPrivateKey());
+            fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, temporalIdentity.getPrivateKey());
             System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + FermatPacketDecoder.decode(fermatPacketEncode, temporalIdentity.getPrivateKey()));
 
         }else {
@@ -165,19 +171,26 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             /**
              * Decode the message with the client identity
              */
-            fermatPacket = FermatPacketDecoder.decode(fermatPacketEncode, clientIdentity.getPrivateKey());
+            fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, clientIdentity.getPrivateKey());
             System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + FermatPacketDecoder.decode(fermatPacketEncode, clientIdentity.getPrivateKey()));
+
+            /*
+             * Validate the signature
+             */
+            validateFermatPacketSignature(fermatPacketReceive);
         }
+
+
 
         /*
          * Call the processors for this packet
          */
-        for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacket.getFermatPacketType())) {
+        for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
 
         /*
          * Processor make his job
          */
-            fermatPacketProcessor.processingPackage(fermatPacket);
+            fermatPacketProcessor.processingPackage(fermatPacketReceive);
         }
 
     }
@@ -191,9 +204,15 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
-        System.out.println(" WsCommunicationsCloudClientChannel -  code   = " + code + " reason = " + reason +" remote = " + remote);
+        System.out.println(" WsCommunicationsCloudClientChannel -  code   = " + code + " reason = " + reason + " remote = " + remote);
         System.out.println(" WsCommunicationsCloudClientChannel -  getReadyState() = " + getReadyState());
+        System.out.println(" WsCommunicationsCloudClientChannel -  getConnection().isFlushAndClose() = " + getConnection().isFlushAndClose());
 
+        /*
+         * Start the agent to try the reconnect
+         */
+        wsCommunicationsCloudClientAgent.setIsConnected(Boolean.FALSE);
+        wsCommunicationsCloudClientAgent.run();
     }
 
     /**
@@ -206,7 +225,32 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onError");
         ex.printStackTrace();
-        getConnection().close();
+        getConnection().closeConnection(1000, ex.getLocalizedMessage());
+
+    }
+
+    /**
+     * Validate the signature of the packet
+     * @param fermatPacketReceive
+     */
+    private void validateFermatPacketSignature(FermatPacket fermatPacketReceive){
+
+        System.out.println(" WsCommunicationsCloudClientChannel - validateFermatPacketSignature");
+
+         /*
+         * Validate the signature
+         */
+        boolean isValid =AsymmectricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), getServerIdentity());
+
+        System.out.println(" WsCommunicationsCloudClientChannel - isValid = "+isValid);
+
+        /*
+         * if not valid signature
+         */
+        if (!isValid){
+            throw new RuntimeException("Fermat Packet received has not a valid signature, go to close this connection maybe is compromise");
+        }
+
     }
 
     /**
@@ -316,5 +360,13 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public void setIsRegister(boolean isRegister) {
         this.isRegister = isRegister;
+    }
+
+    /**
+     * Set the wsCommunicationsCloudClientAgent
+     * @param wsCommunicationsCloudClientAgent
+     */
+    public void setWsCommunicationsCloudClientAgent(WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent) {
+        this.wsCommunicationsCloudClientAgent = wsCommunicationsCloudClientAgent;
     }
 }
