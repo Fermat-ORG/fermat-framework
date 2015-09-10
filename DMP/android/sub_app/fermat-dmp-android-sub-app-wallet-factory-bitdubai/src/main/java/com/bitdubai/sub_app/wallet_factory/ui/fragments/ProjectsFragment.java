@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment;
+package com.bitdubai.sub_app.wallet_factory.ui.fragments;
 
 
 import android.os.Bundle;
@@ -8,14 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
-
-import java.util.List;
-import java.util.UUID;
-
-import android.app.Fragment;
 
 
 public class ProjectsFragment extends FermatFragment {
