@@ -1,0 +1,37 @@
+[[best-practices]]
+== Best Practices
+https://www.lucidchart.com/techblog/2015/08/31/the-worst-mistake-of-computer-science/
+
+http://blog.jooq.org/2013/08/20/10-subtle-best-practices-when-coding-java/
+
+Definamos lo todo lo conveniente.
+
+=== Uso de "getters"
+Todos los métodos getters deben usar en la Digital Asset Platform deben seguir el siguiente formato:
+
+```java
+public void getSomething() throws ObjectNotSetException{
+
+    ....
+    if(returningObject==null){
+        throw new ObjectNotSetException("The object to get is null", "getSomething() method in DAPClass", "Some description");
+    }
+
+    return returningObject
+
+}
+```
+El objetivo de esta técnica es evitar que los métodos getters devuelvan null, para ello se debe realizar una verificación previa antes de devolver algún objeto.
+
+
+== Consideraciones para DAP
+
+* Crear una DAPException para poder manejar todo tipo de Exception que se presente
+
+* Validar todos los SET y GET con THROWS para asegurar que tengan valores y no se generen
+Excepciones desencadenadas de NULL
+
+
+== Refactor Pendientes por hacer:
+
+* Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.

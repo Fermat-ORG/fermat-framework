@@ -440,8 +440,8 @@ project(':fermat-dap-plugin-identity-issuer-bitdubai').projectDir = new File('DA
 include ':fermat-dap-plugin-identity-user-bitdubai'
 project(':fermat-dap-plugin-identity-user-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-user-bitdubai')
 
-include ':fermat-dap-plugin-identity-redem-point-bitdubai'
-project(':fermat-dap-plugin-identity-redem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redem-point-bitdubai')
+include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
+project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
 
 include ':fermat-dap-plugin-actor-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-issuer-bitdubai')

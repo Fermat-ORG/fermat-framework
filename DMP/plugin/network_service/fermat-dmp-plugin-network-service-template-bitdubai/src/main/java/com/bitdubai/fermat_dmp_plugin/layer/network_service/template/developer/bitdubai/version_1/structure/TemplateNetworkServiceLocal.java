@@ -25,17 +25,17 @@ import java.util.Observer;
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceLocal</code> represent
  * the remote network services locally
- *
+ * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
  * for more info see @link https://en.wikipedia.org/wiki/Observer_pattern
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceLocal implements Observer{
+public class TemplateNetworkServiceLocal implements Observer {
 
     /**
      * Represent the public key of the remote network service
@@ -61,13 +61,13 @@ public class TemplateNetworkServiceLocal implements Observer{
      * Constructor with parameters
      *
      * @param remoteNetworkServicePublicKey
-     * @param errorManager instance
-     * @param outgoingMessageDao instance
+     * @param errorManager                  instance
+     * @param outgoingMessageDao            instance
      */
     public TemplateNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
-        this.remoteNetworkServicePublicKey   = remoteNetworkServicePublicKey;
-        this.errorManager                    = errorManager;
-        this.eventManager                    = eventManager;
+        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
     }
 
@@ -78,7 +78,7 @@ public class TemplateNetworkServiceLocal implements Observer{
      *
      * @param message the message to send
      */
-    public void sendMessage(Message message){
+    public void sendMessage(Message message) {
 
         try {
 
@@ -104,14 +104,13 @@ public class TemplateNetworkServiceLocal implements Observer{
     }
 
 
-
     /**
      * Notify the client when a incoming message is receive by the incomingTemplateNetworkServiceMessage
      * ant fire a new event
      *
      * @param incomingTemplateNetworkServiceMessage received
      */
-    private void onMessageReceived(IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage){
+    private void onMessageReceived(IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage) {
 
         /**
          * Put the message on a event and fire new event
@@ -128,7 +127,7 @@ public class TemplateNetworkServiceLocal implements Observer{
      * when new message is received
      *
      * @param observable the observable object
-     * @param data the data update
+     * @param data       the data update
      */
     @Override
     public void update(Observable observable, Object data) {
@@ -140,6 +139,7 @@ public class TemplateNetworkServiceLocal implements Observer{
 
     /**
      * Return the public key of the remote network service
+     *
      * @return
      */
     public String getRemoteNetworkServicePublicKey() {

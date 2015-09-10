@@ -1,3 +1,21 @@
+# Este escenario esta mal estructurado
+Escenario: Publicacion de Informacion del broker
+  Dado que como Crypto Broker deseo darme a conocer en la comunidad para ofercer mis servicios
+  Cuando decido publicar mi identidad como broker para ser descubierto por un Crypto Customer
+  Entonces voy a la Subapp del Crypto Broker
+    Y establesco que datos de mercado deseo mostrar a los Crypto Customers (moneda de referencia, mercaderia, montos maximos, metodos y monedas que acepta de pago)
+    Y en la Subapp del Crypto Broker Selecciono la opcion de publicar mi informacion en la plataforma
+    Y la SubApp del Crypto Broker le cede el control al Module de la Subapp del Crypto Broker
+    Y el Module de la Subapp del Cryto Broker invoca al Plugin Crypto Broker Identity Wallet Linker
+    Y el Plugin Crypto Broker Identity Wallet Linker registra los datos de mercado deseo mostrar con mi identidad
+    Y el Module de la Subapp del Cryto Broker invoca al Plugin Crypto Broker de la capa Actor
+    Y el Plugin Crypto Broker de la capa Actor registra mi identidad
+    Y el Plugin Crypto Broker de la capa Actor se encarga de activar mi identidad colocandome en linea
+    Y el Plugin Crypto Broker de la capa Actor le notifica el Module de la SubApp del Crypto Broker que estoy en linea
+    Y el Module de la SubApp del Crypto Broker hace que la SubApp del Crypto Customer me muestre en la lista de brokers que puede consultar el crypto customer
+
+........................
+
 Story: Crypto Broker Publish
 
 In order to be discovered by Crypto Customers
@@ -5,12 +23,13 @@ In order to be discovered by Crypto Customers
   I need to publish my Public Identity
   And my sale prices
 Using the Crypto Broker SubApp Android
-  And the Crypto Broker SubApp Module Java
-  And the Crypto Broker Network Service Java
-  And the Fiat Index World Java
-  And the Market Index World Java
-  And the Crypto Broker Agent
+  And the Crypto Broker SubApp Module Java Plugin
+  And the Crypto Broker Network Service Java Plugin
+  And the Crypto Broker Agent Java Plugin
+  And the Fiat Index World Java Plugin
+  And the Market Index World Java Plugin
 
+#Este escenario esta mal estructurado
 Scenario: Public Information Publish
   Given I have Crypto Broker Identity
   When I decide to publish my Crypto Broker Identity in the Crypto Broker SubApp
@@ -27,11 +46,14 @@ Scenario: Public Information Publish
 
 Scenario: Business Transaction Public Information Update
   Given I have performed a "Business Transaction"
-  When the "Business Transaction" is completed
-    And the Crypto Broker Agent consolidates the data of the Business Transactions
+    And the "Business Transaction" is completed
+  When the Crypto Broker Agent consolidates the data of the Business Transactions
   Then the Crypto Broker Agent should update the exchange rates between my "Stocked Fiat Money" and the "Fiat Money Type for Price Reference" in my Crypto Broker Public Identity
     And the Crypto Broker Agent should update the exchange rates between my "Stocked Fiat Money" and the "Fiat Money Type for Price Reference" in my Crypto Broker Public Identity
     And the Crypto Broker Agent should publish this update through the Crypto Broker Network Service
+
+--------
+
 
 Public Identity Crypto Broker Example:
 - Photo
@@ -51,3 +73,5 @@ Public Identity Crypto Broker Example:
   - Forines Hungaros
   - Dolares Estadounidenses
   - Pesos Colombianos
+
+--------

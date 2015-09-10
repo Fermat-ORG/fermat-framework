@@ -8,58 +8,32 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.I
  */
 public class IntraUserNetworkService  implements IntraUser {
 
-    @Override
-    public String getAddress() {
-        return null;
+
+    private String publicKey;
+    private byte[] profileImage;
+    private String name;
+
+    public IntraUserNetworkService(String publicKey,byte[] profileImage,String name){
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+        this.name = name;
     }
 
     @Override
     public String getPublicKey() {
-        return null;
+        return this.publicKey;
     }
 
     @Override
     public byte[] getProfileImage() {
-        return new byte[0];
+        return this.profileImage;
     }
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
-    @Override
-    public String getLastLocation() {
-        return null;
-    }
 
-    @Override
-    public IntraUserStatus getStatus() {
-        return null;
-    }
 
-    @Override
-    public String getSmallProfilePicture() {
-        return null;
-    }
-
-    @Override
-    public String getMediumProfilePicture() {
-        return null;
-    }
-
-    @Override
-    public String getBigProfilePicture() {
-        return null;
-    }
-
-    @Override
-    public Long getCreatedTime() {
-        return null;
-    }
-
-    @Override
-    public Long getUpdateTime() {
-        return null;
-    }
 }

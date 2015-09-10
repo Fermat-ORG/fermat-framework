@@ -654,7 +654,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
                     } else
                         queryWhereClause += records.get(i).getName();
                     queryWhereClause += "=";
-                    queryWhereClause += records.get(i).getValue();
+                    queryWhereClause += "'" + records.get(i).getValue() + "'";
                 }
             } else {
                 queryWhereClause = null;

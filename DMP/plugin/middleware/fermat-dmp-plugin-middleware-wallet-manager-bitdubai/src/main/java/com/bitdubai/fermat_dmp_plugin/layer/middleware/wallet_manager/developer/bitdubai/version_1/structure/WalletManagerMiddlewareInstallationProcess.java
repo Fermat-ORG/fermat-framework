@@ -27,8 +27,8 @@ import java.util.logging.Logger;
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationProcess</code>
  * is the implementation of WalletInstallationProcess.
- * <p>
- * <p>
+ * <p/>
+ * <p/>
  * Created by Natalia on 21/07/15.
  *
  * @version 1.0
@@ -70,11 +70,11 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
         //Logger LOG = Logger.getGlobal();
         try {
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
-            InstalledWallet installedWallet=walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
+            InstalledWallet installedWallet = walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
             if (installedWallet != null) return true;
             else return false;
         } catch (CantExecuteDatabaseOperationException exception) {
-            throw new CantExecuteDatabaseOperationException(exception,"Error checking if the wallet is installed","Please, check the cause");
+            throw new CantExecuteDatabaseOperationException(exception, "Error checking if the wallet is installed", "Please, check the cause");
         } catch (CantGetInstalledWalletsException exception) {
             return false;
         }
@@ -110,9 +110,9 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
              * Start the installation process
              */
             installationProgress = InstallationStatus.INSTALLING;
-            LOG.info("INSTALANDO:"+installationProgress);
+            LOG.info("INSTALANDO:" + installationProgress);
 
-            if(!isWalletInstalled(walletCatalogueId)){
+            if (!isWalletInstalled(walletCatalogueId)) {
                 /**
                  * Send wallet info to Wallet Resource
                  */
@@ -125,54 +125,42 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                  */
                 WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
 
-                walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey,deviceUserPublicKey,walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion,developerName,screenSize,navigationStructureVersion);
+                walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey, deviceUserPublicKey, walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion, developerName, screenSize, navigationStructureVersion);
 
-                walletManagerDao.persistWalletSkin(walletCatalogueId,skinId,skinName,skinPreview, skinVersion);
+                walletManagerDao.persistWalletSkin(walletCatalogueId, skinId, skinName, skinPreview, skinVersion);
 
-                walletManagerDao.persistWalletLanguage(walletCatalogueId,languageId, language, languageLabel, languageVersion);
+                walletManagerDao.persistWalletLanguage(walletCatalogueId, languageId, language, languageLabel, languageVersion);
                 /**
                  * Set status installed
                  */
                 installationProgress = InstallationStatus.INSTALLED;
-                LOG.info("INSTALADO:"+installationProgress);
+                LOG.info("INSTALADO:" + installationProgress);
 
             }
 
-        // TODO: Le tendria que pasar la wallet public key
+            // TODO: Le tendria que pasar la wallet public key
 
-        }
-        catch (CantExecuteDatabaseOperationException ex)
-        {
+        } catch (CantExecuteDatabaseOperationException ex) {
             installationProgress = InstallationStatus.NOT_INSTALLED;
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Wallet to install "+ walletPublicKey, "");
+            throw new CantInstallWalletException("ERROR INSTALLING WALLET", ex, "Wallet to install " + walletPublicKey, "");
         }
 //        catch (WalletResourcesInstalationException ex)
 //        {
 //            installationProgress = InstallationStatus.NOT_INSTALLED;
 //            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
 //        }
-        catch (CantPersistWalletSkinException ex)
-        {
+        catch (CantPersistWalletSkinException ex) {
 
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Error Save Skin on DB ", "");
-        }
-        catch (CantPersistWalletLanguageException ex)
-        {
+            throw new CantInstallWalletException("ERROR INSTALLING WALLET", ex, "Error Save Skin on DB ", "");
+        } catch (CantPersistWalletLanguageException ex) {
 
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex," Error Save language on DB ", "");
-        }
-        catch (CantPersistWalletException ex)
-        {
+            throw new CantInstallWalletException("ERROR INSTALLING WALLET", ex, " Error Save language on DB ", "");
+        } catch (CantPersistWalletException ex) {
 
-            throw new CantInstallWalletException("ERROR INSTALLING WALLET",ex, "Error Save wallet on DB", "");
-        }
-        catch (Exception e)
-        {
-            LOG.info("MAP_EXCEPCION_GENERICA:"+e.toString()+"-"+e.getMessage());
+            throw new CantInstallWalletException("ERROR INSTALLING WALLET", ex, "Error Save wallet on DB", "");
+        } catch (Exception e) {
+            LOG.info("MAP_EXCEPCION_GENERICA:" + e.toString() + "-" + e.getMessage());
             throw new CantInstallWalletException("ERROR INSTALLING WALLET", e, "Wallet to install " + walletPublicKey, "");
         }
     }
-
-
-
 }
