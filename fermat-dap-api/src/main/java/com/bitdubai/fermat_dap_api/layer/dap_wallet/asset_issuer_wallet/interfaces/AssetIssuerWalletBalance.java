@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
-import com.bitdubai.fermat_dap_api.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_dap_api.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_dap_api.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 
 /**
  * Created by franklin on 04/09/15.

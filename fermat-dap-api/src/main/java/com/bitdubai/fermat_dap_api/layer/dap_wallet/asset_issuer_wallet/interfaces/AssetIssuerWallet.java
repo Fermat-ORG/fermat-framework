@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
-import com.bitdubai.fermat_dap_api.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantGetTransactionsException;
 
 import java.util.List;
 

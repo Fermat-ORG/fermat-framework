@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dap_api.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by franklin on 05/09/15.
+ * Created by franklin on 08/09/15.
  */
-public class CantCalculateBalanceException extends FermatException{
+public class CantRegisterDebitException extends FermatException{
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantCalculateBalanceException extends FermatException{
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCalculateBalanceException(String message, Exception cause, String context, String possibleReason) {
+    public CantRegisterDebitException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
