@@ -9,11 +9,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 /**
  * Created by franklin on 10/09/15.
  */
-public class MiddlewareLayer implements PlatformLayer {
-
-    private Plugin mAppRuntimePlugin;
-
+public class DAPMiddlewareLayer implements PlatformLayer {
     private Plugin mAssetFactoryPlugin;
+
     @Override
     public void start() throws CantStartLayerException {
         mAssetFactoryPlugin = getPlugin( new AssetFactorySubsystem());
