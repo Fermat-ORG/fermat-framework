@@ -12,9 +12,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantIssueDigitalAssetException;
-import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetException;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
