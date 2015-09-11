@@ -69,11 +69,6 @@ public class GetResultTest {
     @Mock
     private ErrorManager mockErrorManager;
 
-    @Mock
-    private List<SearchField> mockSearchFields;
-
-    @Mock
-    private List<SearchOrder> mockSearchOrders;
 
     @Mock
     private SearchField mockSearchField;
@@ -90,13 +85,11 @@ public class GetResultTest {
     private WalletContactMiddlewareSearch walletContactMiddlewareSearch;
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId1 = UUID.randomUUID();
         mockActors = Actors.INTRA_USER;
         mockCryptoCurrency = CryptoCurrency.BITCOIN;
 
-        mockSearchFields = Arrays.asList(mockSearchField, mockSearchField);
-        mockSearchOrders = Arrays.asList(mockSearchOrder, mockSearchOrder);
         mockTableRecordList = Arrays.asList(mockTableRecord, mockTableRecord);
 
         Mockito.when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);

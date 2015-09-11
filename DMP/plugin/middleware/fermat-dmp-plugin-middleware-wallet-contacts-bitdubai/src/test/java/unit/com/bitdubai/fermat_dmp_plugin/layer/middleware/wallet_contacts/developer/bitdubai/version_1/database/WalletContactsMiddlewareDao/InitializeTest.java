@@ -52,14 +52,18 @@ public class InitializeTest {
     private UUID testOwnerId1;
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId1 = UUID.randomUUID();
         when(mockPluginDatabaseSystem.createDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
         when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
+
+
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem, testOwnerId1);
+        walletContactsMiddlewareDao.setPluginDatabaseSystem(mockPluginDatabaseSystem);
+        walletContactsMiddlewareDao.setPluginId(testOwnerId1);
     }
 
     @Test

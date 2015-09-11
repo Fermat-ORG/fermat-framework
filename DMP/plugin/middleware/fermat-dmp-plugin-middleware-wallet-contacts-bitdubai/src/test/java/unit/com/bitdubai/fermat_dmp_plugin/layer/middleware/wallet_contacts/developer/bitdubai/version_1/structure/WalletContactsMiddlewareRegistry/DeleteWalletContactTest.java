@@ -70,21 +70,14 @@ public class DeleteWalletContactTest {
     @Mock
     private LogManager mockLogManager;
 
-    private CryptoCurrency mockCryptoCurrency;
-
-
     private UUID testOwnerId1;
 
-    @Mock
-    private List<CryptoAddress> cryptoAddressesList;
 
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId1 = UUID.randomUUID();
 
-        mockCryptoCurrency = CryptoCurrency.BITCOIN;
-        cryptoAddressesList = Arrays.asList(mockCryptoAddress, mockCryptoAddress);
         mockTableRecordList = Arrays.asList(mockTableRecord, mockTableRecord);
 
         Mockito.when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);

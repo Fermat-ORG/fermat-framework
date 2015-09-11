@@ -86,21 +86,17 @@ public class UpdateWalletContactTest {
     @Mock
     private List<CryptoAddress> cryptoAddressesList;
 
-    private WalletContactRecord walletContactRecord;
+
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId1 = UUID.randomUUID();
 
         mockCryptoCurrency = CryptoCurrency.BITCOIN;
         cryptoAddressesList = Arrays.asList(mockCryptoAddress, mockCryptoAddress);
         mockTableRecordList = Arrays.asList(mockTableRecord, mockTableRecord);
 
-        walletContactRecord = new WalletContactsMiddlewareRecord(UUID.randomUUID(),
-                "actorAlias",
-                "actorFirstName",
-                "actorLastName",
-                cryptoAddressesList);
+
 
         Mockito.when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         Mockito.when(mockDatabase.getTable(anyString())).thenReturn(mockTable);

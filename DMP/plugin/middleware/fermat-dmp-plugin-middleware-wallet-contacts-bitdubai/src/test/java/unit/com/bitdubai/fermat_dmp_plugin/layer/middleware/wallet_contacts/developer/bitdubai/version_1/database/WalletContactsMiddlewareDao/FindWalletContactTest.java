@@ -61,27 +61,23 @@ public class FindWalletContactTest {
     @Mock
     private List<DatabaseTableRecord> mockTableRecordList;
 
-
+    @Mock
+    private List<DatabaseTableRecord> mockTableRecordList2;
     @Mock
     private CryptoAddress mockCryptoAddress;
 
     private CryptoCurrency mockCryptoCurrency;
 
-    private Actors mockActors;
 
     private UUID testOwnerId1;
 
-    @Mock
-    private List<CryptoAddress> cryptoAddressesList;
-
-
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId1 = UUID.randomUUID();
-        mockActors = Actors.INTRA_USER;
+
         mockCryptoCurrency = CryptoCurrency.BITCOIN;
-        cryptoAddressesList = Arrays.asList(mockCryptoAddress, mockCryptoAddress);
+
         mockTableRecordList = Arrays.asList(mockTableRecord, mockTableRecord);
 
         Mockito.when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
@@ -116,6 +112,25 @@ public class FindWalletContactTest {
 
     }
 
+    @Test
+    public void findWalletContactByActorAndWalletPublicKeyTest_FindErrorNull_ThrowsCantGetWalletContactException() throws Exception {
+
+        catchException(walletContactsMiddlewareDao).findWalletContactByActorAndWalletPublicKey("alias", null);
+        assertThat(caughtException())
+                .isNotNull().isInstanceOf(CantGetWalletContactException.class);
+
+    }
+
+    @Test
+    public void findWalletContactByActorAndWalletPublicKeyTest_FindErrorNotData_ThrowsCantGetWalletContactException() throws Exception {
+
+        Mockito.when(mockTable.getRecords()).thenReturn(mockTableRecordList2);
+
+        catchException(walletContactsMiddlewareDao).findWalletContactByActorAndWalletPublicKey("alias", "walletPublicKey");
+        assertThat(caughtException())
+                .isNotNull().isInstanceOf(CantGetWalletContactException.class);
+
+    }
 
     @Test
     public void findWalletContactByAliasAndWalletPublicKeyTest_FindOK_ThrowsCantGetWalletContactException() throws Exception {

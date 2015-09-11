@@ -72,21 +72,15 @@ public class GetWalletContactTest {
 
     private CryptoCurrency mockCryptoCurrency;
 
-    private Actors mockActors;
-
     private UUID testOwnerId1;
-
-    @Mock
-    private List<CryptoAddress> cryptoAddressesList;
 
 
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId1 = UUID.randomUUID();
-        mockActors = Actors.INTRA_USER;
-        mockCryptoCurrency = CryptoCurrency.BITCOIN;
-        cryptoAddressesList = Arrays.asList(mockCryptoAddress, mockCryptoAddress);
+         mockCryptoCurrency = CryptoCurrency.BITCOIN;
+
         mockTableRecordList = Arrays.asList(mockTableRecord, mockTableRecord);
 
         Mockito.when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
@@ -105,7 +99,18 @@ public class GetWalletContactTest {
 
         walletContactsMiddlewareRegistry.initialize();
 
+
+    }
+
+
+
+    @Test
+    public void walletContactSearchTest_FindOK_ThrowsCantCantGetWalletContactException() throws Exception {
+
         WalletContactSearch walletContactSearch = walletContactsMiddlewareRegistry.searchWalletContact();
+
+        assertThat(walletContactSearch).isInstanceOf(WalletContactSearch.class);
+
     }
 
     @Test

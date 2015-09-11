@@ -60,7 +60,7 @@ private DatabaseTableRecord mockRecord;
 private WalletContactsMiddlewarePluginRoot pluginRoot;
 
         @Before
-        public void SetUp() throws Exception {
+        public void setUp() throws Exception {
             UUID testOwnerId = UUID.randomUUID();
 
             pluginRoot = new WalletContactsMiddlewarePluginRoot();

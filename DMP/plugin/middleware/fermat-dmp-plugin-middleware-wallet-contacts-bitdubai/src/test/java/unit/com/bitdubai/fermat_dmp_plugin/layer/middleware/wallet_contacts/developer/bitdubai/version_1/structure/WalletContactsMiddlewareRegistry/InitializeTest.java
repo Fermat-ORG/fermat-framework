@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitializeTest {
-    private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
+
 
     private WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
@@ -61,14 +61,13 @@ public class InitializeTest {
     private UUID testOwnerId;
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId = UUID.randomUUID();
         when(mockPluginDatabaseSystem.createDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
         when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
         when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
-        walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem, testOwnerId);
 
         walletContactsMiddlewareRegistry = new WalletContactsMiddlewareRegistry(mockErrorManager,mockLogManager,mockPluginDatabaseSystem,testOwnerId);
     }

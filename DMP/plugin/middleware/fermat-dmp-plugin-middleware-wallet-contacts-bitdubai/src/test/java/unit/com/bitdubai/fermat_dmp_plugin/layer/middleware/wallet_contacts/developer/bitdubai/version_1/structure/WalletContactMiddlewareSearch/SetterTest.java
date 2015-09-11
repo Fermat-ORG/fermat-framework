@@ -28,14 +28,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class SetterTest {
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
 
-
-
-    @Mock
-    private List<SearchField> mockSearchFields;
-
-    @Mock
-    private List<SearchOrder> mockSearchOrders;
-
     @Mock
     private SearchField mockSearchField;
 
@@ -50,10 +42,7 @@ public class SetterTest {
 
     private WalletContactMiddlewareSearch walletContactMiddlewareSearch;
     @Before
-    public void SetUp() throws Exception {
-
-        mockSearchFields = Arrays.asList(mockSearchField, mockSearchField);
-        mockSearchOrders = Arrays.asList(mockSearchOrder, mockSearchOrder);
+    public void setUp() throws Exception {
 
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem, UUID.randomUUID());
 

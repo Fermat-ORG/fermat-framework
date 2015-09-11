@@ -78,7 +78,7 @@ public class UpdateWalletContactTest {
     private WalletContactRecord walletContactRecord;
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId1 = UUID.randomUUID();
 
         mockCryptoCurrency = CryptoCurrency.BITCOIN;

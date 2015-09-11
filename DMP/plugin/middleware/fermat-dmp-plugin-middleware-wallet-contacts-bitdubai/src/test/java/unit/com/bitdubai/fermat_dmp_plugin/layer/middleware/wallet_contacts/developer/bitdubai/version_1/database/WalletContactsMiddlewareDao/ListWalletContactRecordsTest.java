@@ -89,7 +89,7 @@ public class ListWalletContactRecordsTest {
     private UUID testOwnerId1;
 
     @Before
-    public void SetUp() throws Exception {
+    public void setUp() throws Exception {
         testOwnerId1 = UUID.randomUUID();
         mockActors = Actors.INTRA_USER;
         mockCryptoCurrency = CryptoCurrency.BITCOIN;
