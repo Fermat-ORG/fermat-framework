@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-// import com.bitdubai.sub_app.wallet_publisher.R;
+import com.bitdubai.sub_app.wallet_publisher.R;
 
 /**
  * Wallet Factory Item ViewHolder
@@ -29,10 +29,10 @@ public class WalletItemViewHolder extends FermatViewHolder {
      */
     public WalletItemViewHolder(View itemView) {
         super(itemView);
-      /*  title = (FermatTextView) itemView.findViewById(R.id.title);
+        title = (FermatTextView) itemView.findViewById(R.id.title);
         description = (FermatTextView) itemView.findViewById(R.id.description);
         type = (FermatTextView) itemView.findViewById(R.id.type);
-        menu = (ImageView) itemView.findViewById(R.id.options); */
+        menu = (ImageView) itemView.findViewById(R.id.options);
 
     }
 }

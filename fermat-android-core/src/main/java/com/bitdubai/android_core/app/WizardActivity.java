@@ -21,8 +21,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.CreateWalletFragment;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.wizard.SetupNavigationFragment;
+import com.bitdubai.sub_app.wallet_factory.ui.wizards.CreateWalletFragment;
+import com.bitdubai.sub_app.wallet_factory.ui.wizards.SetupNavigationFragment;
 import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectStep1;
 import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectStep2;
 import com.bitdubai.sub_app.wallet_publisher.wizard.PublishFactoryProjectSummary;

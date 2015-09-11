@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
  */
 public class CantCreateDigitalAssetTransactionException extends DAPException{
 
-    static final String DEFAULT_MESSAGE = "There was an error creating a Digital Asset.";
+    public static final String DEFAULT_MESSAGE = "There was an error creating a Digital Asset.";
 
     public CantCreateDigitalAssetTransactionException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
