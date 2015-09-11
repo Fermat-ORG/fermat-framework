@@ -12,10 +12,10 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.TransactionStatus;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistDigitalAssetException;
@@ -72,8 +72,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.errorManager=errorManager;
 
     }
-
-
 
     private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
 
@@ -150,6 +148,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
+    private void requestHashGenesisTransaction(){
+        //TODO: to implement
+        //this.cryptoVaultManager.getTransactionManager().confirmReception();
+    }
+
     private void checkCryptoWalletBalance() throws CryptoWalletBalanceInsufficientException, CantGetBalanceException {
 
         String digitalAssetPublicKey=this.digitalAsset.getPublicKey();
@@ -193,8 +196,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         /**
          * TODO:
-         1) La AssetFactory subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
+         1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
          realizarán distintas especificaciones del asset y el contrato inicial.
+
+
 
          La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
          el uso de los siguientes campos:
@@ -210,13 +215,16 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
          La Issuer subApp no permitirá iniciar el proceso de issuing del Asset si no dispone los fondos disponibles para cubrir el GenesisAmount.
 
-         La transacción de Asset Issuing se dará inicio a través del mñetodo IssueAsset(DigitalAsset digitalAsset).
+         Todos los procesos de generación y edicion del Asset serán persistidos en el plugin Middleware Asset Factory. Al momento de finalizar con la
+         edición y dar comienzo a la transacción de Asset Issuing, el mismo ya dejará de estar editable en la sub App del issuer.
 
-         El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
+         La transacción de Asset Issuing se dará inicio a través del método IssueAsset(DigitalAsset digitalAsset).
+
+         1) El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
          GenesisAddress.
 
-
          2) Al estar todo completado para emitir el Asset, se persiste el DA (en archivo) y se actualiza el TransactionStatus a FormingGenesis.
+         El asset guardado en la Asset Factory pasa a estado final y no puede volver a ser modificado en la subApp Issuer.
 
          3) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
          para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se actualiza este valor en el DA y se persisten los cambios.
@@ -238,6 +246,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          7) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
          balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet. La transacción debe escuchar los eventos
          del incoming crypto.
+
+
 
          8) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingConfirmationIssuerWallet y se genera el crédito  en el Available balance en la
          Issuer Wallet.
