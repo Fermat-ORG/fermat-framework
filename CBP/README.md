@@ -60,18 +60,18 @@
 * [Crypto Broker](plugin/agent/fermat-cbp-plugin-agent-crypto-broker-bitdubai/)
 
 ### World
-* [Fiat Index](plugin/world/fermat-cbp-plugin-world-fiat-index-bitdubai)
+* [Fiat Index](plugin/world/fermat-cbp-plugin-world-fiat-index-bitdubai/)
 
 ### Business Transaction
-* [Crypto Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-market-money-stock-replenishment-bitdubai)
-* [Cash Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-cash-fiat-money-stock-replenishment-bitdubai)
-* [Bank Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-bank-fiat-money-stock-replenishment-bitdubai)
-* [Customer Broker Crypto Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-market-crypto-sale-bitdubai)
-* [Customer Broker Cash Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-fiat-cash-sale-bitdubai)
-* [Customer Broker Bank Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-customer-fiat-bank-sale-bitdubai)
-* [Customer Broker Crypto Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-market-crypto-purchase-bitdubai)
-* [Customer Broker Cash Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-cash-purchase-bitdubai)
-* [Customer Broker Bank Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-broker-fiat-bank-purchase-bitdubai)
+* [Crypto Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-money-stock-replenishment-bitdubai/)
+* [Cash Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-cash-money-stock-replenishment-bitdubai/)
+* [Bank Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-bank-money-stock-replenishment-bitdubai/)
+* [Customer Broker Crypto Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bitdubai/)
+* [Customer Broker Cash Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-cash-sale-bitdubai/)
+* [Customer Broker Bank Sale](plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-bank-sale-bitdubai/)
+* [Customer Broker Crypto Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-crypto-purchase-bitdubai/)
+* [Customer Broker Cash Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-cash-purchase-bitdubai/)
+* [Customer Broker Bank Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai/)
 
 ### Identity
 * [Crypto Broker](plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai)
