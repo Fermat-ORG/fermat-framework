@@ -220,9 +220,9 @@
 			<layer name="Request" language="java"></layer>
 			<layer name="Business Transaction" language="java"></layer>
 			<layer name="Digital Asset Transaction" language="java"></layer>
-			<layer name="Market Crypto Transaction" language="java"></layer>
-			<layer name="Fiat Cash Transaction" language="java"></layer>
-			<layer name="Fiat Bank Transaction" language="java"></layer>
+			<layer name="Crypto Money Transaction" language="java"></layer>
+			<layer name="Cash Money Transaction" language="java"></layer>
+			<layer name="Bank Money Transaction" language="java"></layer>
 			<layer name="Contract" language="java"></layer>
 			<layer name="Composite Wallet" language="java"></layer>
 			<layer name="Wallet" language="java"></layer>
@@ -4799,7 +4799,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Market Crypto Transaction" language="java">
+			<layer name="Crypto Money Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Send Crypto"
@@ -4834,7 +4834,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Fiat Cash Transaction" language="java">
+			<layer name="Cash Money Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Give Cash On Hand"
@@ -4899,7 +4899,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Fiat Bank Transaction" language="java">
+			<layer name="Bank Money Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Make Offline Fiat Bank Transfer"
