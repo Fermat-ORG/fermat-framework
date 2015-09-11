@@ -4030,7 +4030,7 @@
 					</android>
 
 					<android
-						name="Crypto Broker Customer"
+						name="Crypto Customer"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -4051,7 +4051,23 @@
 			<layer name="Sub App" language="java-android">
 				<androids>
 					<android
-						name="Crypto Broker"
+						name="Crypto Broker Identity"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+						name="Crypto Broker Community"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -4068,7 +4084,7 @@
 					</android>
 
 					<android
-						name="Crypto Customer"
+						name="Crypto Customer Identity"
 						description=""
 						difficulty="8"
 						code-level="development"
@@ -4083,6 +4099,23 @@
 						<certifications>
 						</certifications>
 					</android>
+					<android
+						name="Crypto Customer Community"
+						description=""
+						difficulty="8"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="nelsonalfo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+
 
 					<android
 						name="Customers"
@@ -4117,7 +4150,11 @@
 						<certifications>
 						</certifications>
 					</android>
+				</androids>
+			</layer>
 
+			<layer name="Desktop" language="ajava-android">
+				<androids>
 					<android
 						name="Sub App Manager"
 						description=""
@@ -4173,7 +4210,7 @@
 					</plugin>
 
 					<plugin
-						name="Crypto Broker Customer"
+						name="Crypto Customer"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4193,7 +4230,22 @@
 			<layer name="Sub App Module" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Broker"
+						name="Crypto Broker Identity"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Broker Community"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4209,7 +4261,22 @@
 					</plugin>
 
 					<plugin
-						name="Crypto Customer"
+						name="Crypto Customer Identity"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Customer Community"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4256,6 +4323,11 @@
 						</certifications>
 					</plugin>
 
+				</plugins>
+			</layer>
+
+			<layer name="Desktop Module" language="java">
+				<plugins>
 					<plugin
 						name="Sub App Manager"
 						description=""
@@ -4287,6 +4359,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
+
 				</plugins>
 			</layer>
 
@@ -4473,7 +4546,52 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Identity Wallet Linker"
+						name="Crypto Broker Identity Wallet"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Crypto Broker Wallet Settings"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Sub App Manager"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4513,7 +4631,7 @@
 			<layer name="Business Transaction" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Broker Market Crypto Stock Replenish"
+						name="Crypto Market Money Stock Replenishment"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4528,7 +4646,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Fiat Cash Stock Replenish"
+						name="Cash Fiat Money Stock Replenishment"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4543,7 +4661,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Fiat Bank Stock Replenish"
+						name="Bank Fiat Money Stock Replenishment"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4818,7 +4936,7 @@
 			<layer name="Wallet" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Broker Market Crypto"
+						name="Crypto Broker Crypto Market Money"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4833,7 +4951,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Fiat Cash"
+						name="Crypto Broker Cash Fiat Money"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4848,7 +4966,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Fiat Bank"
+						name="Crypto Broker Bank Fiat Money"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4863,7 +4981,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Customer Market Crypto"
+						name="Crypto Customer Crypto Market Money"
 						description=""
 						difficulty="6"
 						code-level="development"
