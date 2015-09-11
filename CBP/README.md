@@ -9,8 +9,8 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Crypto Customer](android/reference_wallet/fermat-android-reference-wallet-crypto-customer-bitdubai/): frontend de las actividades financieras de un Crypto Customer(comprar crypto, comprar cash) y provee un balance contable unificado
 
 ### SubApp
-* [Crypto Broker Identity](android/sup_app/fermat-android-sub-app-crypto-broker-bitdubai/): frontend de la administracion de identidades de los Brokers, la relacion con otros brokers y descubrimiento de Brokers para los Customers (solicitudes de conexion, acuerdos especiales, etc)
-* [Crypto Broker Community]
+* [Crypto Broker Identity](android/sup_app/fermat-android-sub-app-crypto-broker-identity-bitdubai/): frontend de administracion de identidades de los Brokers
+* [Crypto Broker Community](android/sup_app/fermat-android-sub-app-crypto-broker-community-bitdubai/): frontend de administracion de la relacion entre un broker y otros brokers y el descubrimiento de Brokers para los Customers (solicitudes de conexion, acuerdos especiales, etc)
 * [Customers]
 * [Crypto Customer Identity](android/sup_app/fermat-android-sub-app-crypto-customer-bitdubai/): frontend de la administracion de identidades de los Customers y la relacion con otros Customers (notificaciones de un Broker, acuerdos especiales, etc)
 * [Crypto Customer Community]
@@ -26,7 +26,8 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Crypto Customer](plugin/wallet_module/fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai/): gestion de la informacion y las actividades financieras de un Customer
 
 ### SubApp Module
-* [Crypto Broker](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-bitdubai/): administracion de identidades de los Brokers y la relacion con otros Brokers
+* [Crypto Broker Identity](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai/): administracion de identidades de los Brokers
+* [Crypto Broker Community](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai/): administracion de la relacion entre un broker y otros brokers y el descubrimiento de Brokers para los Customers
 * [Crypto Customer](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-bitdubai/): administracion de identidades de los Customers y la relacion con otros Customers
 * [Customers](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-customers-bitdubai/): gestion de contactos entre un Broker y sus Customers
 * [SubApp Manager](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-sub-app-manager-bitdubai/): gestor de las SubApps instaladas en el dispositivo
@@ -43,7 +44,8 @@ This is the simplified specification of the Crypto Broker Platform plugins
 
 ### Middleware
 * [Customers](plugin/middleware/fermat-cbp-plugin-middleware-customers-bitdubai/): administra y subclasifica a los Crypto Customers de un Crypto Broker
-* [Crypto Broker Identity Wallet](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-identity-wallet-linker-bitdubai/): relaciona una Crypto Broker Identity con una Crypto Broker Wallet. (no seria mejor llamar a esto Crypto Broker Wallet Settings?)
+* [Crypto Broker Wallet Identity](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-wallet-identity-bitdubai/): relaciona una Crypto Broker Identity con una Crypto Broker Wallet.
+* [Crypto Broker Wallet Settings](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-wallet-settings-bitdubai/): Maneja la confguracion de las Crypto Broker Wallets
 * [Wallet Manager](plugin/middleware/fermat-cbp-plugin-middleware-wallet-manager-bitdubai/): conocimiento de como instalar y desinstalar una **CBP Wallet**
 * [Sub App Manager](plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai/)
 
