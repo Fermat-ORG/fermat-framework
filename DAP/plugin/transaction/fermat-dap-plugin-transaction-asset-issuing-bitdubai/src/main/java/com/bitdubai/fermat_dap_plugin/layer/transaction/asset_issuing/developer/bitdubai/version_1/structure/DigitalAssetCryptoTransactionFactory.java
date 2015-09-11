@@ -12,10 +12,10 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.TransactionStatus;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
 import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistDigitalAssetException;
@@ -37,7 +37,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
-    PluginDatabaseSystem pluginDatabaseSystem;
+    //PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
 
@@ -57,11 +57,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
-        setCryptoVaultManager(cryptoVaultManager);
-        setCryptoWallet(cryptoWallet);
-        setPluginFileSystem(pluginFileSystem);
-        setPluginId(pluginId);
-        setPluginDatabaseSystem(pluginDatabaseSystem);
+        this.cryptoVaultManager=cryptoVaultManager;
+        this.cryptoWallet=cryptoWallet;
+        this.pluginFileSystem=pluginFileSystem;
+        this.pluginId=pluginId;
+        //this.pluginDatabaseSystem=pluginDatabaseSystem;
         assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 
     }
@@ -73,44 +73,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
-    public void setCryptoWallet(CryptoWallet cryptoWallet) throws CantSetObjectException{
-        if(cryptoWallet==null){
-            throw new CantSetObjectException("CryptoWallet is null");
-        }
-        this.cryptoWallet=cryptoWallet;
-    }
 
-    public void setPluginId(UUID pluginId) throws CantSetObjectException{
-        if(pluginId==null){
-            throw new CantSetObjectException("PluginId is null");
-        }
-        this.pluginId=pluginId;
-    }
-
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem)throws CantSetObjectException{
-        if(pluginDatabaseSystem==null){
-            throw new CantSetObjectException("pluginDatabaseSystem is null");
-        }
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
-    }
-
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
-        if(pluginFileSystem==null){
-            throw new CantSetObjectException("pluginFileSystem is null");
-        }
-        this.pluginFileSystem=pluginFileSystem;
-    }
-
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException{
-
-        if(cryptoVaultManager==null){
-
-            throw new CantSetObjectException("CryptoVaultManager is null");
-
-        }
-        this.cryptoVaultManager=cryptoVaultManager;
-
-    }
 
     private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
 
@@ -125,7 +88,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }
 
     //This method can be used by a future monitor agent
-    public void setTransactionStatus(TransactionStatus transactionStatus){
+    public void setTransactionStatus(TransactionStatus transactionStatus) throws ObjectNotSetException{
+        if(transactionStatus==null){
+            throw new ObjectNotSetException("Transaction Status is null");
+        }
         this.transactionStatus=transactionStatus;
     }
 
@@ -227,7 +193,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         /**
          * TODO:
-         1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
+         1) La AssetFactory subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
          realizarán distintas especificaciones del asset y el contrato inicial.
 
          La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante

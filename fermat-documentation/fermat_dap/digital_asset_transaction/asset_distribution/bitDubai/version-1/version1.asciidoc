@@ -85,7 +85,7 @@ sendAssetBitcoins (long amount, CryptoAddress sendTo, String AssetPublicKey)
 
  El *AssetPublicKey* es el Id del asset que se obtiene de DigitalAsset.getPublicKey().
 
-Esto genera una nueva transacción en la AssetVault que colocará el PublicKey del asset dentro de la transacción y la enviará al usuario.
+Esto genera una nueva transacción en la AssetVault que colocará el PublicKey del asset dentro de la transacción (*Output OP_RETURN*) y la enviará al usuario.
 
 ** Se genera un dèbito en la Issuer Wallet que indica que el Asset ha sido enviado tanto en su metadata como los bitcoins.
 
@@ -94,7 +94,7 @@ Esto genera una nueva transacción en la AssetVault que colocará el PublicKey d
 .*En el dispositivo del usuario*
 * El Agent IncomingCrypto detectará el ingreso de los bitcoins y como la direccion a la que llegan está registrada a través del Address Book
 se informará un evento que la Asset User Wallet escucha.
-* La Asset User Wallet obtendrá de la transacción bitcoin que llegó la publicKey del asset para machearlo con la _DigitalAssetMetadata_ que
+* La Asset User Wallet obtendrá de la transacción bitcoin que llegó la publicKey del asset buscando el output del tipo OP_RETURN para machearlo con la _DigitalAssetMetadata_ que
 ya tiene guardada del paso anterior y actualizará el book balance.
 * Cuando esta transacción bitcoin se confirme, actualizará el available balance de la wallet.
 
