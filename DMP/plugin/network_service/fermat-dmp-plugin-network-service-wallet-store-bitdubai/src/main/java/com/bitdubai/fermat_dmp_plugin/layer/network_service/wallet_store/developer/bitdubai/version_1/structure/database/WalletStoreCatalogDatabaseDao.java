@@ -116,9 +116,12 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
     private DatabaseTableRecord getDesignerDatabaseTableRecord(com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DESIGNER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designer.getPublicKey().toString()); //Todo: Revisar si guarda publickey o UUID id
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_NAME_COLUMN_NAME, designer.getAlias());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME, designer.getPublicKey());
+        if (designer.getPublicKey() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_ID_COLUMN_NAME, designer.getPublicKey()); //Todo: Revisar si guarda publickey o UUID id
+        if (designer.getAlias() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_NAME_COLUMN_NAME, designer.getAlias());
+        if (designer.getPublicKey() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.DESIGNER_PUBLICKEY_COLUMN_NAME, designer.getPublicKey());
 
         return record;
     }
@@ -147,9 +150,12 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
     private DatabaseTableRecord getTranslatorDatabaseTableRecord (TranslatorIdentity translator){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.TRANSLATOR_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translator.getPublicKey().toString()); //Todo: Revisar si guarda publickey o UIID id
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME, translator.getAlias());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME, translator.getPublicKey());
+        if (translator.getPublicKey() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_ID_COLUMN_NAME, translator.getPublicKey()); //Todo: Revisar si guarda publickey o UIID id
+        if (translator.getAlias() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_NAME_COLUMN_NAME, translator.getAlias());
+        if (translator.getPublicKey() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.TRANSLATOR_PUBLICKEY_COLUMN_NAME, translator.getPublicKey());
 
         return record;
     }
