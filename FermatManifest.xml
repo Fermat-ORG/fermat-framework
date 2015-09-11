@@ -4531,7 +4531,22 @@
 			<layer name="Request" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Broker Purchase"
+						name="Customer Broker Purchase"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
+							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Customer Broker Sale"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4582,21 +4597,6 @@
 					</plugin>
 					<plugin
 						name="Crypto Broker Identity Wallet"
-						description=""
-						difficulty="4"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-						name="Crypto Broker Wallet Settings"
 						description=""
 						difficulty="4"
 						code-level="development"
