@@ -6,7 +6,7 @@
 * [Crypto Broker](android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai/)
 * [Crypto Customer](android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-customer-bitdubai/)
 
-### SubApp
+### Sub App
 * [Crypto Broker Identity](android/sup_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai/)
 * [Crypto Broker Community](android/sup_app/fermat-cbp-android-sub-app-crypto-broker-community-bitdubai/)
 * [Crypto Customer Identity](android/sup_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai/)
@@ -74,33 +74,9 @@
 * [Customer Broker Bank Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai/)
 
 ### Identity
-* [Crypto Broker](plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai)
-* [Crypto Customer](plugin/identity/fermat-cbp-plugin-identity-crypto-customer-bitdubai)
+* [Crypto Broker](plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai/)
+* [Crypto Customer](plugin/identity/fermat-cbp-plugin-identity-crypto-customer-bitdubai/)
 
 ### Network Service
-* [Crypto Broker](plugin/network_service/fermat-cbp-plugin-network-service-crypto-broker-bitdubai)
-* [Crypto Customer](plugin/network_service/fermat-cbp-plugin-network-service-crypto-customer-bitdubai)
-
-# CSH Modules
-
-## Plugins
-
-### Cash Transaction
-* [Receive Cash On Hand](../CSH/plugin/fiat_cash_transaction/fermat-cbp-plugin-fiat-cash-transaction-receive-fiat-cash-on-hand-bitdubai)
-* [Give Cash On Hand](../CSH/plugin/fiat_cash_transaction/fermat-cbp-plugin-fiat-cash-transaction-give-fiat-cash-on-hand-bitdubai)
-* [Send Cash Delivery](../CSH/plugin/fiat_cash_transaction/fermat-cbp-plugin-fiat-cash-transaction-send-fiat-cash-delivery-bitdubai)
-* [Receive Cash Delivery](../CSH/plugin/fiat_cash_transaction/fermat-cbp-plugin-fiat-cash-transaction-receive-fiat-cash-delivery-bitdubai)
-
-### Wallet
-* [Cash Money](../CSH/plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-cash-fiat-money-bitdubai).
-
-# BNK Modules
-
-## Plugins
-
-### Fiat Bank Transaction
-* [Make Offline Bank Transfer](../BNK/plugin/fiat_bank_transaction/fermat-cbp-plugin-fiat-bank-transaction-make-offline-fiat-bank-transfer-bitdubai)
-* [Receive Offline Bank Transfer](../BNK/plugin/fiat_bank_transaction/fetmat-cbp-plugin-fiat-bank-transaction-receive-offline-fiat-bank-transfer-bitdubai)
-
-### Wallet
-* [Bank Money](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-bank-fiat-money-bitdubai)
+* [Crypto Broker](plugin/network_service/fermat-cbp-plugin-network-service-crypto-broker-bitdubai/)
+* [Crypto Customer](plugin/network_service/fermat-cbp-plugin-network-service-crypto-customer-bitdubai/)
