@@ -1,25 +1,25 @@
-package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
+package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -41,9 +41,10 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CryptoCurrency.class,Actors.class})
-public class FindWalletContactTest {
-
+public class CreateWalletContactTest {
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
+
+    private WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry;
 
     @Mock
     private Database mockDatabase;
@@ -51,6 +52,8 @@ public class FindWalletContactTest {
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
+    @Mock
+    private DatabaseFactory mockDatabaseFactory;
 
     @Mock
     private DatabaseTable mockTable;
@@ -61,9 +64,17 @@ public class FindWalletContactTest {
     @Mock
     private List<DatabaseTableRecord> mockTableRecordList;
 
+    @Mock
+    private DatabaseTableFactory mockTableFactory;
 
     @Mock
     private CryptoAddress mockCryptoAddress;
+
+    @Mock
+    private ErrorManager mockErrorManager;
+
+    @Mock
+    private LogManager mockLogManager;
 
     private CryptoCurrency mockCryptoCurrency;
 
@@ -82,11 +93,11 @@ public class FindWalletContactTest {
         mockActors = Actors.INTRA_USER;
         mockCryptoCurrency = CryptoCurrency.BITCOIN;
         cryptoAddressesList = Arrays.asList(mockCryptoAddress, mockCryptoAddress);
-        mockTableRecordList = Arrays.asList(mockTableRecord, mockTableRecord);
+
 
         Mockito.when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         Mockito.when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
-        Mockito.when(mockTable.getRecords()).thenReturn(mockTableRecordList);
+        Mockito.when(mockTable.getEmptyRecord()).thenReturn(mockTableRecord);
         Mockito.when(mockCryptoAddress.getCryptoCurrency()).thenReturn(mockCryptoCurrency);
         mockStatic(Actors.class);
 
@@ -95,44 +106,43 @@ public class FindWalletContactTest {
         PowerMockito.when(mockCryptoCurrency.getByCode(anyString())).thenReturn(CryptoCurrency.BITCOIN);
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem, testOwnerId1);
         walletContactsMiddlewareDao.initialize();
+
+        walletContactsMiddlewareRegistry = new WalletContactsMiddlewareRegistry(mockErrorManager,mockLogManager,mockPluginDatabaseSystem,UUID.randomUUID());
+
+        walletContactsMiddlewareRegistry.initialize();
     }
 
     @Test
-      public void findWalletContactByActorAndWalletPublicKeyTest_FindOK_ThrowsCantCantGetWalletContactException() throws Exception {
+    public void createWalletContactTest_CreateOK_ThrowsCantCreateWalletContactException() throws Exception {
 
-        WalletContactRecord walletContactRecord = walletContactsMiddlewareDao.findWalletContactByActorAndWalletPublicKey("actorPublicKey",
-                "walletPublicKey");
+        catchException(walletContactsMiddlewareRegistry).createWalletContact(UUID.randomUUID().toString(),
+                "actorAlias",
+                "actorFirstName",
+                "actorLastName",
+                mockActors,
+                cryptoAddressesList,
+                UUID.randomUUID().toString());
 
-        assertThat(walletContactRecord).isInstanceOf(WalletContactRecord.class);
-
-    }
-
-    @Test
-    public void findWalletContactByActorAndWalletPublicKeyTest_FindError_ThrowsCantGetWalletContactException() throws Exception {
-
-        catchException(walletContactsMiddlewareDao).findWalletContactByActorAndWalletPublicKey(null,null);
         assertThat(caughtException())
-                .isNotNull().isInstanceOf(CantGetWalletContactException.class);
+                .isNull();
 
     }
 
 
     @Test
-    public void findWalletContactByAliasAndWalletPublicKeyTest_FindOK_ThrowsCantGetWalletContactException() throws Exception {
+    public void createWalletContactTest_listError_ThrowsCantCreateWalletContactException() throws Exception {
 
-        WalletContactRecord walletContactRecord = walletContactsMiddlewareDao.findWalletContactByAliasAndWalletPublicKey("actorAlias",
-                "walletPublicKey");
+        Mockito.when(mockTable.getEmptyRecord()).thenReturn(null);
+        catchException(walletContactsMiddlewareRegistry).createWalletContact(UUID.randomUUID().toString(),
+                "actorAlias",
+                "actorFirstName",
+                "actorLastName",
+                mockActors,
+                cryptoAddressesList,
+                UUID.randomUUID().toString());
 
-        assertThat(walletContactRecord).isInstanceOf(WalletContactRecord.class);
-
-    }
-
-    @Test
-    public void findWalletContactByContactIdTest_FindOK_ThrowsCantCreateWalletContactException() throws Exception {
-
-        WalletContactRecord walletContactRecord = walletContactsMiddlewareDao.findWalletContactByContactId(UUID.randomUUID());
-
-        assertThat(walletContactRecord).isInstanceOf(WalletContactRecord.class);
+        assertThat(caughtException())
+                .isNotNull().isInstanceOf(CantCreateWalletContactException.class);
 
     }
 
