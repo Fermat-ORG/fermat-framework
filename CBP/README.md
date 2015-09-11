@@ -43,8 +43,8 @@
 * [Customer Broker Bank Money Sale](plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai/)
 
 ### Request
-* [Customer Broker Purchase](plugin/request/fermat-cbp-plugin-request-crypto-broker-purchase-bitdubai)
-* [Customer Broker Sale]
+* [Customer Broker Purchase](plugin/request/fermat-cbp-plugin-request-customer-broker-purchase-bitdubai)
+* [Customer Broker Sale](plugin/request/fermat-cbp-plugin-request-customer-broker-sale-bitdubai)
 
 ### Middleware
 * [Customers](plugin/middleware/fermat-cbp-plugin-middleware-customers-bitdubai/)
