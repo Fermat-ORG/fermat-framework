@@ -434,21 +434,21 @@ include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
 project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
 
 // identity
-include ':fermat-dap-plugin-identity-issuer-bitdubai'
-project(':fermat-dap-plugin-identity-issuer-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-issuer-bitdubai')
+include ':fermat-dap-plugin-identity-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-identity-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-asset-issuer-bitdubai')
 
-include ':fermat-dap-plugin-identity-user-bitdubai'
-project(':fermat-dap-plugin-identity-user-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-user-bitdubai')
+include ':fermat-dap-plugin-identity-asset-user-bitdubai'
+project(':fermat-dap-plugin-identity-asset-user-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-asset-user-bitdubai')
 
 include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
 project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
 
 // actor
-include ':fermat-dap-plugin-actor-issuer-bitdubai'
-project(':fermat-dap-plugin-actor-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-issuer-bitdubai')
+include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
 
-include ':fermat-dap-plugin-actor-user-bitdubai'
-project(':fermat-dap-plugin-actor-user-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-user-bitdubai')
+include ':fermat-dap-plugin-actor-asset-user-bitdubai'
+project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-user-bitdubai')
 
 include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
