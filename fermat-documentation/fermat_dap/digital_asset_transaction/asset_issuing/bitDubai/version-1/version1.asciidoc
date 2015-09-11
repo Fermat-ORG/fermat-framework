@@ -93,6 +93,7 @@ La transacción de Asset Issuing se dará inicio a través del método IssueAsse
 GenesisAddress.
 
 2) Al estar todo completado para emitir el Asset, se persiste el DA (en archivo) y se actualiza el TransactionStatus a FormingGenesis.
+El asset guardado en la Asset Factory pasa a estado final y no puede volver a ser modificado en la subApp Issuer.
 
 3) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
 para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se actualiza este valor en el DA y se persisten los cambios.
@@ -114,6 +115,8 @@ La transacción pasa a estado PendingReceiveCryptoNetwork
 7) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
 balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet. La transacción debe escuchar los eventos
 del incoming crypto.
+
+
 
 8) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingConfirmationIssuerWallet y se genera el crédito  en el Available balance en la
 Issuer Wallet.

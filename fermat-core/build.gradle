@@ -10,6 +10,7 @@ repositories {
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-p2p-api')
+    compile project(':fermat-dap-api')
 
 // CRY Projects
 
@@ -130,5 +131,8 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
     // DMP Projects (Addons)
 
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
+
+    //DAP Projects (Plugins)
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
 }
 
