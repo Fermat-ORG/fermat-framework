@@ -13,7 +13,6 @@ repositories {
 }
 
 dependencies {
-
     compile project(':fermat-dap-api')
 }
 
