@@ -3,15 +3,15 @@ Story: Crypto Broker Discovery
 In order to buy merchandise from a Crypto Broker
   As a Crypto Customer
   I need to get select a Crypto Broker to Buy from
-Using the Crypto Broker SubApp Android plugin
-  And the Crypto Broker SubApp Module Java plugin
+Using the Crypto Broker Community SubApp Android plugin
+  And the Crypto Broker Community SubApp Module Java plugin
   And the Crypto Broker Actor Java plugin
   And the Crypto Broker Network Service Java plugin
 
 Scenario: Crypto Customer has not interacted with a Crypto Broker
   Given I haven't performed any Business Transactions with a Crypto Broker
-  When I access the list of Crypto Brokers in the Crypto Broker SubApp
-  Then the Crypto Broker Actor Java should obtain a list of Crypto Broker Public Identities from the Crypto Broker Network Service
+  When I access the list of Crypto Brokers in the Crypto Broker Community SubApp
+  Then the Crypto Broker Actor plugin should obtain a list of Crypto Broker Public Identities from the Crypto Broker Network Service
     And the Crypto Broker SubApp should get a list of Crypto Broker Public Identities from the Crypto Broker Actor Java
     And I should visualize the Public Identities of the Crypto Brokers sorted by proximity to my location
 

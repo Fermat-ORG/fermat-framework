@@ -4,7 +4,7 @@ Como deseo poder Vender mercancia a un Crypto Customer
   Como un Crypto Broker
   Debería realizar una negociación de venta
 
-Utilizo Y el plugin Crypto Broker Wallet
+Utilizo la Crypto Broker Wallet
   Y el plugin Crypto Broker Wallet Module
   Y el plugin Crypto Customer Actor
   Y el plugin Crypto Broker Network Service
