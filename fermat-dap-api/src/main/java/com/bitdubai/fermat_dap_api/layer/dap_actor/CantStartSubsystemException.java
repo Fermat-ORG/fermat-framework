@@ -7,9 +7,9 @@ import com.bitdubai.fermat_api.layer.DAPException;
  */
 public class CantStartSubsystemException extends DAPException {
 
-    static final String DEFAULT_MESSAGE = "WAS AN ERROR STARTING DAPActorSubsystem.";
+    static final String DEFAULT_MESSAGE = "ERROR STARTING DAPActorAssetSubsystem.";
 
     public CantStartSubsystemException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }
