@@ -1856,7 +1856,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Digital Money Transaction" language="java">
+			<layer name="Crypto Money Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Incoming Device User"
@@ -1874,7 +1874,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Incoming Extra User"
+						name="Incoming Extra Actor"
 						description=""
 						difficulty="10"
 						code-level="production"
@@ -1892,7 +1892,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Incoming Intra User"
+						name="Incoming Intra Actor"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -1940,7 +1940,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoing Extra User"
+						name="Outgoing Extra Actor"
 						description=""
 						difficulty="10"
 						code-level="production"
@@ -1958,7 +1958,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoing Intra User"
+						name="Outgoin Intra Actor"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -2305,7 +2305,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Digital Money Transaction" language="java">
+			<layer name="Crypto Money Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Incoming Device User"
@@ -2323,7 +2323,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Incoming Extra User"
+						name="Incoming Extra Actor"
 						description=""
 						difficulty="10"
 						code-level="production"
@@ -2341,7 +2341,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Incoming Intra User"
+						name="Incoming Intra Actor"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -2389,7 +2389,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoing Extra User"
+						name="Outgoing Extra Actor"
 						description=""
 						difficulty="10"
 						code-level="production"
@@ -2407,7 +2407,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Outgoing Intra User"
+						name="Outgoin Intra Actor"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -2901,7 +2901,7 @@
 				</plugins>
 			</layer>
 
-			<layer name="Digital Money Transaction" language="java">
+			<layer name="Crypto Money Transaction" language="java">
 				<plugins>
 					<plugin
 						name="Purchase"
@@ -4632,7 +4632,7 @@
 			<layer name="Business Transaction" language="java">
 				<plugins>
 					<plugin
-						name="Crypto Market Money Stock Replenishment"
+						name="Crypto Money Stock Replenishment"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4647,7 +4647,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Cash Fiat Money Stock Replenishment"
+						name="Cash Money Stock Replenishment"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4662,7 +4662,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Bank Fiat Money Stock Replenishment"
+						name="Bank Money Stock Replenishment"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4677,7 +4677,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Customer Market Crypto Sale"
+						name="Customer Broker Crypto Sale"
 						description=""
 						difficulty="0"
 						code-level="development"
