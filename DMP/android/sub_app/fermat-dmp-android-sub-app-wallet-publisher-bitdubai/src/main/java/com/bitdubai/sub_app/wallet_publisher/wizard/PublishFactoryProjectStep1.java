@@ -338,6 +338,8 @@ public class PublishFactoryProjectStep1 extends FermatWizardPageFragment impleme
                 throw new NullPointerException("Wallet Icon is null");
 
             ArrayList<byte[]> screenShoots = (ArrayList) data.get(SCREEN_SHOOTS_KEY);
+            //// TODO: 11/09/15 is not necessary for test purporse
+            /*
             if (screenShoots == null || screenShoots.size() == 0)
                 throw new NullPointerException("ScreenShoots are null");
 
@@ -345,6 +347,7 @@ public class PublishFactoryProjectStep1 extends FermatWizardPageFragment impleme
                 if (byteArray == null || byteArray.length == 0)
                     throw new NullPointerException("Some screen shoot is missing...");
             }
+            */
             return true;
         } catch (Exception ex) {
             exception(TAG, ex.getMessage(), ex);
