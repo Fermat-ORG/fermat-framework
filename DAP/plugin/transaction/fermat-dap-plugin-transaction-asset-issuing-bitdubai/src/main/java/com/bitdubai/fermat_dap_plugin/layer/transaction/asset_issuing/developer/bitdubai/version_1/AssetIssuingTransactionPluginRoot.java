@@ -26,6 +26,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
@@ -52,7 +54,7 @@ import java.util.logging.Logger;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin, Service, TransactionProtocolManager {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin, Service, TransactionProtocolManager {
 
     //CryptoAddressBookManager cryptoAddressBookManager;
     AssetIssuingTransactionManager assetIssuingTransactionManager;
@@ -61,6 +63,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     //DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     ErrorManager errorManager;
     EventManager eventManager;
+    LogManager logManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
@@ -195,7 +198,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void issueAsset(DigitalAsset digitalAssetToIssue) throws CantIssueDigitalAssetException {
+    public void issueAsset(DigitalAsset digitalAssetToIssue) throws CantIssueDigitalAssetException{
         this.assetIssuingTransactionManager.issueAsset(digitalAssetToIssue);
     }
 
@@ -227,5 +230,10 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
         return this.assetIssuingTransactionManager;
+    }
+
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager=logManager;
     }
 }
