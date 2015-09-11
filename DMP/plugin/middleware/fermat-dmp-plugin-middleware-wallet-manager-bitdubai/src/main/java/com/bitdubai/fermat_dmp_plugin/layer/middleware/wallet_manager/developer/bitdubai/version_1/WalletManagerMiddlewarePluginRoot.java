@@ -564,16 +564,16 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
 
         } catch (WalletResourcesUnninstallException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL WALLET LANGUAGE",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL WALLET LANGUAGE",e, null, null);
 
         } catch (CantDeleteWalletLanguageException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",e, null, null);
         }
         catch (Exception exception){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",FermatException.wrapException(exception), null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",FermatException.wrapException(exception), null, null);
         }
     }
 
