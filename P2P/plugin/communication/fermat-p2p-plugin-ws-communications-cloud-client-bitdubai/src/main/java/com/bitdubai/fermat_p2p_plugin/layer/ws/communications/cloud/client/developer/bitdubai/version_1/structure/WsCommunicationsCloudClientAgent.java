@@ -54,7 +54,7 @@ public class WsCommunicationsCloudClientAgent extends Thread {
         /*
          * While is no connect
          */
-        while (!isConnected){
+      //  while (!isConnected){
 
             System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isOpen() = "+!wsCommunicationsCloudClientChannel.getConnection().isOpen());
             System.out.println(" WsCommunicationsCloudClientAgent - !wsCommunicationsCloudClientChannel.getConnection().isConnecting() = "+!wsCommunicationsCloudClientChannel.getConnection().isConnecting());
@@ -112,7 +112,7 @@ public class WsCommunicationsCloudClientAgent extends Thread {
 
             }
 
-        }
+     //   }
 
     }
 

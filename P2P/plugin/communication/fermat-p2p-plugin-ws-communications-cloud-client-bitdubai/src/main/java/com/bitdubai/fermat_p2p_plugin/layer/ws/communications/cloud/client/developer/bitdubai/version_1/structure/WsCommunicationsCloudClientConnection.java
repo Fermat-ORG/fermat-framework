@@ -21,6 +21,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.MessageTransmitPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.WsCommunicationsCloudClientPingAgent;
 import com.google.gson.JsonObject;
 
 import org.java_websocket.drafts.Draft_17;
@@ -47,6 +48,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
      */
     private WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent;
 
+
+    private WsCommunicationsCloudClientPingAgent wsCommunicationsCloudClientPingAgent;
+
     /**
      * Constructor
      */
@@ -54,6 +58,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
         super();
         this.wsCommunicationsCloudClientChannel = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, new Draft_17());
         this.wsCommunicationsCloudClientAgent = new WsCommunicationsCloudClientAgent(wsCommunicationsCloudClientChannel);
+        this.wsCommunicationsCloudClientPingAgent = new WsCommunicationsCloudClientPingAgent(wsCommunicationsCloudClientChannel);
     }
 
     /**
@@ -89,6 +94,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
          * Start the agent to try the connect
          */
         wsCommunicationsCloudClientAgent.start();
+
+
+        wsCommunicationsCloudClientPingAgent.start();
 
     }
 

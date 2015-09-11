@@ -16,8 +16,10 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatP
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
 import com.google.gson.JsonObject;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
+import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -76,6 +78,14 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * Represent is the client is register with the server
      */
     private boolean isRegister;
+
+
+    @Override
+    public void onWebsocketPong(WebSocket conn, Framedata f) {
+        System.out.println(" WsCommunicationsCloudClientChannel - onWebsocketPong");
+        System.out.println(" WsCommunicationsCloudClientChannel - conn = "+conn);
+        System.out.println(" WsCommunicationsCloudClientChannel - f = "+f);
+    }
 
     /**
      * Constructor with parameters

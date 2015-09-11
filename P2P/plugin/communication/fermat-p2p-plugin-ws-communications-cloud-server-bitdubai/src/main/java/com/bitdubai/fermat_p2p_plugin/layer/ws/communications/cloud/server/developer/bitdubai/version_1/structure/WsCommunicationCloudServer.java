@@ -22,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.java_websocket.WebSocket;
+import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
@@ -257,6 +258,14 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
          * Close the connection
          */
         clientConnection.closeConnection(505, "- ERROR :" + ex.getLocalizedMessage());
+    }
+
+    @Override
+    public void onWebsocketPing(WebSocket conn, Framedata f) {
+
+        System.out.println(" WsCommunicationCloudServer - onWebsocketPing");
+        System.out.println(" WsCommunicationCloudServer - Framedata = "+f.getOpcode());
+        super.onWebsocketPing(conn, f);
     }
 
     /**
