@@ -35,12 +35,12 @@
 * [Wallet Manager](plugin/desktop_module/fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai/)
 
 ### Contract
-* [Customer Broker Crypto Money Purchase]
-* [Customer Broker Cash Money Purchase]
-* [Customer Broker Bank Money Purchase]
-* [Customer Broker Crypto Money Sale]
-* [Customer Broker Cash Money Sale]
-* [Customer Broker Bank Money Sale]
+* [Customer Broker Crypto Money Purchase](plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai/)
+* [Customer Broker Cash Money Purchase](plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai/)
+* [Customer Broker Bank Money Purchase](plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai/)
+* [Customer Broker Crypto Money Sale](plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai/)
+* [Customer Broker Cash Money Sale](plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai/)
+* [Customer Broker Bank Money Sale](plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai/)
 
 ### Request
 * [Customer Broker Purchase](plugin/request/fermat-cbp-plugin-request-crypto-broker-purchase-bitdubai)
