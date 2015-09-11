@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.database;
+package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.developer.bitdubai.version_1.structure.database;
 
 /**
  * Created by franklin on 08/09/15.
  */
-public class AssertIssuerDatabaseConstant {
+public class AssertFactoryDatabaseConstant {
     /**
      * AssetIssuer database table definition.
      */

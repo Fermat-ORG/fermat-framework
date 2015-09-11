@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1;
+package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -15,12 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
-import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
-import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantCreateAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantSaveAssetIssuerException;
-import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuerManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
@@ -33,12 +27,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 9/7/15.
  */
-public class AssetIssuerModulePluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithEvents, AssetIssuerManager, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
-    /**
-     * DealsWithAssetIssuing Interface member variables.
-     */
-    private DealsWithAssetIssuing dealsWithAssetIssuing;
-
+public class AssetFactoryPluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
     /**
      * DealsWithErrors interface member variables
      */
@@ -72,10 +61,10 @@ public class AssetIssuerModulePluginRoot implements DealsWithErrors, DealsWithLo
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
 
-    private com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager getAssetIssuerManager(){
-        com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager assetIssuerManager = new com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetIssuerManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
-        return assetIssuerManager;
-    }
+//    private com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryManager getAssetIssuerManager(){
+//        com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryManager assetIssuerManager = new com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+//        return assetIssuerManager;
+//    }
 
     @Override
     public void setId(UUID pluginId) {
@@ -148,57 +137,5 @@ public class AssetIssuerModulePluginRoot implements DealsWithErrors, DealsWithLo
         return null;
     }
 
-    @Override
-    public List<AssetIssuer> getAllAssetIssuer() {
-        return null;
-    }
-
-    @Override
-    public List<AssetIssuer> getAssetIssuerByIssuer(String issuerPublicKey) {
-        return null;
-    }
-
-    @Override
-    public List<AssetIssuer> getAssetIssuerByState(State state) {
-        return null;
-    }
-
-    @Override
-    public AssetIssuer createEmptyAssetIssuer() {
-        return null;
-    }
-
-    @Override
-    public void createAssetIssuer(AssetIssuer assetIssuer)  throws CantCreateAssetIssuerException {
-
-    }
-
-    @Override
-    public void saveAssetIssuer(AssetIssuer assetIssuer) throws CantSaveAssetIssuerException {
-
-    }
-
-    @Override
-    public void removeAssetIssuer(AssetIssuer assetIssuer) {
-
-    }
-
-    //Implementara el metodo de la capa transaccional a traves del DealsWithAssetIssuing
-    @Override
-    public boolean verifiedGenesisAmount(AssetIssuer assetIssuer) {
-        return getAssetIssuerManager().verifiedGenesisAmount(assetIssuer.getDigitalAsset());
-    }
-
-    //Implementara el metodo de la capa transaccional a traves del DealsWithAssetIssuing
-    @Override
-    public long getEstimatedFeeValue(AssetIssuer assetIssuer) {
-        return getAssetIssuerManager().getEstimatedFeeValue(assetIssuer.getDigitalAsset());
-    }
-
-    //Implementara el metodo de la capa transaccional a traves del DealsWithAssetIssuing
-    @Override
-    public void IssueAsset(AssetIssuer assetIssuer) {
-        getAssetIssuerManager().IssueAsset(assetIssuer.getDigitalAsset());
-    }
 
 }

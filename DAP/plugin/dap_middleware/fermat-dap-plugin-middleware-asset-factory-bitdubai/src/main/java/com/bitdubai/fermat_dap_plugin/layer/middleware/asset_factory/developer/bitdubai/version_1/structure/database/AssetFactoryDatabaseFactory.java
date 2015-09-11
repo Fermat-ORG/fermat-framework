@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.database;
+package com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 08/09/15.
  */
-public class AssetIssuerDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class AssetFactoryDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -28,7 +28,7 @@ public class AssetIssuerDatabaseFactory implements DealsWithPluginDatabaseSystem
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public AssetIssuerDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public AssetFactoryDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 

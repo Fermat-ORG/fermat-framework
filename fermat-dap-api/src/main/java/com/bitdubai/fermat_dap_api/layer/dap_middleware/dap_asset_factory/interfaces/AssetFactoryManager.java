@@ -13,18 +13,19 @@ import java.util.List;
  * Created by franklin on 07/09/15.
  */
 public interface AssetFactoryManager {
+    //Documentar los meteodos
     //Geters Asset Factory
-    List<AssetFactory> getAssetFactoryrByPublicKey(String publicKey) throws CantGetAssetFactoryException;
+    AssetFactory getAssetFactoryByPublicKey(String publicKey) throws CantGetAssetFactoryException;
     List<AssetFactory> getAllAssetFactory() throws CantGetAssetFactoryException;
-    List<AssetFactory> getAssetFactoryrByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException;
-    List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException;
+    List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException;
+    List<AssetFactory> getDigitalAssetByState(State state) throws CantGetAssetFactoryException;
+    AssetFactory getDigitalAssetByPublicKey(String publicKey) throws CantGetAssetFactoryException;
 
     //CRUD
     AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException;
     void createAssetFactory(AssetFactory assetFactory) throws CantCreateAssetFactoryException;
     void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
     void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException;
-
 
     //Deals
     //TODO: Revisar
