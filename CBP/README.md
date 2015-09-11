@@ -47,7 +47,7 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Crypto Broker Wallet Identity](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-wallet-identity-bitdubai/): relaciona una Crypto Broker Identity con una Crypto Broker Wallet.
 * [Crypto Broker Wallet Settings](plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-wallet-settings-bitdubai/): Maneja la confguracion de las Crypto Broker Wallets
 * [Wallet Manager](plugin/middleware/fermat-cbp-plugin-middleware-wallet-manager-bitdubai/): conocimiento de como instalar y desinstalar una **CBP Wallet**
-* [Sub App Manager](plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai/)
+* [Sub App Manager](plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai/): conocimiento de como instalar y desinstalar una **CBP Sub App**
 
 ### Actor
 * [Crypto Broker](plugin/actor/fermat-cbp-plugin-actor-crypto-broker-bitdubai/): administra la relacion con los Brokers (establecer conexion, listar contactos de este tipo, etc)
@@ -85,10 +85,10 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Receive Offline Fiat Bank Transfer](plugin/fiat_bank_transaction/fetmat-cbp-plugin-fiat-bank-transaction-receive-offline-fiat-bank-transfer-bitdubai): registro manual de recepcion de un deposito hecho con Fiat en una cuenta bancaria.
 
 ### Wallet
-* [Crypto Broker Market Crypto](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-market-crypto-bitdubai): gestiona el balance crypto del Crypto Broker.
-* [Crypto Broker Fiat Cash](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-fiat-cash-bitdubai): gestiona el balance efectivo del Crypto Broker.
-* [Crypto Broker Fiat Bank](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-fiat-bank-bitdubai): gestiona el balance bancario del Crypto Broker (puede estar relacionado a multiples cuentas bancarias).
-* [Crypto Customer Market Crypto](plugin/wallet/fermat-cbp-plugin-wallet-crypto-customer-market-crypto): gestiona el balance crypto del Crypto Customer.
+* [Crypto Broker Crypto Market Money](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-market-crypto-bitdubai): gestiona el balance crypto del Crypto Broker.
+* [Crypto Broker Cash Fiat Money](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-fiat-cash-bitdubai): gestiona el balance efectivo del Crypto Broker.
+* [Crypto Broker Bank Fiat Money](plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-fiat-bank-bitdubai): gestiona el balance bancario del Crypto Broker (puede estar relacionado a multiples cuentas bancarias).
+* [Crypto Customer Crypto Market Money](plugin/wallet/fermat-cbp-plugin-wallet-crypto-customer-market-crypto): gestiona el balance crypto del Crypto Customer.
 
 ### Identity
 * [Crypto Broker](plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai): gestiona la Clave Privada y Publica del Broker asociadas con un alias.
