@@ -26,12 +26,13 @@
 ### SubApp Module
 * [Crypto Broker Identity](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai/)
 * [Crypto Broker Community](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai/)
-* [Crypto Customer](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-bitdubai/)
+* [Crypto Customer Identity](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai/)
+* [Crypto Customer Community](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai/)
 * [Customers](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-customers-bitdubai/)
 
 ### Desktop Module
-* [SubApp Manager](plugin/sub_app_module/fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai/)
-* [Wallet Manager](plugin/sub_app_module/fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai/)
+* [SubApp Manager](plugin/desktop_module/fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai/)
+* [Wallet Manager](plugin/desktop_module/fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai/)
 
 ### Contract
 * [Customer Broker Crypto Money Purchase]
