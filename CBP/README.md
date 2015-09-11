@@ -1,23 +1,21 @@
-# CBP Modules Specification
-
-This is the simplified specification of the Crypto Broker Platform plugins
+# CBP Modules
 
 ## Android
 
 ### Reference Wallet
-* [Crypto Broker](android/reference_wallet/fermat-android-reference-wallet-crypto-broker-bitdubai/)
-* [Crypto Customer](android/reference_wallet/fermat-android-reference-wallet-crypto-customer-bitdubai/)
+* [Crypto Broker](android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai/)
+* [Crypto Customer](android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-customer-bitdubai/)
 
 ### SubApp
-* [Crypto Broker Identity](android/sup_app/fermat-android-sub-app-crypto-broker-identity-bitdubai/)
-* [Crypto Broker Community](android/sup_app/fermat-android-sub-app-crypto-broker-community-bitdubai/)
-* [Customers]
-* [Crypto Customer Identity](android/sup_app/fermat-android-sub-app-crypto-customer-bitdubai/)
-* [Crypto Customer Community]
+* [Crypto Broker Identity](android/sup_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai/)
+* [Crypto Broker Community](android/sup_app/fermat-cbp-android-sub-app-crypto-broker-community-bitdubai/)
+* [Crypto Customer Identity](android/sup_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai/)
+* [Crypto Customer Community](android/sup_app/fermat-cbp-android-sub-app-crypto-customer-community-bitdubai/)
+* [Customers](android/sup_app/fermat-cbp-android-sub-app-customers-bitdubai/)
 
-## Desktop
-* [SubApp Manager](android/sup_app/fermat-android-desktop-sub-app-manager-bitdubai/)
-* [Wallet Manager](android/sup_app/fermat-android-desktop-wallet-manager/)
+### Desktop
+* [SubApp Manager](android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai/)
+* [Wallet Manager](android/desktop/fermat-cbp-android-desktop-wallet-manager/)
 
 ## Plugins
 
@@ -82,7 +80,7 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Crypto Broker](plugin/network_service/fermat-cbp-plugin-network-service-crypto-broker-bitdubai)
 * [Crypto Customer](plugin/network_service/fermat-cbp-plugin-network-service-crypto-customer-bitdubai)
 
-# CSH Platform
+# CSH Modules
 
 ## Plugins
 
@@ -95,7 +93,7 @@ This is the simplified specification of the Crypto Broker Platform plugins
 ### Wallet
 * [Cash Money](../CSH/plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-cash-fiat-money-bitdubai).
 
-# BNK Platform
+# BNK Modules
 
 ## Plugins
 
