@@ -15,14 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
-import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.AssetIssuingManager;
-import com.bitdubai.fermat_dap_api.asset_issuing.interfaces.DealsWithAssetIssuing;
-import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantCreateAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.exceptions.CantSaveAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.module.asset_issuer.interfaces.AssetIssuer;
@@ -35,7 +29,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.ErrorManager;
 
 /**
  * Created by rodrigo on 9/7/15.

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.asset_issuing.interfaces;
+package com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/09/15.
