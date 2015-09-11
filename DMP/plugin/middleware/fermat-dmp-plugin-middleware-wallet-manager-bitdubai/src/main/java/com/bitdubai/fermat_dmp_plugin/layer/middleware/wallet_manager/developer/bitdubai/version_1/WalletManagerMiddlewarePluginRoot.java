@@ -228,16 +228,16 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              * The database exists but cannot be open. I can not handle this situation.
              */
             FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         } catch(Exception exception){
             FermatException e = new CantDeliverDatabaseException("Unexpected Exception",exception,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
-        // If we are here the database could not be opened, so we return an empry list
+        // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
     }
 
@@ -564,16 +564,16 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
 
         } catch (WalletResourcesUnninstallException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL WALLET LANGUAGE",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL WALLET LANGUAGE",e, null, null);
 
         } catch (CantDeleteWalletLanguageException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",e, null, null);
         }
         catch (Exception exception){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",FermatException.wrapException(exception), null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",FermatException.wrapException(exception), null, null);
         }
     }
 

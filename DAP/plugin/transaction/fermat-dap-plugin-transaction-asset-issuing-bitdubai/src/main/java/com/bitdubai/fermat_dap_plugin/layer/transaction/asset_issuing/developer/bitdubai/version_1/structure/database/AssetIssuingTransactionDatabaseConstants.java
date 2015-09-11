@@ -23,7 +23,15 @@ public class AssetIssuingTransactionDatabaseConstants {
     public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_TRANSACTION_STATE_COLUMN_NAME = "digital_asset_transaction_state";
     public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_GENESIS_TRANSACTION_COLUMN_NAME = "digital_asset_genesis_transaction";
     public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_GENESIS_ADDRESS_COLUMN_NAME = "digital_asset_genesis_address";
+    public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PROTOCOL_STATUS = "digital_asset_genesis_transaction";
 
     public static final String DIGITAL_ASSET_TRANSACTION_FIRST_KEY_COLUMN = "digital_asset_public_key";
+
+    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_NAME = "transition_protocol_status";
+
+    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_OCCURRENCES_COLUMN_NAME = "occurrences";
+
+    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_FIRST_KEY_COLUMN = "digital_asset_public_key";
 
 }

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_dap_api.asset_issuing.exceptions.CantInitializeAssetIssuingTransactionDatabaseException;
+import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CantInitializeAssetIssuingTransactionDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
 
@@ -112,7 +112,7 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
     }
 
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
+    public static List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
@@ -125,19 +125,29 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
         digitalAssetTransactionColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_TRANSACTION_STATE_COLUMN_NAME);
         digitalAssetTransactionColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_GENESIS_TRANSACTION_COLUMN_NAME);
         digitalAssetTransactionColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_GENESIS_ADDRESS_COLUMN_NAME);
+        digitalAssetTransactionColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PROTOCOL_STATUS);
         /**
          * Table Digital Asset Transaction addition.
          */
         DeveloperDatabaseTable digitalAssetTransactionTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME, digitalAssetTransactionColumns);
         tables.add(digitalAssetTransactionTable);
 
+        /**
+         * Transition Protocol Status table
+         * */
+        List<String> transitionProtocolStatusColumns = new ArrayList<String>();
 
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_OCCURRENCES_COLUMN_NAME);
+
+        DeveloperDatabaseTable transitionProtocolStatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_FIRST_KEY_COLUMN, digitalAssetTransactionColumns);
+        tables.add(transitionProtocolStatusTable);
 
         return tables;
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
