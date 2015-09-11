@@ -1,7 +1,7 @@
 Story: Crypto Customer Wallet Installation
 
-In order to buy money from the Crypto Brokers who work through Fermat
- I need to install a Crypto Broker Wallet
+In order Comprar mercancia a un Crypto Brokers que trabaje con Fermat
+ I need instalar a Crypto Broker Wallet
 Using the Wallet Store SubApp
   And the Wallet Manager Desktop
   And the Wallet Manager Module plugin
