@@ -1097,6 +1097,13 @@ public class Platform implements Serializable {
             Plugin assetIssuingTransaction=((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION)).getAssetIssuingPlugin();
             injectPluginReferencesAndStart(assetIssuingTransaction,Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
 
+            /*
+             * Plugin Asset Factory Middleware
+             * -----------------------------
+             */
+            //Plugin assetFactortMiddleware=((DAPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_FACTORY).getAssetFactoryPlugin();
+            //injectPluginReferencesAndStart(assetFactortMiddleware,Plugins.BITDUBAI_ASSET_FACTORY;
+
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
             LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
@@ -1269,6 +1276,9 @@ public class Platform implements Serializable {
                 ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION));
             }
 
+            //if(plugin instanceof DealsWithAssetFactory){
+            //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
+            //}
 
             /*
              * Register the plugin into the platform context

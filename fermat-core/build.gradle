@@ -133,6 +133,6 @@ compile project(':fermat-dmp-plugin-world-location-bitdubai')
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
 
     //DAP Projects (Plugins)
-    compile project(':fermat-dap-plugin-transaction-asset-issuing-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
 }
 

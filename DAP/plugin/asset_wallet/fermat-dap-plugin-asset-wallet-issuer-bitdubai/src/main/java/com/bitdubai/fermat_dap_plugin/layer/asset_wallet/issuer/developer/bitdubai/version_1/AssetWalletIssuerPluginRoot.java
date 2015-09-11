@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.Plugin;
 import java.util.UUID;
 
 /**
- * Created by Nerio on 07/09/15.
+ * Created by Franklin on 07/09/15.
  */
 public class AssetWalletIssuerPluginRoot implements Plugin {
 
