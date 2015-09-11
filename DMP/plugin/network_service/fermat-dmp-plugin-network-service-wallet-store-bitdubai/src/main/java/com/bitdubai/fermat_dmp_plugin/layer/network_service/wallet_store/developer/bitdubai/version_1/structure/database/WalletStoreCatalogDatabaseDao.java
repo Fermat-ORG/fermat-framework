@@ -179,16 +179,27 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.ITEM_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_ID_COLUMN_NAME, catalogItemImpl.getId().toString());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_NAME_COLUMN_NAME, catalogItemImpl.getName());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME, catalogItemImpl.getCategory().toString());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME, catalogItemImpl.getDescription());
+        if (catalogItemImpl.getName() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_NAME_COLUMN_NAME, catalogItemImpl.getName());
+        if (catalogItemImpl.getCategory() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_CATEGORY_COLUMN_NAME, catalogItemImpl.getCategory().toString());
+        if (catalogItemImpl.getDescription() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_DESCRIPTION_COLUMN_NAME, catalogItemImpl.getDescription());
         record.setIntegerValue(WalletStoreCatalogDatabaseConstants.ITEM_SIZE_COLUMN_NAME, catalogItemImpl.getDefaultSizeInBytes());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME, catalogItemImpl.getpublisherWebsiteUrl().toString());
+        if (catalogItemImpl.getpublisherWebsiteUrl() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PUBLISHER_WEB_SITE_URL_COLUMN_NAME, catalogItemImpl.getpublisherWebsiteUrl().toString());
         try {
-            record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_VERSION_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getVersion().toString());
-            record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getPlatformInitialVersion().toString());
-            record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getPlatformFinalVersion().toString());
-            record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getDeveloper().getPublicKey()); //Todo Revisar Este Caso si guardara la publickey o id UUID
+            if (catalogItemImpl.getDetailedCatalogItemImpl().getVersion() != null)
+                record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_VERSION_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getVersion().toString());
+            if (catalogItemImpl.getDetailedCatalogItemImpl().getPlatformInitialVersion() != null)
+                record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getPlatformInitialVersion().toString());
+            if (catalogItemImpl.getDetailedCatalogItemImpl().getPlatformFinalVersion() != null)
+                record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getPlatformFinalVersion().toString());
+            if (catalogItemImpl.getDetailedCatalogItemImpl().getDeveloper() != null){
+                if (catalogItemImpl.getDetailedCatalogItemImpl().getDeveloper().getPublicKey() != null)
+                    record.setStringValue(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME, catalogItemImpl.getDetailedCatalogItemImpl().getDeveloper().getPublicKey()); //Todo Revisar Este Caso si guardara la publickey o id UUID
+            }
+
         } catch (CantGetWalletDetailsException cantGetWalletDetailsException) {
             throw new CantExecuteDatabaseOperationException(cantGetWalletDetailsException, null, null);
         }
@@ -220,12 +231,21 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, skin.getSkinId());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME, skin.getSkinName());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME, skin.getVersion().toString());
-        record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, skin.getWalletId());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, skin.getInitialWalletVersion().toString());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, skin.getFinalWalletVersion().toString());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, skin.getDesigner().getPublicKey()); //Todo Revisar Este Caso si guardara la publickey o id UUID
+        if (skin.getSkinName() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME, skin.getSkinName());
+        if (skin.getVersion() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME, skin.getVersion().toString());
+        if (skin.getWalletId() != null)
+            record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETID_COLUMN_NAME, skin.getWalletId());
+        if (skin.getInitialWalletVersion() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME, skin.getInitialWalletVersion().toString());
+        if (skin.getFinalWalletVersion() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME, skin.getFinalWalletVersion().toString());
+        if (skin.getDesigner() != null){
+            if (skin.getDesigner().getPublicKey() != null)
+                record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME, skin.getDesigner().getPublicKey()); //Todo Revisar Este Caso si guardara la publickey o id UUID
+        }
+
         record.setLongValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME, skin.getSkinSizeInBytes());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME, String.valueOf(skin.isDefault()));
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SCREEN_SIZE, String.valueOf(skin.getScreenSize()));
@@ -258,7 +278,8 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, developer.getPublicKey()); //Todo: Revisar Esta caso si guardara el publickey o id UUID
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME, developer.getAlias());;
+        if (developer.getAlias() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME, developer.getAlias());;
         record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME, developer.getPublicKey());
 
         return record;
@@ -289,14 +310,25 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME, language.getLanguageId());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME, language.getLanguageName().value());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME, language.getLanguageLabel());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME, language.getVersion().toString());
-        record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME, language.getWalletId());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME, language.getInitialWalletVersion().toString());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME, language.getFinalWalletVersion().toString());
+        if (language.getLanguageName() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME, language.getLanguageName().value());
+        if (language.getLanguageLabel() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME, language.getLanguageLabel());
+        if (language.getVersion() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME, language.getVersion().toString());
+        if (language.getWalletId() != null)
+            record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETID_COLUMN_NAME, language.getWalletId());
+        if (language.getInitialWalletVersion() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME, language.getInitialWalletVersion().toString());
+        if (language.getFinalWalletVersion() != null)
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME, language.getFinalWalletVersion().toString());
+
         record.setIntegerValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME, language.getLanguagePackageSizeInBytes());
-        record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, language.getTranslator().getPublicKey()); //Todo: Revisar si guardar publickey o  id UUID
+        if (language.getTranslator() != null){
+            if (language.getTranslator().getPublicKey() != null)
+                record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME, language.getTranslator().getPublicKey()); //Todo: Revisar si guardar publickey o  id UUID
+        }
+
         record.setStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME, String.valueOf(language.isDefault()));
 
         return record;
