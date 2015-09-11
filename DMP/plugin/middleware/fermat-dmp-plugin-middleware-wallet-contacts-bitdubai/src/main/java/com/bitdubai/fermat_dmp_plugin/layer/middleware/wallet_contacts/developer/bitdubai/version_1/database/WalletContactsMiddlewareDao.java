@@ -105,6 +105,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e, "", "This contact cannot be loaded.");
         } catch (InvalidParameterException exception) {
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, exception);
+        } catch (Exception exception) {
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, exception,"", "Generic Error");
         }
     }
 
@@ -177,6 +179,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "", "There's a problem inserting crypto addresses");
         } catch (CantInsertRecordException e) {
             throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        } catch (Exception e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Error.");
         }
     }
 
@@ -215,6 +219,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantUpdateRecordException exception) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, exception, "", "Cant update record exception.");
+        } catch (Exception e) {
+            throw new CantUpdateWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -246,6 +252,9 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
         } catch (CantLoadTableToMemoryException e) {
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (Exception e) {
+            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -278,6 +287,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Invalid parameter exception.");
+        } catch (Exception e) {
+            throw new CantGetWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -304,6 +315,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Invalid parameter exception.");
+        } catch (Exception e) {
+            throw new CantGetWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -335,6 +348,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Invalid parameter exception.");
+        } catch (Exception e) {
+            throw new CantGetWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -354,6 +369,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
 
         } catch (CantInsertRecordException e) {
             throw new CantInsertCryptoAddressesException(CantInsertCryptoAddressesException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+        } catch (Exception e) {
+            throw new CantInsertCryptoAddressesException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -371,6 +388,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantDeleteCryptoAddressesException(CantDeleteCryptoAddressesException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
         } catch (CantLoadTableToMemoryException e) {
             throw new CantDeleteCryptoAddressesException(CantDeleteCryptoAddressesException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (Exception e) {
+            throw new CantDeleteCryptoAddressesException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 

@@ -45,7 +45,7 @@ public class CreateDatabaseTest extends TestCase {
     private DatabaseTable mockTable;
 
     @Mock
-    private DatabaseTableFactory mockExtraUserTableFactory;
+    private DatabaseTableFactory mockTableFactory;
 
 
     private UUID testOwnerId;
@@ -60,7 +60,7 @@ public class CreateDatabaseTest extends TestCase {
     private void setUpMockitoGeneralRules() throws Exception {
         when(mockPluginDatabaseSystem.createDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(mockDatabase.getDatabaseFactory()).thenReturn(mockDatabaseFactory);
-        when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockExtraUserTableFactory);
+        when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockTableFactory);
         when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
 
     }
