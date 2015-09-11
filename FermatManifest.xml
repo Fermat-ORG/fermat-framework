@@ -3170,7 +3170,7 @@
 			<layer name="Sub App">
 				<androids>
 					<android
-						name="Asset Issuer"
+						name="Asset Factory"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -3187,7 +3187,7 @@
 						</certifications>
 					</android>
 					<android
-						name="Asset User"
+						name="Asset Issuer Community"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -3204,7 +3204,24 @@
 						</certifications>
 					</android>
 					<android
-						name="Redeem Point"
+						name="Asset User Community"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="fvasquezjatar"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+						name="Redeem Point Community"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -3279,7 +3296,7 @@
 			<layer name="Sub App Module" language="java">
 				<plugins>
 					<plugin
-						name="Asset Issuer"
+						name="Asset Factory"
 						description=""
 						difficulty="2"
 						code-level="development"
@@ -3296,7 +3313,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Asset User"
+						name="Asset Issuer Community"
 						description=""
 						difficulty="2"
 						code-level="development"
@@ -3304,7 +3321,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+							<author name="Nindriago" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="Franklinmarcano1970"></mantainer>
@@ -3313,7 +3330,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Redeem Point"
+						name="Asset User Community"
 						description=""
 						difficulty="2"
 						code-level="development"
@@ -3321,7 +3338,24 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+							<author name="Nindriago" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="Franklinmarcano1970"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Redeem Point Community"
+						description=""
+						difficulty="2"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="Nindriago" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="Franklinmarcano1970"></mantainer>
