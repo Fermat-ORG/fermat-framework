@@ -30,8 +30,10 @@ This is the simplified specification of the Crypto Broker Platform plugins
 * [Crypto Broker Community](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai/): administracion de la relacion entre un broker y otros brokers y el descubrimiento de Brokers para los Customers
 * [Crypto Customer](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-bitdubai/): administracion de identidades de los Customers y la relacion con otros Customers
 * [Customers](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-customers-bitdubai/): gestion de contactos entre un Broker y sus Customers
-* [SubApp Manager](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-sub-app-manager-bitdubai/): gestor de las SubApps instaladas en el dispositivo
-* [Wallet Manager](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-wallet-manager-bitdubai/): gestor de las Wallets instaladas
+
+### Desktop Module
+* [SubApp Manager](plugin/sub_app_module/fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai/): gestor de las SubApps instaladas en el dispositivo
+* [Wallet Manager](plugin/sub_app_module/fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai/): gestor de las Wallets instaladas
 
 ### Contract
 * [Crypto Broker Market Money Buy](plugin/contract/fermat-cbp-plugin-contract-crypto-broker-market-money-buy-bitdubai/): contrato de compra de Crypto de un Crypto Customer
