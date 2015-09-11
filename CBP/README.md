@@ -14,7 +14,7 @@
 * [Customers](android/sup_app/fermat-cbp-android-sub-app-customers-bitdubai/)
 
 ### Desktop
-* [SubApp Manager](android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai/)
+* [Sub App Manager](android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai/)
 * [Wallet Manager](android/desktop/fermat-cbp-android-desktop-wallet-manager/)
 
 ## Plugins
@@ -23,7 +23,7 @@
 * [Crypto Broker](plugin/wallet_module/fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai/)
 * [Crypto Customer](plugin/wallet_module/fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai/)
 
-### SubApp Module
+### Sub App Module
 * [Crypto Broker Identity](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai/)
 * [Crypto Broker Community](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai/)
 * [Crypto Customer Identity](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai/)
@@ -31,7 +31,7 @@
 * [Customers](plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-customers-bitdubai/)
 
 ### Desktop Module
-* [SubApp Manager](plugin/desktop_module/fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai/)
+* [Sub App Manager](plugin/desktop_module/fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai/)
 * [Wallet Manager](plugin/desktop_module/fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai/)
 
 ### Contract
