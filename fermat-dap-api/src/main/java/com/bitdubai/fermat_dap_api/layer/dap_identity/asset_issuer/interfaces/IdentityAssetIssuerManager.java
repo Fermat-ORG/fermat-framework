@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
-import com.bitdubai.fermat_dap_api.layer.dap_identity.issuer.exceptions.CantCreateNewIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface IdentityAssetIssuerManager {
 
-    List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser() throws CantCreateNewIssuerException;
+    List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser() throws CantCreateNewIdentityAssetIssuerException;
 
-    IdentityAssetIssuer createNewIdentityAssetIssuer(String alias) throws CantCreateNewIssuerException;
+    IdentityAssetIssuer createNewIdentityAssetIssuer(String alias) throws CantCreateNewIdentityAssetIssuerException;
 
 }

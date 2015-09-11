@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
-import com.bitdubai.fermat_dap_api.layer.dap_identity.issuer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
 
 /**
  * Created by Nerio on 07/09/15.

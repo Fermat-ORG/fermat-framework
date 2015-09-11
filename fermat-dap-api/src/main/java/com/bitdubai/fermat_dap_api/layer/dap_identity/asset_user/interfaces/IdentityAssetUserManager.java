@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
-import com.bitdubai.fermat_dap_api.layer.dap_identity.user.exceptions.CantCreateNewUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface IdentityAssetUserManager {
 
-    List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser() throws CantCreateNewUserException;
+    List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser() throws CantCreateNewIdentityAssetUserException;
 
-    IdentityAssetUser createNewIdentityAssetUser(String alias) throws CantCreateNewUserException;
+    IdentityAssetUser createNewIdentityAssetUser(String alias) throws CantCreateNewIdentityAssetUserException;
 
 }
