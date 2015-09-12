@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHu
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
@@ -70,6 +71,7 @@ public class GithubConnectionTest {
 
     }
 
+    @Ignore
     @Test
     public void testuploadFilesFromRepo() throws Exception {
         Properties properties = new Properties();
