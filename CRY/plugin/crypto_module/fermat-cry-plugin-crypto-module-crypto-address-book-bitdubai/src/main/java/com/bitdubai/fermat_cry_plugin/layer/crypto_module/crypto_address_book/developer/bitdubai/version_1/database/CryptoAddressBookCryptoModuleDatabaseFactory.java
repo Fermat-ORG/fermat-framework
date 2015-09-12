@@ -47,7 +47,7 @@ public class CryptoAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
@@ -55,17 +55,12 @@ public class CryptoAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
-        }
+
 
         /**
          * Next, I will add the needed tables.
          */
-        try {
+
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
@@ -99,6 +94,18 @@ public class CryptoAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+        }
+        catch (CantCreateDatabaseException cantCreateDatabaseException) {
+        /**
+         * I can not handle this situation.
+         */
+             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+        }
+        catch (Exception e) {
+            /**
+             * I can not handle this situation.
+             */
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
         }
         return database;
     }

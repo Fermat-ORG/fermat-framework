@@ -18,6 +18,8 @@ Escenario: Publicacion de Informacion del broker
 
 Story: Crypto Broker Publish
 
+Identity o Community?
+
 In order to be discovered by Crypto Customers
   As a Crypto Broker
   I need to publish my Public Identity
@@ -54,7 +56,6 @@ Scenario: Business Transaction Public Information Update
 
 --------
 
-
 Public Identity Crypto Broker Example:
 - Photo
 - Alias
@@ -73,5 +74,5 @@ Public Identity Crypto Broker Example:
   - Forines Hungaros
   - Dolares Estadounidenses
   - Pesos Colombianos
-
+: Informacion Publica, Conexiones Establecidas  
 --------

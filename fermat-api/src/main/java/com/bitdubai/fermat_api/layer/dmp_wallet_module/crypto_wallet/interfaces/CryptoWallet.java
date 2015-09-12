@@ -114,9 +114,6 @@ public interface CryptoWallet extends Serializable{
      */
     CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException;
 
-    List<CryptoWalletWalletContact> getWalletContactByNameContainsAndWalletPublicKey(String actorName,
-                                                                                     String walletPublicKey) throws CantGetWalletContactException;
-
     boolean isValidAddress(CryptoAddress cryptoAddress);
 
     /**

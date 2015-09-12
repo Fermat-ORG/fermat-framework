@@ -1,8 +1,12 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorConfirmNotificationsIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorDenyConnectingIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorDisconnectingIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorGetNotificationsIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorInIntraUserSearchException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
 
@@ -47,7 +51,7 @@ public interface IntraUserManager {
      * @param intraUserLoggedInPublicKey The public key of the intra user accepting the connection request.
      * @param intraUserToAddPublicKey    The public key of the intra user to add
      */
-    void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey);
+    void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws ErrorAcceptIntraUserException;
 
     /**
      * The method <code>denyConnection</code> send an rejection message of a connection request.
@@ -55,7 +59,7 @@ public interface IntraUserManager {
      * @param intraUserLoggedInPublicKey The public key of the intra user accepting the connection request.
      * @param intraUserToRejectPublicKey The public key of the intra user to add
      */
-    void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey);
+    void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws ErrorDenyConnectingIntraUserException;
 
     /**
      * The method <coda>disconnectIntraUSer</coda> disconnects and informs the other intra user the disconnecting
@@ -81,7 +85,7 @@ public interface IntraUserManager {
      *
      * @return List of IntraUserNotification
      */
-    public List<IntraUserNotification> getNotifications();
+    public List<IntraUserNotification> getNotifications() throws ErrorGetNotificationsIntraUserException;
 
 
     /**
@@ -89,5 +93,5 @@ public interface IntraUserManager {
      * @param intraUserLogedInPublicKey
      * @param intraUserInvolvedPublicKey
      */
-    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey);
+    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException;
 }
