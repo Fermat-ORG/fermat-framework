@@ -21,7 +21,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.MessageTransmitPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.WsCommunicationsCloudClientPingAgent;
 import com.google.gson.JsonObject;
 
 import org.java_websocket.drafts.Draft_17;

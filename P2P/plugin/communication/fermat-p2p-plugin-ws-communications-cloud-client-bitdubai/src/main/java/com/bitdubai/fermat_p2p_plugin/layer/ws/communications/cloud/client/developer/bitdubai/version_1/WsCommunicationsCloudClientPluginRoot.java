@@ -157,7 +157,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 
 
-            /* ONLY FOR TEST */
+            /* ONLY FOR TEST
 
                 new Thread(new Runnable() {
 
@@ -178,9 +178,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
                     }
                 }).start();
-
-
-
+            */
 
         } catch (Exception e) {
             e.printStackTrace();

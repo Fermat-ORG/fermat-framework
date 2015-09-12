@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-niche-fermatPacketType-wallet-bank-notes-wallet-bitdubai
+# fermat-dmp-plugin-niche-type-wallet-bank-notes-wallet-bitdubai

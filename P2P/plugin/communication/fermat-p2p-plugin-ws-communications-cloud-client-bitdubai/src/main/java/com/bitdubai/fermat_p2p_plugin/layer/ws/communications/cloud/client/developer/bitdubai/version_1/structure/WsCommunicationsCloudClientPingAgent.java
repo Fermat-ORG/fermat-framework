@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel;
 
@@ -65,10 +65,16 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
 
                     System.out.println(" WsCommunicationsCloudClientPingAgent - sending ping");
 
+                    try {
 
-                    FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
-                    frame.setFin(true);
-                    wsCommunicationsCloudClientChannel.getConnection().sendFrame(frame);
+                        FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
+                        frame.setFin(true);
+                        wsCommunicationsCloudClientChannel.getConnection().sendFrame(frame);
+
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+
                 }
 
                 sleep(30000);

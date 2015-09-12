@@ -8,7 +8,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.IncomingTemplateNetworkServiceMessage</code>
- * represent a Incoming FermatMessage
+ * represent a Incoming Message
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
  *
