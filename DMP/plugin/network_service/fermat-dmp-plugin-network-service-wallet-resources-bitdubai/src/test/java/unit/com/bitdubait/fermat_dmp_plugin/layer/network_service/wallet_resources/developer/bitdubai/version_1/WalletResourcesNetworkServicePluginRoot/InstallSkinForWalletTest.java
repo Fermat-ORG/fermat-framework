@@ -1,6 +1,8 @@
 package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
+import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -8,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
@@ -16,7 +19,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import junit.framework.TestCase;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -32,14 +34,10 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by natalia on 03/07/15.
- */
-
-/**
- * The Resource Repository  is not created, then test return error for all case.
+ * Created by natalia on 10/09/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetLayoutResourceTest extends TestCase {
+public class InstallSkinForWalletTest extends TestCase {
 
     /**
      * DealsWithErrors interface Mocked
@@ -57,8 +55,6 @@ public class GetLayoutResourceTest extends TestCase {
     /**
      * DealWithEvents Iianterface member variables.
      */
-
-
     @Mock
     private EventListener mockEventListener;
 
@@ -74,56 +70,56 @@ public class GetLayoutResourceTest extends TestCase {
     @Mock
     private PluginTextFile mockPluginTextFile;
 
+    @Mock
+    private Repository repository;
+
+    @Mock
+    private GithubConnection githubConnection;
+
+    @Mock
+    private XMLParser mockXMLParser;
+
+    String repoManifest = "<skin ></skin >";
+
     WalletResourcesNetworkServicePluginRoot walletResourcePluginRoot;
 
     @Before
     public void setUp() throws Exception {
+
+
         walletResourcePluginRoot = new WalletResourcesNetworkServicePluginRoot();
         walletResourcePluginRoot.setPluginFileSystem(pluginFileSystem);
-
-        walletResourcePluginRoot.setErrorManager(errorManager);
         walletResourcePluginRoot.setEventManager(mockEventManager);
+        walletResourcePluginRoot.setErrorManager(errorManager);
+
         walletResourcePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
-        when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockEventListener);
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
+        when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
 
+        when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockEventListener);
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
 
-        when(mockPluginTextFile.getContent()).thenReturn("layoutContent");
+
+    }
+
+
+    @Test
+    public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
+//TODO error parseando el skin, al parecer la estructura subida al repo no es correcta - se debe actualizar
+        walletResourcePluginRoot.start();
+        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde",  "navigationStructureVersion");
+          assertThat(caughtException()).isNotNull();
+
+    }
+
+
+    @Test
+    public void testInstallCompleteWallet_FileNotFoundThrowsWalletResourcesInstalationException() throws Exception {
 
         walletResourcePluginRoot.start();
-    }
+        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "skin",  "navigationStructureVersion");
+        assertThat(caughtException()).isInstanceOf(WalletResourcesInstalationException.class);
 
-
-    @Test
-    public void testgetImageResource_ReturnOk_ThrowsCantGetResourcesException() throws Exception {
-
-
-        catchException(walletResourcePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt", ScreenOrientation.LANDSCAPE, UUID.randomUUID());
-        assertThat(caughtException()).isNull();
-
-
-    }
-
-    @Ignore
-    @Test
-    public void testcheckResources_TheResourcesRepositoryNotExist_ThrowsCantGetResourcesException() throws Exception {
-
-
-        //catchException(walletResourcePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt");
-        //assertThat(caughtException()).isInstanceOf(CantGetResourcesException.class);
-        caughtException().printStackTrace();
-    }
-
-    @Ignore
-    @Test
-    public void testcheckResources_fileNotFound_ThrowsCantGetResourcesException() throws Exception {
-
-        //catchException(walletResourcePluginRoot).getLayoutResource("layout1.xml");
-        //assertThat(caughtException()).isInstanceOf(CantGetResourcesException.class);
-        caughtException().printStackTrace();
     }
 }
-
-
