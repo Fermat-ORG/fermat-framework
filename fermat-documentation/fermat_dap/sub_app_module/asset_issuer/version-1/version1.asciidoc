@@ -1,16 +1,7 @@
 [[wallet-module-asset-issuer-BitDubai-V1]]
 == Version 1
-Esta Plugin Asset Issuer implementara todo la logica para que permita creación, listados y modificación del Asset, contenida en el objeto "DigitalAsset", para que sea persitido
-en la base de datos del Plug-in.
 
 == Plug-in Description
-El Issuer podra modificar toda la información, siempre y cuando se encuentre en el State "DRAFT".
-Una vez que el Issuer determine que ya el Asset esta listo para que se arme la transacción bitcoin, se solicita a la Crypto Vault la creación de una transaction bitcoin a través
-del Outoing Intra user. Este hash se define como la GenesisTransaction en el Digital Asset, y se debe de setear la propiedad genesisTransaction, para que sea modificada en la base de datos
-de la sub app, esta dirección solicitada queda registrada en el Address Book en el modulo (Asset Issuer Wallet) como solicitada por el Issuer Actor, en la plataforma DAP y la vault de
-donde sale la dirección.
-Una vez que el Digital Asset entra en estado "FINAL", quedara registrado como disponible en el modulo (Asset Issuer Wallet), y ya el Asset se considera listo para ser transferidos
-por plugin AssetDistribution.
 
 == Plug-in Structure
 

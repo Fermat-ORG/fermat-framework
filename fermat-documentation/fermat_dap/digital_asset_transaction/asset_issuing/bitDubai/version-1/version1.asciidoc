@@ -64,10 +64,11 @@ Al iniciar el plugin este instancia al objeto DigitalAssetCryptoTransactionFacto
 DigitalAssetCryptoTransactionFactory (DACTF) usará una instancia del CryptoVaultManager para crear la genesis transaction, la cual quedará registrada en el CryptoAddressBook por medio de CryptoAddressBookManager, que se va a asociar al objeto Digital Asset y así crear un nuevo DigitalAssetMetadata, este último objeto debe generase al concluir
 el proceso de creación del digital Asset, ya que este es quien ajustaría el estado a _final_, una vez que se encuentra en este estado ya no se debe modificar ninguna característica del Digital Asset.
 
-= Pasos detallados:
-1) El Asset Issuing Manager a través de un método llamado IssueAsset(DigitalAsset digitalAsset) recibe de la Issuer SubApp el DigitalAsset.
-El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
-GenesisAddress.
+=== Pasos detallados:
+1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
+ realizarán distintas especificaciones del asset y el contrato inicial.
+
+
 
  La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
  el uso de los siguientes campos:
@@ -83,27 +84,46 @@ El DigitalAsset.transactionFee es un valor que calculará la cryptoVault a trav�
 
 La Issuer subApp no permitirá iniciar el proceso de issuing del Asset si no dispone los fondos disponibles para cubrir el GenesisAmount.
 
+Todos los procesos de generación y edicion del Asset serán persistidos en el plugin Middleware Asset Factory. Al momento de finalizar con la
+edición y dar comienzo a la transacción de Asset Issuing, el mismo ya dejará de estar editable en la sub App del issuer.
 
-2) Al estar todo completado para emitir el Asset, se persiste el DA (en DB o archivo, creo que sería mejor archivo) y TranscationStatus para a estar en estado FormingGenesis.
+La transacción de Asset Issuing se dará inicio a través del método IssueAsset(DigitalAsset digitalAsset).
+
+1) El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
+GenesisAddress.
+
+2) Al estar todo completado para emitir el Asset, se persiste el DA (en archivo) y se actualiza el TransactionStatus a FormingGenesis.
+El asset guardado en la Asset Factory pasa a estado final y no puede volver a ser modificado en la subApp Issuer.
 
 3) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
-para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se persiste este valor.
+para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se actualiza este valor en el DA y se persisten los cambios.
 
-4) Se llama al método requestGenesisAddress de la AssetWallet y se persistirá este valor en la GenesisAddress.
+4) Se llama al método requestGenesisAddress de la AssetWallet y se persistirá este valor en la GenesisAddress. Esta solicitud de dirección
+debe ser registrada en el CryptoAddressBook a través del método registerCryptoAddress.
 
 5) Se creará el objeto DigitalAssetMetadata y se generará el hash del DA con el método getDigitalAssetHash. La transacción pasaría a estar en estado PendingSubmitCryptoNetwork.
 
-6) Se enviará la transacción a través de la cryptoVault utilizando el metodo send de la CryptoWallet. La transacción pasa a estado PendingRecieveCryptoNetwork
+6) Se enviará la transacción a través de la cryptoVault utilizando el metodo send de la CryptoWallet y se pasan los siguientes valores:
+
+* transactionId: el obtenido en el paso 3.
+* addressTo: la obtenida en el paso 4.
+* OP_RETURN: el hash del objeto DigitalAssetMetadata (DigitalAssetMetadata.getDigitalAssetHash())
+* Amount: el valor calculado en el punto 1.
+
+La transacción pasa a estado PendingReceiveCryptoNetwork
 
 7) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
-balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet.
+balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet. La transacción debe escuchar los eventos
+del incoming crypto.
 
-8) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingCreditIssuerWallet y se genera el crédito  en el Available balance en la
-Issuer Wallet llamando a un método a crear por Franklin.
 
-9) La issuerWallet genera un crédito en el available balance de la wallet.
 
-10) La transacción finaliza.
+8) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingConfirmationIssuerWallet y se genera el crédito  en el Available balance en la
+Issuer Wallet.
+
+9) La issuerWallet genera un crédito en el available balance de la wallet y confirma que toma posesión del DA.
+
+10) La transacción finaliza y actualiza a Finalized.
 
 == Plug-in Structure
 

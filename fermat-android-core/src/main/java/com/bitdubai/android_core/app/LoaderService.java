@@ -83,7 +83,7 @@ public class LoaderService extends Service {
             super.onPreExecute();
 
             //mDialog = new ProgressDialog(context);
-            //mDialog.setMessage("Please wait...");
+            //mDialog.setFermatMessage("Please wait...");
             //mDialog.show();
         }
 

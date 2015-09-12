@@ -2,12 +2,15 @@ package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bit
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 
 /**
  * Created by loui on 04/02/15.
  */
-public class DeveloperBitDubai implements PluginDeveloper {
+public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     Plugin plugin;
 
@@ -27,4 +30,23 @@ public class DeveloperBitDubai implements PluginDeveloper {
         
     }
 
+    @Override
+    public int getAmountToPay() {
+        return 100;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return CryptoCurrency.BITCOIN;
+    }
+
+    @Override
+    public String getAddress() {
+        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+    }
+
+    @Override
+    public TimeFrequency getTimePeriod() {
+        return TimeFrequency.MONTHLY;
+    }
 }

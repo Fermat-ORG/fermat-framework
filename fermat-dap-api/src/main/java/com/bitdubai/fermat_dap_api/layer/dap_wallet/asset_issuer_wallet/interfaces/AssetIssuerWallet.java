@@ -1,25 +1,22 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
-import com.bitdubai.fermat_dap_api.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantGetTransactionsException;
+
+import java.util.List;
 
 /**
- * Created by franklin on 04/09/15.
+ * Created by franklin on 07/09/15.
  */
 public interface AssetIssuerWallet {
 
-    //Documentar y excepciones
+    //TODO:Documentat y manejo de expcepciones
     String getWalletPublicKey();
 
-    String getDigitalAssetPublicKey();
+    String getAssetIssuerPublicKey(); //TODO: Definir no lo tengo claro
 
-    long getBalance()  throws CantCalculateBalanceException;
+    AssetIssuerWalletBalance getAvailableBalance();
 
-    void debit(); //Debemos de definir la estructura de la transaccion
+    AssetIssuerWalletBalance getBookBalance();
 
-    void credit(); //Debemos de definir la estructura de la transaccion
-
-    //Debemos de crear un metodo que liste las transacciones
-
-    //Debemos de crear un metodo que modifique un valor de la transacccion y colocarle una descripion
-
+    List<AssetIssuerTransaction> getTransacctions(int max, int offset) throws CantGetTransactionsException;
 }

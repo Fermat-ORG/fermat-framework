@@ -1,0 +1,124 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fermat="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wallet_store_activities_background"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    android:paddingBottom="32dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Banner de la wallet -->
+        <ImageView
+            android:id="@+id/main_screenshot"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:adjustViewBounds="true"
+            android:background="@color/gray"
+            android:scaleType="center"
+            tools:ignore="ContentDescription"
+            tools:src="@android:drawable/ic_menu_camera" />
+        <!--/ Banner de la wallet -->
+
+        <!-- Contenedor de Infromacion de la wallet -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:divider="@drawable/vertical_divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <!-- Icono y Nombre de la wallet -->
+            <RelativeLayout
+                android:id="@+id/wallet_icon_and_name_sec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/wallet_icon"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="3dp"
+                    android:background="@color/gray"
+                    android:scaleType="center"
+                    tools:src="@android:drawable/ic_menu_camera" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/wallet_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/wallet_icon"
+                    android:layout_toRightOf="@+id/wallet_icon"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    fermat:typeface="CAVIAR_DREAMS_BOLD"
+                    tools:text="Nombre de la wallet" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/wallet_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/wallet_name"
+                    android:layout_toEndOf="@+id/wallet_icon"
+                    android:layout_toRightOf="@+id/wallet_icon"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    tools:text="Nombre del publisher" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/wallet_platform"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/wallet_type"
+                    android:layout_toEndOf="@+id/wallet_icon"
+                    android:layout_toRightOf="@+id/wallet_icon"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+            <!--/ Icono y Nombre de la wallet -->
+
+            <!-- Descripcion y screenshots-->
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/wallet_short_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:inputType="textMultiLine"
+                android:maxLines="2"
+                android:textColor="@android:color/black"
+                tools:text="Esto es una Prueba. Esto es una Prueba. Esto es una Prueba." />
+            <!--/ Descripcion -->
+        </LinearLayout>
+        <!--/ Contenedor de Infromacion de la wallet -->
+        <!-- ScreenShoots -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/screenShootsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+</ScrollView>
