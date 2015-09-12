@@ -49,16 +49,16 @@ dependencies {
     compile project(':fermat-dmp-plugin-request-money-request-bitdubai')
     /*
 
-    World layer projects on the pipeline:
+        World layer projects on the pipeline:
 
-    compile project(':fermat-dmp-plugin-world-blockchain-info-bitdubai')
-    compile project(':fermat-dmp-plugin-world-coinapult-bitdubai')
-    compile project(':fermat-dmp-plugin-world-crypto-index-bitdubai')
-    compile project(':fermat-dmp-plugin-world-shape-shift-bitdubai')
-    compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
-    compile project(':fermat-dmp-plugin-world-location-bitdubai')
+        compile project(':fermat-dmp-plugin-world-blockchain-info-bitdubai')
+        compile project(':fermat-dmp-plugin-world-coinapult-bitdubai')
+        compile project(':fermat-dmp-plugin-world-crypto-index-bitdubai')
+        compile project(':fermat-dmp-plugin-world-shape-shift-bitdubai')
+        compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
+        compile project(':fermat-dmp-plugin-world-location-bitdubai')
 
-    */
+        */
     compile project(':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai')
     compile project(':fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai')
     compile project(':fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai')
@@ -108,7 +108,6 @@ dependencies {
     // DMP Projects (Addons)
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
     //DAP Projects (Plugins)
-    compile project(':fermat-dap-plugin-transaction-asset-issuing-bitdubai')
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-actor-redeem-point-bitdubai')
