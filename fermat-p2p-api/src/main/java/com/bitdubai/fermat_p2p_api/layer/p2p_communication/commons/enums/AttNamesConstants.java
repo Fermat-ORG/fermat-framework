@@ -34,11 +34,22 @@ public class AttNamesConstants {
     /**
      * Represent the value of JSON_ATT_NAME_COMPONENT_TYPE
      */
-    public static final String JSON_ATT_NAME_COMPONENT_TYPE = "comp-type";
+    public static final String JSON_ATT_NAME_COMPONENT_TYPE = "comp-t";
 
     /**
      * Represent the value of JSON_ATT_NAME_COMPONENT_TYPE
      */
-    public static final String JSON_ATT_NAME_NETWORK_SERVICE_TYPE = "ns-type";
+    public static final String JSON_ATT_NAME_NETWORK_SERVICE_TYPE = "ns-t";
+
+    /**
+     * Represent the value of JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN
+     */
+    public static final String JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN = "r-p-iv";
+
+    /**
+     * Represent the value of JSON_ATT_NAME_PARTICIPANTS_IDENTITIES_VPN
+     */
+    public static final String JSON_ATT_NAME_PARTICIPANTS_IDENTITIES_VPN = "ps-iv";
+
 
 }
