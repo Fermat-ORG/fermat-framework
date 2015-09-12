@@ -156,8 +156,8 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
 
     private void saveImageIntoFile(String directory, String filename, byte[] content) throws CantPublishItemInCatalogException {
         try{
-            PluginTextFile imageFile = pluginFileSystem.createTextFile(pluginId, directory, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            imageFile.setContent(content.toString());
+            PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, directory, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            imageFile.setContent(content);
             imageFile.persistToMedia();
         } catch (CantCreateFileException | CantPersistFileException e) {
             throw new CantPublishItemInCatalogException(CantPublishItemInCatalogException.DEFAULT_MESSAGE, e, null, null);

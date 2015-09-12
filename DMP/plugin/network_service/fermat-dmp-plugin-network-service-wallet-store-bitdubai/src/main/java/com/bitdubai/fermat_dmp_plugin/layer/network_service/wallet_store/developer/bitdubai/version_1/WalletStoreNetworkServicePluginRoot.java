@@ -339,27 +339,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         /**
          * I will initialize the handling of platform events.
          */
-/*        EventListener eventListener;
-        EventHandler eventHandler;
-*/
-        try {
-            TestPublishWallet();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (CantPublishWalletInCatalogException e) {
-            e.printStackTrace();
-        }
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     /**
-<<<<<<< HEAD
      * Creates the database with the Database Factory
-     *
-=======
-     * Creates the database with the Database Factory                                                                                                                                                                                                                                                                                                                                                                   
->>>>>>> d68ac24c2a7845bb590065fab0cc874c5ba4c227
+     * Creates the database with the Database Factory
      * @throws CantCreateDatabaseException
      */
     private void createWalletStoreNetworkServiceDatabase() throws CantCreateDatabaseException {
