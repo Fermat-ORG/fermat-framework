@@ -54,12 +54,11 @@ import java.util.UUID;
  */
 public class IntraUserActorDao implements Serializable{
 
+    String INTRA_USERS_PROFILE_IMAGE_FILE_NAME = "intraUserActorProfileImage";
     /**
      * Represent the Plugin Database.
      */
 
-
-    String INTRA_USERS_PROFILE_IMAGE_FILE_NAME = "intraUserActorProfileImage";
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     private PluginFileSystem pluginFileSystem;
