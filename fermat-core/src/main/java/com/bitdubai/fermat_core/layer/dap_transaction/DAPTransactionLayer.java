@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_issuing.AssetIssuingSubsystem;
-import com.bitdubai.fermat_dap_api.layer.transaction.CantStartSubsystemException;
-import com.bitdubai.fermat_dap_api.layer.transaction.DAPTransactionSubsystem;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantStartSubsystemException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.DAPTransactionSubsystem;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/09/15.
