@@ -1,17 +1,25 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -207,6 +215,9 @@ public class BalanceFragment extends FermatWalletFragment {
 
             View contentView;
 
+
+            ViewGroup root = container;
+
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
@@ -218,7 +229,12 @@ public class BalanceFragment extends FermatWalletFragment {
               //      (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
            // contentView = inflater.inflate(xpp, null);
 
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(getActivity(),null);
+
             int eventType = xpp.getEventType();
+
+
+            View auxView=null;
 
             while (eventType != XmlPullParser.END_DOCUMENT){
                 String name = null;
@@ -229,6 +245,38 @@ public class BalanceFragment extends FermatWalletFragment {
                     case XmlPullParser.START_TAG:
                         name = xpp.getName();
                         System.out.println("Comienza tag: "+name);
+                        switch (name){
+                            case "android.support.v4.widget.SwipeRefreshLayout":
+                                auxView = new android.support.v4.widget.SwipeRefreshLayout(getActivity());
+                                break;
+                            case "ScrollView":
+                                auxView = new ScrollView(getActivity());
+                                break;
+                            case "LinearLayout":
+                                auxView = new LinearLayout(getActivity());
+                                break;
+                            case "GridLayout":
+                                auxView = new GridLayout(getActivity());
+                                break;
+                            case "Space":
+                                auxView = new Space(getActivity());
+                                break;
+                            case "TextView":
+                                auxView = new TextView(getActivity());
+                                break;
+                            case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
+                                auxView = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati(getActivity());
+                                break;
+
+                        }
+                        root.addView(loadAtributes(auxView, xpp));
+
+//                        for(int i=0;i<xpp.getAttributeCount();i++){
+//                            System.out.println(xpp.getAttributeName(i));
+//
+//                        }
+
+
 //                        if (name == "product"){
 //                            currentProduct = new Product();
 //                        } else if (currentProduct != null){
@@ -243,6 +291,7 @@ public class BalanceFragment extends FermatWalletFragment {
                         break;
                     case XmlPullParser.END_TAG:
                         name = xpp.getName();
+                        //swipeRefreshLayout.setLayoutParams();
                         System.out.println("termina tag: "+name);
 //                        if (name.equalsIgnoreCase("product") && currentProduct != null){
 //                            products.add(currentProduct);
@@ -341,6 +390,96 @@ public class BalanceFragment extends FermatWalletFragment {
 
 
         return rootView;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private View loadAtributes(View view,XmlPullParser xpp){
+
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(getActivity(),null);
+
+
+        int paddingLeft=0;
+        int paddingTop=0;
+        int paddingBottom=0;
+        int paddingRight=0;
+
+        for(int i=0;i<xpp.getAttributeCount();i++){
+            System.out.println(xpp.getAttributeName(i));
+            switch (xpp.getAttributeName(i)){
+                case "id":
+                    view.setId(Integer.valueOf(xpp.getAttributeValue(i)));
+                    break;
+                case "layout_width":
+                    layoutParams.width=Integer.valueOf(xpp.getAttributeValue(i));
+                    break;
+                case "layout_height":
+                    layoutParams.height=Integer.valueOf(xpp.getAttributeValue(i));
+                    break;
+                case "background":
+                    view.setBackgroundColor(Color.parseColor(xpp.getAttributeValue(i)));
+                    break;
+                case "orientation":
+                    //((android.support.v4.widget.SwipeRefreshLayout)view).setO
+                    break;
+                case "paddingLeft":
+                    paddingLeft = Integer.valueOf(xpp.getAttributeValue(i));
+                    break;
+                case "paddingRight":
+                    paddingRight = Integer.valueOf(xpp.getAttributeValue(i));
+                    break;
+                case "paddingBottom":
+                    paddingBottom = Integer.valueOf(xpp.getAttributeValue(i));
+                    break;
+                case "paddingTop":
+                    paddingTop = Integer.valueOf(xpp.getAttributeValue(i));
+                    break;
+                case "gravity":
+                    //((android.support.v4.widget.SwipeRefreshLayout)view).set
+                    break;
+                case "clipToPadding":
+                    //((ScrollView)view).se
+                    //view.setClip
+                    break;
+                case "clickable":
+                    view.setClickable(Boolean.parseBoolean(xpp.getAttributeValue(i)));
+                    break;
+                case "textAlignment":
+                    if(xpp.getAttributeValue(i).equals("center")){
+                        view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    }
+                    break;
+                case "textColor":
+                    ((TextView)view).setTextColor(Color.parseColor(xpp.getAttributeValue(i)));
+                    break;
+                case "textSize":
+                    //((TextView)view).setTextSize(TypedValue.COMPLEX_UNIT_DIP,Integer.valueOf(xpp.getAttributeValue(i)));
+                    break;
+                case "text":
+                    ((TextView)view).setText(xpp.getAttributeValue(i));
+                    break;
+                case "textStyle":
+                    if(xpp.getAttributeName(i).equals("bold")){
+                        ((TextView)view).setTypeface(Typeface.DEFAULT_BOLD);
+                    }
+                    break;
+                case "layout_row":
+
+                    break;
+                case "layout_column":
+                    break;
+                case "layout_columnSpan":
+                    break;
+                case "layout_gravity":
+                    break;
+
+            }
+        }
+
+        view.setPadding(paddingLeft,paddingTop,paddingRight,paddingBottom);
+        view.setLayoutParams(layoutParams);
+
+
+        return view;
     }
 
     /**

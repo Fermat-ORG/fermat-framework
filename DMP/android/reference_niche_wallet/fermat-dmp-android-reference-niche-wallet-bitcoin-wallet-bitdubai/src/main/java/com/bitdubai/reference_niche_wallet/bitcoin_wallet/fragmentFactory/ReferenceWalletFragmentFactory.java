@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BlankFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.CreateContactFragment;
@@ -49,7 +50,7 @@ public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_andro
                  * Executing fragments for BITCOIN REQUESTED.
                  */
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
-                    currentFragment = BalanceFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
+                    currentFragment = BlankFragment.newInstance(null,null);//BalanceFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                     currentFragment = ReceiveFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
