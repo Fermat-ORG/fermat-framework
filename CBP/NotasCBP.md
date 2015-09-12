@@ -30,6 +30,11 @@ Sale Request
 Log trasacciones sobre el contrato (Tanto Broker como Customer)
 Modulo de Notificaciones
 
+# Estados de un Buy Request:
+* IN_PROCESS
+* ACCEPTED
+* POSTPONED
+
 # Estados de un Contrato:
 * NEGOCIACION
 * CANCELADO
@@ -38,4 +43,4 @@ Modulo de Notificaciones
 * PENDIENTE_ENTREGA
 * ENTREGADO
 * COMPLETADO
-* COMPLETADO SIN CONFIRMACION
+* COMPLETADO_SIN_CONFIRMACION
