@@ -34,17 +34,21 @@
 * [Sub App Manager](plugin/desktop_module/fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai/)
 * [Wallet Manager](plugin/desktop_module/fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai/)
 
+### Request
+Los diferentes **Requests** definen el proceso pre-negociacion que ocurre entre dos actores de **Fermat** para establecer la solicitud de una mercaderia o la oferta de una mercaderia.
+
+* [Customer Broker Purchase](plugin/request/fermat-cbp-plugin-request-customer-broker-purchase-bitdubai/)
+* [Customer Broker Sale](plugin/request/fermat-cbp-plugin-request-customer-broker-sale-bitdubai/)
+
 ### Contract
+Los **Contracts** establecen los diferentes tipos de acuerdos negociados entre dos actores para el traspaso de mercaderia.
+
 * [Customer Broker Crypto Money Purchase](plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai/)
 * [Customer Broker Cash Money Purchase](plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai/)
 * [Customer Broker Bank Money Purchase](plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai/)
 * [Customer Broker Crypto Money Sale](plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai/)
 * [Customer Broker Cash Money Sale](plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai/)
 * [Customer Broker Bank Money Sale](plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai/)
-
-### Request
-* [Customer Broker Purchase](plugin/request/fermat-cbp-plugin-request-customer-broker-purchase-bitdubai/)
-* [Customer Broker Sale](plugin/request/fermat-cbp-plugin-request-customer-broker-sale-bitdubai/)
 
 ### Middleware
 * [Customers](plugin/middleware/fermat-cbp-plugin-middleware-customers-bitdubai/)
@@ -63,6 +67,8 @@
 * [Fiat Index](plugin/world/fermat-cbp-plugin-world-fiat-index-bitdubai/)
 
 ### Business Transaction
+Una **Business Transaction** define una actividad relacionada con una o mas **Money Transactions** segun su especificacion. Estas **Money Transactions** deben ser definidas en las plataformas correspondientes([CCP](../CCP/), [CSH](../CSH), [BNK](../BNK/))
+
 * [Crypto Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-money-stock-replenishment-bitdubai/)
 * [Cash Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-cash-money-stock-replenishment-bitdubai/)
 * [Bank Money Stock Replenishment](plugin/business_transaction/fermat-cbp-plugin-business-transaction-bank-money-stock-replenishment-bitdubai/)
@@ -74,6 +80,8 @@
 * [Customer Broker Bank Purchase](plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai/)
 
 ### Identity
+Una identidad define la relacion de la informacion de un **Actor** con un par de claves criptograficas
+
 * [Crypto Broker](plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai/)
 * [Crypto Customer](plugin/identity/fermat-cbp-plugin-identity-crypto-customer-bitdubai/)
 
