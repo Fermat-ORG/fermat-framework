@@ -77,6 +77,6 @@
 * [Crypto Broker](plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai/)
 * [Crypto Customer](plugin/identity/fermat-cbp-plugin-identity-crypto-customer-bitdubai/)
 
-### Network Service
-* [Crypto Broker](plugin/network_service/fermat-cbp-plugin-network-service-crypto-broker-bitdubai/)
-* [Crypto Customer](plugin/network_service/fermat-cbp-plugin-network-service-crypto-customer-bitdubai/)
+### Actor Network Service
+* [Crypto Broker](plugin/network_service/fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai/)
+* [Crypto Customer](plugin/network_service/fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai/)
