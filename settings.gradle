@@ -408,6 +408,7 @@ project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai').pr
 //project(':functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai')
 
 // DAP Projects
+
 //asset wallet
 include ':fermat-dap-plugin-asset-wallet-issuer-bitdubai'
 project(':fermat-dap-plugin-asset-wallet-issuer-bitdubai').projectDir = new File('DAP/plugin/asset_wallet/fermat-dap-plugin-asset-wallet-issuer-bitdubai')
@@ -439,6 +440,16 @@ project(':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai').projectDir = 
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
 project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
 
+// actor
+include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
+
+include ':fermat-dap-plugin-actor-asset-user-bitdubai'
+project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-user-bitdubai')
+
+include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
+project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
+
 // identity
 include ':fermat-dap-plugin-identity-asset-issuer-bitdubai'
 project(':fermat-dap-plugin-identity-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-asset-issuer-bitdubai')
@@ -449,12 +460,34 @@ project(':fermat-dap-plugin-identity-asset-user-bitdubai').projectDir = new File
 include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
 project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
 
-// actor
-include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
-project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
+//module
+include ':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai'
+project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
 
-include ':fermat-dap-plugin-actor-asset-user-bitdubai'
-project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-user-bitdubai')
+include ':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai'
+project(':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai')
 
-include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
-project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
+include ':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai'
+project(':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai')
+
+// WPD Projects
+
+// identity
+include ':fermat-wpd-plugin-identity-publisher-bitdubai'
+project(':fermat-wpd-plugin-identity-publisher-bitdubai').projectDir = new File('WPD/plugin/identity/fermat-wpd-plugin-identity-publisher-bitdubai')
+
+// MKT Projects
+
+// identity
+include ':fermat-mkt-plugin-identity-marketer-bitdubai'
+project(':fermat-mkt-plugin-identity-marketer-bitdubai').projectDir = new File('MKT/plugin/identity/fermat-mkt-plugin-identity-marketer-bitdubai')
+
+// SHP Projects
+
+//module
+include ':fermat-shp-plugin-sub-app-module-brand-bitdubai'
+project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new File('SHP/plugin/module/fermat-shp-plugin-sub-app-module-brand-bitdubai')
+
+// identity
+include ':fermat-shp-plugin-identity-brand-bitdubai'
+project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
