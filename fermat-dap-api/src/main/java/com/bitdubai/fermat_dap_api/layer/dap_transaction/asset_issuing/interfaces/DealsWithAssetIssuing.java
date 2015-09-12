@@ -1,6 +1,6 @@
-package com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces;
+package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces;
 
-import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.all_definition.exceptions.CantSetObjectException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
