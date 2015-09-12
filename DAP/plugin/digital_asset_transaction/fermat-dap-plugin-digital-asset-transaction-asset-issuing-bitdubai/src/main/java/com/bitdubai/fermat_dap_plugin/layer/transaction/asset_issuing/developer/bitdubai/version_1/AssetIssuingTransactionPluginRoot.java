@@ -110,7 +110,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         // If we are here the database could not be opened, so we return an empty list
-        return new ArrayList<>();
+        return new ArrayList<DeveloperDatabaseTableRecord>();
     }
 
     @Override
