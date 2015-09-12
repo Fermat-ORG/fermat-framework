@@ -15,12 +15,12 @@ public class myDesignerIdentity implements DesignerIdentity {
 
     @Override
     public String getAlias() {
-        return null;
+        return alias;
     }
 
     @Override
     public String getPublicKey() {
-        return null;
+        return publicKey;
     }
 
     @Override

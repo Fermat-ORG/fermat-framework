@@ -1155,6 +1155,13 @@ public class Platform implements Serializable {
             Plugin redeemPointIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getRedeemPointIdentity();
             injectPluginReferencesAndStart(redeemPointIdentityLayer, Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER);
 
+            /*
+             * Plugin Asset Factory Middleware
+             * -----------------------------
+             */
+            //Plugin assetFactortMiddleware=((DAPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_FACTORY).getAssetFactoryPlugin();
+            //injectPluginReferencesAndStart(assetFactortMiddleware,Plugins.BITDUBAI_ASSET_FACTORY;
+
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
             LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
@@ -1351,6 +1358,9 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithIdentityAssetRedeemPoint) {
                 ((DealsWithIdentityAssetRedeemPoint) plugin).setRedeemPointIdentityManager((RedeemPointIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER));
             }
+            //if(plugin instanceof DealsWithAssetFactory){
+            //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
+            //}
 
             /*
              * Register the plugin into the platform context

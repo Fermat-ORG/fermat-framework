@@ -115,5 +115,6 @@ dependencies {
     compile project(':fermat-dap-plugin-identity-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-identity-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-identity-redeem-point-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
 }
 

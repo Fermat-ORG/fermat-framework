@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -97,9 +98,9 @@ public enum Plugins {
     BITDUBAI_DAP_USER_IDENTITY_LAYER("BDAPUIL",Developers.BITDUBAI),
     BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER("BDAPRPIL",Developers.BITDUBAI),
 
+    BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI),
+
     ;
-
-
 
     private String code;
     private Developers developer;
@@ -279,6 +280,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_DAP_USER_IDENTITY_LAYER;
             case "BDAPRPIL":
                 return Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER;
+            case "BASF":
+                return Plugins.BITDUBAI_ASSET_FACTORY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
