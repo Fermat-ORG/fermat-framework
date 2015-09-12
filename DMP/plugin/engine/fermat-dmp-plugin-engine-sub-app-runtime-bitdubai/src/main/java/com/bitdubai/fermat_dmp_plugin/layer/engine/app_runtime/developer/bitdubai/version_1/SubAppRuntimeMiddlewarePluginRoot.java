@@ -476,19 +476,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeTab = new Tab();
             runtimeTab.setLabel("Developer Projects");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_MANAGER_FRAGMENT);
-
-            runtimeTabStrip.addTab(runtimeTab);
-
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Wallet Projects");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_PROJECTS_FRAGMENT);
-
-            runtimeTabStrip.addTab(runtimeTab);
-
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("EditMode");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_EDIT_MODE);
+            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS);
 
             runtimeTabStrip.addTab(runtimeTab);
 
@@ -496,16 +484,8 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeSubApp.addActivity(runtimeActivity);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MANAGER_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_MANAGER_FRAGMENT.getKey(), runtimeFragment);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_PROJECTS_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_PROJECTS_FRAGMENT.getKey(), runtimeFragment);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_EDIT_MODE.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_EDIT_MODE.getKey(), runtimeFragment);
+            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS.getKey(), runtimeFragment);
 
             /* Adding WizardTypes */
             Wizard runtimeWizard = new Wizard();
@@ -594,6 +574,10 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeWizardPage = new WizardPage();
             runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_2);
+            runtimeWizard.addPage(runtimeWizardPage);
+
+            runtimeWizardPage = new WizardPage();
+            runtimeWizardPage.setType(WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_3);
             runtimeWizard.addPage(runtimeWizardPage);
 
             runtimeActivity.addWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, runtimeWizard);

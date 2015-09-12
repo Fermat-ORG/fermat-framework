@@ -148,8 +148,8 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 
             String message = CloudCommunicationException.DEFAULT_MESSAGE;
             FermatException cause = fMPException;
-            String context = "Packet Data: " + dataPacket.toString();
-            String possibleReason = "Something failed in the processing of one of the different PacketType, you should check the FMPException that is linked below";
+            String context = "FermatPacketCommunication Data: " + dataPacket.toString();
+            String possibleReason = "Something failed in the processing of one of the different FermatPacketType, you should check the FMPException that is linked below";
             throw new CloudCommunicationException(message, cause, context, possibleReason);
 
         }catch(NoSuchElementException ex){
@@ -388,7 +388,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
          */
         List<String> remoteNetworkServicesIdentities =  Arrays.asList(identitiesList);
 
-        System.out.print("remoteNetworkServicesIdentities = "+remoteNetworkServicesIdentities);
+        System.out.print("remoteNetworkServicesIdentities = " + remoteNetworkServicesIdentities);
 
         //TODO: How to retrieve this list to the network service that request? fire a event with the list???
 
@@ -590,7 +590,6 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
                                                                                                   networkService,
                                                                                                   identity.getPrivateKey());
 
-
             System.out.println("CloudClientCommunicationManager - requestPacketNetworkService = " + requestPacket.toJson());
 
             /*
@@ -673,7 +672,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Client Public Key: " + identity.getPublicKey();
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
-		context += "Packet Sender: " + packet.getSender();
+		context += "FermatPacketCommunication Sender: " + packet.getSender();
 		String possibleReason = "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
 		possibleReason += "This can also be an unexpected attack from an unexpected sender.";
 		return new IllegalPacketSenderException(message, null, context, possibleReason);
@@ -689,7 +688,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	private IllegalPacketSignatureException constructIllegalPacketSignatureException(final FMPPacket packet){
 
         String message = IllegalPacketSignatureException.DEFAULT_MESSAGE;
-		String context = "Data Packet Information: " + packet.toString();
+		String context = "Data FermatPacketCommunication Information: " + packet.toString();
 		String possibleReason = "There was an improper signature associated with this packet; check if you're using the standard Asymmetric Cryptography Signature method";
 
 		return new IllegalPacketSignatureException(message, null, context, possibleReason);
@@ -716,11 +715,11 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Type: " + type;
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
-		context += "Message Hash: " + messageHash;
+		context += "FermatMessage Hash: " + messageHash;
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Signature: " + signature;
 
-		String possibleReason = "The FMP Packet construction failed, check the cause and the values in the context";
+		String possibleReason = "The FMP FermatPacketCommunication construction failed, check the cause and the values in the context";
 
 		return new CloudCommunicationException(message, cause, context, possibleReason);
 	}
@@ -782,5 +781,12 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 
 
     }
+
+  /*  private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    } */
 	
 }

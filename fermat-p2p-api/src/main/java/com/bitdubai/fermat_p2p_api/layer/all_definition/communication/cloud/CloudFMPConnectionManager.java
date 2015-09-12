@@ -437,7 +437,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                 System.out.println("CloudFMPConnectionManager - Received packet json = " + decryptedJson);
 
                 /*
-                 * Create a new FMPPacket whit the decrypted string of data
+                 * Create a new FermatPacketCommunication whit the decrypted string of data
                  */
                 FMPPacket incomingPacket = FMPPacketFactory.constructCloudFMPPacket(decryptedJson);
 
@@ -544,7 +544,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                     ByteBuffer writeBuffer = ByteBuffer.allocate(FMPPacket.PACKET_MAX_BYTE_SIZE);
                     writeBuffer.clear();
 
-                    System.out.println("CloudFMPConnectionManager - Packet json to send = " + dataPacketToSend.toJson());
+                    System.out.println("CloudFMPConnectionManager - FermatPacketCommunication json to send = " + dataPacketToSend.toJson());
 
                     /*
                      * Encrypt the data packet json object string
@@ -552,7 +552,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                     String encryptedJson = AsymmectricCryptography.encryptMessagePublicKey(dataPacketToSend.toJson(), dataPacketToSend.getDestination());
 
                     //System.out.println("CloudFMPConnectionManager - Encrypted packet json to send  = " + encryptedJson);
-                    System.out.println("CloudFMPConnectionManager - Packet data length = " + encryptedJson.length());
+                    System.out.println("CloudFMPConnectionManager - FermatPacketCommunication data length = " + encryptedJson.length());
 
                     /*
                      * Get json format and convert to bytes
@@ -772,8 +772,8 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 
 			String message = CloudCommunicationException.DEFAULT_MESSAGE;
 			FermatException cause = fMPException;
-			String context = "Packet Data: " + dataPacket.toString();
-			String possibleReason = "Something failed in the processing of one of the different PacketType, you should check the FMPException that is linked below";
+			String context = "FermatPacketCommunication Data: " + dataPacket.toString();
+			String possibleReason = "Something failed in the processing of one of the different FermatPacketType, you should check the FMPException that is linked below";
 			throw new CloudCommunicationException(message, cause, context, possibleReason);
 
 		}catch(NoSuchElementException ex){
@@ -1078,7 +1078,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      * to the writing process of the connection to your destination
      *
      * @param destination
-     * @return FMPPacket
+     * @return FermatPacketCommunication
      */
     protected FMPPacket getNextPendingOutgoingPacketCacheForDestination(String destination){
 

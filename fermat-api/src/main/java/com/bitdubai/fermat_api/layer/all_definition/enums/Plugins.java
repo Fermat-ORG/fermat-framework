@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -16,6 +17,10 @@ public enum Plugins {
     BITDUBAI_CRYPTO_INDEX("BCRYPTOINW", Developers.BITDUBAI),
     BITDUBAI_BITCOIN_CRYPTO_NETWORK("BBTCCNET", Developers.BITDUBAI),
     BITDUBAI_CLOUD_CHANNEL("BCLOUDC", Developers.BITDUBAI),
+
+    BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER("BWSCCLSERVER", Developers.BITDUBAI),
+    BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL("BWSCCLIENTCH", Developers.BITDUBAI),
+
     BITDUBAI_CLOUD_SERVER_COMMUNICATION("BCLOUSC", Developers.BITDUBAI),
     BITDUBAI_USER_NETWORK_SERVICE("BUSERNETS", Developers.BITDUBAI),
     BITDUBAI_TEMPLATE_NETWORK_SERVICE("BTEMNETS", Developers.BITDUBAI),
@@ -81,8 +86,11 @@ public enum Plugins {
     BITDUBAI_IDENTITY_MANAGER("BIDMAN", Developers.BITDUBAI),
     BITDUBAI_DESIGNER_IDENTITY("BDDESID", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_MODULE("BDEVMOD", Developers.BITDUBAI),
-    BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI)
-    ;
+    BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI),
+
+    BITDUBAI_ASSET_ISSUING_TRANSACTION("BAIT", Developers.BITDUBAI),
+    BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI);
+
 
 
 
@@ -114,6 +122,13 @@ public enum Plugins {
                 return Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK;
             case "BCLOUDC":
                 return Plugins.BITDUBAI_CLOUD_CHANNEL;
+
+
+            case "BWSCCLSERVER":
+                return Plugins.BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER;
+            case "BWSCCLIENTCH":
+                return Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL;
+
             case "BCLOUSC":
                 return Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION;
             case "BUSERNETS":
@@ -246,6 +261,10 @@ public enum Plugins {
                 return Plugins.BITDUBAI_DEVELOPER_MODULE;
             case "BDNOTMID":
                 return Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION;
+            case "BAIT":
+                return Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION;
+            case "BASF":
+                return Plugins.BITDUBAI_ASSET_FACTORY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
