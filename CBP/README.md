@@ -41,7 +41,7 @@ Los diferentes **Requests** definen el proceso pre-negociacion que ocurre entre 
 * [Customer Broker Sale](plugin/request/fermat-cbp-plugin-request-customer-broker-sale-bitdubai/)
 
 ### Contract
-Los **Contracts** establecen los diferentes tipos de acuerdos negociados entre dos actores para el traspaso de mercaderia.
+Los **Contracts** establecen los diferentes tipos de acuerdos negociados entre dos actores para el traspaso de mercaderia.  
 
 * [Customer Broker Crypto Money Purchase](plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai/)
 * [Customer Broker Cash Money Purchase](plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai/)
