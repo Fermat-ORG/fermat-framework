@@ -47,7 +47,7 @@ public class WalletContactsMiddlewareDatabaseFactory implements DealsWithPluginD
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**
@@ -55,17 +55,12 @@ public class WalletContactsMiddlewareDatabaseFactory implements DealsWithPluginD
          */
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            /**
-             * I can not handle this situation.
-             */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
-        }
+
 
         /**
          * Next, I will add the needed tables.
          */
-        try {
+
             DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
@@ -84,12 +79,10 @@ public class WalletContactsMiddlewareDatabaseFactory implements DealsWithPluginD
 
             table.addIndex(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_FIRST_KEY_COLUMN);
 
-            try {
+
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+                     /**
              * Create Wallet Contact Addresses table.
              */
             table = databaseFactory.newTableFactory(ownerId, WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TABLE_NAME);
@@ -100,18 +93,29 @@ public class WalletContactsMiddlewareDatabaseFactory implements DealsWithPluginD
 
             table.addIndex(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_FIRST_KEY_COLUMN);
 
-            try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
+
+
+
+        } catch (CantCreateTableException cantCreateTableException) {
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            /**
+             * I can not handle this situation.
+             */
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+        }
+        catch (Exception e) {
+             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Error.");
         }
         return database;
     }

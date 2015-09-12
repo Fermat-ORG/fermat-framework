@@ -97,6 +97,12 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
                    */
                 throw new CantInitializeWalletContactsMiddlewareDatabaseException(cantCreateDatabaseException.getMessage());
             }
+
+        }
+        catch (Exception e) {
+
+            throw new CantInitializeWalletContactsMiddlewareDatabaseException(e.getMessage());
+
         }
     }
 
