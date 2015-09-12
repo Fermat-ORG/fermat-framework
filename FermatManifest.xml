@@ -4760,7 +4760,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Identity Wallet"
+						name="Crypto Broker Wallet Identity"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -4890,7 +4890,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Customer Fiat Cash Sale"
+						name="Customer Broker Cash Sale"
 						description=""
 						difficulty="0"
 						code-level="development"
@@ -4905,7 +4905,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Customer Fiat Bank Sale"
+						name="Customer Broker Bank Sale"
 						description=""
 						difficulty="0"
 						code-level="development"
@@ -4920,7 +4920,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Market Crypto Purchase"
+						name="Customer Broker Crypto Purchase"
 						description=""
 						difficulty="0"
 						code-level="development"
@@ -4935,7 +4935,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Fiat Cash Purchase"
+						name="Customer Broker Cash Purchase"
 						description=""
 						difficulty="0"
 						code-level="development"
@@ -4950,7 +4950,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Crypto Broker Fiat Bank Purchase"
+						name="Customer Broker Bank Purchase"
 						description=""
 						difficulty="0"
 						code-level="development"
