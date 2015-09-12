@@ -19,22 +19,22 @@ public class IntraUserActorRequestConnectionEvent extends AbstractPlatformEvent 
     }
 
 
-    /**
-     * Constructor with parameters
-     *
-     * @param eventType
-     * @param intraUserLoggedInPublicKey
-     * @param intraUserToAddPublicKey
-     */
-    public IntraUserActorRequestConnectionEvent(EventType eventType, String intraUserLoggedInPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) {
 
-        super(eventType);
-        this.intraUserLoggedInPublicKey = intraUserLoggedInPublicKey;
-        this.intraUserToAddPublicKey = intraUserToAddPublicKey;
-        this.intraUserToAddName = intraUserToAddName;
-        this.profileImage = profileImage;
+    public void setIntraUserLoggedInPublicKey(String intraUserLoggedInPublicKey) {
+       this.intraUserLoggedInPublicKey = intraUserLoggedInPublicKey;
     }
 
+    public void setIntraUserToAddPublicKey(String intraUserToAddPublicKey) {
+        this.intraUserToAddPublicKey = intraUserToAddPublicKey;
+    }
+
+    public void setIntraUserToAddName(String intraUserToAddName) {
+        this.intraUserToAddName = intraUserToAddName;
+    }
+
+    public void setIntraUserProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
 
     /**
      *Return the public key of intra user logged

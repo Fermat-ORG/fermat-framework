@@ -15,7 +15,7 @@ public class CryptoAddressBookCryptoModuleDatabaseConstants {
     /**
      * Crypto Address Book database table definition.
      */
-    static final String CRYPTO_ADDRESS_BOOK_TABLE_NAME = "crypto_address_book";
+   public  static final String CRYPTO_ADDRESS_BOOK_TABLE_NAME = "crypto_address_book";
 
     static final String CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
     static final String CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";

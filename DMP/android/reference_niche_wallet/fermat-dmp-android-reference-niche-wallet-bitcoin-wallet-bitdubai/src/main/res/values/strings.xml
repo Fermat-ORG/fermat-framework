@@ -132,5 +132,8 @@
     <string name="fragment_send_notes_hint">Notes (optional)</string>
     <string name="clear_text_button">Clear</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

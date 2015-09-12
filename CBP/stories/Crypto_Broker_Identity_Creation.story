@@ -14,7 +14,7 @@ Scenario: First Crypto Broker Identity
   Then the Crypto Broker Identity Java Plugin should Create a Private Key
     And Derive a Public Key
     And associate them with the Alias and the Photo
-    And the Crypto Broker SubApp should display it in a list of My Identities
+    And the Crypto Broker Identity SubApp should display it in a list of My Identities
 
 Scenario: Multiple Crypto Broker Identities
   Given I have already created a Crypto Broker Identity
