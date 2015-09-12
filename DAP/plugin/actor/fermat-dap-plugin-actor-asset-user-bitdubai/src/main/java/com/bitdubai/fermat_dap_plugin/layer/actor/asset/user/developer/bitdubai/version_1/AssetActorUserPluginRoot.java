@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 09/09/15.
  */
-public class ActorIssuerPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class AssetActorUserPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     /**
      * Service Interface member variables.
@@ -99,8 +99,7 @@ public class ActorIssuerPluginRoot implements DealsWithErrors, DealsWithEvents, 
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.ActorIntraUser");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.ActorIssuerPluginRoot");
         /**
          * I return the values.
          */
@@ -122,11 +121,11 @@ public class ActorIssuerPluginRoot implements DealsWithErrors, DealsWithEvents, 
                 /**
                  * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
                  */
-                if (ActorIssuerPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    ActorIssuerPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    ActorIssuerPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (AssetActorUserPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    AssetActorUserPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    AssetActorUserPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    ActorIssuerPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    AssetActorUserPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
 

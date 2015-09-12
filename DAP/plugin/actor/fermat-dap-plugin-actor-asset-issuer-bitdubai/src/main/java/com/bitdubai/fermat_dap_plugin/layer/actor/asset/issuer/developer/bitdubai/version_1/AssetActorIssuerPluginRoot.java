@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -24,9 +24,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by Nerio on 07/09/15.
+ * Created by Nerio on 09/09/15.
  */
-public class IdentityRedeemPointPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class AssetActorIssuerPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     /**
      * Service Interface member variables.
@@ -121,11 +121,11 @@ public class IdentityRedeemPointPluginRoot implements DealsWithErrors, DealsWith
                 /**
                  * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
                  */
-                if (IdentityRedeemPointPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    IdentityRedeemPointPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    IdentityRedeemPointPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (AssetActorIssuerPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    AssetActorIssuerPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    AssetActorIssuerPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    IdentityRedeemPointPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    AssetActorIssuerPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
 

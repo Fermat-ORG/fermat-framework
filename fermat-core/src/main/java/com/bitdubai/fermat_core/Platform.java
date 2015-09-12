@@ -405,9 +405,9 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.dmp_actor.ActorLayer(), PlatformLayers.BITDUBAI_ACTOR_LAYER);
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_Identity.IdentityLayer(), PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new IdentityLayer(), PlatformLayers.BITDUBAI_IDENTITY_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(),PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION);
-            corePlatformContext.registerPlatformLayer(new DAPActorLayer(),PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPIdentityLayer(),PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER);
+            corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(), PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION);
+            corePlatformContext.registerPlatformLayer(new DAPActorLayer(), PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER);
+            corePlatformContext.registerPlatformLayer(new DAPIdentityLayer(), PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER);
 
             /*
              * Start all other platform layers
@@ -874,7 +874,7 @@ public class Platform implements Serializable {
              * ----------------------------------
              */
             Plugin assetsCryptoVault = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER)).getmAssetsVault();
-            injectPluginReferencesAndStart(assetsCryptoVault , Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT);
+            injectPluginReferencesAndStart(assetsCryptoVault, Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT);
 
             /*
              * Plugin Incoming Crypto Crypto Router
@@ -1110,8 +1110,8 @@ public class Platform implements Serializable {
              * Plugin Asset Issuing Transaction
              * -----------------------------
              */
-            Plugin assetIssuingTransaction=((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION)).getAssetIssuingPlugin();
-            injectPluginReferencesAndStart(assetIssuingTransaction,Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
+            Plugin assetIssuingTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION)).getAssetIssuingPlugin();
+            injectPluginReferencesAndStart(assetIssuingTransaction, Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
 
            /*
             * Plugin Asset Issuer Actor Layer
@@ -1167,7 +1167,7 @@ public class Platform implements Serializable {
      * Method that inject all references to another plugin that required a
      * plugin to work
      *
-     * @param plugin whom I'll start
+     * @param plugin     whom I'll start
      * @param descriptor descriptor of this plugin
      */
     private void injectPluginReferencesAndStart(Plugin plugin, Plugins descriptor) {
@@ -1319,11 +1319,12 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithIntraUsersNetworkService) {
                 ((DealsWithIntraUsersNetworkService) plugin).setIntraUserNetworkServiceManager((IntraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE));
             }
+
             if (plugin instanceof DealsWithWalletSettings) {
                 ((DealsWithWalletSettings) plugin).setWalletSettingsManager((WalletSettingsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE));
             }
 
-            if(plugin instanceof DealsWithAssetIssuing){
+            if (plugin instanceof DealsWithAssetIssuing) {
                 ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION));
             }
 
