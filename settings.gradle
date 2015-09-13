@@ -425,7 +425,6 @@ project(':fermat-dap-plugin-asset-issuer-wallet-module-bitdubai').projectDir = n
 include ':fermat-dap-plugin-asset-user-wallet-module-bitdubai'
 project(':fermat-dap-plugin-asset-user-wallet-module-bitdubai').projectDir = new File('DAP/plugin/wallet_module/fermat-dap-plugin-asset-user-wallet-module-bitdubai')
 
-///home/franklin/Desarrollos/fermat/DAP/plugin/wallet_module/fermat-dap-plugin-redeem-point-wallet-module-bitdubai
 include ':fermat-dap-plugin-redeem-point-wallet-module-bitdubai'
 project(':fermat-dap-plugin-redeem-point-wallet-module-bitdubai').projectDir = new File('DAP/plugin/wallet_module/fermat-dap-plugin-redeem-point-wallet-module-bitdubai')
 
