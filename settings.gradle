@@ -1,4 +1,4 @@
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-dap-plugin-actor-network-service-asset-user-bitdubai', ':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai'
 include ':fermat-android-core'
 
 include ':fermat-api'
@@ -463,6 +463,17 @@ project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new Fi
 //module
 include ':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai'
 project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
+
+// actor network service
+include ':fermat-dap-plugin-actor-network-service-asset-user-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
+
+include ':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-redeem-point-bitdubai')
+
+// actor
+include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
 
 include ':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai'
 project(':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai')
