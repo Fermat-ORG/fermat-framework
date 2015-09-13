@@ -23,7 +23,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
@@ -156,8 +155,8 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
 
     private void saveImageIntoFile(String directory, String filename, byte[] content) throws CantPublishItemInCatalogException {
         try{
-            PluginTextFile imageFile = pluginFileSystem.createTextFile(pluginId, directory, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            imageFile.setContent(content.toString());
+            PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, directory, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            imageFile.setContent(content);
             imageFile.persistToMedia();
         } catch (CantCreateFileException | CantPersistFileException e) {
             throw new CantPublishItemInCatalogException(CantPublishItemInCatalogException.DEFAULT_MESSAGE, e, null, null);
@@ -195,8 +194,10 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         saveImageIntoFile(skin.getSkinId().toString(), skin.getSkinName(), skin.getPresentationImage());
         int i = 0;
         for (byte[] images : skin.getPreviewImageList()){
-            i++;
-            saveImageIntoFile(skin.getSkinId().toString(), skin.getSkinName() + "_" + i, images);
+            if (images != null){
+                i++;
+                saveImageIntoFile(skin.getSkinId().toString(), skin.getSkinName() + "_" + i, images);
+            }
         }
     }
     /**
@@ -281,9 +282,9 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
     }
 
     private byte[] getSkinContent(String directory, String fileName) throws FileNotFoundException, CantCreateFileException, CantLoadFileException {
-            PluginTextFile skinFile = pluginFileSystem.getTextFile(pluginId, directory, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginBinaryFile skinFile = pluginFileSystem.getBinaryFile(pluginId, directory, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             skinFile.loadFromMedia();
-            return skinFile.getContent().getBytes(Charset.forName("UTF-8"));
+            return skinFile.getContent();
     }
 
     /**
