@@ -420,7 +420,7 @@ project(':fermat-dap-plugin-asset-wallet-redeem-point-bitdubai').projectDir = ne
 
 // middleware
 include ':fermat-dap-plugin-middleware-asset-factory-bitdubai'
-project(':fermat-dap-plugin-middleware-asset-factory-bitdubai').projectDir = new File('DAP/plugin/dap_middleware/fermat-dap-plugin-middleware-asset-factory-bitdubai')
+project(':fermat-dap-plugin-middleware-asset-factory-bitdubai').projectDir = new File('DAP/plugin/middleware/fermat-dap-plugin-middleware-asset-factory-bitdubai')
 
 // transaction
 include ':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai'

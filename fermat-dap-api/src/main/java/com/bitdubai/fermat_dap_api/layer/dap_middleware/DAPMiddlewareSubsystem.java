@@ -6,6 +6,6 @@ import com.bitdubai.fermat_api.Plugin;
  * Created by franklin on 10/09/15.
  */
 public interface DAPMiddlewareSubsystem {
-    void star() throws CantStartSubsystemException;
+    void start() throws CantStartSubsystemException;
     Plugin getPlugin();
 }
