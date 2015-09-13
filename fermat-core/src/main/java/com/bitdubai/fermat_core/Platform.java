@@ -27,8 +27,8 @@ import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.DealsWithAssetsVault;
-import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
-import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
@@ -1097,6 +1097,13 @@ public class Platform implements Serializable {
             Plugin assetIssuingTransaction=((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION)).getAssetIssuingPlugin();
             injectPluginReferencesAndStart(assetIssuingTransaction,Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
 
+            /*
+             * Plugin Asset Factory Middleware
+             * -----------------------------
+             */
+            //Plugin assetFactortMiddleware=((DAPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_FACTORY).getAssetFactoryPlugin();
+            //injectPluginReferencesAndStart(assetFactortMiddleware,Plugins.BITDUBAI_ASSET_FACTORY;
+
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
             LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
@@ -1269,6 +1276,9 @@ public class Platform implements Serializable {
                 ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION));
             }
 
+            //if(plugin instanceof DealsWithAssetFactory){
+            //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
+            //}
 
             /*
              * Register the plugin into the platform context

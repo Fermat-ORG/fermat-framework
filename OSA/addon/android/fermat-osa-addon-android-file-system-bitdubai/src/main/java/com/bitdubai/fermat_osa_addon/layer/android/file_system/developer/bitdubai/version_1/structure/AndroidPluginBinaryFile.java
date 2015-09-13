@@ -165,7 +165,8 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         String path = "";
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
-            
+        else
+            path = this.context.getFilesDir().toString();
 
         /**
          * Get the file handle.

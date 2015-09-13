@@ -3,82 +3,113 @@ Story: Crypto Broker Buy Negotiation
 In order to buy Merchandise from a Crypto Broker
   As a Crypto Customer
   I should perform a Buy Negotiation
-Using the Crypto Customer Wallet Android plugin
-  And the Crypto Customer Wallet Module Java plugin
-  And the Crypto Broker Actor plugin
-  And the Crypto Broker Network Service Java plugin
-  And the Crypto Customer Network Service Java plugin
+Using the Crypto Customer Wallet Android
+  And the Crypto Customer Wallet Module Plugin
+  And the Crypto Broker Actor Plugin
+  And the Crypto Broker Network Service Plugin
+  And the Crypto Customer Network Service Plugin
+  And the Crypto Broker Purchase Request Plugin
+  And the Market Money Buy Contract Plugin
+  And the Fiat Money Buy Contract Plugin
 
 Scenario: The Crypto Customer initiates a Buy Request
-  Given I have set a Crypto Broker for Business Transactions in the **Crypto Broker Actor**
+  Given I have set conection whit a Crypto Broker in the Crypto Broker Actor Plugin
     And the Crypto Broker offers the "Type of Merchandise" I want to Buy
   When I want to create a Crypto Broker Buy Request in the Crypto Customer Wallet
-  Then I have to specify the "Type of Merchandise" I want to Buy
+  Then I have to specify the Crypto Broker I want to negotiate with
+    And I have to specify the "Type of Merchandise" I want to Buy
     And I have to specify the Amount of Merchandise I want to Buy
+Permutations:
+|Type of Merchandise  |
+|Market Money         |
+|Fiat Money           |
 
 Scenario: The Crypto Customer creates a Buy Request
   Given I have specified the required information
   When I create a Crypto Broker Buy Request in the Crypto Customer Wallet
-  Then the Crypto Customer Wallet should create a new Crypto Broker Buy Request
-    And it should send a message through the Crypto Broker Network Service with the information of the Buy Request
+  Then the Crypto Customer Wallet Module Plugin should create a new Crypto Broker Buy Request using the Crypto Broker Purchase Request Plugin
+    And the Crypto Broker Purchase Request Plugin should mark the "Request" as IN_PROCESS
+    And it should send a message with the Crypto Broker Buy Request  through the Crypto Broker Network Service Plugin to the Crypto Broker
+    And the Crypto Customer Wallet Android should put the Crypto Broker Buy Request in the list of Pending Buy Requests
 
 Scenario: The Crypto Broker accepts the Buy Request
-  Given I have already sent a Crypto Broker Buy Request to my Crypto Broker
-  When I receive a message through the Crypto Customer Network Service with the acceptance of the Crypto Broker Buy Request
-  Then the Crypto Broker Buy Request should be marked as ACCEPTED
-    And the Crypto Customer Wallet should create a "Buy Negotiation Contract" for the "Type of Merchandise"
+  Given I have already sent a Crypto Broker Buy Request to the Crypto Broker
+    And I received a message with the acceptance of the Crypto Broker Buy Request
+  When the Crypto Customer Network Service Plugin receive the message
+  Then it should notify the Crypto Broker Purchase Request Plugin with the acceptance of the Crypto Broker Buy Request
+    And the Crypto Broker Purchase Request Plugin should mark the "Request" as ACCEPTED
+    And it should notify the Crypto Customer Wallet Module Plugin
+    And the Crypto Customer Wallet Module Plugin should create a "Buy Negotiation Contract" for the "Type of Merchandise"
+    And the Crypto Customer Wallet Android should update the list of Crypto Broker Buy Requests as correspond
 Permutations:
-|Type of Merchandise  |Buy Negotiation Contract               |
-|Market Money         |Market Money Buy Negotiation Contract  |
-|Fiat Money           |Fiat Money Buy Negotiation Contract    |
+|Type of Merchandise  |Buy Negotiation Contract   |
+|Market Money         |Market Money Buy Contract  |
+|Fiat Money           |Fiat Money Buy Contract    |
+
+Scenario: The Crypto Broker postpone the Buy Request
+  Given I have already sent a Crypto Broker Buy Request to the Crypto Broker
+    And I received a message with the postponing of the Crypto Broker Buy Request
+  When the Crypto Customer Network Service Plugin receive the message
+  Then it should notify the Crypto Broker Purchase Request PLugin with the postpone of "Request"
+    And the Crypto Broker Purchase Request PLugin should mark the "Request" as POSTPONED
+    And the Crypto Customer Wallet Android should update the list of Crypto Broker Buy Requests as correspond
 
 Scenario: Creation of a Buy Negotiation Contract
   Given I have received the acceptance of a Crypto Broker Buy Request
     And it specified a "Type of Merchandise"
-  When the "Buy Negotiation Contract" is created then
-  Then it should send a message through the Crypto Broker Network Service with the "Contract" Information to the Crypto Broker
+  When the "Buy Negotiation Contract" is created
+  Then "Buy Negotiation Contract" should be marked has NEGOCIACION
+    And it should send a message through the Crypto Broker Network Service PLugin with the "Contract" Information to the Crypto Broker
     And it should be added to a list of Pending Buy Negotiations in the Crypto Customer Wallet
     And it should add a register in the "Buy Negotiation Contract" Transactions Log
 Permutations:
-|Type of Merchandise  |Buy Negotiation Contract               |
-|Market Money         |Market Money Buy Negotiation Contract  |
-|Fiat Money           |Fiat Money Buy Negotiation Contract    |
+|Type of Merchandise  |Buy Negotiation Contract   |
+|Market Money         |Market Money Buy Contract  |
+|Fiat Money           |Fiat Money Buy Contract    |
 
 Scenario: The Crypto Broker provides additional information to a Buy Negotiation
   Given I have updated a "Buy Negotiation Contract" in the Crypto Customer Wallet
-    And it has been reviewed by the Crypto Broker I have set for Business Transactions in the Crypto Broker Actor
-  When the Crypto Customer Network Service receives a message from the Crypto Broker that contains information of the "Buy Negotiation Contract"
+    And it has been reviewed by the Crypto Broker
+    And the Crypto Broker send a message that contains information of the "Buy Negotiation Contract"
+  When the Crypto Customer Network Service Plugin receives the message
   Then the "Buy Negotiation Contract" should be updated with the supplied information
-    And the Crypto Broker Wallet should be notified of the change
+    And the Crypto Broker Wallet Module Plugin should be notified of the change
     And the updated "Buy Negotiation Contract" should be visible inside the Crypto Customer Wallet
-    And the Crypto Customer Wallet should add a register to the "Buy Negotiation Contract" Transactions Log
+    And the Crypto Customer Wallet Module Plugin should add a register to the "Buy Negotiation Contract" Transactions Log
+Permutations:
+|Buy Negotiation Contract   |
+|Market Money Buy Contract  |
+|Fiat Money Buy Contract    |
 
 Scenario: The Crypto Customer provides additional information to a Buy Negotiation
   Given I have updated a "Buy Negotiation Contract" in the Crypto Customer Wallet
-    And it has been reviewed by the Crypto Broker I have set for Business Transactions in the Crypto Broker Actor
+    And it has been reviewed by the Crypto Broker
     And the Crypto Broker has provided additional information
   When I provide additional information for the "Buy Negotiation Contract"
   Then the "Buy Negotiation Contract" should be updated with the information
-    And it should send a message through the Crypto Broker Network Service with the updated Contract Information to the Crypto Broker
-      And the "Buy Negotiation Contract" should register a new Transaction Log
+    And it should send a message through the Crypto Broker Network Service Plugin with the updated Contract Information to the Crypto Broker
     And it should be visible inside the Crypto Customer Wallet
-    And the Crypto Customer Wallet should add a register to the "Buy Negotiation Contract" Transactions Log
+    And the Crypto Customer Wallet Module Plugin hould add a register to the "Buy Negotiation Contract" Transactions Log
+Permutations:
+|Buy Negotiation Contract   |
+|Market Money Buy Contract  |
+|Fiat Money Buy Contract    |
 
 Scenario: The Crypto Customer accepts the terms of the "Buy Negotiation Contract"
-  Given I have updated a "Buy Negotiation Contract" in the Crypto Customer Wallet
+  Given I updated a "Buy Negotiation Contract" in the Crypto Customer Wallet
     And it has been reviewed and updated by the Crypto Broker
-    And it has been reviewed and update by the me
+    And it has been reviewed and updated by me
   When I accept the terms of the "Buy Negotiation Contract"
-  Then the Buy Negotiation should be marked as ACCEPTED
-    And it should send a message through the Crypto Broker Network Service to the Crypto Broker marking the Buy Negotiation as ACCEPTED
-    And the Crypto Customer Wallet should create a "Business Transaction" according to "Type of Merchandise" and the agreed "Type of Execution" in the "Buy Negotiation Contract"
+  Then the "Buy Negotiation Contract" should be marked as PENDIENTE_PAGO
+    And it should send a message through the Crypto Broker Network Service Plugin with the updated Contract Information to the Crypto Broker
+    And the Crypto Customer Wallet Module Plugin should create a "Business Transaction" according to "Type of Merchandise" and the agreed "Type of Execution" in the "Buy Negotiation Contract"
     And should be visible inside the Crypto Customer Wallet as continuation of the Buy Negotiation
-    And the Crypto Customer Wallet should add a register to the "Buy Negotiation Contract" Transactions Log
+    And the Crypto Customer Wallet Module Plugin should add a register to the "Buy Negotiation Contract" Transactions Log
 Permutations:
-|Type of Merchandise  |Buy Negotiation Contract               |Type of Execution  |Business Transaction             |
-|Market Money         |Market Money Buy Negotiation Contract  |Market Crypto      |Crypto Broker Market Crypto Buy  |
-|Fiat Money           |Fiat Money Buy Negotiation Contract    |Fiat Cash          |Crypto Broker Fiat Cash Buy      |
-|Fiat Money           |Fiat Money Buy Negotiation Contract    |Fiat Bank          |Crypto Broker Fiat Bank Buy      |
+|Type of Merchandise  |Buy Negotiation Contract   |Type of Execution  |Business Transaction                  |
+|Market Money         |Market Money Buy Contract  |Market Crypto      |Crypto Broker Market Crypto Purchase  |
+|Fiat Money           |Fiat Money Buy Contract    |Fiat Cash          |Crypto Broker Fiat Cash Purchase      |
+|Fiat Money           |Fiat Money Buy Contract    |Fiat Bank          |Crypto Broker Fiat Bank Purchase      |
 
 Scenario: The Crypto Customer rejects the terms of the "Buy Negotiation Contract"
   Given I have updated a "Buy Negotiation Contract" in the Crypto Customer Wallet
@@ -86,9 +117,8 @@ Scenario: The Crypto Customer rejects the terms of the "Buy Negotiation Contract
     And it has been reviewed and update by the me
   When I rejects the terms of the "Buy Negotiation Contract"
   Then the Buy Negotiation should be marked as CANCELADO
-    And it should send a message through the Crypto Broker Network Service to the Crypto Broker marking the Buy Negotiation as CANCELADO
+    And it should send a message through the Crypto Broker Network Service Plugin with the updated Contract Information to the Crypto Broker
 Permutations:
-|Type of Merchandise  |Buy Negotiation Contract               |
-|Market Money         |Market Money Buy Negotiation Contract  |
-|Fiat Money           |Fiat Money Buy Negotiation Contract    |
-|Fiat Money           |Fiat Money Buy Negotiation Contract    |
+|Buy Negotiation Contract               |
+|Market Money Buy Negotiation Contract  |
+|Fiat Money Buy Negotiation Contract    |

@@ -61,7 +61,7 @@ public class IntraUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId,IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -77,13 +77,13 @@ public class IntraUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            IntraUserNetworkServiceDatabaseFactory intraUserIdentityDatabaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            IntraUserNetworkServiceDatabaseFactory  intraUserNetworkServiceDatabaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = intraUserIdentityDatabaseFactory.createDatabase(pluginId);
+                database = intraUserNetworkServiceDatabaseFactory.createDatabase(pluginId);
                 database.closeDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
@@ -104,7 +104,7 @@ public class IntraUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Intra User", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -119,10 +119,10 @@ public class IntraUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
 
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_ID_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME);
-        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_PROFILE_PICTURE_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME);
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME);
 
 
         /**

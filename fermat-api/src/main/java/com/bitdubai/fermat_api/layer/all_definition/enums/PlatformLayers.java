@@ -49,7 +49,8 @@ public enum PlatformLayers {
     BITDUBAI_PIP_MODULE_LAYER("BPIPML", Developers.BITDUBAI),
     BITDUBAI_REQUEST_LAYER("BRL", Developers.BITDUBAI),
     BITDUBAI_PIP_NETWORK_SERVICE_LAYER("BPIPNSL", Developers.BITDUBAI),
-    BITDUBAI_DIGITAL_ASSET_TRANSACTION("BDAT", Developers.BITDUBAI);
+    BITDUBAI_DIGITAL_ASSET_TRANSACTION("BDAT", Developers.BITDUBAI),
+    BITDUBAI_DIGITAL_ASSET_FACTORY("BDAF", Developers.BITDUBAI);
 
     /**
      * Represent the key
@@ -154,6 +155,8 @@ public enum PlatformLayers {
                 return PlatformLayers.BITDUBAI_PIP_NETWORK_SERVICE_LAYER;
             case "BDAT":
                 return PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION;
+            case "BDAF":
+                return PlatformLayers.BITDUBAI_DIGITAL_ASSET_FACTORY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");
 

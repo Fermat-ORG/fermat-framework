@@ -558,7 +558,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             LOG.info("MAP_LANGUAGE_VERSION:"+language.getVersion());
             LOG.info("MAP_LANGUAGE_NAME:"+language.getLanguageName());
             LOG.info("MAP_LANGUAGE_LABEL:"+language.getLanguageLabel());
-            LOG.info("MAP_DEVELOPER:"+detailedCatalogItem.getDeveloper().getAlias());
+
             LOG.info("MAP_VERSION:"+version);
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
                     catalogItem.getId().toString(), null, /*deviceUser.getPublicKey()*/"testPublicKey", null,
