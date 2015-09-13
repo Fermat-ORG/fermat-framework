@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
@@ -8,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -36,6 +38,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develop
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 
 import java.net.MalformedURLException;
@@ -529,6 +532,21 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
                 detailedCatalogItemImpl.setLanguage(language);
         }
 
+        /**
+         * Modify by Manuel Perez on 09/12/2015:
+         * I need to fix the installation process, the default language can be null at this point, so, if
+         * detailedCatalogItemImpl.getDefaultLanguage() is null, I'm going to force that the first language in
+         * languages will be the defaultLanguage
+         * */
+        try {
+            if(detailedCatalogItemImpl.getDefaultLanguage()==null){
+                detailedCatalogItemImpl.setLanguage(languages.get(0));
+            }
+        } catch (CantGetLanguageException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+
+        //End of modify
         detailedCatalogItemImpl.setLanguages(languages);
 
         /**
