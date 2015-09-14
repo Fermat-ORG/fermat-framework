@@ -4075,7 +4075,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Deliver Cash"
+					<plugin name="Send Cash Delivery"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -4089,7 +4089,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Receive Cash Delivered"
+					<plugin name="Receive Cash Delivery"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -4225,7 +4225,7 @@
 				</androids>
 			</layer>
 
-			<layer name="Sub App" language="java-android">
+			<layer name="Sub App" language="java-android"	>
 				<androids>
 					<android
 						name="Crypto Broker Identity"
