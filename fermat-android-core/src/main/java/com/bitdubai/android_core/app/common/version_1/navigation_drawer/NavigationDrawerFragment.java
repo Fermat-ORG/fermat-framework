@@ -288,23 +288,23 @@ public class NavigationDrawerFragment extends Fragment {
                 mCallbacks.onNavigationDrawerItemSelected(position);
             }
             //test mati
-            if (((FermatActivity)(getActivity())).getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getType().getCode() == "DesktopActivity") {
-
-
-                //wallet store
-                if (position == 5) {
-                    SubAppRuntimeManager appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-                    appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-                    Intent intent;
-                    appRuntimeMiddleware.getLastSubApp().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
-                    intent = new Intent(getActivity(), SubAppActivity.class);
-                    intent.putExtra("executeStart", "1");
-                    startActivity(intent);
-
-
-                }
-
-            }
+//            if (((FermatActivity)(getActivity())).getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getType().getCode() == "DesktopActivity") {
+//
+//
+//                //wallet store
+//                if (position == 5) {
+//                    SubAppRuntimeManager appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+//                    appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+//                    Intent intent;
+//                    appRuntimeMiddleware.getLastSubApp().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+//                    intent = new Intent(getActivity(), SubAppActivity.class);
+//                    intent.putExtra("executeStart", "1");
+//                    startActivity(intent);
+//
+//
+//                }
+//
+//            }
         }
         catch (Exception e)
         {

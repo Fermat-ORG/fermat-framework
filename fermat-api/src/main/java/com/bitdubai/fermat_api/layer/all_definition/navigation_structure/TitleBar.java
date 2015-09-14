@@ -19,6 +19,7 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
     private String iconName;
 
     private RuntimeFernatComboBox comboBox;
+    private int labelSize=-1;
 
     /**
      * Class Constructors
@@ -46,6 +47,10 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public String getBackgroundImage() {
         return backgroundImage;
+    }
+
+    public int getLabelSize(){
+        return labelSize;
     }
 
 
@@ -89,5 +94,9 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public void setComboBox(RuntimeFernatComboBox comboBox) {
         this.comboBox = comboBox;
+    }
+
+    public void setLabelSize(int labelSize) {
+        this.labelSize = labelSize;
     }
 }
