@@ -12,18 +12,23 @@ import junit.framework.TestCase;
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.UUID;
 import java.util.logging.ErrorManager;
 
-import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
-import static org.fest.assertions.api.Assertions.assertThat;
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
+
 
 /**
  * Created by natalia on 11/09/15.
  */
+
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = CustomBuildConfig.class)
 public class StartTest extends TestCase
 {
 

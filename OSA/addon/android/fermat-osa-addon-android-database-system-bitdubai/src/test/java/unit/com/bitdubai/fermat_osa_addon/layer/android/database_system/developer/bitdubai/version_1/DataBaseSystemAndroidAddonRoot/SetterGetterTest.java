@@ -2,18 +2,22 @@ package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develop
 
 import android.content.Context;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.DataBaseSystemAndroidAddonRoot;
 
-import org.fest.assertions.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
 
-import java.util.UUID;
+
 import java.util.logging.ErrorManager;
+
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -22,6 +26,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * Created by natalia on 11/09/15.
  */
+
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = CustomBuildConfig.class)
 public class SetterGetterTest
     {
 
@@ -29,10 +36,10 @@ public class SetterGetterTest
          * DealsWithEvents Interface member variables.
          */
         @Mock
-        Context mockContext;
+        private Context mockContext;
 
         @Mock
-        Object mockObjectContext;
+        private Object mockObjectContext;
 
         /**
          * DealsWithErrors interface Mocked
@@ -44,19 +51,15 @@ public class SetterGetterTest
          * PluginDatabaseSystem Interface member variables.
          */
         @Mock
-        PluginDatabaseSystem pluginDatabaseSystem;
+        private PluginDatabaseSystem pluginDatabaseSystem;
         @Mock
-        PlatformDatabaseSystem platformDatabaseSystem;
+        private PlatformDatabaseSystem platformDatabaseSystem;
 
         private DataBaseSystemAndroidAddonRoot pluginRoot;
 
 
-        UUID pluginId;
-
         @Before
         public void setUp() throws Exception {
-
-        pluginId= UUID.randomUUID();
 
 
         pluginRoot = new DataBaseSystemAndroidAddonRoot();
@@ -86,8 +89,8 @@ public class SetterGetterTest
         @Test
         public void getterTest() throws Exception {
 
-        assertThat(pluginRoot.getPlatformDatabaseSystem()).isEqualTo(platformDatabaseSystem);
-        assertThat(pluginRoot.getPluginDatabaseSystem()).isEqualTo(pluginDatabaseSystem);
+        assertThat(pluginRoot.getPlatformDatabaseSystem()).isNotNull();
+        assertThat(pluginRoot.getPluginDatabaseSystem()).isNotNull();
       }
 
 

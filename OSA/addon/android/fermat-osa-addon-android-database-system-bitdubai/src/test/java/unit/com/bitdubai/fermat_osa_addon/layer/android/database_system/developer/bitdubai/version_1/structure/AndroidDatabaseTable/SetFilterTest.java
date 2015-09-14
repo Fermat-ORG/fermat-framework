@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
+import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTable;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableFactory;
 
 import org.junit.Before;
@@ -51,6 +52,8 @@ public class SetFilterTest {private Activity mockActivity;
         testDatabase.createDatabase(testDatabaseName);
         testDatabaseTable = testDatabase.getTable(testTableName);
 
+
+
     }
 
     @Before
@@ -75,4 +78,9 @@ public class SetFilterTest {private Activity mockActivity;
     }
 
 
+    @Test
+    public void constructorTest_Succefuly() throws Exception{
+        testDatabaseTable = new AndroidDatabaseTable(testDatabase,"tableName");
+
+    }
 }
