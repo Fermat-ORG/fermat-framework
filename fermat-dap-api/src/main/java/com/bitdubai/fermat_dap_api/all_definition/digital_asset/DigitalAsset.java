@@ -20,12 +20,7 @@ public class DigitalAsset  implements Serializable{
     String description;
     List<Resource> resources;
     DigitalAssetContract contract;
-    int quantity;
-    long unitValue;
     long genesisAmount;
-    long transactionFee;
-
-
 
     /**
      * Properties defined by the Asset Issuer Transaction
@@ -115,30 +110,6 @@ public class DigitalAsset  implements Serializable{
 
     public void setState(State state) {
         this.state = state;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public long getTransactionFee() {
-        return transactionFee;
-    }
-
-    public void setTransactionFee(long transactionFee) {
-        this.transactionFee = transactionFee;
-    }
-
-    public long getUnitValue() {
-        return unitValue;
-    }
-
-    public void setUnitValue(long unitValue) {
-        this.unitValue = unitValue;
     }
 
     /**

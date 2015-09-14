@@ -86,7 +86,7 @@
             android:label="Factory">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.SubAppActivity"></meta-data>
+                android:value="com.bitdubai.android_core.app.SubAppActivity"/>
         </activity>
         <activity
             android:name="com.bitdubai.android_core.app.WalletActivity"

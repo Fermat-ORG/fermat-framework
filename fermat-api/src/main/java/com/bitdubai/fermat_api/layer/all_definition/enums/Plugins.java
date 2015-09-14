@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -85,8 +86,11 @@ public enum Plugins {
     BITDUBAI_IDENTITY_MANAGER("BIDMAN", Developers.BITDUBAI),
     BITDUBAI_DESIGNER_IDENTITY("BDDESID", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_MODULE("BDEVMOD", Developers.BITDUBAI),
-    BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI)
-    ;
+    BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI),
+
+    BITDUBAI_ASSET_ISSUING_TRANSACTION("BAIT", Developers.BITDUBAI),
+    BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI);
+
 
 
 
@@ -257,6 +261,10 @@ public enum Plugins {
                 return Plugins.BITDUBAI_DEVELOPER_MODULE;
             case "BDNOTMID":
                 return Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION;
+            case "BAIT":
+                return Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION;
+            case "BASF":
+                return Plugins.BITDUBAI_ASSET_FACTORY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

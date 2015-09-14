@@ -21,7 +21,7 @@ import java.util.UUID;
 public class WalletContactsMiddlewareRecord implements WalletContactRecord {
 
     /**
-     * Represent the contactId
+     * Represent the contact id
      */
     private UUID contactId;
 
@@ -55,85 +55,73 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
      */
     private Actors actorType;
 
-    private List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+    private List<CryptoAddress> cryptoAddresses;
 
     /**
      * Constructor with parameters
      *
-     * @param contactId contact's id
-     * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
-     * @param actorAlias actor's id
+     * @param contactId first key
+     * @param actorAlias alias of the actor
+     * @param actorFirstName first name of the actor
+     * @param actorLastName last name of the actor
      */
-    public WalletContactsMiddlewareRecord(UUID contactId, CryptoAddress receivedCryptoAddress, String actorAlias) {
+    public WalletContactsMiddlewareRecord(UUID contactId,
+                                          String actorAlias,
+                                          String actorFirstName,
+                                          String actorLastName,
+                                          List<CryptoAddress> cryptoAddresses) {
         this.contactId = contactId;
-        cryptoAddresses.add(receivedCryptoAddress);
         this.actorAlias = actorAlias;
+        this.actorFirstName = actorFirstName;
+        this.actorLastName = actorLastName;
+        this.cryptoAddresses = cryptoAddresses;
     }
 
     /**
      * Constructor with parameters
      *
+     * @param contactId first key
      * @param actorPublicKey actor's public key
-     * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
-     * @param contactId contact's id
-     * @param actorAlias actor's id
+     * @param actorAlias alias of the actor
+     * @param actorFirstName first name of the actor
+     * @param actorLastName last name of the actor
      * @param actorType actor's type
+     * @param cryptoAddresses contact's cryptoAddresses (address + cryptoCurrency)
      * @param walletPublicKey wallet's public Key
      */
-    public WalletContactsMiddlewareRecord(String actorPublicKey, String actorAlias, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, String walletPublicKey) {
+    public WalletContactsMiddlewareRecord(UUID contactId,
+                                          String actorPublicKey,
+                                          String actorAlias,
+                                          String actorFirstName,
+                                          String actorLastName,
+                                          Actors actorType,
+                                          List<CryptoAddress> cryptoAddresses,
+                                          String walletPublicKey) {
+        this.contactId = contactId;
         this.actorPublicKey = actorPublicKey;
         this.actorAlias = actorAlias;
+        this.actorFirstName = actorFirstName;
+        this.actorLastName = actorLastName;
         this.actorType = actorType;
-        this.contactId = contactId;
-        cryptoAddresses.add(receivedCryptoAddress);
+        this.cryptoAddresses = cryptoAddresses;
         this.walletPublicKey = walletPublicKey;
     }
 
-    /**
-     * Return the contactId
-     *
-     * @return UUID
-     */
-    @Override
-    public UUID getContactId() {
-        return contactId;
-    }
-
-    /**
-     * Return the walletPublicKey
-     *
-     * @return String
-     */
     @Override
     public String getWalletPublicKey() {
         return walletPublicKey;
     }
 
-    /**
-     * Return the actorType
-     *
-     * @return Actors
-     */
     @Override
     public Actors getActorType() {
         return actorType;
     }
 
-    /**
-     * Return the actorId
-     *
-     * @return UUID
-     */
     @Override
     public String getActorPublicKey() {
         return actorPublicKey;
     }
 
-    /**
-     * Return the actorName
-     *
-     * @return String
-     */
     @Override
     public String getActorFirstName() {
         return actorFirstName;
@@ -152,5 +140,10 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     @Override
     public List<CryptoAddress> getCryptoAddresses() {
         return cryptoAddresses;
+    }
+
+    @Override
+    public UUID getContactId() {
+        return contactId;
     }
 }

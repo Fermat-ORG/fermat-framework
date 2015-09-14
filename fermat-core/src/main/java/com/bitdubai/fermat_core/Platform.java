@@ -22,11 +22,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
+import com.bitdubai.fermat_core.layer.dap_transaction.DAPTransactionLayer;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.DealsWithAssetsVault;
-import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
@@ -389,6 +391,7 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.dmp_actor.ActorLayer(), PlatformLayers.BITDUBAI_ACTOR_LAYER);
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_Identity.IdentityLayer(), PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new IdentityLayer(), PlatformLayers.BITDUBAI_IDENTITY_LAYER);
+            corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(),PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION);
 
             /*
              * Start all other platform layers
@@ -1087,8 +1090,19 @@ public class Platform implements Serializable {
             Plugin moneyRequest = ((RequestServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_REQUEST_LAYER)).getMoney();
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
+            /*
+             * Plugin Asset Issuing Transaction
+             * -----------------------------
+             */
+            Plugin assetIssuingTransaction=((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION)).getAssetIssuingPlugin();
+            injectPluginReferencesAndStart(assetIssuingTransaction,Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
 
-
+            /*
+             * Plugin Asset Factory Middleware
+             * -----------------------------
+             */
+            //Plugin assetFactortMiddleware=((DAPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_FACTORY).getAssetFactoryPlugin();
+            //injectPluginReferencesAndStart(assetFactortMiddleware,Plugins.BITDUBAI_ASSET_FACTORY;
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
@@ -1258,8 +1272,13 @@ public class Platform implements Serializable {
                 ((DealsWithWalletSettings) plugin).setWalletSettingsManager((WalletSettingsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE));
             }
 
+            if(plugin instanceof DealsWithAssetIssuing){
+                ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION));
+            }
 
-
+            //if(plugin instanceof DealsWithAssetFactory){
+            //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
+            //}
 
             /*
              * Register the plugin into the platform context
