@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.C
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactSearch</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsSearch</code>
  * haves the necessary functionality for search a wallet contact.<p/>
  * <p/>
  *
@@ -14,7 +14,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WalletContactSearch {
+public interface WalletContactsSearch {
 
     /**
      * set an actor alias to search
@@ -34,21 +34,19 @@ public interface WalletContactSearch {
     /**
      * get the result of the search
      *
-     * @param walletPublicKey of the wallet in which we're working
      * @return a list of instances of wallet contact
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    List<WalletContactRecord> getResult(String walletPublicKey) throws CantGetAllWalletContactsException;
+    List<WalletContactRecord> getResult() throws CantGetAllWalletContactsException;
 
     /**
      * get the result of the search with pagination params
      *
-     * @param walletPublicKey of the wallet in which we're working
      * @param max of results
      * @param offset pointer
      * @return a list of instances of wallet contact
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    List<WalletContactRecord> getResult(String walletPublicKey, int max, int offset) throws CantGetAllWalletContactsException;
+    List<WalletContactRecord> getResult(int max, int offset) throws CantGetAllWalletContactsException;
 
 }
