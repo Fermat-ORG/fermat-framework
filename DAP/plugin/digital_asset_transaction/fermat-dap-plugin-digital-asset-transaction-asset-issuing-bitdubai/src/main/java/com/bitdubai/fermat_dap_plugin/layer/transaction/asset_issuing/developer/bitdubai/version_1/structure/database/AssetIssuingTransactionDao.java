@@ -102,4 +102,15 @@ public class AssetIssuingTransactionDao {
 
     }
 
+
+    public boolean isPendingTransactions(/*CryptoStatus cryptoStatus*/) throws CantExecuteQueryException {
+        //TODO: implement this method
+        return false;
+    }
+
+    public int updateTransactionProtocolStatus(boolean occurrence) throws CantExecuteQueryException {
+        //TODO: implement this method
+        return 0;
+    }
+
 }
