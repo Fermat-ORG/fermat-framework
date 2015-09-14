@@ -4134,7 +4134,7 @@
 					<plugin
 						name="Make Offline Bank Transfer"
 						description=""
-						difficulty="10"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4149,7 +4149,7 @@
 					<plugin
 						name="Receive Offline Bank Transfer"
 						description=""
-						difficulty="10"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4168,7 +4168,7 @@
 				<plugins>
 					<plugin name="Bank Money"
 						description=""
-						difficulty="6"
+						difficulty="2"
 						code-level="development"
 						>
 						<authors>
