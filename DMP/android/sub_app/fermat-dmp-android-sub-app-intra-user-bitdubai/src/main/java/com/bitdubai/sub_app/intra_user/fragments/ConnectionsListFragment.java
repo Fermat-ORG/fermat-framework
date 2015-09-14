@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.intra_user.fragments;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
@@ -17,9 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -30,6 +33,8 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -83,6 +88,13 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     private boolean isStartList=false;
     private int mNotificationsCount=0;
 
+
+    /**
+     *  UI
+     */
+    private LinearLayout empty;
+    private ProgressDialog dialog;
+
     public static ConnectionsListFragment newInstance(){
         ConnectionsListFragment fragment = new ConnectionsListFragment();
         return fragment;
@@ -95,7 +107,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
             // setting up  module
             intraUserModuleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
             errorManager = subAppsSession.getErrorManager();
-            intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            //intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
             isStartList = true;
 
             mNotificationsCount = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET).size();
@@ -114,6 +126,55 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (dialog != null)
+            dialog.dismiss();
+        dialog = null;
+        dialog = new ProgressDialog(getActivity());
+        dialog.setTitle("Loading connections");
+        dialog.setMessage("Please wait...");
+        dialog.show();
+        showView(false, empty);
+        new FermatWorker(getActivity(), new FermatWorkerCallBack() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void onPostExecute(Object... result) {
+                if (isAttached) {
+                    dialog.dismiss();
+                    dialog = null;
+                    if (adapter != null) {
+                        intraUserItemList = (ArrayList<IntraUserConnectionListItem>) result[0];
+                        adapter.changeDataSet(intraUserItemList);
+                        isStartList = true;
+
+                    }
+                    showEmpty();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                if (isAttached) {
+                    dialog.dismiss();
+                    dialog = null;
+                    Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    showEmpty();
+                }
+            }
+        }) {
+
+            @Override
+            protected Object doInBackground() throws Exception {
+
+                return getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+
+            }
+        }.execute();
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
@@ -568,6 +629,41 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 //                }
 
             return rowView;
+        }
+    }
+
+    /**
+     * Show or Hide any view
+     *
+     * @param show true if you want to show the view, otherwise false
+     * @param view View object to show or hide
+     */
+    public void showView(boolean show, View view) {
+        if (view == null)
+            return;
+        view.setAnimation(AnimationUtils
+                .loadAnimation(getActivity(), show ? R.anim.abc_fade_in : R.anim.abc_fade_out));
+        if (show && (view.getVisibility() == View.GONE || view.getVisibility() == View.INVISIBLE)) {
+            view.setVisibility(View.VISIBLE);
+        } else if (!show && view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Show or hide empty view if needed
+     */
+    public void showEmpty() {
+        if (!isAttached || empty == null)
+            return;
+        if (intraUserItemList == null || intraUserItemList.isEmpty()) {
+            if (empty.getVisibility() == View.GONE || empty.getVisibility() == View.INVISIBLE) {
+                empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_in));
+                empty.setVisibility(View.VISIBLE);
+            }
+        } else if (empty.getVisibility() == View.VISIBLE) {
+            empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_out));
+            empty.setVisibility(View.GONE);
         }
     }
 }
