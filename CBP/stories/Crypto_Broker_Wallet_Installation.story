@@ -1,4 +1,4 @@
-Story: Crypto Customer Wallet Installation
+Story: Crypto Broker Wallet Installation
 
 In order Comprar mercancia a un Crypto Brokers que trabaje con Fermat
  I need to install a Crypto Broker Wallet
