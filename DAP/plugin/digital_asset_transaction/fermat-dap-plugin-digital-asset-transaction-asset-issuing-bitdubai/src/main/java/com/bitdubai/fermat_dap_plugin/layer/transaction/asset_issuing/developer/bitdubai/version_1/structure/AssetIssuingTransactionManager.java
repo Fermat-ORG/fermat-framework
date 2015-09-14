@@ -73,10 +73,10 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.cryptoWallet=cryptoWallet;
     }
 
-    @Override
+    /*@Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
-        return null;
-    }
+        return this;
+    }*/
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -130,6 +130,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     @Override
     public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+        //TODO:implement this method
         return null;
     }
 }

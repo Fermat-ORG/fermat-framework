@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -132,7 +131,6 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public void setEventManager(EventManager eventManager) {
 
-
         this.eventManager=eventManager;
 
     }
@@ -233,10 +231,10 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         return this.assetIssuingTransactionManager.getPendingTransactions(specialist);
     }
 
-    @Override
+    /*@Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
         return this.assetIssuingTransactionManager;
-    }
+    }*/
 
     @Override
     public void setLogManager(LogManager logManager) {

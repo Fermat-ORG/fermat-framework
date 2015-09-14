@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
@@ -9,7 +9,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exception
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public interface AssetIssuingManager extends TransactionSender<CryptoTransaction> {
+public interface AssetIssuingManager /*extends TransactionProtocolManager<CryptoTransaction>*/ {
 
     /*void createDigitalAsset(String publicKey, String name,
                             String description,

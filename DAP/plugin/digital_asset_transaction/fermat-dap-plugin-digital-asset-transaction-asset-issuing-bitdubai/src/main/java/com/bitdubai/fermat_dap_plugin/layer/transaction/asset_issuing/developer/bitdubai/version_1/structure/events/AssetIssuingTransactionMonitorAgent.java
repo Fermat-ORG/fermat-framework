@@ -180,7 +180,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             boolean found = false;
             try {
                 AssetIssuingTransactionDao assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
-
+//TODO:finish this method
 
                 if (!found){
                     assetIssuingTransactionDao.updateTransactionProtocolStatus(false);
