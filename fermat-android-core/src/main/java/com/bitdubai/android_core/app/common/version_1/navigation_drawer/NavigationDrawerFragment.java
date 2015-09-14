@@ -330,7 +330,10 @@ public class NavigationDrawerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
+        mFragmentContainerView = null;
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

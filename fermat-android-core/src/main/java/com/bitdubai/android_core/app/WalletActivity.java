@@ -199,9 +199,10 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             resetThisActivity();
             Intent intent = new Intent(this, SubAppActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            finish();
+
         }
 
 
@@ -220,6 +221,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //            super.onBackPressed();
 //        }
     }
+
+
 
     /**
      * Method that loads the UI
@@ -390,7 +393,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         this.getNotificationManager().deleteObserver(this);
         System.gc();
     }

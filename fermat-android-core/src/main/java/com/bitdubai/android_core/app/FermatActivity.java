@@ -992,6 +992,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onDestroy() {
         super.onDestroy();
         wizards = null;
+        //NavigationDrawerFragment.onDetach();
         resetThisActivity();
     }
 
