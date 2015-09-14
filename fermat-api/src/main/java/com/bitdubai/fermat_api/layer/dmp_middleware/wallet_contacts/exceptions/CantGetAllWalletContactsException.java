@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantGetAllWalletContactsException extends WalletContactsException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T GET ALL REQUESTED CONTACTS EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET ALL WALLET CONTACTS EXCEPTION";
 
     public CantGetAllWalletContactsException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

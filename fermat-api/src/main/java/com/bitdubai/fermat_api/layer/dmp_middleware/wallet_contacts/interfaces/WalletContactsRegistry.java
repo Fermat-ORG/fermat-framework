@@ -3,7 +3,6 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException;
@@ -74,9 +73,10 @@ public interface WalletContactsRegistry {
      * The method <code>searchWalletContact</code> gives us an interface to manage a search for a particular
      * wallet contact
      *
+     * @param walletPublicKey of the wallet whom we're working with
      * @return a searching interface
      */
-     WalletContactSearch searchWalletContact();
+     WalletContactsSearch searchWalletContact(String walletPublicKey);
 
     /**
      * Throw the method <code>getWalletContactByActorPublicKeyAndWalletPublicKey</code> you can find a wallet contact throw actor and wallet public key
