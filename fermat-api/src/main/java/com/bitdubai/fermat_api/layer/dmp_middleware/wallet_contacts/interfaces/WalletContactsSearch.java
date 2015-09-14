@@ -42,11 +42,15 @@ public interface WalletContactsSearch {
     /**
      * get the result of the search with pagination params
      *
-     * @param max of results
+     * @param max    of results
      * @param offset pointer
      * @return a list of instances of wallet contact
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
     List<WalletContactRecord> getResult(int max, int offset) throws CantGetAllWalletContactsException;
 
+    /**
+     * reset filters
+     */
+    void resetFilters();
 }

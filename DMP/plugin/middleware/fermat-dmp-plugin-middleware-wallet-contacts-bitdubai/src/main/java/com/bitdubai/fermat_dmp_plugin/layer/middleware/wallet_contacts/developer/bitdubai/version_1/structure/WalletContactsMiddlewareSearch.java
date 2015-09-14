@@ -31,14 +31,21 @@ public class WalletContactsMiddlewareSearch implements WalletContactsSearch {
 
     private DatabaseTable walletContactsTable;
 
+    private String walletPublicKey;
+
     public WalletContactsMiddlewareSearch(ErrorManager errorManager, WalletContactsMiddlewareDao walletContactsMiddlewareDao, String walletPublicKey) {
         this.errorManager = errorManager;
         this.walletContactsMiddlewareDao = walletContactsMiddlewareDao;
         this.walletContactsTable = walletContactsMiddlewareDao.getWalletContactsTable();
+        this.walletPublicKey = walletPublicKey;
 
-        String field = WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME;
+        this.resetFilters();
+    }
 
-        walletContactsTable.setStringFilter(field, walletPublicKey, DatabaseFilterType.EQUAL);
+    @Override
+    public void resetFilters() {
+        this.walletContactsTable = walletContactsMiddlewareDao.getWalletContactsTable();
+        walletContactsTable.setStringFilter(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
     }
 
     @Override
