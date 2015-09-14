@@ -57,9 +57,9 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     }
 
     @Override
-    public void issueAsset(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetException {
+    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetException {
         try {
-            this.digitalAssetCryptoTransactionFactory.createDigitalAssetCryptoTransaction(digitalAssetToIssue, assetsAmount);
+            this.digitalAssetCryptoTransactionFactory.createDigitalAssetCryptoTransactions(digitalAssetToIssue, assetsAmount);
         } catch (CantCreateDigitalAssetTransactionException exception) {
             throw new CantIssueDigitalAssetException(exception, "Creating a Digital Asset Transaction", "Check the cause");
         } catch(Exception exception){

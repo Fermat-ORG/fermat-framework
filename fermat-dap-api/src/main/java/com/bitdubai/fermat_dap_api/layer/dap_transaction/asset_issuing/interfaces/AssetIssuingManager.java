@@ -14,7 +14,7 @@ public interface AssetIssuingManager /*extends TransactionProtocolManager<Crypto
                             List<Resource> resources,
                             DigitalAssetContract contract,
                             long genesisAmount) throws CantCreateDigitalAssetTransactionException;*/
-    void issueAsset(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetException;
+    void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetException;
     void setCryptoWallet(CryptoWallet cryptoWallet);
     /*void setActors(String deliveredByActorPublicKey,
                         Actors deliveredByType,

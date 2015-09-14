@@ -202,8 +202,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void issueAsset(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetException{
-        this.assetIssuingTransactionManager.issueAsset(digitalAssetToIssue);
+    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetException{
+        this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount);
     }
 
     @Override

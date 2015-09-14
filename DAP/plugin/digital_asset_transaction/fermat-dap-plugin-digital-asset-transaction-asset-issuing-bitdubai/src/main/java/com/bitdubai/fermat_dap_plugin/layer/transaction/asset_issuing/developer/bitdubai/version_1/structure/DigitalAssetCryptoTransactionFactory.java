@@ -183,7 +183,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }
 
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
-    public void createDigitalAssetCryptoTransaction(DigitalAsset digitalAsset, int assetsAmount) throws CantCreateDigitalAssetTransactionException {
+    public void createDigitalAssetCryptoTransactions(DigitalAsset digitalAsset, int assetsAmount) throws CantCreateDigitalAssetTransactionException {
 
         /**
          * TODO:
