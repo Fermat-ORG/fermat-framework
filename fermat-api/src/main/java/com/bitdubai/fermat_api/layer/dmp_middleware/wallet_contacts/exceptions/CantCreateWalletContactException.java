@@ -11,7 +11,7 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions;
  */
 public class CantCreateWalletContactException extends WalletContactsException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T CREATE REQUESTED CONTACT EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T CREATE WALLET CONTACT EXCEPTION";
 
     public CantCreateWalletContactException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantDeleteWalletContactException extends WalletContactsException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T DELETE REQUESTED CONTACT EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T DELETE WALLET CONTACT EXCEPTION";
 
     public CantDeleteWalletContactException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
