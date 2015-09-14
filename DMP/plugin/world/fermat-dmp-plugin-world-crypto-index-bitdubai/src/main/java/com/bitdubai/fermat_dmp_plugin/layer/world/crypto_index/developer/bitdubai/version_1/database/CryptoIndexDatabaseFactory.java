@@ -46,10 +46,10 @@ public class CryptoIndexDatabaseFactory {
             table=databaseFactory.newTableFactory(ownerId,CryptoIndexDatabaseConstants.CRYPTO_INDEX_TABLE_NAME);
 
             table.addColumn(CryptoIndexDatabaseConstants.CRYPTO_INDEX_PRIMARY_KEY_COLUMN_NAME, DatabaseDataType.INTEGER, 0,Boolean.TRUE);
-            table.addColumn(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.MONEY, 0,Boolean.FALSE);
-            table.addColumn(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME, DatabaseDataType.MONEY, 0,Boolean.FALSE);
+            table.addColumn(CryptoIndexDatabaseConstants.CRYPTO_INDEX_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 0,Boolean.FALSE);
+            table.addColumn(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIAT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 0,Boolean.FALSE);
             table.addColumn(CryptoIndexDatabaseConstants.CRYPTO_INDEX_EXCHANGE_RATE_COLUMN_NAME, DatabaseDataType.MONEY, 0,Boolean.FALSE);
-            table.addColumn(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(CryptoIndexDatabaseConstants.CRYPTO_INDEX_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 
             table.addIndex(CryptoIndexDatabaseConstants.CRYPTO_INDEX_FIRST_KEY_COLUMN);
             databaseFactory.createTable(ownerId,table);

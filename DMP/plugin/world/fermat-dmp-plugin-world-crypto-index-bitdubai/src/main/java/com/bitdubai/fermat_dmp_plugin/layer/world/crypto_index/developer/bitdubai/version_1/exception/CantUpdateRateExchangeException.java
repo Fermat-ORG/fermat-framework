@@ -3,10 +3,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdub
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by francisco on 07/09/15.
+ * Created by francisco on 10/09/15.
  */
-public class CantGetBufferedReader extends FermatException {
-
+public class CantUpdateRateExchangeException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -15,10 +14,7 @@ public class CantGetBufferedReader extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-
-    public static final String DEFAULT_MESSAGE ="CANT GET BUFFEREDREADER";
-
-    public CantGetBufferedReader(final String message, final Exception cause,final String context, final String possibleReason) {
+    public CantUpdateRateExchangeException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

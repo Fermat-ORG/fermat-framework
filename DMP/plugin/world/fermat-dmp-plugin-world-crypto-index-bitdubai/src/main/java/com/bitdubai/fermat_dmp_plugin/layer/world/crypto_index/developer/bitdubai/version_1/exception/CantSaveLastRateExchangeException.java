@@ -3,9 +3,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdub
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by francisco on 07/09/15.
+ * Created by francisco on 10/09/15.
  */
-public class CantGetJsonObject extends FermatException {
+public class CantSaveLastRateExchangeException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,10 +14,7 @@ public class CantGetJsonObject extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-
-    public static final String DEFAULT_MESSAGE = "CANT GET JSON OBJECT";
-
-    public CantGetJsonObject(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantSaveLastRateExchangeException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

@@ -28,6 +28,6 @@ public class GetJSONFromUrlTest {
 
     public void TestGetJSONFromUrl_ThrowException(){
         catchException(htppJson).getJSONFromUrl("");
-        Assertions.assertThat(caughtException()).isNotNull();//.isInstanceOf(CantGetInputStream.class);
+        Assertions.assertThat(caughtException()).isNotNull();//.isInstanceOf(CantGetInputStreamException.class);
     }
 }

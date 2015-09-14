@@ -8,10 +8,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
 import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.CryptoCurrencyNotSupportedException;
 import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.FiatCurrencyNotSupportedException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDao;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exception.CantInitializeCryptoIndexDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -35,18 +39,19 @@ import java.util.UUID;
  * * *
  */
 
-public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
-    
+public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,DealsWithPluginDatabaseSystem, Plugin {
+
+    private CryptoIndexDao cryptoIndexDao;
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-    
+
     /**
-     * UsesFileSystem Interface member variables.
+     * DealsWithPlatformDatabaseSystem Interface member variables.
      */
-   PluginFileSystem pluginFileSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -69,9 +74,17 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
     UUID pluginId;
     @Override
     public void start() {
-        /**
+        try {
+         /**
          * I will initialize the handling of platform events.
          */
+        this.cryptoIndexDao = new CryptoIndexDao(pluginDatabaseSystem, this.pluginId);
+        cryptoIndexDao.initializeDatabase();
+
+
+        } catch (CantInitializeCryptoIndexDatabaseException e) {
+            e.printStackTrace();
+        }
         EventListener eventListener;
         EventHandler eventHandler;
 
@@ -127,10 +140,7 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
      * UsesFileSystem Interface implementation.
      */
 
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
+
 
     /**
      * DealWithEvents Interface implementation.
@@ -157,5 +167,15 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
     @Override
     public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
         return 0;
+    }
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+
+    }
+
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }
