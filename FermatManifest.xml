@@ -4091,7 +4091,7 @@
 					</plugin>
 					<plugin name="Receive Cash Delivery"
 						description=""
-						difficulty="10"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
