@@ -14,7 +14,8 @@ Llegada una transacción enviada a una de estas direcciones, se disparará un ev
 
 .Relacionado al Asset User
 Al iniciarse debe conectarse con el communication Server y notificar su posición.
-Si algún usuario está "cerca", recibirá la solicitud de brindar información del Redeem Point a través del communication server
+Si algún usuario está "cerca", recibirá la solicitud de brindar información del Redeem Point a través del communication server. Entre la información que estará pasando
+al Asset User se encuentra la dirección de bitcoin generada a través de la clave pública.
 
 == Plug-in Structure
 

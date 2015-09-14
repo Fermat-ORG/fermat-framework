@@ -101,11 +101,12 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 defaultSkinFile =  pluginFileSystem.createTextFile(pluginId, walletFactoryProject.getProjectPublicKey(), defaultSkin.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             }
 
-            defaultSkinFile.setContent(XMLParser.parseObject(defaultSkin));
+            String skinXML = XMLParser.parseObject(defaultSkin);
+            defaultSkinFile.setContent(skinXML);
             defaultSkinFile.persistToMedia();
 
             // I will also save any other skin available
-            if (!walletFactoryProject.getSkins().isEmpty()){
+            if (walletFactoryProject.getSkins() !=null){
                 for (Skin skin : walletFactoryProject.getSkins()){
                     PluginTextFile skinFile;
                     try {
@@ -137,7 +138,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             defaultLanguageFile.persistToMedia();
 
             // I will also save any other skin available
-            if (!walletFactoryProject.getLanguages().isEmpty()){
+            if (walletFactoryProject.getLanguages() !=null){
                 for (Language language : walletFactoryProject.getLanguages()){
                     PluginTextFile languageFile;
                     try {
@@ -402,28 +403,29 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     }
 
     private Skin loadSkinFromXML(String projectPublicKey, UUID id) throws FileNotFoundException, CantCreateFileException {
-        Skin skin;
+        Skin skin = new Skin();
 
         PluginTextFile skinFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, id.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        skin = (Skin) XMLParser.parseXML(skinFile.getContent(), Skin.class);
+        String skinXMLContent = skinFile.getContent();
+        skin = (Skin) XMLParser.parseXML(skinXMLContent, skin);
         return skin;
 
     }
 
     private WalletNavigationStructure loadNavigationStructureFromXML(String projectPublicKey, String publicKey) throws FileNotFoundException, CantCreateFileException {
-        WalletNavigationStructure navigationStructure;
+        WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
 
         PluginTextFile navigationStructureFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, publicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        navigationStructure = (WalletNavigationStructure) XMLParser.parseXML(navigationStructureFile.getContent(), WalletNavigationStructure.class);
+        navigationStructure = (WalletNavigationStructure) XMLParser.parseXML(navigationStructureFile.getContent(), navigationStructure);
         return navigationStructure;
 
     }
 
     private Language loadLanguageFromXML(String projectPublicKey, UUID id) throws FileNotFoundException, CantCreateFileException {
-        Language language;
+        Language language = new Language();
 
         PluginTextFile languageFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, id.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        language = (Language) XMLParser.parseXML(languageFile.getContent(), Language.class);
+        language = (Language) XMLParser.parseXML(languageFile.getContent(), language);
         return language;
     }
 
