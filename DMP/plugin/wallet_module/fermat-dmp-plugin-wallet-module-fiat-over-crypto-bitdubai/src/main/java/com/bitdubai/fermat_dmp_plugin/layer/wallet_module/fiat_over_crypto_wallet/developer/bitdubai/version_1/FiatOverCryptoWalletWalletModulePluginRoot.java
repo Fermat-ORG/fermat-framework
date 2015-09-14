@@ -4,6 +4,9 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.WalletModule;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.fiat_over_crypto_wallet.exceptions.CantGetFiatOverCryptoWalletModule;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.fiat_over_crypto_wallet.interfaces.FiatOverCryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.fiat_over_crypto_wallet.interfaces.FiatOverCryptoWalletModule;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -12,7 +15,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +22,7 @@ import java.util.UUID;
 /**
  * Created by loui on 27/05/15.
  */
-public class FiatOverCryptoWalletWalletModulePluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, WalletModule,Plugin {
+public class FiatOverCryptoWalletWalletModulePluginRoot implements FiatOverCryptoWalletManager,Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, WalletModule,Plugin {
 
     /**
      * Service Interface member variables.
@@ -140,5 +142,8 @@ public class FiatOverCryptoWalletWalletModulePluginRoot implements Service, Deal
     }
 
 
-
+    @Override
+    public FiatOverCryptoWalletModule getFiatOverCryptoWallet() throws CantGetFiatOverCryptoWalletModule {
+        return null;
+    }
 }
