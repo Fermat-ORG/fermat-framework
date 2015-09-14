@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
@@ -47,15 +49,19 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin, Service, TransactionProtocolManager {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, TransactionProtocolManager {
 
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     //CryptoAddressBookManager cryptoAddressBookManager;
     AssetIssuingTransactionManager assetIssuingTransactionManager;
     CryptoWallet cryptoWallet;
@@ -236,4 +242,44 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     public void setLogManager(LogManager logManager) {
         this.logManager=logManager;
     }
+
+    @Override
+    public List<String> getClassesFullPath() {
+        return null;
+    }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (AssetIssuingTransactionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                AssetIssuingTransactionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                AssetIssuingTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                AssetIssuingTransactionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+    }
+
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return AssetIssuingTransactionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
 }
