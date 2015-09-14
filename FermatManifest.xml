@@ -4049,7 +4049,7 @@
 				<plugins>
 					<plugin name="Give Cash On Hand"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4063,7 +4063,7 @@
 					</plugin>
 					<plugin name="Receive Cash On Hand"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4077,7 +4077,7 @@
 					</plugin>
 					<plugin name="Send Cash Delivery"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4091,7 +4091,7 @@
 					</plugin>
 					<plugin name="Receive Cash Delivery"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4134,7 +4134,7 @@
 					<plugin
 						name="Make Offline Bank Transfer"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4149,7 +4149,7 @@
 					<plugin
 						name="Receive Offline Bank Transfer"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4579,7 +4579,7 @@
 				<plugins>
 					<plugin name="Customer Broker Crypto Money Purchase"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4593,7 +4593,7 @@
 					</plugin>
 					<plugin name="Customer Broker Cash Money Purchase"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4607,7 +4607,7 @@
 					</plugin>
 					<plugin name="Customer Broker Bank Money Purchase"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4621,7 +4621,7 @@
 					</plugin>
 					<plugin name="Customer Broker Crypto Money Sale"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4635,7 +4635,7 @@
 					</plugin>
 					<plugin name="Customer Broker Cash Money Sale"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4649,7 +4649,7 @@
 					</plugin>
 					<plugin name="Customer Broker Bank Money Sale"
 						description=""
-						difficulty="5"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4762,7 +4762,7 @@
 					<plugin
 						name="Crypto Broker Wallet Identity"
 						description=""
-						difficulty="3"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
@@ -4847,7 +4847,7 @@
 					<plugin
 						name="Cash Money Stock Replenishment"
 						description=""
-						difficulty="3"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
@@ -4862,7 +4862,7 @@
 					<plugin
 						name="Bank Money Stock Replenishment"
 						description=""
-						difficulty="3"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
@@ -4892,7 +4892,7 @@
 					<plugin
 						name="Customer Broker Cash Sale"
 						description=""
-						difficulty="7"
+						difficulty="8"
 						code-level="development"
 						>
 						<authors>
@@ -4907,7 +4907,7 @@
 					<plugin
 						name="Customer Broker Bank Sale"
 						description=""
-						difficulty="7"
+						difficulty="8"
 						code-level="development"
 						>
 						<authors>
@@ -4937,7 +4937,7 @@
 					<plugin
 						name="Customer Broker Cash Purchase"
 						description=""
-						difficulty="7"
+						difficulty="8"
 						code-level="development"
 						>
 						<authors>
@@ -4952,7 +4952,7 @@
 					<plugin
 						name="Customer Broker Bank Purchase"
 						description=""
-						difficulty="7"
+						difficulty="8"
 						code-level="development"
 						>
 						<authors>
