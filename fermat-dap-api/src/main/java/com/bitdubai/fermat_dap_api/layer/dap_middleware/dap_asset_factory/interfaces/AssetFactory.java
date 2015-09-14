@@ -16,11 +16,12 @@ import java.util.UUID;
  */
 public interface AssetFactory {
 
+    //Datos para el registro del Asset Factory
     UUID getId();
     void setId(UUID id);
 
-    String getName();
-    void setName(String name);
+    String getNameAssetFactory();
+    void setNameAssetFActory(String name);
 
     WalletCategory getWalletCategory();
     void setWalletCategory(WalletCategory walletCategory);
@@ -37,7 +38,7 @@ public interface AssetFactory {
     String getWalletPublicKey();
     void setWalletPublicKey(String walletPublicKey);
 
-    String getAssetUserIdentityPublicKey();
+    String getAssetIssuerIdentityPublicKey();
     void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
 
     DigitalAsset getDigitalAsset();
@@ -47,39 +48,34 @@ public interface AssetFactory {
     List<DigitalAsset> getDigitalAssets();
     void setDigitalAssets(List<DigitalAsset> digitalAssets);
 
-//    String getPublicKey();
-//    void setPublicKey(String publicKey);
-//
-//    String getName();
-//    void setName(String name);
-//
-//    String getDescription();
-//    void setDescription(String description);
-//
-//    List<Resource> getResources();
-//    void setResources(List<Resource> resources);
-//
-//    DigitalAssetContract getContract();
-//    void setContract(DigitalAssetContract contract);
-//
-//    String getGenesisTransaction();
-//    void setGenesisTransaction(String genesisTransaction);
-//
-//    CryptoAddress getGenesisAddress();
-//    void setGenesisAddress(CryptoAddress genesisAddress);
-//
-//    long getGenesisAmount();
-//    void setGenesisAmount(long genesisAmount);
-//
-//    State getState();
-//    void setState(State state);
-//
-//    int getQuantity();
-//    void setQuantity(int quantity);
-//
-//    long getTransactionFee();
-//    void setTransactionFee(long transactionFee);
-//
-//    long getUnitValue();
-//    void setUnitValue(long unitValue);
+    //Datos para el Digital Assets
+    String getPublicKey();
+    void setPublicKey(String publicKey);
+
+    String getName();
+    void setName(String name);
+
+    String getDescription();
+    void setDescription(String description);
+
+    List<Resource> getResources();
+    void setResources(List<Resource> resources);
+
+    DigitalAssetContract getContract();
+    void setContract(DigitalAssetContract contract);
+
+    String getGenesisTransaction();
+    void setGenesisTransaction(String genesisTransaction);
+
+    CryptoAddress getGenesisAddress();
+    void setGenesisAddress(CryptoAddress genesisAddress);
+
+    long getGenesisAmount();
+    void setGenesisAmount(long genesisAmount);
+
+    State getState();
+    void setState(State state);
+
+    int getQuantity();
+    void setQuantity(int quantity);
 }

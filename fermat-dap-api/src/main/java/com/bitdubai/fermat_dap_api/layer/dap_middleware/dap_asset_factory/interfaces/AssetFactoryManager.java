@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
+import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
@@ -19,6 +20,7 @@ public interface AssetFactoryManager {
     List<AssetFactory> getAllAssetFactory() throws CantGetAssetFactoryException;
     List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException;
     List<AssetFactory> getDigitalAssetByState(State state) throws CantGetAssetFactoryException;
+    List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException;
     AssetFactory getDigitalAssetByPublicKey(String publicKey) throws CantGetAssetFactoryException;
 
     //CRUD
@@ -34,6 +36,6 @@ public interface AssetFactoryManager {
     //TODO: Revisar
     long getEstimatedFeeValue(AssetFactory assetFactory);
 
-    //TODO: Revisar
-    void IssueAsset(AssetFactory assetFactory);
+    //Metodo que comunica con la capa transaccional Issuing Transacction
+    void IssueAsset(DigitalAsset digitalAsset);
 }
