@@ -726,7 +726,11 @@ public class BlankFragment extends FermatFragment {
                     break;
                 case "elevation":
                     try {
-                        view.setElevation(matchFloatFromString(xpp.getAttributeValue(i)));
+                        Float elevation = matchFloatFromString(xpp.getAttributeValue(i));
+                        if (!(Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT)){
+                            view.setElevation(elevation);
+                        }
+
                     }catch (Exception e){
                         e.printStackTrace();
                     }
