@@ -90,7 +90,7 @@ public class GithubConnectionTest {
 
 
     }
-
+    @Ignore
     @Test
     public void testuploadFilesFromRepo1() throws Exception {
 
@@ -102,9 +102,9 @@ public class GithubConnectionTest {
                 "    </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>";
 
 
-        GithubConnection githubConnection = new GithubConnection("furszy/fermat","furszy","clave");
+        GithubConnection githubConnection = new GithubConnection("acostarodrigo/fermat","acostarodrigo","tatita0602");
 
-        githubConnection.createGitHubTextFile("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/matiTest1.xml",c,"test 2");
+        githubConnection.createGitHubTextFile("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/RODRI_TE_QUIERO!!.xml",c,"probando github connection");
 
 
     }
