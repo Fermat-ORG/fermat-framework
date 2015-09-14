@@ -181,17 +181,15 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                                                          String walletPublicKey,
                                                          byte[] photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
-            WalletContactRecord walletContactRecord;
             try {
-                walletContactRecord = walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorName, walletPublicKey);
+                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorName, walletPublicKey);
+                throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
+
             } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                walletContactRecord = null;
-            }
-            if (walletContactRecord == null) {
                 String actorPublicKey = createActor(actorName, actorType, photo);
                 List<CryptoAddress> cryptoAddresses = new ArrayList<>();
                 cryptoAddresses.add(receivedCryptoAddress);
-                walletContactRecord = walletContactsRegistry.createWalletContact(
+                WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
                         actorName,
                         null,
@@ -201,8 +199,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                         walletPublicKey
                 );
                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord, photo);
-            } else
-                throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
+            }
 
         } catch (ContactNameAlreadyExistsException e) {
             throw e;
@@ -224,17 +221,16 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                                                          ReferenceWallet referenceWallet,
                                                          String walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
-            WalletContactRecord walletContactRecord;
             try {
-                walletContactRecord = walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorName, walletPublicKey);
+                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorName, walletPublicKey);
+                throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
+
             } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                walletContactRecord = null;
-            }
-            if (walletContactRecord == null) {
+
                 String actorPublicKey = createActor(actorName, actorType);
                 List<CryptoAddress> cryptoAddresses = new ArrayList<>();
                 cryptoAddresses.add(receivedCryptoAddress);
-                walletContactRecord = walletContactsRegistry.createWalletContact(
+                WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
                         actorName,
                         null,
@@ -244,8 +240,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                         walletPublicKey
                 );
                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord);
-            } else
-                throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
+            }
 
         } catch (ContactNameAlreadyExistsException e) {
             throw e;
