@@ -4049,7 +4049,7 @@
 				<plugins>
 					<plugin name="Give Cash On Hand"
 						description=""
-						difficulty="10"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4063,7 +4063,7 @@
 					</plugin>
 					<plugin name="Receive Cash On Hand"
 						description=""
-						difficulty="10"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4077,7 +4077,7 @@
 					</plugin>
 					<plugin name="Send Cash Delivery"
 						description=""
-						difficulty="10"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4110,7 +4110,7 @@
 				<plugins>
 					<plugin name="Cash Money"
 						description=""
-						difficulty="6"
+						difficulty="2"
 						code-level="development"
 						>
 						<authors>
