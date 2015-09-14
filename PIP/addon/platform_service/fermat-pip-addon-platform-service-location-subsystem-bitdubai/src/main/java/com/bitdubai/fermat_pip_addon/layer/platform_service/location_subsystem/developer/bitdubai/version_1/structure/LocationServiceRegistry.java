@@ -78,6 +78,7 @@ public class LocationServiceRegistry implements DealsWithErrors, DealsWithPlugin
             DatabaseTableRecord record = records.get(0);
             return parseTo(record);
         }
+        System.err.println("Method: findLastLocation - TENGO RETURN NULL");
         return null;
     }
 

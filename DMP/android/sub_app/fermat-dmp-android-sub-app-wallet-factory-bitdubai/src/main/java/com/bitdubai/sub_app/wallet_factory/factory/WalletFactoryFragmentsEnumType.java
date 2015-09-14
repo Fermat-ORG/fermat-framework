@@ -39,6 +39,7 @@ public enum WalletFactoryFragmentsEnumType implements FermatFragmentsEnumType<Wa
                 return fragments;
             }
         }
+        System.err.println("Method: getValue - TENGO RETURN NULL");
         return null;
     }
 }

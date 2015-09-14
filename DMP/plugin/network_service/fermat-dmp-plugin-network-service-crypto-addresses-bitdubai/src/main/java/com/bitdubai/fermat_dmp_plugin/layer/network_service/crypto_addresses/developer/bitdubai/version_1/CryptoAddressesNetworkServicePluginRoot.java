@@ -44,7 +44,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
-
+    ErrorManager errorManager;
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -58,32 +58,34 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void createContactRequest(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressToSend, String intraUserToContactPublicKey, String requesterIntraUserPublicKey, String requesterIntraUserName, String requesterIntraUserProfileImage) throws CantCreateContactRequestException {
-
+        System.err.println("Method: createContactRequest - VACIO");
     }
 
     @Override
     public void acceptContactRequest(UUID requestId, String walletAcceptingTheRequestPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressReceived, String intraUserAcceptingTheRequestPublicKey) throws CantAcceptContactRequestException {
-
+        System.err.println("Method: acceptContactRequest - VACIO");
     }
 
     @Override
     public void denyContactRequest(UUID requestId) throws CantDenyContactRequestException {
-
+        System.err.println("Method: denyContactRequest - VACIO");
     }
 
     @Override
     public List<PendingContactRequest> listPendingRequests(String intraUserLoggedInPublicKey, String walletPublicKey, ContactRequestState contactRequestState) throws CantGetPendingContactRequestsListException {
+        System.err.println("Method: listPendingRequests - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public PendingContactRequest getPendingRequest(UUID requestId) throws CantGetPendingContactRequestException {
+        System.err.println("Method: getPendingRequest - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public void confirmContactRequest(UUID requestId) throws CantConfirmContactRequestException {
-
+        System.err.println("Method: confirmContactRequest - VACIO");
     }
 
     /**
@@ -138,7 +140,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public UUID getId() {
-        return null;
+        return pluginId;
     }
 
     /**
@@ -167,7 +169,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
 

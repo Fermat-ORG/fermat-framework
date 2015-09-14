@@ -304,6 +304,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     @Override
     public CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorName, Platforms platform, Vaults vault, String walletPublicKey, ReferenceWallet walletType) throws CantRequestCryptoAddressException {
         // TODO implement this method
+        System.err.println("Method: requestAddressToNewExtraUser - TENGO RETURN NULL");
         return null;
     }
 

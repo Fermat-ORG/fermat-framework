@@ -478,6 +478,7 @@ public class SendFragment extends Fragment {
                 }
             }
         }
+        System.err.println("Method: validateAddress - TENGO RETURN NULL");
         return null;
     }
 

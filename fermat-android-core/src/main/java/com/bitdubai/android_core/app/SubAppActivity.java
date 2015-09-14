@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
@@ -119,7 +120,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      * @param fragmentType Type Id of fragment to show
      */
 
-    private void loadFragment(String fragmentType){
+    private void loadFragment(String fragmentType) throws InvalidParameterException {
 
 
         FragmentTransaction transaction;
@@ -632,7 +633,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
-    private void setOneFragmentInScreen(){
+    private void setOneFragmentInScreen() throws InvalidParameterException {
         RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.only_fragment_container));
         SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
         String subAppType = subAppRuntimeManager.getLastSubApp().getType().getCode();

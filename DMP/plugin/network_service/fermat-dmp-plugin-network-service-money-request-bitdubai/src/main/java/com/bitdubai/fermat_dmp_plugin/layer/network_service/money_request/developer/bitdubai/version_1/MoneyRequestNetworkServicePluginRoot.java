@@ -181,32 +181,34 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
 
     @Override
     public List<CryptoRequest> getPendingReceivedCryptoRequests(String identityPublicKey) throws CantGetPendingCryptoRequestsException {
+        System.err.println("Method: getPendingReceivedCryptoRequests - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public CryptoRequestState getSentRequestState(UUID requestId) {
+        System.err.println("Method: getSentRequestState - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public void deleteFromPendingReceivedCryptoRequests(UUID requestId) throws CantDeleteFromPendingCryptoRequestsException {
-
+        System.err.println("Method: deleteFromPendingReceivedCryptoRequests - VACIO");
     }
 
     @Override
     public void requestCrypto(UUID requestId, String receptorWalletPublicKey, CryptoAddress addressToSendThePayment, long cryptoAmount, String loggedInIntraUserPublicKey, String intraUserToSendRequestPublicKey, String description) throws CantSendCryptoRequestException {
-
+        System.err.println("Method: requestCrypto - VACIO");
     }
 
     @Override
     public void requestMoney(String receptorWalletPublicKey, String requestSenderPublicKey, String requestDestinationPublicKey, String requestDescription, CryptoAddress addressToSendThePayment, FiatCurrency fiatCurrency, long fiatAmount) throws CantSendMoneyRequestException {
-
+        System.err.println("Method: requestMoney - VACIO");
     }
 
 
     @Override
     public void rejectRequest(UUID requestId, String intraUserThatSentTheRequestPublicKey) throws CantRejectRequestException {
-
+        System.err.println("Method: rejectRequest - VACIO");
     }
 }

@@ -22,6 +22,7 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
+        System.err.println("Method: getDefaultLanguage - TENGO RETURN NULL");
         return null;
     }
 
@@ -33,6 +34,7 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public UUID getDefaultSkin() throws CantGetDefaultSkinException {
+        System.err.println("Method: getDefaultSkin - TENGO RETURN NULL");
         return null;
     }
 
@@ -44,7 +46,7 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
-
+        System.err.println("Method: setDefaultLanguage - VACIO");
     }
 
     /**
@@ -55,7 +57,7 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
-
+        System.err.println("Method: setDefaultSkin - VACIO");
     }
 
     /**
@@ -67,7 +69,7 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveWalletSettings {
-
+        System.err.println("Method: setPreferenceSettings - VACIO");
     }
 
     /**
@@ -79,6 +81,6 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings {
-        return null;
+        return "Method: getPreferenceSettings - NO TIENE valor ASIGNADO para RETURN";
     }
 }

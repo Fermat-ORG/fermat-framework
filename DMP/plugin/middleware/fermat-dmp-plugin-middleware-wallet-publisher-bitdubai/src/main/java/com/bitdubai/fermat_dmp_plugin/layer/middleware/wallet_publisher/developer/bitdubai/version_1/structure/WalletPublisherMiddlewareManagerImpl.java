@@ -116,7 +116,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
         }
-
+        System.err.println("Method: getPublishedComponents - TENGO RETURN NULL");
         return null;
     }
 
@@ -145,7 +145,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
         }
-
+        System.err.println("Method: getPublishedWallets - TENGO RETURN NULL");
         return null;
     }
 
@@ -175,7 +175,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
         }
-
+        System.err.println("Method: getPublishedSkins - TENGO RETURN NULL");
         return null;
     }
 
@@ -204,7 +204,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
         }
-
+        System.err.println("Method: getPublishedLanguages - TENGO RETURN NULL");
         return null;
     }
 

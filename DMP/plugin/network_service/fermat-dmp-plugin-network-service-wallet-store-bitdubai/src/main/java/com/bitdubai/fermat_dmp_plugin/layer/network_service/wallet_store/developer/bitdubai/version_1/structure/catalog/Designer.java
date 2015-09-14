@@ -51,6 +51,7 @@ public class Designer implements DesignerIdentity {
     @Override
     public String createMessageSignature(String mensage) throws CantSingMessageException
     {
+        System.err.println("Method: createMessageSignature - TENGO RETURN NULL");
         return null;
     }
 

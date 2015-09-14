@@ -114,6 +114,7 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
 
     @Override
     public WalletStatistics getWalletStatistics(UUID walletCatalogId) throws CantGetWalletStatisticsException{
+        System.err.println("Method: getWalletStatistics - TENGO RETURN NULL");
         return null;
     }
 

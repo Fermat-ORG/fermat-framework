@@ -208,6 +208,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             lastSubapp = subApps;
             return subApp;
         }
+        System.err.println("Method: getSubApp - TENGO RETURN NULL");
         return null;
 
 //        Iterator<Map.Entry<SubApps, SubApp>> eSubApp = listSubApp.entrySet().iterator();

@@ -39,7 +39,7 @@ public class OutgoingIntraUserTransactionPluginRoot implements Service,OutgoingI
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
-
+    ErrorManager errorManager;
     /**
      * Plugin Interface member variables.
      */
@@ -125,7 +125,7 @@ public class OutgoingIntraUserTransactionPluginRoot implements Service,OutgoingI
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
     /**
@@ -143,6 +143,7 @@ public class OutgoingIntraUserTransactionPluginRoot implements Service,OutgoingI
 
     @Override
     public OutgoingIntraUserTransactionManager getTransactionManager() throws CantGetOutgoingIntraUserTransactionManagerException {
+        System.err.println("Method: getTransactionManager - TENGO RETURN NULL");
         return null;
     }
 }

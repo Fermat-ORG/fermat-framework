@@ -597,6 +597,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                    System.err.println("Method: createMessageSignature - TENGO RETURN NULL");
                     return null;
                 }
             };
@@ -639,6 +640,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                    System.err.println("Method: createMessageSignature - TENGO RETURN NULL");
                     return null;
                 }
             };
@@ -661,6 +663,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws CantSingMessageException {
+                    System.err.println("Method: createMessageSignature - TENGO RETURN NULL");
                     return null;
                 }
             };

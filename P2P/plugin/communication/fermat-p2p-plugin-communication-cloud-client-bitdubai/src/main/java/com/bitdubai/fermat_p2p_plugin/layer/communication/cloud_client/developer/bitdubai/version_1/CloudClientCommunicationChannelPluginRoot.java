@@ -66,21 +66,24 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 
 	@Override
 	public void requestConnectionTo(NetworkServices networkServices, String remoteNetworkService) throws CommunicationException {
+		System.err.println("Method: requestConnectionTo - VACIO");
 
 	}
 
 	@Override
 	public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
+		System.err.println("Method: acceptIncomingNetworkServiceConnectionRequest - VACIO");
 
 	}
 
 	@Override
 	public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationException {
-
+		System.err.println("Method: rejectIncomingNetworkServiceConnectionRequest - VACIO");
 	}
 
 	@Override
 	public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
+		System.err.println("Method: getActiveNetworkServiceConnection - TENGO RETURN NULL");
 		return null;
 	}
 
@@ -149,6 +152,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 
 	@Override
 	public OnlineChannel createOnlineChannel() {
+		System.err.println("Method: createOnlineChannel - TENGO RETURN NULL");
 		return null;
 	}
 
@@ -184,7 +188,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getIdentityPublicKey();
 		} catch (CloudCommunicationException e) {
-			return null;
+			return "Method: getNetworkServiceChannelPublicKey - NO TIENE valor ASIGNADO para RETURN";
 		}
 	}
 
@@ -215,6 +219,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getPendingVPNRequests();
 		} catch (CloudCommunicationException e) {
+			System.err.println("Method: getIncomingNetworkServiceConnectionRequests - TENGO RETURN NULL");
 			return null;
 		}
 	}
@@ -226,6 +231,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			cloudClient.getNetworkServiceClient(networkService).acceptPendingVPNRequest(remoteNetworkService);
 
 		} catch (CloudCommunicationException | FMPException e) {
+			System.err.println("Method: acceptIncomingNetworkServiceConnectionRequest - TENGO RETURN NULL");
 			return;
 		}
 	}
@@ -238,6 +244,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			return cloudClient.getNetworkServiceClient(networkService).getActiveVPN(remoteNetworkService);
 		} catch (CloudCommunicationException e) {
 			System.out.println(errorManager.hashCode());
+			System.err.println("Method: getActiveNetworkServiceConnection - TENGO RETURN NULL");
 			return null;
 		}
 	}
@@ -247,6 +254,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getActiveVPNIdentifiers();
 		} catch (CloudCommunicationException e) {
+			System.err.println("Method: getActiveNetworkServiceConnectionIdentifiers - TENGO RETURN NULL");
 			return null;
 		}
 	}

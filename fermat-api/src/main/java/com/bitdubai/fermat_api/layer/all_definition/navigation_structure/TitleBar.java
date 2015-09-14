@@ -53,6 +53,7 @@ public class TitleBar implements com.bitdubai.fermat_api.layer.all_definition.na
         if (runtimeSearchView != null) {
             return runtimeSearchView;
         }
+        System.err.println("Method: getRuntimeSearchView - TENGO RETURN NULL");
         return null;
     }
 

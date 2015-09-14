@@ -162,7 +162,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         } catch (CantListWalletSkinsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            System.err.println("Method: listSkins - VACIO");
         }
+        System.err.println("Method: listSkins - TENGO RETURN NULL");
+        return null;
     }
 
     @Override
@@ -172,7 +177,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         } catch (CantGetWalletSkinException | SkinNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            System.err.println("Method: getSkinBySkinIdAndVersion - VACIO");
         }
+        System.err.println("Method: getSkinBySkinIdAndVersion - TENGO RETURN NULL");
+        return null;
     }
 
     @Override
@@ -182,7 +192,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         } catch (CantGetWalletSkinException | SkinNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            System.err.println("Method: getSkinById - VACIO");
         }
+        System.err.println("Method: getSkinById - TENGO RETURN NULL");
+        return null;
     }
 
     @Override
@@ -192,7 +207,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         } catch (CantListWalletSkinsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            System.err.println("Method: getSkinsBySkinId - VACIO");
         }
+        System.err.println("Method: getSkinsBySkinId - TENGO RETURN NULL");
+        return null;
     }
 
     @Override
@@ -223,17 +243,20 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
 
     @Override
     public WalletSkin copySkin(String newName, String designerPublicKey, WalletSkin walletSkin) throws CantCopyWalletSkinException, SkinNotFoundException {
+        System.err.println("Method: copySkin - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public WalletSkin createNewVersion(String alias, WalletSkin walletSkin) throws CantCopyWalletSkinException {
+        System.err.println("Method: createNewVersion - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public void closeSkin(WalletSkin walletSkin) throws CantCloseWalletSkinException, SkinNotFoundException {
         // TODO to do...
+        System.err.println("Method: closeSkin - VACIO");
     }
 
     @Override
@@ -409,6 +432,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println("******* Error trying to get database table list for plugin Wallet Skin");
+            System.err.println("Method: getDatabaseTableContent - TENGO RETURN NULL");
             return null;
         }
     }

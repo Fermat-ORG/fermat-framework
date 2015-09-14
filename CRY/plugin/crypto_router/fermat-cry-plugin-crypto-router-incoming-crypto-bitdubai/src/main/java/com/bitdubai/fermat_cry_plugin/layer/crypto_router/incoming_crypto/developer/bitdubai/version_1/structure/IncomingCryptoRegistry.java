@@ -227,6 +227,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                         event.getLongValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName)
                 );
             }
+        System.err.println("Method: saveNewEvent - TENGO RETURN NULL");
             return null;
     }
 
@@ -511,6 +512,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
+        System.err.println("Method: getSpecialists - TENGO RETURN NULL");
         return null;
     }
 

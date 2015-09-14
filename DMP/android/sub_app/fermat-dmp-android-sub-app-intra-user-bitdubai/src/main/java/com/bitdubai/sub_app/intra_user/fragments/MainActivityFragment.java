@@ -172,7 +172,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
             data = WalletStoreListItem.getTestData(getResources());
         }
-
+        System.err.println("Method: getMoreDataAsync - TENGO RETURN NULL");
         //return data;
         return null;
     }
@@ -180,6 +180,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     @Override
     public void onLongItemClickListener(WalletStoreListItem data, int position) {
         // do nothing
+        System.err.println("Method: onLongItemClickListener - VACIO");
     }
 
     @Override

@@ -72,10 +72,7 @@ public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithEr
 
 
     public void start() throws CantStartPluginException {
-
-        serviceStatus = ServiceStatus.STARTED;
-
-
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     /**
@@ -84,22 +81,22 @@ public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithEr
 
     @Override
     public void pause() {
-
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override
     public ServiceStatus getStatus() {
-        return null;
+        return this.serviceStatus;
     }
 
     /**

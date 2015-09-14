@@ -29,6 +29,7 @@ public class TransactionExecutorFactory {
                 case BASIC_WALLET_BITCOIN_WALLET:
                     return createBitcoinBasicWalletExecutor(walletPublicKey);
                 default:
+                    System.err.println("Method: newTransactionExecutor - TENGO RETURN NULL");
                     return null;
             }
         } catch (CantLoadWalletException e) {

@@ -56,6 +56,7 @@ public class AsymmetricPublicKey extends EllipticCurvePoint implements PublicKey
 
 	@Override
 	public String getFormat() {
+		System.err.println("Method: getFormat - TENGO RETURN NULL");
 		return null;
 	}
 

@@ -500,7 +500,7 @@ public class IncomingMessageDao {
             incomingTemplateNetworkServiceMessage.setStatus(MessagesStatus.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
-
+            System.err.println("Method: constructFrom - TENGO RETURN NULL");
             //this should not happen, but if it happens return null
             return null;
         }

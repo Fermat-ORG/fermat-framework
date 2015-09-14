@@ -332,6 +332,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         if (table.getRecords().size() == 1)
             return table.getRecords().get(0);
         else
+            System.err.println("Method: getNavigationStructureData - TENGO RETURN NULL");
             return null;
     }
 
@@ -517,7 +518,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return walletFactoryProject;
     }
 
-    private WalletFactoryProject getWalletFactoryProjectHeader(DatabaseTableRecord projectsRecord) throws CantLoadTableToMemoryException, DatabaseOperationException {
+    private WalletFactoryProject getWalletFactoryProjectHeader(DatabaseTableRecord projectsRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         WalletFactoryProject walletFactoryProject = getEmptyWalletFactoryProject();
         walletFactoryProject.setProjectPublickKey(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME));
         walletFactoryProject.setName(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME));

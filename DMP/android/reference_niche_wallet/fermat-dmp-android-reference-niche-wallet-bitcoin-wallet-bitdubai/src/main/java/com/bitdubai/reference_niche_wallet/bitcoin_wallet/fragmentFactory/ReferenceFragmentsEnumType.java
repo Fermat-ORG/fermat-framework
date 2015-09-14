@@ -45,7 +45,7 @@ public enum ReferenceFragmentsEnumType implements FermatFragmentsEnumType<Refere
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
 
-
+        System.err.println("Method: getValue - TENGO RETURN NULL");
         return null;
     }
 

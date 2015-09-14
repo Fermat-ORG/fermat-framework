@@ -387,7 +387,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     /**
      * Method used from a subApp to paint tabs
      */
-    protected void setPagerTabs(SubApp subApp, TabStrip tabStrip, SubAppsSession subAppsSession) {
+    protected void setPagerTabs(SubApp subApp, TabStrip tabStrip, SubAppsSession subAppsSession) throws InvalidParameterException {
 
         PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
 
@@ -427,6 +427,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         List<android.support.v4.app.Fragment> lstWalletFragment = new ArrayList<android.support.v4.app.Fragment>();
         //tengo que traer el WalletFragmentFactory dependiendo del tipo de wallet que es un enum ejemplo basic_wallet
         //ReferenceWalletFragmentFactory.getFragmentFactoryByWalletType(getWalletRuntimeManager().getActivity(.))
+        System.err.println("Method: getWalletFragments - TENGO RETURN NULL");
         return null;
     }
 

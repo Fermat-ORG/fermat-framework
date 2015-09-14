@@ -84,6 +84,7 @@ public class WalletUtils {
                 }
             }
         }
+        System.err.println("Method: validateAddress - TENGO RETURN NULL");
         return null;
     }
 

@@ -43,7 +43,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-
+        System.err.println("Method: notifyNewBestBlock - VACIO");
     }
 
 
@@ -56,7 +56,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void reorganize(StoredBlock splitPoint, List<StoredBlock> oldBlocks, List<StoredBlock> newBlocks) throws VerificationException {
-
+        System.err.println("Method: reorganize - VACIO");
     }
 
     /**
@@ -142,6 +142,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public Message onPreMessageReceived(Peer peer, Message m) {
+        System.err.println("Method: onPreMessageReceived - TENGO RETURN NULL");
         return null;
     }
 
@@ -152,7 +153,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void onTransaction(Peer peer, Transaction t) {
-
+        System.err.println("Method: onTransaction - VACIO");
     }
 
     /**
@@ -164,16 +165,17 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
     @Nullable
     @Override
     public List<Message> getData(Peer peer, GetDataMessage m) {
+        System.err.println("Method: getData - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public void onPeersDiscovered(Set<PeerAddress> peerAddresses) {
-
+        System.err.println("Method: onPeersDiscovered - VACIO");
     }
 
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int blocksLeft) {
-
+        System.err.println("Method: onBlocksDownloaded - VACIO");
     }
 }

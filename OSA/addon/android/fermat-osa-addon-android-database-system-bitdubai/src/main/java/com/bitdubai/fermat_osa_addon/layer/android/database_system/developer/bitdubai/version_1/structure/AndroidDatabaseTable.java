@@ -708,11 +708,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 }
 
             } else {
+                System.err.println("Method: getRecordFromPk - TENGO RETURN NULL");
                 return null;
             }
             c.close();
             return tableRecord1;
         } catch (Exception e) {
+            System.err.println("Method: getRecordFromPk - TENGO RETURN NULL");
             return null;
         } finally {
             if (database != null)

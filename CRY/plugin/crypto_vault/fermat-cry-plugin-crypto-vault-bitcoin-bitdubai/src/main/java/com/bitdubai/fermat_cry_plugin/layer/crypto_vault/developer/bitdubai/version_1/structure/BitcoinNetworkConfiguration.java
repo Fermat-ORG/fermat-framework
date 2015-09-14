@@ -33,9 +33,11 @@ public class BitcoinNetworkConfiguration  implements BitcoinManager {
             }
             case FERMAT_MAIN:
                 // Not implemented yet
+                System.err.println("Method: getMoreDataAsync CASE: FERMAT_MAIN - TENGO RETURN NULL");
                 return null;
             case FERMAT_TEST:
                 //not implemented yet
+                System.err.println("Method: getMoreDataAsync CASE: FERMAT_TEST - TENGO RETURN NULL");
                 return null;
             default:{
                 return TestNet3Params.get();

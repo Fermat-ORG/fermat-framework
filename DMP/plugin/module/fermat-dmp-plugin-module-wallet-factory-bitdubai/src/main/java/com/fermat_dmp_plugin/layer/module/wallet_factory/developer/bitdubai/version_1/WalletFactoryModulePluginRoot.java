@@ -159,6 +159,7 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
 
     @Override
     public WalletFactoryDeveloper getLoggedDeveloper() {
+        System.err.println("Method: getLoggedDeveloper - TENGO RETURN NULL");
         return null;
     }
 

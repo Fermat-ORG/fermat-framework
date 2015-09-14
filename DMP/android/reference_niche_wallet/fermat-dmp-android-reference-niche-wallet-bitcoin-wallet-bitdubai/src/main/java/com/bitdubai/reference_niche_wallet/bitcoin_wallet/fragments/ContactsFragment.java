@@ -100,8 +100,10 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
 
     public static ContactsFragment newInstance(ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
-        if (walletSession == null)
+        if (walletSession == null) {
+            System.err.println("Method: newInstance - TENGO RETURN NULL");
             return null;
+        }
         ContactsFragment f = new ContactsFragment();
         f.setWalletSession(walletSession);
         f.setWalletResourcesProviderManager(walletResourcesProviderManager);
@@ -496,6 +498,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
                 }
 
             }
+            System.err.println("Method: doInBackground - TENGO RETURN NULL");
             return null;
         }
 

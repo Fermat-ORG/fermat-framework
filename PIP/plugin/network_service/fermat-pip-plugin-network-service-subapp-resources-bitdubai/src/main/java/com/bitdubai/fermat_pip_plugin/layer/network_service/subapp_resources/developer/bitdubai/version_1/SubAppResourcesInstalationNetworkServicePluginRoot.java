@@ -108,7 +108,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * DealsWithPluginIdentity Interface member variables.
      */
     UUID pluginId;
-
+    private UUID resourcesId;
     /**
      * SubApp Type
      */
@@ -144,16 +144,12 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
@@ -207,7 +203,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public void installResources(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) {
-
+        System.err.println("Method: installResources - VACIO");
     }
 
     /**
@@ -217,7 +213,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public void unninstallResources(String walletPath, UUID skinId, String navigationStructureVersion) {
-
+        System.err.println("Method: unninstallResources - VACIO");
     }
 
 
@@ -233,7 +229,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public UUID getResourcesId() {
-        return null;
+        return resourcesId;
     }
 
     /**
@@ -246,6 +242,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
+        System.err.println("Method: getSkinFile - TENGO RETURN NULL");
         return null;
     }
 
@@ -258,7 +255,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return null;
+        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
     }
 
     /**
@@ -310,7 +307,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public String getFontStyle(String styleName, UUID skinId) {
-        return null;
+        return "Method: getFontStyle - NO TIENE valor ASIGNADO para RETURN";
     }
 
     /**
@@ -323,7 +320,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
-        return null;
+        return "Method: getLayoutResource - NO TIENE valor ASIGNADO para RETURN";
     }
 
 

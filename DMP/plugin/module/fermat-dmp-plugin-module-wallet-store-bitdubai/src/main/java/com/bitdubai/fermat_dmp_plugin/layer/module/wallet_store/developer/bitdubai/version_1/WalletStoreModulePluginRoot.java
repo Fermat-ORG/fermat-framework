@@ -295,6 +295,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
         try {
             return walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId);
         } catch (Exception e) {
+            System.err.println("Method: getCatalogItemDetails - TENGO RETURN NULL");
             return null;
         }
 

@@ -513,6 +513,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             if (walletFactoryProjects.size() == 1)
                 return walletFactoryProjects.get(0);
             else
+                System.err.println("Method: getWalletFactoryProject - TENGO RETURN NULL");
                 return null;
 
         } catch (DatabaseOperationException | CantLoadTableToMemoryException e) {
@@ -603,16 +604,19 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
 
             @Override
             public String getColumn() {
+                System.err.println("Method: getColumn - TENGO RETURN NULL");
                 return null;
             }
 
             @Override
             public String getValue() {
+                System.err.println("Method: getValue - TENGO RETURN NULL");
                 return null;
             }
 
             @Override
             public DatabaseFilterType getType() {
+                System.err.println("Method: getType - TENGO RETURN NULL");
                 return null;
             }
         };

@@ -95,6 +95,7 @@ public class IncomingIntraUserDao {
         List<DatabaseTableRecord> events = eventsTable.getRecords();
 
         if (events == null || events.isEmpty()) {
+            System.err.println("Method: getNextPendingEvent - TENGO RETURN NULL");
             return null;
         }
 
@@ -159,6 +160,7 @@ public class IncomingIntraUserDao {
 
     // TODO: Completar método cuando escriba el Relay Agent. El tipo de retorno va a cambiar
     public List<Transaction<CryptoTransaction>> getAllTransactionsToBeApplied(){
+        System.err.println("Method: getAllTransactionsToBeApplied - TENGO RETURN NULL");
         return null;
     }
 

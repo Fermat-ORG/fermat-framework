@@ -187,6 +187,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
             @Override
             public WalletStoreDetailedCatalogItem getWalletDetailedCatalogItem() throws DatailedInformationNotFoundException {
+                System.err.println("Method: getWalletDetailedCatalogItem - TENGO RETURN NULL");
                 return null;
             }
 

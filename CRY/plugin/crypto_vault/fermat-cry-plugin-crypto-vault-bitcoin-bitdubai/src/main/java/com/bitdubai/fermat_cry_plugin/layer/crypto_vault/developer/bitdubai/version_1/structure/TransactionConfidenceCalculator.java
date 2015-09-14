@@ -68,6 +68,7 @@ public class TransactionConfidenceCalculator {
 
         List<DatabaseTableRecord> databaseTableRecordList = cryptoTransactionsTable.getRecords();
         if (databaseTableRecordList.isEmpty()) {
+            System.err.println("Method: getPreviousCryptoStatus - TENGO RETURN NULL");
             return null;
         } else {
             CryptoStatus previousCryptoStatus = null;

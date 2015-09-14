@@ -253,6 +253,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         }catch (Exception e){
             e.printStackTrace();
         }
+        System.err.println("Method: createOrCallWalletSession - TENGO RETURN NULL");
         return null;
     }
 
@@ -294,21 +295,21 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {
-
+        System.err.println("Method: selectSubApp - VACIO");
     }
 
     @Override
     public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
-
+        System.err.println("Method: changeWalletFragment - VACIO");
     }
 
     @Override
     public void changeScreen(String screen, Object[] objects) {
-
+        System.err.println("Method: changeScreen - VACIO");
     }
 
     @Override
     public void selectWallet(InstalledWallet installedWallet) {
-
+        System.err.println("Method: selectWallet - VACIO");
     }
 }

@@ -323,6 +323,7 @@ public class WalletNavigationStructureMiddlewareDao {
         // } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
         //    throw  new CantExecuteDatabaseOperationException("",exception, "", "Error in database plugin.");
         //}
+        System.err.println("Method: openDatabase - TENGO RETURN NULL");
         return null;
     }
 

@@ -67,7 +67,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
                 return UUID.fromString(values.get(i).getValue());
             }
         }
-
+        System.err.println("Method: getUUIDValue - TENGO RETURN NULL");
         return null;
     }
 
