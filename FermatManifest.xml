@@ -4238,7 +4238,7 @@
 					<android
 						name="Crypto Broker Identity"
 						description=""
-						difficulty="8"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
@@ -4254,7 +4254,7 @@
 					<android
 						name="Crypto Broker Community"
 						description=""
-						difficulty="8"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4271,7 +4271,7 @@
 					<android
 						name="Crypto Customer Identity"
 						description=""
-						difficulty="8"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
@@ -4287,7 +4287,7 @@
 					<android
 						name="Crypto Customer Community"
 						description=""
-						difficulty="8"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
@@ -4305,7 +4305,7 @@
 					<android
 						name="Customers"
 						description=""
-						difficulty="6"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
@@ -4343,7 +4343,7 @@
 					<android
 						name="Sub App Manager"
 						description=""
-						difficulty="6"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
@@ -4360,7 +4360,7 @@
 					<android
 						name="Wallet Manager"
 						description=""
-						difficulty="6"
+						difficulty="4"
 						code-level="development"
 						>
 						<authors>
