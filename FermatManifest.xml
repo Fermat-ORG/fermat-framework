@@ -4545,7 +4545,7 @@
 					<plugin
 						name="Crypto Broker"
 						description=""
-						difficulty="4"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4560,7 +4560,7 @@
 					<plugin
 						name="Crypto Customer"
 						description=""
-						difficulty="4"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4579,7 +4579,7 @@
 				<plugins>
 					<plugin name="Customer Broker Crypto Money Purchase"
 						description=""
-						difficulty="4"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4593,7 +4593,7 @@
 					</plugin>
 					<plugin name="Customer Broker Cash Money Purchase"
 						description=""
-						difficulty="4"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4607,7 +4607,7 @@
 					</plugin>
 					<plugin name="Customer Broker Bank Money Purchase"
 						description=""
-						difficulty="4"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4621,7 +4621,7 @@
 					</plugin>
 					<plugin name="Customer Broker Crypto Money Sale"
 						description=""
-						difficulty="4"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4635,7 +4635,7 @@
 					</plugin>
 					<plugin name="Customer Broker Cash Money Sale"
 						description=""
-						difficulty="4"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4649,7 +4649,7 @@
 					</plugin>
 					<plugin name="Customer Broker Bank Money Sale"
 						description=""
-						difficulty="4"
+						difficulty="5"
 						code-level="development"
 						>
 						<authors>
@@ -4762,7 +4762,7 @@
 					<plugin
 						name="Crypto Broker Wallet Identity"
 						description=""
-						difficulty="4"
+						difficulty="3"
 						code-level="development"
 						>
 						<authors>
@@ -4777,7 +4777,7 @@
 					<plugin
 						name="Wallet Manager"
 						description=""
-						difficulty="4"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4792,7 +4792,7 @@
 					<plugin
 						name="Sub App Manager"
 						description=""
-						difficulty="4"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4812,7 +4812,7 @@
 					<plugin
 						name="Crypto Broker"
 						description=""
-						difficulty="4"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -4847,7 +4847,7 @@
 					<plugin
 						name="Cash Money Stock Replenishment"
 						description=""
-						difficulty="4"
+						difficulty="3"
 						code-level="development"
 						>
 						<authors>
@@ -4862,7 +4862,7 @@
 					<plugin
 						name="Bank Money Stock Replenishment"
 						description=""
-						difficulty="4"
+						difficulty="3"
 						code-level="development"
 						>
 						<authors>
@@ -4877,7 +4877,7 @@
 					<plugin
 						name="Customer Broker Crypto Sale"
 						description=""
-						difficulty="0"
+						difficulty="8"
 						code-level="development"
 						>
 						<authors>
@@ -4892,7 +4892,7 @@
 					<plugin
 						name="Customer Broker Cash Sale"
 						description=""
-						difficulty="0"
+						difficulty="7"
 						code-level="development"
 						>
 						<authors>
@@ -4907,7 +4907,7 @@
 					<plugin
 						name="Customer Broker Bank Sale"
 						description=""
-						difficulty="0"
+						difficulty="7"
 						code-level="development"
 						>
 						<authors>
@@ -4922,7 +4922,7 @@
 					<plugin
 						name="Customer Broker Crypto Purchase"
 						description=""
-						difficulty="0"
+						difficulty="8"
 						code-level="development"
 						>
 						<authors>
@@ -4937,7 +4937,7 @@
 					<plugin
 						name="Customer Broker Cash Purchase"
 						description=""
-						difficulty="0"
+						difficulty="7"
 						code-level="development"
 						>
 						<authors>
@@ -4952,7 +4952,7 @@
 					<plugin
 						name="Customer Broker Bank Purchase"
 						description=""
-						difficulty="0"
+						difficulty="7"
 						code-level="development"
 						>
 						<authors>
@@ -5019,6 +5019,26 @@
 						name="Crypto Customer"
 						description=""
 						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="World" language="java">
+				<plugins>
+					<plugin
+						name="Fiat Index"
+						description=""
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
