@@ -1,4 +1,4 @@
-# Fermat CBP Java Agent Crypto Broker
+# Fermat CBP Plugin Agent Crypto Broker
 
 Evaluación de balances consolidados y calculo de índices para la ganancia en las Business Transactions de un Crypto Broker.
 

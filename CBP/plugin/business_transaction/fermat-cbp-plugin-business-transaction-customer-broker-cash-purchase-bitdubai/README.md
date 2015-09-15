@@ -1,4 +1,4 @@
-# Fermat CBP Java Business Transaction Customer Broker Cash Purchase
+# Fermat CBP Plugin Business Transaction Customer Broker Cash Purchase
 
 Gestiona una Compra de mercancia del tipo Fiat Cash de un Customer a un Broker
 

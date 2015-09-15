@@ -1,4 +1,4 @@
-# Fermat CBP Java Business Transaction Crypto Customer Fiat Bank Sale
+# Fermat CBP Plugin Business Transaction Crypto Customer Fiat Bank Sale
 
 Gestiona una Venta de mercancia del tipo Fiat Bank de un Broker a un Customer.
 

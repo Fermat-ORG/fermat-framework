@@ -1,4 +1,4 @@
-# Fermat CBP Java Business Transaction Crypto Money Stock Replenishment
+# Fermat CBP Plugin Business Transaction Crypto Money Stock Replenishment
 
 Gestiona una reposición de stock del tipo de mercancia Crypto.
 

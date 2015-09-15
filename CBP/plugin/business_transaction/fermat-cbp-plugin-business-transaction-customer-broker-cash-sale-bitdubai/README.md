@@ -1,4 +1,4 @@
-# Fermat CBP Java Business Transaction Customer Broker Cash Sale
+# Fermat CBP Plugin Business Transaction Customer Broker Cash Sale
 
 Gestiona una Venta de mercancia del tipo Fiat Cash de un Broker a un Customer.
 

@@ -1,4 +1,4 @@
-# Fermat CBP Java Business Transaction Customer Broker Crypto Sale
+# Fermat CBP Plugin Business Transaction Customer Broker Crypto Sale
 
 Gestiona una Venta de mercancia del tipo Crypto de un Broker a un Customer.
 

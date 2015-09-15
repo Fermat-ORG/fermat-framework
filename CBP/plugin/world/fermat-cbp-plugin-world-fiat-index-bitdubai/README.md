@@ -1,4 +1,4 @@
-# Fermat CBP Java World
+# Fermat CBP Plugin World
 
 Establece la relación de valor entre dos monedas Fiat (por ejemplo: bolívar vs dólar).
 

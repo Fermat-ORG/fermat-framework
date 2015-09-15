@@ -1,4 +1,4 @@
-# Fermat CBP Java Business Transaction Customer Broker Bank Purchase
+# Fermat CBP Plugin Business Transaction Customer Broker Bank Purchase
 
 Gestiona una Compra de mercancia del tipo Fiat Bank de un Customer a un Broker
 

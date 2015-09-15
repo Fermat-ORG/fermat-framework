@@ -1,4 +1,4 @@
-# Fermat CBP Java Business Transaction Cash Money Stock Replenishment
+# Fermat CBP Plugin Business Transaction Cash Money Stock Replenishment
 
 Realiza una reposición de stock del tipo de mercancia Fiat Cash.
 
