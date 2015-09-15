@@ -1,6 +1,13 @@
-# Fermat CBP Java Business Transaction Crypto Customer Fiat Bank Sale
+# Fermat CBP Java Business Transaction Cash Money Stock Replenishment
 
-Venta de monedas Cash Fiat del Broker a otros actores.
+Realiza una reposición de stock del tipo de mercancia Fiat Cash.
+
+## Caracteristicas
+* Gestiona todo lo relacionado con la transaccion financiera de reponer mercancia en un stock de moneda Fiat Cash.
+* Valida la consistencia de los datos.
+* Registra los datos de la transaccion.
+* Actualiza el estatus de la transaccion.
+* Guarda en un log las operaciones.
 
 ## Developer
 
