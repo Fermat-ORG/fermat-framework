@@ -12,12 +12,12 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
 import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.TransactionStatus;
-import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
-import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
-import com.bitdubai.fermat_dap_api.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
+import com.bitdubai.fermat_dap_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -43,15 +43,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     TransactionStatus transactionStatus;
 
-    final long MINIMAL_TRANSACTION_FEE=300;
-    /**
-     * Minimal Asset quantity to send
-     */
-    final int MINIMAL_QUANTITY=1;
-    /**
-     * Assuming that the DigitalAsset.UnitValue=0.
-     * */
-    //final long MINIMAL_GENESIS_AMOUNT=MINIMAL_TRANSACTION_FEE*MINIMAL_QUANTITY;
     final String LOCAL_STORAGE_PATH="digital-asset/";
     String digitalAssetLocalFilePath;
 
@@ -104,14 +95,14 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         if(this.digitalAsset.getDescription()==null){
             throw new ObjectNotSetException("Digital Asset Description is not set");
         }
-        long digitalAssetTransactionFee=this.digitalAsset.getTransactionFee();
+        /*long digitalAssetTransactionFee=this.digitalAsset.getTransactionFee();
         if(digitalAssetTransactionFee<MINIMAL_TRANSACTION_FEE){
             throw new ObjectNotSetException("Digital Asset Genesis Transaction Fee is insufficient: "+digitalAssetTransactionFee);
         }
-        int digitalAssetQuantity=this.digitalAsset.getQuantity();
+        /*int digitalAssetQuantity=this.digitalAsset.getQuantity();
         if(digitalAssetQuantity<MINIMAL_QUANTITY){
             throw new ObjectNotSetException("Digital Asset quantity is insufficient: "+digitalAssetQuantity);
-        }
+        }*/
         if(this.digitalAsset.getName()==null){
             throw new ObjectNotSetException("Digital Asset Name is not set");
         }
@@ -122,25 +113,25 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //throw new ObjectNotSetException("Digital Asset State is not set");
             digitalAsset.setState(State.DRAFT);
         }
-        checkGenesisAmount();
+        //checkGenesisAmount();
 
     }
 
-    private void checkGenesisAmount() throws ObjectNotSetException{
+    /*private void checkGenesisAmount() throws ObjectNotSetException{
         long digitalAssetGenesisAmount=this.digitalAsset.getGenesisAmount();
         long calculatedDigitalAssetGenesisAmount=calculateGenesisAmount();
         if(calculatedDigitalAssetGenesisAmount!=digitalAssetGenesisAmount){
             throw new ObjectNotSetException("The Genesis Amount set in Digital Asset is incorrect: '"+digitalAssetGenesisAmount+"' is set in object, Asset Issuing plugin calculates in '"+calculatedDigitalAssetGenesisAmount+"'");
         }
-    }
+    }*/
 
-    private long calculateGenesisAmount(){
+    /*private long calculateGenesisAmount(){
         int digitalAssetQuantity=this.digitalAsset.getQuantity();
         long digitalAssetTransactionFee=this.digitalAsset.getTransactionFee();
         long digitalAssetUnitValue=this.digitalAsset.getUnitValue();
         long genesisAmount=((long)digitalAssetQuantity*digitalAssetUnitValue)+(digitalAssetQuantity*digitalAssetTransactionFee);
         return genesisAmount;
-    }
+    }*/
 
     private void persistFormingGenesisDigitalAsset() throws CantPersistDigitalAssetException {
 

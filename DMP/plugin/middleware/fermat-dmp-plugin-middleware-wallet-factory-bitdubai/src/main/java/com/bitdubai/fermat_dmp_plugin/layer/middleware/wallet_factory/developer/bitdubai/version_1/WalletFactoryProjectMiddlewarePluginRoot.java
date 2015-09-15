@@ -124,9 +124,6 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             }
         }
 
-        //Start Test
-        //test();
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
     @Override
@@ -349,14 +346,14 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     private void test(){
         try {
             WalletFactoryProject walletFactoryProject = createEmptyWalletFactoryProject();
-            walletFactoryProject.setName("Mi primer project");
+            walletFactoryProject.setName("Proyecto de Prueba");
             walletFactoryProject.setWalletCategory(WalletCategory.BRANDED_REFERENCE_WALLET);
-            walletFactoryProject.setDescription("Wallet Factory de prueba cargado desde el Middleware a modo de ejemplo");
+            walletFactoryProject.setDescription("WFP de prueba");
             walletFactoryProject.setProjectState(WalletFactoryProjectState.CLOSED);
             walletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
             walletFactoryProject.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
             walletFactoryProject.setSize(300);
-            walletFactoryProject.setProjectPublickKey("newPublicKey");
+            walletFactoryProject.setProjectPublickKey(UUID.randomUUID().toString());
             walletFactoryProject.setWalletType(WalletType.REFERENCE);
             Skin skin = new Skin();
             skin.setId(UUID.randomUUID());
@@ -364,7 +361,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
             myDesignerIdentity designerIdentity = new myDesignerIdentity();
             designerIdentity.setAlias("Alias");
-            designerIdentity.setPublicKey("pubKey");
+            designerIdentity.setPublicKey(UUID.randomUUID().toString());
             skin.setDesigner(designerIdentity);
             skin.setScreenSize(ScreenSize.MEDIUM);
             skin.setSize(100);
@@ -377,7 +374,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language language = new com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language();
             language.setName("TestLanguage");
             myTranslatorIdentity translatorIdentity = new myTranslatorIdentity();
-            translatorIdentity.setPublicKey("translatorPubKey");
+            translatorIdentity.setPublicKey(UUID.randomUUID().toString());
             translatorIdentity.setAlias("Alias");
             language.setTranslator(translatorIdentity);
             language.setId(UUID.randomUUID());
@@ -391,7 +388,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             walletFactoryProject.setLastModificationTimeststamp(new Timestamp(System.currentTimeMillis()));
 
             WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
-            navigationStructure.setPublicKey("NavId");
+            navigationStructure.setPublicKey(UUID.randomUUID().toString());
             navigationStructure.setSize(100);
             navigationStructure.setWalletCategory("Sssd");
 

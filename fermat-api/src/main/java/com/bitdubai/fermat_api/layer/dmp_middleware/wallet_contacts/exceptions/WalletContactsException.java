@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class WalletContactsException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "THE REQUESTED CONTACTS HAS TRIGGERED AN EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "THE WALLET CONTACTS HAS TRIGGERED AN EXCEPTION";
 
     public WalletContactsException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
