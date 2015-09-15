@@ -3,10 +3,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_dap_api.all_definition.contracts.Contract;
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAssetContract;
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+
 
 import java.sql.Timestamp;
 import java.util.List;

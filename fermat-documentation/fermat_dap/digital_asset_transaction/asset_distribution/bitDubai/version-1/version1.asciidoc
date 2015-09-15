@@ -5,6 +5,8 @@
 
 === Pasos detallados
 
+Diagrama de flujo en Prezi: http://prezi.com/_mbtb0pa22c3/?utm_campaign=share&utm_medium=copy&rc=ex0share
+
 .Escenario:
 
 

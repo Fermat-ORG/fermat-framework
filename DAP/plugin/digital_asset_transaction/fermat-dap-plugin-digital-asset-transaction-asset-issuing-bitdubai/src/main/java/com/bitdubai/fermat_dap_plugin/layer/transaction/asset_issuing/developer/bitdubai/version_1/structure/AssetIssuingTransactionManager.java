@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -13,11 +12,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
-import com.bitdubai.fermat_dap_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
@@ -58,9 +57,9 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     }
 
     @Override
-    public void issueAsset(DigitalAsset digitalAssetToIssue) throws CantIssueDigitalAssetException {
+    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetException {
         try {
-            this.digitalAssetCryptoTransactionFactory.createDigitalAssetCryptoTransaction(digitalAssetToIssue);
+            this.digitalAssetCryptoTransactionFactory.createDigitalAssetCryptoTransactions(digitalAssetToIssue, assetsAmount);
         } catch (CantCreateDigitalAssetTransactionException exception) {
             throw new CantIssueDigitalAssetException(exception, "Creating a Digital Asset Transaction", "Check the cause");
         } catch(Exception exception){
@@ -73,10 +72,10 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.cryptoWallet=cryptoWallet;
     }
 
-    @Override
+    /*@Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
-        return null;
-    }
+        return this;
+    }*/
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -130,6 +129,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     @Override
     public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+        //TODO:implement this method
         return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.all_definition.digital_asset;
+package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 
 /**
  * Created by rodrigo on 9/4/15.
