@@ -1,7 +1,12 @@
-# Fermat CBP Java Middleware Customers
+# Fermat CBP Java Middleware Sub App Manager
 
-Administra y subclasifica a los Crypto Customers de un Crypto Broker
+Administra las Sub App de un usuario.
+
+## Características
+* Debe poder instalar (Hacer visibles) las Sub App correspondientes a la Wallet instalada.
+* Debe poder desinstalar (Ocultar)  las Sub App correspondientes a la Wallet.
 
 ## Developer
 
 **bitDubai** - [http://bitdubai.com/](http://bitdubai.com/)
+

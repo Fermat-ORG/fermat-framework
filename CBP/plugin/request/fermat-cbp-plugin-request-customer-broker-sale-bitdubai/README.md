@@ -1,6 +1,11 @@
-# Fermat CBP Java Request Crypto Broker Buy
+# Fermat CBP Java Request Crypto Broker Sale
 
-Gestiona la solicitud de compra del Crypto Customer al Crypto Broker.
+Gestiona la solicitud de venta del Crypto Broker al Crypto Customer.
+
+## Características
+* Debe crear solicitudes de venta del Crypto Broker al Crypto Customer.
+* Debe estar a la escucha de los eventos que ocurran.
+ * Debe notificar al Crypto Broker Actor cuando reciba la confirmación del Crypto Customer.
 
 ## Developer
 
