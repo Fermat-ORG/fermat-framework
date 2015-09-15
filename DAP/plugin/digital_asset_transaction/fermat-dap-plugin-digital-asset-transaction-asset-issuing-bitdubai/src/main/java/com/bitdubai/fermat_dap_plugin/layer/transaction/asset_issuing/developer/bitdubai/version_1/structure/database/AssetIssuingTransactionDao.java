@@ -19,6 +19,7 @@ import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -103,12 +104,44 @@ public class AssetIssuingTransactionDao {
 
     }
 
-    public List<String> getPendingDigitalAssetPublicKeys(){
-        //TODO:implement this method 15/09/2015
+    private List<String> getDigitalAssetPublicKeys(){
+        //No se si esto me pueda servir a futuro.
         return null;
     }
 
-    public boolean isPendingAsset(String publicKey)throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public List<String> getPendingDigitalAssetPublicKeys()throws CantCheckAssetIssuingProgressException{
+        String publicKey;
+        int assetsToGenerate;
+        int assetsGenerated;
+        try{
+            this.database.openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            List<String> pendingDigitalAssetPublicKeyList=new ArrayList<>();
+            for(DatabaseTableRecord databaseTableRecord: databaseTableRecords){
+                publicKey=databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME);
+                assetsToGenerate=databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE);
+                assetsGenerated=databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED);
+                if(assetsToGenerate-assetsGenerated>0){
+                    pendingDigitalAssetPublicKeyList.add(publicKey);
+                }
+            }
+            this.database.closeDatabase();
+            return pendingDigitalAssetPublicKeyList;
+        } catch (DatabaseNotFoundException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Checking pending Digital Assets PublicKeys", "Cannot find the database");
+        } catch (CantOpenDatabaseException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Checking pending Digital Assets PublicKeys", "Cannot open the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Checking pending Digital Assets PublicKeys", "Cannot load the database into memory");
+        }
+    }
+
+    public int getNumberOfPendingAssets(String publicKey)throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
 
         try{
             this.database.openDatabase();
@@ -126,7 +159,40 @@ public class AssetIssuingTransactionDao {
             int assetsToGenerate=databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE);
             int assetsGenerated=databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED);
             this.database.closeDatabase();
-            return assetsToGenerate-assetsGenerated>=0;
+            return assetsToGenerate-assetsGenerated;
+
+        } catch (DatabaseNotFoundException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Opening the Asset Issuing plugin database","Cannot found the Asset Issuing database");
+        } catch (CantOpenDatabaseException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Opening the Asset Issuing plugin database","Cannot open the Asset Issuing database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Loading Asset Issuing plugin database to memory","Cannot load the Asset Issuing database");
+        } catch (Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Checking pending assets to issue","Unexpected exception");
+        }
+    }
+
+    public boolean isTransactionIdUsed(UUID transactionId)throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException{
+        try{
+            this.database.openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setUUIDFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_FIRST_KEY_COLUMN, transactionId, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            int recordsInTable=databaseTableRecords.size();
+            this.database.closeDatabase();
+            switch (recordsInTable){
+                case 0:
+                    return false;
+                case 1:
+                    return true;
+                default:
+                    throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Transaction ID:" + transactionId);
+            }
 
         } catch (DatabaseNotFoundException exception) {
             this.database.closeDatabase();
