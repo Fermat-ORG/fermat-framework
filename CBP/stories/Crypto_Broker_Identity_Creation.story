@@ -3,7 +3,7 @@ Story: Crypto Broker Identity Creation
 In order to use any Crypto Broker Wallet
   I need to have an Identity as a Crypto Broker
 Using the Crypto Broker Identity SubApp
-  And the the Crypto Broker Identity  SubApp Module
+  And the the Crypto Broker Identity SubApp Module
   And the Crypto Broker Identity Plugin
 
 Scenario: First Crypto Broker Identity

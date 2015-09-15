@@ -3,7 +3,7 @@ Historia: Crypto Broker Buy Execution
 Como deseo poder finalizar la compra establecida en la negociación con un Crypto Broker
  Como un Crypto Customer
 
-Utilizando la Crypto Broker Wallet SubApp
+Utilizando la Crypto Customer Wallet
   Y el Incoming intra actor transaction Crypto Money Transaction Plugin CCP
   Y el Outgoing intra actor transaction Crypto Money Transaction Plugin CCP
   Y el Crypto Customer Wallet Module Plugin
