@@ -2,6 +2,8 @@
 
 frontend de administracion para el descubrimiento de Brokers para los Customers y permitir establecer conexion entre ellos
 
+## Caracteristicas
+
 La SubApp Crypto Broker Community ha de estar en la capacidad de:
 
 * Mostrar Lista de Todos los Brokers cuya identidad es publica

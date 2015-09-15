@@ -2,6 +2,8 @@
 
 frontend del gestor de las Wallets instaladas
 
+## Caracteristicas
+
 La Desktop Wallet Manager ha de estar en la capacidad de:
 
 * Mostrar lista de Wallets instaladas
