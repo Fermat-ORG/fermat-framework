@@ -1,4 +1,4 @@
-# Fermat CBP Java SubApp Module Customers
+# Fermat CBP Plugin SubApp Module Customers
 
 Gestion de contactos entre un Broker y sus Customers
 
