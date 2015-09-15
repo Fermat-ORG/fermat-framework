@@ -1,4 +1,4 @@
-# Fermat CBP Java Network Service Crypto Customer
+# Fermat CBP Plugin Actor Network Service Crypto Customer
 
 Maneja la comunicación Customer - Broker.
 
