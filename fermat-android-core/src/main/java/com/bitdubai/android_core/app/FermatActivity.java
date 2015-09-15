@@ -136,7 +136,19 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            // The Activity is being created for the first time, so create and
+            // add new fragments.
+            super.onCreate(savedInstanceState);
+        } else {
+
+            super.onCreate(new Bundle());
+            // Otherwise, the activity is coming back after being destroyed.
+            // The FragmentManager will restore the old Fragments so we don't
+            // need to create any new ones here.
+        }
+
 
 
 
@@ -311,6 +323,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 }
 
                 actionBar.setTitle(title);
+
+
 
                 actionBar.show();
                 setActionBarProperties(title, activity);
@@ -651,17 +665,17 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             if (NavigationDrawerFragment != null) {
 
-                getSupportFragmentManager().beginTransaction().
-                        remove(getSupportFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
-                NavigationDrawerFragment.setMenuVisibility(false);
+//                getSupportFragmentManager().beginTransaction().
+//                        remove(getSupportFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
+//                NavigationDrawerFragment.setMenuVisibility(false);
+//                NavigationDrawerFragment.onDetach();
+                //if()
+                //getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
                 NavigationDrawerFragment.onDetach();
-
                 NavigationDrawerFragment = null;
-
-
-
             }
 
+            this.getNotificationManager().deleteObserver(this);
 
             this.adapter = null;
             paintStatusBar(null);
@@ -670,6 +684,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
 
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
+
+            System.gc();
 
         } catch (Exception e) {
 
@@ -992,6 +1008,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onDestroy() {
         super.onDestroy();
         wizards = null;
+
         //NavigationDrawerFragment.onDetach();
         resetThisActivity();
     }

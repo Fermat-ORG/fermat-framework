@@ -169,7 +169,16 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public boolean isDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+        try{
+            if(mDrawerLayout != null) {
+                if (mDrawerLayout.isDrawerOpen(mFragmentContainerView)) {
+                    return true;
+                }
+            }
+        }catch (Exception e){
+
+        }
+        return  false;
     }
 
     /**
