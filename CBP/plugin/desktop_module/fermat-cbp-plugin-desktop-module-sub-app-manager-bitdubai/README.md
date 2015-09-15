@@ -1,4 +1,4 @@
-# Fermat CBP Java Desktop Module SubApp Manager
+# Fermat CBP Plugin Desktop Module SubApp Manager
 
 Gestor de las SubApps instaladas en el dispositivo
 

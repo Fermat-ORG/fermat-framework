@@ -1,4 +1,4 @@
-# Fermat CBP Java Desktop Module SubApp Wallet Manager
+# Fermat CBP Plugin Desktop Module SubApp Wallet Manager
 
 Gestor de las Wallets instaladas
 
