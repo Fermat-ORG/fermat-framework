@@ -182,8 +182,23 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
+    private UUID generateTransactionUUID(){
+        //TODO: buscar una mejor forma o la forma correcta de hacer esto
+        return UUID.randomUUID();
+    }
+
+    private void checkPendingAssets(){
+        //TODO: implement this method 15/09/2015
+    }
+
+    public void issueDigitalAssets(DigitalAsset digitalAsset, int assetsAmount){
+
+
+
+    }
+
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
-    public void createDigitalAssetCryptoTransactions(DigitalAsset digitalAsset, int assetsAmount) throws CantCreateDigitalAssetTransactionException {
+    private void createDigitalAssetCryptoTransactions(DigitalAsset digitalAsset, int assetsAmount) throws CantCreateDigitalAssetTransactionException {
 
         /**
          * TODO:
