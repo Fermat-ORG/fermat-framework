@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;

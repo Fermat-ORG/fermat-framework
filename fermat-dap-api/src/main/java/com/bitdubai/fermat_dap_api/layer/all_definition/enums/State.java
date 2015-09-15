@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums;
+package com.bitdubai.fermat_dap_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
