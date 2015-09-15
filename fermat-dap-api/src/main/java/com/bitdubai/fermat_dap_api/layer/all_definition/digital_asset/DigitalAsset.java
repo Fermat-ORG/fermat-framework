@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,6 +17,7 @@ public class DigitalAsset  implements Serializable{
      * properties defined by the Issuer
      */
     String publicKey;
+    IdentityAssetIssuer identityAssetIssuer;
     String name;
     String description;
     List<Resource> resources;
@@ -46,6 +48,14 @@ public class DigitalAsset  implements Serializable{
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
+    }
+
+    public IdentityAssetIssuer getIdentityAssetIssuer() {
+        return identityAssetIssuer;
+    }
+
+    public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
+        this.identityAssetIssuer = identityAssetIssuer;
     }
 
     public String getName() {
