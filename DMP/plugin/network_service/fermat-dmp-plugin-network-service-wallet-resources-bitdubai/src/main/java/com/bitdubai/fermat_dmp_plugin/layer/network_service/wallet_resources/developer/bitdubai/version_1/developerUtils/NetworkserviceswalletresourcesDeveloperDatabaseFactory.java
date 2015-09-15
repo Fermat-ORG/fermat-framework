@@ -102,6 +102,14 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory implements D
                 throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
+        catch (Exception e) {
+
+             /*
+              * The database exists but cannot be open. I can not handle this situation.
+              */
+            throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(e.getMessage());
+
+        }
     }
 
 

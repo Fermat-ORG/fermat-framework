@@ -50,7 +50,7 @@ Esta llamada será en forma asincrónica y su valor de retorno será un _Distrib
 El ActorNetworkService Asset User recibe el mensaje con el _DigitalAssetMetadata_ para validarlo y ejecuta lo siguiente:
 
 * El UUID generado por _distributeAssetToAssetUser_ será persistido localmente para mantener un registro del ID de transacción y poder informar
-luego el resutado.
+luego el resultado.
 
 Validación de _DigitalAssetMetadata_
 

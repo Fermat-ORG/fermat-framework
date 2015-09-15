@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
@@ -8,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -36,6 +38,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.develop
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 
 import java.net.MalformedURLException;
@@ -529,6 +532,21 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
                 detailedCatalogItemImpl.setLanguage(language);
         }
 
+        /**
+         * Modify by Manuel Perez on 09/12/2015:
+         * I need to fix the installation process, the default language can be null at this point, so, if
+         * detailedCatalogItemImpl.getDefaultLanguage() is null, I'm going to force that the first language in
+         * languages will be the defaultLanguage
+         * */
+        try {
+            if(detailedCatalogItemImpl.getDefaultLanguage()==null){
+                detailedCatalogItemImpl.setLanguage(languages.get(0));
+            }
+        } catch (CantGetLanguageException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+
+        //End of modify
         detailedCatalogItemImpl.setLanguages(languages);
 
         /**
@@ -623,55 +641,61 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
             throw new InvalidResultReturnedByDatabaseException(null, "Id: " + tableFilter.getValue() + " number of records: " + records.size(), "database inconsistency");
 
         DatabaseTableRecord record = records.get(0);
-        detailedCatalogItemImpl.setVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_VERSION_COLUMN_NAME)));
-        detailedCatalogItemImpl.setPlatformInitialVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME)));
-        detailedCatalogItemImpl.setPlatformFinalVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_VERSION_COLUMN_NAME) != null)
+            detailedCatalogItemImpl.setVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_VERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME) != null)
+            detailedCatalogItemImpl.setPlatformInitialVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMINITIALVERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME) != null)
+            detailedCatalogItemImpl.setPlatformFinalVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_PLATFORMFINALVERSION_COLUMN_NAME)));
 
         // Gets the developer from database and assign it to the catalog item
-        final UUID developerId = record.getUUIDValue(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME);
-        tableFilter = new DatabaseTableFilter() {
-            @Override
-            public void setColumn(String column) {
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME) != null){
+            final UUID developerId = record.getUUIDValue(WalletStoreCatalogDatabaseConstants.ITEM_DEVELOPER_ID_COLUMN_NAME);
+            tableFilter = new DatabaseTableFilter() {
+                @Override
+                public void setColumn(String column) {
 
-            }
+                }
 
-            @Override
-            public void setType(DatabaseFilterType type) {
+                @Override
+                public void setType(DatabaseFilterType type) {
 
-            }
+                }
 
-            @Override
-            public void setValue(String value) {
+                @Override
+                public void setValue(String value) {
 
-            }
+                }
 
-            @Override
-            public String getColumn() {
-                return WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME;
-            }
+                @Override
+                public String getColumn() {
+                    return WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME;
+                }
 
-            @Override
-            public String getValue() {
-                return developerId.toString();
-            }
+                @Override
+                public String getValue() {
+                    return developerId.toString();
+                }
 
-            @Override
-            public DatabaseFilterType getType() {
-                return DatabaseFilterType.EQUAL;
-            }
-        };
-        records = getRecordsFromDatabase(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME, tableFilter);
+                @Override
+                public DatabaseFilterType getType() {
+                    return DatabaseFilterType.EQUAL;
+                }
+            };
+            records = getRecordsFromDatabase(WalletStoreCatalogDatabaseConstants.DEVELOPER_TABLE_NAME, tableFilter);
 
-        if (records.size() != 1)
-            throw new InvalidResultReturnedByDatabaseException(null, "Id: " + tableFilter.getValue() + " number of records: " + records.size(), "database inconsistency");
+            if (records.size() != 1)
+                throw new InvalidResultReturnedByDatabaseException(null, "Id: " + tableFilter.getValue() + " number of records: " + records.size(), "database inconsistency");
 
-        DatabaseTableRecord developerRecord = records.get(0);
+            DatabaseTableRecord developerRecord = records.get(0);
 
-        Developer developer = new Developer();
-        developer.setId(developerRecord.getUUIDValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
-        developer.setPublicKey(developerRecord.getStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME));
-        developer.setAlias(developerRecord.getStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME));
-        detailedCatalogItemImpl.setDeveloper(developer);
+            Developer developer = new Developer();
+            developer.setId(developerRecord.getUUIDValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME));
+            developer.setPublicKey(developerRecord.getStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME));
+            developer.setAlias(developerRecord.getStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME));
+            detailedCatalogItemImpl.setDeveloper(developer);
+        }
+
 
         return detailedCatalogItemImpl;
     }
@@ -782,15 +806,21 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         Skin skin = new Skin();
         skin.setId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME));
         skin.setWalletId(walletId);
-        skin.setName(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME));
-        skin.setInitialWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME)));
-        skin.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME)));
-        skin.setVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME)));
-        skin.setIsDefault(Boolean.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME) != null)
+            skin.setName(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_NAME_COLUMN_NAME));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME) != null)
+            skin.setInitialWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETINITIALVERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME) != null)
+            skin.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_WALLETFINALVERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME) != null)
+            skin.setVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_VERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME) != null)
+            skin.setIsDefault(Boolean.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ISDEFAULT_COLUMN_NAME)));
         skin.setScreenSize(ScreenSize.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SCREEN_SIZE)));
-
-        Designer designer = getDesigner(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME));
-        skin.setDesigner(designer);
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME) != null){
+            Designer designer = getDesigner(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_DESIGNERID_COLUMN_NAME));
+            skin.setDesigner(designer);
+        }
 
         skin.setSkinSizeInBytes(record.getIntegerValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_SIZE_COLUMN_NAME));
 
@@ -845,16 +875,26 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         Language language = new Language();
         language.setWalletId(walletId);
         language.setId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME));
-        language.setLanguageName(Languages.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME)));
-        language.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME)));
-        language.setInitialWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME)));
-        language.setVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME)));
-        language.setIsDefault(Boolean.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME)));
-        language.setLanguageLabel(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME) != null)
+            language.setLanguageName(Languages.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME) != null)
+            language.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME) != null)
+            language.setInitialWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME) != null)
+            language.setVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_VERSION_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME) != null)
+            language.setIsDefault(Boolean.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ISDEFAULT_COLUMN_NAME)));
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME) != null)
+            language.setLanguageLabel(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_LABEL_COLUMN_NAME));
+
         language.setLanguagePackageSizeInBytes(record.getIntegerValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_FILESIZE_COLUMN_NAME));
 
-        Translator translator = getTranslator(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME));
-        language.setTranslator(translator);
+        if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME) != null){
+            Translator translator = getTranslator(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TRANSLATORID_COLUMN_NAME));
+            language.setTranslator(translator);
+        }
+
 
 
         return language;

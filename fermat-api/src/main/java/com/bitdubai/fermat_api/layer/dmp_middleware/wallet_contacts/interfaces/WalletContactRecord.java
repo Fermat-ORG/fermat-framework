@@ -2,7 +2,6 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetContactProfileImageException;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +18,7 @@ import java.util.UUID;
 public interface WalletContactRecord {
 
     /**
-     * Return the contactId
+     * Return the contact id
      *
      * @return UUID
      */

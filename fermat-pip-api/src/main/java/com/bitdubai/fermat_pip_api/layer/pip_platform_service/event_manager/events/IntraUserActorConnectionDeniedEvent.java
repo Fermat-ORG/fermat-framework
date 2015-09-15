@@ -16,19 +16,17 @@ public class IntraUserActorConnectionDeniedEvent extends AbstractPlatformEvent{
         super(eventType);
     }
 
-    /**
-     * Constructor with parameters
-     *
-     * @param eventType
-     * @param intraUserLoggedInPublicKey
-     * @param intraUserToAddPublicKey
-     */
-    public IntraUserActorConnectionDeniedEvent(EventType eventType, String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) {
 
-        super(eventType);
+
+    public void setIntraUserLoggedInPublicKey(String intraUserLoggedInPublicKey) {
         this.intraUserLoggedInPublicKey = intraUserLoggedInPublicKey;
+    }
+
+    public void setIntraUserToAddPublicKey(String intraUserToAddPublicKey) {
         this.intraUserToAddPublicKey = intraUserToAddPublicKey;
     }
+
+
 
     /**
      *Return the public key of intra user logged
