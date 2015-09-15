@@ -1,6 +1,10 @@
-# Fermat CBP Android SubApp Wallet Manager
+# Fermat CBP Android Desktop Wallet Manager
 
 frontend del gestor de las Wallets instaladas
+
+La Desktop Wallet Manager ha de estar en la capacidad de:
+
+* Mostrar lista de Wallets instaladas
 
 ## Developer
 

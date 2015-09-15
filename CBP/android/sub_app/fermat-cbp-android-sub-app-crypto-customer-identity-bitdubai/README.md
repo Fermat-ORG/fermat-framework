@@ -1,6 +1,11 @@
-# Fermat CBP Android SubApp Crypto Customer
+# Fermat CBP Android SubApp Crypto Customer Identity
 
-frontend de la administracion de identidades de los Customers y la relacion con otros Customers (notificaciones de un Broker, acuerdos especiales, etc)
+frontend de la administracion de identidades de los Customers
+
+La SubApp Crypto Customer Identity ha de estar en la capacidad de:
+
+* Crear una Identidad
+* Mostrar lista de Identidades
 
 ## Developer
 
