@@ -1313,16 +1313,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
         runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Transactions BOOK");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Transactions AVAILABLE");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE);
-        runtimeTabStrip.addTab(runtimeTab);
-
         /*runtimeTab = new Tab();
         runtimeTab.setLabel("Send");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
@@ -1362,15 +1352,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE.getKey(), runtimeFragment);
-
 
 
         runtimeFragment = new Fragment();

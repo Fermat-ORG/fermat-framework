@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -166,16 +168,20 @@ public class HomeFragment extends FermatFragment {
 
 
             TextView tv;
+
+            final EditText edit_text_alias;
+
+            Button buttom_search;
+
             if (groupPosition == 0) {
                 convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
 
                 tv = ((TextView)convertView.findViewById(R.id.title));
-                tv.setText("Total balance in all accounts");
+                tv.setText("Search connection");
                 //tv.setTypeface(ApplicationSession.getDefaultTypeface());
             }
             else
             {
-                if (1 == 1) {
                     switch (groupPosition)
                     {
 
@@ -184,19 +190,21 @@ public class HomeFragment extends FermatFragment {
 
                             convertView = inf.inflate(R.layout.wallets_teens_fragment_home_list_item, parent, false);
 
-                            tv = ((TextView)convertView.findViewById(R.id.balance));
-                            tv.setText(balances[groupPosition - 1]);
-                            //tv.setTypeface(pplicationSession.getDefaultTypeface());
+                            edit_text_alias = ((EditText)convertView.findViewById(R.id.edit_text_alias));
 
-                            tv = ((TextView)convertView.findViewById(R.id.balance_available));
-                            tv.setText(balances_available[groupPosition - 1]);
-                            //tv.setTypeface(ApplicationSession.getDefaultTypeface());
+                            buttom_search = ((Button)convertView.findViewById(R.id.buttom_search));
 
+                            buttom_search.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    String query = edit_text_alias.getText().toString();
 
+                                    if(query.length()!=0){
+                                        //TODO: abrir la nueva pantalla con todos los contactos encontrados
+                                    }
+                                }
+                            });
 
-                            tv = ((TextView)convertView.findViewById(R.id.account_type));
-                            tv.setText(account_types[groupPosition - 1]);
-                            //tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                             break;
 
@@ -209,7 +217,7 @@ public class HomeFragment extends FermatFragment {
 
                             break;
 
-                        case 3: case 4:case 5:case 6:case 8:case 9:
+                        default:
 
                         convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
                         account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
@@ -220,20 +228,20 @@ public class HomeFragment extends FermatFragment {
                         //holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                         holder.text.setText(contacts[groupPosition].toString());
 
-                        amount = new ViewHolder();
-                        amount.text = (TextView) convertView.findViewById(R.id.amount);
+                        //amount = new ViewHolder();
+                        //amount.text = (TextView) convertView.findViewById(R.id.amount);
                         //amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
-                        amount.text.setText(amounts[groupPosition].toString());
+                        //amount.text.setText(amounts[groupPosition].toString());
 
-                        when = new ViewHolder();
-                        when.text = (TextView) convertView.findViewById(R.id.when);
+//                        when = new ViewHolder();
+//                        when.text = (TextView) convertView.findViewById(R.id.when);
                         //when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
-                        when.text.setText(whens[groupPosition].toString());
+//                        when.text.setText(whens[groupPosition].toString());
 
                         note = new ViewHolder();
-                        note.text = (TextView) convertView.findViewById(R.id.notes);
+                        note.text = (TextView) convertView.findViewById(R.id.text_view_phrase);
                         //note.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         note.text.setText(notes[groupPosition].toString());
@@ -242,29 +250,6 @@ public class HomeFragment extends FermatFragment {
                         send_message.setTag("ContactsChatActivity|"+contacts[groupPosition].toString());
 
 
-                        switch (groupPosition)
-                        {
-
-                            case 3:
-                                account_picture.setImageResource(R.drawable.stephani_profile_picture);
-                                break;
-                            case 4:
-                                account_picture.setImageResource(R.drawable.kimberly_profile_picture);
-                                break;
-                            case 5:
-                                account_picture.setImageResource(R.drawable.ginny_profile_picture);
-                                break;
-                            case 6:
-                                account_picture.setImageResource(R.drawable.piper_profile_picture);
-                                break;
-
-                            case 8:
-                                account_picture.setImageResource(R.drawable.stephani_profile_picture);
-                                break;
-                            case 9:
-                                account_picture.setImageResource(R.drawable.kimberly_profile_picture);
-                                break;
-                        }
                         break;
                         case 7:
                             convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
@@ -273,7 +258,6 @@ public class HomeFragment extends FermatFragment {
                             //tv.setTypeface(ApplicationSession.getDefaultTypeface());
                             break;
                     }
-                }
             }
 
 
