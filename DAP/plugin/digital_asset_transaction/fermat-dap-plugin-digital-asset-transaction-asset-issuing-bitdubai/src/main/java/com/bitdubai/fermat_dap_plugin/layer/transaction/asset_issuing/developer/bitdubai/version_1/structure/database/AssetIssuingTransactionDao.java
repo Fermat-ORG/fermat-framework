@@ -32,6 +32,7 @@ public class AssetIssuingTransactionDao {
     Database database;
 
     PluginDatabaseSystem pluginDatabaseSystem;
+    private final int INITIAL_DIGITAL_ASSET_GENERATED_AMOUNT=0;
 
     public AssetIssuingTransactionDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws CantExecuteDatabaseOperationException {
 
@@ -80,7 +81,7 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public void persistFormingDigitalAsset(String digitalAssetPublicKey, String digitalAssetLocalStoragePath)throws CantPersistDigitalAssetException{
+    public void persistDigitalAsset(String digitalAssetPublicKey, String digitalAssetLocalStoragePath, int assetsAmount)throws CantPersistDigitalAssetException{
 
         try{
             this.database=openDatabase();
@@ -88,7 +89,8 @@ public class AssetIssuingTransactionDao {
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME,digitalAssetPublicKey);
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_LOCAL_STORAGE_PATH_COLUMN_NAME, digitalAssetLocalStoragePath);
-            //record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.FORMING_GENESIS.getCode());
+            record.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE, assetsAmount);
+            record.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED, INITIAL_DIGITAL_ASSET_GENERATED_AMOUNT);
             databaseTable.insertRecord(record);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
