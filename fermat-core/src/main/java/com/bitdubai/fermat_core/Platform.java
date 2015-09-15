@@ -1277,7 +1277,7 @@ public class Platform implements Serializable {
             }
 
             //if(plugin instanceof DealsWithAssetFactory){
-            //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
+            //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryMiddlewareManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
             //}
 
             /*
