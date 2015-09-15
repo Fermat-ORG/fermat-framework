@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/luis_profile_picture"
+            android:src="@drawable/mati_profile"
             android:layout_gravity="center"
 
             android:padding="6dp"
@@ -131,53 +131,41 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip"
                 android:paddingTop="10dip">
-                <TextView
-                    android:id="@+id/when"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FF666666"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:text="yesterday"
-                    android:gravity="start" android:paddingBottom="1dip"
-                    android:paddingTop="2dip"/>
 
-                <TextView
+                <ImageButton
                     android:id="@+id/amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|end"
-                    android:textColor="#FF666666"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:text="$0.00"
                     android:paddingBottom="1dip"
                     android:paddingTop="2dip"
+                    android:src="@drawable/abc_menu_hardkey_panel_mtrl_mult"
                     android:layout_gravity="end" />
             </LinearLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip"
+                android:gravity="center"
                 android:weightSum="1">
 
                 <TextView
-                    android:id="@+id/notes"
+                    android:id="@+id/text_view_phrase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:textColor="#FF666666"
-                    android:textSize="12sp"
+                    android:textSize="14sp"
                     android:textStyle="normal"
-                    android:text="notes"
+                    android:text="Matias Furszyfer want to add you!!"
                     android:layout_gravity="start"
                     android:paddingBottom="1dip"
                     android:paddingTop="1dip" />
 
-            </LinearLayout>
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -185,18 +173,14 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip">
 
-                <TextView
+                <Space
 
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="7dp"
                     android:gravity="center_vertical"
-                    android:textColor="#FF666666"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:text=""
                     android:layout_gravity="start"
-                    android:paddingBottom="1dip"
-                    android:paddingTop="1dip" />
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip" />
 
             </LinearLayout>
 

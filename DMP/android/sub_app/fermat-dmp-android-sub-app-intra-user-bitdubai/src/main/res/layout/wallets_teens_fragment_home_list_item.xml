@@ -48,85 +48,56 @@
             />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentRight="true"
 
-        >
 
-        <TextView
-            android:id="@+id/account_type"
-            android:layout_width="match_parent"
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-            android:paddingTop="3dip"
-            android:paddingBottom="3dip"
-            android:textColor="#FF666666"
-            android:textSize="15sp"
-            android:textStyle="normal"
-            android:text="notes"
-            />
-
-
-
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
 
             >
 
-            <TextView
-                android:id="@+id/balance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
-                android:textColor="#FF666666"
-                android:textSize="45sp"
-                android:textStyle="bold"
-                android:text="$0.00"
-
-
-
-
-                />
-
 
             <TextView
-                android:id="@+id/balance_available"
+                android:id="@+id/account_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:paddingLeft="7dip"
                 android:paddingRight="7dip"
                 android:paddingTop="3dip"
                 android:paddingBottom="3dip"
                 android:textColor="#FF666666"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:textStyle="bold"
+                android:text="Alias"
+                />
 
-
-                android:text="available"
-                android:layout_gravity="center_horizontal"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-
-
-                android:clickable="true"
-
-                android:onClick="onAvailableBalanceIconClicked"
-
+            <EditText
+                android:id="@+id/edit_text_alias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+                android:textColor="#FF666666"
+                android:textSize="30sp"
+                android:textStyle="normal"
+                android:hint="name"
 
                 />
 
-        </RelativeLayout>
-    </LinearLayout>
+
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/buttom_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search"/>
+
 
 </LinearLayout>
