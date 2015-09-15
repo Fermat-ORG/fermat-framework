@@ -113,6 +113,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //throw new ObjectNotSetException("Digital Asset State is not set");
             digitalAsset.setState(State.DRAFT);
         }
+        if(this.digitalAsset.getIdentityAssetIssuer()==null){
+            throw new ObjectNotSetException("Digital Asset Identity is not set");
+        }
         //checkGenesisAmount();
 
     }
