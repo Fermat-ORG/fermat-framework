@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 
+import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 
@@ -115,7 +117,33 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
 
     SubApps subappType;
 
-    String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/";
+    /**
+     * Installed skins repositories
+     * <p>
+     * SkinId, repository link
+     */
+    //private Map<UUID, Repository> repositoriesName;
+
+
+    private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat/master/seed-resources/subApp_resources/";
+
+
+    private final String LOCAL_STORAGE_PATH="subApp-resources/";
+
+
+    /**
+     *  Wallet instalation progress
+     */
+    private InstalationProgress instalationProgress;;
+
+    //para testear
+    private Map<String, byte[]> imagenes;
+
+
+    /**
+     * Github connection until the main repository be open source
+     */
+    private GithubConnection githubConnection;
 
     /**
      * Service Interface implementation.
@@ -193,11 +221,8 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * SubAppResourcesInstalationManager Implementation
      */
 
-
-
     /**
-     * @param walletCategory
-     * @param walletType
+     * @param subApp
      * @param developer
      * @param screenSize
      * @param screenDensity
@@ -206,19 +231,28 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * @param navigationStructureVersion
      */
     @Override
-    public void installResources(String walletCategory, String walletType, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) {
+    public void installResources(String subApp, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) {
 
     }
 
     /**
-     * @param walletPath
-     * @param skinId
-     * @param navigationStructureVersion
+     * @param subApp
      */
     @Override
-    public void unninstallResources(String walletPath, UUID skinId, String navigationStructureVersion) {
+    public void unninstallResources(String subApp) {
 
     }
+
+    /**
+     * Get enum instalation progress
+     *
+     * @return
+     */
+    @Override
+    public InstalationProgress getInstalationProgress() {
+        return null;
+    }
+
 
 
     /**
