@@ -85,7 +85,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
      */
     //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
-    private int cantTransactions = 5;
+    private int cantTransactions = 50;
 
 
     /**

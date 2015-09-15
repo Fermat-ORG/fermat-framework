@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantGetWalletContactRegistryException extends WalletContactsException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T GET REQUESTED CONTACT REGISTRY EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET WALLET CONTACT REGISTRY EXCEPTION";
 
     public CantGetWalletContactRegistryException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
