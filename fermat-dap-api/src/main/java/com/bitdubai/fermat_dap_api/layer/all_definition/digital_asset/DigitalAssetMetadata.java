@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_dap_api.all_definition.digital_asset;
+package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 
 /**
  * Created by rodrigo on 9/4/15.

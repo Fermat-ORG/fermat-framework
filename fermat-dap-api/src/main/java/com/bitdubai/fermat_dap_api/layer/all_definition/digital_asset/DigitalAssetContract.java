@@ -1,8 +1,6 @@
-package com.bitdubai.fermat_dap_api.all_definition.digital_asset;
+package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
 
-import com.bitdubai.fermat_dap_api.all_definition.contracts.Contract;
-import com.bitdubai.fermat_dap_api.all_definition.contracts.ContractProperty;
-import com.bitdubai.fermat_dap_api.all_definition.contracts.exceptions.CantDefineContractPropertyException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.List;
 /**
  * Created by rodrigo on 9/4/15.
  */
-public class DigitalAssetContract implements Contract {
+public class DigitalAssetContract implements com.bitdubai.fermat_dap_api.layer.all_definition.contracts.Contract {
     ContractProperty redeemable;
     ContractProperty transferable;
     ContractProperty expirationDate;
@@ -35,7 +33,7 @@ public class DigitalAssetContract implements Contract {
     }
 
     @Override
-    public void setContractProperty(ContractProperty contractProperty) throws CantDefineContractPropertyException {
+    public void setContractProperty(ContractProperty contractProperty) throws com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException {
         boolean isExistingProperty = false;
         for (ContractProperty property : properties){
             if (contractProperty.getName() == property.getName()){
@@ -44,7 +42,7 @@ public class DigitalAssetContract implements Contract {
             }
 
             if (!isExistingProperty)
-                throw new CantDefineContractPropertyException(CantDefineContractPropertyException.DEFAULT_MESSAGE, null, "Property " + contractProperty.toString() + " does not exists in the contract.", null);
+                throw new com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException(com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException.DEFAULT_MESSAGE, null, "Property " + contractProperty.toString() + " does not exists in the contract.", null);
         }
     }
 

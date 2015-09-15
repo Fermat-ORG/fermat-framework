@@ -1359,7 +1359,7 @@ public class Platform implements Serializable {
                 ((DealsWithIdentityAssetRedeemPoint) plugin).setRedeemPointIdentityManager((RedeemPointIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER));
             }
             //if(plugin instanceof DealsWithAssetFactory){
-            //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
+            //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryMiddlewareManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
             //}
 
             /*
