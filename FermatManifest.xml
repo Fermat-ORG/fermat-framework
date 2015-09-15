@@ -1456,8 +1456,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="60"></author>
-							<author name="franklinmarcano1970" scope="implementation" percentage="40"></author>
+							<author name="darkestpriest" scope="implementation" percentage="60"></author>
+							<author name="nattyco" scope="implementation" percentage="40"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="franklinmarcano1970"></mantainer>
