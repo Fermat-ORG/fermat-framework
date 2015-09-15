@@ -117,7 +117,7 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
              */
             table = databaseFactory.newTableFactory(ownerId, AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ID_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            //table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ID_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN, DatabaseDataType.STRING, 50, Boolean.FALSE);

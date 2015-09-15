@@ -3,6 +3,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 
@@ -26,13 +27,19 @@ public interface AssetFactory {
     void setDescription(String description);
 
     Resource getResource();
-    void setResources(Resource resource);
+    void setResource(Resource resource);
 
     List<Resource> getResources();
     void setResources(List<Resource> resources);
 
     DigitalAssetContract getContract();
     void setContract(DigitalAssetContract contract);
+
+    ContractProperty getContractProperty();
+    void setContractProperty(ContractProperty contractProperty);
+
+    List<ContractProperty> getContractProperties();
+    void setContractProperties(ContractProperty contractProperties);
 
     State getState();
     void setState(State state);
