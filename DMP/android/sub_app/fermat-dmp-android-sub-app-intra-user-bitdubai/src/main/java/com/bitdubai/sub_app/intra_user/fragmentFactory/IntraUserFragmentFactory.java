@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.sub_app.intra_user.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user.fragments.ConnectionsRequestListFragment;
 import com.bitdubai.sub_app.intra_user.fragments.DetailsActivityFragment;
+import com.bitdubai.sub_app.intra_user.fragments.HomeFragment;
 import com.bitdubai.sub_app.intra_user.fragments.MainActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.MoreDetailsActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.RegisterIntraUserFragment;
@@ -26,7 +27,7 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
 
         switch (fragments) {
             case CWP_WALLET_STORE_MAIN_ACTIVITY:
-                currentFragment = ConnectionsListFragment.newInstance();
+                currentFragment = HomeFragment.newInstance(1);
                 break;
             case CWP_WALLET_STORE_DETAIL_ACTIVITY:
                 currentFragment = ConnectionsListFragment.newInstance();
@@ -35,6 +36,7 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_ALL_FRAGMENT:
+                //currentFragment = HomeFragment.newInstance(1);
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_FREE_FRAGMENT:

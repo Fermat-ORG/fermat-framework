@@ -1,5 +1,6 @@
 package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
@@ -86,6 +87,24 @@ public class GithubConnectionTest {
         GHUser hub=ghRepository.getOwner();
 
         ghRepository.createContent("mati", "testeando", "seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/text.txt");
+
+
+    }
+    @Ignore
+    @Test
+    public void testuploadFilesFromRepo1() throws Exception {
+
+        String c ="<com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>\n" +
+                "    <activities/>\n" +
+                "    <publicKey>04ffe37e-e5e5-4dd7-bade-d4fd4b4801a0</publicKey>\n" +
+                "    <size>100</size>\n" +
+                "    <walletCategory>Sssd</walletCategory>\n" +
+                "    </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>";
+
+
+        GithubConnection githubConnection = new GithubConnection("acostarodrigo/fermat","acostarodrigo","tatita0602");
+
+        githubConnection.createGitHubTextFile("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/RODRI_TE_QUIERO!!.xml",c,"probando github connection");
 
 
     }
