@@ -2,6 +2,8 @@
 
 Frontend de las actividades financieras de un Crypto Broker(vender crypto, vender cash, inyeccion de capital) y provee un balance contable unificado
 
+## Caracteristicas
+
 La Reference Wallet Crypto Broker ha de estar en la capacidad de:
 
 * Asociar una identidad nueva

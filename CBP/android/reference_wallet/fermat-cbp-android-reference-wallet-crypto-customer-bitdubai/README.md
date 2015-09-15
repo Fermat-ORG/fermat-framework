@@ -2,6 +2,8 @@
 
 Frontend de las actividades financieras de un Crypto Customer(comprar crypto, comprar cash) y provee un balance contable unificado
 
+## Caracteristicas
+
 La Reference Wallet Crypto Customer ha de estar en la capacidad de:
 
 * Asociar una identidad nueva
