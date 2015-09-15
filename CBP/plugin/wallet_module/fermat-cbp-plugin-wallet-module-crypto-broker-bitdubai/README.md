@@ -1,4 +1,4 @@
-# Fermat CBP Java Wallet Module Crypto Broker
+# Fermat CBP Plugin Wallet Module Crypto Broker
 
 Backend de las actividades financieras de un Crypto Broker(vender crypto, vender cash, inyeccion de capital) y provee un balance contable unificado
 

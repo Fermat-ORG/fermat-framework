@@ -1,4 +1,4 @@
-# Fermat CBP Java Wallet Module Crypto Customer
+# Fermat CBP Plugin Wallet Module Crypto Customer
 
 Backend de las actividades financieras de un Crypto Customer(comprar crypto, comprar cash) y provee un balance contable unificado
 

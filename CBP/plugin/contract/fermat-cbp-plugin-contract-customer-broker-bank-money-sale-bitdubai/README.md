@@ -1,4 +1,4 @@
-# Fermat CBP Java Contract Customer Broker Bank Money Sale
+# Fermat CBP Plugin Contract Customer Broker Bank Money Sale
 
 Almacena toda la información de una negociación de venta de tipo Bank Money.
 

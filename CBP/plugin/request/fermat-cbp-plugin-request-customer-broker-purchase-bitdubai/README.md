@@ -1,4 +1,4 @@
-# Fermat CBP Java Request Crypto Broker Buy
+# Fermat CBP Plugin Request Crypto Broker Buy
 
 Gestiona la solicitud de compra del Crypto Customer al Crypto Broker.
 

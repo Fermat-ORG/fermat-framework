@@ -1,4 +1,4 @@
-# Fermat CBP Java COntract Customer Broker Crypto Money Purchase
+# Fermat CBP Plugin Contract Customer Broker Crypto Money Purchase
 
 Almacena toda la información de una negociación de compra de tipo Crypto Money.
 

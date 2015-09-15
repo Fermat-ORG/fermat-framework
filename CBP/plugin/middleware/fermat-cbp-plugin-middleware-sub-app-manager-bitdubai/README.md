@@ -1,4 +1,4 @@
-# Fermat CBP Java Middleware Sub App Manager
+# Fermat CBP Plugin Middleware Sub App Manager
 
 Administra las Sub App de un usuario.
 

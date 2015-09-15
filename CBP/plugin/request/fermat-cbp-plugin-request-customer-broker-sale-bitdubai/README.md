@@ -1,4 +1,4 @@
-# Fermat CBP Java Request Crypto Broker Sale
+# Fermat CBP Plugin Request Crypto Broker Sale
 
 Gestiona la solicitud de venta del Crypto Broker al Crypto Customer.
 

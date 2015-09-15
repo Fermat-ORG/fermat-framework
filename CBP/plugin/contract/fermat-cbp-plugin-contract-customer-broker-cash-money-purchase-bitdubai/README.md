@@ -1,4 +1,4 @@
-# Fermat CBP Java COntract Customer Broker Cash Money Purchase
+# Fermat CBP Plugin Contract Customer Broker Cash Money Purchase
 
 Almacena toda la información de una negociación de compra de tipo Cash Money.
 

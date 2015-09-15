@@ -1,4 +1,4 @@
-# Fermat CBP Java Contract Customer Broker Bank Money Purchase
+# Fermat CBP Plugin Contract Customer Broker Bank Money Purchase
 
 Almacena toda la información de una negociación de compra de tipo Bank Money.
 

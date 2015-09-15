@@ -1,4 +1,4 @@
-# Fermat CBP Java Middleware Wallet Manager
+# Fermat CBP Plugin Middleware Wallet Manager
 
 Administra las Wallet de un usuario.
 

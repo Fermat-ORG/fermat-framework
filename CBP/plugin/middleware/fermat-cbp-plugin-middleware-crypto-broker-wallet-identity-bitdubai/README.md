@@ -1,4 +1,4 @@
-# Fermat CBP Java Middleware Crypto Broker Wallet Identity 
+# Fermat CBP Plugin Middleware Crypto Broker Wallet Identity 
 
 Relaciona una Crypto Broker Identity con una Crypto Broker Wallet.
 
