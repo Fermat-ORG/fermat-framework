@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFa
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactMiddlewareSearch;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareSearch;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.search.SearchField;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.search.SearchOrder;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -82,7 +82,7 @@ public class GetResultTest {
 
     private UUID testOwnerId1;
 
-    private WalletContactMiddlewareSearch walletContactMiddlewareSearch;
+    private WalletContactsMiddlewareSearch walletContactsMiddlewareSearch;
 
     @Before
     public void setUp() throws Exception {
@@ -105,13 +105,13 @@ public class GetResultTest {
         walletContactsMiddlewareDao = new WalletContactsMiddlewareDao(mockPluginDatabaseSystem, testOwnerId1);
         walletContactsMiddlewareDao.initialize();
 
-        walletContactMiddlewareSearch = new WalletContactMiddlewareSearch(mockErrorManager,walletContactsMiddlewareDao);
+        walletContactsMiddlewareSearch = new WalletContactsMiddlewareSearch(mockErrorManager,walletContactsMiddlewareDao);
     }
 
     @Test
     public void getResultTest_GetOK_ThrowsCantGetAllWalletContactsException() throws Exception {
 
-        List<WalletContactRecord> walletContactRecordList = walletContactMiddlewareSearch.getResult("walletPublicKey");
+        List<WalletContactRecord> walletContactRecordList = walletContactsMiddlewareSearch.getResult("walletPublicKey");
         assertThat(walletContactRecordList).isInstanceOf(List.class);
 
     }
@@ -119,7 +119,7 @@ public class GetResultTest {
     @Test
     public void getResultTest_GetOKOffSet_ThrowsCantGetAllWalletContactsException() throws Exception {
 
-        List<WalletContactRecord> walletContactRecordList = walletContactMiddlewareSearch.getResult("walletPublicKey",10,0);
+        List<WalletContactRecord> walletContactRecordList = walletContactsMiddlewareSearch.getResult("walletPublicKey",10,0);
         assertThat(walletContactRecordList).isInstanceOf(List.class);
 
     }
@@ -128,7 +128,7 @@ public class GetResultTest {
     public void getResultTest_GetError_ThrowsCantGetAllWalletContactsException() throws Exception {
 
         Mockito.when(mockTable.getRecords()).thenReturn(null);
-        catchException(walletContactMiddlewareSearch).getResult("walletPublicKey");
+        catchException(walletContactsMiddlewareSearch).getResult("walletPublicKey");
 
         assertThat(caughtException())
                 .isNotNull().isInstanceOf(CantGetAllWalletContactsException.class);
