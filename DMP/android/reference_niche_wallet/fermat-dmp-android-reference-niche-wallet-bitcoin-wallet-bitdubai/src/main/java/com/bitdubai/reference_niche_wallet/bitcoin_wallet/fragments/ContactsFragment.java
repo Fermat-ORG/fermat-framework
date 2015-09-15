@@ -101,7 +101,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
     public static ContactsFragment newInstance(ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         if (walletSession == null) {
-            System.err.println("Method: newInstance - TENGO RETURN NULL");
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
         }
         ContactsFragment f = new ContactsFragment();
@@ -498,7 +498,8 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
                 }
 
             }
-            System.err.println("Method: doInBackground - TENGO RETURN NULL");
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: doInBackground - TENGO RETURN NULL");
             return null;
         }
 

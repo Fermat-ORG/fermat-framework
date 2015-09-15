@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactSearch;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsSearch;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -107,9 +107,9 @@ public class GetWalletContactTest {
     @Test
     public void walletContactSearchTest_FindOK_ThrowsCantCantGetWalletContactException() throws Exception {
 
-        WalletContactSearch walletContactSearch = walletContactsMiddlewareRegistry.searchWalletContact();
+        WalletContactsSearch walletContactsSearch = walletContactsMiddlewareRegistry.searchWalletContact();
 
-        assertThat(walletContactSearch).isInstanceOf(WalletContactSearch.class);
+        assertThat(walletContactsSearch).isInstanceOf(WalletContactsSearch.class);
 
     }
 

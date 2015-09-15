@@ -170,7 +170,7 @@ public final class IntentIntegrator {
     intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
     activity.startActivityForResult(intentScan, REQUEST_CODE);
-    System.err.println("Method: initiateScan - TENGO RETURN NULL");
+    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     return null;
   }
 
@@ -185,7 +185,7 @@ public final class IntentIntegrator {
         }
       }
     }
-    System.err.println("Method: findTargetAppPackage - TENGO RETURN NULL");
+    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     return null;
   }
 
@@ -241,7 +241,7 @@ public final class IntentIntegrator {
       }
       return new IntentResult();
     }
-    System.err.println("Method: parseActivityResult - TENGO RETURN NULL");
+    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     return null;
   }
 

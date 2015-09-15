@@ -26,6 +26,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -52,6 +53,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -134,7 +136,19 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            // The Activity is being created for the first time, so create and
+            // add new fragments.
+            super.onCreate(savedInstanceState);
+        } else {
+
+            super.onCreate(new Bundle());
+            // Otherwise, the activity is coming back after being destroyed.
+            // The FragmentManager will restore the old Fragments so we don't
+            // need to create any new ones here.
+        }
+
 
 
 
@@ -292,6 +306,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     protected void paintTitleBar(TitleBar titleBar, Activity activity) {
         try {
+            ActionBar actionBar = getActionBar();
             TextView abTitle = (TextView) findViewById(getResources().getIdentifier("action_bar_title", "id", "android"));
             if (titleBar != null) {
 
@@ -300,13 +315,22 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 if (abTitle != null) {
                     abTitle.setTextColor(Color.WHITE);
                     abTitle.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf"));
+                    if(titleBar.getLabelSize()!=-1){
+                        abTitle.setTextSize(titleBar.getLabelSize());
+
+                    }
+
                 }
-                getActionBar().setTitle(title);
-                getActionBar().show();
+
+                actionBar.setTitle(title);
+
+
+
+                actionBar.show();
                 setActionBarProperties(title, activity);
                 paintToolbarIcon(titleBar);
             } else {
-                getActionBar().hide();
+                actionBar.hide();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -427,7 +451,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         List<android.support.v4.app.Fragment> lstWalletFragment = new ArrayList<android.support.v4.app.Fragment>();
         //tengo que traer el WalletFragmentFactory dependiendo del tipo de wallet que es un enum ejemplo basic_wallet
         //ReferenceWalletFragmentFactory.getFragmentFactoryByWalletType(getWalletRuntimeManager().getActivity(.))
-        System.err.println("Method: getWalletFragments - TENGO RETURN NULL");
         return null;
     }
 
@@ -441,6 +464,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
                 setContentView(R.layout.runtime_app_activity_runtime_navigator);
             } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
+
                 setContentView(R.layout.runtime_app_wallet_runtime_navigator);
             }
 
@@ -640,10 +664,18 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             pager.setVisibility(View.INVISIBLE);
 
             if (NavigationDrawerFragment != null) {
-                this.NavigationDrawerFragment.setMenuVisibility(false);
+
+//                getSupportFragmentManager().beginTransaction().
+//                        remove(getSupportFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
+//                NavigationDrawerFragment.setMenuVisibility(false);
+//                NavigationDrawerFragment.onDetach();
+                //if()
+                //getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
+                NavigationDrawerFragment.onDetach();
                 NavigationDrawerFragment = null;
             }
 
+            this.getNotificationManager().deleteObserver(this);
 
             this.adapter = null;
             paintStatusBar(null);
@@ -653,6 +685,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
+            System.gc();
+
         } catch (Exception e) {
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -660,6 +694,20 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             makeText(getApplicationContext(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
         }
+    }
+
+    public void resetPager(){
+        //clean page adapter
+        ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
+        if (adapter != null) pagertabs.removeAllViews();
+
+        ViewPager viewpager = (ViewPager) super.findViewById(R.id.viewpager);
+        viewpager.setVisibility(View.INVISIBLE);
+        ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
+        pager.setVisibility(View.INVISIBLE);
+        this.adapter = null;
+        List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
+        this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
     }
 
     public void cleanTabs() {
@@ -960,6 +1008,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onDestroy() {
         super.onDestroy();
         wizards = null;
+
+        //NavigationDrawerFragment.onDetach();
+        resetThisActivity();
     }
 
     @Override

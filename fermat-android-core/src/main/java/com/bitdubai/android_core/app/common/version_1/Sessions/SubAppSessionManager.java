@@ -66,14 +66,10 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 lstSubAppSession.put(subApps.getCode(),intraUserSubAppSession);
                 return intraUserSubAppSession;
             default:
-                System.err.println("Method: openSubAppSession - TENGO RETURN NULL");
                 return null;
                 //throw new FermatException("")
         }
-
-        System.err.println("Method: openSubAppSession - TENGO RETURN NULL");
         return null;
-
     }
 
 

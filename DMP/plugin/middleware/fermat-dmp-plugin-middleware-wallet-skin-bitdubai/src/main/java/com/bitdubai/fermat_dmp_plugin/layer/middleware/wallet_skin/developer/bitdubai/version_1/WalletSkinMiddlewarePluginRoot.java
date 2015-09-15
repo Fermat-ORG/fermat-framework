@@ -164,9 +164,11 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             throw e;
         } catch (InvalidParameterException e) {
             e.printStackTrace();
-            System.err.println("Method: listSkins - VACIO");
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: listSkins - VACIO");
         }
-        System.err.println("Method: listSkins - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: listSkins - TENGO RETURN NULL");
         return null;
     }
 
@@ -179,9 +181,11 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             throw e;
         } catch (InvalidParameterException e) {
             e.printStackTrace();
-            System.err.println("Method: getSkinBySkinIdAndVersion - VACIO");
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: getSkinBySkinIdAndVersion - VACIO");
         }
-        System.err.println("Method: getSkinBySkinIdAndVersion - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getSkinBySkinIdAndVersion - TENGO RETURN NULL");
         return null;
     }
 
@@ -194,9 +198,11 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             throw e;
         } catch (InvalidParameterException e) {
             e.printStackTrace();
-            System.err.println("Method: getSkinById - VACIO");
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: getSkinById - VACIO");
         }
-        System.err.println("Method: getSkinById - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getSkinById - TENGO RETURN NULL");
         return null;
     }
 
@@ -209,9 +215,11 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             throw e;
         } catch (InvalidParameterException e) {
             e.printStackTrace();
-            System.err.println("Method: getSkinsBySkinId - VACIO");
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: getSkinsBySkinId - VACIO");
         }
-        System.err.println("Method: getSkinsBySkinId - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getSkinsBySkinId - TENGO RETURN NULL");
         return null;
     }
 
@@ -243,20 +251,22 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
 
     @Override
     public WalletSkin copySkin(String newName, String designerPublicKey, WalletSkin walletSkin) throws CantCopyWalletSkinException, SkinNotFoundException {
-        System.err.println("Method: copySkin - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: copySkin - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public WalletSkin createNewVersion(String alias, WalletSkin walletSkin) throws CantCopyWalletSkinException {
-        System.err.println("Method: createNewVersion - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: createNewVersion - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public void closeSkin(WalletSkin walletSkin) throws CantCloseWalletSkinException, SkinNotFoundException {
-        // TODO to do...
-        System.err.println("Method: closeSkin - VACIO");
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: closeSkin - VACIO");
     }
 
     @Override
@@ -399,12 +409,14 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
 
     @Override
     public void updateResource(Resource resource, byte[] file, WalletSkin walletSkin) throws CantUpdateResourceException, ResourceNotFoundException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: updateResource - VACIO");
     }
 
     @Override
     public void deleteResource(Resource resource, WalletSkin walletSkin) throws CantDeleteResourceException, ResourceNotFoundException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: deleteResource - VACIO");
     }
 
 
@@ -432,7 +444,8 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println("******* Error trying to get database table list for plugin Wallet Skin");
-            System.err.println("Method: getDatabaseTableContent - TENGO RETURN NULL");
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: getDatabaseTableContent - TENGO RETURN NULL");
             return null;
         }
     }

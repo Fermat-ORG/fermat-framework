@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="210dp"
+    android:background="@drawable/background_tabs_diagonal_rotated"
+    android:orientation="vertical"
+    android:paddingLeft="7dip"
+    android:paddingRight="7dip"
+    android:paddingBottom="7dip"
+    android:paddingTop="7dip"
+    >
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="94dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+
+        <ImageView
+            android:id="@+id/account_picture1"
+            android:layout_width="94dp"
+            android:layout_height="94dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/account_type_current_small"
+            android:layout_gravity="center"
+            />
+
+        <ImageView
+            android:id="@+id/account_picture2"
+            android:layout_width="94dp"
+            android:layout_height="94dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/account_type_savings_1_small"
+            android:layout_gravity="center"
+            />
+
+        <ImageView
+            android:id="@+id/account_picture3"
+            android:layout_width="94dp"
+            android:layout_height="94dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/account_type_savings_2_small"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+
+
+
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+
+            >
+
+
+            <TextView
+                android:id="@+id/account_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+                android:textColor="#FF666666"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:text="Alias"
+                />
+
+            <EditText
+                android:id="@+id/edit_text_alias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+                android:textColor="#FF666666"
+                android:textSize="30sp"
+                android:textStyle="normal"
+                android:hint="name"
+
+                />
+
+
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/buttom_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search"/>
+
+
+</LinearLayout>

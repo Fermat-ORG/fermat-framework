@@ -114,9 +114,12 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             return informationPublishedComponentDao.findAll(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publisherIdentityPublicKey);
 
         } catch (CantReadRecordDataBaseException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass()+" Method: getPublishedComponents - VACIO");
             e.printStackTrace();
         }
-        System.err.println("Method: getPublishedComponents - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getPublishedComponents - TENGO RETURN NULL");
         return null;
     }
 
@@ -143,9 +146,12 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             return informationPublishedComponentDao.findAll(filters);
 
         } catch (CantReadRecordDataBaseException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass()+" Method: getPublishedWallets - VACIO");
             e.printStackTrace();
         }
-        System.err.println("Method: getPublishedWallets - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getPublishedWallets - TENGO RETURN NULL");
         return null;
     }
 
@@ -173,9 +179,12 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             return informationPublishedComponentDao.findAll(filters);
 
         } catch (CantReadRecordDataBaseException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass()+" Method: getPublishedSkins - VACIO");
             e.printStackTrace();
         }
-        System.err.println("Method: getPublishedSkins - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getPublishedSkins - TENGO RETURN NULL");
         return null;
     }
 
@@ -202,9 +211,12 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             return informationPublishedComponentDao.findAll(filters);
 
         } catch (CantReadRecordDataBaseException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass()+" Method: getPublishedLanguages - VACIO");
             e.printStackTrace();
         }
-        System.err.println("Method: getPublishedLanguages - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getPublishedLanguages - TENGO RETURN NULL");
         return null;
     }
 

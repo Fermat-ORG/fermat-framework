@@ -30,12 +30,10 @@ public class BitcoinNetworkConfiguration  implements BitcoinManager{
                 return MainNetParams.get();
             }
             case FERMAT_MAIN:
-                // Not implemented yet
-                System.err.println("Method: getNetworkConfiguration CASE: FERMAT_MAIN - TENGO RETURN NULL");
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
             case FERMAT_TEST:
-                //not implemented yet
-                System.err.println("Method: getNetworkConfiguration CASE: FERMAT_TEST - TENGO RETURN NULL");
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
             default:{
                 return TestNet3Params.get();

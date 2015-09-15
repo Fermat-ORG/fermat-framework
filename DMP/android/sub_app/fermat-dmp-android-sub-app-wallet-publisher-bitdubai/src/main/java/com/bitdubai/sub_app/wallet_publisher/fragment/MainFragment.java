@@ -297,13 +297,14 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
             WalletFactoryProject tmp = new WalletFactoryProject() {
                 @Override
                 public String getProjectPublicKey() {
-                    System.err.println("Method: getProjectPublicKey - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getProjectPublicKey - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setProjectPublickKey(String publickKey) {
-                    System.err.println("Method: setProjectPublickKey - VACIO");
+
                 }
 
                 @Override
@@ -313,7 +314,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public void setName(String name) {
-                    System.err.println("Method: setName - VACIO");
+
                 }
 
                 @Override
@@ -323,29 +324,32 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public void setDescription(String description) {
-                    System.err.println("Method: setDescription - VACIO");
+
                 }
 
                 @Override
                 public WalletType getWalletType() {
-                    System.err.println("Method: getWalletType - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getWalletType - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setWalletType(WalletType walletType) {
-                    System.err.println("Method: setWalletType - VACIO");
+                    //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: setWalletType - VACIO");
                 }
 
                 @Override
                 public WalletCategory getWalletCategory() {
-                    System.err.println("Method: getWalletCategory - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getWalletCategory - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setWalletCategory(WalletCategory walletCategory) {
-                    System.err.println("Method: setWalletCategory - VACIO");
+
                 }
 
                 @Override
@@ -355,40 +359,43 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
-                    System.err.println("Method: setFactoryProjectType - VACIO");
+
                 }
 
                 @Override
                 public WalletFactoryProjectState getProjectState() {
-                    System.err.println("Method: getProjectState - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " ethod: getProjectState - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setProjectState(WalletFactoryProjectState projectState) {
-                    System.err.println("Method: setProjectState - VACIO");
+
                 }
 
                 @Override
                 public Timestamp getCreationTimestamp() {
-                    System.err.println("Method: getCreationTimestamp - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getCreationTimestamp - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setCreationTimestamp(Timestamp timestamp) {
-                    System.err.println("Method: setCreationTimestamp - VACIO");
+
                 }
 
                 @Override
                 public Timestamp getLastModificationTimestamp() {
-                    System.err.println("Method: getLastModificationTimestamp - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getLastModificationTimestamp - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setLastModificationTimeststamp(Timestamp timestamp) {
-                    System.err.println("Method: setLastModificationTimeststamp - VACIO");
+
                 }
 
                 @Override
@@ -398,64 +405,69 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public void setSize(int size) {
-                    System.err.println("Method: setSize - VACIO");
+
                 }
 
                 @Override
                 public Skin getDefaultSkin() {
-                    System.err.println("Method: getDefaultSkin - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getDefaultSkin - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setDefaultSkin(Skin skin) {
-                    System.err.println("Method: setDefaultSkin - VACIO");
+
                 }
 
                 @Override
                 public List<Skin> getSkins() {
-                    System.err.println("Method: getSkins - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getSkins - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setSkins(List<Skin> skins) {
-                    System.err.println("Method: setSkins - VACIO");
+
                 }
 
 
                 @Override
                 public Language getDefaultLanguage() {
-                    System.err.println("Method: getDefaultLanguage - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getDefaultLanguage - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setDefaultLanguage(Language language) {
-                    System.err.println("Method: setDefaultLanguage - VACIO");
+
                 }
 
                 @Override
                 public List<Language> getLanguages() {
-                    System.err.println("Method: getLanguages - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getLanguages - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setLanguages(List<Language> languages) {
-                    System.err.println("Method: setLanguages - VACIO");
+
                 }
 
 
                 @Override
                 public WalletNavigationStructure getNavigationStructure() {
-                    System.err.println("Method: getNavigationStructure - TENGO RETURN NULL");
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: getNavigationStructure - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
-                    System.err.println("Method: setNavigationStructure - VACIO");
+
                 }
             };
             items.add(tmp);

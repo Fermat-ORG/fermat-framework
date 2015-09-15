@@ -44,8 +44,7 @@ public enum ReferenceFragmentsEnumType implements FermatFragmentsEnumType<Refere
         }
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
-
-        System.err.println("Method: getValue - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 

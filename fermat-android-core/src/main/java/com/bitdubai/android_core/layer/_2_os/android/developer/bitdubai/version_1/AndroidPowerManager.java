@@ -33,7 +33,6 @@ public class AndroidPowerManager  implements PowerManager {
 
     @Override
     public PowerStatus getStatus(){
-        System.err.println("Method: getStatus - TENGO RETURN NULL");
         return null;
     }
 
@@ -42,7 +41,6 @@ public class AndroidPowerManager  implements PowerManager {
      */
     @Override
     public PlugType getPlugType(){
-        System.err.println("Method: getPlugType - TENGO RETURN NULL");
         return null;
     }
 

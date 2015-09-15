@@ -143,7 +143,6 @@ public abstract class FermatListFragment<M> extends FermatFragment
      * @param refreshType Fermat Refresh Enum Type
      */
     public ArrayList<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        System.err.println("Method: getMoreDataAsync - TENGO RETURN NULL");
         return null;
     }
 

@@ -1097,13 +1097,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                  * Get the next packet to send
                  */
                   return (FMPPacket) ((Queue) pendingOutgoingPacketCache.get(destination)).iterator().next();
-
             }
-
         }
-        System.err.println("Method: getNextPendingOutgoingPacketCacheForDestination - TENGO RETURN NULL");
         return null;
-
     }
 
 

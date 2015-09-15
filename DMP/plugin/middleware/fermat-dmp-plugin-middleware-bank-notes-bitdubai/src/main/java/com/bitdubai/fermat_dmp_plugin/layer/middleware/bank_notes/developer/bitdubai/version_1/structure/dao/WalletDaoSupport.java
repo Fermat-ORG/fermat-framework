@@ -72,7 +72,8 @@ public class WalletDaoSupport extends DatabaseTemplate implements WalletDao<Long
      */
     @Override
     public Wallet get(Long id) {
-        System.err.println("Method: get - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: get - TENGO RETURN NULL");
         return null;
     }
 
@@ -83,7 +84,8 @@ public class WalletDaoSupport extends DatabaseTemplate implements WalletDao<Long
      */
     @Override
     public List<Wallet> findAll() {
-        System.err.println("Method: findAll - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: findAll - TENGO RETURN NULL");
         return null;
     }
 

@@ -59,7 +59,6 @@ public class LoaderService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        System.err.println("Method: onBind - TENGO RETURN NULL");
         return null;
     }
 

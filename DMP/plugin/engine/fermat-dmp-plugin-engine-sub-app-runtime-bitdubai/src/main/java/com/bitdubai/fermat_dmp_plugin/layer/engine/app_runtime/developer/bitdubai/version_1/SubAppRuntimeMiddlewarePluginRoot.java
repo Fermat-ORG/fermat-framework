@@ -208,7 +208,8 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             lastSubapp = subApps;
             return subApp;
         }
-        System.err.println("Method: getSubApp - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getSubApp - TENGO RETURN NULL");
         return null;
 
 //        Iterator<Map.Entry<SubApps, SubApp>> eSubApp = listSubApp.entrySet().iterator();

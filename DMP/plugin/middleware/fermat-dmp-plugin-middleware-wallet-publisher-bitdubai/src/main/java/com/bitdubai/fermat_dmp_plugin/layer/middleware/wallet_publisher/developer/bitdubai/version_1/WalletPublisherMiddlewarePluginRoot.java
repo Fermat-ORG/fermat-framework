@@ -507,9 +507,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
 
     private WalletFactoryProject constructWalletFactoryProjectTest(){
-
-
-
         WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
 
             @Override
@@ -519,6 +516,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setProjectPublickKey(String publickKey) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setProjectPublickKey - VACIO");
             }
 
             @Override
@@ -528,6 +527,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setName(String name) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setName - VACIO");
             }
 
             @Override
@@ -537,6 +538,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setDescription(String description) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setDescription - VACIO");
             }
 
             @Override
@@ -546,7 +549,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setWalletType(WalletType walletType) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setWalletType - VACIO");
             }
 
             @Override
@@ -556,7 +560,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setProjectState(WalletFactoryProjectState projectState) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setProjectState - VACIO");
             }
 
             @Override
@@ -566,7 +571,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setCreationTimestamp(Timestamp timestamp) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setCreationTimestamp - VACIO");
             }
 
             @Override
@@ -576,7 +582,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setLastModificationTimeststamp(Timestamp timestamp) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setLastModificationTimeststamp - VACIO");
             }
 
             @Override
@@ -586,7 +593,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setSize(int size) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setSize - VACIO");
             }
 
             @Override
@@ -596,7 +604,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setDefaultSkin(Skin skin) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setDefaultSkin - VACIO");
             }
 
             @Override
@@ -608,7 +617,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setSkins(List<Skin> skins) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setSkins - VACIO");
             }
 
             @Override
@@ -618,7 +628,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setDefaultLanguage(Language language) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setDefaultLanguage - VACIO");
             }
 
             @Override
@@ -630,7 +641,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setLanguages(List<Language> languages) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setLanguages - VACIO");
             }
 
 
@@ -651,7 +663,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
                     @Override
                     public String createMessageSignature(String mensage) throws CantSingMessageException {
-                        System.err.println("Method: createMessageSignature - TENGO RETURN NULL");
+                        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                        System.err.println(this.getClass() + " Method: createMessageSignature - TENGO RETURN NULL");
                         return null;
                     }
                 });
@@ -662,7 +675,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setNavigationStructure - VACIO");
             }
 
             @Override
@@ -672,7 +686,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setWalletCategory(WalletCategory walletCategory) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setWalletCategory - VACIO");
             }
 
             @Override
@@ -682,7 +697,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: setFactoryProjectType - VACIO");
             }
         };
 
@@ -710,7 +726,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
-                System.err.println("Method: createMessageSignature - TENGO RETURN NULL");
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: createMessageSignature - TENGO RETURN NULL");
                 return null;
             }
         });
@@ -740,7 +757,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
-                System.err.println("Method: createMessageSignature - TENGO RETURN NULL");
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: createMessageSignature - TENGO RETURN NULL");
                 return null;
             }
         });

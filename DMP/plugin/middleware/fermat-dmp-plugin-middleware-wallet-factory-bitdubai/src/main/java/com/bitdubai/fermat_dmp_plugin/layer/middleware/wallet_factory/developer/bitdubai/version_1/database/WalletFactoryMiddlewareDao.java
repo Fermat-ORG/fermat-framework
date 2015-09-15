@@ -329,11 +329,13 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         if (table.getRecords().size() > 1)
             throw new DatabaseOperationException("Multiples navigation structure for single project found in database." , null, "Project key: " + walletFactoryPublicKey, null);
 
-        if (table.getRecords().size() == 1)
+        if (table.getRecords().size() == 1) {
             return table.getRecords().get(0);
-        else
-            System.err.println("Method: getNavigationStructureData - TENGO RETURN NULL");
+        }else {
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: getNavigationStructureData - TENGO RETURN NULL");
             return null;
+        }
     }
 
     private List<DatabaseTableRecord> getWalletFactoryProjectsData (DatabaseTableFilter filter) throws CantLoadTableToMemoryException {

@@ -163,9 +163,12 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (InvalidParameterException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass()+" Method: getLanguages - VACIO");
             e.printStackTrace();
         }
-        System.err.println("Method: getLanguages - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getLanguages - TENGO RETURN NULL");
         return null;
     }
 
@@ -177,9 +180,12 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (InvalidParameterException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass()+" Method: getLanguageById - VACIO");
             e.printStackTrace();
         }
-        System.err.println("Method: getLanguageById - TENGO RETURN NULL");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getLanguageById - TENGO RETURN NULL");
         return null;
     }
 
@@ -287,7 +293,8 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (InvalidParameterException e) {
-            System.err.println("Method: updateLanguage - VACIO");
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: updateLanguage - VACIO");
             e.printStackTrace();
         }
     }
@@ -322,7 +329,8 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
 
     @Override
     public void closeLanguage(WalletLanguage walletLanguage) throws CantCloseWalletLanguageException, LanguageNotFoundException {
-        //TODO to do..
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: closeLanguage - VACIO");
     }
 
     @Override
@@ -450,7 +458,8 @@ public class WalletLanguageMiddlewarePluginRoot implements DatabaseManagerForDev
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println("******* Error trying to get database table list for plugin Wallet Factory");
-            System.err.println("Method: getDatabaseTableContent - TENGO RETURN NULL");
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: getDatabaseTableContent - TENGO RETURN NULL");
             return null;
         }
     }

@@ -35,7 +35,6 @@ public class WalletFragmentFactory {
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.err.println("Method: getFragmentFactoryByWalletType - TENGO RETURN NULL");
         return null;
     }
 }

@@ -46,9 +46,6 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
             case BRANDED_REFERENCE_WALLET:
                 break;
         }
-
-
-        System.err.println("Method: openWalletSession - TENGO RETURN NULL");
         return null;
     }
 
@@ -68,7 +65,6 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
             case BRANDED_REFERENCE_WALLET:
                 break;
         }
-        System.err.println("Method: openWalletSession - TENGO RETURN NULL");
         return null;
     }
 

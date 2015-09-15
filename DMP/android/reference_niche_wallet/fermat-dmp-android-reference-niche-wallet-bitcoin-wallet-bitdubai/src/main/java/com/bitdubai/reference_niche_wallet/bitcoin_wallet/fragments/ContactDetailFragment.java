@@ -84,7 +84,6 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
     public static ContactDetailFragment newInstance(ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
         if (walletSession == null) {
-            System.err.println("Method: newInstance - TENGO RETURN NULL");
             return null;
         }
         ContactDetailFragment f = new ContactDetailFragment();
