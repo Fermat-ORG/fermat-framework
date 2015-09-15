@@ -1676,7 +1676,7 @@
 			<layer name="Sub App">
 				<androids>
 					<android
-						name="Intra User"
+						name="Intra User identity"
 						description=""
 						difficulty="4"
 						code-level="development"
@@ -1693,20 +1693,23 @@
 						</certifications>
 					</android>
 					<android
-						name="Extra User"
+						name="Intra User Community"
 						description=""
-						difficulty="0"
-						code-level="concept"
+						difficulty="4"
+						code-level="development"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="furszy"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
 					</android>
+
 				</androids>
 			</layer>
 
