@@ -2,7 +2,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdub
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketRateProvider;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.CryptoCurrencyNotSupportedException;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.FiatCurrencyNotSupportedException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDao;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexInterface;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketPriceInterface;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BtceServiceAPI;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BterServiceAPI;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.CcexServiceAPI;
@@ -12,32 +18,59 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by francisco on 12/08/15.
  */
-public class MarketPrice implements MarketRateProvider {
+public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
     Double marketExchangeRate = null;
     HTTPJson jsonService = new HTTPJson();
     BtceServiceAPI btceServiceAPI = new BtceServiceAPI();
     BterServiceAPI bterServiceAPI = new BterServiceAPI();
     CcexServiceAPI ccexServiceAPI = new CcexServiceAPI();
     CexioServiceAPI cexioServiceAPI = new CexioServiceAPI();
+    CryptoIndexDao cryptoIndexDao;
     CryptocoinchartsServiceAPI cryptocoinchartsServiceAPI = new CryptocoinchartsServiceAPI();
+    UUID pluginId;
+    PluginDatabaseSystem pluginDatabaseSystem;
     String url = null;
     /**
-     * Through getBestMarketPrice method, the best market price returns
-     * @param c
-     * @param f
+     *
+     * @param cryptoCurrency
+     * @param fiatCurrency
      * @param time
      * @return
      */
     @Override
-    public double getHistoricalExchangeRate(CryptoCurrency c, FiatCurrency f, long time) {
-            String crypto= c.getCode().toString();
-            String fiat = f.getCode().toString();
-            marketExchangeRate=null;
-            marketExchangeRate=getBestMarketPrice(crypto, fiat);
+    public double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency, FiatCurrency fiatCurrency, long time) {
+        /**
+         * get market price from database, filtering by time
+         */
+        List<CryptoIndexInterface> list;
+        String crypto= cryptoCurrency.getCode().toString();
+        String fiat = fiatCurrency.getCode().toString();
+        cryptoIndexDao= new CryptoIndexDao(pluginDatabaseSystem,pluginId);
+        list=cryptoIndexDao.getHistoricalExchangeRateList(crypto, fiat, time);
+        marketExchangeRate=Double.valueOf(list.get(0).toString());
+         return marketExchangeRate;
+    }
+
+    /**
+     * Through getBestMarketPrice method, the best market price returns
+     * @param fiatCurrency
+     * @param cryptoCurrency
+     * @param time
+     * @return
+     * @throws FiatCurrencyNotSupportedException
+     * @throws CryptoCurrencyNotSupportedException
+     */
+    @Override
+    public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
+        String crypto= cryptoCurrency.getCode().toString();
+        String fiat = fiatCurrency.getCode().toString();
+        marketExchangeRate = null;
+        marketExchangeRate=getBestMarketPrice(crypto, fiat);
         return marketExchangeRate;
     }
     /**
@@ -68,6 +101,8 @@ public class MarketPrice implements MarketRateProvider {
         marketExchangeRate= Double.valueOf(priceList.get(priceList.size()-1));
         return marketExchangeRate;
     }
+
+
 }
 
 

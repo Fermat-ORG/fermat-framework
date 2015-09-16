@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDao;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDatabaseFactory;
+import com.googlecode.catchexception.CatchException;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
@@ -73,11 +74,11 @@ public class SaveLastRateExchangeTest {
     @Test
     public void TestSaveLastRateExchange_successful() throws Exception {
         catchException(cryptoIndexDao).saveLastRateExchange("BTC", "USD", 1);
-     assertThat(caughtException()).isNull();
+     assertThat(CatchException.<Exception>caughtException()).isNull();
     }
     @Test
     public void TestSaveLastRateExchange_ThrowCantSaveLastRateExchangeException() throws Exception{
      catchException(cryptoIndexDao).saveLastRateExchange(null, null, 2);
-     assertThat(caughtException()).isNotNull();
+     assertThat(CatchException.<Exception>caughtException()).isNotNull();
     }
 }

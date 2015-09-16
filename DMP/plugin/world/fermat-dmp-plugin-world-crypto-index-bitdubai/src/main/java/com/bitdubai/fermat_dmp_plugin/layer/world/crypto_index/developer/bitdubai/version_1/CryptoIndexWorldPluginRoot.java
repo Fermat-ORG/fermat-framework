@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -16,6 +17,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database.CryptoIndexDao;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exception.CantInitializeCryptoIndexDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exception.CantSaveLastRateExchangeException;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.CryptoIndexInterface;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.MarketPriceInterface;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.MarketPrice;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -39,7 +44,10 @@ import java.util.UUID;
  * * *
  */
 
-public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,DealsWithPluginDatabaseSystem, Plugin {
+public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service, CryptoIndexManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,DealsWithPluginDatabaseSystem, Plugin {
+
+
+    MarketPrice marketPrice=new MarketPrice();
 
     private CryptoIndexDao cryptoIndexDao;
     /**
@@ -73,14 +81,13 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
      */
     UUID pluginId;
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException{
         try {
          /**
          * I will initialize the handling of platform events.
          */
         this.cryptoIndexDao = new CryptoIndexDao(pluginDatabaseSystem, this.pluginId);
         cryptoIndexDao.initializeDatabase();
-
 
         } catch (CantInitializeCryptoIndexDatabaseException e) {
             e.printStackTrace();
@@ -131,18 +138,26 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
      * CryptoIndex Interface implementation.
      */
     
-   /* @Override
-    public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
-        return 0;
+   @Override
+    public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
+       double price = 0;
+       try {
+           /**
+            * implement the interface to get the last price of market from different providers
+            */
+           price=marketPrice.getMarketPrice(fiatCurrency, cryptoCurrency,0);
+           /**
+            * save in database the last price consulted
+            */
+           String c= cryptoCurrency.getCode().toString();
+           String f = fiatCurrency.getCode().toString();
+           cryptoIndexDao.saveLastRateExchange(c,f,price);
+       } catch (CantSaveLastRateExchangeException e) {
+           e.printStackTrace();
+       }
+       return price;
     }
-    */
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-
-
-
-    /**
+     /**
      * DealWithEvents Interface implementation.
      */
 
@@ -164,10 +179,6 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-    @Override
-    public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
-        return 0;
-    }
 
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
@@ -178,4 +189,28 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
+    /**
+     * mplement the interface MarketPriceInterface
+     * @param cryptoCurrency
+     * @param fiatCurrency
+     * @param time
+     * @return
+     */
+    @Override
+    public double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency, FiatCurrency fiatCurrency, long time) {
+        /**
+         * get market price from database, filtering by time
+         */
+        double marketExchangeRate;
+        List<CryptoIndexInterface> list;
+        String crypto= cryptoCurrency.getCode().toString();
+        String fiat = fiatCurrency.getCode().toString();
+        cryptoIndexDao= new CryptoIndexDao(pluginDatabaseSystem,pluginId);
+        list=cryptoIndexDao.getHistoricalExchangeRateList(crypto, fiat, time);
+        marketExchangeRate=Double.valueOf(list.get(0).toString());
+        return marketExchangeRate;
+    }
+
+
 }

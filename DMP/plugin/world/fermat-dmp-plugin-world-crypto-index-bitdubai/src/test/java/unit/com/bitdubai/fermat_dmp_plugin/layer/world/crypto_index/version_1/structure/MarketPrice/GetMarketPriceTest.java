@@ -12,7 +12,7 @@ import org.junit.Test;
 /**
  * Created by francisco on 21/08/15.
  */
-public class TestGetHistoricalExchangeRate {
+public class GetMarketPriceTest {
 
     MarketPrice marketPrice = new MarketPrice();
     private double marketExchangeRate=0;
@@ -26,8 +26,8 @@ public class TestGetHistoricalExchangeRate {
         f= FiatCurrency.getByCode("USD");
     }
     @Test
-    public void getHistoricalExchangeRateTest() {
-        marketExchangeRate=marketPrice.getHistoricalExchangeRate(c,f,time);
+    public void TestGetMarketPrice() throws Exception{
+        marketExchangeRate=marketPrice.getMarketPrice(f,c,time);
         System.out.println("El precio: " + marketExchangeRate);
         Assertions.assertThat(marketExchangeRate).isNotEqualTo(null);
     }
