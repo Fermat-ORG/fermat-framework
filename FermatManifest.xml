@@ -3543,7 +3543,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Asset User Compensation"
+						name="Asset Appropriation"
 						description=""
 						difficulty="10"
 						code-level="development"
