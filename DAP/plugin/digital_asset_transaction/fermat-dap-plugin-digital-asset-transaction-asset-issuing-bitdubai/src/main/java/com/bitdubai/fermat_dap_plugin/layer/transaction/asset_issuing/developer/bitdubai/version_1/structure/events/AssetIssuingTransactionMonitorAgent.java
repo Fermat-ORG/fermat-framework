@@ -15,9 +15,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuingMonitorAgentException;
+import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -172,8 +174,27 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 throw new CantInitializeAssetIssuingMonitorAgentException(exception,"Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
             }
         }
-        
-        private void doTheMainTask()throws CantExecuteQueryException{}
+
+        private void doTheMainTask()throws CantExecuteQueryException{
+
+            boolean found = false;
+            try {
+                AssetIssuingTransactionDao assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
+//TODO:finish this method
+
+                if (!found){
+                    assetIssuingTransactionDao.updateTransactionProtocolStatus(false);
+                    this.iterationNumber = 0;
+                } else {
+                    this.iterationNumber = assetIssuingTransactionDao.updateTransactionProtocolStatus(true);
+                }
+
+
+            } catch (CantExecuteDatabaseOperationException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
 }

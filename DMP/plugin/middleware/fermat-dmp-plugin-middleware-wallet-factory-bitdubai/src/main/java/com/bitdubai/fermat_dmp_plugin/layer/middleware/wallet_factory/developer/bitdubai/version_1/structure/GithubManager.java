@@ -25,7 +25,8 @@ import javax.imageio.ImageIO;
 /**
  * Created by rodrigo on 8/22/15.
  */
-public class GithubManager extends GithubConnection {
+public class GithubManager {
+    GithubConnection githubConnection;
     final String ROOT_PATH = "seed-resources/wallet_resources/bitDubai/reference_wallet/";
     String walletPath;
 
@@ -34,10 +35,8 @@ public class GithubManager extends GithubConnection {
      * @throws GitHubRepositoryNotFoundException
      * @throws GitHubNotAuthorizedException
      */
-    public GithubManager() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-    }
     public GithubManager(String repository, String user, String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        super(repository, user, password);
+        githubConnection = new GithubConnection(repository, user, password);
     }
 
     /**
@@ -83,12 +82,14 @@ public class GithubManager extends GithubConnection {
         else
             savingPath = walletPath + "languages/" + languageFileName;
 
-        this.createGitHubTextFile(savingPath, XMLParser.parseObject(language), "new language");
+        githubConnection.createGitHubTextFile(savingPath, XMLParser.parseObject(language), "new language");
     }
 
     private void saveNavigationStructure (WalletNavigationStructure navigationStructure){
         String savingPath = walletPath + "navigation_structure/navigation_structure.xml";
-        this.createGitHubTextFile(savingPath, XMLParser.parseObject(navigationStructure), "new navigation structure");
+        String content = XMLParser.parseObject(navigationStructure);
+
+       githubConnection.createGitHubTextFile(savingPath, content, "new navigation structure");
     }
 
     private void saveSkin(Skin skin, boolean isDefault) throws IOException {
@@ -105,7 +106,7 @@ public class GithubManager extends GithubConnection {
 
         // I save the skin.xml file
         savingPath = savingPath + skin.getScreenSize().toString() + "/";
-        this.createGitHubTextFile(savingPath + skinFileName, XMLParser.parseObject(skin), "new skin added");
+        githubConnection.createGitHubTextFile(savingPath + skinFileName, XMLParser.parseObject(skin), "new skin added");
 
         //will save both layouts
         saveLandscapeLayouts(savingPath, skin.getLandscapeLayouts());
@@ -115,14 +116,14 @@ public class GithubManager extends GithubConnection {
     private void savePortraitLayouts(String savingPath, Map<String, Layout> portraitLayouts) {
         savingPath = savingPath + "portrait/layouts/";
         for (Layout layout : portraitLayouts.values()){
-            this.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
+            githubConnection.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
         }
     }
 
     private void saveLandscapeLayouts(String savingPath, Map<String, Layout> landscapeLayouts) {
         savingPath = savingPath + "landscape/layouts/";
         for (Layout layout : landscapeLayouts.values()){
-            this.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
+            githubConnection.createGitHubTextFile(savingPath + layout.getFilename(), "", "new layout");
         }
     }
 
@@ -131,7 +132,7 @@ public class GithubManager extends GithubConnection {
         for (Resource resource : resources.values()){
             //right now I can only support images types to upload to github
             if (resource.getResourceType() == ResourceType.IMAGE){
-                this.createGitHubImageFile(savingPath + resource.getResourceDensity().toString() + "drawables/" + resource.getFileName(), getGithubImage(resource.getResourceFile()), "new image uploaded.");
+                githubConnection.createGitHubImageFile(savingPath + resource.getResourceDensity().toString() + "drawables/" + resource.getFileName(), getGithubImage(resource.getResourceFile()), "new image uploaded.");
             }
         }
     }

@@ -265,6 +265,10 @@ public class CustomComponentMati extends LinearLayout implements Animation.Anima
         if(imageBitmap!=null){
             imageView_transaction.setBackground(new RoundedDrawable(imageBitmap, imageView_transaction));
             imageView_transaction.setImageDrawable(null);
+        }else{
+            imageBitmap =BitmapFactory.decodeResource(resources,R.drawable.person1);
+            imageView_transaction.setBackground(new RoundedDrawable(imageBitmap, imageView_transaction));
+            imageView_transaction.setImageDrawable(null);
         }
 
         invalidate();

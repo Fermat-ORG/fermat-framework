@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.enums.WalletFactoryProjectState</code>
  * enumerates type of Resources.
@@ -16,7 +18,7 @@ public enum LanguageState {
     DISMISSED("dismissed"),
     CLOSED("closed");
 
-    public static LanguageState getByCode(String key) {
+    public static LanguageState getByCode(String key) throws InvalidParameterException {
         switch(key) {
             case"draft":
                 return DRAFT;
@@ -26,8 +28,10 @@ public enum LanguageState {
                 return DISMISSED;
             case"closed":
                 return CLOSED;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + key, "This Code Is Not Valid for the Plugins enum");
         }
-        return null;
+       // return null;
     }
 
     private final String code;
