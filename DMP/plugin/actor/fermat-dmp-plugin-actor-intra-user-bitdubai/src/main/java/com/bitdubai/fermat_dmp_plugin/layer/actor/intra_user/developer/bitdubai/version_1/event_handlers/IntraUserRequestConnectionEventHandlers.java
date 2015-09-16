@@ -3,21 +3,21 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventMonitor;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorRequestConnectionEvent;
 
 /**
  * Created by natalia on 17/08/15.
  */
-public class IntraUserRequestConnectionEventHandlers implements EventHandler {
+public class IntraUserRequestConnectionEventHandlers implements FermatEventHandler {
     /**
      * listener  INTRA_USER_REQUESTED_CONNECTION event
      * Change Actor status to PENDING_LOCALLY_ACCEPTANCE
@@ -27,10 +27,10 @@ public class IntraUserRequestConnectionEventHandlers implements EventHandler {
     IntraUserManager intraUserNetworkServiceManager;
 
 
-    EventMonitor eventMonitor;
+    FermatEventMonitor fermatEventMonitor;
 
-    public void setEventManager(EventMonitor eventMonitor){
-        this.eventMonitor = eventMonitor;
+    public void setEventManager(FermatEventMonitor fermatEventMonitor){
+        this.fermatEventMonitor = fermatEventMonitor;
 
     }
 
@@ -50,12 +50,12 @@ public class IntraUserRequestConnectionEventHandlers implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (((Service) this.actorIntraUserManager).getStatus() == ServiceStatus.STARTED){
 
             try
             {
-                IntraUserActorRequestConnectionEvent intraUserActorRequestConnectionEvent = (IntraUserActorRequestConnectionEvent) platformEvent;
+                IntraUserActorRequestConnectionEvent intraUserActorRequestConnectionEvent = (IntraUserActorRequestConnectionEvent) fermatEvent;
                 this.actorIntraUserManager.receivingIntraUserRequestConnection(intraUserActorRequestConnectionEvent.getIntraUserLoggedInPublicKey(),
                         intraUserActorRequestConnectionEvent.getIntraUserToAddName(),
                         intraUserActorRequestConnectionEvent.getIntraUserToAddPublicKey(),
@@ -71,17 +71,17 @@ public class IntraUserRequestConnectionEventHandlers implements EventHandler {
                 /**
                  * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
                  */
-                PlatformEvent event =  eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION);
+                FermatEvent event =  eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION);
                 eventManager.raiseEvent(event);
 
             }
             catch(CantCreateIntraUserException e)
             {
-                this.eventMonitor.handleEventException(e,platformEvent);
+                this.fermatEventMonitor.handleEventException(e, fermatEvent);
             }
             catch(Exception e)
             {
-                this.eventMonitor.handleEventException(e,platformEvent);
+                this.fermatEventMonitor.handleEventException(e, fermatEvent);
             }
 
         }

@@ -8,12 +8,12 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money.interfaces.MoneyNetworkServiceManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.MoneyReceivedEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -33,7 +33,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -62,9 +62,9 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
 
     private void moneyReceived() {
 
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
-        ((MoneyReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
+        ((MoneyReceivedEvent) fermatEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
 
     }
 
@@ -77,8 +77,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
         /**
          * I will initialize the handling of platform events.
          */
-        EventListener eventListener;
-        EventHandler eventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -98,8 +98,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements Service, Netw
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;

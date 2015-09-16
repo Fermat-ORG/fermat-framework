@@ -11,7 +11,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -101,10 +101,10 @@ public class CryptoAddressesNetworkServiceLocalAgent implements Observer {
         /**
          * Put the message on a event and fire new event
          */
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
-        platformEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
-        ((NewNetworkServiceMessageReceivedEvent) platformEvent).setData(incomingTemplateNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
-        eventManager.raiseEvent(platformEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
+        fermatEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
+        ((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
+        eventManager.raiseEvent(fermatEvent);
 
     }
 

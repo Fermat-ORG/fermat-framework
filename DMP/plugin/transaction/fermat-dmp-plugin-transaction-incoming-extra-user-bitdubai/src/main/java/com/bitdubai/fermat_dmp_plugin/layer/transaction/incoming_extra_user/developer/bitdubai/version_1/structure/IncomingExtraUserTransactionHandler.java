@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -22,7 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 
 /**
  * Created by eze on 2015.06.22.
@@ -77,8 +76,8 @@ public class IncomingExtraUserTransactionHandler implements DealsWithEvents,Deal
                  *  Fire event notification
                  */
 
-                PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
-                IncomingMoneyNotificationEvent incomingMoneyNotificationEvent=  (IncomingMoneyNotificationEvent) platformEvent;
+                FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
+                IncomingMoneyNotificationEvent incomingMoneyNotificationEvent=  (IncomingMoneyNotificationEvent) fermatEvent;
                 incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_EXTRA_USER);
                 incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
                 //incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
@@ -87,7 +86,7 @@ public class IncomingExtraUserTransactionHandler implements DealsWithEvents,Deal
                 incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());
 
 
-                eventManager.raiseEvent(platformEvent);
+                eventManager.raiseEvent(fermatEvent);
 
             } catch (CryptoAddressBookRecordNotFoundException exception) {
                 //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception

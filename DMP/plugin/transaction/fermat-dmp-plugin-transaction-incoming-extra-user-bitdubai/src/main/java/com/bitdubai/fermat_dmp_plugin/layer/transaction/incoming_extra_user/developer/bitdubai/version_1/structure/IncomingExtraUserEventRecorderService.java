@@ -12,8 +12,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionService;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ public class IncomingExtraUserEventRecorderService implements com.bitdubai.ferma
      * DealsWithEvents Interface member variables.
      */
     private com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager;
-    private List<com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener> listenersAdded = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /*
      * DealsWithRegistry Interface member variables.
@@ -77,7 +77,7 @@ public class IncomingExtraUserEventRecorderService implements com.bitdubai.ferma
         this.registry = registry;
     }
 
-    public void saveEvent(PlatformEvent event) throws CantSaveEventException {
+    public void saveEvent(FermatEvent event) throws CantSaveEventException {
         if(!serviceStatus.equals(ServiceStatus.STARTED))
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, null, null, "You must start the service first");
 
@@ -95,25 +95,25 @@ public class IncomingExtraUserEventRecorderService implements com.bitdubai.ferma
          * I will initialize the handling of com.bitdubai.platform events.
          */
         try{
-            EventListener onBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
-            EventListener onCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
-            EventListener reversedOnBlockchainEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
-            EventListener reversedOnCryptoNetworkEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+            FermatEventListener onBlockchainFermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+            FermatEventListener onCryptoNetworkFermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
+            FermatEventListener reversedOnBlockchainFermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
+            FermatEventListener reversedOnCryptoNetworkFermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER);
 
-            onBlockchainEventListener.setEventHandler(new IncomingCryptoOnBlockchainNetworkWaitingTransferenceExtraUserEventHandler(this));
-            onCryptoNetworkEventListener.setEventHandler(new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
-            reversedOnBlockchainEventListener.setEventHandler(new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventHandler(this));
-            reversedOnCryptoNetworkEventListener.setEventHandler(new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
+            onBlockchainFermatEventListener.setEventHandler(new IncomingCryptoOnBlockchainNetworkWaitingTransferenceExtraUserEventHandler(this));
+            onCryptoNetworkFermatEventListener.setEventHandler(new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
+            reversedOnBlockchainFermatEventListener.setEventHandler(new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventHandler(this));
+            reversedOnCryptoNetworkFermatEventListener.setEventHandler(new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventHandler(this));
 
-            eventManager.addListener(onBlockchainEventListener);
-            eventManager.addListener(onCryptoNetworkEventListener);
-            eventManager.addListener(reversedOnBlockchainEventListener);
-            eventManager.addListener(reversedOnCryptoNetworkEventListener);
+            eventManager.addListener(onBlockchainFermatEventListener);
+            eventManager.addListener(onCryptoNetworkFermatEventListener);
+            eventManager.addListener(reversedOnBlockchainFermatEventListener);
+            eventManager.addListener(reversedOnCryptoNetworkFermatEventListener);
 
-            listenersAdded.add(onBlockchainEventListener);
-            listenersAdded.add(onCryptoNetworkEventListener);
-            listenersAdded.add(reversedOnBlockchainEventListener);
-            listenersAdded.add(reversedOnCryptoNetworkEventListener);
+            listenersAdded.add(onBlockchainFermatEventListener);
+            listenersAdded.add(onCryptoNetworkFermatEventListener);
+            listenersAdded.add(reversedOnBlockchainFermatEventListener);
+            listenersAdded.add(reversedOnCryptoNetworkFermatEventListener);
 
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception e){
@@ -129,8 +129,8 @@ public class IncomingExtraUserEventRecorderService implements com.bitdubai.ferma
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();

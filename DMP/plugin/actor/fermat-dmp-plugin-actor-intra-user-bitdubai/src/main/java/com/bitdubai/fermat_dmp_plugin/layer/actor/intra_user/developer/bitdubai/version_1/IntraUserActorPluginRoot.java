@@ -27,26 +27,19 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraU
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserNotification;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDao;
-import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserConnectionAcceptedEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserDisconnectionEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserDeniedConnectionEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserRequestConnectionEventHandlers;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraUserException;
-import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserActorDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantProcessNotificationsExceptions;
@@ -57,8 +50,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 
@@ -68,7 +61,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 
 /**
@@ -97,7 +89,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      */
     EventManager eventManager;
 
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealsWithLogger interface member variable
@@ -379,57 +371,57 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
              * I will initialize the handling of com.bitdubai.platform events.
              */
 
-            EventListener eventListener;
-            EventHandler eventHandler;
+            FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
 
 
             /**
              * Listener Accepted connection event
              */
-            eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
-            eventHandler = new IntraUserConnectionAcceptedEventHandlers();
-            ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setActorIntraUserManager(this);
-            ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setEventManager(eventManager);
-            ((IntraUserConnectionAcceptedEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
+            fermatEventHandler = new IntraUserConnectionAcceptedEventHandlers();
+            ((IntraUserConnectionAcceptedEventHandlers) fermatEventHandler).setActorIntraUserManager(this);
+            ((IntraUserConnectionAcceptedEventHandlers) fermatEventHandler).setEventManager(eventManager);
+            ((IntraUserConnectionAcceptedEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             /**
              * Listener Cancelled connection event
              */
-            eventListener = eventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
-            eventHandler = new IntraUserDisconnectionEventHandlers();
-            ((IntraUserDisconnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
-            ((IntraUserDisconnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+            fermatEventHandler = new IntraUserDisconnectionEventHandlers();
+            ((IntraUserDisconnectionEventHandlers) fermatEventHandler).setActorIntraUserManager(this);
+            ((IntraUserDisconnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             /**
              * Listener Request connection event
              */
-            eventListener = eventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION);
-            eventHandler = new IntraUserRequestConnectionEventHandlers();
-            ((IntraUserRequestConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
-            ((IntraUserRequestConnectionEventHandlers) eventHandler).setEventManager(this.eventManager);
-            ((IntraUserRequestConnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION);
+            fermatEventHandler = new IntraUserRequestConnectionEventHandlers();
+            ((IntraUserRequestConnectionEventHandlers) fermatEventHandler).setActorIntraUserManager(this);
+            ((IntraUserRequestConnectionEventHandlers) fermatEventHandler).setEventManager(this.eventManager);
+            ((IntraUserRequestConnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
 
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             /**
              * Listener Denied connection event
              */
-            eventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED);
-            eventHandler = new IntraUserDeniedConnectionEventHandlers();
-            ((IntraUserDeniedConnectionEventHandlers) eventHandler).setActorIntraUserManager(this);
-            ((IntraUserDeniedConnectionEventHandlers) eventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            eventListener.setEventHandler(eventHandler);
+            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED);
+            fermatEventHandler = new IntraUserDeniedConnectionEventHandlers();
+            ((IntraUserDeniedConnectionEventHandlers) fermatEventHandler).setActorIntraUserManager(this);
+            ((IntraUserDeniedConnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            fermatEventListener.setEventHandler(fermatEventHandler);
 
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
 
             /**

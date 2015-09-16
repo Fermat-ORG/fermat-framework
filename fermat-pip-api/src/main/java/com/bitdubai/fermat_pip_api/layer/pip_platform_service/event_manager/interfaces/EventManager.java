@@ -7,14 +7,14 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
  */
 public interface EventManager {
 
-public EventListener getNewListener (EventType eventType);
+    FermatEventListener getNewListener(EventType eventType);
 
-public PlatformEvent getNewEvent(EventType eventType);
+    FermatEvent getNewEvent(EventType eventType);
 
-public void addListener(EventListener listener);
-    
-public void removeListener(EventListener listener);
+    void addListener(FermatEventListener listener);
 
-public void raiseEvent(PlatformEvent platformEvent);
+    void removeListener(FermatEventListener listener);
+
+    void raiseEvent(FermatEvent fermatEvent);
 
 }

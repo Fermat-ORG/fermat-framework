@@ -53,6 +53,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +107,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -209,43 +211,43 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
-        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener;
-        com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler eventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
 
-       /* eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
-        eventHandler = new UserCreatedEventHandler();
-        ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+       /* fermatEventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
+        fermatEventHandler = new UserCreatedEventHandler();
+        ((UserCreatedEventHandler) fermatEventHandler).setWalletManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-        eventListener = eventManager.getNewListener(EventType.DEVICE_USER_LOGGED_IN);
-        eventHandler = new UserLoggedInEventHandler();
-        ((UserLoggedInEventHandler) eventHandler).setWalletManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.DEVICE_USER_LOGGED_IN);
+        fermatEventHandler = new UserLoggedInEventHandler();
+        ((UserLoggedInEventHandler) fermatEventHandler).setWalletManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-        eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
-        eventHandler = new WalletResourcesInstalledEventHandler();
-        ((WalletResourcesInstalledEventHandler) eventHandler).setWalletManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
+        fermatEventHandler = new WalletResourcesInstalledEventHandler();
+        ((WalletResourcesInstalledEventHandler) fermatEventHandler).setWalletManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-        eventListener = eventManager.getNewListener(EventType.NAVIGATION_STRUCTURE_UPDATED);
-        eventHandler = new NavigationStructureUpdatedEventHandler();
-        ((NavigationStructureUpdatedEventHandler) eventHandler).setWalletManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.NAVIGATION_STRUCTURE_UPDATED);
+        fermatEventHandler = new NavigationStructureUpdatedEventHandler();
+        ((NavigationStructureUpdatedEventHandler) fermatEventHandler).setWalletManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-        eventListener = eventManager.getNewListener(EventType.WALLET_CREATED);
-        eventHandler = new WalletCreatedEventHandler();
-        ((WalletCreatedEventHandler) eventHandler).setWalletManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);*/
+        fermatEventListener = eventManager.getNewListener(EventType.WALLET_CREATED);
+        fermatEventHandler = new WalletCreatedEventHandler();
+        ((WalletCreatedEventHandler) fermatEventHandler).setWalletManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);*/
 
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -267,8 +269,8 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();

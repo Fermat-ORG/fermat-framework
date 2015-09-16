@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserNotificationDescriptor;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserStatus;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorConfirmNotificationsIntraUserException;
@@ -54,7 +53,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionDeniedEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorRequestConnectionEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserEstablishedRequestedNetworkServiceConnectionHandler;
@@ -65,7 +64,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 
 
 import java.util.ArrayList;
@@ -130,7 +129,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     /**
      * Hold the listeners references
      */
-    private List<EventListener> listenersAdded;
+    private List<FermatEventListener> listenersAdded;
 
     /**
      * Holds the intraUserNetworkServiceManagersCache
@@ -515,8 +514,8 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
           UUID requestId = UUID.randomUUID();
           getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, intraUserLoggedInName,intraUserToAddPublicKey, IntraUserNotificationDescriptor.ASKFORACCEPTANCE,myProfileImage);
 
-          PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_REQUESTED_CONNECTION);
-          IntraUserActorRequestConnectionEvent intraUserActorRequestConnectionEvent = (IntraUserActorRequestConnectionEvent) platformEvent;
+          FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_REQUESTED_CONNECTION);
+          IntraUserActorRequestConnectionEvent intraUserActorRequestConnectionEvent = (IntraUserActorRequestConnectionEvent) fermatEvent;
 
           intraUserActorRequestConnectionEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
           intraUserActorRequestConnectionEvent.setIntraUserToAddPublicKey(intraUserToAddPublicKey);
@@ -547,8 +546,8 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             UUID requestId = UUID.randomUUID();
             getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey,"", intraUserToAddPublicKey, IntraUserNotificationDescriptor.ACCEPTED,new byte[0]);
 
-            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED);
-            IntraUserActorConnectionAcceptedEvent intraUserActorConnectionAcceptedEvent = (IntraUserActorConnectionAcceptedEvent) platformEvent;
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED);
+            IntraUserActorConnectionAcceptedEvent intraUserActorConnectionAcceptedEvent = (IntraUserActorConnectionAcceptedEvent) fermatEvent;
 
             intraUserActorConnectionAcceptedEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
             intraUserActorConnectionAcceptedEvent.setIntraUserToAddPublicKey(intraUserToAddPublicKey);
@@ -576,8 +575,8 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             UUID requestId = UUID.randomUUID();
             getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToRejectPublicKey, IntraUserNotificationDescriptor.DENIED,new byte[0]);
 
-            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_DENIED);
-            IntraUserActorConnectionDeniedEvent intraUserActorConnectionDeniedEvent = (IntraUserActorConnectionDeniedEvent) platformEvent;
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_DENIED);
+            IntraUserActorConnectionDeniedEvent intraUserActorConnectionDeniedEvent = (IntraUserActorConnectionDeniedEvent) fermatEvent;
 
             intraUserActorConnectionDeniedEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
             intraUserActorConnectionDeniedEvent.setIntraUserToAddPublicKey(intraUserToRejectPublicKey);
@@ -606,8 +605,8 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED,new byte[0]);
 
 
-            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
-            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) platformEvent;
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) fermatEvent;
 
             intraUserActorConnectionCancelledEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
             intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToDisconnectPublicKey);
@@ -635,8 +634,8 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
             getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL,new byte[0]);
 
 
-            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
-            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) platformEvent;
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) fermatEvent;
 
             intraUserActorConnectionCancelledEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
             intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToCancelPublicKey);
@@ -701,18 +700,18 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
         /*
          * Listen and handle incoming network service connection request event
          */
-        EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
-        eventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
+        fermatEventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
         /*
          * Listen and handle established network service connection event
          */
-        eventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
-        eventListener.setEventHandler(new IntraUserEstablishedRequestedNetworkServiceConnectionHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
+        fermatEventListener.setEventHandler(new IntraUserEstablishedRequestedNetworkServiceConnectionHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**

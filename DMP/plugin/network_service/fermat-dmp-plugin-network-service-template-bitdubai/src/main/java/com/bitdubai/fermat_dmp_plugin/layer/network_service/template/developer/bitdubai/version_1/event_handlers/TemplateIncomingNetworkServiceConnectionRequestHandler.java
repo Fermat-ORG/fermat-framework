@@ -9,10 +9,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events.IncomingNetworkServiceConnectionRequestEvent;
 
 /**
@@ -24,7 +24,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events.Incoming
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateIncomingNetworkServiceConnectionRequestHandler implements EventHandler {
+public class TemplateIncomingNetworkServiceConnectionRequestHandler implements FermatEventHandler {
 
     /*
     * Represent the templateManager
@@ -43,20 +43,20 @@ public class TemplateIncomingNetworkServiceConnectionRequestHandler implements E
     /**
      * (non-Javadoc)
      *
-     * @see EventHandler#handleEvent(PlatformEvent)
+     * @see FermatEventHandler#handleEvent(FermatEvent)
      *
-     * @param platformEvent
+     * @param fermatEvent
      * @throws Exception
      */
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
         if (((Service) this.templateManager).getStatus() == ServiceStatus.STARTED) {
 
             /*
              *  TemplateManager make the job
              */
-            IncomingNetworkServiceConnectionRequestEvent incomingNetworkServiceConnectionRequestEvent = (IncomingNetworkServiceConnectionRequestEvent) platformEvent;
+            IncomingNetworkServiceConnectionRequestEvent incomingNetworkServiceConnectionRequestEvent = (IncomingNetworkServiceConnectionRequestEvent) fermatEvent;
             ((TemplateNetworkServiceManager) this.templateManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getCommunicationChannels(),
                                                                                                                       incomingNetworkServiceConnectionRequestEvent.getRemoteNetworkServicePublicKey());
 

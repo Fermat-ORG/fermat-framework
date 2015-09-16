@@ -4,15 +4,15 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletOpenedEvent;
 
 /**
  * Created by Matias Furszyfer
  */
-public class WalletOpenedEventHandler implements EventHandler {
+public class WalletOpenedEventHandler implements FermatEventHandler {
     WalletRuntimeManager walletRuntimeManager;
     
     public void setWalletRuntimeManager(WalletRuntimeManager walletRuntimeManager) {
@@ -21,8 +21,8 @@ public class WalletOpenedEventHandler implements EventHandler {
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
-        String walletId = ((WalletOpenedEvent)platformEvent).getWalletPublicKey();
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+        String walletId = ((WalletOpenedEvent) fermatEvent).getWalletPublicKey();
         
         
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {

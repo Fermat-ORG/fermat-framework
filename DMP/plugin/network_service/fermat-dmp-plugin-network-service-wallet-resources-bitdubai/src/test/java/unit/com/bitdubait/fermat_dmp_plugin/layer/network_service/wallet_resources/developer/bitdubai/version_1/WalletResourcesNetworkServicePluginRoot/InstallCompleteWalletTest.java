@@ -13,7 +13,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.dev
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import junit.framework.TestCase;
@@ -58,7 +58,7 @@ public class InstallCompleteWalletTest extends TestCase {
      * DealWithEvents Iianterface member variables.
      */
     @Mock
-    private EventListener mockEventListener;
+    private FermatEventListener mockFermatEventListener;
 
     @Mock
     private EventManager mockEventManager;
@@ -99,7 +99,7 @@ public class InstallCompleteWalletTest extends TestCase {
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
 
-        when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockEventListener);
+        when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockFermatEventListener);
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
 
 

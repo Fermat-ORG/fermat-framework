@@ -6,5 +6,5 @@ package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.int
  */
 public interface DealsWithEventMonitor {
 
-    public void setEventMonitor (EventMonitor eventMonitor);
+    public void setFermatEventMonitor(FermatEventMonitor fermatEventMonitor);
 }

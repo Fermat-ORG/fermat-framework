@@ -2,13 +2,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
 
 /**
  * Created by loui on 18/02/15.
  */
-public class WalletResourcesInstalledEventHandler implements EventHandler {
+public class WalletResourcesInstalledEventHandler implements FermatEventHandler {
     WalletManager walletManager;
 
     public void setWalletManager (WalletManager walletManager){
@@ -16,7 +16,7 @@ public class WalletResourcesInstalledEventHandler implements EventHandler {
     }
     
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
     }
 }

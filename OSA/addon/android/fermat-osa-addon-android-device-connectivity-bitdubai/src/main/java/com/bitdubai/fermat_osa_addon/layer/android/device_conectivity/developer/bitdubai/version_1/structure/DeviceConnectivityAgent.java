@@ -6,11 +6,10 @@ import android.content.Context;
 import android.net.NetworkInfo;
 
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectionType;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityAgent;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.Network;
@@ -235,9 +234,9 @@ public class DeviceConnectivityAgent  implements ConnectivityAgent,DealsWithErro
 
                     if (activeNetwork != connectionIfo.getType() ){
                         activeNetwork = connectionIfo.getType();
-                        PlatformEvent platformEvent = eventManager.getNewEvent(null);
-                        platformEvent.setSource(EventSource.DEVICE_CONNECTIVITY);
-                        eventManager.raiseEvent(platformEvent);
+                        FermatEvent fermatEvent = eventManager.getNewEvent(null);
+                        fermatEvent.setSource(EventSource.DEVICE_CONNECTIVITY);
+                        eventManager.raiseEvent(fermatEvent);
                     }
 
                 }

@@ -7,7 +7,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 /**
  * Created by Matias Furszyfer on 2015.09.03..
  */
-public class IncomingMoneyNotificationEvent extends AbstractPlatformEvent{
+public class IncomingMoneyNotificationEvent extends AbstractFermatEvent {
 
 
     private String walletPublicKey;

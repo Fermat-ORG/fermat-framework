@@ -36,7 +36,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
@@ -110,7 +110,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     /**
      * Hold the listeners references
      */
-    private List<EventListener> listenersAdded;
+    private List<FermatEventListener> listenersAdded;
 
     /**
      * Holds the templateNetworkServiceManagersCache
@@ -186,18 +186,18 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * Listen and handle incoming network service connection request event
          */
-        EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
-        eventListener.setEventHandler(new TemplateIncomingNetworkServiceConnectionRequestHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
+        fermatEventListener.setEventHandler(new TemplateIncomingNetworkServiceConnectionRequestHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
         /*
          * Listen and handle established network service connection event
          */
-        eventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
-        eventListener.setEventHandler(new TemplateEstablishedRequestedNetworkServiceConnectionHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
+        fermatEventListener.setEventHandler(new TemplateEstablishedRequestedNetworkServiceConnectionHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**

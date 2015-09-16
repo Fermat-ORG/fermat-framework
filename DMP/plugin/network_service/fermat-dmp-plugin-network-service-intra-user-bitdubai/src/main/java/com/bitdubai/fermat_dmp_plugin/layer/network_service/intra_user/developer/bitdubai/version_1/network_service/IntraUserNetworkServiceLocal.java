@@ -9,7 +9,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -113,10 +113,10 @@ public class IntraUserNetworkServiceLocal implements Observer {
         /**
          * Put the message on a event and fire new event
          */
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
-        platformEvent.setSource(EventSource.NETWORK_SERVICE_INTRA_USER_PLUGIN);
-        ((NewNetworkServiceMessageReceivedEvent) platformEvent).setData(incomingIntraUserNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
-        eventManager.raiseEvent(platformEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
+        fermatEvent.setSource(EventSource.NETWORK_SERVICE_INTRA_USER_PLUGIN);
+        ((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingIntraUserNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
+        eventManager.raiseEvent(fermatEvent);
 
     }
 

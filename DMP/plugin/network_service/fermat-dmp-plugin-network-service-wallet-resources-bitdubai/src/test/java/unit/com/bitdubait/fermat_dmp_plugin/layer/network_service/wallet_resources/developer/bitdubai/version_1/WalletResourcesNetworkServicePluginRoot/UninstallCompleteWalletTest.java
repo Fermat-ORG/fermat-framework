@@ -2,7 +2,6 @@ package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resour
 
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -13,9 +12,9 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.dev
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 
 import junit.framework.TestCase;
 
@@ -59,7 +58,7 @@ public class UninstallCompleteWalletTest extends TestCase {
      * DealWithEvents Iianterface member variables.
      */
     @Mock
-    private EventListener mockEventListener;
+    private FermatEventListener mockFermatEventListener;
 
     @Mock
     private EventManager mockEventManager;
@@ -85,7 +84,7 @@ public class UninstallCompleteWalletTest extends TestCase {
     String repoManifest = "<skin ></skin >";
 
     @Mock
-    PlatformEvent mockPlatformEvent;
+    FermatEvent mockFermatEvent;
 
 
     WalletResourcesNetworkServicePluginRoot walletResourcePluginRoot;
@@ -104,10 +103,10 @@ public class UninstallCompleteWalletTest extends TestCase {
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
         when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
 
-        when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockEventListener);
+        when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockFermatEventListener);
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
 
-        when(mockEventManager.getNewEvent(EventType.WALLET_UNINSTALLED)).thenReturn(mockPlatformEvent);
+        when(mockEventManager.getNewEvent(EventType.WALLET_UNINSTALLED)).thenReturn(mockFermatEvent);
 
     }
 

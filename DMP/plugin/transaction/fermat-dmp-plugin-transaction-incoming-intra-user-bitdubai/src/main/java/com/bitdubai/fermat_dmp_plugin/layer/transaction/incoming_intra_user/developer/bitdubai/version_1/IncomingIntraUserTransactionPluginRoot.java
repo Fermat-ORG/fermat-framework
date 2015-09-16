@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -42,7 +42,7 @@ public class IncomingIntraUserTransactionPluginRoot implements Service, Incoming
      * PlatformService Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * UsesFileSystem Interface member variables.
@@ -90,8 +90,8 @@ public class IncomingIntraUserTransactionPluginRoot implements Service, Incoming
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();

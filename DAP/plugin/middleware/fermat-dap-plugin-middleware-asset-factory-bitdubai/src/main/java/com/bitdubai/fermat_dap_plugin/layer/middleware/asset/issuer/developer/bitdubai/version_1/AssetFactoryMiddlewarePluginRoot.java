@@ -26,7 +26,7 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsW
     EventManager eventManager;
 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
 //    private com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryMiddlewareManager getAssetIssuerManager(){
 //        com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryMiddlewareManager assetIssuerManager = new com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);

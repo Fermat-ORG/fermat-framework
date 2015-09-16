@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 
@@ -44,12 +44,12 @@ public class StartTest extends TestCase {
     @Mock
     private EventManager mockEventManager;
     @Mock
-    private EventListener mockEventListener;
+    private FermatEventListener mockFermatEventListener;
 
     @Mock
     private EventManager mockEventManager1;
     @Mock
-    private EventListener mockEventListener1;
+    private FermatEventListener mockFermatEventListener1;
 
     private WalletRuntimeModulePluginRoot testWalletRuntimeModulePluginRoot;
 
@@ -66,7 +66,7 @@ public class StartTest extends TestCase {
     public void teststart_ThePlugInHasStartedOk_ThrowsCantStartPluginException() throws Exception {
 
 
-        when(mockEventManager.getNewListener(EventType.WALLET_OPENED)).thenReturn(mockEventListener);
+        when(mockEventManager.getNewListener(EventType.WALLET_OPENED)).thenReturn(mockFermatEventListener);
 
         catchException(testWalletRuntimeModulePluginRoot).start();
 

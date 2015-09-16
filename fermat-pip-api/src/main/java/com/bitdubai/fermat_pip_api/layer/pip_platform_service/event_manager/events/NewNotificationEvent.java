@@ -2,13 +2,13 @@ package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.eve
 
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 
 /**
  * Created by Matias Furszyfer on 2015.08.18..
  */
 
-public class NewNotificationEvent extends AbstractPlatformEvent {
+public class NewNotificationEvent extends AbstractFermatEvent {
 
 
     /**
@@ -41,7 +41,7 @@ public class NewNotificationEvent extends AbstractPlatformEvent {
     /**
      * (non-Javadoc)
      *
-     * @see PlatformEvent#getEventType()
+     * @see FermatEvent#getEventType()
      */
     @Override
     public EventType getEventType() {
@@ -51,7 +51,7 @@ public class NewNotificationEvent extends AbstractPlatformEvent {
     /**
      * (non-Javadoc)
      *
-     * @see PlatformEvent#setSource(EventSource)
+     * @see FermatEvent#setSource(EventSource)
      */
     @Override
     public void setSource(EventSource eventSource) {
@@ -61,7 +61,7 @@ public class NewNotificationEvent extends AbstractPlatformEvent {
     /**
      * (non-Javadoc)
      *
-     * @see PlatformEvent#getSource()
+     * @see FermatEvent#getSource()
      */
     @Override
     public EventSource getSource() {

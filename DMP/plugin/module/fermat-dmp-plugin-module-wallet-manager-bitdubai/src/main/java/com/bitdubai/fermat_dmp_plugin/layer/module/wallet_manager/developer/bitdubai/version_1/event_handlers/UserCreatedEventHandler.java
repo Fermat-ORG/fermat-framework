@@ -6,15 +6,15 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.DeviceUserCreatedEvent;
 
 /**
  * Created by ciencias on 26.01.15.
  */
-public class UserCreatedEventHandler  implements EventHandler {
+public class UserCreatedEventHandler  implements FermatEventHandler {
 
     WalletManager walletManager;
 
@@ -23,9 +23,9 @@ public class UserCreatedEventHandler  implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException{
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException{
 
-        String deviceUserPublicKey = ((DeviceUserCreatedEvent) platformEvent).getPublicKey();
+        String deviceUserPublicKey = ((DeviceUserCreatedEvent) fermatEvent).getPublicKey();
 
 
         if (((Service) this.walletManager).getStatus() == ServiceStatus.STARTED) {

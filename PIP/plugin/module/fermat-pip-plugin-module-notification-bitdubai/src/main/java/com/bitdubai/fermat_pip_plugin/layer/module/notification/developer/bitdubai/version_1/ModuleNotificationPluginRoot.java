@@ -28,12 +28,11 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletUninstalledEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.event_handlers.IncomingMoneyNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.exceptions.CantCreateNotification;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.structure.Notification;
@@ -81,7 +80,7 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
     /**
      * PlatformService Interface member variables.
      */
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * Deals with event manager
@@ -202,11 +201,11 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
 
     private void setUpEventListeners(){
 
-        EventListener eventListenerNewNotification = eventManager.getNewListener(EventType.INCOMING_MONEY_NOTIFICATION);
-        EventHandler eventHandlerNewNotification = new IncomingMoneyNotificationHandler(this);
-        eventListenerNewNotification.setEventHandler(eventHandlerNewNotification);
-        eventManager.addListener(eventListenerNewNotification);
-        listenersAdded.add(eventListenerNewNotification);
+        FermatEventListener fermatEventListenerNewNotification = eventManager.getNewListener(EventType.INCOMING_MONEY_NOTIFICATION);
+        FermatEventHandler fermatEventHandlerNewNotification = new IncomingMoneyNotificationHandler(this);
+        fermatEventListenerNewNotification.setEventHandler(fermatEventHandlerNewNotification);
+        eventManager.addListener(fermatEventListenerNewNotification);
+        listenersAdded.add(fermatEventListenerNewNotification);
 
 
     }
@@ -326,10 +325,10 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
          *  Fire event notification
          */
 
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
-        IncomingMoneyNotificationEvent incomingMoneyNotificationEvent=  (IncomingMoneyNotificationEvent) platformEvent;
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
+        IncomingMoneyNotificationEvent incomingMoneyNotificationEvent=  (IncomingMoneyNotificationEvent) fermatEvent;
         incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_EXTRA_USER);
-        eventManager.raiseEvent(platformEvent);
+        eventManager.raiseEvent(fermatEvent);
     }
 
 

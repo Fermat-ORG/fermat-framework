@@ -2,9 +2,9 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
@@ -12,7 +12,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 /**
  * Created by rodrigo on 2015.07.08..
  */
-public class IncomingCryptoReversedOnCryptoNetworkEventHandler implements EventHandler {
+public class IncomingCryptoReversedOnCryptoNetworkEventHandler implements FermatEventHandler {
     /**
      * IncomingCryptoIdentifiedEventHandler member variables
      */
@@ -27,7 +27,7 @@ public class IncomingCryptoReversedOnCryptoNetworkEventHandler implements EventH
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         /**
          * Modified by Franklin Marcano, 03/08/2015
          */
@@ -35,7 +35,7 @@ public class IncomingCryptoReversedOnCryptoNetworkEventHandler implements EventH
 
             try
             {
-                this.incomingCryptoEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoReversedOnCryptoNetworkEvent) platformEvent);
+                this.incomingCryptoEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoReversedOnCryptoNetworkEvent) fermatEvent);
             }
             catch (CantSaveEvent cantSaveEvent)
             {

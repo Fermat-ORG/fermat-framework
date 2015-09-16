@@ -23,7 +23,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
@@ -75,7 +75,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
     /*
      * Hold the list of event listeners
      */
-    private List<EventListener> listenersAdded = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -223,8 +223,8 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
         /*
          * Remove all the event listeners registered with the event manager.
          */
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         /*

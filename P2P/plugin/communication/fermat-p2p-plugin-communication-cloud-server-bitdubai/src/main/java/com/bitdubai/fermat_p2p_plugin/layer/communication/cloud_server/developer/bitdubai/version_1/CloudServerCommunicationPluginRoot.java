@@ -20,7 +20,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
@@ -95,7 +95,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     /*
      * Hold the list of event listeners
      */
-    private List<EventListener> listenersAdded = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -333,8 +333,8 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
         /*
          * Remove all the event listeners registered with the event manager.
          */
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         /*

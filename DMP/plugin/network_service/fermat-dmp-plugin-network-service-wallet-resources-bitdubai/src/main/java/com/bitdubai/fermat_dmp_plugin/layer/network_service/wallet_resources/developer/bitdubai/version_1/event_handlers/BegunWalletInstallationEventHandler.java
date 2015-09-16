@@ -4,15 +4,15 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
 
 
 /**
  * Created by loui on 17/02/15.
  */
-public class BegunWalletInstallationEventHandler implements EventHandler {
+public class BegunWalletInstallationEventHandler implements FermatEventHandler {
     WalletResourcesInstalationManager walletResourcesInstalationManager;
     
     public void setWalletResourcesInstalationManager(WalletResourcesInstalationManager walletResourcesInstalationManager){
@@ -20,7 +20,7 @@ public class BegunWalletInstallationEventHandler implements EventHandler {
     }
     
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
 
 

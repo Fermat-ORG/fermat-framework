@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletCreatedEvent;
 
 import java.util.UUID;
@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by loui on 16/02/15.
  */
-public class WalletCreatedEventHandler implements EventHandler {
+public class WalletCreatedEventHandler implements FermatEventHandler {
 
     DiscountWalletManager discountWalletManager;
 
@@ -27,10 +27,10 @@ public class WalletCreatedEventHandler implements EventHandler {
     }
 
     @Override
-    public  void handleEvent(PlatformEvent platformEvent) throws FermatException {
-        UUID walletId = ((WalletCreatedEvent) platformEvent).getWalletId();
-        FiatCurrency fiatCurrency= ((WalletCreatedEvent) platformEvent).getFiatCurrency();
-        CryptoCurrency cryptoCurrency = ((WalletCreatedEvent) platformEvent).getCryptoCurrency();
+    public  void handleEvent(FermatEvent fermatEvent) throws FermatException {
+        UUID walletId = ((WalletCreatedEvent) fermatEvent).getWalletId();
+        FiatCurrency fiatCurrency= ((WalletCreatedEvent) fermatEvent).getFiatCurrency();
+        CryptoCurrency cryptoCurrency = ((WalletCreatedEvent) fermatEvent).getCryptoCurrency();
 
         /*
          * This event is thrown by different plug-ins, in particular by us.
@@ -38,7 +38,7 @@ public class WalletCreatedEventHandler implements EventHandler {
          * So we check if the source is our plug-in and exit if so.
          * TODo: Write a real specification to see if there is other source we want to ignore
         */
-        if(platformEvent.getSource() == EventSource.DISCOUNT_WALLET_BASIC_WALLET_PLUGIN)
+        if(fermatEvent.getSource() == EventSource.DISCOUNT_WALLET_BASIC_WALLET_PLUGIN)
             return;
 
 

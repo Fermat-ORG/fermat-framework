@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.dev
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -68,7 +69,7 @@ public class IncomingIntraUserDao {
         }
     }
 
-    public void saveNewEvent(EventType eventType, EventSource eventSource) throws CantInsertRecordException {
+    public void saveNewEvent(FermatEnum eventType, EventSource eventSource) throws CantInsertRecordException {
         String eventTypeAsString        = eventType.getCode();
         String eventSourceAsString      = eventSource.getCode();
         DatabaseTable eventsTable       = database.getTable(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_TABLE_NAME);
