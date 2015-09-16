@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.CantStartSubsystemException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.DAPMiddlewareSubsystem;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset_factory.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.DeveloperBitDubai;
 
 
 /**
@@ -15,17 +15,17 @@ public class AssetFactorySubsystem implements DAPMiddlewareSubsystem{
 
     @Override
     public void start() throws CantStartSubsystemException {
-        try {
-        DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-        plugin = developerBitDubai.getPlugin();
+        try
+        {
+            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            plugin = developerBitDubai.getPlugin();
+        }
+        catch (Exception exception)
+        {
+            //System.err.println("Exception: " + e.getMessage());
+            throw new CantStartSubsystemException(FermatException.wrapException(exception),"AssetFactorySubsystem","Unexpected Exception");
+        }
     }
-    catch (Exception exception)
-    {
-        //System.err.println("Exception: " + e.getMessage());
-        throw new CantStartSubsystemException(FermatException.wrapException(exception),"AssetFactorySubsystem","Unexpected Exception");
-    }
-    }
-
 
     @Override
     public Plugin getPlugin() {

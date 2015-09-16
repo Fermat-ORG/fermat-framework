@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.wallet_publisher.wizard;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -241,10 +242,14 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
         }
     };
 
-    FermatWorker worker = new FermatWorker(getActivity(), callBack) {
+    FermatWorker worker = new FermatWorker() {
 
         @Override
         protected Object doInBackground() throws Exception {
+            if (getActivity() != null)
+                setContext(getActivity());
+            if (callBack != null)
+                setCallBack(callBack);
             info(TAG, "Publishing Wallet...");
             videoUrlString = "https://www.youtube.com/watch?v=GS2JXAZhrYY";//// TODO: 08/09/15 remove this line
             URL url = new URL(videoUrlString);

@@ -102,7 +102,7 @@ public class GithubConnectionTest {
                 "    </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>";
 
 
-        GithubConnection githubConnection = new GithubConnection("acostarodrigo/fermat","acostarodrigo","tatita0602");
+        GithubConnection githubConnection = new GithubConnection("acostarodrigo/fermat","acostarodrigo","passs");
 
         githubConnection.createGitHubTextFile("seed-resources/wallet_resources/bitDubai/reference_wallet/bitcoin_wallet/navigation_structure/RODRI_TE_QUIERO!!.xml",c,"probando github connection");
 

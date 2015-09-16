@@ -109,7 +109,7 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
      *
      * @return All Wallet Factory Projects Proposals who belongs to a developer.
      */
-    public List<WalletLanguage> findAllLanguagesByTranslator(String translatorPublicKey) throws CantGetWalletLanguagesException {
+    public List<WalletLanguage> findAllLanguagesByTranslator(String translatorPublicKey) throws CantGetWalletLanguagesException, InvalidParameterException {
 
         List<WalletLanguage> walletFactoryProjectLanguages = new ArrayList<>();
 
@@ -146,7 +146,7 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public WalletLanguage findLanguageById(UUID id) throws CantGetWalletLanguageException, LanguageNotFoundException {
+    public WalletLanguage findLanguageById(UUID id) throws CantGetWalletLanguageException, LanguageNotFoundException, InvalidParameterException {
         try {
             database.openDatabase();
             DatabaseTable projectLanguageTable = database.getTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME);
@@ -208,7 +208,7 @@ public class WalletLanguageMiddlewareDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public void updateLanguage(WalletLanguage walletLanguage) throws CantUpdateLanguageException, LanguageNotFoundException {
+    public void updateLanguage(WalletLanguage walletLanguage) throws CantUpdateLanguageException, LanguageNotFoundException, InvalidParameterException {
         try {
             database.openDatabase();
             DatabaseTable projectLanguageTable = database.getTable(WalletLanguageMiddlewareDatabaseConstants.WALLET_LANGUAGE_TABLE_NAME);
