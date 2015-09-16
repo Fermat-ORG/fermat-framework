@@ -82,7 +82,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
      * WalletManager Interface member variables.
      */
     String deviceUserPublicKey = "";
-    String walletId = "25428311-deb3-4064-93b2-69093e859871";
+    String walletId = "reference_wallet";
 
     List<InstalledWallet> userWallets;
 
