@@ -101,14 +101,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         if(this.digitalAsset.getDescription()==null){
             throw new ObjectNotSetException("Digital Asset Description is not set");
         }
-        /*long digitalAssetTransactionFee=this.digitalAsset.getTransactionFee();
-        if(digitalAssetTransactionFee<MINIMAL_TRANSACTION_FEE){
-            throw new ObjectNotSetException("Digital Asset Genesis Transaction Fee is insufficient: "+digitalAssetTransactionFee);
-        }
-        /*int digitalAssetQuantity=this.digitalAsset.getQuantity();
-        if(digitalAssetQuantity<MINIMAL_QUANTITY){
-            throw new ObjectNotSetException("Digital Asset quantity is insufficient: "+digitalAssetQuantity);
-        }*/
         if(this.digitalAsset.getName()==null){
             throw new ObjectNotSetException("Digital Asset Name is not set");
         }
@@ -116,13 +108,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new ObjectNotSetException("Digital Asset PublicKey is not set");
         }
         if(this.digitalAsset.getState()==null){
-            //throw new ObjectNotSetException("Digital Asset State is not set");
             digitalAsset.setState(State.DRAFT);
         }
         if(this.digitalAsset.getIdentityAssetIssuer()==null){
             throw new ObjectNotSetException("Digital Asset Identity is not set");
         }
-        //checkGenesisAmount();
 
     }
 
@@ -253,28 +243,37 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
-    private void issuePendingDigitalAsset(String publicKey){
+    private void issuePendingDigitalAssets(String publicKey){
 
         try {
-            int pendingDigitalAssetsAmount=this.assetIssuingTransactionDao.getNumberOfPendingAssets(publicKey);
-            while(pendingDigitalAssetsAmount>0){
-                //Llamamos a la factory de digital Assets
-                //Disminuimos la cantidad de Digital Assets a generar
-                pendingDigitalAssetsAmount--;
+            //Primero, trato de emitir assets, ya persistidos en archivo, pero no emitidos hasta el momento.
+            //int pendingDigitalAssetsAmount=this.assetIssuingTransactionDao.getNumberOfPendingAssets(publicKey);
+            List<String> pendingDigitalAssetsTransactionIdList=this.assetIssuingTransactionDao.getPendingDigitalAssetsTransactionIdByPublicKey(publicKey);
+            for(String pendingDigitalAssetsTransactionId: pendingDigitalAssetsTransactionIdList){
+                issueUnfinishedDigitalAsset(pendingDigitalAssetsTransactionId);
             }
-        } catch (CantCheckAssetIssuingProgressException | UnexpectedResultReturnedFromDatabaseException exception) {
+            //Ahora emito los assets nuevos.
+            //Llamamos a la factory de digital Assets
+            createDigitalAssetCryptoTransaction();
+        } catch (CantCreateDigitalAssetTransactionException | CantCheckAssetIssuingProgressException  exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
+    private void issueUnfinishedDigitalAsset(String transactionId){
+        /***
+         *Este método debe verificar el estatus de cada Asset y proceder de acuerdo a cada uno de ellos.
+         * El objetivo es finalizar los digital assets, ya persistidos en base de datos, pero sin emitir.
+         */
+    }
+
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
-    private void createDigitalAssetCryptoTransactions(DigitalAsset digitalAsset, int assetsAmount) throws CantCreateDigitalAssetTransactionException {
+    private void createDigitalAssetCryptoTransaction() throws CantCreateDigitalAssetTransactionException {
 
         /**
          * Este método lo usaré para pedir las transacciones de cada digital asset, mucho de lo que estaba en este método ahora pertenece al
          * método issueDigitalAssets.
          */
-
 
     }
 
