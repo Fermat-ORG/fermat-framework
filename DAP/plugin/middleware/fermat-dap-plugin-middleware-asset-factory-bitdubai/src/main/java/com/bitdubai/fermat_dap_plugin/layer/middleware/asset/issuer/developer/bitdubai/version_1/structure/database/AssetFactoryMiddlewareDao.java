@@ -21,6 +21,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interf
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -155,7 +156,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         return transaction;
     }
 
-    private DatabaseTransaction addResourceContractToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory, UUID id) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
+    private DatabaseTransaction addResourceContractToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
     {
         //Contract contract = null;
 
@@ -168,7 +169,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
             DatabaseTableRecord contractRecord = getContractDataRecord(assetFactory.getPublicKey(), contractProperty.getName(), contractProperty.getValue().toString());
-            DatabaseTableFilter filter = getContractFilter(id.toString());
+            DatabaseTableFilter filter = getContractFilter(contractProperty.getName());
 
             if (isNewRecord(table, filter))
             {
@@ -245,6 +246,67 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         table.loadToMemory();
 
         return table.getRecords();
+    }
+
+    //TODO: Metodo privado para instancia un objeto assetfactory vacio
+    //private AssetFactory getEmptyAssetFactory(){
+
+    //TODO: Metodo privado para buscar un regsitro en la base de datos del assetfactory
+    //private AssetFactory getAssettFactory(DatabaseTableRecord projectsRecord)
+
+    public void saveAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException
+    {
+        try {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
+
+            DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
+            DatabaseTableRecord assetFactoryRecord = getAssetFactoryProjectRecord(assetFactory);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(assetFactory.getPublicKey());
+            filter.setColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, assetFactoryRecord);
+            else {
+                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, assetFactoryRecord);
+
+                transaction = addResourceRecordsToTransaction(transaction, assetFactory);
+
+                transaction = addResourceContractToTransaction(transaction, assetFactory);
+            }
+
+            //I execute the transaction and persist the database side of the asset.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Asset Factory in the database.", null);
+        }
+    }
+
+    public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter filter) throws DatabaseOperationException {
+        Database database= null;
+        try {
+            database = openDatabase();
+            List<AssetFactory> assetFactoryList =  new ArrayList<>();
+
+            for (DatabaseTableRecord assetFactoriesRecord : getAssetFactoryData(filter)){
+
+            }
+
+            database.closeDatabase();
+
+            return assetFactoryList;
+        }catch (Exception e){
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get projects from the database with filter: " + filter.toString(), null);
+        }
+
     }
 
 }
