@@ -445,11 +445,9 @@ project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai').p
 include ':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai')
 
-include ':fermat-dap-plugin-digital-asset-transaction-asset-redemption-bitdubai'
-project(':fermat-dap-plugin-digital-asset-transaction-asset-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-redemption-bitdubai')
+include ':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
 
-include ':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai'
-project(':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-outgoing-issuer-bitdubai')
 
 // network-service
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
