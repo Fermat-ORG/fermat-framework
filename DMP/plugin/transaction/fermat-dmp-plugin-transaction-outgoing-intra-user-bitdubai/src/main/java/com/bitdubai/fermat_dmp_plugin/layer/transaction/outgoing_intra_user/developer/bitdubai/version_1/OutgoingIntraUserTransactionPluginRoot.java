@@ -144,7 +144,6 @@ public class OutgoingIntraUserTransactionPluginRoot implements Service,OutgoingI
     @Override
     public OutgoingIntraUserTransactionManager getTransactionManager() throws CantGetOutgoingIntraUserTransactionManagerException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getTransactionManager - TENGO RETURN NULL");
         return null;
     }
 }

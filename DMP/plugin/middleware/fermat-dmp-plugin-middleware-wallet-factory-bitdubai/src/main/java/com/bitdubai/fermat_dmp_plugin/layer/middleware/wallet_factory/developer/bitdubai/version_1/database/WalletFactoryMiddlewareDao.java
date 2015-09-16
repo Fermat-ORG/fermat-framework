@@ -333,7 +333,6 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             return table.getRecords().get(0);
         }else {
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            System.err.println(this.getClass() + " Method: getNavigationStructureData - TENGO RETURN NULL");
             return null;
         }
     }

@@ -228,7 +228,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public void installResources(String subApp, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) {
         //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: installResources - VACIO");
     }
 
     /**
@@ -237,7 +236,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public void unninstallResources(String subApp) {
         //TODO METODO NO IMPLEMENTADO AUN - OJO: solo informativo de ayuda visual para momentos de DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: unninstallResources - VACIO");
     }
 
     /**
@@ -248,7 +246,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public InstalationProgress getInstalationProgress() {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getSkinFile - TENGO RETURN NULL");
         return null;
     }
 
@@ -279,7 +276,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getSkinFile - TENGO RETURN NULL");
         return null;
     }
 
@@ -293,7 +289,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getLanguageFile - TENGO RETURN NULL");
         return null;
     }
 
@@ -347,7 +342,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public String getFontStyle(String styleName, UUID skinId) {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getFontStyle - TENGO RETURN NULL");
         return null;
     }
 
@@ -362,7 +356,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getLayoutResource - TENGO RETURN NULL");
         return null;
     }
 
