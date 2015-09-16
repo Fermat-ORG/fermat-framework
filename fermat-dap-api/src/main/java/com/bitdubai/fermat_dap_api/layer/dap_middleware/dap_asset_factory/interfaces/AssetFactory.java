@@ -39,7 +39,7 @@ public interface AssetFactory {
     void setContractProperty(ContractProperty contractProperty);
 
     List<ContractProperty> getContractProperties();
-    void setContractProperties(ContractProperty contractProperties);
+    void setContractProperties(List<ContractProperty> contractProperties);
 
     State getState();
     void setState(State state);
