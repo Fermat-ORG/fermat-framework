@@ -145,9 +145,9 @@ project(':fermat-dmp-plugin-actor-intra-user-bitdubai').projectDir = new File('D
 include ':fermat-dmp-plugin-module-intra-user-bitdubai'
 project(':fermat-dmp-plugin-module-intra-user-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai')
 
-/*
 
-World layer projects on the pipeline:
+
+//World layer projects on the pipeline:
 
 include ':fermat-dmp-plugin-world-blockchain-info-bitdubai'
 project(':fermat-dmp-plugin-world-blockchain-info-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai')
@@ -167,7 +167,7 @@ project(':fermat-dmp-plugin-world-shape-shift-bitdubai').projectDir = new File('
 include ':fermat-dmp-plugin-world-coinbase-bitdubai'
 project(':fermat-dmp-plugin-world-coinbase-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai')
 
-*/
+
 
 include ':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
 project(':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai')

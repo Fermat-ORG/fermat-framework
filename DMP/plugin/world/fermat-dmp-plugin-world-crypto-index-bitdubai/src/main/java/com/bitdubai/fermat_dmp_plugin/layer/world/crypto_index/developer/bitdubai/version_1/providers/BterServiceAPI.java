@@ -3,16 +3,16 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdub
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.InterfaceUrlAPI;
 
 /**
- * Created by francisco on 13/08/15.
+ * Created by francisco on 31/08/15.
  */
-public class CryptocoinchartsServiceAPI implements InterfaceUrlAPI {
+public class BterServiceAPI implements InterfaceUrlAPI {
 
-    public String UrlAPI;
+   private String UrlAPI;
 
     @Override
-   public String getUrlAPI(String c, String f)  {
+    public String getUrlAPI(String c, String f) {
         String pair = c + "_" + f;
-        UrlAPI="http://api.cryptocoincharts.info/tradingPair/"+ pair;
+        UrlAPI="http://data.bter.com/api/1/ticker/"+ pair;
         return UrlAPI;
     }
 }
