@@ -8,7 +8,7 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 2015.08.03..
  */
 
-public class WalletNavigationStructureDownloadedEvent extends AbstractPlatformEvent{
+public class WalletNavigationStructureDownloadedEvent extends AbstractFermatEvent {
 
     private String xmlText;
 

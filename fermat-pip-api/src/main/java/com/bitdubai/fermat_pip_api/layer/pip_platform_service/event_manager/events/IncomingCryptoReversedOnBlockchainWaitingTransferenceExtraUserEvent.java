@@ -5,7 +5,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 /**
  * Created by rodrigo on 2015.07.08..
  */
-public class IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent extends AbstractPlatformEvent {
+public class IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent extends AbstractFermatEvent {
 
     public IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent(EventType eventType) {
         super(eventType);

@@ -2,17 +2,17 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.de
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_community.WalletCommunityManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
 
 /**
  * Created by loui on 19/02/15.
  */
-public class FinishedWalletInstallationEventHandler implements EventHandler {
+public class FinishedWalletInstallationEventHandler implements FermatEventHandler {
     WalletCommunityManager walletCommunityManager;
 
     public void setWalletCommunityManager(WalletCommunityManager walletCommunityManager){
@@ -21,8 +21,8 @@ public class FinishedWalletInstallationEventHandler implements EventHandler {
     
     
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
-        EventSource eventSource = platformEvent.getSource();
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+        EventSource eventSource = fermatEvent.getSource();
         if (eventSource == EventSource.MIDDLEWARE_WALLET_PLUGIN) {
 
 
