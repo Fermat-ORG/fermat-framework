@@ -13,8 +13,8 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManage
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.CompleteComponentRegistrationNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateIncomingNetworkServiceConnectionRequestHandler</code>
@@ -25,7 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteComponentRegistrationNotificationEventHandler implements EventHandler {
+public class CompleteComponentRegistrationNotificationEventHandler implements FermatEventHandler {
 
     /*
     * Represent the templateNetworkServicePluginRoot
@@ -44,13 +44,13 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Ev
     /**
      * (non-Javadoc)
      *
-     * @see EventHandler#handleEvent(PlatformEvent)
+     * @see FermatEventHandler#handleEvent(FermatEvent)
      *
      * @param platformEvent
      * @throws Exception
      */
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
         if (((Service) this.templateNetworkServicePluginRoot).getStatus() == ServiceStatus.STARTED) {
 
@@ -58,7 +58,7 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Ev
              *  TemplateManager make the job
              */
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
-            this.templateNetworkServicePluginRoot.handleCompleteComponentRegistrationNotificationEvent();
+            //this.templateNetworkServicePluginRoot.handleCompleteComponentRegistrationNotificationEvent();
 
         }
     }

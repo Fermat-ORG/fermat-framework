@@ -17,7 +17,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
  *
  * @version 1.0
  */
-public class CompleteComponentRegistrationNotificationEvent extends AbstractPlatformEvent{
+public class CompleteComponentRegistrationNotificationEvent extends AbstractFermatEvent {
 
 
  //   PlatformComponentProfile platformComponentProfile;

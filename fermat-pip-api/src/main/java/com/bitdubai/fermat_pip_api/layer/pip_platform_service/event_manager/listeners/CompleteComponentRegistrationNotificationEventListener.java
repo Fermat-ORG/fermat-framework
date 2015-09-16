@@ -7,10 +7,10 @@
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners;
 
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.CompleteComponentRegistrationNotificationEventListener</code> is
@@ -21,13 +21,13 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
  *
  * @version 1.0
  */
-public class CompleteComponentRegistrationNotificationEventListener implements EventListener {
+public class CompleteComponentRegistrationNotificationEventListener implements FermatEventListener {
 
-    EventMonitor eventMonitor;
+    FermatEventMonitor eventMonitor;
     private EventType eventType;
-    private EventHandler eventHandler;
+    private FermatEventHandler eventHandler;
 
-    public CompleteComponentRegistrationNotificationEventListener(EventType eventType, EventMonitor eventMonitor){
+    public CompleteComponentRegistrationNotificationEventListener(EventType eventType, FermatEventMonitor eventMonitor){
         this.eventType = eventType;
         this.eventMonitor = eventMonitor;
     }
@@ -38,17 +38,17 @@ public class CompleteComponentRegistrationNotificationEventListener implements E
     }
 
     @Override
-    public void setEventHandler(EventHandler eventHandler) {
+    public void setEventHandler(FermatEventHandler eventHandler) {
         this.eventHandler = eventHandler;
     }
 
     @Override
-    public EventHandler getEventHandler() {
+    public FermatEventHandler getEventHandler() {
         return this.eventHandler;
     }
 
     @Override
-    public void raiseEvent(PlatformEvent platformEvent) {
+    public void raiseEvent(FermatEvent platformEvent) {
 
         try
         {
