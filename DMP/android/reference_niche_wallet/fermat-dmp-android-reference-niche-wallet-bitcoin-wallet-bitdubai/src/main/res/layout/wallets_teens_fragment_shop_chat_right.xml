@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end">
+        <TextView android:id="@+id/hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15:53"
+            android:textSize="8dp"
+            android:textColor="#aaaaaa"
+            android:layout_gravity="bottom"
+            android:paddingRight="12dp"
+            android:paddingBottom="5dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sent_message_bubble"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:maxWidth="260dp"
+                android:text="Hi!, how are you doing tonight?"
+                android:textColor="#FF000000"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+        </LinearLayout>
+
+</FrameLayout>
+

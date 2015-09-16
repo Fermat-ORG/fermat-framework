@@ -7,4 +7,5 @@ import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
  */
 public interface ActorAssetIssuer extends Actor {
 
+
 }

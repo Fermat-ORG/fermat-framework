@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_factory.enums.WalletFactoryProjectState</code>
  * enumerates type of Resources.
@@ -15,7 +17,7 @@ public enum WalletFactoryProjectState {
     PUBLISHED("Published"),
     DELETED("Deleted");//dismissed
 
-    public static WalletFactoryProjectState getByCode(String key) {
+    public static WalletFactoryProjectState getByCode(String key) throws InvalidParameterException {
         switch(key) {
             case"In_Progress":
                 return IN_PROGRESS;
@@ -25,9 +27,11 @@ public enum WalletFactoryProjectState {
                 return PUBLISHED;
             case"Deleted":
                 return DELETED;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + key, "This Code Is Not Valid for the Plugins enum");
         }
         //throw new InvalidParameterException(key);
-        return null;
+        //return null;
     }
 
     //Modified by Manuel perez on 05/08/2015

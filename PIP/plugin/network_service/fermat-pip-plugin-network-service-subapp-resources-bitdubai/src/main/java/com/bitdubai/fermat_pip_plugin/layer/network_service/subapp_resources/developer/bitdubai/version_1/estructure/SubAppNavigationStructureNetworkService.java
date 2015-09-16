@@ -37,6 +37,6 @@ public class SubAppNavigationStructureNetworkService implements SubAppNavigation
      */
     @Override
     public String getSubAppNavigationStructure() throws CantGetSubAppNavigationStructureException {
-        return null;
+        return "Method: getSubAppNavigationStructure - NO TIENE valor ASIGNADO para RETURN";
     }
 }
