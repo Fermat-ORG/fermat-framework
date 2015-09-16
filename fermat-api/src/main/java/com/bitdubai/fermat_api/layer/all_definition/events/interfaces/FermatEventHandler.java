@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces;
+package com.bitdubai.fermat_api.layer.all_definition.events.interfaces;
 
 import com.bitdubai.fermat_api.FermatException;
 
@@ -6,7 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
  * The interface <code>com.bitdubai.fermat_api.layer.all_definition.event.interfaces.FermatEventHandler</code>
  * represent the basic functionality of a Fermat Event Handler.<p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
+ * Created by ciencias.
+ * Modified by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7

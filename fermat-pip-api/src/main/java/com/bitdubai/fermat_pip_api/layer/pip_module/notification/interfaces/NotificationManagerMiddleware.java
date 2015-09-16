@@ -2,9 +2,8 @@ package com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 
-import java.util.List;
 import java.util.Observer;
 import java.util.Queue;
 

@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.Wallet
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.structure.WalletFactoryModuleManager;
 
 import java.util.ArrayList;

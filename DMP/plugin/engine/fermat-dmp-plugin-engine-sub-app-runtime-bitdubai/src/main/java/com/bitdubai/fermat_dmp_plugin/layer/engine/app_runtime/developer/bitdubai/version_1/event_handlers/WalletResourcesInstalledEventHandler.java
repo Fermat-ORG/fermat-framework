@@ -2,8 +2,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdub
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
 /**
  * Created by loui on 18/02/15.

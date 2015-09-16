@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
@@ -36,7 +36,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     /**
      * EventManager Interface member variables.
      */
-    Map<String, List<FermatEventListener>> listenersMap = new HashMap<>();
+    private Map<String, List<FermatEventListener>> listenersMap = new HashMap<>();
 
     /**
      * EventManager Interface implementation.
@@ -52,7 +52,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     }
 
     @Override
-    public void addListener(FermatEventListener listener) {
+    public void addListener(final FermatEventListener listener) {
 
         String eventKey = buildMapKey(listener.getEventType());
 
@@ -67,7 +67,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     }
 
     @Override
-    public void removeListener(FermatEventListener listener) {
+    public void removeListener(final FermatEventListener listener) {
 
         String eventKey = buildMapKey(listener.getEventType());
 
@@ -82,7 +82,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     }
 
     @Override
-    public void raiseEvent(FermatEvent fermatEvent) {
+    public void raiseEvent(final FermatEvent fermatEvent) {
 
         String eventKey = buildMapKey(fermatEvent.getEventType());
 
@@ -95,8 +95,15 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
         }
     }
 
-    private String buildMapKey(FermatEnum fermatEnum) {
-        return fermatEnum.getPlatform().getCode()+fermatEnum.getCode();
+    private String buildMapKey(final FermatEnum fermatEnum) {
+        StringBuilder builder = new StringBuilder();
+
+        if (fermatEnum.getPlatform() != null)
+            builder.append(fermatEnum.getPlatform().getCode());
+
+        builder.append(fermatEnum.getCode());
+
+        return builder.toString();
     }
 
     /**
