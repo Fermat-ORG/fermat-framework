@@ -432,7 +432,6 @@ project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai').projectDir = n
 include ':fermat-dap-plugin-sub-app-module-asset_factory-bitdubai'
 project(':fermat-dap-plugin-sub-app-module-asset_factory-bitdubai').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset_factory-bitdubai')
 
-
 // middleware
 include ':fermat-dap-plugin-middleware-asset-factory-bitdubai'
 project(':fermat-dap-plugin-middleware-asset-factory-bitdubai').projectDir = new File('DAP/plugin/middleware/fermat-dap-plugin-middleware-asset-factory-bitdubai')
@@ -464,7 +463,6 @@ project(':fermat-dap-plugin-identity-asset-user-bitdubai').projectDir = new File
 include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
 project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
 
-
 // actor network service
 include ':fermat-dap-plugin-actor-network-service-asset-user-bitdubai'
 project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
@@ -482,10 +480,17 @@ project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('D
 include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
 
+// android dap wallets
 include ':fermat-dap-android-wallet-asset-issuer-bitdubai'
 project(':fermat-dap-android-wallet-asset-issuer-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-asset-issuer-bitdubai')
 
 include ':fermat-dap-android-wallet-asset-user-bitdubai'
 project(':fermat-dap-android-wallet-asset-user-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-asset-user-bitdubai')
+
+include ':fermat-dap-android-wallet-redeem-point-bitdubai'
+project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-redeem-point-bitdubai')
+
+// android dap sub apps
+
 
 
