@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsSearch</code>
- * haves the necessary functionality for search a wallet contact.<p/>
+ * contains the necessary functionality to search a wallet contact.<p/>
  * <p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 04/09/15.

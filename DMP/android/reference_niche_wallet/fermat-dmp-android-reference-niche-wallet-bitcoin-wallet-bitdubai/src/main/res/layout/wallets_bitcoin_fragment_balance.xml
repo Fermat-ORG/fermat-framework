@@ -35,14 +35,14 @@
         android:paddingTop="7dp"
         android:paddingBottom="7dp">
 
-        <GridLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:elevation="14dp"
             android:background="@drawable/myrect"
-            android:paddingTop="20dp"
-            android:paddingBottom="5dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="30dp"
             >
 
 
@@ -111,15 +111,8 @@
                     android:text="mBTC     0"
                     />
 
-            <Space
-                android:layout_row="4"
-                android:layout_column="0"
-                android:layout_columnSpan="2"
-                android:layout_gravity="fill"
-                android:layout_margin="30dp"
-                />
 
-            </GridLayout>
+            </LinearLayout>
 
         <Space
             android:layout_width="fill_parent"

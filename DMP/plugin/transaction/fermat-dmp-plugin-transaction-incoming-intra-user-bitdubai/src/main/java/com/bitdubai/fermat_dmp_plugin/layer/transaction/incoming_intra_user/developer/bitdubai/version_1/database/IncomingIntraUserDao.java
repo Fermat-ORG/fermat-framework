@@ -95,6 +95,7 @@ public class IncomingIntraUserDao {
         List<DatabaseTableRecord> events = eventsTable.getRecords();
 
         if (events == null || events.isEmpty()) {
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
         }
 
@@ -159,6 +160,7 @@ public class IncomingIntraUserDao {
 
     // TODO: Completar método cuando escriba el Relay Agent. El tipo de retorno va a cambiar
     public List<Transaction<CryptoTransaction>> getAllTransactionsToBeApplied(){
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 

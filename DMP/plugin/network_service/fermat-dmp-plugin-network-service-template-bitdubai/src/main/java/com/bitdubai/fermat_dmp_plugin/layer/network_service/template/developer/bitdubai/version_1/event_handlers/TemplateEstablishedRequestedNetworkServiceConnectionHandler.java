@@ -57,8 +57,8 @@ public class TemplateEstablishedRequestedNetworkServiceConnectionHandler impleme
              *  TemplateManager make the job
              */
             EstablishedNetworkServiceConnectionEvent stablishedNetworkServiceConnectionEvent = (EstablishedNetworkServiceConnectionEvent) platformEvent;
-            ((TemplateNetworkServiceManager) this.templateManager).handleEstablishedRequestedNetworkServiceConnection(stablishedNetworkServiceConnectionEvent.getCommunicationChannels(),
-                    stablishedNetworkServiceConnectionEvent.getRemoteNetworkServicePublicKey());
+       /*     ((TemplateNetworkServiceManager) this.templateManager).handleEstablishedRequestedNetworkServiceConnection(stablishedNetworkServiceConnectionEvent.getCommunicationChannels(),
+                    stablishedNetworkServiceConnectionEvent.getRemoteNetworkServicePublicKey()); */
 
         }
     }

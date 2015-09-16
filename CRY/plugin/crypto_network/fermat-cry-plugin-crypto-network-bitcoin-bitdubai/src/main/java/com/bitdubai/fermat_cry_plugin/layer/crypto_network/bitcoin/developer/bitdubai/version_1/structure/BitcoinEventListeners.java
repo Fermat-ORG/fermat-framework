@@ -43,7 +43,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
 
@@ -56,7 +56,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void reorganize(StoredBlock splitPoint, List<StoredBlock> oldBlocks, List<StoredBlock> newBlocks) throws VerificationException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     /**
@@ -142,6 +142,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public Message onPreMessageReceived(Peer peer, Message m) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
@@ -152,7 +153,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void onTransaction(Peer peer, Transaction t) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     /**
@@ -164,16 +165,17 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
     @Nullable
     @Override
     public List<Message> getData(Peer peer, GetDataMessage m) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public void onPeersDiscovered(Set<PeerAddress> peerAddresses) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int blocksLeft) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 }

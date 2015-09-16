@@ -8,6 +8,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.OutgoingMessageDao;
@@ -90,7 +91,7 @@ public class TemplateNetworkServiceLocal implements Observer {
             /*
              * Configure the correct status
              */
-            outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.PENDING_TO_SEND);
+            outgoingIntraUserNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
 
             /*
              * Save to the data base table

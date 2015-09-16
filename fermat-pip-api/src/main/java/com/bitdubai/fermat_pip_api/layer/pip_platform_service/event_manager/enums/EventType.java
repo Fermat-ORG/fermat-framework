@@ -298,7 +298,7 @@ public enum EventType {
 
     NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
         public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
+        public PlatformEvent getEvent() { return new NewNetworkServiceMessageReceivedEvent(this); }
     },
 
     OUTGOING_MONEY_REQUEST_APPROVED("OMRA") {
@@ -359,7 +359,27 @@ public enum EventType {
     INCOMING_MONEY_NOTIFICATION("IMN"){
         public EventListener getListener(EventMonitor eventMonitor) { return new IncomingMoneyNotificationEventListener(this, eventMonitor); }
         public PlatformEvent getEvent() { return new IncomingMoneyNotificationEvent(this);}
-    };
+    },
+
+    /**
+     * Declaration of the Web Socket Communication Layer Events
+     */
+    COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION("CL_CRCN"){
+        public EventListener getListener(EventMonitor eventMonitor) { return new CompleteComponentRegistrationNotificationEventListener(this, eventMonitor); }
+        public PlatformEvent getEvent() { return new CompleteComponentRegistrationNotificationEvent(this);}
+    },
+
+    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION ("CL_CRLCRN"){
+        public EventListener getListener(EventMonitor eventMonitor) { return null; }
+        public PlatformEvent getEvent() { return null;}
+    },
+
+    COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION ("CL_CCCRN"){
+        public EventListener getListener(EventMonitor eventMonitor) { return null; }
+        public PlatformEvent getEvent() { return null;}
+    }
+
+    ;
 
 
     /**
