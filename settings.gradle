@@ -408,6 +408,7 @@ project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai').pr
 //project(':functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai')
 
 // DAP Projects
+
 //asset wallet
 include ':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai'
 project(':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai').projectDir = new File('DAP/plugin/wallet/fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai')
@@ -445,7 +446,6 @@ project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitduba
 
 include ':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
-
 
 // network-service
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
@@ -512,8 +512,7 @@ project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new Fil
 
 // identity
 include ':fermat-shp-plugin-identity-brand-bitdubai'
-project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
-project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
+project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
 
 // android dap wallets
 include ':fermat-dap-android-wallet-asset-issuer-bitdubai'
@@ -524,8 +523,3 @@ project(':fermat-dap-android-wallet-asset-user-bitdubai').projectDir = new File(
 
 include ':fermat-dap-android-wallet-redeem-point-bitdubai'
 project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-redeem-point-bitdubai')
-
-// android dap sub apps
-
-
-
