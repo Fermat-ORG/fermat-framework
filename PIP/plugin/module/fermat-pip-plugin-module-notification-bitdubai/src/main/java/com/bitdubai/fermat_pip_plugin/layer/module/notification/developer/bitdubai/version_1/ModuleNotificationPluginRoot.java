@@ -278,7 +278,7 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
             case INCOMING_EXTRA_USER:
                 return "Received money";
             default:
-                return null;
+                return "Method: getTextTitleBySource - NO TIENE valor ASIGNADO para RETURN";
         }
     }
 
@@ -288,7 +288,7 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
             case INCOMING_EXTRA_USER:
                 return " send ";
             default:
-                return null;
+                return "Method: makeString - NO TIENE valor ASIGNADO para RETURN";
 
         }
 
@@ -300,7 +300,7 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
             case INCOMING_EXTRA_USER:
                 return INCOMING_EXTRA_USER_EVENT_STRING;
             default:
-                return null;
+                return "Method: getSourceString - NO TIENE valor ASIGNADO para RETURN";
 
         }
 

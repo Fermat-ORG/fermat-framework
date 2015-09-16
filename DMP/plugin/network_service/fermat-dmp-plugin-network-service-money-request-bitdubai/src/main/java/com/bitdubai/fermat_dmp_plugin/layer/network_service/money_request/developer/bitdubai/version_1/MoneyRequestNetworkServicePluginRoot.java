@@ -72,8 +72,7 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
      */
     
     public void sendMoneyRequest(){
-        
-        
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
     
     
@@ -181,32 +180,34 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
 
     @Override
     public List<CryptoRequest> getPendingReceivedCryptoRequests(String identityPublicKey) throws CantGetPendingCryptoRequestsException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public CryptoRequestState getSentRequestState(UUID requestId) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public void deleteFromPendingReceivedCryptoRequests(UUID requestId) throws CantDeleteFromPendingCryptoRequestsException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public void requestCrypto(UUID requestId, String receptorWalletPublicKey, CryptoAddress addressToSendThePayment, long cryptoAmount, String loggedInIntraUserPublicKey, String intraUserToSendRequestPublicKey, String description) throws CantSendCryptoRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public void requestMoney(String receptorWalletPublicKey, String requestSenderPublicKey, String requestDestinationPublicKey, String requestDescription, CryptoAddress addressToSendThePayment, FiatCurrency fiatCurrency, long fiatAmount) throws CantSendMoneyRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
 
     @Override
     public void rejectRequest(UUID requestId, String intraUserThatSentTheRequestPublicKey) throws CantRejectRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 }

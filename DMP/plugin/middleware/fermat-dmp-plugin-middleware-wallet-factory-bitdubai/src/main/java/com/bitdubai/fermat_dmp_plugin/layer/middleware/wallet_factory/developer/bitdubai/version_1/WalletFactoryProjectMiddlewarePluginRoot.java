@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -346,7 +347,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     private void test(){
         try {
             WalletFactoryProject walletFactoryProject = createEmptyWalletFactoryProject();
-            walletFactoryProject.setName("Proyecto de Prueba");
+            walletFactoryProject.setName("ProyectoPrueba");
             walletFactoryProject.setWalletCategory(WalletCategory.BRANDED_REFERENCE_WALLET);
             walletFactoryProject.setDescription("WFP de prueba");
             walletFactoryProject.setProjectState(WalletFactoryProjectState.CLOSED);
@@ -378,6 +379,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             translatorIdentity.setAlias("Alias");
             language.setTranslator(translatorIdentity);
             language.setId(UUID.randomUUID());
+            language.setType(Languages.AMERICAN_ENGLISH);
             language.setVersion(new Version(1, 0, 0));
             language.setSize(100);
 
