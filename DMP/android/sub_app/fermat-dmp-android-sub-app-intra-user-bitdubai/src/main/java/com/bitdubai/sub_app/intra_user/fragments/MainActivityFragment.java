@@ -172,14 +172,16 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
             data = WalletStoreListItem.getTestData(getResources());
         }
-
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getMoreDataAsync - TENGO RETURN NULL");
         //return data;
         return null;
     }
 
     @Override
     public void onLongItemClickListener(WalletStoreListItem data, int position) {
-        // do nothing
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: onLongItemClickListener - VACIO");
     }
 
     @Override

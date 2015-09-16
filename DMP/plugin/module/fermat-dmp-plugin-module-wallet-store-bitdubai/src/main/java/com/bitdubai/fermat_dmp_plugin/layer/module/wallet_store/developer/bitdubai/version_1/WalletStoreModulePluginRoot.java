@@ -298,6 +298,9 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
             return walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogId);
         } catch (Exception e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(e));
+
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: getCatalogItemDetails - TENGO RETURN NULL");
             return null;
         }
 

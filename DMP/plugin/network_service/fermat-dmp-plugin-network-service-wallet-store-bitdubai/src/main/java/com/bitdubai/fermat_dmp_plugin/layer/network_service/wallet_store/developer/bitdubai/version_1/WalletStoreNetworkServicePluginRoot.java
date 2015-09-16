@@ -597,6 +597,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: createMessageSignature - TENGO RETURN NULL");
                     return null;
                 }
             };
@@ -639,6 +641,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: createMessageSignature - TENGO RETURN NULL");
                     return null;
                 }
             };
@@ -661,6 +665,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws CantSingMessageException {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass() + " Method: createMessageSignature - TENGO RETURN NULL");
                     return null;
                 }
             };

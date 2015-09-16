@@ -510,11 +510,13 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             if (walletFactoryProjects.size() > 1)
                 throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, null, "PublicKey: " + publicKey, "Unexpected value returned. Duplicated projects in database.");
 
-            if (walletFactoryProjects.size() == 1)
+            if (walletFactoryProjects.size() == 1) {
                 return walletFactoryProjects.get(0);
-            else
+            }else {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getWalletFactoryProject - TENGO RETURN NULL");
                 return null;
-
+            }
         } catch (DatabaseOperationException | CantLoadTableToMemoryException e) {
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "PublicKey: " + publicKey, "database error");
         } catch (FileNotFoundException | CantCreateFileException e) {
@@ -603,16 +605,22 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
 
             @Override
             public String getColumn() {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getColumn - TENGO RETURN NULL");
                 return null;
             }
 
             @Override
             public String getValue() {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getValue - TENGO RETURN NULL");
                 return null;
             }
 
             @Override
             public DatabaseFilterType getType() {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getType - TENGO RETURN NULL");
                 return null;
             }
         };

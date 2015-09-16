@@ -266,22 +266,22 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
 
     @Override
     public void pause() {
-
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override
     public ServiceStatus getStatus() {
-        return null;
+        return serviceStatus;
     }
 
     /**

@@ -51,6 +51,8 @@ public class MyLayoutInflaterFactory implements LayoutInflater.Factory {
                 //Handle any ClassNotFoundException here
             }
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: onCreateView - TENGO RETURN NULL");
         return null;
     }
 

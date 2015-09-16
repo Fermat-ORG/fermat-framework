@@ -202,6 +202,8 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             List<DatabaseTableRecord> events = eventsTable.getRecords();
 
             if (events == null || events.isEmpty()) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass()+" Method: getNextPendingEvent - TENGO RETURN NULL");
                 return null;
             }
 

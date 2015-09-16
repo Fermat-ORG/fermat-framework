@@ -29,6 +29,8 @@ public class TransactionExecutorFactory {
                 case BASIC_WALLET_BITCOIN_WALLET:
                     return createBitcoinBasicWalletExecutor(walletPublicKey);
                 default:
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                    System.err.println(this.getClass()+" Method: newTransactionExecutor - TENGO RETURN NULL");
                     return null;
             }
         } catch (CantLoadWalletException e) {
