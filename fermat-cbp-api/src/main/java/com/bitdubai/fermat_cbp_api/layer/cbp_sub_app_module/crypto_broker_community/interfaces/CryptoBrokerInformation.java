@@ -7,7 +7,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_commu
 import java.util.List;
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoBrokerIdentityInformation</code>
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerIdentityInformation</code>
  * provides the method to extract information about an crypto broker.
  */
 public interface CryptoBrokerInformation {

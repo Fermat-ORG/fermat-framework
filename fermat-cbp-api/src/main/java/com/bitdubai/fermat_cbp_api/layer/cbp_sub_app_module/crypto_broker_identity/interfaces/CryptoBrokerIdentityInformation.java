@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_ident
  * Created by natalia on 16/09/15.
  */
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation</code>
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoCustomerIdentityInformation</code>
  * provides the method to extract information about an crypto broker identity.
  */
 public interface CryptoBrokerIdentityInformation {

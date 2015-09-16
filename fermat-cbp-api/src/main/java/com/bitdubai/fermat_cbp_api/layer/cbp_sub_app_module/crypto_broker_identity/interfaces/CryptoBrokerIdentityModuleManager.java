@@ -12,7 +12,7 @@ import java.util.List;
  */
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager</code>
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoCustomerIdentityModuleManager</code>
  * provides the methods for the Crypto Broker Identity sub app.
  */
 
