@@ -2,9 +2,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.develop
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSetPhotoException;
@@ -295,7 +296,14 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     }
 
     @Override
-    public CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorName, Platforms platform, Vaults vault, String walletPublicKey, ReferenceWallet walletType) throws CantRequestCryptoAddressException {
+    public CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
+                                                      Actors deliveredByActorType,
+                                                      String deliveredToActorName,
+                                                      Platforms platform,
+                                                      VaultType vaultType,
+                                                      String vaultIdentifier,
+                                                      String walletPublicKey,
+                                                      ReferenceWallet walletType) throws CantRequestCryptoAddressException {
         // TODO implement this method
         return null;
     }
@@ -306,7 +314,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                                         String deliveredToActorPublicKey,
                                         Actors deliveredToActorType,
                                         Platforms platform,
-                                        Vaults vault,
+                                        VaultType vaultType,
+                                        String vaultIdentifier,
                                         String walletPublicKey,
                                         ReferenceWallet walletType) throws CantRequestCryptoAddressException {
         try {
@@ -319,7 +328,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                     deliveredToActorPublicKey,
                     deliveredToActorType,
                     platform,
-                    vault,
+                    vaultType,
+                    vaultIdentifier,
                     walletPublicKey,
                     walletType
             );
