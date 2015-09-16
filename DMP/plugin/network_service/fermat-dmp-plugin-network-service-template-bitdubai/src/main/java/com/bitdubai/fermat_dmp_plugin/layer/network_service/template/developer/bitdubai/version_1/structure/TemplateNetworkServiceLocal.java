@@ -90,7 +90,7 @@ public class TemplateNetworkServiceLocal implements Observer {
             /*
              * Configure the correct status
              */
-            outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.PENDING_TO_SEND);
+           // outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.PENDING_TO_SEND);
 
             /*
              * Save to the data base table
