@@ -1,9 +1,10 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.interfaces;
 
-
-import com.bitdubai.fermat_cbp_api.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.WalletType;
-import com.bitdubai.fermat_cbp_api.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.interfaces.CryptoDesktopInstalledSkin;
+import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.interfaces.CryptoDesktopWalletInstalledLanguage;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,26 +12,27 @@ import java.util.UUID;
 /**
  * Created by natalia on 16/09/15.
  */
-public interface CryptoDesktopInstalledWallet {
-    /**
-     * This method gives us the list of all the languages installed for this wallet
-     *
-     * @return the list of languages
-     */
-    public List<CryptoDesktopWalletInstalledLanguage> getLanguagesId();
+public interface CryptoDesktopInstalledSubApp {
 
-    /**
-     * This method gives us the list of all the skins installed for this wallet
-     *
-     * @return the saud list of skins
-     */
-    public List<CryptoDesktopInstalledSkin> getSkinsId();
+        /**
+         * This method gives us the list of all the languages installed for this wallet
+         *
+         * @return the list of languages
+         */
+        public List<CryptoDesktopWalletInstalledLanguage> getLanguagesId();
 
-    /**
-     * This method tell us the category of the wallet
-     *
-     * @return the category of the wallet
-     */
+        /**
+         * This method gives us the list of all the skins installed for this wallet
+         *
+         * @return the saud list of skins
+         */
+        public List<CryptoDesktopInstalledSkin> getSkinsId();
+
+        /**
+         * This method tell us the category of the wallet
+         *
+         * @return the category of the wallet
+         */
     public WalletCategory getWalletCategory();
 
     /**
@@ -110,4 +112,5 @@ public interface CryptoDesktopInstalledWallet {
      */
     public String getWalletDeviceUserPublicKey();
 }
+
 
