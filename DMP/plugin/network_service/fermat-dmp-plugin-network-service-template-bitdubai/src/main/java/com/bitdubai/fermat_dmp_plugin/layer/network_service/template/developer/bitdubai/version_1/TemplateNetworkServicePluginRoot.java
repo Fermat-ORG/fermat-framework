@@ -377,6 +377,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         //Clear all references
         templateNetworkServiceManagersCache.clear();
 
+        //TODO ROBERTO CLOUD MEGAFIX
          /*
          * Unregister whit the communicationsCloudClientConnection
          */

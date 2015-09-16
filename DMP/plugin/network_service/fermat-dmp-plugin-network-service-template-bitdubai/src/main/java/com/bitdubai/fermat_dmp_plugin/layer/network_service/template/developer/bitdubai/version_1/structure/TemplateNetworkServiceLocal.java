@@ -87,6 +87,7 @@ public class TemplateNetworkServiceLocal implements Observer {
              */
             OutgoingTemplateNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (OutgoingTemplateNetworkServiceMessage) message;
 
+            //TODO ROBERTO CLOUD MEGAFIX
             /*
              * Configure the correct status
              */
