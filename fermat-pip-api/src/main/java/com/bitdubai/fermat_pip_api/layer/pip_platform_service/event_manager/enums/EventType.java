@@ -298,7 +298,7 @@ public enum EventType {
 
     NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
         public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
+        public PlatformEvent getEvent() { return new NewNetworkServiceMessageReceivedEvent(this); }
     },
 
     OUTGOING_MONEY_REQUEST_APPROVED("OMRA") {

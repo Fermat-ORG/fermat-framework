@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.WalletInstalationProgress;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
@@ -147,13 +147,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/";
 
 
-    private final String localStoragePath="wallet-resources/";
+    private final String LOCAL_STORAGE_PATH="wallet-resources/";
 
 
     /**
      *  Wallet instalation progress
      */
-    private WalletInstalationProgress walletInstalationProgress;;
+    private InstalationProgress instalationProgress;;
 
     //para testear
     private Map<String, byte[]> imagenes;
@@ -281,14 +281,14 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
 
-        String localStoragePath=this.localStoragePath+developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+        String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
 
         Skin skin = null;
 
         /**
          * add progress
          */
-        addProgress(WalletInstalationProgress.INSTALATION_START);
+        addProgress(InstalationProgress.INSTALATION_START);
 
         try {
 
@@ -362,14 +362,14 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
 
-        String localStoragePath=this.localStoragePath+developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+        String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
 
         Skin skin = null;
 
         /**
          * add progress
          */
-        addProgress(WalletInstalationProgress.INSTALATION_START);
+        addProgress(InstalationProgress.INSTALATION_START);
 
         try {
 
@@ -425,7 +425,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          *  download language
          */
         String linkToLanguage = linkToRepo + "languages/";
-        downloadLanguageFromRepo(linkToLanguage, skinId, languageName, localStoragePath, screenSize);
+        downloadLanguageFromRepo(linkToLanguage, skinId, languageName, LOCAL_STORAGE_PATH, screenSize);
 
         /**
          *  Fire event Wallet language installed
@@ -488,8 +488,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
     @Override
-    public WalletInstalationProgress getWalletInstalationProgress(){
-        return  walletInstalationProgress;
+    public InstalationProgress getInstalationProgress(){
+        return instalationProgress;
     }
 
 
@@ -503,6 +503,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public UUID getResourcesId() {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
@@ -539,7 +540,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return null;
+        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
     }
 
 
@@ -595,7 +596,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public String getFontStyle(String styleName, UUID skinId) {
-        return null;
+        return "Method: getFontStyle - NO TIENE valor ASIGNADO para RETURN";
     }
 
 
@@ -650,7 +651,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         try {
 
 
-            skin = checkAndInstallSkinResources(linkToResources,localStoragePath);
+            skin = checkAndInstallSkinResources(linkToResources, LOCAL_STORAGE_PATH);
 
 
             /**
@@ -1265,8 +1266,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
-    private void addProgress(WalletInstalationProgress walletInstalationProgress){
-        this.walletInstalationProgress=walletInstalationProgress;
+    private void addProgress(InstalationProgress instalationProgress){
+        this.instalationProgress = instalationProgress;
     }
 
 

@@ -1,6 +1,6 @@
 # Fermat CBP API
 
-Este es el API para la Crypto Broker Platform; aca definimos las interfaces publicas que unen a los componentes de la plataforma.
+Este es el API para la [Crypto Broker Platform](../CBP); aca definimos las interfaces publicas que unen a los componentes de la plataforma.
 
 ## Developer
 

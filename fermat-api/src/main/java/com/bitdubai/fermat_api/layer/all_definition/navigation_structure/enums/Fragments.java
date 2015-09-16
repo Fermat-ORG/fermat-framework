@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 
 /**
@@ -132,7 +133,7 @@ public enum Fragments implements FermatFragments {
         return code;
     }
 
-    public static Fragments getValueFromString(String code) {
+    public static Fragments getValueFromString(String code) throws InvalidParameterException {
         /*for (Fragments fragments : Fragments.values()) {
             if (fragments.key.equals(name)) {
                 return fragments;
@@ -277,11 +278,12 @@ public enum Fragments implements FermatFragments {
 
             case "CWRWBTCABTA":
                 return CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE;
-
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
 
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
-        return null;
+        //return null;
     }
 }
