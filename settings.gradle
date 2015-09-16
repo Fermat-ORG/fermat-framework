@@ -437,7 +437,7 @@ project(':fermat-dap-plugin-sub-app-module-asset_factory-bitdubai').projectDir =
 include ':fermat-dap-plugin-middleware-asset-factory-bitdubai'
 project(':fermat-dap-plugin-middleware-asset-factory-bitdubai').projectDir = new File('DAP/plugin/middleware/fermat-dap-plugin-middleware-asset-factory-bitdubai')
 
-// transaction
+// digital asset transaction
 include ':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
 
@@ -458,6 +458,9 @@ project(':fermat-dap-plugin-digital-asset-transaction-redeempoint-redemption-bit
 
 include ':fermat-dap-plugin-digital-asset-transaction-asset-appropiation-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-appropiation-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-appropiation-bitdubai')
+
+include ':fermat-dap-plugin-digital-asset-transaction-appropiation-stats-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-appropiation-stats-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-appropiation-stats-bitdubai')
 
 // network-service
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
