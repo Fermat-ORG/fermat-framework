@@ -1,12 +1,11 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-
-import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord</code>
@@ -54,10 +53,16 @@ public interface CryptoAddressBookRecord {
     Platforms getPlatform();
 
     /**
-     * returns the vault to which it belongs
-     * @return Vaults enum
+     * returns the type of vault to which it belongs
+     * @return VaultType enum
      */
-    Vaults getVault();
+    VaultType getVaultType();
+
+    /**
+     * returns the identifier of the vault to which it belongs
+     * @return String enum
+     */
+    String getVaultIdentifier();
 
     /**
      * returns the public key of the wallet to which it belongs

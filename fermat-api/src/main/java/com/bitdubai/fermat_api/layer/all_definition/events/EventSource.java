@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.all_definition.event;
+package com.bitdubai.fermat_api.layer.all_definition.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
