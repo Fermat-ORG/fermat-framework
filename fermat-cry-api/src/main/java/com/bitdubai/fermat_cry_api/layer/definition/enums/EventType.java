@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cry_api.layer.definition.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;/*
-import com.bitdubai.fermat_api.layer.all_definition.event.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.event.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.event.interfaces.FermatEventMonitor;*/
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
@@ -22,12 +22,12 @@ public enum EventType implements FermatEnum {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
 
-    EVENTO1("BWI")/* {
+    EVENTO1("BWI") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return null; }
         public FermatEvent getNewEvent() {
             return null;
         }
-    }*/;
+    };
 
     private final String code;
 
@@ -51,9 +51,9 @@ public enum EventType implements FermatEnum {
         throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code isn't valid for the EventType Enum");
     }
 
-  /*  public abstract FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor);
+    public abstract FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor);
 
-    public abstract FermatEvent getNewEvent();*/
+    public abstract FermatEvent getNewEvent();
 
     @Override
     public String getCode() {
