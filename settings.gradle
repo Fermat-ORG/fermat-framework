@@ -16,9 +16,6 @@ include ':fermat-bch-api'
 include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
 project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
 
-include ':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
-project(':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
-
 // Milestone 1 project:
 include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
 project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
@@ -533,3 +530,6 @@ project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new Fil
 // BCH
 include ':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai'
 project(':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai')
+
+include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
+project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
