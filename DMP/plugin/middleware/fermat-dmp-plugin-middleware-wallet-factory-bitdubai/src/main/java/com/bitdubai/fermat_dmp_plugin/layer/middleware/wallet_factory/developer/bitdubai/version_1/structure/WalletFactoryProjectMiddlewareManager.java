@@ -514,7 +514,6 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 return walletFactoryProjects.get(0);
             }else {
                 //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                System.err.println(this.getClass() + " Method: getWalletFactoryProject - TENGO RETURN NULL");
                 return null;
             }
         } catch (DatabaseOperationException | CantLoadTableToMemoryException e) {
@@ -606,21 +605,18 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             @Override
             public String getColumn() {
                 //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                System.err.println(this.getClass() + " Method: getColumn - TENGO RETURN NULL");
                 return null;
             }
 
             @Override
             public String getValue() {
                 //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                System.err.println(this.getClass() + " Method: getValue - TENGO RETURN NULL");
                 return null;
             }
 
             @Override
             public DatabaseFilterType getType() {
                 //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                System.err.println(this.getClass() + " Method: getType - TENGO RETURN NULL");
                 return null;
             }
         };

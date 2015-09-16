@@ -188,7 +188,6 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             @Override
             public WalletStoreDetailedCatalogItem getWalletDetailedCatalogItem() throws DatailedInformationNotFoundException {
                 //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                System.err.println(this.getClass() + " Method: getWalletDetailedCatalogItem - TENGO RETURN NULL");
                 return null;
             }
 

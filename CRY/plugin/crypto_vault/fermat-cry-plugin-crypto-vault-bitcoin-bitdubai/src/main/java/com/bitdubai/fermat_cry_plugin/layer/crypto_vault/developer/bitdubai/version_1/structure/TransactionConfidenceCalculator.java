@@ -69,7 +69,6 @@ public class TransactionConfidenceCalculator {
         List<DatabaseTableRecord> databaseTableRecordList = cryptoTransactionsTable.getRecords();
         if (databaseTableRecordList.isEmpty()) {
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            System.err.println(this.getClass()+" Method: getPreviousCryptoStatus - TENGO RETURN NULL");
             return null;
         } else {
             CryptoStatus previousCryptoStatus = null;

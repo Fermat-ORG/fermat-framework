@@ -73,7 +73,6 @@ public class BillDaoSupport extends DatabaseTemplate implements BillDao<Long, Bi
     @Override
     public Bill get(Long id) {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: get - TENGO RETURN NULL");
         return null;
     }
 
@@ -85,7 +84,6 @@ public class BillDaoSupport extends DatabaseTemplate implements BillDao<Long, Bi
     @Override
     public List<Bill> findAll() {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: findAll - TENGO RETURN NULL");
         return null;
     }
 

@@ -67,27 +67,21 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	@Override
 	public void requestConnectionTo(NetworkServices networkServices, String remoteNetworkService) throws CommunicationException {
 		//TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-		System.err.println(this.getClass()+" Method: requestConnectionTo - VACIO");
-
 	}
 
 	@Override
 	public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
 		//TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-		System.err.println(this.getClass()+" Method: acceptIncomingNetworkServiceConnectionRequest - VACIO");
-
 	}
 
 	@Override
 	public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationException {
 		//TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-		System.err.println(this.getClass()+" Method: rejectIncomingNetworkServiceConnectionRequest - VACIO");
 	}
 
 	@Override
 	public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
 		//TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-		System.err.println(this.getClass()+" Method: getActiveNetworkServiceConnection - TENGO RETURN NULL");
 		return null;
 	}
 
@@ -157,7 +151,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	@Override
 	public OnlineChannel createOnlineChannel() {
 		//TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-		System.err.println(this.getClass()+" Method: createOnlineChannel - TENGO RETURN NULL");
 		return null;
 	}
 
@@ -172,7 +165,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	@Override
 	public void registerNetworkService(final NetworkServices networkService, String networkServicePublicKey) {
 		try {
-
             System.out.println("Iniciando registerNetworkService()");
             System.out.println("networkService = "+networkService);
             System.out.println("networkServicePublicKey = "+networkServicePublicKey);
@@ -187,7 +179,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public void unregisterNetworkService(final NetworkServices networkService) {
 		// TODO Auto-generated method stub
 		//TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-		System.err.println(this.getClass()+" Method: unregisterNetworkService - VACIO");
 	}
 
 	@Override
@@ -196,7 +187,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			return cloudClient.getNetworkServiceClient(networkService).getIdentityPublicKey();
 		} catch (CloudCommunicationException e) {
 			//TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-			System.err.println(this.getClass()+" Method: getNetworkServiceChannelPublicKey - TENGO RETURN NULL");
 			return null;
 		}
 	}
@@ -229,7 +219,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			return cloudClient.getNetworkServiceClient(networkService).getPendingVPNRequests();
 		} catch (CloudCommunicationException e) {
 			//TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-			System.err.println(this.getClass()+" Method: getIncomingNetworkServiceConnectionRequests - TENGO RETURN NULL");
 			return null;
 		}
 	}
@@ -242,7 +231,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 
 		} catch (CloudCommunicationException | FMPException e) {
 			//TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-			System.err.println(this.getClass()+" Method: acceptIncomingNetworkServiceConnectionRequest - TENGO RETURN NULL");
 			return;
 		}
 	}
@@ -256,7 +244,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		} catch (CloudCommunicationException e) {
 			System.out.println(errorManager.hashCode());
 			//TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-			System.err.println(this.getClass()+" Method: getActiveNetworkServiceConnection - TENGO RETURN NULL");
 			return null;
 		}
 	}
@@ -267,7 +254,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			return cloudClient.getNetworkServiceClient(networkService).getActiveVPNIdentifiers();
 		} catch (CloudCommunicationException e) {
 			//TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-			System.err.println(this.getClass()+" Method: getActiveNetworkServiceConnectionIdentifiers - TENGO RETURN NULL");
 			return null;
 		}
 	}
@@ -277,7 +263,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			RejectConnectionRequestReasons reason) {
 		// TODO Auto-generated method stub
 		//TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-		System.err.println(this.getClass()+" Method: rejectIncomingNetworkServiceConnectionRequest - VACIO");
 	}
 
 
@@ -462,7 +447,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			this.cloudClient.stop();
 		} catch (CloudCommunicationException e) {
 			//TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-			System.err.println(this.getClass()+" Method: stop - TENGO RETURN NULL");
 				return;
 		}
     }
