@@ -708,11 +708,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 }
 
             } else {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
             }
             c.close();
             return tableRecord1;
         } catch (Exception e) {
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
         } finally {
             if (database != null)
