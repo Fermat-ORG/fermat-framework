@@ -109,187 +109,189 @@ public class BlankFragment extends FermatFragment {
 
         List<Integer> lstViewsDepth = new ArrayList<Integer>();
 
-        try {
-
-            InputStream inputStream = getActivity().getApplication().getAssets().open("xml/fragment_blank.xml");
 
 
-
-
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(inputStream, null);
-
-            //xpp.setInput(new FileReader("/path/to/layout.xml"));
-
-
-
-
-
-            int eventType = xpp.getEventType();
-
-            View auxView = null;
-
-            ViewGroup auxViewGroup =null;
-
-            ViewGroup rootView = null;
-
-            int depth = xpp.getDepth();
-
-            int count = xpp.getAttributeCount();
-
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                String name = null;
-
-                depth = xpp.getDepth();
-
-                count = xpp.getAttributeCount();
-
-                switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT:
-                        //products = new ArrayList();
-                        break;
-
-                    case XmlPullParser.START_TAG:
-                        name = xpp.getName();
-                        //System.out.println("Comienza tag: " + name);
-                        switch (name) {
-                            case "android.support.v4.widget.SwipeRefreshLayout":
-                                //auxViewGroup = new android.support.v4.widget.SwipeRefreshLayout(getActivity());
-                                lstViews.add(loadAtributesViewGroup(new android.support.v4.widget.SwipeRefreshLayout(getActivity()),xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-                            case "ScrollView":
-                                //auxViewGroup = new ScrollView(getActivity());
-                                lstViews.add(loadAtributesViewGroup(new ScrollView(getActivity()), xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-                            case "LinearLayout":
-                                //auxViewGroup = new LinearLayout(getActivity());
-                                lstViews.add(loadAtributesViewGroup(new LinearLayout(getActivity()), xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-                            case "RelativeLayout":
-                                //auxViewGroup = new LinearLayout(getActivity());
-                                lstViews.add(loadAtributesViewGroup(new RelativeLayout(getActivity()), xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-                            case "GridLayout":
-                                //auxViewGroup = new GridLayout(getActivity());
-                                lstViews.add(loadAtributesViewGroup(new GridLayout(getActivity()), xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-                            case "Space":
-                                //auxView = new Space(getActivity());
-                                lstViews.add(loadAtributes(new Space(getActivity()), xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-                            case "TextView":
-                                //auxView = new TextView(getActivity());
-                                lstViews.add(loadAtributes(new TextView(getActivity()), xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-                            case "ImageView":
-                                lstViews.add(loadAtributes(new ImageView(getActivity()), xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-                            case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
-                                //auxView = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati(getActivity());
-                                lstViews.add(loadAtributes(new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati(getActivity()), xpp));
-                                lstViewsDepth.add(depth);
-                                break;
-
-                        }
-
-
-                        //auxView = loadAtributes(auxView, xpp);
-
-//                        }
-                        break;
-
-//                    case XmlPullParser.END_TAG:
+       // try {
+//
+//            InputStream inputStream = getActivity().getApplication().getAssets().open("xml/fragment_blank.xml");
+//
+//
+//
+//
+//            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+//            factory.setNamespaceAware(true);
+//            XmlPullParser xpp = factory.newPullParser();
+//            xpp.setInput(inputStream, null);
+//
+//            //xpp.setInput(new FileReader("/path/to/layout.xml"));
+//
+//
+//
+//
+//
+//            int eventType = xpp.getEventType();
+//
+//            View auxView = null;
+//
+//            ViewGroup auxViewGroup =null;
+//
+//            ViewGroup rootView = null;
+//
+//            int depth = xpp.getDepth();
+//
+//            int count = xpp.getAttributeCount();
+//
+//
+//            while (eventType != XmlPullParser.END_DOCUMENT) {
+//                String name = null;
+//
+//                depth = xpp.getDepth();
+//
+//                count = xpp.getAttributeCount();
+//
+//                switch (eventType) {
+//                    case XmlPullParser.START_DOCUMENT:
+//                        //products = new ArrayList();
+//                        break;
+//
+//                    case XmlPullParser.START_TAG:
 //                        name = xpp.getName();
-//                        //swipeRefreshLayout.setLayoutParams();
-//                        System.out.println("termina tag: " + name);
+//                        //System.out.println("Comienza tag: " + name);
+//                        switch (name) {
+//                            case "android.support.v4.widget.SwipeRefreshLayout":
+//                                //auxViewGroup = new android.support.v4.widget.SwipeRefreshLayout(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new android.support.v4.widget.SwipeRefreshLayout(getActivity()),xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "ScrollView":
+//                                //auxViewGroup = new ScrollView(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new ScrollView(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "LinearLayout":
+//                                //auxViewGroup = new LinearLayout(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new LinearLayout(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "RelativeLayout":
+//                                //auxViewGroup = new LinearLayout(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new RelativeLayout(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "GridLayout":
+//                                //auxViewGroup = new GridLayout(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new GridLayout(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "Space":
+//                                //auxView = new Space(getActivity());
+//                                lstViews.add(loadAtributes(new Space(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "TextView":
+//                                //auxView = new TextView(getActivity());
+//                                lstViews.add(loadAtributes(new TextView(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "ImageView":
+//                                lstViews.add(loadAtributes(new ImageView(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
+//                                //auxView = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati(getActivity());
+//                                lstViews.add(loadAtributes(new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
 //
-//                        if(depth!=0) {
-//                            switch (name) {
-//                                case "android.support.v4.widget.SwipeRefreshLayout":
-//                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
-//                                    break;
-//                                case "ScrollView":
-//                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
-//                                    break;
-//                                case "LinearLayout":
-//                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
-//                                    break;
-//                                case "GridLayout":
-//                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
-//                                    break;
-//                                case "Space":
-//                                    auxViewGroup.addView(loadAtributes(auxView, xpp));
-//                                    break;
-//                                case "TextView":
-//                                    //auxView = new TextView(getActivity());
-//                                    auxViewGroup.addView(loadAtributes(auxView, xpp));
-//                                    break;
-//                                case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
-//                                    auxViewGroup.addView(loadAtributes(auxViewGroup, xpp));
-//                                    break;
-//
-//                            }
-//
-//
-//                            if (auxViewGroup != null) {
-//                                viewGroup = loadAtributesViewGroup(auxViewGroup, xpp);
-//
-//                            }
 //                        }
-
-
-//                        if (name.equalsIgnoreCase("product") && currentProduct != null){
-//                            products.add(currentProduct);
-//                        }
-
-                        //break;
-                    case XmlPullParser.END_DOCUMENT:
-                        //rootView.addView(auxViewGroup);
-                }
-
-
-
-
-                //if(viewGroup!=null && !firstElement ){
-
-                //}
-                eventType = xpp.next();
-
-
-
-
-                //System.out.println("DEPTH: "+depth);
-
-                //System.out.println("COUNT: "+count);
-            }
-
-
-
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_blank, container, false);
-
-//        for (int pos = 0; pos < lstViews.size(); pos++) {
-//            System.out.println("View: "+lstViews.get(pos)+" Profundidad: "+lstViewsDepth.get(pos));
+//
+//
+//                        //auxView = loadAtributes(auxView, xpp);
+//
+////                        }
+//                        break;
+//
+////                    case XmlPullParser.END_TAG:
+////                        name = xpp.getName();
+////                        //swipeRefreshLayout.setLayoutParams();
+////                        System.out.println("termina tag: " + name);
+////
+////                        if(depth!=0) {
+////                            switch (name) {
+////                                case "android.support.v4.widget.SwipeRefreshLayout":
+////                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
+////                                    break;
+////                                case "ScrollView":
+////                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
+////                                    break;
+////                                case "LinearLayout":
+////                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
+////                                    break;
+////                                case "GridLayout":
+////                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
+////                                    break;
+////                                case "Space":
+////                                    auxViewGroup.addView(loadAtributes(auxView, xpp));
+////                                    break;
+////                                case "TextView":
+////                                    //auxView = new TextView(getActivity());
+////                                    auxViewGroup.addView(loadAtributes(auxView, xpp));
+////                                    break;
+////                                case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
+////                                    auxViewGroup.addView(loadAtributes(auxViewGroup, xpp));
+////                                    break;
+////
+////                            }
+////
+////
+////                            if (auxViewGroup != null) {
+////                                viewGroup = loadAtributesViewGroup(auxViewGroup, xpp);
+////
+////                            }
+////                        }
+//
+//
+////                        if (name.equalsIgnoreCase("product") && currentProduct != null){
+////                            products.add(currentProduct);
+////                        }
+//
+//                        //break;
+//                    case XmlPullParser.END_DOCUMENT:
+//                        //rootView.addView(auxViewGroup);
+//                }
+//
+//
+//
+//
+//                //if(viewGroup!=null && !firstElement ){
+//
+//                //}
+//                eventType = xpp.next();
+//
+//
+//
+//
+//                //System.out.println("DEPTH: "+depth);
+//
+//                //System.out.println("COUNT: "+count);
+//            }
+//
+//
+//
+//        } catch (XmlPullParserException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
-
-        viewGroup = buildView(lstViews, lstViewsDepth);
+//
+//        // Inflate the layout for this fragment
+//        //return inflater.inflate(R.layout.fragment_blank, container, false);
+//
+////        for (int pos = 0; pos < lstViews.size(); pos++) {
+////            System.out.println("View: "+lstViews.get(pos)+" Profundidad: "+lstViewsDepth.get(pos));
+////        }
+//
+//        viewGroup = buildView(lstViews, lstViewsDepth);
 
 
 

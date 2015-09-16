@@ -574,7 +574,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, co
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",
-                "Bitcoin Reference Wallet",
+                "bitDubai bitcoin Wallet",
                 "reference_wallet",
                 "wallet_platform_identifier",
                 new Version(1,0,0)
