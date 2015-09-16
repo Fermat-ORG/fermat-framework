@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.MessageTransmitPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
@@ -49,9 +50,7 @@ import java.util.regex.Pattern;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by loui on 26/04/15.
- * Update by Jorge Gonzales
- * Update by Roberto Requena - (rart3001@gmail.com) on 03/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
  */
@@ -164,7 +163,8 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                         InetSocketAddress inetSocketAddress = new InetSocketAddress(address, WsCommunicationCloudServer.DEFAULT_PORT);
                         WsCommunicationCloudServer wsCommunicationCloudServer = new WsCommunicationCloudServer(inetSocketAddress);
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentRegistrationRequestPacketProcessor());
-                        wsCommunicationCloudServer.registerFermatPacketProcessor(new MessageTransmitPacketProcessor());
+                        wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentConnectionRequestPacketProcessor());
+                        //wsCommunicationCloudServer.registerFermatPacketProcessor(new MessageTransmitPacketProcessor()); DEPRECATE
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
 
                         wsCommunicationCloudServer.start();
@@ -173,7 +173,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                         System.out.println("New CommunicationChannelAddress linked on " + networkInterface.getName());
                         System.out.println("Host = " + inetSocketAddress.getHostString());
                         System.out.println("Port = "     + inetSocketAddress.getPort());
-                        System.out.println("Comunication Service Manager on " + networkInterface.getName() + " started.");
+                        System.out.println("Communication Service Manager on " + networkInterface.getName() + " started.");
 
                     }
 
