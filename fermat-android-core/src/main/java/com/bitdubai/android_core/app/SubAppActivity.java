@@ -510,9 +510,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
             intent.putExtra(WalletActivity.INSTALLED_WALLET, installedWallet);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            finish();
+
 
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -533,10 +534,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                 intent = new Intent(this, com.bitdubai.android_core.app.EditableWalletActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
+                finish();
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
+
 
             }catch (Exception e){
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -573,9 +574,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
             intent.putExtra(SubAppActivity.INSTALLED_SUB_APP, installedSubApp);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            finish();
+
 
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));

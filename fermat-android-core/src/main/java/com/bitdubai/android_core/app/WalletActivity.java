@@ -6,11 +6,15 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -34,6 +38,9 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.Wallet
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
@@ -196,9 +203,10 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             resetThisActivity();
             Intent intent = new Intent(this, SubAppActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            finish();
+
         }
 
 
@@ -217,6 +225,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //            super.onBackPressed();
 //        }
     }
+
+
 
     /**
      * Method that loads the UI
@@ -334,12 +344,69 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public void changeActivity(String activityName, Object... objects) {
+//        Method m = null;
+//        try {
+//            m = StrictMode.class.getMethod("incrementExpectedActivityCount", Class.class);
+//            m.invoke(null, WalletActivity.class);
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
+
         try {
             //resetThisActivity();
 
             getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
 
-            loadUI(getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()));
+
+
+            Intent intent;
+
+            try {
+
+                //Activities activityType = Activities.getValueFromString(this.actionKey);
+
+
+                //getWalletRuntimeManager().getWallet(getWalletRuntimeManager().getLastWallet().getPublicKey());
+
+
+
+                intent = getIntent();//new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
+                if(intent.hasExtra(WalletActivity.WALLET_PUBLIC_KEY)){
+                    intent.removeExtra(WalletActivity.WALLET_PUBLIC_KEY);
+                }
+                if(intent.hasExtra(WalletActivity.INSTALLED_WALLET)){
+                    intent.removeExtra(WalletActivity.INSTALLED_WALLET);
+                }
+                intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, getWalletRuntimeManager().getLastWallet().getPublicKey());
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+
+                //finalize();
+                //System.gc();
+                //overridePendingTransition(0, 0);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                //this.finalize();
+
+                //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                //startActivity(intent);
+                recreate();
+                //finish();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                //System.gc();
+
+            }catch (Exception e){
+                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
+            //loadUI(getWalletSessionManager().getWalletSession());
 
 
         }catch (Exception e){
@@ -347,6 +414,12 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
+
+
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
 
     }
