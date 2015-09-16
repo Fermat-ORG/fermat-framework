@@ -281,7 +281,7 @@ public  class SendFragment extends FermatWalletFragment {
                 tv = (TextView) convertView.findViewById(R.id.amount);
 
 
-                tv = (TextView) convertView.findViewById(R.id.new_contact_name);
+                //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
 
 
                 tv = (TextView) convertView.findViewById(R.id.when);
@@ -289,7 +289,7 @@ public  class SendFragment extends FermatWalletFragment {
 
                 tv = (TextView) convertView.findViewById(R.id.contact_name);
 
-                tv.setText("Send to new contact");
+                //tv.setText("Name");
 
 
             }
@@ -318,7 +318,7 @@ public  class SendFragment extends FermatWalletFragment {
                             profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
                             break;
                         case 2:
-                            profile_picture.setImageResource(R.drawable.mati_profile);
+                            profile_picture.setImageResource(R.drawable.brant_profile_picture);
                             break;
                         case 3:
                             profile_picture.setImageResource(R.drawable.mati_profile);

@@ -5,7 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
@@ -79,15 +80,19 @@ public class RequestAddressToKnownUserTest extends TestCase {
     Actors actorType;
     ReferenceWallet referenceWallet;
     String walletPublicKey;
+    String vaultIdentifier;
 
     CryptoWalletWalletModuleManager walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
+
         actorPublicKey = new ECCKeyPair().getPublicKey();
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
         actorType = Actors.EXTRA_USER;
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
+        vaultIdentifier = "";
+
         walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setExtraUserManager(extraUserManager);
@@ -101,7 +106,7 @@ public class RequestAddressToKnownUserTest extends TestCase {
 
     @Test
     public void testRequestAddress_NotNull() throws Exception {
-        CryptoAddress cryptoAddress = walletModuleCryptoWallet.requestAddressToKnownUser(actorPublicKey, actorType, actorPublicKey, actorType, Platforms.CRYPTO_CURRENCY_PLATFORM, Vaults.BITCOIN_VAULT, walletPublicKey, referenceWallet);
+        CryptoAddress cryptoAddress = walletModuleCryptoWallet.requestAddressToKnownUser(actorPublicKey, actorType, actorPublicKey, actorType, Platforms.CRYPTO_CURRENCY_PLATFORM, CryptoCurrencyVault.BITCOIN_VAULT, walletPublicKey, referenceWallet);
         assertNotNull(cryptoAddress);
     }
 
@@ -110,7 +115,7 @@ public class RequestAddressToKnownUserTest extends TestCase {
     public void testRequestAddress_PlatformWalletTypeNotRecognized() throws Exception {
         referenceWallet = ReferenceWallet.BASIC_WALLET_DISCOUNT_WALLET;
 
-        walletModuleCryptoWallet.requestAddressToKnownUser(actorPublicKey, actorType, actorPublicKey, actorType, Platforms.CRYPTO_CURRENCY_PLATFORM, Vaults.BITCOIN_VAULT, walletPublicKey, referenceWallet);
+        walletModuleCryptoWallet.requestAddressToKnownUser(actorPublicKey, actorType, actorPublicKey, actorType, Platforms.CRYPTO_CURRENCY_PLATFORM, CryptoCurrencyVault.BITCOIN_VAULT, walletPublicKey, referenceWallet);
     }
 
     // TYPE OF ACTOR NOT RECOGNIZED BY THE PLUGIN
@@ -119,7 +124,7 @@ public class RequestAddressToKnownUserTest extends TestCase {
     public void testRequestAddress_ActorTypeNotRecognized() throws Exception {
         actorType = Actors.INTRA_USER;
 
-        walletModuleCryptoWallet.requestAddressToKnownUser(actorPublicKey, actorType, actorPublicKey, actorType, Platforms.CRYPTO_CURRENCY_PLATFORM, Vaults.BITCOIN_VAULT, walletPublicKey, referenceWallet);
+        walletModuleCryptoWallet.requestAddressToKnownUser(actorPublicKey, actorType, actorPublicKey, actorType, Platforms.CRYPTO_CURRENCY_PLATFORM, CryptoCurrencyVault.BITCOIN_VAULT, walletPublicKey, referenceWallet);
     }
 
     // CANT REGISTER REQUESTED CRYPTO ADDRESS BOOK TEST
@@ -133,11 +138,22 @@ public class RequestAddressToKnownUserTest extends TestCase {
                 anyString(),
                 any(Actors.class),
                 any(Platforms.class),
-                any(Vaults.class),
+                any(VaultType.class),
+                anyString(),
                 anyString(),
                 any(ReferenceWallet.class)
         );
 
-        walletModuleCryptoWallet.requestAddressToKnownUser(actorPublicKey, actorType, actorPublicKey, actorType, Platforms.CRYPTO_CURRENCY_PLATFORM, Vaults.BITCOIN_VAULT, walletPublicKey, referenceWallet);
+        walletModuleCryptoWallet.requestAddressToKnownUser(
+                actorPublicKey,
+                actorType,
+                actorPublicKey,
+                actorType,
+                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                VaultType.CRYPTO_CURRENCY_VAULT,
+                vaultIdentifier,
+                walletPublicKey,
+                referenceWallet
+        );
     }
 }

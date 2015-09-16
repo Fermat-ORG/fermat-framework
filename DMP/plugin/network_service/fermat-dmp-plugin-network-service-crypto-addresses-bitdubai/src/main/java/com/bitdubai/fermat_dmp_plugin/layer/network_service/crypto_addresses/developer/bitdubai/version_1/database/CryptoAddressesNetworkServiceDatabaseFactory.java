@@ -70,24 +70,21 @@ public class CryptoAddressesNetworkServiceDatabaseFactory implements DealsWithPl
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Contact Request table.
+             * Create Crypto Address Request table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME);
 
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REQUEST_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_WALLET_PUBLIC_KEY_TO_SEND_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REFERENCE_WALLET_TO_SEND_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_CRYPTO_ADDRESS_TO_SEND_COLUMN_NAME, DatabaseDataType.STRING, 40, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REQUESTER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REQUESTER_INTRA_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REQUESTER_INTRA_USER_PROFILE_IMAGE_COLUMN_NAME, DatabaseDataType.BLOB, 0, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_WALLET_PUBLIC_KEY_ACCEPTING_REQUEST_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REFERENCE_WALLET_ACCEPTING_REQUEST_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_CRYPTO_ADDRESS_RECEIVED_COLUMN_NAME, DatabaseDataType.STRING, 40, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_INTRA_USER_PUBLIC_KEY_ACCEPTING_REQUEST_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME, DatabaseDataType.STRING, 40, Boolean.TRUE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_REQUESTING_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_TO_SEND_COLUMN_NAME, DatabaseDataType.STRING, 40, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_ACCEPTING_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_TO_RECEIVE_COLUMN_NAME, DatabaseDataType.STRING, 40, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
-            table.addIndex(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_FIRST_KEY_COLUMN);
+            table.addIndex(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

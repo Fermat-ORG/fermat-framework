@@ -31,8 +31,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.Su
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -81,7 +81,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -155,15 +155,15 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
-        EventListener eventListener;
-        EventHandler eventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
-        eventHandler = new BegunSubAppInstallationEventHandler();
-        ((BegunSubAppInstallationEventHandler) eventHandler).setSubAppResourcesManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
+        fermatEventHandler = new BegunSubAppInstallationEventHandler();
+        ((BegunSubAppInstallationEventHandler) fermatEventHandler).setSubAppResourcesManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -188,8 +188,8 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();

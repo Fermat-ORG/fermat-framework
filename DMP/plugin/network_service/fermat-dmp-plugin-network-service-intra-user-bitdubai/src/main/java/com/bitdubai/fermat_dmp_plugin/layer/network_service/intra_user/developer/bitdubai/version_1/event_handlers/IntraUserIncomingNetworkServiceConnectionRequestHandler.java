@@ -10,8 +10,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IntraUserNetworkServiceCommunicationManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events.IncomingNetworkServiceConnectionRequestEvent;
 
@@ -23,7 +23,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events.Incoming
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserIncomingNetworkServiceConnectionRequestHandler implements EventHandler {
+public class IntraUserIncomingNetworkServiceConnectionRequestHandler implements FermatEventHandler {
 
     /*
     * Represent the intraUserManager
@@ -42,20 +42,20 @@ public class IntraUserIncomingNetworkServiceConnectionRequestHandler implements 
     /**
      * (non-Javadoc)
      *
-     * @see EventHandler#handleEvent(PlatformEvent)
+     * @see FermatEventHandler#handleEvent(FermatEvent)
      *
-     * @param platformEvent
+     * @param fermatEvent
      * @throws Exception
      */
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {
 
             /*
              *  ActorIntraUserManager make the job
              */
-            IncomingNetworkServiceConnectionRequestEvent incomingNetworkServiceConnectionRequestEvent = (IncomingNetworkServiceConnectionRequestEvent) platformEvent;
+            IncomingNetworkServiceConnectionRequestEvent incomingNetworkServiceConnectionRequestEvent = (IncomingNetworkServiceConnectionRequestEvent) fermatEvent;
             ((IntraUserNetworkServiceCommunicationManager) this.intraUserManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getCommunicationChannels(),
                                                                                                                       incomingNetworkServiceConnectionRequestEvent.getRemoteNetworkServicePublicKey());
 

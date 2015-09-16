@@ -481,14 +481,14 @@ public class Platform implements Serializable {
             /**
              * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
              */
-            PlatformEventMonitor eventMonitor = new PlatformEventMonitor((ErrorManager) errorManager);
+            PlatformFermatEventMonitor eventMonitor = new PlatformFermatEventMonitor((ErrorManager) errorManager);
 
             /*
              * Addon Event Manager
              * -------------------
              */
             Service eventManager = (Service) ((PlatformServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER)).getEventManager();
-            ((DealsWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
+            ((DealsWithEventMonitor) eventManager).setFermatEventMonitor(eventMonitor);
             corePlatformContext.registerAddon((Addon) eventManager, Addons.EVENT_MANAGER);
             eventManager.start();
 
