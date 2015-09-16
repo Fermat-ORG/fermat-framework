@@ -69,16 +69,17 @@ public class CryptoAddressBookCryptoModuleDatabaseFactory implements DealsWithPl
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
 
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME               , DatabaseDataType.STRING, 130, Boolean.TRUE );
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME              , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_TYPE_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
-            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_TYPE_COLUMN_NAME      , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_PLATFORM_COLUMN_NAME                     , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_TYPE_COLUMN_NAME                   , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_IDENTIFIER_COLUMN_NAME             , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_PUBLIC_KEY_COLUMN_NAME            , DatabaseDataType.STRING, 150, Boolean.FALSE);
+            table.addColumn(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_TYPE_COLUMN_NAME                  , DatabaseDataType.STRING,  10, Boolean.FALSE);
 
             table.addIndex(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_FIRST_KEY_COLUMN);
 

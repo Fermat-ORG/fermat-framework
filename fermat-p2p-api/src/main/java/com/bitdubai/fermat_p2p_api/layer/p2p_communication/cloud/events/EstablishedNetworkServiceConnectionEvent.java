@@ -6,9 +6,9 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
 /**
@@ -20,7 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class EstablishedNetworkServiceConnectionEvent implements PlatformEvent {
+public class EstablishedNetworkServiceConnectionEvent implements FermatEvent {
 
     /**
      *  Represent the eventType
@@ -69,7 +69,7 @@ public class EstablishedNetworkServiceConnectionEvent implements PlatformEvent {
     /**
      * (non-Javadoc)
      *
-     * @see PlatformEvent#getEventType()
+     * @see FermatEvent#getEventType()
      */
     @Override
     public EventType getEventType() {
@@ -79,7 +79,7 @@ public class EstablishedNetworkServiceConnectionEvent implements PlatformEvent {
     /**
      * (non-Javadoc)
      *
-     * @see PlatformEvent#setSource(EventSource)
+     * @see FermatEvent#setSource(EventSource)
      */
     @Override
     public void setSource(EventSource eventSource) {
@@ -89,7 +89,7 @@ public class EstablishedNetworkServiceConnectionEvent implements PlatformEvent {
     /**
      * (non-Javadoc)
      *
-     * @see PlatformEvent#getSource()
+     * @see FermatEvent#getSource()
      */
     @Override
     public EventSource getSource() {

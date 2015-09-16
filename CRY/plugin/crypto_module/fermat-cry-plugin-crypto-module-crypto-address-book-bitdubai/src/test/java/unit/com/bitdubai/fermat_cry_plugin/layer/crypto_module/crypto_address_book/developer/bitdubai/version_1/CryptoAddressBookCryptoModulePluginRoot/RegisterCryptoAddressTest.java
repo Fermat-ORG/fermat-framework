@@ -2,9 +2,9 @@ package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_b
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.CryptoAddressBookCryptoModulePluginRoot;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDatabaseConstants;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.structure.CryptoAddressBookCryptoModuleRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -43,7 +42,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, Vaults.class, ReferenceWallet.class})
+@PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, CryptoCurrencyVault.class, ReferenceWallet.class})
 
 public class RegisterCryptoAddressTest extends TestCase {
 
@@ -91,7 +90,7 @@ public class RegisterCryptoAddressTest extends TestCase {
                 "actorToKey",
                 Actors.INTRA_USER,
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
-                Vaults.BITCOIN_VAULT,
+                CryptoCurrencyVault.BITCOIN_VAULT,
                 "",
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
@@ -142,7 +141,7 @@ public class RegisterCryptoAddressTest extends TestCase {
                 "actorToKey",
                 Actors.INTRA_USER,
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
-                Vaults.BITCOIN_VAULT,
+                CryptoCurrencyVault.BITCOIN_VAULT,
                 "",
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
@@ -160,7 +159,7 @@ public class RegisterCryptoAddressTest extends TestCase {
                 "actorToKey",
                 Actors.INTRA_USER,
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
-                Vaults.BITCOIN_VAULT,
+                CryptoCurrencyVault.BITCOIN_VAULT,
                 "",
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 

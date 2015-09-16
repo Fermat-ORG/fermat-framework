@@ -23,7 +23,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -121,7 +121,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
      * Service Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    private List<EventListener> listenersAdded = new ArrayList<EventListener>();
+    private List<FermatEventListener> listenersAdded = new ArrayList<FermatEventListener>();
     
     
     public CloudClientCommunicationChannelPluginRoot() {
@@ -392,8 +392,8 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-        //EventListener eventListener;
-        //EventHandler eventHandler;
+        //FermatEventListener eventListener;
+        //FermatEventHandler eventHandler;
     	ExecutorService executor = Executors.newCachedThreadPool();
     	String clientKey = AsymmectricCryptography.createPrivateKey();
 		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
@@ -438,8 +438,8 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
         /**
          * I will remove all the event listeners registered with the event manager.
          */
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
@@ -476,7 +476,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		return serviceStatus;
 	}
 
-	public List<EventListener> getListenersAdded() {
+	public List<FermatEventListener> getListenersAdded() {
 		return listenersAdded;
 	}
 
