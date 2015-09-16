@@ -115,11 +115,9 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
         } catch (CantReadRecordDataBaseException e) {
             //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            System.err.println(this.getClass()+" Method: getPublishedComponents - VACIO");
             e.printStackTrace();
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: getPublishedComponents - TENGO RETURN NULL");
         return null;
     }
 
@@ -147,11 +145,9 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
         } catch (CantReadRecordDataBaseException e) {
             //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            System.err.println(this.getClass()+" Method: getPublishedWallets - VACIO");
             e.printStackTrace();
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: getPublishedWallets - TENGO RETURN NULL");
         return null;
     }
 
@@ -180,11 +176,9 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
         } catch (CantReadRecordDataBaseException e) {
             //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            System.err.println(this.getClass()+" Method: getPublishedSkins - VACIO");
             e.printStackTrace();
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: getPublishedSkins - TENGO RETURN NULL");
         return null;
     }
 
@@ -212,11 +206,9 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
 
         } catch (CantReadRecordDataBaseException e) {
             //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            System.err.println(this.getClass()+" Method: getPublishedLanguages - VACIO");
             e.printStackTrace();
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: getPublishedLanguages - TENGO RETURN NULL");
         return null;
     }
 

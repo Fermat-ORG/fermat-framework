@@ -96,7 +96,6 @@ public class IncomingIntraUserDao {
 
         if (events == null || events.isEmpty()) {
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            System.err.println(this.getClass()+" Method: getNextPendingEvent - TENGO RETURN NULL");
             return null;
         }
 
@@ -162,7 +161,6 @@ public class IncomingIntraUserDao {
     // TODO: Completar método cuando escriba el Relay Agent. El tipo de retorno va a cambiar
     public List<Transaction<CryptoTransaction>> getAllTransactionsToBeApplied(){
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getAllTransactionsToBeApplied - TENGO RETURN NULL");
         return null;
     }
 

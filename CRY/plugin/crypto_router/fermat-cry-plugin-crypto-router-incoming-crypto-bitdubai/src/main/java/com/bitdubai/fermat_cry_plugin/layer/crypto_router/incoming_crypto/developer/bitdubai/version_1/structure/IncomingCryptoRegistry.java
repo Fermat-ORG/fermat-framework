@@ -228,7 +228,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 );
             }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: saveNewEvent - TENGO RETURN NULL");
         return null;
     }
 
@@ -514,7 +513,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getSpecialists - TENGO RETURN NULL");
         return null;
     }
 

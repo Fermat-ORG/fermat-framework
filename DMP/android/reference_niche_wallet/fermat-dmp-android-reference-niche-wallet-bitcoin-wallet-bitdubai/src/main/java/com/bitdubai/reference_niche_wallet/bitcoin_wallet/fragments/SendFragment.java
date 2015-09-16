@@ -483,7 +483,6 @@ public class SendFragment extends Fragment {
             }
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: validateAddress - TENGO RETURN NULL");
         return null;
     }
 

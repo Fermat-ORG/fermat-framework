@@ -160,7 +160,6 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
     @Override
     public WalletFactoryDeveloper getLoggedDeveloper() {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: getLoggedDeveloper - TENGO RETURN NULL");
         return null;
     }
 

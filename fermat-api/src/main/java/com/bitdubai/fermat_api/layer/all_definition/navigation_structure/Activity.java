@@ -166,7 +166,6 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
             }
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass()+" Method: getFragment - TENGO RETURN NULL");
         return null;
     }
 

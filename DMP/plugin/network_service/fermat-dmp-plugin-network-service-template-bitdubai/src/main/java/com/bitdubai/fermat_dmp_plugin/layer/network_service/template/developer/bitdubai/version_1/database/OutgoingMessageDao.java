@@ -509,7 +509,6 @@ public class OutgoingMessageDao {
 
         } catch (InvalidParameterException e) {
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            System.err.println(this.getClass() + " Method: constructFrom - TENGO RETURN NULL");
             //this should not happen, but if it happens return null
             return null;
         }

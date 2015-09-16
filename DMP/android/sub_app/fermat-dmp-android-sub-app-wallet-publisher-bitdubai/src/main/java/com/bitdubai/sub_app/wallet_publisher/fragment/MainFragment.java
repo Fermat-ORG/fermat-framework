@@ -298,7 +298,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public String getProjectPublicKey() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getProjectPublicKey - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -330,20 +329,17 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public WalletType getWalletType() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getWalletType - TENGO RETURN NULL");
                     return null;
                 }
 
                 @Override
                 public void setWalletType(WalletType walletType) {
                     //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: setWalletType - VACIO");
                 }
 
                 @Override
                 public WalletCategory getWalletCategory() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getWalletCategory - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -365,7 +361,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public WalletFactoryProjectState getProjectState() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " ethod: getProjectState - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -377,7 +372,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public Timestamp getCreationTimestamp() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getCreationTimestamp - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -389,7 +383,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public Timestamp getLastModificationTimestamp() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getLastModificationTimestamp - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -411,7 +404,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public Skin getDefaultSkin() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getDefaultSkin - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -423,7 +415,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public List<Skin> getSkins() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getSkins - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -436,7 +427,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public Language getDefaultLanguage() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getDefaultLanguage - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -448,7 +438,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public List<Language> getLanguages() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getLanguages - TENGO RETURN NULL");
                     return null;
                 }
 
@@ -461,7 +450,6 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 @Override
                 public WalletNavigationStructure getNavigationStructure() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                    System.err.println(this.getClass() + " Method: getNavigationStructure - TENGO RETURN NULL");
                     return null;
                 }
 
