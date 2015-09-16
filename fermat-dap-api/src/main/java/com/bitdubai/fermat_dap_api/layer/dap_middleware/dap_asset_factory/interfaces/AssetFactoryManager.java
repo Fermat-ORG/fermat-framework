@@ -41,6 +41,11 @@ public interface AssetFactoryManager {
     void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
 
     /**
+     * This method mark object AssetFactory in database with close
+     */
+    void markAssetFactoryState(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
+
+    /**
      * This method remove object AssetFactory in database
      */
     void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException;
@@ -48,8 +53,8 @@ public interface AssetFactoryManager {
     /**
      * This method retrieves the bitcoin wallet and check if you have available balance
      */
-
     long getAvailableBalance(long amount);
+
     /**
      * TThis method publishes the asset digital object with the number and amount of Asset
      */
