@@ -262,12 +262,17 @@ project(':fermat-dmp-plugin-module-wallet-publisher-bitdubai').projectDir = new 
 include ':fermat-dmp-plugin-module-wallet-store-bitdubai'
 project(':fermat-dmp-plugin-module-wallet-store-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai')
 
-// Milestone 1 project:
+// engine
 include ':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai'
 project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai').projectDir = new File('DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
 
 include ':fermat-dmp-plugin-engine-wallet-runtime-bitdubai'
 project(':fermat-dmp-plugin-engine-wallet-runtime-bitdubai').projectDir = new File('DMP/plugin/engine/fermat-dmp-plugin-engine-wallet-runtime-bitdubai')
+
+include ':fermat-dmp-plugin-engine-desktop-runtime-bitdubai'
+project(':fermat-dmp-plugin-engine-desktop-runtime-bitdubai').projectDir = new File('DMP/plugin/engine/fermat-dmp-plugin-engine-desktop-runtime-bitdubai')
+
+// end engine
 
 
 include ':fermat-dmp-plugin-middleware-bank-notes-bitdubai'
