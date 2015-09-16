@@ -8,6 +8,7 @@ include ':fermat-dap-api'
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
 include ':fermat-wpd-api'
+include ':fermat-bch-api'
 
 // CRY Projects
 
@@ -523,3 +524,7 @@ project(':fermat-dap-android-wallet-asset-user-bitdubai').projectDir = new File(
 
 include ':fermat-dap-android-wallet-redeem-point-bitdubai'
 project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-redeem-point-bitdubai')
+
+// BCH
+include ':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai'
+project(':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai')
