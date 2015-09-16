@@ -224,12 +224,12 @@ public class HomeFragment extends FermatWalletFragment {
 
                             convertView = inf.inflate(R.layout.wallets_teens_fragment_home_list_item, parent, false);
 
-                            tv = ((TextView)convertView.findViewById(R.id.balance));
-                            tv.setText(formatBalanceString(availableBalance, ShowMoneyType.BITCOIN.getCode()));
+                            TextView balance = ((TextView)convertView.findViewById(R.id.balance));
+                            balance.setText(formatBalanceString(availableBalance, ShowMoneyType.BITCOIN.getCode()));
 
 
-                            tv = ((TextView)convertView.findViewById(R.id.balance_available));
-                            tv.setText(formatBalanceString(bookBalance, ShowMoneyType.BITCOIN.getCode())+" book");
+                            TextView balance_available = ((TextView)convertView.findViewById(R.id.balance_available));
+                            balance_available.setText(formatBalanceString(bookBalance, ShowMoneyType.BITCOIN.getCode())+" book");
 
                             break;
 
