@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
@@ -51,8 +50,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 
@@ -76,7 +75,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      * PlatformService Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
     
     /**
      * UsesFileSystem Interface member variables.
@@ -135,42 +134,42 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
          */
 
 
-            EventListener eventListener;
-            EventHandler eventHandler;
+            FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_OPENED);
-            eventHandler = new WalletOpenedEventHandler();
-            ((WalletOpenedEventHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_OPENED);
+            fermatEventHandler = new WalletOpenedEventHandler();
+            ((WalletOpenedEventHandler) fermatEventHandler).setWalletRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_CLOSED);
-            eventHandler = new WalletClosedEventHandler();
-            ((WalletClosedEventHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_CLOSED);
+            fermatEventHandler = new WalletClosedEventHandler();
+            ((WalletClosedEventHandler) fermatEventHandler).setWalletRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_INSTALLED);
-            eventHandler = new WalletInstalledEventHandler();
-            ((WalletInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_INSTALLED);
+            fermatEventHandler = new WalletInstalledEventHandler();
+            ((WalletInstalledEventHandler) fermatEventHandler).setWalletRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_UNINSTALLED);
-            eventHandler = new WalletUnnInstalledEventHandler();
-            ((WalletUnnInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_UNINSTALLED);
+            fermatEventHandler = new WalletUnnInstalledEventHandler();
+            ((WalletUnnInstalledEventHandler) fermatEventHandler).setWalletRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
-            EventListener eventListenerStructureDownloaded = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-            EventHandler eventHandlerStructureDownloaded = new WalletNavigationStructureDownloadedHandler(this);
-            eventListenerStructureDownloaded.setEventHandler(eventHandlerStructureDownloaded);
-            eventManager.addListener(eventListenerStructureDownloaded);
-            listenersAdded.add(eventListenerStructureDownloaded);
+            FermatEventListener fermatEventListenerStructureDownloaded = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            FermatEventHandler fermatEventHandlerStructureDownloaded = new WalletNavigationStructureDownloadedHandler(this);
+            fermatEventListenerStructureDownloaded.setEventHandler(fermatEventHandlerStructureDownloaded);
+            eventManager.addListener(fermatEventListenerStructureDownloaded);
+            listenersAdded.add(fermatEventListenerStructureDownloaded);
 
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -217,8 +216,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
