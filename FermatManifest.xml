@@ -3447,7 +3447,7 @@
 			<layer name="Digital Asset Transaction" language="java">
 				<plugins>
 					<plugin
-						name="Asset User Compensation"
+						name="Asset Distribution"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -3495,7 +3495,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Asset Issuer Redemption"
+						name="Issuer Redemption"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -3511,7 +3511,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Asset User Redemption"
+						name="User Redemption"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -3527,7 +3527,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Asset RedeemPoint Redemption"
+						name="RedeemPoint Redemption"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -3543,7 +3543,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Asset RedeemPoint Redemption"
+						name="Asset User Compensation"
 						description=""
 						difficulty="10"
 						code-level="development"
