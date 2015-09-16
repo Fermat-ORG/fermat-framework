@@ -53,11 +53,11 @@ public class AssertFactoryMiddlewareDatabaseConstant {
 
     static final String ASSET_FACTORY_CONTRACT_TABLE_NAME = "asset_factory_contract";
 
-    static final String ASSET_FACTORY_CONTRACT_ID_COLUMN = "id";
+    //static final String ASSET_FACTORY_CONTRACT_ID_COLUMN = "id";
     static final String ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN = "asset_public_key";
     static final String ASSET_FACTORY_CONTRACT_NAME_COLUMN = "name";
     static final String ASSET_FACTORY_CONTRACT_VALUE_COLUMN = "value";
 
-    static final String ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN = "id";
+    static final String ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN = "name";
 
 }
