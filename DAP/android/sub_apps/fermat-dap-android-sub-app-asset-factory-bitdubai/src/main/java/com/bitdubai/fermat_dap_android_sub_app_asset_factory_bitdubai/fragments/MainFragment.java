@@ -27,8 +27,8 @@ public class MainFragment extends FermatFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(0, container, false);
 
-
-        return null;
+        return rootView;
     }
 }
