@@ -503,6 +503,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public UUID getResourcesId() {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getResourcesId - TENGO RETURN NULL");
         return null;
     }
 
@@ -539,7 +541,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return null;
+        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
     }
 
 
@@ -595,7 +597,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public String getFontStyle(String styleName, UUID skinId) {
-        return null;
+        return "Method: getFontStyle - NO TIENE valor ASIGNADO para RETURN";
     }
 
 

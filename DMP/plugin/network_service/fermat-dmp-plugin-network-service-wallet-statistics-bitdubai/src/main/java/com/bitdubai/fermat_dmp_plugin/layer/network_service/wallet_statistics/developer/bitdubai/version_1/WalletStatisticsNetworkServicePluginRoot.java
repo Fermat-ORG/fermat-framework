@@ -114,6 +114,8 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
 
     @Override
     public WalletStatistics getWalletStatistics(UUID walletCatalogId) throws CantGetWalletStatisticsException{
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getWalletStatistics - TENGO RETURN NULL");
         return null;
     }
 

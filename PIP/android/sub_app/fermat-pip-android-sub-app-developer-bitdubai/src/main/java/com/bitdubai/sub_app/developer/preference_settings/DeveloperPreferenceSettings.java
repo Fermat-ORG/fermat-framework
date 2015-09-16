@@ -22,6 +22,8 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getDefaultLanguage - TENGO RETURN NULL");
         return null;
     }
 
@@ -33,6 +35,8 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public UUID getDefaultSkin() throws CantGetDefaultSkinException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getDefaultSkin - TENGO RETURN NULL");
         return null;
     }
 
@@ -44,7 +48,8 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: setDefaultLanguage - VACIO");
     }
 
     /**
@@ -55,7 +60,8 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: setDefaultSkin - VACIO");
     }
 
     /**
@@ -67,7 +73,8 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveWalletSettings {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: setPreferenceSettings - VACIO");
     }
 
     /**
@@ -79,6 +86,8 @@ public class DeveloperPreferenceSettings implements SubAppSettings{
      */
     @Override
     public String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getPreferenceSettings - VACIO");
         return null;
     }
 }

@@ -323,6 +323,8 @@ public class WalletNavigationStructureMiddlewareDao {
         // } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
         //    throw  new CantExecuteDatabaseOperationException("",exception, "", "Error in database plugin.");
         //}
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: openDatabase - TENGO RETURN NULL");
         return null;
     }
 

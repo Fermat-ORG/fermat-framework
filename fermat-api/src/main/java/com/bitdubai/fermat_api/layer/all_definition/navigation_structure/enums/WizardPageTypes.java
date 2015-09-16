@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * Wizard Pages Enumerable
  *
@@ -30,7 +32,7 @@ public enum WizardPageTypes {
         return code;
     }
 
-    public static WizardPageTypes getValueFromString(String code) {
+    public static WizardPageTypes getValueFromString(String code) throws InvalidParameterException {
         switch (code) {
             case "CWFCS1":
                 return WizardPageTypes.CWP_WALLET_FACTORY_CREATE_STEP_1;
@@ -43,8 +45,9 @@ public enum WizardPageTypes {
             case "CWPPS3":
                 return WizardPageTypes.CWP_WALLET_PUBLISHER_PUBLISH_STEP_3;
             default:
-                break;
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
+
         }
-        return null;
+        //return null;
     }
 }

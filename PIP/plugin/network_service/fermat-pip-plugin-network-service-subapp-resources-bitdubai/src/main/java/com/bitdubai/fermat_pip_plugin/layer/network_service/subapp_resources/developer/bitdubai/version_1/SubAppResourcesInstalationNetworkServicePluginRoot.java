@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.In
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 ;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -64,18 +63,18 @@ import java.util.UUID;
  */
 
 /**
- * This plugin is designed to look up for the resources needed by a newly installed wallet. We are talking about the 
+ * This plugin is designed to look up for the resources needed by a newly installed wallet. We are talking about the
  * navigation structure, plus the images needed by the wallet to be able to run.
- *
- * It will try to gather those resources from other peers or a centralized location provided by the wallet developer 
+ * <p/>
+ * It will try to gather those resources from other peers or a centralized location provided by the wallet developer
  * if it is not possible.
- *
+ * <p/>
  * It will also serve other peers with these resources when needed.
- *
- * * * * * * * 
+ * <p/>
+ * * * * * * *
  */
 
-public class SubAppResourcesInstalationNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors,DealsWithLogger, DealsWithPluginFileSystem,LogManagerForDevelopers,Plugin,SubAppResourcesInstalationManager,SubAppResourcesProviderManager {
+public class SubAppResourcesInstalationNetworkServicePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, SubAppResourcesInstalationManager, SubAppResourcesProviderManager {
 
 
     /**
@@ -110,7 +109,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * DealsWithPluginIdentity Interface member variables.
      */
     UUID pluginId;
-
+    private UUID resourcesId;
     /**
      * SubApp Type
      */
@@ -119,7 +118,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
 
     /**
      * Installed skins repositories
-     * <p>
+     * <p/>
      * SkinId, repository link
      */
     //private Map<UUID, Repository> repositoriesName;
@@ -128,13 +127,14 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat/master/seed-resources/subApp_resources/";
 
 
-    private final String LOCAL_STORAGE_PATH="subApp-resources/";
+    private final String LOCAL_STORAGE_PATH = "subApp-resources/";
 
 
     /**
-     *  Wallet instalation progress
+     * Wallet instalation progress
      */
-    private InstalationProgress instalationProgress;;
+    private InstalationProgress instalationProgress;
+    ;
 
     //para testear
     private Map<String, byte[]> imagenes;
@@ -150,7 +150,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
 
     @Override
-    public void start() throws CantStartPluginException{
+    public void start() throws CantStartPluginException {
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -172,16 +172,12 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
@@ -216,7 +212,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     }
 
 
-
     /**
      * SubAppResourcesInstalationManager Implementation
      */
@@ -232,7 +227,8 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public void installResources(String subApp, String developer, String screenSize, String screenDensity, String skinName, String languageName, String navigationStructureVersion) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: installResources - VACIO");
     }
 
     /**
@@ -240,7 +236,8 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public void unninstallResources(String subApp) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo informativo de ayuda visual para momentos de DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: unninstallResources - VACIO");
     }
 
     /**
@@ -250,9 +247,10 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public InstalationProgress getInstalationProgress() {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getSkinFile - TENGO RETURN NULL");
         return null;
     }
-
 
 
     /**
@@ -267,7 +265,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public UUID getResourcesId() {
-        return null;
+        return resourcesId;
     }
 
     /**
@@ -280,6 +278,8 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getSkinFile - TENGO RETURN NULL");
         return null;
     }
 
@@ -292,6 +292,8 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getLanguageFile - TENGO RETURN NULL");
         return null;
     }
 
@@ -344,6 +346,8 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public String getFontStyle(String styleName, UUID skinId) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getFontStyle - TENGO RETURN NULL");
         return null;
     }
 
@@ -357,13 +361,10 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      */
     @Override
     public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getLayoutResource - TENGO RETURN NULL");
         return null;
     }
-
-
-
-
-
 
 
     // Private instances methods declarations.
@@ -372,14 +373,14 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * <p>This method connects to the repository and download string file resource for wallet on byte (Private Method)
      *
      * @param repoResource name of repository where wallet files resources are stored
-     * @param fileName Name of resource file
+     * @param fileName     Name of resource file
      * @return string resource object
      * @throws MalformedURLException
      * @throws IOException
      * @throws FileNotFoundException
      */
-    private String getRepositoryStringFile(String repoResource,String fileName) throws MalformedURLException, IOException, FileNotFoundException {
-        String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
+    private String getRepositoryStringFile(String repoResource, String fileName) throws MalformedURLException, IOException, FileNotFoundException {
+        String link = REPOSITORY_LINK + repoResource + "/master/" + fileName;
 
         URL url = new URL(link);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -399,7 +400,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
         InputStream crunchifyStream = http.getInputStream();
         String response = getStringFromStream(crunchifyStream);
 
-        return  response;
+        return response;
 
     }
 
@@ -407,16 +408,16 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * <p>This method connects to the repository and download resource image file for wallet on byte
      *
      * @param repoResource name of repository where wallet files resources are stored
-     * @param fileName Name of resource file
+     * @param fileName     Name of resource file
      * @return byte image object
      * @throws MalformedURLException
      * @throws IOException
      * @throws FileNotFoundException
      */
 
-    private byte[] getRepositoryImageFile(String repoResource ,String fileName) throws MalformedURLException, IOException, FileNotFoundException {
+    private byte[] getRepositoryImageFile(String repoResource, String fileName) throws MalformedURLException, IOException, FileNotFoundException {
 
-        String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
+        String link = REPOSITORY_LINK + repoResource + "/master/" + fileName;
 
         URL url = new URL(link);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -440,7 +441,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * @throws IOException
      */
 
-    private  String getStringFromStream(InputStream stream) throws IOException {
+    private String getStringFromStream(InputStream stream) throws IOException {
         if (stream != null) {
             Writer writer = new StringWriter();
 
@@ -459,7 +460,6 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
             return "No Contents";
         }
     }
-
 
 
     /**
@@ -482,14 +482,13 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     }
 
 
-
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager =errorManager;
+        this.errorManager = errorManager;
     }
 
 
@@ -525,8 +524,8 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
 
 
         /**
-   * I return the values.
-   */
+         * I return the values.
+         */
         return returnedClasses;
     }
 
@@ -550,7 +549,4 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
         }
 
     }
-
-
-
 }

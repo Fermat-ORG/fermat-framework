@@ -329,10 +329,13 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         if (table.getRecords().size() > 1)
             throw new DatabaseOperationException("Multiples navigation structure for single project found in database." , null, "Project key: " + walletFactoryPublicKey, null);
 
-        if (table.getRecords().size() == 1)
+        if (table.getRecords().size() == 1) {
             return table.getRecords().get(0);
-        else
+        }else {
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            System.err.println(this.getClass() + " Method: getNavigationStructureData - TENGO RETURN NULL");
             return null;
+        }
     }
 
     private List<DatabaseTableRecord> getWalletFactoryProjectsData (DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
@@ -517,7 +520,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         return walletFactoryProject;
     }
 
-    private WalletFactoryProject getWalletFactoryProjectHeader(DatabaseTableRecord projectsRecord) throws CantLoadTableToMemoryException, DatabaseOperationException {
+    private WalletFactoryProject getWalletFactoryProjectHeader(DatabaseTableRecord projectsRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         WalletFactoryProject walletFactoryProject = getEmptyWalletFactoryProject();
         walletFactoryProject.setProjectPublickKey(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME));
         walletFactoryProject.setName(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME));
