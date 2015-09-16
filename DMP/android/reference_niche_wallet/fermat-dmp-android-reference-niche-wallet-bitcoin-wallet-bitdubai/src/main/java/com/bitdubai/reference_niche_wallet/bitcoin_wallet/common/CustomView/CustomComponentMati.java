@@ -98,6 +98,10 @@ public class CustomComponentMati extends LinearLayout implements Animation.Anima
         initData();
     }
 
+    public CustomComponentMati(Context context) {
+        super(context);
+    }
+
     private void initData() {
         lstData= new ArrayList<CustomComponentsObjects>();
         listPosition++;

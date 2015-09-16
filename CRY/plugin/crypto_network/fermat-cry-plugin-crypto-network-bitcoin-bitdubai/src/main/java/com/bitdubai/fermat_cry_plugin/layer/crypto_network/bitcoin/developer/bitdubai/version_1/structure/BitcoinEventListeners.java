@@ -43,7 +43,8 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: notifyNewBestBlock - VACIO");
     }
 
 
@@ -56,7 +57,8 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void reorganize(StoredBlock splitPoint, List<StoredBlock> oldBlocks, List<StoredBlock> newBlocks) throws VerificationException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: reorganize - VACIO");
     }
 
     /**
@@ -142,6 +144,8 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public Message onPreMessageReceived(Peer peer, Message m) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: onPreMessageReceived - TENGO RETURN NULL");
         return null;
     }
 
@@ -152,7 +156,8 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void onTransaction(Peer peer, Transaction t) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: onTransaction - VACIO");
     }
 
     /**
@@ -164,16 +169,20 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
     @Nullable
     @Override
     public List<Message> getData(Peer peer, GetDataMessage m) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: getData - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public void onPeersDiscovered(Set<PeerAddress> peerAddresses) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: onPeersDiscovered - VACIO");
     }
 
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int blocksLeft) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: onBlocksDownloaded - VACIO");
     }
 }

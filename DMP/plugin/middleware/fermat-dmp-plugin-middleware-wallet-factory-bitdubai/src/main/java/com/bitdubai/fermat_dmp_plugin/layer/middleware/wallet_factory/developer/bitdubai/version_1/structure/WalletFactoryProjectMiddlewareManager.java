@@ -180,7 +180,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             saveWalletFactoryProjectNavigationStructureXML(walletFactoryProject);
 
             //once I have every saved locally (both in db and XML files) I will upload them to github
-            GithubManager githubManager = new GithubManager("acostarodrigo/testFermat", "acostarodrigo", "");
+            GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "");
             githubManager.saveWalletFactoryProject(walletFactoryProject);
 
         } catch (DatabaseOperationException | MissingProjectDataException | CantPersistFileException | CantCreateFileException e) {
@@ -385,7 +385,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     public void uploadWalletFactoryProjectToRepository(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
         try{
             //once I have every saved locally (both in db and XML files) I will upload them to github
-            GithubManager githubManager = new GithubManager("acostarodrigo/testFermat", "acostarodrigo", "");
+            GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "");
             githubManager.saveWalletFactoryProject(walletFactoryProject);
         } catch (Exception e){
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, "error trying to upload project to repository", null);
@@ -510,11 +510,13 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             if (walletFactoryProjects.size() > 1)
                 throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, null, "PublicKey: " + publicKey, "Unexpected value returned. Duplicated projects in database.");
 
-            if (walletFactoryProjects.size() == 1)
+            if (walletFactoryProjects.size() == 1) {
                 return walletFactoryProjects.get(0);
-            else
+            }else {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getWalletFactoryProject - TENGO RETURN NULL");
                 return null;
-
+            }
         } catch (DatabaseOperationException | CantLoadTableToMemoryException e) {
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "PublicKey: " + publicKey, "database error");
         } catch (FileNotFoundException | CantCreateFileException e) {
@@ -603,16 +605,22 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
 
             @Override
             public String getColumn() {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getColumn - TENGO RETURN NULL");
                 return null;
             }
 
             @Override
             public String getValue() {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getValue - TENGO RETURN NULL");
                 return null;
             }
 
             @Override
             public DatabaseFilterType getType() {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getType - TENGO RETURN NULL");
                 return null;
             }
         };

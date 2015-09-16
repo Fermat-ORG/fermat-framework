@@ -42,13 +42,13 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
 
 
     /**
-     * Service Interface menber variables. 
+     * Service Interface menber variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
 
     /**
-     * PluginFileSystem interface member variables. 
+     * PluginFileSystem interface member variables.
      */
 
     PluginFileSystem pluginFileSystem;
@@ -59,24 +59,25 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     EventManager eventManager;
-
+    ErrorManager errorManager;
     /**
-     * Plugin interface menber varuiables. 
+     * Plugin interface menber varuiables.
      */
     UUID pluginId;
 
 
     /**
-     *  MoneyRequestNetworkServicePluginRoot methods implementation.
+     * MoneyRequestNetworkServicePluginRoot methods implementation.
      */
-    
-    public void sendMoneyRequest(){
-        
-        
+
+    public void sendMoneyRequest() {
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: sendMoneyRequest - VACIO");
+
     }
-    
-    
-    public void events(){
+
+
+    public void events() {
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_REQUEST_RECEIVED);
         ((IncomingMoneyRequestReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
         eventManager.raiseEvent(platformEvent);
@@ -92,55 +93,51 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
         PlatformEvent platformEvent_3 = eventManager.getNewEvent(EventType.OUTGOING_MONEY_REQUEST_REJECTED);
         ((OutgoingMoneyRequestRejectedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
         eventManager.raiseEvent(platformEvent);
-        
+
     }
 
     /**
-     * Service Interface implementation. 
+     * Service Interface implementation.
      */
-    
+
     @Override
     public void start() {
         EventListener eventListener;
         EventHandler eventHandler;
-        
-        
+
+
         this.serviceStatus = ServiceStatus.STARTED;
-        
+
     }
-    
+
     @Override
-    public void pause(){
-        
+    public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
-        
     }
-    
+
     @Override
     public void resume() {
-        
         this.serviceStatus = ServiceStatus.STARTED;
-        
     }
-    
+
     @Override
-    public void stop(){
+    public void stop() {
 
         /**
          * I will remove the evnt listeners registered with the event manager. 
          */
-        
-        for (EventListener eventListener : listenersAdded){
+
+        for (EventListener eventListener : listenersAdded) {
             eventManager.removeListener(eventListener);
         }
-        
+
         listenersAdded.clear();
-        
+
         this.serviceStatus = ServiceStatus.STOPPED;
     }
-    
+
     @Override
-    public ServiceStatus getStatus(){
+    public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
 
@@ -149,7 +146,7 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem){
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
 
@@ -158,7 +155,7 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     @Override
-    public void setEventManager(EventManager eventManager){
+    public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
@@ -167,8 +164,8 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     @Override
-    public void setErrorManager(ErrorManager errorManager){
-
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
     }
 
     /**
@@ -176,13 +173,13 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     @Override
-    public void setId(UUID pluginId){
+    public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
     @Override
     public UUID getId() {
-        return null;
+        return this.pluginId;
     }
 
     /*
@@ -191,33 +188,40 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
 
     @Override
     public List<CryptoRequest> getPendingReceivedCryptoRequests(String identityPublicKey) throws CantGetPendingCryptoRequestsException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getPendingReceivedCryptoRequests - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public CryptoRequestState getSentRequestState(UUID requestId) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: getSentRequestState - TENGO RETURN NULL");
         return null;
     }
 
     @Override
     public void deleteFromPendingReceivedCryptoRequests(UUID requestId) throws CantDeleteFromPendingCryptoRequestsException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: deleteFromPendingReceivedCryptoRequests - VACIO");
     }
 
     @Override
     public void requestCrypto(UUID requestId, String receptorWalletPublicKey, CryptoAddress addressToSendThePayment, long cryptoAmount, String loggedInIntraUserPublicKey, String intraUserToSendRequestPublicKey, String description) throws CantSendCryptoRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: requestCrypto - VACIO");
     }
 
     @Override
     public void requestMoney(String receptorWalletPublicKey, String requestSenderPublicKey, String requestDestinationPublicKey, String requestDescription, CryptoAddress addressToSendThePayment, FiatCurrency fiatCurrency, long fiatAmount) throws CantSendMoneyRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: requestMoney - VACIO");
     }
-
 
 
     @Override
     public void rejectRequest(UUID requestId, String intraUserThatSentTheRequestPublicKey) throws CantRejectRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: rejectRequest - VACIO");
     }
 }

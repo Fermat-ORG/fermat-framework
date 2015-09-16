@@ -15,16 +15,18 @@ public class myDesignerIdentity implements DesignerIdentity {
 
     @Override
     public String getAlias() {
-        return null;
+        return alias;
     }
 
     @Override
     public String getPublicKey() {
-        return null;
+        return publicKey;
     }
 
     @Override
     public String createMessageSignature(String mensage) throws CantSingMessageException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass() + " Method: createMessageSignature - TENGO RETURN NULL");
         return null;
     }
 

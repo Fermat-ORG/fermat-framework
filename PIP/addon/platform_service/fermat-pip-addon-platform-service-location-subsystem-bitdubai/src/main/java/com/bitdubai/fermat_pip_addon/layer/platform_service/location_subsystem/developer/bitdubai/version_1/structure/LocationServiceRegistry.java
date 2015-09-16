@@ -78,6 +78,8 @@ public class LocationServiceRegistry implements DealsWithErrors, DealsWithPlugin
             DatabaseTableRecord record = records.get(0);
             return parseTo(record);
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: findLastLocation - TENGO RETURN NULL");
         return null;
     }
 

@@ -14,12 +14,12 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.*;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsSearch;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.*;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantDeleteWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -119,7 +119,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
         try {
             List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
-            for(WalletContactRecord r : walletContactsRegistry.listWalletContacts(walletPublicKey)){
+            WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
+            for(WalletContactRecord r : walletContactsSearch.getResult()){
                 byte[] image = null;
                 switch (r.getActorType()) {
                     case EXTRA_USER:
@@ -147,7 +148,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
         try {
             List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
-            for(WalletContactRecord r : walletContactsRegistry.listWalletContactsScrolling(walletPublicKey, max, offset)){
+            WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
+            for(WalletContactRecord r : walletContactsSearch.getResult(max, offset)){
                 byte[] image = null;
                 switch (r.getActorType()) {
                     case EXTRA_USER:
@@ -177,17 +179,25 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                                                          String walletPublicKey,
                                                          byte[] photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
-            WalletContactRecord walletContactRecord;
             try {
-                walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletPublicKey(actorName, walletPublicKey);
-            } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                walletContactRecord = null;
-            }
-            if (walletContactRecord == null) {
-                String actorPublicKey = createActor(actorName, actorType, photo);
-                return new CryptoWalletWalletModuleWalletContact(walletContactsRegistry.createWalletContact(actorPublicKey, actorName, actorType, receivedCryptoAddress, walletPublicKey), photo);
-            } else
+                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorName, walletPublicKey);
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
+
+            } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
+                String actorPublicKey = createActor(actorName, actorType, photo);
+                List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+                cryptoAddresses.add(receivedCryptoAddress);
+                WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
+                        actorPublicKey,
+                        actorName,
+                        null,
+                        null,
+                        actorType,
+                        cryptoAddresses,
+                        walletPublicKey
+                );
+                return new CryptoWalletWalletModuleWalletContact(walletContactRecord, photo);
+            }
 
         } catch (ContactNameAlreadyExistsException e) {
             throw e;
@@ -209,17 +219,26 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                                                          ReferenceWallet referenceWallet,
                                                          String walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
-            WalletContactRecord walletContactRecord;
             try {
-                walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletPublicKey(actorName, walletPublicKey);
-            } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                walletContactRecord = null;
-            }
-            if (walletContactRecord == null) {
-                String actorPublicKey = createActor(actorName, actorType);
-                return new CryptoWalletWalletModuleWalletContact(walletContactsRegistry.createWalletContact(actorPublicKey, actorName, actorType, receivedCryptoAddress, walletPublicKey));
-            } else
+                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorName, walletPublicKey);
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
+
+            } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
+
+                String actorPublicKey = createActor(actorName, actorType);
+                List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+                cryptoAddresses.add(receivedCryptoAddress);
+                WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
+                        actorPublicKey,
+                        actorName,
+                        null,
+                        null,
+                        actorType,
+                        cryptoAddresses,
+                        walletPublicKey
+                );
+                return new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+            }
 
         } catch (ContactNameAlreadyExistsException e) {
             throw e;
@@ -278,6 +297,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     @Override
     public CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorName, Platforms platform, Vaults vault, String walletPublicKey, ReferenceWallet walletType) throws CantRequestCryptoAddressException {
         // TODO implement this method
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.err.println(this.getClass()+" Method: requestAddressToNewExtraUser - TENGO RETURN NULL");
         return null;
     }
 
@@ -318,7 +339,15 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     @Override
     public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException {
         try {
-            walletContactsRegistry.updateWalletContact(contactId, receivedCryptoAddress, actorName);
+            List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+            cryptoAddresses.add(receivedCryptoAddress);
+            walletContactsRegistry.updateWalletContact(
+                    contactId,
+                    actorName,
+                    null,
+                    null,
+                    cryptoAddresses
+            );
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException e) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e);
         }  catch (Exception e) {
@@ -334,32 +363,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e);
         } catch (Exception e) {
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
-        }
-    }
-
-    @Override
-    public List<CryptoWalletWalletContact> getWalletContactByNameContainsAndWalletPublicKey(String actorName, String walletPublicKey) throws CantGetWalletContactException {
-        try {
-            List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
-            finalRecordList.clear();
-            for(WalletContactRecord r :walletContactsRegistry.getWalletContactByNameContainsAndWalletPublicKey(actorName, walletPublicKey)){
-                byte[] image = null;
-                switch (r.getActorType()) {
-                    case EXTRA_USER:
-                        Actor actor = extraUserManager.getActorByPublicKey(r.getActorPublicKey());
-                        if (actor != null)
-                            image = actor.getPhoto();
-                        break;
-                    default:
-                        throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
-                }
-                finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
-            }
-            return  finalRecordList;
-        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
-            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e);
-        } catch(Exception exception){
-            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
     }
 
@@ -469,6 +472,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
 
     private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction) throws CantEnrichTransactionException {
         try {
+            // TODO necesito la wallet public key
 
             Actor involvedActor = null;
             UUID contactId = null;
@@ -479,7 +483,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                 case DEBIT:
                     try {
                         involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType());
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorPublicKey(bitcoinWalletTransaction.getActorFromPublicKey());
+                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), null);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 

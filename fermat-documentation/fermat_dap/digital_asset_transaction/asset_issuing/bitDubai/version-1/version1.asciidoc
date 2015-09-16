@@ -65,6 +65,9 @@ DigitalAssetCryptoTransactionFactory (DACTF) usará una instancia del CryptoVaul
 el proceso de creación del digital Asset, ya que este es quien ajustaría el estado a _final_, una vez que se encuentra en este estado ya no se debe modificar ninguna característica del Digital Asset.
 
 === Pasos detallados:
+
+Diagrama de Flujo en Prezi: http://prezi.com/fy3cag7olwbz/?utm_campaign=share&utm_medium=copy&rc=ex0share
+
 1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
  realizarán distintas especificaciones del asset y el contrato inicial.
 

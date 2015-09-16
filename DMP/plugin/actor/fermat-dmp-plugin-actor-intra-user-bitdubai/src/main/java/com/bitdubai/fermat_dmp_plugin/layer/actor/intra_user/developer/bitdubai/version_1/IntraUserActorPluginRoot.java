@@ -248,9 +248,9 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      * @throws CantGetIntraUSersException
      */
     @Override
-    public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUSersException {
         try {
-            return this.intraUserActorDao.getAllIntraUsers(intraUserLoggedInPublicKey,max, offset);
+            return this.intraUserActorDao.getAllIntraUsers(intraUserLoggedInPublicKey, max, offset);
         } catch (CantGetIntraUsersListException e) {
             throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -269,7 +269,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      */
 
     @Override
-    public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUSersException {
         try {
             return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraUsersListException e) {
@@ -290,7 +290,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      */
 
     @Override
-    public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUSersException {
         try {
             return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraUsersListException e) {
@@ -458,23 +458,17 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
-
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -590,28 +584,37 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
 
             for (IntraUserNotification notification : intraUserNotificationes) {
 
-                String intraUserSedingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
+                String intraUserSendingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
+
+                String intraUserToConnectPublicKey = notification.getPublicKeyOfTheIntraUserToConnect();
 
                 switch (notification.getNotificationDescriptor()) {
+                    case ASKFORACCEPTANCE:
+
+                        this.askIntraUserForAcceptance(intraUserSendingPublicKey,notification.getIntraUserToConnectAlias(),intraUserToConnectPublicKey,notification.getIntraUserToConnectProfileImage());
+
+                    case CANCEL:
+                        this.cancelIntraUser(intraUserSendingPublicKey,intraUserToConnectPublicKey);
+
                     case ACCEPTED:
-                        this.acceptIntraUser("", intraUserSedingPublicKey);
+                        this.acceptIntraUser( intraUserSendingPublicKey,intraUserToConnectPublicKey);
                         /**
                          * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
                          */
                         eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
                         break;
                     case DISCONNECTED:
-                        this.disconnectIntraUser("", intraUserSedingPublicKey);
+                        this.disconnectIntraUser("", intraUserSendingPublicKey);
                         break;
                     case RECEIVED:
-                        this.receivingIntraUserRequestConnection("", "", intraUserSedingPublicKey, null);
+                        this.receivingIntraUserRequestConnection(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
                         /**
                          * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
                          */
                         eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
                         break;
                     case DENIED:
-                        this.denyConnection("", intraUserSedingPublicKey);
+                        this.denyConnection(intraUserSendingPublicKey, intraUserToConnectPublicKey);
                         break;
                     default:
                         break;
@@ -621,7 +624,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
                 /**
                  * I confirm the application in the Network Service
                  */
-                intraUserNetworkServiceManager.confirmNotification("", intraUserSedingPublicKey);
+                intraUserNetworkServiceManager.confirmNotification(intraUserSendingPublicKey, intraUserToConnectPublicKey);
             }
 
 

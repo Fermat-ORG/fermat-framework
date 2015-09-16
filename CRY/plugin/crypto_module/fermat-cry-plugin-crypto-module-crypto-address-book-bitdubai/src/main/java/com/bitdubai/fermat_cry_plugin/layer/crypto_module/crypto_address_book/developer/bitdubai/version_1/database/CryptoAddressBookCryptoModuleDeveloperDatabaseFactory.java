@@ -71,7 +71,9 @@ public class CryptoAddressBookCryptoModuleDeveloperDatabaseFactory implements De
               */
             database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        }
+        catch (CantOpenDatabaseException cantOpenDatabaseException)
+        {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
@@ -97,6 +99,15 @@ public class CryptoAddressBookCryptoModuleDeveloperDatabaseFactory implements De
                    */
                 throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(cantCreateDatabaseException.getMessage());
             }
+        }
+        catch (Exception e)
+        {
+
+             /*
+              * The database exists but cannot be open. I can not handle this situation.
+              */
+            throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(e.getMessage());
+
         }
     }
 

@@ -187,6 +187,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
             @Override
             public WalletStoreDetailedCatalogItem getWalletDetailedCatalogItem() throws DatailedInformationNotFoundException {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+                System.err.println(this.getClass() + " Method: getWalletDetailedCatalogItem - TENGO RETURN NULL");
                 return null;
             }
 
@@ -497,6 +499,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         try {
 
             DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
+            Logger LOG = Logger.getGlobal();
+            LOG.info("MAP_detailedCatalogItem:" + detailedCatalogItem);
             return detailedCatalogItem.getDefaultLanguage();
 
         } catch (CantGetCatalogItemException exception) {
@@ -515,6 +519,22 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             throw new CantGetSkinException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, "Cannot get the wallet Skin", "Please, check the cause");
         }
 
+    }
+
+    private String checkDeveloperAlias(DetailedCatalogItem detailedCatalogItem){
+        String developerAlias="DefaultDeveloperAlias";
+        if(detailedCatalogItem.getDeveloper()!=null){
+            developerAlias=detailedCatalogItem.getDeveloper().getAlias();
+        }
+        return developerAlias;
+    }
+
+    private Languages checkLanguages(Languages languages){
+        Languages checkingLanguages=languages;
+        if(languages==null){
+            checkingLanguages=Languages.AMERICAN_ENGLISH;
+        }
+        return checkingLanguages;
     }
 
     /**
@@ -542,6 +562,9 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             //DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
             Skin skin = getWalletSkinFromWalletCatalogueId(walletCatalogueId);
             Language language = getWalletLanguageFromWalletCatalogueId(walletCatalogueId);
+            //TODO: when we fix the publisher, delete this, please.
+            Languages languageName=checkLanguages(language.getLanguageName());
+            String developerAlias=checkDeveloperAlias(detailedCatalogItem);
 
             /*
             For now, we'll pass null to the  walletPrivateKey, walletIconName, skinPreview method arguments
@@ -550,22 +573,24 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
             LOG.info("MAP_STORE_MODULE:"+walletInstallationProcess);
             LOG.info("MAP_NAME:"+catalogItem.getName());
-            LOG.info("MAP_NAME:"+catalogItem.getId());
+            LOG.info("MAP_ID:"+catalogItem.getId());
             LOG.info("MAP_VERSION:"+detailedCatalogItem.getVersion());
             LOG.info("MAP_SCREENS:"+skin.getScreenSize().getCode());
             LOG.info("MAP_SKIN_VERSION:"+skin.getVersion());
             LOG.info("MAP_SKIN_NAME:"+skin.getSkinName());
             LOG.info("MAP_LANGUAGE_VERSION:"+language.getVersion());
             LOG.info("MAP_LANGUAGE_NAME:"+language.getLanguageName());
+            LOG.info("MAP_FIX_LANGUAGE_NAME:"+languageName);
             LOG.info("MAP_LANGUAGE_LABEL:"+language.getLanguageLabel());
-            LOG.info("MAP_DEVELOPER:"+detailedCatalogItem.getDeveloper().getAlias());
+            LOG.info("MAP_DEVELOPER_ALIAS:"+developerAlias);
+
             LOG.info("MAP_VERSION:"+version);
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
                     catalogItem.getId().toString(), null, /*deviceUser.getPublicKey()*/"testPublicKey", null,
                     walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
                     skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
-                    language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
-                    detailedCatalogItem.getDeveloper().getAlias(), version.toString()/*"1.0.0"*/);
+                    language.getVersion(), /*language.getLanguageName()*/languageName, language.getLanguageLabel(),
+                    /*detailedCatalogItem.getDeveloper().getAlias()*/developerAlias, version.toString()/*"1.0.0"*/);
         } catch (CantSetInstallationStatusException exception) {
             throw new CantStartInstallationException(CantSetInstallationStatusException.DEFAULT_MESSAGE, exception, "Cannot set the instalation status", "Please, check the cause");
         } catch (CantGetCatalogItemException exception) {
