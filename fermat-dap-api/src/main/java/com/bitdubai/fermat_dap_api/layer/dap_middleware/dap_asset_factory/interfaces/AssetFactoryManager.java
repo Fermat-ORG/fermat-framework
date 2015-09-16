@@ -43,7 +43,7 @@ public interface AssetFactoryManager {
     /**
      * This method mark object AssetFactory in database with close
      */
-    void markAssetFactoryInFinal(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
+    void markAssetFactoryState(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
 
     /**
      * This method remove object AssetFactory in database
