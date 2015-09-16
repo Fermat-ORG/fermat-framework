@@ -18,4 +18,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
  * @since Java JDK 1.7
  */
 public class OutgoingTemplateNetworkServiceMessage extends FermatMessageCommunication {
+    //TODO ROBERTO CLOUD MEGAFIX
+
 }

@@ -54,7 +54,8 @@ public class RedeemPointActorDatabaseConstants {
     static final String REDEEM_POINT_RELATION_ASSET_USER_ASSET_STATUS_COLUMN_NAME = "asset_user_status";
     static final String REDEEM_POINT_RELATION_ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME = "asset_user_registration_date";
     static final String REDEEM_POINT_RELATION_ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME = "asset_user_modified_date";
-    static final String REDEEM_POINT_RELATION_ASSET_USER_USER_TIMESTAMP_COLUMN_NAME = "asset_user_timestamp";
+    static final String REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_TIMESTAMP_COLUMN_NAME = "asset_user_timestamp";
+    static final String REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_DATE_COLUMN_NAME = "asset_user_redeemption_date";
 
     static final String REDEEM_POINT_RELATION_ASSET_USER_FIRST_KEY_COLUMN = "asset_user_publicKey";
 
