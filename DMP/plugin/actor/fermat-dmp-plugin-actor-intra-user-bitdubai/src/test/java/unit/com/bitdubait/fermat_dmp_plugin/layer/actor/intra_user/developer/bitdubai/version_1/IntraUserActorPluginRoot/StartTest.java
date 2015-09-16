@@ -15,7 +15,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import junit.framework.TestCase;
@@ -79,7 +79,7 @@ public class StartTest extends TestCase
     DatabaseTableRecord mockDatabaseTableRecord=Mockito.mock(DatabaseTableRecord.class);
     Database mockDatabase= Mockito.mock(Database.class);
 
-    EventListener mockEventListener = Mockito.mock(EventListener.class);
+    FermatEventListener mockFermatEventListener = Mockito.mock(FermatEventListener.class);
     private IntraUserActorPluginRoot testIntraUserActorPluginRoot;
 
 
@@ -113,10 +113,10 @@ public class StartTest extends TestCase
 
         when(mockIntraUserActorDatabaseFactory.createDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME)).thenReturn(mockDatabase);
 
-        when(mockEventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED)).thenReturn(mockEventListener);
-        when(mockEventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED)).thenReturn(mockEventListener);
-        when(mockEventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION)).thenReturn(mockEventListener);
-        when(mockEventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED)).thenReturn(mockEventListener);
+        when(mockEventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED)).thenReturn(mockFermatEventListener);
+        when(mockEventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED)).thenReturn(mockFermatEventListener);
+        when(mockEventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION)).thenReturn(mockFermatEventListener);
+        when(mockEventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED)).thenReturn(mockFermatEventListener);
     }
 
     @Test

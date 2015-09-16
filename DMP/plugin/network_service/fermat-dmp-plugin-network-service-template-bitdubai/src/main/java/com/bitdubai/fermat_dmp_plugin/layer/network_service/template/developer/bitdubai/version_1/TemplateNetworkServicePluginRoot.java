@@ -14,13 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
@@ -43,7 +36,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
@@ -67,7 +60,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin {
+public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin {
 
     /**
      * Represent the logManager
@@ -80,14 +73,9 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
-     * Represent the platformComponentProfile
+     * DealsWithCommunicationLayerManager Interface member variables.
      */
-    private PlatformComponentProfile platformComponentProfile;
-
-    /**
-     * Represent the wsCommunicationsCloudClientManager
-     */
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+    private CommunicationLayerManager communicationLayerManager;
 
     /**
      * Represent the status of the network service
@@ -122,7 +110,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     /**
      * Hold the listeners references
      */
-    private List<EventListener> listenersAdded;
+    private List<FermatEventListener> listenersAdded;
 
     /**
      * Holds the templateNetworkServiceManagersCache
@@ -160,7 +148,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          /*
          * If all resources are inject
          */
-        if (wsCommunicationsCloudClientManager == null ||
+        if (communicationLayerManager == null ||
                 pluginDatabaseSystem  == null ||
                     errorManager      == null ||
                         eventManager  == null) {
@@ -169,7 +157,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append("communicationLayerManager: " + communicationLayerManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -196,13 +184,20 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     private void initializeListener(TemplateNetworkServiceManager templateNetworkServiceManager){
 
         /*
-         * Listen and handle Complete Component Registration Notification Event
+         * Listen and handle incoming network service connection request event
          */
-        EventListener eventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
-        eventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
+        fermatEventListener.setEventHandler(new TemplateIncomingNetworkServiceConnectionRequestHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
+        /*
+         * Listen and handle established network service connection event
+         */
+        fermatEventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
+        fermatEventListener.setEventHandler(new TemplateEstablishedRequestedNetworkServiceConnectionHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -261,7 +256,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     @Override
     public void start() throws CantStartPluginException {
 
-        logManager.log(TemplateNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
+        logManager.log(TemplateNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "Starting", "Starting", "Starting");
 
         /*
          * Validate required resources
@@ -284,42 +279,10 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              * TODO: Register this network service whit the communicationLayerManager
              */
             //communicationLayerManager.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
-            platformComponentProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(eccKeyPair.getPublicKey(), "TemplateNetworkService", new Double(0), new Double(0), "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT);
 
-
-            /* ONLY FOR TEST */
-
-                new Thread(new Runnable() {
-
-                    boolean continuar = Boolean.TRUE;
-
-                    @Override
-                    public void run() {
-
-                        while (continuar){
-
-                            if (wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().isConnected() &&
-                                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().isRegister()){
-
-                                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentInCommunicationCloudServer(platformComponentProfile);
-
-                                continuar = Boolean.FALSE;
-                            }
-                        }
-
-                    }
-                }).start();
 
             /*
-             * Listen and handle Complete Component Registration Notification Event
-             */
-            EventListener eventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
-            eventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
-
-            /*
-            * Its all ok, set the new status
+             * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
 
@@ -408,14 +371,12 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         //Clear all references
         templateNetworkServiceManagersCache.clear();
 
-        /*
+         /*
          * Unregister whit the communicationLayerManager
-
+         */
         try {
 
-
-
-            //communicationLayerManager.unregisterNetworkService(NetworkServices.INTRA_USER);
+            communicationLayerManager.unregisterNetworkService(NetworkServices.INTRA_USER);
 
         } catch (CommunicationException e) {
 
@@ -428,7 +389,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
-        }*/
+        }
 
         /*
          * Set the new status
@@ -444,6 +405,16 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
+    }
+
+
+    /**
+     * (non-Javadoc)
+     * @see DealsWithCommunicationLayerManager#setCommunicationLayerManager(CommunicationLayerManager)  No Compila (Luis)
+     */
+    @Override
+    public void setCommunicationLayerManager(CommunicationLayerManager communicationLayerManager) {
+        this.communicationLayerManager = communicationLayerManager;
     }
 
     /**
@@ -567,14 +538,14 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * This is a factory method for create new instances of the intra user network service manager
      *
      * @param pluginClientId the plugin client id
-     * @return TemplateNetworkServiceManager the template network service manager
+     * @return TemplateNetworkServiceManager the intra user network service manager
      */
     public TemplateNetworkServiceManager templateNetworkServiceManagerFactory(UUID pluginClientId){
 
         /*
          * Create a new instance
          */
-        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(platformComponentProfile, eccKeyPair, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
@@ -593,19 +564,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
-
-    /**
-     * Handles events that CompleteComponentRegistrationNotification
-     */
-    public void handleCompleteComponentRegistrationNotificationEvent(){
-
-        System.out.println(" TemplateNetworkServiceManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
-
-        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile);
-
-    }
-
-
     /**
      * Return a previously created instances of the template network service manager
      *
@@ -617,13 +575,5 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         return  templateNetworkServiceManagersCache.get(pluginClientId);
     }
 
-    /**
-     * (non-Javadoc)
-     * @see DealsWithWsCommunicationsCloudClientManager#setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager)
-     */
-    @Override
-    public void setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
-        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
-    }
 
 }

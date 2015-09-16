@@ -8,15 +8,13 @@ include ':fermat-dap-api'
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
 include ':fermat-wpd-api'
+include ':fermat-bch-api'
 
 // CRY Projects
 
 // Milestone 1 project:
 include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
 project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
-
-include ':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
-project(':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 
 // Milestone 1 project:
 include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
@@ -262,12 +260,17 @@ project(':fermat-dmp-plugin-module-wallet-publisher-bitdubai').projectDir = new 
 include ':fermat-dmp-plugin-module-wallet-store-bitdubai'
 project(':fermat-dmp-plugin-module-wallet-store-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai')
 
-// Milestone 1 project:
+// engine
 include ':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai'
 project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai').projectDir = new File('DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
 
 include ':fermat-dmp-plugin-engine-wallet-runtime-bitdubai'
 project(':fermat-dmp-plugin-engine-wallet-runtime-bitdubai').projectDir = new File('DMP/plugin/engine/fermat-dmp-plugin-engine-wallet-runtime-bitdubai')
+
+include ':fermat-pip-plugin-engine-desktop-runtime-bitdubai'
+project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai').projectDir = new File('PIP/plugin/engine/fermat-pip-plugin-engine-desktop-runtime-bitdubai')
+
+// end engine
 
 
 include ':fermat-dmp-plugin-middleware-bank-notes-bitdubai'
@@ -456,7 +459,6 @@ project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitduba
 include ':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
 
-
 // network-service
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
 project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
@@ -512,3 +514,20 @@ project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new Fil
 // identity
 include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
+
+// android dap wallets
+include ':fermat-dap-android-wallet-asset-issuer-bitdubai'
+project(':fermat-dap-android-wallet-asset-issuer-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-asset-issuer-bitdubai')
+
+include ':fermat-dap-android-wallet-asset-user-bitdubai'
+project(':fermat-dap-android-wallet-asset-user-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-asset-user-bitdubai')
+
+include ':fermat-dap-android-wallet-redeem-point-bitdubai'
+project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-redeem-point-bitdubai')
+
+// BCH
+include ':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai'
+project(':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai')
+
+include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
+project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')

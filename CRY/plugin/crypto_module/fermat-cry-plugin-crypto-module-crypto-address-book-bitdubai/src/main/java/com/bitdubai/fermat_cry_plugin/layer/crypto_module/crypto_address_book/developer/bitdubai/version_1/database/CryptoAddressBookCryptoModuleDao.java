@@ -13,9 +13,10 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.d
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -72,22 +73,21 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
      * CryptoAddressBook Interface implementation.
      */
     public void initialize() throws CantInitializeCryptoAddressBookCryptoModuleDatabaseException {
-        try
-        {
+        try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
-        }
-        catch (DatabaseNotFoundException e) {
+        } catch (DatabaseNotFoundException e) {
             try {
                 CryptoAddressBookCryptoModuleDatabaseFactory databaseFactory = new CryptoAddressBookCryptoModuleDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+            } catch (Exception z) {
+                throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
             }
         } catch (CantOpenDatabaseException e) {
             throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-
         } catch (Exception e) {
-            throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+            throw new CantInitializeCryptoAddressBookCryptoModuleDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -116,9 +116,8 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
             throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         } catch (InvalidCryptoAddressBookRecordParametersException exception) {
             throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
-        }
-        catch (Exception exception) {
-            throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
+        } catch (Exception exception) {
+            throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "Generic Exception.");
         }
     }
 
@@ -149,7 +148,7 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
         } catch (InvalidCryptoAddressBookRecordParametersException exception) {
             throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
         } catch (Exception exception) {
-            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "Generic Exception.");
         }
     }
 
@@ -229,16 +228,19 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
     }
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord record, CryptoAddressBookRecord cryptoAddressBookRecord) {
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME                ,cryptoAddressBookRecord.getCryptoAddress()            .getAddress());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME               ,cryptoAddressBookRecord.getCryptoAddress()            .getCryptoCurrency().getCode());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_PUBLIC_KEY_COLUMN_NAME ,cryptoAddressBookRecord.getDeliveredByActorPublicKey());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_TYPE_COLUMN_NAME       ,cryptoAddressBookRecord.getDeliveredByActorType()     .getCode());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_PUBLIC_KEY_COLUMN_NAME ,cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_TYPE_COLUMN_NAME       ,cryptoAddressBookRecord.getDeliveredToActorType()     .getCode());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_PLATFORM_COLUMN_NAME                      ,cryptoAddressBookRecord.getPlatform()                 .getCode());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_COLUMN_NAME                         ,cryptoAddressBookRecord.getVault()                    .getCode());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_PUBLIC_KEY_COLUMN_NAME             ,cryptoAddressBookRecord.getWalletPublicKey());
-        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_TYPE_COLUMN_NAME                   ,cryptoAddressBookRecord.getWalletType()               .getCode());
+
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME               , cryptoAddressBookRecord.getCryptoAddress()            .getAddress());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME              , cryptoAddressBookRecord.getCryptoAddress()            .getCryptoCurrency().getCode());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_PUBLIC_KEY_COLUMN_NAME, cryptoAddressBookRecord.getDeliveredByActorPublicKey());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_BY_ACTOR_TYPE_COLUMN_NAME      , cryptoAddressBookRecord.getDeliveredByActorType()     .getCode());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_PUBLIC_KEY_COLUMN_NAME, cryptoAddressBookRecord.getDeliveredToActorPublicKey());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_TYPE_COLUMN_NAME      , cryptoAddressBookRecord.getDeliveredToActorType()     .getCode());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_PLATFORM_COLUMN_NAME                     , cryptoAddressBookRecord.getPlatform()                 .getCode());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_TYPE_COLUMN_NAME                   , cryptoAddressBookRecord.getVaultType()                .getCode());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_IDENTIFIER_COLUMN_NAME             , cryptoAddressBookRecord.getVaultIdentifier()          );
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_PUBLIC_KEY_COLUMN_NAME            , cryptoAddressBookRecord.getWalletPublicKey());
+        record.setStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_TYPE_COLUMN_NAME                  , cryptoAddressBookRecord.getWalletType()               .getCode());
+
         return record;
     }
 
@@ -256,12 +258,25 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
 
         Platforms platform = Platforms.getByCode(record.getStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_PLATFORM_COLUMN_NAME));
 
-        Vaults vault = Vaults.getByCode(record.getStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_COLUMN_NAME));
+        VaultType vaultType = VaultType.getByCode(record.getStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_TYPE_COLUMN_NAME));
+
+        String vaultIdentifier = record.getStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_VAULT_IDENTIFIER_COLUMN_NAME);
 
         String walletPublicKey = record.getStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_PUBLIC_KEY_COLUMN_NAME);
         ReferenceWallet walletType = ReferenceWallet.getByCode(record.getStringValue(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_WALLET_TYPE_COLUMN_NAME));
 
-        return new CryptoAddressBookCryptoModuleRecord(cryptoAddress, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, platform, vault, walletPublicKey, walletType);
+        return new CryptoAddressBookCryptoModuleRecord(
+                cryptoAddress,
+                deliveredByActorPublicKey,
+                deliveredByActorType,
+                deliveredToActorPublicKey,
+                deliveredToActorType,
+                platform,
+                vaultType,
+                vaultIdentifier,
+                walletPublicKey,
+                walletType
+        );
     }
 
     /**
