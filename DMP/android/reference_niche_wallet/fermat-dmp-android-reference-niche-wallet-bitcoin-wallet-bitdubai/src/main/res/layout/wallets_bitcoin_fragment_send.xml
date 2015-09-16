@@ -24,7 +24,7 @@
             android:hint="name"
             android:textColor="#72af9c"
             android:textColorHint="#BDBDBD"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="normal"
             android:paddingTop="7dip"
             android:paddingLeft="14dip"
