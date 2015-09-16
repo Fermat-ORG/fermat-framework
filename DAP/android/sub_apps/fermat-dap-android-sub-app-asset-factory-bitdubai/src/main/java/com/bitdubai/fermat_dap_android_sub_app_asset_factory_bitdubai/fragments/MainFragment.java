@@ -7,9 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
 /**
- * Created by francisco on 15/09/15.
+ * Main Fragment
+ *
+ * @author Francisco Vásquez
+ * @version 1.0
  */
 public class MainFragment extends FermatFragment {
 
@@ -27,7 +31,7 @@ public class MainFragment extends FermatFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(0, container, false);
+        rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
         return rootView;
     }

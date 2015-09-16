@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 
 /**
- * Created by francisco on 15/09/15.
+ * Main Fragment
+ *
+ * @author Francisco Vásquez
+ * @version 1.0
  */
 public class MainFragment extends FermatFragment {
-    
+
     /**
      * UI
      */
@@ -31,5 +34,4 @@ public class MainFragment extends FermatFragment {
 
         return rootView;
     }
-
 }
