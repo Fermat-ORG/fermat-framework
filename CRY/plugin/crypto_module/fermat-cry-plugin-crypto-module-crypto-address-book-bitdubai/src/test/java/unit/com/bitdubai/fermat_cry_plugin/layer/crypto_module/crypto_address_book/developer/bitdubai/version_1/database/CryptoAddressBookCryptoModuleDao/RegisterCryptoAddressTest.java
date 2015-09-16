@@ -2,10 +2,9 @@ package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_b
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -13,7 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
@@ -22,14 +20,11 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.de
 
 import junit.framework.TestCase;
 
-import org.fest.assertions.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -46,7 +41,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
  * Created by natalia on 08/09/15.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, Vaults.class, ReferenceWallet.class})
+@PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, CryptoCurrencyVault.class, ReferenceWallet.class})
 
 public class RegisterCryptoAddressTest  extends TestCase {
 
@@ -91,7 +86,7 @@ public class RegisterCryptoAddressTest  extends TestCase {
                 "actorToKey",
                 Actors.INTRA_USER,
                 Platforms.CRYPTO_CURRENCY_PLATFORM,
-                Vaults.BITCOIN_VAULT,
+                CryptoCurrencyVault.BITCOIN_VAULT,
                 "",
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 

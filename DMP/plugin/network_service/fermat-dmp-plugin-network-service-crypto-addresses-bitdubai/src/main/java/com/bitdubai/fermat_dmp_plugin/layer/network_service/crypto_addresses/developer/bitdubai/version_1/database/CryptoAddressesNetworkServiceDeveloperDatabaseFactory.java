@@ -105,37 +105,34 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory implements De
         /**
          * I only have one database on my plugin. I will return its name.
          */
-        List<DeveloperDatabase> databases = new ArrayList<>();
+        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase("Crypto Addresses", this.pluginId.toString()));
         return databases;
     }
 
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
-        List<DeveloperDatabaseTable> tables = new ArrayList<>();
+        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table Contact Request columns.
+         * Table Crypto Address Request columns.
          */
-        List<String> contactRequestColumns = new ArrayList<>();
+        List<String> cryptoAddressRequestColumns = new ArrayList<String>();
 
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REQUEST_ID_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_WALLET_PUBLIC_KEY_TO_SEND_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REFERENCE_WALLET_TO_SEND_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_CRYPTO_ADDRESS_TO_SEND_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REQUESTER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REQUESTER_INTRA_USER_NAME_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REQUESTER_INTRA_USER_PROFILE_IMAGE_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_WALLET_PUBLIC_KEY_ACCEPTING_REQUEST_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_REFERENCE_WALLET_ACCEPTING_REQUEST_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_CRYPTO_ADDRESS_RECEIVED_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_INTRA_USER_PUBLIC_KEY_ACCEPTING_REQUEST_COLUMN_NAME);
-        contactRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_STATE_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_TYPE_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_REQUESTING_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_TO_SEND_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_ACCEPTING_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_TO_RECEIVE_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME);
         /**
-         * Table Contact Request addition.
+         * Table Crypto Address Request addition.
          */
-        DeveloperDatabaseTable contactRequestTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoAddressesNetworkServiceDatabaseConstants.CONTACT_REQUEST_TABLE_NAME, contactRequestColumns);
-        tables.add(contactRequestTable);
+        DeveloperDatabaseTable cryptoAddressRequestTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME, cryptoAddressRequestColumns);
+        tables.add(cryptoAddressRequestTable);
 
 
 
@@ -147,7 +144,7 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory implements De
         /**
          * Will get the records for the given table
          */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
+        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
 
 
         /**
@@ -164,7 +161,7 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory implements De
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<>();
+        List<String> developerRow = new ArrayList<String>();
         for (DatabaseTableRecord row : records) {
             /**
              * for each row in the table list
@@ -173,7 +170,7 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory implements De
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue());
+                developerRow.add(field.getValue().toString());
             }
             /**
              * I create the Developer Database record

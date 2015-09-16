@@ -13,23 +13,20 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.de
 public class CryptoAddressesNetworkServiceDatabaseConstants {
 
     /**
-     * Contact Request database table definition.
+     * Crypto Address Request database table definition.
      */
-    static final String CONTACT_REQUEST_TABLE_NAME = "contact_request";
+    public static final String CRYPTO_ADDRESS_REQUEST_TABLE_NAME = "crypto_address_request";
 
-    static final String CONTACT_REQUEST_REQUEST_ID_COLUMN_NAME = "request_id";
-    static final String CONTACT_REQUEST_WALLET_PUBLIC_KEY_TO_SEND_COLUMN_NAME = "wallet_public_key_to_send";
-    static final String CONTACT_REQUEST_REFERENCE_WALLET_TO_SEND_COLUMN_NAME = "reference_wallet_to_send";
-    static final String CONTACT_REQUEST_CRYPTO_ADDRESS_TO_SEND_COLUMN_NAME = "crypto_address_to_send";
-    static final String CONTACT_REQUEST_REQUESTER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME = "requester_intra_user_public_key";
-    static final String CONTACT_REQUEST_REQUESTER_INTRA_USER_NAME_COLUMN_NAME = "requester_intra_user_name";
-    static final String CONTACT_REQUEST_REQUESTER_INTRA_USER_PROFILE_IMAGE_COLUMN_NAME = "requester_intra_user_profile_image";
-    static final String CONTACT_REQUEST_WALLET_PUBLIC_KEY_ACCEPTING_REQUEST_COLUMN_NAME = "wallet_public_key_accepting_request";
-    static final String CONTACT_REQUEST_REFERENCE_WALLET_ACCEPTING_REQUEST_COLUMN_NAME = "reference_wallet_accepting_request";
-    static final String CONTACT_REQUEST_CRYPTO_ADDRESS_RECEIVED_COLUMN_NAME = "crypto_address_received";
-    static final String CONTACT_REQUEST_INTRA_USER_PUBLIC_KEY_ACCEPTING_REQUEST_COLUMN_NAME = "intra_user_public_key_accepting_request";
-    static final String CONTACT_REQUEST_STATE_COLUMN_NAME = "state";
+    public static final String CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME = "request_id";
+    public static final String CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
+    public static final String CRYPTO_ADDRESS_REQUEST_ACTOR_TYPE_COLUMN_NAME = "actor_type";
+    public static final String CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
+    public static final String CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_REQUESTING_COLUMN_NAME = "actor_public_key_requesting";
+    public static final String CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_TO_SEND_COLUMN_NAME = "crypto_address_to_send";
+    public static final String CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_ACCEPTING_COLUMN_NAME = "actor_public_key_accepting";
+    public static final String CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_TO_RECEIVE_COLUMN_NAME = "crypto_address_to_receive";
+    public static final String CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME = "state";
 
-    static final String CONTACT_REQUEST_FIRST_KEY_COLUMN = "request_id";
+    public static final String CRYPTO_ADDRESS_REQUEST_FIRST_KEY_COLUMN = "request_id";
 
 }

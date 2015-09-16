@@ -17,8 +17,16 @@ import java.util.Map;
 public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity {
     /**
      * Activity class member variables
+     *
+     * TODO:  se debe cambiar y empezar a usar el String de activity type de abajo cuando esté hecho el activity factory
      */
+    @Deprecated
     Activities type;
+
+    /**
+     *  Activity type in String format
+     */
+    String activityType;
 
     /**
      *  the String is the fragments enum value corresponding to each plugin
@@ -188,6 +196,14 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      */
     public Map<WizardTypes, Wizard> getWizards() {
         return wizards;
+    }
+
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
     }
 }
 
