@@ -3447,7 +3447,23 @@
 			<layer name="Digital Asset Transaction" language="java">
 				<plugins>
 					<plugin
-						name="Asset Distribution"
+						name="Asset User Compensation"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Asset Reception"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -3479,7 +3495,55 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Asset Redemption"
+						name="Asset Issuer Redemption"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Asset User Redemption"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Asset RedeemPoint Redemption"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Asset RedeemPoint Redemption"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -6406,23 +6470,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Redeem Point Address Book"
-						description=""
-						difficulty="5"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="acostarodrigo"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 				</plugins>
 			</layer>
 
@@ -6447,6 +6494,23 @@
 					</plugin>
 					<plugin
 						name="Assets Over Bitcoin"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Bitcoin Watch Only"
 						description=""
 						difficulty="10"
 						code-level="development"
