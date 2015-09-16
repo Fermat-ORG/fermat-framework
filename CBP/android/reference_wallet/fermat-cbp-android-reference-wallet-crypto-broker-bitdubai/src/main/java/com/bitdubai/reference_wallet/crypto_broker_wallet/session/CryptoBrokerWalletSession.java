@@ -31,7 +31,7 @@ public class CryptoBrokerWalletSession implements WalletSession {
     /**
      * Wallet Store Module
      */
-    private WalletStoreModuleManager walletStoreModuleManager;
+    private WalletStoreModuleManager moduleManager;
 
 
     /**
@@ -39,13 +39,13 @@ public class CryptoBrokerWalletSession implements WalletSession {
      *
      * @param wallet                  the SubApp type
      * @param errorManager             the error manager
-     * @param walletStoreModuleManager the module of this SubApp
+     * @param moduleManager the module of this SubApp
      */
-    public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletStoreModuleManager walletStoreModuleManager) {
+    public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletStoreModuleManager moduleManager) {
         this.wallet = wallet;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
-        this.walletStoreModuleManager = walletStoreModuleManager;
+        this.moduleManager = moduleManager;
     }
 
 
@@ -106,8 +106,8 @@ public class CryptoBrokerWalletSession implements WalletSession {
      *
      * @return reference to the Wallet Store Module
      */
-    public WalletStoreModuleManager getWalletStoreModuleManager() {
-        return walletStoreModuleManager;
+    public WalletStoreModuleManager getModuleManager() {
+        return moduleManager;
     }
 
     @Override

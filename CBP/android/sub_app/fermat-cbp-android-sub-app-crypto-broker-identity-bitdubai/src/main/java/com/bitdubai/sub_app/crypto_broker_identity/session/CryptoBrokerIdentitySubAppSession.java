@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.crypto_broker_identity.session;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
     /**
      * Wallet Store Module
      */
-    private WalletStoreModuleManager walletStoreModuleManager;
+    private CryptoBrokerIdentityModuleManager moduleManager;
 
 
     /**
@@ -39,13 +40,13 @@ public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
      *
      * @param subApps                  the SubApp type
      * @param errorManager             the error manager
-     * @param walletStoreModuleManager the module of this SubApp
+     * @param moduleManager the module of this SubApp
      */
-    public CryptoBrokerIdentitySubAppSession(SubApps subApps, ErrorManager errorManager, WalletStoreModuleManager walletStoreModuleManager) {
+    public CryptoBrokerIdentitySubAppSession(SubApps subApps, ErrorManager errorManager, CryptoBrokerIdentityModuleManager moduleManager) {
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
-        this.walletStoreModuleManager = walletStoreModuleManager;
+        this.moduleManager = moduleManager;
     }
 
     /**
@@ -105,8 +106,8 @@ public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
      *
      * @return reference to the Wallet Store Module
      */
-    public WalletStoreModuleManager getWalletStoreModuleManager() {
-        return walletStoreModuleManager;
+    public CryptoBrokerIdentityModuleManager getModuleManager() {
+        return moduleManager;
     }
 
     @Override
