@@ -36,14 +36,29 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("CompleteRegistrationComponentPacketProcessor - processingPackage");
 
-       /*
-        * ---------------------------------------------------------------------------------------------------
-        * IMPORTANT: This Message Content of this packet come encrypted with the temporal identity public key
-        * at this moment the communication cloud client is noT register
-        * ---------------------------------------------------------------------------------------------------
-        * Get the platformComponentProfile from the message content and decrypt
-        */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey());
+        String messageContentJsonStringRepresentation = null;
+
+        if (getWsCommunicationsCloudClientChannel().isRegister()){
+
+            /*
+            * Get the platformComponentProfile from the message content and decrypt
+            */
+            System.out.println(" CompleteRegistrationComponentPacketProcessor - decoding fermatPacket with client-identity ");
+            messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+
+        }else {
+
+            /*
+            * ---------------------------------------------------------------------------------------------------
+            * IMPORTANT: This Message Content of this packet come encrypted with the temporal identity public key
+            * at this moment the communication cloud client is noT register
+            * ---------------------------------------------------------------------------------------------------
+            * Get the platformComponentProfile from the message content and decrypt
+            */
+            System.out.println(" CompleteRegistrationComponentPacketProcessor - decoding fermatPacket with temp-identity ");
+            messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey());
+
+        }
 
         System.out.println("CompleteRegistrationComponentPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
@@ -61,6 +76,9 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
 
             System.out.println("CompleteRegistrationComponentPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() = "+ getWsCommunicationsCloudClientChannel().isRegister());
         }
+
+
+        System.out.println("CompleteRegistrationComponentPacketProcessor - Fire a event = EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
 
         /*
          * Create a raise a new event whit the platformComponentProfile registered

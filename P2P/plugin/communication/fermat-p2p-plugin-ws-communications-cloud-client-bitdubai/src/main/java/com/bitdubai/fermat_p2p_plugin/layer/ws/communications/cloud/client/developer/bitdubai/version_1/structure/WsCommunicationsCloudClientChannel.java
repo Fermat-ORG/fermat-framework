@@ -147,6 +147,8 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          */
         headers.put(AttNamesConstants.HEADER_ATT_NAME_TI, jsonObject.toString());
 
+        System.out.println(" WsCommunicationsCloudClientChannel - headers = "+headers);
+
         /*
          * Construct the instance with the required parameters
          */
@@ -162,8 +164,8 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onOpen");
-        System.out.println("Server hand Shake Data = " + handShakeData);
-        System.out.println("Server getReadyState() = " + getReadyState());
+        System.out.println(" WsCommunicationsCloudClientChannel - Server hand Shake Data = " + handShakeData);
+        System.out.println(" WsCommunicationsCloudClientChannel - Server getReadyState() = " + getReadyState());
     }
 
     /**
@@ -184,19 +186,21 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          */
         if (!isRegister){
 
+            System.out.println(" WsCommunicationsCloudClientChannel - decoding fermatPacket with temp-identity ");
+
             /**
              * Decode the message with the temporal identity
              */
             fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, temporalIdentity.getPrivateKey());
-            System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + FermatPacketDecoder.decode(fermatPacketEncode, temporalIdentity.getPrivateKey()));
 
         }else {
+
+            System.out.println(" WsCommunicationsCloudClientChannel - decoding fermatPacket with client-identity ");
 
             /**
              * Decode the message with the client identity
              */
             fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, clientIdentity.getPrivateKey());
-            System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + FermatPacketDecoder.decode(fermatPacketEncode, clientIdentity.getPrivateKey()));
 
             /*
              * Validate the signature
@@ -204,6 +208,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             validateFermatPacketSignature(fermatPacketReceive);
         }
 
+        System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + fermatPacketReceive);
 
 
         /*

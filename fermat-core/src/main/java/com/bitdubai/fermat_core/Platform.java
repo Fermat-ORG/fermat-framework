@@ -29,8 +29,6 @@ import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.DealsWithAssetsVault;
-import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
-import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;

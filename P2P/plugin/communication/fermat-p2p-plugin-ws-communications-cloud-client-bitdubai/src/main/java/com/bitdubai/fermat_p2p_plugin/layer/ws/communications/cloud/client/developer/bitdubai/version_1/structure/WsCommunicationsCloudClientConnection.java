@@ -163,10 +163,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
         }
 
          /*
-         * Construct a fermat packet whit the server identity
+         * Construct a fermat packet whit the PlatformComponentProfile
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                    wsCommunicationsCloudClientChannel.getTemporalIdentity().getPublicKey(), //Sender
+                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
                                                                                                                     platformComponentProfile.toJson(),                                       //Message Content
                                                                                                                     FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                         //Packet type
                                                                                                                     wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
@@ -202,7 +202,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
         messageContent.addProperty(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE, requestedPlatformComponentProfile.getNetworkServiceType().toString());
 
          /*
-         * Construct a fermat packet whit the server identity
+         * Construct a fermat packet whit the filters
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
                                                                                                                     wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender

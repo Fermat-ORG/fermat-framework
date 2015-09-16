@@ -68,8 +68,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the SERVER_IP
      */
-    //private static final String SERVER_IP = "52.11.156.16"; //AWS
-    private static final String SERVER_IP = "192.168.43.206";
+    private static final String SERVER_IP = "52.11.156.16"; //AWS
+    //private static final String SERVER_IP = "192.168.42.5";
     //private static final String SERVER_IP = "192.168.0.7";
 
     /**
@@ -155,30 +155,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
             wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
-
-
-            /* ONLY FOR TEST
-
-                new Thread(new Runnable() {
-
-                    boolean continuar = Boolean.TRUE;
-
-                    @Override
-                    public void run() {
-
-                        while (continuar){
-
-                            if (wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().isActive()){
-
-                                wsCommunicationsCloudClientConnection.requestListComponentRegistered(wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getPlatformComponentProfile());
-
-                                continuar = Boolean.FALSE;
-                            }
-                        }
-
-                    }
-                }).start();
-            */
 
         } catch (Exception e) {
             e.printStackTrace();
