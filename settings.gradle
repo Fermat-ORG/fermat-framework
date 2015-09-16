@@ -527,6 +527,10 @@ project(':fermat-dap-android-wallet-asset-user-bitdubai').projectDir = new File(
 include ':fermat-dap-android-wallet-redeem-point-bitdubai'
 project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-redeem-point-bitdubai')
 
+// android dap sub apps
+include ':fermat-dap-android-sub-app-asset-factory-bitdubai'
+project(':fermat-dap-android-sub-app-asset-factory-bitdubai').projectDir = new File('DAP/android/sub_apps/fermat-dap-android-sub-app-asset-factory-bitdubai')
+
 // BCH
 include ':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai'
 project(':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai')
