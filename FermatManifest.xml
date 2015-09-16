@@ -448,12 +448,7 @@
 		</platform>
 
 		<platform code="PIP" name="Plug-ins Platform" logo="PIP_logo.png" dependsOn="P2P, COR">
-
-			<dependencies>
-				<dependency code="COR"></dependency>
-				<dependency code="OSA"></dependency>
-			</dependencies>
-
+			
 			<layer name="Sub App" language="java-android">
 				<androids>
 					<android
@@ -6649,7 +6644,7 @@
 
 		</super_layer>
 
-		<super_layer code="OSA" name="Operating System API" dependsOn="OSA">
+		<super_layer code="OSA" name="Operating System API">
 
 			<layer name="Multi OS" language="java">
 				<addons>
