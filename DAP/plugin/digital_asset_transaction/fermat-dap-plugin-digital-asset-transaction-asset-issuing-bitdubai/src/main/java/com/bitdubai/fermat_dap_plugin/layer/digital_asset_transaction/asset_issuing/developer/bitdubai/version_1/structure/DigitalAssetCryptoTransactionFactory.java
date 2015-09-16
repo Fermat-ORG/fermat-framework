@@ -265,6 +265,17 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          *Este método debe verificar el estatus de cada Asset y proceder de acuerdo a cada uno de ellos.
          * El objetivo es finalizar los digital assets, ya persistidos en base de datos, pero sin emitir.
          */
+        try {
+            String digitalAssetTransactionStatusCode=this.assetIssuingTransactionDao.getDigitalAssetTransactionStatus(transactionId);
+            switch (digitalAssetTransactionStatusCode){
+                case "FGEN":
+                    break;
+                default:
+                    break;
+            }
+        } catch (CantCheckAssetIssuingProgressException | UnexpectedResultReturnedFromDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+        }
     }
 
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
