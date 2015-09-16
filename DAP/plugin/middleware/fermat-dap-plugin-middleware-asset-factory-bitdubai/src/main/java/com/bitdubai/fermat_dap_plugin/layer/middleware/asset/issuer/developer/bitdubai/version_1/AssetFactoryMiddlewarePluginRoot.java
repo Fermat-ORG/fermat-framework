@@ -33,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -158,6 +159,7 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
                 throw new CantStartPluginException("Cannot start AssetFactoryMiddleware plugin.", FermatException.wrapException(exception), null, null);
             }
         }
+        System.out.println("******* Asset Factory Init. Franklin ******");
         this.serviceStatus = ServiceStatus.STARTED;
     }
 

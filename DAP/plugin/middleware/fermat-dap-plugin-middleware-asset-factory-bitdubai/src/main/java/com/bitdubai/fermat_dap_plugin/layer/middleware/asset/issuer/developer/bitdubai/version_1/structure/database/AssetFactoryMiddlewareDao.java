@@ -93,9 +93,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         return record;
     }
 
-    private DatabaseTableRecord getResourceDataRecord(String assetPublicKey,
-                                                      //UUID id,
-                                                      Resource resource) throws DatabaseOperationException, MissingAssetDataException
+    private DatabaseTableRecord getResourceDataRecord(String assetPublicKey, Resource resource) throws DatabaseOperationException, MissingAssetDataException
     {
         DatabaseTable databaseTable = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
@@ -107,6 +105,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_DENSITY_COLUMN, resource.getResourceDensity().getCode());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN, resource.getResourceType().value());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, resource.getResourceFile().getPath());
+        //TODO: Analizar crear una constante para que guarde los bytes del archivo asociado
 
         return record;
     }
@@ -154,15 +153,12 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             {
                 //TODO: Verificar si debe haber una lista de Resource en la interfaz AseetFactory, para implementar dicha logica
             }
-
-
-
         }
 
         return transaction;
     }
 
-    private DatabaseTransaction addResourceContractToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
+    private DatabaseTransaction addContractRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
     {
         //Contract contract = null;
 
@@ -254,7 +250,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         return table.getRecords();
     }
 
-    //TODO: Metodo privado para instancia un objeto assetfactory vacio
     private AssetFactory getEmptyAssetFactory()
     {
         AssetFactory assetFactory = new AssetFactory() {
@@ -521,8 +516,13 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
 
                 transaction = addResourceRecordsToTransaction(transaction, assetFactory);
 
-                transaction = addResourceContractToTransaction(transaction, assetFactory);
+                transaction = addContractRecordsToTransaction(transaction, assetFactory);
             }
+
+            // I wil add the Contracts to the transaction if there are any
+            transaction = addContractRecordsToTransaction(transaction, assetFactory);
+            // I wil add the resources to the transaction if there are any
+            transaction = addResourceRecordsToTransaction(transaction, assetFactory);
 
             //I execute the transaction and persist the database side of the asset.
             database.executeTransaction(transaction);
@@ -534,7 +534,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         }
     }
 
-    public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter filter) throws DatabaseOperationException {
+    public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
         Database database= null;
         try {
             database = openDatabase();
@@ -557,11 +557,37 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                     contractProperties.add(contractProperty);
                 }
 
+                List<Resource> resources =  new ArrayList<>();
                 // I will add the resource properties information from database
+                for (DatabaseTableRecord resourceRecords : getResourcesData(assetFactory.getPublicKey())){
 
+                    Resource resource = new Resource();
+
+                    resource.setId(resourceRecords.getUUIDValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN));
+                    resource.setName(resourceRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_NAME_COLUMN));
+                    resource.setFileName(resourceRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_FILE_NAME_COLUMN));
+                    resource.setName(resourceRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_NAME_COLUMN));
+                    try {
+                        resource.setResourceDensity(ResourceDensity.getByCode(resourceRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_DENSITY_COLUMN)));
+                    }
+                    catch (InvalidParameterException e)
+                    {
+                        resource.setResourceDensity(ResourceDensity.HDPI);
+                    }
+                    try {
+                        resource.setResourceType(ResourceType.getByCode(resourceRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN)));
+                    }
+                    catch (InvalidParameterException e)
+                    {
+                        resource.setResourceType(ResourceType.IMAGE);
+                    }
+                    //TODO: Revisar que hacer con resource.setResourceFile() ya que es el archivo como tal, de donde lo saco, desde un binario o el path donde se guardo el archivo.
+                    //resource.setResourceFile();
+
+                    resources.add(resource);
+                }
                 assetFactory.setContractProperties(contractProperties);
-
-                //TODO: Falta la tabla recursos
+                assetFactory.setResources(resources);
 
                 assetFactoryList.add(assetFactory);
             }
