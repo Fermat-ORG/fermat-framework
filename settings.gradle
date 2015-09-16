@@ -481,3 +481,6 @@ project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('D
 
 include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
+
+include ':fermat-dap-android-wallet-asset-issuer-bitdubai'
+project(':fermat-dap-android-wallet-asset-issuer-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-asset-issuer-bitdubai')
