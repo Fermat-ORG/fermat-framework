@@ -3,19 +3,19 @@ package com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionCancelledEvent;
 
 /**
  * Created by natalia on 14/08/15.
  */
-public class IntraUserDisconnectionEventHandlers implements EventHandler {
+public class IntraUserDisconnectionEventHandlers implements FermatEventHandler {
     /**
      * listener  INTRA_USER_CONNECTION_CANCELLED event
      * Change Actor status to CANCELLED
@@ -23,10 +23,10 @@ public class IntraUserDisconnectionEventHandlers implements EventHandler {
     ActorIntraUserManager actorIntraUserManager;
     IntraUserManager intraUserNetworkServiceManager;
 
-    EventMonitor eventMonitor;
+    FermatEventMonitor fermatEventMonitor;
 
-    public void setEventManager(EventMonitor eventMonitor){
-        this.eventMonitor = eventMonitor;
+    public void setEventManager(FermatEventMonitor fermatEventMonitor){
+        this.fermatEventMonitor = fermatEventMonitor;
 
     }
 
@@ -41,11 +41,11 @@ public class IntraUserDisconnectionEventHandlers implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (((Service) this.actorIntraUserManager).getStatus() == ServiceStatus.STARTED){
             try
             {
-                IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) platformEvent;
+                IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) fermatEvent;
                 this.actorIntraUserManager.disconnectIntraUser(intraUserActorConnectionCancelledEvent.getIntraUserLoggedInPublicKey(),
                         intraUserActorConnectionCancelledEvent.getIntraUserToAddPublicKey());
 
@@ -57,11 +57,11 @@ public class IntraUserDisconnectionEventHandlers implements EventHandler {
             }
             catch(CantDisconnectIntraUserException e)
             {
-                this.eventMonitor.handleEventException(e,platformEvent);
+                this.fermatEventMonitor.handleEventException(e, fermatEvent);
             }
             catch(Exception e)
             {
-                this.eventMonitor.handleEventException(e,platformEvent);
+                this.fermatEventMonitor.handleEventException(e, fermatEvent);
             }
 
         }

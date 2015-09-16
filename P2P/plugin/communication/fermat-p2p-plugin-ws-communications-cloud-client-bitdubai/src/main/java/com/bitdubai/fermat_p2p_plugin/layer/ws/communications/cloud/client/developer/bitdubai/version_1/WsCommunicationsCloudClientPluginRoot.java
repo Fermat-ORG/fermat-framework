@@ -15,20 +15,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
@@ -48,11 +39,13 @@ import java.util.regex.Pattern;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by  Roberto Requena - (rart3001@gmail.com) on 03/09/15.
+ * Created by loui on 26/04/15.
+ * Update by Jorge Gonzales
+ * Update by Roberto Requena - (rart3001@gmail.com) on 03/06/15.
  *
  * @version 1.0
  */
-public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin, WsCommunicationsCloudClientManager {
+public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
 
     /**
@@ -68,8 +61,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the SERVER_IP
      */
-    private static final String SERVER_IP = "52.11.156.16"; //AWS
-    //private static final String SERVER_IP = "192.168.42.5";
+    private static final String SERVER_IP = "52.11.156.16";
     //private static final String SERVER_IP = "192.168.0.7";
 
     /**
@@ -90,7 +82,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /*
      * Hold the list of event listeners
      */
-    private List<EventListener> listenersAdded = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -153,8 +145,34 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
             URI uri = new URI(WsCommunicationsCloudClientPluginRoot.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.DEFAULT_PORT);
 
-            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager);
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
+
+
+            /* ONLY FOR TEST
+
+                new Thread(new Runnable() {
+
+                    boolean continuar = Boolean.TRUE;
+
+                    @Override
+                    public void run() {
+
+                        while (continuar){
+
+                            if (wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().isRegister()){
+
+                                wsCommunicationsCloudClientConnection.requestListComponentRegistered(wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getPlatformComponentProfile());
+
+                                continuar = Boolean.FALSE;
+                            }
+                        }
+
+                    }
+                }).start();
+
+            */
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -200,8 +218,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
         /*
          * Remove all the event listeners registered with the event manager.
          */
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         /*
@@ -353,15 +371,5 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public void setDisableClientFlag(Boolean disableClientFlag) {
         this.disableClientFlag = disableClientFlag;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see WsCommunicationsCloudClientManager#getCommunicationsCloudClientConnection()
-     */
-    @Override
-    public CommunicationsCloudClientConnection getCommunicationsCloudClientConnection() {
-        return wsCommunicationsCloudClientConnection;
     }
 }

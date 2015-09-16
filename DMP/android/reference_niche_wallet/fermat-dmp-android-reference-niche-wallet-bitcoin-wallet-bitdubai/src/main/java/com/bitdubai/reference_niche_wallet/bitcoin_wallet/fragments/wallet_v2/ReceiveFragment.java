@@ -273,12 +273,12 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
 
 
-                tv = (TextView) convertView.findViewById(R.id.new_contact_name);
+                //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
 
 
                 tv = (TextView) convertView.findViewById(R.id.contact_name);
 
-                tv.setText("Receive from new contact");
+                //tv.setText("Name");
             }
             else
             {

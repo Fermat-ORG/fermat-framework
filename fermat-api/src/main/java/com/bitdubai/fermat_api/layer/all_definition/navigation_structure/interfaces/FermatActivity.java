@@ -22,6 +22,8 @@ public interface FermatActivity {
 
     public Activities getType();
 
+    public String getActivityType();
+
     public Map<String, Fragment> getFragments();
 
     public Fragment getLastFragment();
