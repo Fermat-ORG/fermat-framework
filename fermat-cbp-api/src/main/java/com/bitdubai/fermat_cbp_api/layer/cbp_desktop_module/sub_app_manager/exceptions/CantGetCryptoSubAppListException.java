@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manage.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

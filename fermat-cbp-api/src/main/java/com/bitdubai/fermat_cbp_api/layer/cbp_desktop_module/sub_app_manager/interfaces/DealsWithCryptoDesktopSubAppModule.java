@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manage.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.interfaces;
 
 
 /**
