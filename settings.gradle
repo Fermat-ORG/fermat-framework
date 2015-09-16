@@ -529,7 +529,6 @@ project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP
 //Desktop
 include ':fermat-cbp-android-desktop-sub-app-manager-bitdubai'
 project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai')
-include 'fermat-cbp-android-desktop-wallet-manager-bitdubai'
 include ':fermat-cbp-android-desktop-wallet-manager-bitdubai'
 project(':fermat-cbp-android-desktop-wallet-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-wallet-manager-bitdubai')
 
@@ -546,10 +545,10 @@ include ':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai'
 project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
 include ':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai'
 project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
-include ':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai'
-project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
-include ':fermat-cbp-android-sub-app-customers-bitdubai'
-project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
+//include ':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai'
+//project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
+//include ':fermat-cbp-android-sub-app-customers-bitdubai'
+//project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
 
 //PLUGINS
 

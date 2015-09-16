@@ -1,0 +1,128 @@
+package com.bitdubai.reference_wallet.crypto_broker_wallet.session;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class CryptoBrokerWalletSession implements WalletSession {
+
+    /**
+     * SubApps type
+     */
+    InstalledWallet wallet;
+
+    /**
+     * Active objects in wallet session
+     */
+    Map<String, Object> data;
+
+    /**
+     * Error manager
+     */
+    private ErrorManager errorManager;
+
+    /**
+     * Wallet Store Module
+     */
+    private WalletStoreModuleManager walletStoreModuleManager;
+
+
+    /**
+     * Create a session for the Wallet Store SubApp
+     *
+     * @param wallet                  the SubApp type
+     * @param errorManager             the error manager
+     * @param walletStoreModuleManager the module of this SubApp
+     */
+    public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletStoreModuleManager walletStoreModuleManager) {
+        this.wallet = wallet;
+        data = new HashMap<String, Object>();
+        this.errorManager = errorManager;
+        this.walletStoreModuleManager = walletStoreModuleManager;
+    }
+
+
+    @Override
+    public InstalledWallet getWalletSessionType() {
+        return null;
+    }
+
+    /**
+     * Store any data you need to hold between the fragments of the sub app
+     *
+     * @param key    key to reference the object
+     * @param object the object yo want to store
+     */
+    @Override
+    public void setData(String key, Object object) {
+        data.put(key, object);
+    }
+
+    /**
+     * Return the data referenced by the key
+     *
+     * @param key the key to access de data
+     * @return the data you want
+     */
+    @Override
+    public Object getData(String key) {
+        return data.get(key);
+    }
+
+    @Override
+    public CryptoWalletManager getCryptoWalletManager() {
+        return null;
+    }
+
+    /**
+     * Return the Error Manager
+     *
+     * @return reference to the Error Manager
+     */
+    @Override
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    @Override
+    public WalletResourcesProviderManager getWalletResourcesProviderManager() {
+        return null;
+    }
+
+    @Override
+    public WalletSettings getWalletSettings() {
+        return null;
+    }
+
+    /**
+     * Return the Wallet Store Module
+     *
+     * @return reference to the Wallet Store Module
+     */
+    public WalletStoreModuleManager getWalletStoreModuleManager() {
+        return walletStoreModuleManager;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CryptoBrokerWalletSession that = (CryptoBrokerWalletSession) o;
+
+        return wallet == that.wallet;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return wallet.hashCode();
+    }
+}
