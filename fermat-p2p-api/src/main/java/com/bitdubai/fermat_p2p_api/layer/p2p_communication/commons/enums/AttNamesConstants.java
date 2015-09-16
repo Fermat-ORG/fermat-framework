@@ -47,9 +47,22 @@ public class AttNamesConstants {
     public static final String JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN = "r-p-iv";
 
     /**
-     * Represent the value of JSON_ATT_NAME_PARTICIPANTS_IDENTITIES_VPN
+     * Represent the value of JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN
      */
-    public static final String JSON_ATT_NAME_PARTICIPANTS_IDENTITIES_VPN = "ps-iv";
+    public static final String JSON_ATT_NAME_CLIENT_IDENTITY_VPN = "c-iv";
+    /**
+     * Represent the value of JSON_ATT_NAME_VPN_URI
+     */
+    public static final String JSON_ATT_NAME_VPN_URI = "u";
 
+    /**
+     * Represent the value of JSON_ATT_NAME_VPN_URI
+     */
+    public static final String JSON_ATT_NAME_VPN_SERVER_IDENTITY = "v-s-i";
+
+    /**
+     * Represent the value of JSON_ATT_NAME_REMOTE_PARTICIPANT_IDENTITY_VPN
+     */
+    public static final String JSON_ATT_NAME_REMOTE_PARTICIPANT_IDENTITY_VPN = "r-p-iv";
 
 }

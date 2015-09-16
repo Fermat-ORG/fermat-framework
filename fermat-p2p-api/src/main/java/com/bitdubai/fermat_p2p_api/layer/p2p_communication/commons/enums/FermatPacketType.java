@@ -26,6 +26,11 @@ public enum FermatPacketType {
     SERVER_HANDSHAKE_RESPOND       ("SRV_HS_RESP"),
 
     /**
+     * This type is use when a vpn server handshake respond
+     */
+    VPN_SERVER_HANDSHAKE_RESPOND   ("VPN_SRV_HS_RESP"),
+
+    /**
      * This type is use when a component registration request
      */
     COMPONENT_REGISTRATION_REQUEST ("COMP_REG_REQ"),
@@ -33,7 +38,7 @@ public enum FermatPacketType {
     /**
      * This type is use when a component registration request is complete
      */
-    COMPLETE_REGISTRATION_COMPONENT("COMPL_REG_COMP"),
+    COMPLETE_COMPONENT_REGISTRATION("COMPL_COMP_REG"),
 
     /**
      * This type is use when need a list the components registered in the server
@@ -56,10 +61,15 @@ public enum FermatPacketType {
     COMPONENT_CONNECTION_REQUEST   ("COMP_CONNECT_REQ"),
 
     /**
-     * This type is use when a component connection request is complete are
-     * participants are connected to the vpn
+     * This type is use when a component connection respond is made
      */
-    COMPONENT_CONNECTION_REQUEST_COMPLETE ("COMP_CONNECT_REQ_COMP"),
+    COMPONENT_CONNECTION_RESPOND   ("COMP_CONNECT_RES"),
+
+    /**
+     * This type is use when a component connection request is complete, are
+     * participants are connected to the vpn, and is ready to send message
+     */
+    COMPLETE_COMPONENT_CONNECTION_REQUEST("COMPL_COMP_CONNECT_REQ"),
 
     /**
      * This type is use whe an component send a message to another component
@@ -98,15 +108,17 @@ public enum FermatPacketType {
     public static FermatPacketType getByCode(final String code){
 
         switch (code){
-            case "SRV_HS_RESP"           : return FermatPacketType.SERVER_HANDSHAKE_RESPOND;
-            case "COMP_REG_REQ"          : return FermatPacketType.COMPONENT_CONNECTION_REQUEST;
-            case "COMPL_REG_COMP"        : return FermatPacketType.COMPLETE_REGISTRATION_COMPONENT;
-            case "REQ_LIST_COMP_REG"     : return FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED;
-            case "COMP_DISC_REQ"         : return FermatPacketType.COMPONENT_DISCONNECT_REQUEST;
-            case "MSG_DEL_NOT"           : return FermatPacketType.MESSAGE_DELIVERY_NOTIFICATION;
-            case "COMP_CONNECT_REQ"      : return FermatPacketType.COMPONENT_CONNECTION_REQUEST;
-            case "COMP_CONNECT_REQ_COMP" : return FermatPacketType.COMPONENT_CONNECTION_REQUEST_COMPLETE;
-            case "MSG_TRANS"             : return FermatPacketType.MESSAGE_TRANSMIT;
+            case "SRV_HS_RESP"            : return FermatPacketType.SERVER_HANDSHAKE_RESPOND;
+            case "VPN_SRV_HS_RESP"        : return FermatPacketType.VPN_SERVER_HANDSHAKE_RESPOND;
+            case "COMP_REG_REQ"           : return FermatPacketType.COMPONENT_CONNECTION_REQUEST;
+            case "COMPL_COMP_REG"         : return FermatPacketType.COMPLETE_COMPONENT_REGISTRATION;
+            case "REQ_LIST_COMP_REG"      : return FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED;
+            case "COMP_DISC_REQ"          : return FermatPacketType.COMPONENT_DISCONNECT_REQUEST;
+            case "MSG_DEL_NOT"            : return FermatPacketType.MESSAGE_DELIVERY_NOTIFICATION;
+            case "COMP_CONNECT_REQ"       : return FermatPacketType.COMPONENT_CONNECTION_REQUEST;
+            case "COMP_CONNECT_RES"       : return FermatPacketType.COMPONENT_CONNECTION_RESPOND;
+            case "COMPL_COMP_CONNECT_REQ" : return FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST;
+            case "MSG_TRANS"              : return FermatPacketType.MESSAGE_TRANSMIT;
 
             default: throw new IllegalArgumentException();
         }

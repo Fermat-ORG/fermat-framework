@@ -4,16 +4,17 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn;
+
+
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import sun.security.krb5.internal.HostAddress;
-
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationVpnServerManagerAgent</code> this
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn.WsCommunicationVpnServerManagerAgent</code> this
  * agent manage all the WsCommunicationVpnServer created
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/09/15.
@@ -66,12 +67,14 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
      *
      * @param participants
      */
-    public void createNewWsCommunicationVPNServer(List<String> participants){
+    public WsCommunicationVPNServer createNewWsCommunicationVPNServer(List<PlatformComponentProfile> participants) {
 
         InetSocketAddress inetSocketAddress = new InetSocketAddress(hostIp, (lastPortAssigned+=1));
         WsCommunicationVPNServer vpnServer = new WsCommunicationVPNServer(inetSocketAddress, participants);
         vpnServersActivesCache.add(vpnServer);
         vpnServer.start();
+
+        return vpnServer;
     }
 
 
@@ -123,14 +126,6 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
     public synchronized void start() {
         isRunning = Boolean.TRUE;
         super.start();
-    }
-
-    /**
-     * Get the VpnServersActives
-     * @return List<WsCommunicationVPNServer>
-     */
-    public List<WsCommunicationVPNServer> getVpnServersActivesCache() {
-        return vpnServersActivesCache;
     }
 
     /**

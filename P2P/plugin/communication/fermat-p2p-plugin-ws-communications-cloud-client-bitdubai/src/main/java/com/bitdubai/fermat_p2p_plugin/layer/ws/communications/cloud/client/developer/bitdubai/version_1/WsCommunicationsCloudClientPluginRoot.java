@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -46,13 +48,11 @@ import java.util.regex.Pattern;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by loui on 26/04/15.
- * Update by Jorge Gonzales
- * Update by Roberto Requena - (rart3001@gmail.com) on 03/06/15.
+ * Created by  Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
  */
-public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin, WsCommunicationsCloudClientManager {
 
 
     /**
@@ -69,8 +69,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Represent the SERVER_IP
      */
     //private static final String SERVER_IP = "52.11.156.16"; //AWS
-    //private static final String SERVER_IP = "192.168.43.206";
-    private static final String SERVER_IP = "192.168.0.7";
+    private static final String SERVER_IP = "192.168.43.206";
+    //private static final String SERVER_IP = "192.168.0.7";
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -153,7 +153,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
             URI uri = new URI(WsCommunicationsCloudClientPluginRoot.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.DEFAULT_PORT);
 
-            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri);
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri, eventManager);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 
 
@@ -168,7 +168,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
                         while (continuar){
 
-                            if (wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().isRegister()){
+                            if (wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().isActive()){
 
                                 wsCommunicationsCloudClientConnection.requestListComponentRegistered(wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getPlatformComponentProfile());
 
@@ -377,5 +377,15 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public void setDisableClientFlag(Boolean disableClientFlag) {
         this.disableClientFlag = disableClientFlag;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see WsCommunicationsCloudClientManager#getCommunicationsCloudClientConnection()
+     */
+    @Override
+    public CommunicationsCloudClientConnection getCommunicationsCloudClientConnection() {
+        return wsCommunicationsCloudClientConnection;
     }
 }

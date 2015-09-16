@@ -29,6 +29,8 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.As
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.DealsWithAssetsVault;
 import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
@@ -1269,6 +1271,10 @@ public class Platform implements Serializable {
                 ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION));
             }
 
+            if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
+                ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
+            }
+
 
             /*
              * Register the plugin into the platform context
@@ -1336,6 +1342,7 @@ public class Platform implements Serializable {
                 ((DealsWithCommunicationLayerManager) plugin).setCommunicationLayerManager((CommunicationLayerManager) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER));
 
             }
+
 
         } catch (Exception exception) {
             LOG.log(Level.SEVERE, exception.getLocalizedMessage());

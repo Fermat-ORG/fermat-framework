@@ -13,7 +13,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.Pl
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
 
 import org.java_websocket.WebSocket;
@@ -43,6 +45,16 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * Represent the value of DEFAULT_CONNECTION_TIMEOUT
      */
     private static final int DEFAULT_CONNECTION_TIMEOUT = 10000;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+
+    /**
+     * Represent the wsCommunicationsCloudClientConnection
+     */
+    private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
     /*
      * Represent the wsCommunicationsCloudClientAgent
@@ -95,12 +107,14 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * @param headers
      * @param connectTimeout
      */
-    private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity) {
+    private WsCommunicationsCloudClientChannel(URI serverUri, Draft draft, Map<String, String> headers, int connectTimeout, ECCKeyPair temporalIdentity, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection, EventManager eventManager) {
         super(serverUri, draft, headers, connectTimeout);
         this.clientIdentity = new ECCKeyPair();
         this.temporalIdentity = temporalIdentity;
         this.packetProcessorsRegister = new ConcurrentHashMap<>();
-        isRegister = Boolean.FALSE;
+        this.wsCommunicationsCloudClientConnection = wsCommunicationsCloudClientConnection;
+        this.eventManager = eventManager;
+        this.isRegister = Boolean.FALSE;
     }
 
     /**
@@ -110,7 +124,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * @param draft
      * @return WsCommunicationsCloudClientChannel instance
      */
-    public static WsCommunicationsCloudClientChannel constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft){
+    public static WsCommunicationsCloudClientChannel constructWsCommunicationsCloudClientFactory(URI serverUri, Draft draft, WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection,EventManager eventManager){
 
         /*
          * Create a new temporal identity
@@ -136,7 +150,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         /*
          * Construct the instance with the required parameters
          */
-        return new WsCommunicationsCloudClientChannel(serverUri, draft, headers, WsCommunicationsCloudClientChannel.DEFAULT_CONNECTION_TIMEOUT, tempIdentity);
+        return new WsCommunicationsCloudClientChannel(serverUri, draft, headers, WsCommunicationsCloudClientChannel.DEFAULT_CONNECTION_TIMEOUT, tempIdentity, wsCommunicationsCloudClientConnection, eventManager);
     }
 
     /**
@@ -267,7 +281,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      * This method register a FermatPacketProcessor object with this
      * server
      */
-    public void registerFermatPacketProcessorServerSideObject(FermatPacketProcessor fermatPacketProcessor) {
+    public void registerFermatPacketProcessor(FermatPacketProcessor fermatPacketProcessor) {
 
         /*
          * Set server reference
@@ -357,7 +371,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     }
 
     /**
-     * Get the isRegister value
+     * Get the isActive value
      * @return boolean
      */
     public boolean isRegister() {
@@ -365,7 +379,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
     }
 
     /**
-     * Set the isRegister
+     * Set the isActive
      * @param isRegister
      */
     public void setIsRegister(boolean isRegister) {
@@ -378,5 +392,21 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public void setWsCommunicationsCloudClientAgent(WsCommunicationsCloudClientAgent wsCommunicationsCloudClientAgent) {
         this.wsCommunicationsCloudClientAgent = wsCommunicationsCloudClientAgent;
+    }
+
+    /**
+     * Get the WsCommunicationsCloudClientConnection
+     * @return WsCommunicationsCloudClientConnection
+     */
+    public WsCommunicationsCloudClientConnection getWsCommunicationsCloudClientConnection() {
+        return wsCommunicationsCloudClientConnection;
+    }
+
+    /**
+     * Get the EventManager
+     * @return EventManager
+     */
+    public EventManager getEventManager() {
+        return eventManager;
     }
 }

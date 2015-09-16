@@ -145,7 +145,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
                                                                                                                         serverIdentity.getPublicKey(),                    //Sender
                                                                                                                         platformComponentProfile.toJson(),                //Message Content
-                                                                                                                        FermatPacketType.COMPLETE_REGISTRATION_COMPONENT, //Packet type
+                                                                                                                        FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
                                                                                                                         serverIdentity.getPrivateKey());                  //Sender private key
 
             /*

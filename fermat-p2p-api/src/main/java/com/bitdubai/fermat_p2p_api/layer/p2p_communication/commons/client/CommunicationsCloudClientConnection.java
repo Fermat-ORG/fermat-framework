@@ -11,6 +11,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 
+import java.util.List;
+
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection</code> represent
  * a connection with the server
@@ -54,11 +56,13 @@ public interface CommunicationsCloudClientConnection {
     public void requestListComponentRegistered(PlatformComponentProfile requestedPlatformComponentProfile);
 
     /**
-     * Method that send a message to other component
+     * Method that request to the communication cloud server create a vpn connection between the applicant and
+     * the remote destination component to send message
      *
-     * @param fermatMessage
+     * @param applicant who is made the request
+     * @param remoteDestination the remote destination component to receive message
      */
-    public void sendMessage(FermatMessage fermatMessage);
+    public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination);
 
     /**
      * Method that verified is the connection is
@@ -67,5 +71,20 @@ public interface CommunicationsCloudClientConnection {
      * @return boolean
      */
     public boolean isConnected();
+
+    /**
+     * Get the isActive value
+     * @return boolean
+     */
+    public boolean isRegister();
+
+
+    /**
+     * Get the CommunicationsVPNConnection stablished
+     *
+     * @param applicant
+     * @return CommunicationsVPNConnection
+     */
+    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile);
 
 }
