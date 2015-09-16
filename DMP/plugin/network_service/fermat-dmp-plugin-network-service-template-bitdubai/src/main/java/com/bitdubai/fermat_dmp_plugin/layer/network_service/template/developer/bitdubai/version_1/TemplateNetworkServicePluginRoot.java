@@ -14,6 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
@@ -40,7 +43,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 
 
 import java.util.ArrayList;
@@ -60,7 +63,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin {
+public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin {
 
     /**
      * Represent the logManager
@@ -76,6 +79,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * DealsWithCommunicationLayerManager Interface member variables.
      */
     private CommunicationLayerManager communicationLayerManager;
+
+    private CommunicationsCloudClientConnection communicationsCloudClientConnection;
 
     /**
      * Represent the status of the network service
@@ -127,6 +132,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      */
     private ECCKeyPair eccKeyPair;
 
+    PlatformComponentProfile platformComponentProfile;
     /**
      * Constructor
      */
@@ -148,7 +154,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          /*
          * If all resources are inject
          */
-        if (communicationLayerManager == null ||
+        if (communicationsCloudClientConnection == null ||
                 pluginDatabaseSystem  == null ||
                     errorManager      == null ||
                         eventManager  == null) {
@@ -157,7 +163,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("communicationLayerManager: " + communicationLayerManager);
+            contextBuffer.append("communicationsCloudClientConnection: " + communicationsCloudClientConnection);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -276,9 +282,9 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             initializeDb();
 
             /*
-             * TODO: Register this network service whit the communicationLayerManager
+             * TODO: Register this network service whit the communicationsCloudClientConnection
              */
-            //communicationLayerManager.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
+            //communicationsCloudClientConnection.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
 
 
             /*
@@ -289,7 +295,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
        /* } catch (CommunicationException e) {
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessageContent()));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationsCloudClientConnection. Error reason: "+e.getMessageContent()));
             throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
 
       */  } catch (CantInitializeNetworkTemplateDataBaseException exception) {
@@ -371,25 +377,26 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         //Clear all references
         templateNetworkServiceManagersCache.clear();
 
+        //TODO ROBERTO CLOUD MEGAFIX
          /*
-         * Unregister whit the communicationLayerManager
+         * Unregister whit the communicationsCloudClientConnection
          */
-        try {
+//        try {
+//
+//            communicationsCloudClientConnection.unregisterNetworkService(NetworkServices.INTRA_USER);
+//
+//        } catch (CommunicationException e) {
+//
+//            StringBuffer contextBuffer = new StringBuffer();
+//            contextBuffer.append("Plugin ID: " + pluginId);
+//
+//            String context = contextBuffer.toString();
+//            String possibleCause = "Communication Layer Manager error";
+//            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+//
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
-            communicationLayerManager.unregisterNetworkService(NetworkServices.INTRA_USER);
-
-        } catch (CommunicationException e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Communication Layer Manager error";
-            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-        }
+//        }
 
         /*
          * Set the new status
@@ -407,14 +414,14 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         return serviceStatus;
     }
 
-
     /**
-     * (non-Javadoc)
-     * @see DealsWithCommunicationLayerManager#setCommunicationLayerManager(CommunicationLayerManager)  No Compila (Luis)
+     * Configure the WsCommunicationsCloudClientManager in the plugin
+     *
+     * @param wsCommunicationsCloudClientManager
      */
     @Override
-    public void setCommunicationLayerManager(CommunicationLayerManager communicationLayerManager) {
-        this.communicationLayerManager = communicationLayerManager;
+    public void setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
+        this.communicationsCloudClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
     }
 
     /**
@@ -545,7 +552,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * Create a new instance
          */
-        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
+        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(platformComponentProfile, eccKeyPair, communicationsCloudClientConnection, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
@@ -574,6 +581,4 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
         return  templateNetworkServiceManagersCache.get(pluginClientId);
     }
-
-
 }
