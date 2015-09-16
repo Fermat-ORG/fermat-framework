@@ -504,7 +504,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public UUID getResourcesId() {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-        System.err.println(this.getClass() + " Method: getResourcesId - TENGO RETURN NULL");
         return null;
     }
 
