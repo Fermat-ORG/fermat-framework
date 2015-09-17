@@ -80,12 +80,13 @@ public class MarketPrice implements MarketPriceInterface, CryptoIndexManager {
             try {
                 priceList.add(cryptoIndexProvider.getMarketPrice(cryptoCurrency, fiatCurrency, time));
             } catch (CantGetMarketPriceException e) {
-                //TODO es necesario manejar esta excepcion?
+                //TODO es necesario manejar esta excepcion? aunque haya error, esto no debería parar
             }
         }
 
         Collections.sort(priceList);
 
+        // TODO que pasa si no hay precios en la lista?
         return priceList.get(priceList.size() - 1);
     }
 
