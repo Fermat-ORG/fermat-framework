@@ -15,8 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_api.layer.dmp_engine.desktop_runtime.DesktopObject;
-import com.bitdubai.fermat_api.layer.dmp_engine.desktop_runtime.DesktopRuntimeManager;
+import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
+import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;

@@ -1,4 +1,4 @@
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-dap-desktop-wallet-manager-bitdubai'
 include ':fermat-android-core'
 
 include ':fermat-api'
@@ -501,6 +501,7 @@ project(':fermat-dap-plugin-identity-asset-user-bitdubai').projectDir = new File
 include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
 project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
 
+
 //module
 
 
@@ -535,6 +536,14 @@ project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new Fil
 // android dap sub apps
 include ':fermat-dap-android-sub-app-asset-factory-bitdubai'
 project(':fermat-dap-android-sub-app-asset-factory-bitdubai').projectDir = new File('DAP/android/sub_apps/fermat-dap-android-sub-app-asset-factory-bitdubai')
+
+// Desktops
+include ':fermat-dap-desktop-sub-app-manager-bitdubai'
+project(':fermat-dap-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-desktop-sub-app-manager-bitdubai')
+
+include ':fermat-dap-desktop-wallet-manager-bitdubai'
+project(':fermat-dap-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-desktop-wallet-manager-bitdubai')
+
 
 // BCH
 include ':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai'
@@ -697,3 +706,4 @@ project(':fermat-cbp-plugin-world-fiat-index-bitdubai').projectDir = new File('C
 
 //include ':'
 //project(':').projectDir = new File('CBP/plugin//')
+
