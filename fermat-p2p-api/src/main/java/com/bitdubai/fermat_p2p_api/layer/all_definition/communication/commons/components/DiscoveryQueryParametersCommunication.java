@@ -6,12 +6,15 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication</code> is the implementation
@@ -45,14 +48,9 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
     private String name;
 
     /**
-     * Represent the latitude
+     * Represent the location
      */
-    private Double latitude;
-
-    /**
-     * Represent the longitude
-     */
-    private Double longitude;
+    private Location location;
 
     /**
      * Represent the platformComponentType
@@ -87,8 +85,7 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
         super();
         this.alias = null;
         this.identityPublicKey = null;
-        this.latitude = null;
-        this.longitude = null;
+        this.location = null;
         this.name = null;
         this.networkServiceType = null;
         this.platformComponentType = null;
@@ -102,18 +99,16 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
      *
      * @param alias
      * @param identityPublicKey
-     * @param latitude
-     * @param longitude
+     * @param location
      * @param name
      * @param networkServiceType
      * @param platformComponentType
      */
-    public DiscoveryQueryParametersCommunication(String alias, String identityPublicKey, Double latitude, Double longitude, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer firstRecord, Integer numberRegister) {
+    public DiscoveryQueryParametersCommunication(String alias, String identityPublicKey, Location location, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer firstRecord, Integer numberRegister) {
         super();
         this.alias = alias;
         this.identityPublicKey = identityPublicKey;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.location = location;
         this.name = name;
         this.networkServiceType = networkServiceType;
         this.platformComponentType = platformComponentType;
@@ -151,20 +146,11 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
 
     /**
      * (non-javadoc)
-     * @see DiscoveryQueryParameters#getLatitude()
+     * @see DiscoveryQueryParameters#getLocation()
      */
     @Override
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    /**
-     * (non-javadoc)
-     * @see DiscoveryQueryParameters#getLongitude()
-     */
-    @Override
-    public Double getLongitude() {
-        return longitude;
+    public Location getLocation() {
+        return location;
     }
 
     /**
@@ -230,5 +216,53 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
 
         Gson gson = new Gson();
         return gson.fromJson(json, DiscoveryQueryParametersCommunication.class);
+    }
+
+    /**
+     * (non-javadoc)
+     * @see Object#equals(Object)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DiscoveryQueryParametersCommunication)) return false;
+        DiscoveryQueryParametersCommunication that = (DiscoveryQueryParametersCommunication) o;
+        return Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
+                Objects.equals(getAlias(), that.getAlias()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getLocation(), that.getLocation()) &&
+                Objects.equals(getPlatformComponentType(), that.getPlatformComponentType()) &&
+                Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
+                Objects.equals(getExtraData(), that.getExtraData()) &&
+                Objects.equals(firstRecord, that.firstRecord) &&
+                Objects.equals(getNumberRegister(), that.getNumberRegister());
+    }
+
+    /**
+     * (non-javadoc)
+     * @see Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLocation(), getPlatformComponentType(), getNetworkServiceType(), getExtraData(), firstRecord, getNumberRegister());
+    }
+
+    /**
+     * (non-javadoc)
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "DiscoveryQueryParametersCommunication{" +
+                "alias='" + alias + '\'' +
+                ", identityPublicKey='" + identityPublicKey + '\'' +
+                ", name='" + name + '\'' +
+                ", location=" + location +
+                ", platformComponentType=" + platformComponentType +
+                ", networkServiceType=" + networkServiceType +
+                ", extraData='" + extraData + '\'' +
+                ", firstRecord=" + firstRecord +
+                ", numberRegister=" + numberRegister +
+                '}';
     }
 }

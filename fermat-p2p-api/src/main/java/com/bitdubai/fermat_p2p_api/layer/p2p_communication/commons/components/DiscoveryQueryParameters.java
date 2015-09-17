@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 
@@ -42,18 +43,11 @@ public interface DiscoveryQueryParameters {
     public String getName();
 
     /**
-     * Get the latitude for geo localization
+     * Get the location for geo localization
      *
      * @return Double
      */
-    public Double getLatitude();
-
-    /**
-     * Get the longitude for geo localization
-     *
-     * @return Double
-     */
-    public Double getLongitude();
+    public Location getLocation();
 
     /**
      * Return the platform component type
