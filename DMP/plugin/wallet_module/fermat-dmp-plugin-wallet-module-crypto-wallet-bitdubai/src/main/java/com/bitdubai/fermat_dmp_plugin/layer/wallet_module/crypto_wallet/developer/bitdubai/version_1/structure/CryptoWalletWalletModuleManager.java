@@ -438,27 +438,39 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     }
 
     @Override
-    public List<CryptoWalletTransaction> getTransactionByContact() {
+    public List<CryptoWalletTransaction> listTransactionByActor() {
+        return new ArrayList<CryptoWalletTransaction>();
+    }
+
+    @Override
+    public List<PaymentRequest> listSentPaymentRequest() {
+        List<PaymentRequest> lst =  new ArrayList<PaymentRequest>();
+        CryptoWalletPaymentRequest cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null);
+        lst.add(cryptoWalletPaymentRequest);
+        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null);
+        lst.add(cryptoWalletPaymentRequest);
+
+        return lst;
+    }
+
+    @Override
+    public List<PaymentRequest> listReceivedPaymentRequest() {
+        List<PaymentRequest> lst =  new ArrayList<PaymentRequest>();
+        CryptoWalletPaymentRequest cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null);
+        lst.add(cryptoWalletPaymentRequest);
+        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null);
+        lst.add(cryptoWalletPaymentRequest);
+
+        return lst;
+    }
+
+    @Override
+    public List<CryptoWalletWalletContact> listContactOrdererByLastSendTransaction() {
         return null;
     }
 
     @Override
-    public List<PaymentRequest> getSendedPaymentRequest() {
-        return null;
-    }
-
-    @Override
-    public List<PaymentRequest> getReceivedPaymentRequest() {
-        return null;
-    }
-
-    @Override
-    public List<CryptoWalletWalletContact> getContactOrdererByLastSendTransaction() {
-        return null;
-    }
-
-    @Override
-    public List<CryptoWalletWalletContact> getContactOrdererByLastReceiveTransaction() {
+    public List<CryptoWalletWalletContact> listContactOrdererByLastReceiveTransaction() {
         return null;
     }
 
