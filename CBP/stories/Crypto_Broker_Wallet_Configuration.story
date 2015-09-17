@@ -21,7 +21,7 @@ Escenario: Instalo otra Crypto Broker Wallet y la asocio a una identidad existen
   Dado que he instalado una Crypto Broker Wallet
    	 Y asocie una identidad a esa Crypto Broker Wallet
   Cuando instale una nueva Crypto Broker Wallet
-     Y desee asociar una Identidad existente a la nueva Wallet desde la Crypto Broker Identity SubApp 
+     Y desee asociar una Identidad existente a la nueva Wallet desde la Crypto Broker Wallet
      Y seleccione una identidad de la lista que muestra la Crypto Broker Identity SubApp
   Entonces se debe asociar la identidad seleccionada a la Crypto Broker Wallet usando el Crypto Broker Wallet Identity Middleware Plugin
 
@@ -29,8 +29,9 @@ Escenario: Instalo otra Crypto Broker Wallet y la asocio a una nueva identidad
   Dado que tengo instalada una Crypto Broker Wallet
     Y he asociado una identidad a la Crypto Broker Wallet
   Cuando instale una nueva Crypto Broker Wallet
-    Y seleccione en la Crypto Broker Identity SubApp que deseo crear una nueva identidad para la nueva Crypto Broker Wallet
-  Entonces se debe crear una nueva identidad mediante el Crypto Broker Identity Plugin
+    Y desee asociar una nueva Indentidad desde la Crypto Broker Wallet
+  Entonces la Crypto Broker Wallet ejecutar la Crypto Broker SubApp para crear una nueva identidad
+    Y se debe crear una nueva identidad mediante el Crypto Broker Identity Plugin
     Y se debe asociar la identidad creada a la Crypto Broker Wallet mediante el Crypto Broker Wallet Identity Middleware Plugin
 
 Escenario: Establesco la moneda de referencia (Dolar, Euro...) que voy a usar para trabajar con la Crypto Broker Wallet

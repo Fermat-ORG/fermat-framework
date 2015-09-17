@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -20,9 +21,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDeveloperFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -30,13 +34,16 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 9/7/15.
  */
-public class AssetFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
+//TODO: implements AssetFactoryMiddlewareManager
+public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers,  DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
     /**
      * DealsWithErrors interface member variables
      */
@@ -70,10 +77,9 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsW
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-//    private com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryMiddlewareManager getAssetIssuerManager(){
-//        com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryMiddlewareManager assetIssuerManager = new com.bitdubai.fermat_dap_plugin.layer.module.asset_issuer.version_1.structure.AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
-//        return assetIssuerManager;
-//    }
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+
+    AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
 
     @Override
     public void setId(UUID pluginId) {
@@ -82,17 +88,27 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsW
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return null;
+        AssetFactoryMiddlewareDeveloperFactory assetFactoryMiddlewareDeveloperFactory = new AssetFactoryMiddlewareDeveloperFactory(pluginDatabaseSystem, pluginId);
+        return assetFactoryMiddlewareDeveloperFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return null;
+        AssetFactoryMiddlewareDeveloperFactory assetFactoryMiddlewareDeveloperFactory = new AssetFactoryMiddlewareDeveloperFactory(pluginDatabaseSystem, pluginId);
+        return assetFactoryMiddlewareDeveloperFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return null;
+        AssetFactoryMiddlewareDeveloperFactory assetFactoryMiddlewareDeveloperFactory = new AssetFactoryMiddlewareDeveloperFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        try {
+            assetFactoryMiddlewareDeveloperFactory.initializeDatabase();
+            developerDatabaseTableRecordList = assetFactoryMiddlewareDeveloperFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database table list for plugin Asset Factory ******");
+        }
+        return developerDatabaseTableRecordList;
     }
 
     @Override
@@ -122,7 +138,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsW
 
     @Override
     public void start() throws CantStartPluginException {
-        //TODO: Implement falta instanciar el manager del assetfactory
+        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             database.closeDatabase();
@@ -163,5 +179,35 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithErrors, DealsW
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
+    }
+
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("com/bitdubai/fermat_dap_plugin/layer/middleware/asset/issuer/developer/bitdubai/version_1/AssetFactoryMiddlewarePluginRoot");
+
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
+    }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (AssetFactoryMiddlewarePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                AssetFactoryMiddlewarePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                AssetFactoryMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                AssetFactoryMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
     }
 }

@@ -145,7 +145,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
             URI uri = new URI(WsCommunicationsCloudClientPluginRoot.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.DEFAULT_PORT);
 
-            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri);
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
 
 

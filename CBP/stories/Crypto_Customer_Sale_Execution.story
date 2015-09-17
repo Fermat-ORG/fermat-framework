@@ -3,7 +3,7 @@ Historia: Crypto Customer Sale Execution
 Como deseo poder finalizar la compra establecida en la negociación con un Crypto Customer
  Como un Crypto Broker
 
-Utilizando la Crypto Broker Wallet SubApp
+Utilizando la Crypto Broker Wallet
   Y el plugin Receive Crypto Crypto Transaction
   Y el plugin Send Crypto Crypto Transaction
   Y el plugin Give Cash On Hand Fiat Cash Transaction

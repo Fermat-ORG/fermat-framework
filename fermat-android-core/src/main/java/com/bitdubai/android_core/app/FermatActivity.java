@@ -778,7 +778,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             /*for (FermatFragments key : activity.getFragments().keySet()) {
                 Fragment fragment = activity.getFragments().get(key);
 
-                switch (fragment.getFermatPacketType()) {
+                switch (fragment.getType()) {
                     case CWP_SHELL_LOGIN:
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
