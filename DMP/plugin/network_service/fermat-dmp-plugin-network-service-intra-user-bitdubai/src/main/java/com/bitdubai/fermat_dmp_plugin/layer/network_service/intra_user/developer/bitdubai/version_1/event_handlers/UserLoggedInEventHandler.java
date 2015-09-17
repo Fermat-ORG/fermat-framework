@@ -10,8 +10,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.UserLoggedInEventHandler</code> have
@@ -24,7 +24,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class UserLoggedInEventHandler implements EventHandler{
+public class UserLoggedInEventHandler implements FermatEventHandler {
 
     /*
      * Represent the intraUserManager
@@ -45,20 +45,20 @@ public class UserLoggedInEventHandler implements EventHandler{
     /**
      * (non-Javadoc)
      *
-     * @see EventHandler#handleEvent(PlatformEvent)
+     * @see FermatEventHandler#handleEvent(FermatEvent)
      *
-     * @param platformEvent
+     * @param fermatEvent
      * @throws Exception
      */
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {
 
             /*
              *  ActorIntraUserManager make the job
              */
-           // ((IntraUserNetworkServicePluginRoot) this.intraUserManager).logIn(((IntraUserLoggedInEvent) platformEvent).getIntraUserId());
+           // ((IntraUserNetworkServicePluginRoot) this.intraUserManager).logIn(((IntraUserLoggedInEvent) fermatEvent).getIntraUserId());
 
         }
     }

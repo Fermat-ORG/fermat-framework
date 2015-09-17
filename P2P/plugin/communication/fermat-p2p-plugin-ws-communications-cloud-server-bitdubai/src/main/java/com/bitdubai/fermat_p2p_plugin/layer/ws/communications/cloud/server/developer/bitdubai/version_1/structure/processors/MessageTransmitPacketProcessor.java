@@ -27,6 +27,7 @@ import org.java_websocket.WebSocket;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
 
     /**
@@ -73,22 +74,10 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
 
             System.out.println("MessageTransmitPacketProcessor - sending to destination "+fermatPacketRespond.getDestination());
 
-
            /*
             * Send the encode packet to the destination
             */
             clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
-
-        }else {
-
-            System.out.println("MessageTransmitPacketProcessor - save into message cache");
-
-            /*
-             * Cache the message to try send after
-             *
-             * TODO: IMPLEMENTAR UN MECANISMO PARA DESPUES ENTREGAR ESTOS MENSAJES
-             */
-            getWsCommunicationCloudServer().getMessagesCache().add(fermatPacketRespond);
 
         }
 

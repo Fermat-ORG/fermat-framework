@@ -14,6 +14,9 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManage
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.IncomingMessageDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -24,6 +27,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -38,9 +42,14 @@ import java.util.Map;
 public class TemplateNetworkServiceManager implements TemplateManager {
 
     /**
-     * Represent the communicationLayerManager
+     * Represent the communicationsCloudClientConnection
      */
-    private CommunicationLayerManager communicationLayerManager;
+    private CommunicationsCloudClientConnection communicationsCloudClientConnection;
+
+    /**
+     * Represent the platformComponentProfile
+     */
+    private PlatformComponentProfile platformComponentProfile;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -81,13 +90,14 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     /**
      * Constructor with parameters
      *
-     * @param communicationLayerManager a communicationLayerManager instance
+     * @param communicationsCloudClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public TemplateNetworkServiceManager(ECCKeyPair eccKeyPair, CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public TemplateNetworkServiceManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair eccKeyPair, CommunicationsCloudClientConnection communicationsCloudClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
+        this.platformComponentProfile = platformComponentProfile;
         this.eccKeyPair = eccKeyPair;
-        this.communicationLayerManager = communicationLayerManager;
+        this.communicationsCloudClientConnection = communicationsCloudClientConnection;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.incomingMessageDao = new IncomingMessageDao(dataBase);
@@ -100,20 +110,20 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     /**
      * Create a new connection to
      *
-     * @param remoteNetworkServicePublicKey the remote Network Service public key
+     * @param remotePlatformComponentProfile the remote PlatformComponentProfile
      * @return TemplateNetworkServiceLocal a new instance
      */
-    public void connectTo(String remoteNetworkServicePublicKey) {
+    public void connectTo(PlatformComponentProfile remotePlatformComponentProfile) {
 
         try {
 
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-            communicationLayerManager.requestConnectionTo(NetworkServices.TEMPLATE, remoteNetworkServicePublicKey);
+            communicationsCloudClientConnection.requestVpnConnection(platformComponentProfile, remotePlatformComponentProfile);
 
 
-        } catch (CommunicationException e) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
 
@@ -147,26 +157,21 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     /**
      * Method to accept incoming connection request
      *
-     * @param communicationChannel          the communication channel
      * @param remoteNetworkServicePublicKey the remote network service public key
      */
-    public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey) {
+    public void acceptIncomingNetworkServiceConnectionRequest(String remoteNetworkServicePublicKey) {
 
         try {
 
-            /*
-             * Accept the new connection
-             */
-            communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(communicationChannel, NetworkServices.TEMPLATE, remoteNetworkServicePublicKey);
-
-            /*
+             /*
              * Get the active connection
              */
-            ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = communicationLayerManager.getActiveNetworkServiceConnection(communicationChannel, NetworkServices.TEMPLATE, remoteNetworkServicePublicKey);
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsCloudClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteNetworkServicePublicKey);
+
 
             //Validate the connection
-            if (serviceToServiceOnlineConnection != null &&
-                    serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
+            if (communicationsVPNConnection != null &&
+                    communicationsVPNConnection.isActive()) {
 
                 /*
                  * Instantiate the local reference
@@ -176,7 +181,7 @@ public class TemplateNetworkServiceManager implements TemplateManager {
                 /*
                  * Instantiate the remote reference
                  */
-                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, remoteNetworkServicePublicKey, serviceToServiceOnlineConnection, errorManager, incomingMessageDao, outgoingMessageDao);
+                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, communicationsVPNConnection, remoteNetworkServicePublicKey, errorManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -196,7 +201,7 @@ public class TemplateNetworkServiceManager implements TemplateManager {
 
             }
 
-        } catch (CommunicationException communicationException) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not accept incoming connection"));
         }
 
@@ -205,32 +210,29 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     /**
      * Handles events that indicate a connection to been established between two intra user
      * network services and prepares all objects to work with this new connection
-     *
-     * @param communicationChannel          the communication channel
-     * @param remoteNetworkServicePublicKey the remote network service public key
      */
-    public void handleEstablishedRequestedNetworkServiceConnection(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey) {
+    public void handleEstablishedRequestedNetworkServiceConnection(String remoteNetworkServicePublicKey) {
 
         try {
 
             /*
              * Get the active connection
              */
-            ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = communicationLayerManager.getActiveNetworkServiceConnection(communicationChannel, NetworkServices.INTRA_USER, remoteNetworkServicePublicKey);
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsCloudClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteNetworkServicePublicKey);
 
             //Validate the connection
-            if (serviceToServiceOnlineConnection != null &&
-                    serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
+            if (communicationsVPNConnection != null &&
+                    communicationsVPNConnection.isActive()) {
 
                  /*
                  * Instantiate the local reference
                  */
-                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, eventManager, outgoingMessageDao);
+                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(null, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, remoteNetworkServicePublicKey, serviceToServiceOnlineConnection, errorManager, incomingMessageDao, outgoingMessageDao);
+                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, communicationsVPNConnection, remoteNetworkServicePublicKey, errorManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -250,7 +252,7 @@ public class TemplateNetworkServiceManager implements TemplateManager {
 
             }
 
-        } catch (CommunicationException communicationException) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
     }

@@ -30,14 +30,14 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -326,7 +326,8 @@ public class ReceiveFragment extends Fragment {
                     Actors.INTRA_USER,
                     contact_name,
                     Platforms.CRYPTO_CURRENCY_PLATFORM,
-                    Vaults.BITCOIN_VAULT,
+                    VaultType.CRYPTO_CURRENCY_VAULT,
+                    "BITV",
                     walletPublicKey,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
             ); user_address_wallet = cryptoAddress.getAddress();
@@ -346,7 +347,8 @@ public class ReceiveFragment extends Fragment {
                     walletContact.actorPublicKey,
                     Actors.EXTRA_USER,
                     Platforms.CRYPTO_CURRENCY_PLATFORM,
-                    Vaults.BITCOIN_VAULT,
+                    VaultType.CRYPTO_CURRENCY_VAULT,
+                    "BITV",
                     walletPublicKey,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
             );
