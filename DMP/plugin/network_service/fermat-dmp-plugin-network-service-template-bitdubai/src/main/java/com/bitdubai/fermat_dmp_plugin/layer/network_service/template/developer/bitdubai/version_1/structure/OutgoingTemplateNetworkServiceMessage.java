@@ -6,14 +6,18 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.OutgoingTemplateNetworkServiceMessage</code>
- * represent a Outgoing FermatMessage
+ * represent a Outgoing Message
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class OutgoingTemplateNetworkServiceMessage extends TemplateNetworkServiceMessage {
+public class OutgoingTemplateNetworkServiceMessage extends FermatMessageCommunication {
+    //TODO ROBERTO CLOUD MEGAFIX
+
 }

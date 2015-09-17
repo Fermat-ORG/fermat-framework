@@ -15,9 +15,11 @@ dependencies {
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai')
     compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
     compile project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
     // OSA Projects   --- Hace falta esto aca??
+
+    //BCH projects
+    compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 
     //compile project(':fermat-osa-addon-android-database-system-bitdubai')
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://www.netbeans.org/ns/project/1">
-    <fermatPacketType>org.netbeans.modules.apisupport.project</fermatPacketType>
+    <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
             <code-name-base>fermat.osa.addon.multi.os.database.system.bitdubai</code-name-base>

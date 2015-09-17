@@ -73,7 +73,7 @@ Diagrama de Flujo en Prezi: http://prezi.com/fy3cag7olwbz/?utm_campaign=share&ut
 
 
 
- La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
+ La Asset Factory debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
  el uso de los siguientes campos:
 * Cantidad de Assets que se están creando (DigitalAsset.quantity)
 * Valor de cada Asset. (DigitalAsset.unitValue)

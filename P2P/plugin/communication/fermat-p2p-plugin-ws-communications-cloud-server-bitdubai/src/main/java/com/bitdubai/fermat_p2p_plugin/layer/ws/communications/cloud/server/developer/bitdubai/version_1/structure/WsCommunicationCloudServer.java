@@ -18,10 +18,12 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.Network
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.server.CommunicationCloudServer;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn.WsCommunicationVpnServerManagerAgent;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.java_websocket.WebSocket;
+import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
@@ -48,6 +50,11 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     public static final int DEFAULT_PORT = 9090;
 
     /**
+     * Represent the wsCommunicationVpnServerManagerAgent
+     */
+    private WsCommunicationVpnServerManagerAgent wsCommunicationVpnServerManagerAgent;
+
+    /**
      * Holds the pending register clients connections cache
      */
     private Map<String, WebSocket> pendingRegisterClientConnectionsCache;
@@ -72,7 +79,6 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      */
     private Map<FermatPacketType, List<FermatPacketProcessor>> packetProcessorsRegister;
 
-
     //TODO: THE REGISTERED COMPONENT WOULD BE HOLD IN DATA BASE AND NO IN MEMORY, FOR SEARCH IN FUTURE
 
     /**
@@ -91,26 +97,20 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     private Map<PlatformComponentType, Map<NetworkServiceType, List<PlatformComponentProfile>>> registeredPlatformComponentProfileCache;
 
     /**
-     * Holds all FermatPacket the type MESSAGE_TRANSMIT
-     */
-    private List<FermatPacket> messagesCache;
-
-
-    /**
      * Constructor with parameter
      * @param address
      */
     public WsCommunicationCloudServer(InetSocketAddress address) {
         super(address);
+        this.wsCommunicationVpnServerManagerAgent     = new WsCommunicationVpnServerManagerAgent(address.getHostString(), address.getPort());
         this.pendingRegisterClientConnectionsCache    = new ConcurrentHashMap<>();
         this.registeredClientConnectionsCache         = new ConcurrentHashMap<>();
         this.serverIdentityByClientCache              = new ConcurrentHashMap<>();
-        this.clientIdentityByClientConnectionCache = new ConcurrentHashMap<>();
+        this.clientIdentityByClientConnectionCache    = new ConcurrentHashMap<>();
         this.packetProcessorsRegister                 = new ConcurrentHashMap<>();
         this.registeredCommunicationsCloudServerCache = new ConcurrentHashMap<>();
         this.registeredCommunicationsCloudClientCache = new ConcurrentHashMap<>();
         this.registeredPlatformComponentProfileCache  = new ConcurrentHashMap<>();
-        this.messagesCache                            = new ArrayList<>();
     }
 
     /**
@@ -163,7 +163,6 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                                                                                                                  jsonObject.toString(),                    //Message Content
                                                                                                                  FermatPacketType.SERVER_HANDSHAKE_RESPOND,//Packet type
                                                                                                                  serverIdentity.getPrivateKey());          //Sender private key
-
             /*
              * Send the encode packet to the client
              */
@@ -199,11 +198,8 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onClose");
-        System.out.println(clientConnection + " is disconnect!");
-        System.out.println(" code   = " + code);
-        System.out.println(" reason = " + reason);
-        System.out.println(" remote = " + remote);
-
+        System.out.println(" WsCommunicationCloudServer - " +clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code +" reason = " + reason +" remote = " + remote);
+        cleanReferences(clientConnection);
     }
 
     /**
@@ -255,24 +251,21 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         System.out.println(" WsCommunicationCloudServer - Starting method onError");
         ex.printStackTrace();
 
-        /*
-         * Clean all the caches, remove data bind whit this connection
-         */
-        pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-        registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-        serverIdentityByClientCache.remove(clientConnection.hashCode());
-        clientIdentityByClientConnectionCache.remove(clientConnection.hashCode());
-        registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
-        registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
-
-        //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
+        cleanReferences(clientConnection);
 
         /*
          * Close the connection
          */
-        clientConnection.closeConnection(505, "- ERROR :"+ex.getLocalizedMessage());
+        clientConnection.closeConnection(505, "- ERROR :" + ex.getLocalizedMessage());
     }
 
+    @Override
+    public void onWebsocketPing(WebSocket conn, Framedata f) {
+
+        System.out.println(" WsCommunicationCloudServer - onWebsocketPing");
+        System.out.println(" WsCommunicationCloudServer - Framedata = " + f.getOpcode());
+        super.onWebsocketPing(conn, f);
+    }
 
     /**
      * This method register a FermatPacketProcessor object with this
@@ -309,6 +302,74 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" WsCommunicationCloudServer - packetProcessorsRegister = " + packetProcessorsRegister.size());
 
+    }
+
+    /**
+     * Clean all reference from the connection
+     */
+    private void cleanReferences(WebSocket clientConnection){
+
+        /*
+         * Clean all the caches, remove data bind whit this connection
+         */
+        //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
+        removePlatformComponentRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+        pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+        registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+        serverIdentityByClientCache.remove(clientConnection.hashCode());
+        clientIdentityByClientConnectionCache.remove(clientConnection.hashCode());
+        registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
+        registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
+
+        System.out.println(" WsCommunicationCloudServer - pendingRegisterClientConnectionsCache.size() = " + pendingRegisterClientConnectionsCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredClientConnectionsCache.size() = "+registeredClientConnectionsCache.size());
+        System.out.println(" WsCommunicationCloudServer - serverIdentityByClientCache.size() = "+serverIdentityByClientCache.size());
+        System.out.println(" WsCommunicationCloudServer - clientIdentityByClientConnectionCache.size() = " + clientIdentityByClientConnectionCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudServerCache.size() = "+registeredCommunicationsCloudServerCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudClientCache.size() = "+registeredCommunicationsCloudClientCache.size());
+    }
+
+    /**
+     * This method unregister all platform component profile
+     * register
+     */
+    private void removePlatformComponentRegisteredByClientIdentity(String clientIdentity){
+
+        System.out.println(" WsCommunicationCloudServer - removePlatformComponentRegisterByClientIdentity ");
+
+        for (PlatformComponentType platformComponentType : registeredPlatformComponentProfileCache.keySet()) {
+
+            System.out.println(" WsCommunicationCloudServer - platformComponentType = "+platformComponentType);
+
+            for (NetworkServiceType networkServiceType : registeredPlatformComponentProfileCache.get(platformComponentType).keySet()) {
+
+                System.out.println(" WsCommunicationCloudServer - networkServiceType = "+networkServiceType);
+
+                for (PlatformComponentProfile platformComponentProfile : registeredPlatformComponentProfileCache.get(platformComponentType).get(networkServiceType)) {
+
+                    System.out.println(" WsCommunicationCloudServer - platformComponentProfile = "+platformComponentProfile.getCommunicationCloudClientIdentity());
+                    System.out.println(" WsCommunicationCloudServer - platformComponentProfile = "+clientIdentity);
+
+                    if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
+
+                        System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
+
+                        registeredPlatformComponentProfileCache.get(platformComponentType).get(networkServiceType).remove(platformComponentProfile);
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+    /**
+     * Get the wsCommunicationVpnServerManagerAgent
+     * @return WsCommunicationVpnServerManagerAgent
+     */
+    public WsCommunicationVpnServerManagerAgent getWsCommunicationVpnServerManagerAgent() {
+        return wsCommunicationVpnServerManagerAgent;
     }
 
     /**
@@ -370,12 +431,4 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         return registeredCommunicationsCloudClientCache;
     }
 
-    /**
-     * Get the MessagesCache
-     *
-     * @return List<FermatPacket>
-     */
-    public List<FermatPacket> getMessagesCache() {
-        return messagesCache;
-    }
 }

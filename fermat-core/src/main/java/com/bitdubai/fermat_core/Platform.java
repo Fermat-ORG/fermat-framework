@@ -29,6 +29,8 @@ import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.DealsWithAssetsVault;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -481,14 +483,14 @@ public class Platform implements Serializable {
             /**
              * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
              */
-            PlatformEventMonitor eventMonitor = new PlatformEventMonitor((ErrorManager) errorManager);
+            PlatformFermatEventMonitor eventMonitor = new PlatformFermatEventMonitor((ErrorManager) errorManager);
 
             /*
              * Addon Event Manager
              * -------------------
              */
             Service eventManager = (Service) ((PlatformServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER)).getEventManager();
-            ((DealsWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
+            ((DealsWithEventMonitor) eventManager).setFermatEventMonitor(eventMonitor);
             corePlatformContext.registerAddon((Addon) eventManager, Addons.EVENT_MANAGER);
             eventManager.start();
 
@@ -1361,6 +1363,10 @@ public class Platform implements Serializable {
             //if(plugin instanceof DealsWithAssetFactory){
             //    ((DealsWithAssetFactory) plugin).setAssetFactoryManager((AssetFactoryMiddlewareManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY));
             //}
+            if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
+                ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
+            }
+
 
             /*
              * Register the plugin into the platform context
@@ -1428,6 +1434,7 @@ public class Platform implements Serializable {
                 ((DealsWithCommunicationLayerManager) plugin).setCommunicationLayerManager((CommunicationLayerManager) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER));
 
             }
+
 
         } catch (Exception exception) {
             LOG.log(Level.SEVERE, exception.getLocalizedMessage());

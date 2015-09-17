@@ -3,7 +3,8 @@ package com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.inte
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantListCryptoAddressBookRecordsException;
@@ -71,7 +72,8 @@ public interface CryptoAddressBookManager {
      * @param deliveredToActorPublicKey public key of the actor with whom the actor is trying to register
      * @param deliveredToType type of the actor with whom the actor is trying to register
      * @param platform to which it belongs
-     * @param vault to which it belongs
+     * @param vaultType to which it belongs
+     * @param vaultIdentifier to which it belongs
      * @param walletPublicKey to which it belongs
      * @param walletType to which it belongs
      * @throws CantRegisterCryptoAddressBookRecordException if something goes wrong
@@ -82,7 +84,8 @@ public interface CryptoAddressBookManager {
                                String deliveredToActorPublicKey,
                                Actors deliveredToType,
                                Platforms platform,
-                               Vaults vault,
+                               VaultType vaultType,
+                               String vaultIdentifier,
                                String walletPublicKey,
                                ReferenceWallet walletType) throws CantRegisterCryptoAddressBookRecordException;
 

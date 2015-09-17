@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.wallet_manager.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+
+import com.bitdubai.fermat_cbp_api.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.WalletType;
+import com.bitdubai.fermat_cbp_api.all_definition.util.Version;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,14 +17,14 @@ public interface CryptoDesktopInstalledWallet {
      *
      * @return the list of languages
      */
-    public List<InstalledLanguage> getLanguagesId();
+    public List<CryptoDesktopWalletInstalledLanguage> getLanguagesId();
 
     /**
      * This method gives us the list of all the skins installed for this wallet
      *
      * @return the saud list of skins
      */
-    public List<InstalledSkin> getSkinsId();
+    public List<CryptoDesktopInstalledSkin> getSkinsId();
 
     /**
      * This method tell us the category of the wallet

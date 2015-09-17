@@ -50,7 +50,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
 
         /*
-         * Get the platformComponentProfile from the message content and decrypt
+         * Get the filters from the message content and decrypt
          */
         String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
 
@@ -115,7 +115,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
                                                                                                                     serverIdentity.getPublicKey(),                      //Sender
-                                                                                                                    jsonListRepresentation,                                  //Message Content
+                                                                                                                    jsonListRepresentation,                             //Message Content
                                                                                                                     FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
                                                                                                                     serverIdentity.getPrivateKey());                    //Sender private key
 
