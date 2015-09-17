@@ -42,7 +42,7 @@ public class TabStrip implements FermatTabStrip {
 
     String tabsIndicateColor;
 
-    boolean hasIcon;
+    boolean hasIcon=false;
 
     boolean hasText;
 
