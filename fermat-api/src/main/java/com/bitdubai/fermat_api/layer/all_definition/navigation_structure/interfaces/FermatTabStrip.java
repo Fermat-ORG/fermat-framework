@@ -47,4 +47,6 @@ public interface FermatTabStrip {
 
     String getTabsIndicateColor();
 
+    int getStartItem();
+
 }

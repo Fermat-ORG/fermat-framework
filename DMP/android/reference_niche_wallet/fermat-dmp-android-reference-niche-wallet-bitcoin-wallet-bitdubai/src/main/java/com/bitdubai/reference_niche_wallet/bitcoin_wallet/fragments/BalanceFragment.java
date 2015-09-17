@@ -299,7 +299,6 @@ public class BalanceFragment extends FermatWalletFragment {
      */
     private void changeBalanceType() {
 
-        ReferenceWalletSession referenceWalletSession = this.referenceWalletSession;
         try {
             if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
