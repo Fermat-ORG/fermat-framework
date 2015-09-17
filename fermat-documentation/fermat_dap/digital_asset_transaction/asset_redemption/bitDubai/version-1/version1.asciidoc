@@ -2,6 +2,9 @@
 = Version 1
 
 == Plug-in Description
+
+Transaction Flow on Prezi: https://prezi.com/jwnuv7i13mnb/dap-asset-redemption/
+
 .Escenario:
 
 Nos encontramos en el dispositivo del usuario con al menos un asset disponible en su Asset User Wallet y los fondos necesarios en su Asset Vault

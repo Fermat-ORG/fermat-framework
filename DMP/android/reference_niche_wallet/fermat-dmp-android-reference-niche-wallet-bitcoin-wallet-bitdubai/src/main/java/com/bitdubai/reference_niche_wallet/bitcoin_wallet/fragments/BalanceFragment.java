@@ -1,17 +1,28 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +33,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -43,6 +53,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -136,8 +147,7 @@ public class BalanceFragment extends FermatWalletFragment {
          */
         try {
 
-            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-
+            //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             balanceAvailable = 0;
             bookBalance = 0;
             cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
@@ -196,66 +206,6 @@ public class BalanceFragment extends FermatWalletFragment {
 
         try {
 
-            InputStream inputStream = getActivity().getApplication().getAssets().open("xml/wallets_bitcoin_fragment_balance.xml");
-
-//            XmlPullParserFactory xmlPullParserFactory = XmlPullParserFactory.newInstance();
-//            xmlPullParserFactory.setNamespaceAware(true);
-//
-//            XmlPullParser xmlPullParser = xmlPullParserFactory.newPullParser();
-
-
-
-            View contentView;
-
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(inputStream,null);
-
-            //xpp.setInput(new FileReader("/path/to/layout.xml"));
-
-            //LayoutInflater inflater1 =
-              //      (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-           // contentView = inflater.inflate(xpp, null);
-
-            int eventType = xpp.getEventType();
-
-            while (eventType != XmlPullParser.END_DOCUMENT){
-                String name = null;
-                switch (eventType){
-                    case XmlPullParser.START_DOCUMENT:
-                        //products = new ArrayList();
-                        break;
-                    case XmlPullParser.START_TAG:
-                        name = xpp.getName();
-                        System.out.println("Comienza tag: "+name);
-//                        if (name == "product"){
-//                            currentProduct = new Product();
-//                        } else if (currentProduct != null){
-//                            if (name == "productname"){
-//                                currentProduct.name = parser.nextText();
-//                            } else if (name == "productcolor"){
-//                                currentProduct.color = parser.nextText();
-//                            } else if (name == "productquantity"){
-//                                currentProduct.quantity= parser.nextText();
-//                            }
-//                        }
-                        break;
-                    case XmlPullParser.END_TAG:
-                        name = xpp.getName();
-                        System.out.println("termina tag: "+name);
-//                        if (name.equalsIgnoreCase("product") && currentProduct != null){
-//                            products.add(currentProduct);
-//                        }
-                }
-                eventType = xpp.next();
-            }
-
-            //printProducts(products);
-
-
-
-
 
             rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
 
@@ -273,7 +223,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
             // Loading a setting textView Balance amount
             txtViewBalance = ((TextView) rootView.findViewById(R.id.txtViewBalance));
-            txtViewBalance.setTypeface(tf);
+            //txtViewBalance.setTypeface(tf);
             txtViewBalance.setText(formatBalanceString(balanceAvailable, ShowMoneyType.BITCOIN.getCode()));
 
             ViewCompat.setElevation(txtViewBalance, 30);
@@ -342,6 +292,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
         return rootView;
     }
+
 
     /**
      * Method to change the balance type

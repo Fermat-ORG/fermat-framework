@@ -1,9 +1,10 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.exceptions.InvalidCryptoAddressBookRecordParametersException;
@@ -29,7 +30,9 @@ public class CryptoAddressBookCryptoModuleRecord implements CryptoAddressBookRec
 
     Platforms platform;
 
-    Vaults vault;
+    VaultType vaultType;
+
+    String vaultIdentifier;
 
     String walletPublicKey;
 
@@ -41,7 +44,8 @@ public class CryptoAddressBookCryptoModuleRecord implements CryptoAddressBookRec
                                                String deliveredToActorPublicKey,
                                                Actors deliveredToActorType,
                                                Platforms platform,
-                                               Vaults vault,
+                                               VaultType vaultType,
+                                               String vaultIdentifier,
                                                String walletPublicKey,
                                                ReferenceWallet walletType) throws InvalidCryptoAddressBookRecordParametersException {
         if (cryptoAddress == null ||
@@ -50,7 +54,8 @@ public class CryptoAddressBookCryptoModuleRecord implements CryptoAddressBookRec
                 deliveredToActorPublicKey == null ||
                 deliveredToActorType == null ||
                 platform == null ||
-                vault == null ||
+                vaultType == null ||
+                vaultIdentifier == null ||
                 walletPublicKey == null ||
                 walletType == null)
             throw new InvalidCryptoAddressBookRecordParametersException();
@@ -61,7 +66,8 @@ public class CryptoAddressBookCryptoModuleRecord implements CryptoAddressBookRec
         this.deliveredToActorPublicKey = deliveredToActorPublicKey;
         this.deliveredToActorType = deliveredToActorType;
         this.platform = platform;
-        this.vault = vault;
+        this.vaultType = vaultType;
+        this.vaultIdentifier = vaultIdentifier;
         this.walletPublicKey = walletPublicKey;
         this.walletType = walletType;
     }
@@ -97,8 +103,13 @@ public class CryptoAddressBookCryptoModuleRecord implements CryptoAddressBookRec
     }
 
     @Override
-    public Vaults getVault() {
-        return vault;
+    public VaultType getVaultType() {
+        return vaultType;
+    }
+
+    @Override
+    public String getVaultIdentifier() {
+        return vaultIdentifier;
     }
 
     @Override

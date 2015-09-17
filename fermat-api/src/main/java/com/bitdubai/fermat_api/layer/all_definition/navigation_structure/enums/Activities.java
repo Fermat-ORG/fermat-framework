@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * Created by rodrigo on 2015.07.20..
  */
@@ -83,7 +85,7 @@ public enum Activities {
         return code;
     }
 
-    public static Activities getValueFromString(String code) {
+    public static Activities getValueFromString(String code) throws InvalidParameterException {
         //for (Activities activities : Activities.values()) {
         //    if (activities.key.equals(name)) {
         //        return activities;
@@ -189,10 +191,11 @@ public enum Activities {
                 return CWP_INTRA_USER_ACTIVITY;
             case "CIUCA":
                 return CWP_INTRA_USER_CREATE_ACTIVITY;
-
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
         // throw an IllegalArgumentException or return null
         //throw new IllegalArgumentException("the given number doesn't match any Status.");
-        return null;
+       // return null;
     }
 }

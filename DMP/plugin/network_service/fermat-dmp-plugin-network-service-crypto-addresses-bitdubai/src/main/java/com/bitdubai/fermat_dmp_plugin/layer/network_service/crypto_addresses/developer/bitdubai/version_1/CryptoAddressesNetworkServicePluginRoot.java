@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.inter
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -38,13 +38,13 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
-
+    ErrorManager errorManager;
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -58,32 +58,34 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void createContactRequest(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressToSend, String intraUserToContactPublicKey, String requesterIntraUserPublicKey, String requesterIntraUserName, String requesterIntraUserProfileImage) throws CantCreateContactRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public void acceptContactRequest(UUID requestId, String walletAcceptingTheRequestPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressReceived, String intraUserAcceptingTheRequestPublicKey) throws CantAcceptContactRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public void denyContactRequest(UUID requestId) throws CantDenyContactRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public List<PendingContactRequest> listPendingRequests(String intraUserLoggedInPublicKey, String walletPublicKey, ContactRequestState contactRequestState) throws CantGetPendingContactRequestsListException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public PendingContactRequest getPendingRequest(UUID requestId) throws CantGetPendingContactRequestException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public void confirmContactRequest(UUID requestId) throws CantConfirmContactRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     /**
@@ -95,8 +97,8 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-        EventListener eventListener;
-        EventHandler eventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -118,8 +120,8 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
@@ -138,7 +140,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public UUID getId() {
-        return null;
+        return pluginId;
     }
 
     /**
@@ -167,7 +169,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
 

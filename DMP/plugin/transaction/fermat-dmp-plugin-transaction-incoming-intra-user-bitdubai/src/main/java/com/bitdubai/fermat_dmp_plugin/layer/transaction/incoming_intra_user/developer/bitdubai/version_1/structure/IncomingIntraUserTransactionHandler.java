@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException;
@@ -17,7 +18,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.deve
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 
 /**
  * Created by eze on 2015.09.11..
@@ -60,9 +60,9 @@ public class IncomingIntraUserTransactionHandler {
     }
 
     private void launchIncomingMoneyNotificationEvent(CryptoAddressBookRecord cryptoAddressBookRecord,Transaction<CryptoTransaction> transaction) {
-        PlatformEvent                  platformEvent                  = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
+        FermatEvent                    platformEvent                  = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
         IncomingMoneyNotificationEvent incomingMoneyNotificationEvent = (IncomingMoneyNotificationEvent) platformEvent;
-        incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_EXTRA_USER);
+        incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_INTRA_USER);
         incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
         //incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
         incomingMoneyNotificationEvent.setAmount(transaction.getInformation().getCryptoAmount());

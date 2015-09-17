@@ -4,16 +4,16 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletClosedEvent;
 
 /**
  * Created by loui on 05/02/15.
  */
-public class WalletClosedEventHandler implements EventHandler {
+public class WalletClosedEventHandler implements FermatEventHandler {
     WalletRuntimeManager walletRuntimeManager;
 
     public void setWalletRuntimeManager(WalletRuntimeManager walletRuntimeManager) {
@@ -22,8 +22,8 @@ public class WalletClosedEventHandler implements EventHandler {
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
-        String publicKey = ((WalletClosedEvent)platformEvent).getPublicKey();
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+        String publicKey = ((WalletClosedEvent) fermatEvent).getPublicKey();
 
 
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {

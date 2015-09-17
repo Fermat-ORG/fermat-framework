@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
@@ -51,8 +50,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 
@@ -76,7 +75,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      * PlatformService Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
     
     /**
      * UsesFileSystem Interface member variables.
@@ -135,42 +134,42 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
          */
 
 
-            EventListener eventListener;
-            EventHandler eventHandler;
+            FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_OPENED);
-            eventHandler = new WalletOpenedEventHandler();
-            ((WalletOpenedEventHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_OPENED);
+            fermatEventHandler = new WalletOpenedEventHandler();
+            ((WalletOpenedEventHandler) fermatEventHandler).setWalletRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_CLOSED);
-            eventHandler = new WalletClosedEventHandler();
-            ((WalletClosedEventHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_CLOSED);
+            fermatEventHandler = new WalletClosedEventHandler();
+            ((WalletClosedEventHandler) fermatEventHandler).setWalletRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_INSTALLED);
-            eventHandler = new WalletInstalledEventHandler();
-            ((WalletInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_INSTALLED);
+            fermatEventHandler = new WalletInstalledEventHandler();
+            ((WalletInstalledEventHandler) fermatEventHandler).setWalletRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_UNINSTALLED);
-            eventHandler = new WalletUnnInstalledEventHandler();
-            ((WalletUnnInstalledEventHandler) eventHandler).setWalletRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_UNINSTALLED);
+            fermatEventHandler = new WalletUnnInstalledEventHandler();
+            ((WalletUnnInstalledEventHandler) fermatEventHandler).setWalletRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
-            EventListener eventListenerStructureDownloaded = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-            EventHandler eventHandlerStructureDownloaded = new WalletNavigationStructureDownloadedHandler(this);
-            eventListenerStructureDownloaded.setEventHandler(eventHandlerStructureDownloaded);
-            eventManager.addListener(eventListenerStructureDownloaded);
-            listenersAdded.add(eventListenerStructureDownloaded);
+            FermatEventListener fermatEventListenerStructureDownloaded = eventManager.getNewListener(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            FermatEventHandler fermatEventHandlerStructureDownloaded = new WalletNavigationStructureDownloadedHandler(this);
+            fermatEventListenerStructureDownloaded.setEventHandler(fermatEventHandlerStructureDownloaded);
+            eventManager.addListener(fermatEventListenerStructureDownloaded);
+            listenersAdded.add(fermatEventListenerStructureDownloaded);
 
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -217,8 +216,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
@@ -245,9 +244,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         //this.walletNavigationStructureOpen=(WalletNavigationStructure)XMLParser.parseXML(xmlText,walletNavigationStructure);
 
-
-        System.out.println("Llegué al record");
-
         PluginTextFile layoutFile = null;
 
         //String filename= skinId.toString()+"_"+name;
@@ -272,7 +268,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
                 throw new CantCheckResourcesException("CAN'T CHECK REQUESTED RESOURCES", cantPersistFileException, "Error persist image file " + navigationStructureName, "");
             }
         }
-        System.out.println("TERMINÉ EL RECORIDDDDD");
     }
 
     @Override
@@ -1290,7 +1285,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
+        runtimeTitleBar.setLabel("Bitdubai Bitcoin Reference Wallet");
+        runtimeTitleBar.setLabelSize(16);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#72af9c");
@@ -1317,16 +1313,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
-        runtimeTab.setLabel("Transactions BOOK");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Transactions AVAILABLE");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        /*runtimeTab = new Tab();
         runtimeTab.setLabel("Send");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
         runtimeTabStrip.addTab(runtimeTab);
@@ -1335,7 +1321,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTab.setLabel("Receive");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
         runtimeTabStrip.addTab(runtimeTab);
-
+        /*
         runtimeTab = new Tab();
         runtimeTab.setLabel("Transactions");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
@@ -1365,15 +1351,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE.getKey(), runtimeFragment);
-
 
 
         runtimeFragment = new Fragment();
@@ -1408,6 +1385,63 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS.getKey(), runtimeFragment);
 
+        //Navigation
+
+        runtimeSideMenu = new SideMenu();
+
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Personal Wallets");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Shops");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Commercial wallets");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Factory Projects");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Published Wallets");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Wallet Store");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Exit");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        //fin navigation
+
+
+        /**
+         * Menu
+         */
+
+        runtimeMainMenu = new MainMenu();
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeActivity.setMainMenu(runtimeMainMenu);
+
+        /**
+         *  Fin de menu
+         */
+
         /**
          * Transaction Activity
          */
@@ -1420,7 +1454,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
+        runtimeTitleBar.setLabel("itdubai bitcoin Wallet");
+        runtimeTitleBar.setLabelSize(16);
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#72af9c");
         //runtimeActivity.setColor("#d07b62");
@@ -1437,6 +1472,63 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey(), runtimeFragment);
+
+
+        //Navigation
+
+        runtimeSideMenu = new SideMenu();
+
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Personal Wallets");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Shops");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Commercial wallets");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Factory Projects");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Published Wallets");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Wallet Store");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Exit");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        //fin navigation
+
+        /**
+         * Menu
+         */
+
+        runtimeMainMenu = new MainMenu();
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeActivity.setMainMenu(runtimeMainMenu);
+
+        /**
+         *  Fin de menu
+         */
 
 
 
