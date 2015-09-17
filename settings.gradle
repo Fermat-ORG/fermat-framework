@@ -564,6 +564,36 @@ project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new Fil
 include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
 
+//BNK projects
+
+//Bank Money Transaction
+include ':fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai'
+project(':fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai')
+include ':fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai'
+project(':fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai')
+
+//Wallet
+include ':fermat-bnk-plugin-wallet-bank-money-bitdubai'
+project(':fermat-bnk-plugin-wallet-bank-money-bitdubai').projectDir = new File('BNK/plugin/wallet/fermat-bnk-plugin-wallet-bank-money-bitdubai')
+
+//CSH projects
+
+//Cash Money Transaction
+include ':fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-give-cash-on-hand-bitdubai')
+include ':fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-receive-cash-delivery-bitdubai')
+include ':fermat-csh-plugin-cash-money-transaction-receive-cash-on-hand-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-receive-cash-on-hand-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-receive-cash-on-hand-bitdubai')
+include ':fermat-csh-plugin-cash-money-transaction-send-cash-delivery-bitdubai'
+project(':fermat-csh-plugin-cash-money-transaction-send-cash-delivery-bitdubai').projectDir = new File('CSH/plugin/cash_money_transaction/fermat-csh-plugin-cash-money-transaction-send-cash-delivery-bitdubai')
+
+//Wallet
+include ':fermat-csh-plugin-wallet-cash-money-bitdubai'
+project(':fermat-csh-plugin-wallet-cash-money-bitdubai').projectDir = new File('CSH/plugin/wallet/fermat-csh-plugin-wallet-cash-money-bitdubai')
+
+//include ':'
+//project(':').projectDir = new File('CSH/plugin//')
 
 // CBP projects
 
