@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -280,6 +281,14 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.assetIssuingTransactionDao.persistGenesisAddress(transactionId, genesisAddress);
     }
 
+    //private String generateDigitalAssetMetadata(){}
+
+    private void setDigitalAssetGenesisAddress(UUID transactionID, String genesisAddress) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        //TODO: descomentar la siguiente línea una vez que esté lista la cryptoVault
+        //this.digitalAsset.setGenesisAddress(genesisAddress);
+        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionID, TransactionStatus.GENESIS_SETTLED);
+    }
+
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
     private void createDigitalAssetCryptoTransaction() throws CantCreateDigitalAssetTransactionException {
 
@@ -294,8 +303,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             String genesisAddress=requestHashGenesisTransaction();
             //La persisto en base de datos
             persistsGenesisAddress(transactionUUID,genesisAddress);
+            //Le asigno al Digital Asset la genesisAddress
+            setDigitalAssetGenesisAddress(transactionUUID,genesisAddress);
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis Address in database");
+        } catch (CantExecuteQueryException |UnexpectedResultReturnedFromDatabaseException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot update the Digital Asset Transaction Status in database");
         }
 
 

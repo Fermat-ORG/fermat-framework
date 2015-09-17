@@ -86,6 +86,35 @@ public class AssetIssuingTransactionDao {
         }
     }
 
+    public void updateDigitalAssetTransactionStatus(UUID transactionID, TransactionStatus transactionStatus) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable=this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_FIRST_KEY_COLUMN, transactionID.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTransaction databaseTransaction=this.database.newTransaction();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1)
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Transaction ID:" + transactionID+ "Transaction Status:" + transactionStatus.toString());
+            else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, transactionStatus.toString());
+            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,exception, "Trying to update "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME,"Check the cause");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception,"Trying to update "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME,"Check the cause");
+        } catch (Exception exception){
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Trying to update "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME,"Check the cause");
+        }
+    }
+
     public void persistDigitalAsset(String digitalAssetPublicKey, String digitalAssetLocalStoragePath, int assetsAmount)throws CantPersistDigitalAssetException{
 
         try{

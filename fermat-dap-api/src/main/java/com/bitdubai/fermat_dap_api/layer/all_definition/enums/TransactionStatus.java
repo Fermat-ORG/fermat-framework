@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum TransactionStatus {
     FORMING_GENESIS("FGEN"),
     GENESIS_OBTAINED("OGEN"),
+    GENESIS_SETTLED("SGEN"),
     ISSUED("ISSUED");
 
     private String code;
