@@ -27,6 +27,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserExpectedTransactionNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.EventWrapper;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.TransactionCompleteInformation;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 
@@ -158,7 +159,7 @@ public class IncomingIntraUserDao {
     }
 
     // TODO: Completar método cuando escriba el Relay Agent. El tipo de retorno va a cambiar
-    public List<Transaction<CryptoTransaction>> getAllTransactionsToBeApplied(){
+    public List<TransactionCompleteInformation> getAllTransactionsToBeApplied(){
         return null;
     }
 
