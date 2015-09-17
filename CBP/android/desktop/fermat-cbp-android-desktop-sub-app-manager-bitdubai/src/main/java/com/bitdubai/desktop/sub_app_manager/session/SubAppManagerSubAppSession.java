@@ -2,8 +2,7 @@ package com.bitdubai.desktop.sub_app_manager.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manage.interfaces.CryptoDesktopSubAppModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_desktop_module.sub_app_manager.interfaces.CryptoDesktopSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
