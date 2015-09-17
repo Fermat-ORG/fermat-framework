@@ -116,7 +116,7 @@ public class AssetIssuingTransactionDao {
         return null;
     }
 
-    public String getDigitalAssetTransactionStatus(String transactionId)throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException{
+    public TransactionStatus getDigitalAssetTransactionStatus(String transactionId)throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException{
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
@@ -130,7 +130,7 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             this.database.closeDatabase();
-            return databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME);
+            return TransactionStatus.getByCode(databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME));
 
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
@@ -138,7 +138,10 @@ public class AssetIssuingTransactionDao {
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(exception, "Checking Transaction Status","Cannot load the database into memory");
-        }  catch (Exception exception){
+        } catch (InvalidParameterException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Checking Transaction Status","Invalid parameter in TransactionStatus");
+        }catch (Exception exception){
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(exception,"Checking Transaction Status","Unexpected exception");
         }
@@ -245,6 +248,10 @@ public class AssetIssuingTransactionDao {
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(exception,"Checking pending assets to issue","Unexpected exception");
         }
+    }
+
+    public void persistGenesisTransaction(UUID transactionID, String genesisAddress){
+        //TODO: implement this 17/09/2015
     }
 
     public boolean isTransactionIdUsed(UUID transactionId)throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException{

@@ -138,9 +138,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
-    private void requestHashGenesisTransaction(){
+    private String requestHashGenesisTransaction(){
         //TODO: to implement
         //this.cryptoVaultManager.getTransactionManager().confirmReception();
+        return "fakeGenesisTransaction";
     }
 
     private void checkCryptoWalletBalance() throws CryptoWalletBalanceInsufficientException, CantGetBalanceException {
@@ -266,16 +267,17 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          * El objetivo es finalizar los digital assets, ya persistidos en base de datos, pero sin emitir.
          */
         try {
-            String digitalAssetTransactionStatusCode=this.assetIssuingTransactionDao.getDigitalAssetTransactionStatus(transactionId);
-            switch (digitalAssetTransactionStatusCode){
-                case "FGEN":
-                    break;
-                default:
-                    break;
+            TransactionStatus digitalAssetTransactionStatus=this.assetIssuingTransactionDao.getDigitalAssetTransactionStatus(transactionId);
+            if(digitalAssetTransactionStatus==TransactionStatus.FORMING_GENESIS){
+                //Todo: iniciar todo el proceso.
             }
         } catch (CantCheckAssetIssuingProgressException | UnexpectedResultReturnedFromDatabaseException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
+    }
+
+    private void persistsGenesisAddress(UUID tranasactionId, String genesisAddress){
+        //TODO: implement this 17/09/2015
     }
 
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
@@ -285,6 +287,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          * Este método lo usaré para pedir las transacciones de cada digital asset, mucho de lo que estaba en este método ahora pertenece al
          * método issueDigitalAssets.
          */
+        //Primero, asigno un UUID interno
+        UUID transactionUUID=generateTransactionUUID();
+        //Solicito la genesisAddress
+        String genesisAddress=requestHashGenesisTransaction();
+        //La persisto en base de datos
+
 
     }
 
