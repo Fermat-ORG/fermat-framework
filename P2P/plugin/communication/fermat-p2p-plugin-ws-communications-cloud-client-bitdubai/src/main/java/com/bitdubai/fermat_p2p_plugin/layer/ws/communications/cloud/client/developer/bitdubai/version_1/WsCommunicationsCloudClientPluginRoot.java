@@ -6,18 +6,25 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -45,8 +52,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
-
+public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents, DealsWithLogger, DealsWithDeviceLocation, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin, WsCommunicationsCloudClientManager {
 
     /**
      * Represent the WS_PROTOCOL
@@ -61,8 +67,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the SERVER_IP
      */
-    //private static final String SERVER_IP = "52.11.156.16";
-    private static final String SERVER_IP = "192.168.0.106";
+    //private static final String SERVER_IP = "52.11.156.16"; //AWS
+    private static final String SERVER_IP = "192.168.0.9";
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -79,31 +85,40 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+    /**
+     * Represent the errorManager
+     */
+    private ErrorManager errorManager;
+
+    /**
+     * Represent the eventManager
+     */
+    private EventManager eventManager;
+    
+    /**
+     * Represent the logManager
+     */
+    private LogManager logManager;
+
+    /**
+     * Represent the locationManager
+     */
+    private LocationManager locationManager;
+
+    /**
+     * Represent the newLoggingLevel
+     */
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
     /*
      * Hold the list of event listeners
      */
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
-     * DealWithEvents Interface member variables.
-     */
-    private EventManager eventManager;
-    
-    /**
-     * DealsWithLogger interface member variable
-     */
-    private LogManager logManager;
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    /**
      * DealsWithPluginIdentity Interface member variables.
      */
     private UUID pluginId;
-
-    /*
-     * Represent the executorService
-     */
-    private ExecutorService executorService;
 
     /**
      * Represent the disableClientFlag
@@ -115,13 +130,51 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     private WsCommunicationsCloudClientConnection wsCommunicationsCloudClientConnection;
 
-
     /**
      * Constructor
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
         this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
+    }
+
+
+    /**
+     * This method validate is all required resource are injected into
+     * the plugin root by the platform
+     *
+     * @throws CantStartPluginException
+     */
+    private void validateInjectedResources() throws CantStartPluginException {
+
+         /*
+         * If all resources are inject
+         */
+        if (eventManager == null            ||
+                logManager  == null         ||
+                    locationManager == null ||
+                        errorManager == null) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("logManager: " + logManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("locationManager: " + locationManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "No all required resource are injected";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+
+        }
+
     }
 
     /**
@@ -134,6 +187,11 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
         try {
 
+            /*
+             * Validate required resources
+             */
+            validateInjectedResources();
+
             if (disableClientFlag) {
                 System.out.println("WsCommunicationsCloudClientPluginRoot - Local Client is Disable, no started");
                 return;
@@ -145,34 +203,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
 
             URI uri = new URI(WsCommunicationsCloudClientPluginRoot.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.DEFAULT_PORT);
 
-            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager);
+            wsCommunicationsCloudClientConnection = new WsCommunicationsCloudClientConnection(uri,eventManager, locationManager);
             wsCommunicationsCloudClientConnection.initializeAndConnect();
-
-
-            /* ONLY FOR TEST
-
-                new Thread(new Runnable() {
-
-                    boolean continuar = Boolean.TRUE;
-
-                    @Override
-                    public void run() {
-
-                        while (continuar){
-
-                            if (wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().isRegister()){
-
-                                wsCommunicationsCloudClientConnection.requestListComponentRegistered(wsCommunicationsCloudClientConnection.getWsCommunicationsCloudClientChannel().getPlatformComponentProfile());
-
-                                continuar = Boolean.FALSE;
-                            }
-                        }
-
-                    }
-                }).start();
-
-            */
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -343,6 +375,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
     }
 
     /**
@@ -371,5 +404,25 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public void setDisableClientFlag(Boolean disableClientFlag) {
         this.disableClientFlag = disableClientFlag;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see WsCommunicationsCloudClientManager#getCommunicationsCloudClientConnection()
+     */
+    @Override
+    public CommunicationsCloudClientConnection getCommunicationsCloudClientConnection() {
+        return wsCommunicationsCloudClientConnection;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see DealsWithDeviceLocation#setLocationManager(LocationManager)
+     */
+    @Override
+    public void setLocationManager(LocationManager locationManager) {
+        this.locationManager = locationManager;
     }
 }

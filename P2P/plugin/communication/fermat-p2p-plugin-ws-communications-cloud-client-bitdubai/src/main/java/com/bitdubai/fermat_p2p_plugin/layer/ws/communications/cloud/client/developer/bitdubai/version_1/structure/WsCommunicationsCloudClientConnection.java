@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
@@ -65,17 +67,23 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
     private WsCommunicationsCloudClientPingAgent wsCommunicationsCloudClientPingAgent;
 
     /**
+     * Represent the locationManager
+     */
+    private LocationManager locationManager;
+
+    /**
      * Constructor whit parameters
      *
      * @param uri
      * @param eventManager
      */
-    public WsCommunicationsCloudClientConnection(URI uri, EventManager eventManager) {
+    public WsCommunicationsCloudClientConnection(URI uri, EventManager eventManager, LocationManager locationManager) {
         super();
         this.wsCommunicationsCloudClientChannel   = WsCommunicationsCloudClientChannel.constructWsCommunicationsCloudClientFactory(uri, new Draft_17(), this, eventManager);
         this.wsCommunicationsCloudClientAgent     = new WsCommunicationsCloudClientAgent(wsCommunicationsCloudClientChannel);
         this.wsCommunicationsCloudClientPingAgent = new WsCommunicationsCloudClientPingAgent(wsCommunicationsCloudClientChannel);
         this.wsCommunicationVPNClientManagerAgent = new WsCommunicationVPNClientManagerAgent();
+        this.locationManager                      = locationManager;
     }
 
     /**
@@ -125,25 +133,31 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
     @Override
     public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, Double latitude, Double longitude, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData){
 
-        //Validate parameters
-        if ((identityPublicKey == null || identityPublicKey == "") ||
-                (alias == null || alias == "")                     ||
-                    (name == null || name == "")                   ||
-                         latitude == null                          ||
-                            longitude == null                      ||
-                                networkServiceType == null         ||
-                                    platformComponentType == null  ||
-                                        extraData == null){
+        try {
 
-            throw new IllegalArgumentException("All argument are required, can not be null ");
+            //Validate parameters
+            if ((identityPublicKey == null || identityPublicKey == "") ||
+                    (alias == null || alias == "")                     ||
+                        (name == null || name == "")                   ||
+                             latitude == null                          ||
+                                longitude == null                      ||
+                                    networkServiceType == null         ||
+                                        platformComponentType == null  ||
+                                            extraData == null){
 
+                throw new IllegalArgumentException("All argument are required, can not be null ");
+
+            }
+
+            /*
+             * Construct a PlatformComponentProfile instance
+             */
+            return new PlatformComponentProfileCommunication(alias, wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(), identityPublicKey, locationManager.getLocation(), name, networkServiceType, platformComponentType, extraData);
+
+        } catch (CantGetDeviceLocationException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(e);
         }
-
-
-        /*
-         * Construct a PlatformComponentProfile instance
-         */
-        return new PlatformComponentProfileCommunication(alias, wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(), identityPublicKey, latitude, longitude, name, networkServiceType, platformComponentType, extraData);
 
     }
 
