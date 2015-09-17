@@ -61,8 +61,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the SERVER_IP
      */
-    private static final String SERVER_IP = "52.11.156.16";
-    //private static final String SERVER_IP = "192.168.0.7";
+    //private static final String SERVER_IP = "52.11.156.16";
+    private static final String SERVER_IP = "192.168.0.106";
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -121,7 +121,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
-        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
     }
 
     /**
