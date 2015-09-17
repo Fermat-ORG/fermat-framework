@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.interfaces;
 
 
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
@@ -16,21 +16,11 @@ import java.util.List;
  */
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
- * provides the methods for the Crypto Customer Community sub app, to Identity Management Customers and the relationship with other Customers.
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.interfaces.CryptoCustomerModuleManager</code>
+ * provides the methods for the Crypto Customer sub app, for managing contacts between a broker and its Customers.
  */
-public interface CryptoCustomerCommunityModuleManager {
+public interface CryptoCustomerModuleManager {
 
-
-
-    /**
-     * The method <code>getSuggestionsToContact</code> searches for crypto Customer that the logged in
-     * crypto customer could be interested to add.
-     *
-     * @return a list with information of crypto customer
-     * @throws CantGetCryptoCustomerListException
-     */
-    public List<CryptoCustomerInformation> getSuggestionsToContact(int max, int offset) throws CantGetCryptoCustomerListException;
 
     /**
      * The method <code>searchCryptoCustomer</code> gives us an interface to manage a search for a particular
@@ -40,16 +30,6 @@ public interface CryptoCustomerCommunityModuleManager {
      */
     public CryptoCustomerSearch searchCryptoCustomer();
 
-    /**
-     * The method <code>askCryptoBrokerForAcceptance</code> initialize the request of contact between
-     * a crypto Customer and a other crypto customer.
-     *
-     * @param cryptoCustomerToAddName      The name of the crypto customer to add
-     * @param cryptoCustomerToAddPublicKey The public key of the crypto customer to add
-     * @param profileImage            The profile image that the crypto customer has
-     * @throws CantStartRequestException
-     */
-    public void askCryptoCustomerForAcceptance(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws CantStartRequestException;
 
     /**
      * The method <code>acceptCryptoCustomer</code> takes the information of a connection request, accepts
@@ -89,7 +69,7 @@ public interface CryptoCustomerCommunityModuleManager {
 
     /**
      * The method <code>getAllCryptoCustomers</code> returns the list of all crypto Customer registered by the
-     * logged in crypto Customer
+     * logged in crypto broker
      *
      * @return the list of crypto Customer connected to the logged in broker
      * @throws CantGetCryptoCustomerListException
@@ -98,28 +78,18 @@ public interface CryptoCustomerCommunityModuleManager {
 
     /**
      * The method <code>getCryptoCustomersWaitingYourAcceptance</code> returns the list of crypto Customer waiting to be accepted
-     * or rejected by the logged in Customer
+     * or rejected by the logged in broker
      *
-     * @return the list of crypto Customer waiting to be accepted or rejected by the  logged in Customer
+     * @return the list of crypto Customer waiting to be accepted or rejected by the  logged in broker
      * @throws CantGetCryptoCustomerListException
      */
     public List<CryptoCustomerInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws CantGetCryptoCustomerListException;
 
-    /**
-     * The method <code>getCryptoBrokersWaitingTheirAcceptance</code> list the crypto Customer that haven't
-     * answered to a sent connection request by the current logged in Customer.
-     *
-     * @return the list of crypto Customer that haven't answered to a sent connection request by the current
-     * logged in Customer.
-     * @throws CantGetCryptoCustomerListException
-     */
-    public List<CryptoCustomerInformation> getCryptoCustomersWaitingTheirAcceptance(int max, int offset) throws CantGetCryptoCustomerListException;
-
 
     /**
-     * The method <code>login</code> let an crypto Customer log in
+     * The method <code>login</code> let an crypto broker log in
      *
-     * @param customerPublicKey the public key of the crypto Customer to log in
+     * @param customerPublicKey the public key of the crypto broker to log in
      */
     public void login(String customerPublicKey) throws CantLoginCustomerException;
 
