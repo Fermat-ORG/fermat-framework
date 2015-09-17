@@ -49,4 +49,9 @@ public interface FermatTabStrip {
 
     int getStartItem();
 
+    public boolean isHasIcon();
+
+    public boolean isHasText();
+
+
 }

@@ -38,6 +38,7 @@ import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionMana
 import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.fragments.WizardFragment;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
@@ -118,6 +119,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Screen adapters
      */
     private TabsPagerAdapter adapter;
+    private TabsPagerAdapterWithIcons adapterWithIcons;
     private ScreenPagerAdapter screenPagerAdapter;
     /**
      * WizardTypes
@@ -385,29 +387,46 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, WalletSession walletSession) {
 
         PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
+        pagerSlidingTabStrip.setShouldExpand(true);
 
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
-        adapter = new TabsPagerAdapter(getFragmentManager(),
-                getApplicationContext(),
-                WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
-                tabStrip,
-                walletSession,
-                getWalletResourcesProviderManager());
+        if(tabStrip.isHasIcon()){
+            adapterWithIcons = new TabsPagerAdapterWithIcons(getFragmentManager(),
+                    getApplicationContext(),
+                    WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
+                    tabStrip,
+                    walletSession,
+                    getWalletResourcesProviderManager(),
+                    getResources());
+            pagertabs.setAdapter(adapterWithIcons);
+        }else{
+            adapter = new TabsPagerAdapter(getFragmentManager(),
+                    getApplicationContext(),
+                    WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
+                    tabStrip,
+                    walletSession,
+                    getWalletResourcesProviderManager(),
+                    getResources());
+            pagertabs.setAdapter(adapter);
+        }
 
-        pagertabs.setAdapter(adapter);
+
+
+
 
         //pagertabs.setCurrentItem();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pagertabs.setPageMargin(pageMargin);
         pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
+
         /**
          * Put tabs in pagerSlidingTabsStrp
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
-
+        pagerSlidingTabStrip.setShouldExpand(true);
         pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
 
     }
