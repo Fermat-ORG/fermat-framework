@@ -396,9 +396,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 getWalletResourcesProviderManager());
 
         pagertabs.setAdapter(adapter);
+
+        //pagertabs.setCurrentItem();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pagertabs.setPageMargin(pageMargin);
+        pagertabs.setCurrentItem(tabStrip.getStartItem(),true);
         /**
          * Put tabs in pagerSlidingTabsStrp
          */

@@ -10,14 +10,19 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -36,6 +41,9 @@ public class HomeFragment extends FermatWalletFragment {
     String[] balances_available;
     private String[][] transactions;
     private static final String ARG_POSITION = "position";
+
+    TextView txtBalance;
+    TextView balance_type;
 
 
     /**
@@ -138,8 +146,53 @@ public class HomeFragment extends FermatWalletFragment {
         });*/
 
 
+    }
 
+    /**
+     * Method to change the balance amount
+     */
+    private void changeBalance(TextView textView) {
+        try {
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+                textView.setText(formatBalanceString(availableBalance, referenceWalletSession.getTypeAmount()));
+            } else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
+                textView.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+            }
+        } catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    /**
+     * Method to change the balance type
+     */
+    private void changeBalanceType(TextView txtViewBalance,TextView txtViewTypeBalance) {
+
+        try {
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+                txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+                txtViewTypeBalance.setText(R.string.book_balance);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
+            } else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
+                txtViewBalance.setText(formatBalanceString(availableBalance, referenceWalletSession.getTypeAmount()));
+                txtViewTypeBalance.setText(R.string.available_balance);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+            }
+        } catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String getBalanceTypeInLetters(){
+        String balanceType="";
+        if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+            balanceType = "Available";
+        }else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
+            balanceType = "Book";
+        }
+        return balanceType;
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -224,12 +277,25 @@ public class HomeFragment extends FermatWalletFragment {
 
                             convertView = inf.inflate(R.layout.wallets_teens_fragment_home_list_item, parent, false);
 
-                            TextView balance = ((TextView)convertView.findViewById(R.id.balance));
-                            balance.setText(formatBalanceString(availableBalance, ShowMoneyType.BITCOIN.getCode()));
+                            txtBalance = ((TextView)convertView.findViewById(R.id.balance));
+                            txtBalance.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
 
+                                    changeBalance(txtBalance);
+                                    //refreshBalance();
+                                }
+                            });
+                            changeBalance(txtBalance);
 
-                            TextView balance_available = ((TextView)convertView.findViewById(R.id.balance_available));
-                            balance_available.setText(formatBalanceString(bookBalance, ShowMoneyType.BITCOIN.getCode())+" book");
+                            balance_type = ((TextView)convertView.findViewById(R.id.balance_available));
+                            balance_type.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    changeBalanceType(txtBalance,balance_type);
+                                }
+                            });
+                            balance_type.setText(getBalanceTypeInLetters());
 
                             break;
 
