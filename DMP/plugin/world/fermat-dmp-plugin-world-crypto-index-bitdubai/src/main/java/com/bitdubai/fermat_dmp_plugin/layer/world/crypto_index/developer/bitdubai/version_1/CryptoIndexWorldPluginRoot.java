@@ -23,12 +23,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.MarketPrice;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,22 +34,21 @@ import java.util.UUID;
  */
 
 /**
- * This plugin mission is to provide the current market price of the different crypto currencies. To accomplish that 
+ * This plugin mission is to provide the current market price of the different crypto currencies. To accomplish that
  * goal, it will check one or more indexes as needed.
  * * *
  */
 
-public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service, CryptoIndexManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,DealsWithPluginDatabaseSystem, Plugin {
+public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service, CryptoIndexManager, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin {
 
 
-    MarketPrice marketPrice=new MarketPrice();
+    MarketPrice marketPrice = new MarketPrice();
 
     private CryptoIndexDao cryptoIndexDao;
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
@@ -74,60 +68,40 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
      * DealsWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
-    EventManager eventManager;
 
     /**
      * Plugin Interface member variables.
      */
     UUID pluginId;
+
     @Override
-    public void start() throws CantStartPluginException{
+    public void start() throws CantStartPluginException {
         try {
-         /**
-         * I will initialize the handling of platform events.
-         */
-        this.cryptoIndexDao = new CryptoIndexDao(pluginDatabaseSystem, this.pluginId);
-        cryptoIndexDao.initializeDatabase();
+
+            this.cryptoIndexDao = new CryptoIndexDao(pluginDatabaseSystem, this.pluginId);
+            cryptoIndexDao.initializeDatabase();
 
         } catch (CantInitializeCryptoIndexDatabaseException e) {
             e.printStackTrace();
         }
-        EventListener eventListener;
-        EventHandler eventHandler;
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
-        }
-
-        listenersAdded.clear();
-
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
-    
+
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
@@ -137,36 +111,33 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
     /**
      * CryptoIndex Interface implementation.
      */
-    
-   @Override
-    public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
-       double price = 0;
-       try {
-           /**
-            * implement the interface to get the last price of market from different providers
-            */
-           price=marketPrice.getMarketPrice(fiatCurrency, cryptoCurrency,0);
-           /**
-            * save in database the last price consulted
-            */
-           String c= cryptoCurrency.getCode().toString();
-           String f = fiatCurrency.getCode().toString();
-           cryptoIndexDao.saveLastRateExchange(c,f,price);
-       } catch (CantSaveLastRateExchangeException e) {
-           e.printStackTrace();
-       }
-       return price;
-    }
-     /**
-     * DealWithEvents Interface implementation.
-     */
 
     @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
+    public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
+        double price = 0;
+        try {
+            /**
+             * implement the interface to get the last price of market from different providers
+             */
+            price = marketPrice.getMarketPrice(fiatCurrency, cryptoCurrency, 0);
+            /**
+             * save in database the last price consulted
+             */
+            String c = cryptoCurrency.getCode();
+            String f = fiatCurrency.getCode();
+            cryptoIndexDao.saveLastRateExchange(c, f, price);
+        } catch (CantSaveLastRateExchangeException e) {
+            // TODO manage exceptions
+            // TODO add exception CantGetMarketPriceException
+            // TODO use errorManager to report unexpected exceptions
+            // TODO use generic exceptions for other unexpected exceptions
+            e.printStackTrace();
+        }
+        return price;
     }
+
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -192,6 +163,7 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
 
     /**
      * mplement the interface MarketPriceInterface
+     *
      * @param cryptoCurrency
      * @param fiatCurrency
      * @param time
@@ -204,12 +176,17 @@ public class CryptoIndexWorldPluginRoot implements MarketPriceInterface, Service
          */
         double marketExchangeRate;
         List<CryptoIndexInterface> list;
-        String crypto= cryptoCurrency.getCode().toString();
-        String fiat = fiatCurrency.getCode().toString();
-        cryptoIndexDao= new CryptoIndexDao(pluginDatabaseSystem,pluginId);
-        list=cryptoIndexDao.getHistoricalExchangeRateList(crypto, fiat, time);
-        marketExchangeRate=Double.valueOf(list.get(0).toString());
+        String crypto = cryptoCurrency.getCode();
+        String fiat = fiatCurrency.getCode();
+        cryptoIndexDao = new CryptoIndexDao(pluginDatabaseSystem, pluginId);
+        list = cryptoIndexDao.getHistoricalExchangeRateList(crypto, fiat, time);
+        marketExchangeRate = Double.valueOf(list.get(0).toString());
         return marketExchangeRate;
+        // TODO manage exceptions
+        // TODO add exception CantGetHistoricalExchangeRateException
+        // TODO maybe there's no record for the currencies pair: HistoricalExchangeRateNotFoundException
+        // TODO use errorManager to report unexpected exceptions
+        // TODO use generic exceptions for other unexpected exceptions
     }
 
 
