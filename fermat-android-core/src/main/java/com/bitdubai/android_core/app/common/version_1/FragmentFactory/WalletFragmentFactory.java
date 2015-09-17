@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.FragmentFactory;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceWalletFragmentFactory;
 
 
@@ -25,10 +26,10 @@ public class WalletFragmentFactory {
                         case REFERENCE:
                             return new ReferenceWalletFragmentFactory();
                         default:
-                            return null;
+                            throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + type, "This Code Is Not Valid for the Plugins enum");
                     }
                 default:
-                    return null;
+                    throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + category, "This Code Is Not Valid for the Plugins enum");
 
             }
         }catch (Exception e){

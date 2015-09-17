@@ -5,13 +5,13 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
 /**
  * Created by Matias Furszyfer on 2015.08.18..
  */
-public class IncomingMoneyNotificationHandler implements EventHandler {
+public class IncomingMoneyNotificationHandler implements FermatEventHandler {
 
 
     NotificationManagerMiddleware notificationManager;
@@ -21,9 +21,9 @@ public class IncomingMoneyNotificationHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        IncomingMoneyNotificationEvent incomingMoneyNotificationEvent =(IncomingMoneyNotificationEvent)platformEvent;
+        IncomingMoneyNotificationEvent incomingMoneyNotificationEvent =(IncomingMoneyNotificationEvent) fermatEvent;
 
         //NotificationEvent notificationEvent = new NotificationEvent();
         //notificationEvent.setAlertTitle(newNotificationEvent.getNotificationTitle());

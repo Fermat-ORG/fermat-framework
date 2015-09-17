@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.WalletInstalationProgress;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
 
 import java.util.UUID;
@@ -108,7 +108,7 @@ public interface WalletResourcesInstalationManager {
      *  Get enum type of wallet instalation progress
      * @return
      */
-    public WalletInstalationProgress getWalletInstalationProgress();
+    public InstalationProgress getInstalationProgress();
 
 
 }

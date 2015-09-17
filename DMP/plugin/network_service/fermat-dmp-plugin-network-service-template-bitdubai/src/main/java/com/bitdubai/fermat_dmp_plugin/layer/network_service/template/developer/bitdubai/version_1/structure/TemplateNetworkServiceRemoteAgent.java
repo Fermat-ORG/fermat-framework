@@ -16,6 +16,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
@@ -24,7 +28,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 
 /**
@@ -49,9 +55,9 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
     private static final long SLEEP_TIME = 2000;
 
     /**
-     * Represent the serviceToServiceOnlineConnection
+     * Represent the communicationsVPNConnection
      */
-    private ServiceToServiceOnlineConnection serviceToServiceOnlineConnection;
+    CommunicationsVPNConnection communicationsVPNConnection;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -98,21 +104,20 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
      *
      * @param eccKeyPair from the plugin root
      * @param remoteNetworkServicePublicKey the public key
-     * @param serviceToServiceOnlineConnection  the serviceToServiceOnlineConnection instance
      * @param errorManager  instance
      * @param incomingMessageDao instance
      * @param outgoingMessageDao instance
      */
-    public TemplateNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, String remoteNetworkServicePublicKey, ServiceToServiceOnlineConnection serviceToServiceOnlineConnection, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public TemplateNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
-        this.eccKeyPair                       = eccKeyPair;
-        this.remoteNetworkServicePublicKey    = remoteNetworkServicePublicKey;
-        this.serviceToServiceOnlineConnection = serviceToServiceOnlineConnection;
-        this.errorManager                     = errorManager;
-        this.running                          = Boolean.FALSE;
-        this.incomingMessageDao = incomingMessageDao;
-        this.outgoingMessageDao = outgoingMessageDao;
+        this.eccKeyPair                          = eccKeyPair;
+        this.remoteNetworkServicePublicKey       = remoteNetworkServicePublicKey;
+        this.errorManager                        = errorManager;
+        this.running                             = Boolean.FALSE;
+        this.incomingMessageDao                  = incomingMessageDao;
+        this.outgoingMessageDao                  = outgoingMessageDao;
+        this.communicationsVPNConnection         = communicationsVPNConnection;
 
 
         //Create a thread to receive the messages
@@ -173,7 +178,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
         toSend.interrupt();
 
         //Disconnect from the service
-        serviceToServiceOnlineConnection.disconnect();
+        //serviceToServiceOnlineConnection.disconnect();
     }
 
     /**
@@ -188,17 +193,17 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
             /**
              * Verified the status of the connection
              */
-            if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED){
+            if (communicationsVPNConnection.isActive()){
 
                 /**
                  * process all pending messages
                  */
-                for (int i = 0; i < serviceToServiceOnlineConnection.getUnreadMessagesCount(); i++) {
+                for (int i = 0; i < communicationsVPNConnection.getUnreadMessagesCount(); i++) {
 
                     /*
                      * Read the next message in the queue
                      */
-                    Message message = serviceToServiceOnlineConnection.readNextMessage();
+                    FermatMessage message = communicationsVPNConnection.readNextMessage();
 
                     /*
                      *  Cast the message to IncomingTemplateNetworkServiceMessage
@@ -208,17 +213,17 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Validate the message signature
                      */
-                    AsymmectricCryptography.verifyMessageSignature(incomingTemplateNetworkServiceMessage.getSignature(), incomingTemplateNetworkServiceMessage.getTextContent(), remoteNetworkServicePublicKey);
+                    AsymmectricCryptography.verifyMessageSignature(incomingTemplateNetworkServiceMessage.getSignature(), incomingTemplateNetworkServiceMessage.getContent(), remoteNetworkServicePublicKey);
 
                     /*
                      * Decrypt the message content
                      */
-                    incomingTemplateNetworkServiceMessage.setTextContent(AsymmectricCryptography.decryptMessagePrivateKey(incomingTemplateNetworkServiceMessage.getTextContent(), eccKeyPair.getPrivateKey()));
+                    incomingTemplateNetworkServiceMessage.setContent(AsymmectricCryptography.decryptMessagePrivateKey(incomingTemplateNetworkServiceMessage.getContent(), eccKeyPair.getPrivateKey()));
 
                     /*
                      * Change to the new status
                      */
-                    incomingTemplateNetworkServiceMessage.setStatus(MessagesStatus.NEW_RECEIVED);
+                    incomingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.NEW_RECEIVED);
 
                     /*
                      * Save to the data base table
@@ -228,7 +233,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Remove the message from the queue
                      */
-                    serviceToServiceOnlineConnection.clearMessage(message);
+                    communicationsVPNConnection.removeMessageRead(message);
 
                     /**
                      * Notify all observer of this agent that Received a new message
@@ -259,52 +264,52 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
-
                 try {
+
+                    Map<String, Object> filters = new HashMap<>();
+                    filters.put(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+                    filters.put(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
 
                     /*
                      * Read all pending message from database
                      */
-                    List<OutgoingTemplateNetworkServiceMessage> messages = outgoingMessageDao.findAll(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME,
-                                                                                                                  MessagesStatus.PENDING_TO_SEND.getCode());
+                    List<OutgoingTemplateNetworkServiceMessage> messages = outgoingMessageDao.findAll(filters);
                     /*
                      * For each message
                      */
                     for (OutgoingTemplateNetworkServiceMessage message: messages){
 
-                        /*
-                         * Encrypt the content of the message whit the remote public key
-                         */
-                        message.setTextContent(AsymmectricCryptography.encryptMessagePublicKey(message.getTextContent(), remoteNetworkServicePublicKey));
 
-                        /*
-                         * Sing the message
-                         */
-                        AsymmectricCryptography.createMessageSignature(message.getTextContent(), eccKeyPair.getPrivateKey());
+                        if (communicationsVPNConnection.isActive()) {
 
-                        /*
-                         * Send the message
-                         */
-                        serviceToServiceOnlineConnection.sendMessage(message);
+                            /*
+                             * Encrypt the content of the message whit the remote public key
+                             */
+                            message.setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), remoteNetworkServicePublicKey));
 
-                        /*
-                         * Change the message and update in the data base
-                         */
-                        message.setStatus(MessagesStatus.SENT);
-                        outgoingMessageDao.update(message);
+                            /*
+                             * Sing the message
+                             */
+                            AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+
+                            /*
+                             * Send the message
+                             */
+                            communicationsVPNConnection.sendMessage(message);
+
+                            /*
+                             * Change the message and update in the data base
+                             */
+                            message.setFermatMessagesStatus(FermatMessagesStatus.SENT);
+                            outgoingMessageDao.update(message);
+                        }
                     }
 
-
-                } catch (CantSendMessageException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message to remote network service "));
                 } catch (CantUpdateRecordDataBaseException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
                 } catch (CantReadRecordDataBaseException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
                 }
-
-            }
 
             //Sleep for a time
             toSend.sleep(TemplateNetworkServiceRemoteAgent.SLEEP_TIME);

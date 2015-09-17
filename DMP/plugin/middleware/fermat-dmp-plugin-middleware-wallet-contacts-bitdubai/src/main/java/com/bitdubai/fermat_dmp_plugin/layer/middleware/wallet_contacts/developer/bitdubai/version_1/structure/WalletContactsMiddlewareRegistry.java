@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactSearch;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsSearch;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
@@ -126,8 +126,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     }
 
     @Override
-    public WalletContactSearch searchWalletContact() {
-        return new WalletContactMiddlewareSearch(errorManager, walletContactsMiddlewareDao);
+    public WalletContactsSearch searchWalletContact(String walletPublicKey) {
+        return new WalletContactsMiddlewareSearch(errorManager, walletContactsMiddlewareDao, walletPublicKey);
     }
 
     @Override

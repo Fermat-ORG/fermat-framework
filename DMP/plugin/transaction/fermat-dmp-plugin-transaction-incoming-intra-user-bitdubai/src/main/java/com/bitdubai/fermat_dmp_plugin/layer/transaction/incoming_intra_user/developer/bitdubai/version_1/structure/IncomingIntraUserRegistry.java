@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -23,7 +24,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserExpectedTransactionNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.EventWrapper;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,7 +56,7 @@ public class IncomingIntraUserRegistry {
     /*
      * Eevnts table management
      */
-    public void saveNewEvent(EventType eventType, EventSource eventSource) throws IncomingIntraUserCantSaveEventException {
+    public void saveNewEvent(FermatEnum eventType, EventSource eventSource) throws IncomingIntraUserCantSaveEventException {
         try {
             this.incomingIntraUserDao.saveNewEvent (eventType,eventSource);
         } catch (CantInsertRecordException e) {

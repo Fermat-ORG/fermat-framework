@@ -35,7 +35,7 @@ public class WalletResources implements com.bitdubai.fermat_api.layer.dmp_networ
 
     @Override
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return null;
+        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
     }
 
     @Override
@@ -63,11 +63,11 @@ public class WalletResources implements com.bitdubai.fermat_api.layer.dmp_networ
 
     @Override
     public String getFontStyle(String styleName) {
-        return null;
+        return "Method: getFontStyle - NO TIENE valor ASIGNADO para RETURN";
     }
 
     @Override
     public String getLayoutResource(String layoutName) throws CantGetResourcesException {
-        return null;
+        return "Method: getLayoutResource - NO TIENE valor ASIGNADO para RETURN";
     }
 }

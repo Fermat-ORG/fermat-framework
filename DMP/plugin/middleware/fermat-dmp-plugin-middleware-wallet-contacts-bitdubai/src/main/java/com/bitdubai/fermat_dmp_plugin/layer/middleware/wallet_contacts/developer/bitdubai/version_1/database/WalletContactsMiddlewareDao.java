@@ -29,8 +29,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInsertCryptoAddressesException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRecord;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.search.SearchField;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.search.SearchOrder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,11 +82,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public List<WalletContactRecord> listWalletContactRecords(List<SearchField> searchFields,
-                                                              List<SearchOrder> searchOrders) throws CantGetAllWalletContactsException {
+    public List<WalletContactRecord> listWalletContactRecords(DatabaseTable walletContactsTable) throws CantGetAllWalletContactsException {
         try {
-            DatabaseTable walletContactsTable = getTableWithFiltersAndOrders(searchFields, searchOrders);
-
             walletContactsTable.loadToMemory();
 
             List<DatabaseTableRecord> records = walletContactsTable.getRecords();
@@ -110,13 +105,10 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public List<WalletContactRecord> listWalletContactRecords(List<SearchField> searchFields,
-                                                              List<SearchOrder> searchOrders,
+    public List<WalletContactRecord> listWalletContactRecords(DatabaseTable walletContactsTable,
                                                               Integer max,
                                                               Integer offset) throws CantGetAllWalletContactsException {
         try {
-            DatabaseTable walletContactsTable = getTableWithFiltersAndOrders(searchFields, searchOrders);
-
             walletContactsTable.setFilterTop(max.toString());
             walletContactsTable.setFilterOffSet(offset.toString());
 
@@ -179,8 +171,6 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "", "There's a problem inserting crypto addresses");
         } catch (CantInsertRecordException e) {
             throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        } catch (Exception e) {
-            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Error.");
         }
     }
 
@@ -219,8 +209,6 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (CantUpdateRecordException exception) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, exception, "", "Cant update record exception.");
-        } catch (Exception e) {
-            throw new CantUpdateWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -253,8 +241,6 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
         } catch (CantLoadTableToMemoryException e) {
             throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
-        } catch (Exception e) {
-            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -287,8 +273,6 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Invalid parameter exception.");
-        } catch (Exception e) {
-            throw new CantGetWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -315,8 +299,6 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Invalid parameter exception.");
-        } catch (Exception e) {
-            throw new CantGetWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -348,8 +330,6 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Invalid parameter exception.");
-        } catch (Exception e) {
-            throw new CantGetWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
 
@@ -420,7 +400,7 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
     private WalletContactRecord buildRecord(DatabaseTableRecord databaseTableRecord) throws InvalidParameterException, CantGetWalletContactException {
 
         UUID   contactId       = databaseTableRecord.getUUIDValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME       );
-        String actorPublicKey  = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
+        String actorPublicKey = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME );
         String actorTypeString = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_TYPE_COLUMN_NAME       );
         String actorAlias      = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME      );
         String actorFirstName  = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME );
@@ -443,18 +423,8 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
         );
     }
 
-    private DatabaseTable getTableWithFiltersAndOrders(List<SearchField> searchFields,
-                                                       List<SearchOrder> searchOrders) {
-
-        DatabaseTable databaseTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
-
-        for(SearchField searchField : searchFields)
-            databaseTable.setStringFilter(searchField.getField(), searchField.getValue(), searchField.getFilterType());
-
-        for(SearchOrder searchOrder : searchOrders)
-            databaseTable.setFilterOrder(searchOrder.getField(), searchOrder.getFilterOrder());
-
-        return databaseTable;
+    public DatabaseTable getWalletContactsTable() {
+        return database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
     }
 
     /**

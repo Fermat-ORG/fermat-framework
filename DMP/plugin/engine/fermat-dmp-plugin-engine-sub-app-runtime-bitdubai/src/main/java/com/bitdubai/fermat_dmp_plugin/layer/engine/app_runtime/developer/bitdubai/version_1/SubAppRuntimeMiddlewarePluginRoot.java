@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.RuntimeFernatComboBox;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatComboBox;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
@@ -38,8 +37,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
@@ -48,7 +47,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitduba
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -75,7 +73,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
      * SubAppRuntimeManager Interface member variables.
      */
 
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     Map<SubApps, SubApp> listSubApp = new HashMap<SubApps, SubApp>();
 
@@ -108,14 +106,14 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
     public void addToNavigationStructure(/*String NavigationStructure, WalletModule*/) {
 
         /*
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
         ((NavigationStructureUpdatedEvent) platformEvent).----------(this.-----);
         eventManager.raiseEvent(platformEvent);
         */
     }
     
     /*
-    PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
+    FermatEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
     ((NavigationStructureUpdatedEvent) platformEvent).--------(this.-------);
     eventManager.raiseEvent(platformEvent);
 */
@@ -127,14 +125,14 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             /**
              * I will initialize the handling of com.bitdubai.platform events.
              */
-            EventListener eventListener;
-            EventHandler eventHandler;
-            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
-            eventHandler = new WalletResourcesInstalledEventHandler();
-            ((WalletResourcesInstalledEventHandler) eventHandler).setSubAppRuntimeManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
+            fermatEventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
+            fermatEventHandler = new WalletResourcesInstalledEventHandler();
+            ((WalletResourcesInstalledEventHandler) fermatEventHandler).setSubAppRuntimeManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             /**
              * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -172,8 +170,8 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
         /**
          * I will remove all the listeners registered with the event manager. 
          */
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
@@ -208,6 +206,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             lastSubapp = subApps;
             return subApp;
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
 
 //        Iterator<Map.Entry<SubApps, SubApp>> eSubApp = listSubApp.entrySet().iterator();

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -51,7 +51,7 @@ import java.util.UUID;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, Vaults.class, ReferenceWallet.class})
+@PrepareForTest({CryptoCurrency.class,Actors.class,Platforms.class,CryptoCurrency.class, CryptoCurrencyVault.class, ReferenceWallet.class})
 
 public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
 
@@ -80,7 +80,7 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
 
     private Platforms mockPlatforms;
 
-    private Vaults mockVaults;
+    private CryptoCurrencyVault mockCryptoCurrencyVault;
 
     private ReferenceWallet mockReferenceWallet;
 
@@ -93,7 +93,7 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
         testOwnerId = UUID.randomUUID();
         mockActors = Actors.INTRA_USER;
         mockPlatforms = Platforms.CRYPTO_BROKER_PLATFORM;
-        mockVaults = Vaults.BITCOIN_VAULT;
+        mockCryptoCurrencyVault = CryptoCurrencyVault.BITCOIN_VAULT;
 
         mockReferenceWallet = ReferenceWallet.COMPOSITE_WALLET_MULTI_ACCOUNT;
 
@@ -123,8 +123,8 @@ public class GetCryptoAddressBookRecordByCryptoAddressTest extends TestCase {
         PowerMockito.when(mockActors.getByCode(anyString())).thenReturn(Actors.INTRA_USER);
         mockStatic(Platforms.class);
         PowerMockito.when(mockPlatforms.getByCode(anyString())).thenReturn(Platforms.CRYPTO_CURRENCY_PLATFORM);
-        mockStatic(Vaults.class);
-        PowerMockito.when(mockVaults.getByCode(anyString())).thenReturn(Vaults.BITCOIN_VAULT);
+        mockStatic(CryptoCurrencyVault.class);
+        PowerMockito.when(mockCryptoCurrencyVault.getByCode(anyString())).thenReturn(CryptoCurrencyVault.BITCOIN_VAULT);
         mockStatic(ReferenceWallet.class);
         PowerMockito.when(mockReferenceWallet.getByCode(anyString())).thenReturn(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
 
