@@ -79,14 +79,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_email"
+            android:src="@drawable/ic_action_email1"
             android:layout_alignParentTop="true"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:layout_alignParentLeft="true"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onItemSelectedClicked"
 
             />
 
@@ -95,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_receive_now"
+            android:src="@drawable/ic_action_receive_now1"
             android:layout_alignParentRight="true"
 
             android:layout_alignParentTop="true"
@@ -103,7 +102,7 @@
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onItemSelectedClicked"
+
 
             />
 
@@ -248,13 +247,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_expand_grey"
                 android:layout_weight="1"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_view_as_list_grey"
-                android:id="@+id/open_history"
-                android:onClick="onItemSelectedClicked"
-                android:layout_weight="1"/>
+
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

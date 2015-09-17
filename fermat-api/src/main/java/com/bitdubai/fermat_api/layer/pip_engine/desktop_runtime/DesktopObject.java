@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_engine.desktop_runtime;
+package com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;

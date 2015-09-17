@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantGetActorException;
@@ -434,6 +435,31 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
+    }
+
+    @Override
+    public List<CryptoWalletTransaction> getTransactionByContact() {
+        return null;
+    }
+
+    @Override
+    public List<PaymentRequest> getSendedPaymentRequest() {
+        return null;
+    }
+
+    @Override
+    public List<PaymentRequest> getReceivedPaymentRequest() {
+        return null;
+    }
+
+    @Override
+    public List<CryptoWalletWalletContact> getContactOrdererByLastSendTransaction() {
+        return null;
+    }
+
+    @Override
+    public List<CryptoWalletWalletContact> getContactOrdererByLastReceiveTransaction() {
+        return null;
     }
 
     @Override
