@@ -11,16 +11,13 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.WebSocket;
@@ -61,14 +58,13 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Construct the json object
          */
         Gson gson = new Gson();
-        JsonParser parser = new JsonParser();
-        JsonObject filters = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
+        DiscoveryQueryParameters discoveryQueryParameters = gson.fromJson(messageContentJsonStringRepresentation, DiscoveryQueryParameters.class);
 
         /*
          * Get the filters
          */
-        PlatformComponentType platformComponentType = gson.fromJson(filters.get(AttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE), PlatformComponentType.class);
-        NetworkServiceType networkServiceType       = gson.fromJson(filters.get(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE), NetworkServiceType.class);
+        PlatformComponentType platformComponentType = discoveryQueryParameters.getPlatformComponentType();
+        NetworkServiceType networkServiceType       = discoveryQueryParameters.getNetworkServiceType();
 
         System.out.println("RequestListComponentRegisterPacketProcessor - platformComponentType = "+platformComponentType);
         System.out.println("RequestListComponentRegisterPacketProcessor - networkServiceType    = "+networkServiceType);
@@ -123,6 +119,31 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         * Send the encode packet to the server
         */
         clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+    }
+
+
+    /**
+     * Filter the PlatformComponentProfile that match with the discoveryQueryParameters
+     *
+     * @param list
+     * @param discoveryQueryParameters
+     */
+    private void applyDiscoveryQueryParams(List<PlatformComponentProfile>  list, DiscoveryQueryParameters discoveryQueryParameters){
+
+        /*
+         * Apply the filter
+         */
+        for (PlatformComponentProfile platformComponentProfile: list) {
+
+
+
+
+
+
+
+
+        }
+
     }
 
     /**
