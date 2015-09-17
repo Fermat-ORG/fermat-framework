@@ -690,38 +690,10 @@ public enum EventType implements FermatEnum {
         public FermatEvent getEvent() {
             return new IncomingMoneyNotificationEvent(this);
         }
-    },
-
-
-    /**
-     * Declaration of the Web Socket Communication Layer Events
-     */
-    COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION("CL_CRCN") {
-        public FermatEventListener getListener(FermatEventMonitor eventMonitor) {
-            return new CompleteComponentRegistrationNotificationEventListener(this, eventMonitor);
-        }
-        public FermatEvent getEvent() {
-            return new CompleteComponentRegistrationNotificationEvent(this);
-        }
-    },
-
-    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_CRLCRN") {
-        public FermatEventListener getListener(FermatEventMonitor eventMonitor) {
-            return null;
-        }
-        public FermatEvent getEvent() {
-            return null;
-        }
-    },
-
-    COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("CL_CCCRN") {
-        public FermatEventListener getListener(FermatEventMonitor eventMonitor) {
-            return null;
-        }
-        public FermatEvent getEvent() {
-            return null;
-        }
     };
+
+
+
 
 
     /**

@@ -4,13 +4,13 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.CompleteComponentRegistrationNotificationEventListener</code> is
@@ -27,26 +27,48 @@ public class CompleteComponentRegistrationNotificationEventListener implements F
     private EventType eventType;
     private FermatEventHandler eventHandler;
 
+    /**
+     * Constructor with parameters
+     *
+     * @param eventType
+     * @param eventMonitor
+     */
     public CompleteComponentRegistrationNotificationEventListener(EventType eventType, FermatEventMonitor eventMonitor){
         this.eventType = eventType;
         this.eventMonitor = eventMonitor;
     }
 
+    /**
+     * (non-javadoc)
+     * @see FermatEventListener#getEventType()
+     */
     @Override
     public EventType getEventType() {
         return eventType;
     }
 
+    /**
+     * (non-javadoc)
+     * @see FermatEventListener#setEventHandler(FermatEventHandler)
+     */
     @Override
     public void setEventHandler(FermatEventHandler eventHandler) {
         this.eventHandler = eventHandler;
     }
 
+    /**
+     * (non-javadoc)
+     * @see FermatEventListener#getEventHandler()
+     */
     @Override
     public FermatEventHandler getEventHandler() {
         return this.eventHandler;
     }
 
+    /**
+     * (non-javadoc)
+     * @see FermatEventListener#raiseEvent(FermatEvent)
+     */
     @Override
     public void raiseEvent(FermatEvent platformEvent) {
 
