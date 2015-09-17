@@ -1,14 +1,12 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.interfaces;
 
 /**
  * Created by natalia on 16/09/15.
  */
 
-import java.util.List;
-
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.interfaces.CryptoCustomerInformation</code>
- * provides the method to extract information about a crypto customer.
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.interfaces.CryptoCustomerInformation</code>
+ * provides the method to extract information about an crypto customer.
  */
 public interface CryptoCustomerInformation {
     /**
