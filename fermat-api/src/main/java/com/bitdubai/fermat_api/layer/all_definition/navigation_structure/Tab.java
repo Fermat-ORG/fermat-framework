@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 
 
 /**
- * Created by rodrigo on 2015.07.17..
+ * Created by Furszyfer Matias on 2015.07.17..
  */
 public class Tab implements FermatTab {
 
@@ -15,6 +15,8 @@ public class Tab implements FermatTab {
      * Tab class member variables
      */
     String label;
+
+    byte[] icon;
 
     Fragments fragment;
 
@@ -42,6 +44,10 @@ public class Tab implements FermatTab {
         return this.fragment;
     }
 
+    public byte[] getIcon() {
+        return icon;
+    }
+
     /**
      * Tab class setters
      */
@@ -51,5 +57,9 @@ public class Tab implements FermatTab {
 
     public void setFragment(Fragments fragment){
         this.fragment = fragment;
+    }
+
+    public void setIcon(byte[] icon) {
+        this.icon = icon;
     }
 }

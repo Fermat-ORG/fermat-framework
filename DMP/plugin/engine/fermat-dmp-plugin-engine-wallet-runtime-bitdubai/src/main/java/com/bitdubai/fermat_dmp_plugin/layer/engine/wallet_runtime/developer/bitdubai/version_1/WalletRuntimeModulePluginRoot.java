@@ -1285,7 +1285,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Bitdubai Bitcoin Reference Wallet");
+        runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");
         runtimeTitleBar.setLabelSize(16);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
