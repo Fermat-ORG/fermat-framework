@@ -276,8 +276,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         }
     }
 
-    private void persistsGenesisAddress(UUID tranasactionId, String genesisAddress){
-        //TODO: implement this 17/09/2015
+    private void persistsGenesisAddress(UUID transactionId, String genesisAddress) throws CantPersistDigitalAssetException {
+        this.assetIssuingTransactionDao.persistGenesisAddress(transactionId, genesisAddress);
     }
 
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
@@ -287,11 +287,16 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          * Este método lo usaré para pedir las transacciones de cada digital asset, mucho de lo que estaba en este método ahora pertenece al
          * método issueDigitalAssets.
          */
-        //Primero, asigno un UUID interno
-        UUID transactionUUID=generateTransactionUUID();
-        //Solicito la genesisAddress
-        String genesisAddress=requestHashGenesisTransaction();
-        //La persisto en base de datos
+        try{
+            //Primero, asigno un UUID interno
+            UUID transactionUUID=generateTransactionUUID();
+            //Solicito la genesisAddress
+            String genesisAddress=requestHashGenesisTransaction();
+            //La persisto en base de datos
+            persistsGenesisAddress(transactionUUID,genesisAddress);
+        } catch (CantPersistDigitalAssetException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis Address in database");
+        }
 
 
     }

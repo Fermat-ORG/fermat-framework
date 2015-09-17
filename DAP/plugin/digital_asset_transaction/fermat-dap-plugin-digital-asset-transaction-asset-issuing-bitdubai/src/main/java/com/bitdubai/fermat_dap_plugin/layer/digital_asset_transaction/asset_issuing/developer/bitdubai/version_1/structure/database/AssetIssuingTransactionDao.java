@@ -250,8 +250,23 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public void persistGenesisTransaction(UUID transactionID, String genesisAddress){
-        //TODO: implement this 17/09/2015
+    public void persistGenesisAddress(UUID transactionID, String genesisAddress)throws CantPersistDigitalAssetException{
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            DatabaseTableRecord record = databaseTable.getEmptyRecord();
+            record.setUUIDValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID, transactionID);
+            record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME, genesisAddress);
+            record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.GENESIS_OBTAINED.getCode());
+            databaseTable.insertRecord(record);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistDigitalAssetException(exception, "Persisting Genesis Address in database","Cannot open or find the database");
+        } catch (CantInsertRecordException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistDigitalAssetException(exception, "Persisting Genesis Address in database","Cannot insert a new record in database");
+        }
     }
 
     public boolean isTransactionIdUsed(UUID transactionId)throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException{

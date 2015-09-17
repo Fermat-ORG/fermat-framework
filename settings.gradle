@@ -537,12 +537,12 @@ project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new Fil
 include ':fermat-dap-android-sub-app-asset-factory-bitdubai'
 project(':fermat-dap-android-sub-app-asset-factory-bitdubai').projectDir = new File('DAP/android/sub_apps/fermat-dap-android-sub-app-asset-factory-bitdubai')
 
-// Desktops
-include ':fermat-dap-desktop-sub-app-manager-bitdubai'
-project(':fermat-dap-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-desktop-sub-app-manager-bitdubai')
+// Desktops removed by Manuel Perez on 17/09/2015 - Cannot compile the app
+//include ':fermat-dap-desktop-sub-app-manager-bitdubai'
+//project(':fermat-dap-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-desktop-sub-app-manager-bitdubai')
 
-include ':fermat-dap-desktop-wallet-manager-bitdubai'
-project(':fermat-dap-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-desktop-wallet-manager-bitdubai')
+//include ':fermat-dap-desktop-wallet-manager-bitdubai'
+//project(':fermat-dap-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-desktop-wallet-manager-bitdubai')
 
 
 // BCH
