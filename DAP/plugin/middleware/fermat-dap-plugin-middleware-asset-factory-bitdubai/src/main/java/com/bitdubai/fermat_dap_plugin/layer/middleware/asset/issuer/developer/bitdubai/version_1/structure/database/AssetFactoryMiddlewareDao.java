@@ -22,6 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.Contract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
@@ -80,15 +81,12 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN, assetFactory.getDescription());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN, assetFactory.getAssetIssuerIdentityPublicKey());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN, assetFactory.getState().getCode());
-        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_CATEGORY_COLUMN, assetFactory.getWalletCategory().getCode());
-        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_TYPE_COLUMN, assetFactory.getWalletType().getCode());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN, assetFactory.getFee());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, assetFactory.getAmount());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, assetFactory.getQuantity());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, assetFactory.getCreationTimestamp().toString());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, assetFactory.getLastModificationTimestamp().toString());
-        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_PUBLIC_KEY_COLUMN, assetFactory.getWalletPublicKey().toString());
-        //TODO: Falta Genesis Transaction
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, assetFactory.getAssetBehavior().getCode());
 
         return record;
     }
@@ -129,7 +127,8 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         Resource resource = null;
 
         resource = assetFactory.getResource();
-        if (resource != null)
+        //TODO:Revisar assetFactory.getResource()
+        if (resource != null) //Eliminar
         {
             DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
 
@@ -169,13 +168,11 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
 
     private DatabaseTransaction addContractRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
     {
-        //Contract contract = null;
-
         ContractProperty contractProperty = null;
 
-        //contract = assetFactory.getContract();
         contractProperty = assetFactory.getContractProperty();
-        if (contractProperty != null)
+        //TODO: Revisar assetFactory.getContractProperty()
+        if (contractProperty != null) //Eliminar
         {
             DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
@@ -285,12 +282,13 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             int quantity;
             long amount;
             long fee;
-            WalletCategory walletCategory;
-            WalletType walletType;
             Timestamp creationTimestamp;
             Timestamp lastModificationTimestamp;
-            String walletPublicKey;
             String assetIssuerIdentityPublicKey;
+            boolean isRedeemable;
+            Timestamp expirationDate;
+            AssetBehavior assetBehavior;
+
             @Override
             public String getPublicKey() {
                 return publicKey;
@@ -412,23 +410,33 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             }
 
             @Override
-            public WalletCategory getWalletCategory() {
-                return walletCategory;
+            public boolean getIsRedeemable() {
+                return isRedeemable;
             }
 
             @Override
-            public void setWalletCategory(WalletCategory walletCategory) {
-                this.walletCategory = walletCategory;
+            public void setIsRedeemable(boolean isRedeemable) {
+                this.isRedeemable = isRedeemable;
             }
 
             @Override
-            public WalletType getWalletType() {
-                return walletType;
+            public Timestamp getExpirationDate() {
+                return expirationDate;
             }
 
             @Override
-            public void setWalletType(WalletType walletType) {
-                this.walletType = walletType;
+            public void setExpirationDate(Timestamp expirationDate) {
+                this.expirationDate = expirationDate;
+            }
+
+            @Override
+            public AssetBehavior getAssetBehavior() {
+                return assetBehavior;
+            }
+
+            @Override
+            public void setAssetBehavior(AssetBehavior assetBehavior) {
+                this.assetBehavior = assetBehavior;
             }
 
             @Override
@@ -449,16 +457,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             @Override
             public void setLastModificationTimeststamp(Timestamp timestamp) {
                 this.lastModificationTimestamp = timestamp;
-            }
-
-            @Override
-            public String getWalletPublicKey() {
-                return walletPublicKey;
-            }
-
-            @Override
-            public void setWalletPublicKey(String walletPublicKey) {
-                this.walletPublicKey = walletPublicKey;
             }
 
             @Override
@@ -488,29 +486,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         assetFactory.setQuantity(assetFactoriesRecord.getIntegerValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN));
         assetFactory.setCreationTimestamp(Timestamp.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN)));
         assetFactory.setLastModificationTimeststamp(Timestamp.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN)));
-
-        if (assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_TYPE_COLUMN) != null)
-        {
-            try {
-                assetFactory.setWalletType(WalletType.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_TYPE_COLUMN)));
-            }
-            catch (InvalidParameterException e)
-            {
-                assetFactory.setWalletType(WalletType.REFERENCE);
-            }
-        }
-
-        if (assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_CATEGORY_COLUMN) != null)
-        {
-            try {
-                assetFactory.setWalletCategory(WalletCategory.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_CATEGORY_COLUMN)));
-            }
-            catch (InvalidParameterException e)
-            {
-                assetFactory.setWalletCategory(WalletCategory.REFERENCE_WALLET);
-            }
-        }
-
+        assetFactory.setAssetBehavior(AssetBehavior.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN)));
 
         return assetFactory;
     }

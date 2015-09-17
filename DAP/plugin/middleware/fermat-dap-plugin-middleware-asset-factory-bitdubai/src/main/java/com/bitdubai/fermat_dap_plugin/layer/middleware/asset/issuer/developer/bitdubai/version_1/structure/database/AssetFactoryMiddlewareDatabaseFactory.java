@@ -52,7 +52,7 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
             /**
              * I can not handle this situation.
              */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "Asset Factory", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
         }
 
         /**
@@ -77,9 +77,7 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_TYPE_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_CATEGORY_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
 
             table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FIRST_KEY_COLUMN);
 
@@ -87,7 +85,7 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Asset Factory", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
             /**
@@ -109,7 +107,7 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Asset Factory", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
             /**
@@ -128,7 +126,7 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Asset Factory", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
@@ -136,7 +134,7 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "Asset Factory", "There is a problem with the ownerId of the database.");
         }
         return database;
     }
