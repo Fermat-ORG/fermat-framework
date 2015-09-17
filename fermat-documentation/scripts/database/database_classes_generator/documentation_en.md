@@ -31,7 +31,7 @@ List databaseTables = [] // table list definition
 databaseTables << [
     name: "Project", // name of the table
     columns: [ // columns of the table
-        ["ID", "STRING", "36", "true"], // name of the column, data fermatPacketType, size, if is primary or not
+        ["ID", "STRING", "36", "true"], // name of the column, data type, size, if is primary or not
         ["Developer Public Key", "STRING", "100", "false"],
         ["Name", "STRING", "100", "false"],
         ["Wallet Type", "STRING", "100", "false"]

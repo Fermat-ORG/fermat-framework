@@ -42,6 +42,8 @@ public class TabStrip implements FermatTabStrip {
 
     String tabsIndicateColor;
 
+    int startItem;
+
     List<Tab> tabs = new ArrayList<>();
 
     public void addTab(Tab tab) {
@@ -175,6 +177,14 @@ public class TabStrip implements FermatTabStrip {
     @Override
     public void setTabsIndicateColor(String tabsIndicateColor) {
         this.tabsIndicateColor = tabsIndicateColor;
+    }
+
+    public int getStartItem() {
+        return startItem;
+    }
+
+    public void setStartItem(int startItem) {
+        this.startItem = startItem;
     }
 
     public void setTabs(List<Tab> tabs) {

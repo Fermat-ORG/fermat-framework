@@ -3,7 +3,7 @@ Story: Crypto Broker Wallet Stock Replenishment
 In order to perform the activities of a Crypto Broker
   As a Crypto Broker
   I need to Replenish my Stock
-Using the Crypto Broker Wallet SubApp
+Using the Crypto Broker Wallet
   And the Crypto Broker Wallet Module
   And the Crypto Money Stock Replenishment Business Transaction Plugin
   And the Cash Money Stock Repenishment Business Transaction Plugin
@@ -29,7 +29,7 @@ Scenario: Creation of a Crypto Money Stock Replenishment Transaction from outsid
   Given I have configured the "Crypto Market Money" I want to use in my Crypto Broker Wallet
   When I create a Crypto Money Stock Replenishment Business Transaction in my Crypto Broker Wallet
   Then the Crypto Broker Wallet should provide me with a Crypto Public Address for the Transaction
-  And the Business Transaction status should be set as PENDING
+    And the Business Transaction status should be set as PENDING
 
 Scenario: Incoming crypto stock arrives through the Blockchain
   Given I have created a Crypto Money Stock Business Transaction
@@ -54,7 +54,7 @@ Scenario: Fiat Offline Replenishment over an existing Stock
   Given I have a Stock in my Crypto Broker Wallet for a "Type of Merchandise"
     And the value of the Stock is "X"
   When I perform a "Stock Business Transaction" with the value of "Y" in the Crypto Broker Wallet
-      And I register it as a "Type of Stock"
+    And I register it as a "Type of Stock"
   Then "Stock Business Transaction" should add a credit in my "Stock Wallet" with the value of "Y"
     And the consolidated balance for the "Stock Wallet" should be "X+Y"
 Permutations:

@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-niche-fermatPacketType-wallet-crypto-loss-protected-wallet-bitdubai
+# fermat-dmp-plugin-niche-type-wallet-crypto-loss-protected-wallet-bitdubai

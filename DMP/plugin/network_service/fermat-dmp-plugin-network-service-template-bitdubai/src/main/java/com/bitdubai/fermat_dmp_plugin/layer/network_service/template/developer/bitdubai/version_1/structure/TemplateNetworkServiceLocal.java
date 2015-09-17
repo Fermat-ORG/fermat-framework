@@ -87,10 +87,11 @@ public class TemplateNetworkServiceLocal implements Observer {
              */
             OutgoingTemplateNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (OutgoingTemplateNetworkServiceMessage) message;
 
+            //TODO ROBERTO CLOUD MEGAFIX
             /*
              * Configure the correct status
              */
-            outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.PENDING_TO_SEND);
+           // outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.PENDING_TO_SEND);
 
             /*
              * Save to the data base table

@@ -78,6 +78,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
@@ -396,9 +397,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 getWalletResourcesProviderManager());
 
         pagertabs.setAdapter(adapter);
+
+        //pagertabs.setCurrentItem();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pagertabs.setPageMargin(pageMargin);
+        pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
         /**
          * Put tabs in pagerSlidingTabsStrp
          */
@@ -775,7 +779,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             /*for (FermatFragments key : activity.getFragments().keySet()) {
                 Fragment fragment = activity.getFragments().get(key);
 
-                switch (fragment.getFermatPacketType()) {
+                switch (fragment.getType()) {
                     case CWP_SHELL_LOGIN:
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
@@ -968,6 +972,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     public NotificationManagerMiddleware getNotificationManager() {
         return (NotificationManagerMiddleware) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION);
+    }
+    /**
+     * Get DesktopRuntimeManager
+     */
+    public DesktopRuntimeManager getDesktopRuntimeManager() {
+        return (DesktopRuntimeManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DESKTOP_RUNTIME);
     }
 
 

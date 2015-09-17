@@ -34,7 +34,7 @@ public class Set_Get_AndroidDatabaseTest {
     private String testDatabaseName_cambio = "testDatabaseName_cambio";
 
     @Before
-    public void Up_Set_Get_AndroidDatabase(){
+    public void up_Set_Get_AndroidDatabase(){
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = shadowOf(mockActivity).getApplicationContext();
 
@@ -44,7 +44,7 @@ public class Set_Get_AndroidDatabaseTest {
     }
 
     @Test
-    public void Name_AndroidDatabase(){
+    public void name_AndroidDatabase(){
         assertThat(testDatabase.getDatabaseName()).isEqualTo(testDatabaseName_cambio);
     }
 }

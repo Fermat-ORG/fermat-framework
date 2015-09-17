@@ -29,7 +29,8 @@ public enum EventSource {
     CRYPTO_ROUTER ("CCR"),
     CRYPTO_VAULT ("CCV"),
     INCOMING_EXTRA_USER("IEU"),
-    INCOMING_INTRA_USER("IIU");
+    INCOMING_INTRA_USER("IIU"),
+    WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN ("WSCCLCL");
 
     private final String code;
 
@@ -88,6 +89,8 @@ public enum EventSource {
                 return INCOMING_EXTRA_USER;
             case "IIU":
                 return INCOMING_INTRA_USER;
+            case "WSCCLCL" :
+                return WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN;
             //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
 
