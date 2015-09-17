@@ -28,8 +28,8 @@ public enum EventSource {
     DEVICE_CONNECTIVITY ("DCO"),
     CRYPTO_ROUTER ("CCR"),
     CRYPTO_VAULT ("CCV"),
-    INCOMING_EXTRA_USER("IEU");
-
+    INCOMING_EXTRA_USER("IEU"),
+    INCOMING_INTRA_USER("IIU");
 
     private final String code;
 
@@ -84,9 +84,10 @@ public enum EventSource {
                 return EventSource.CRYPTO_ROUTER;
             case "CCV":
                 return EventSource.CRYPTO_VAULT;
-            case "IEU":{
+            case "IEU":
                 return INCOMING_EXTRA_USER;
-            }
+            case "IIU":
+                return INCOMING_INTRA_USER;
             //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
 
