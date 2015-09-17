@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments;
+package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
 /**
  * Main Fragment
