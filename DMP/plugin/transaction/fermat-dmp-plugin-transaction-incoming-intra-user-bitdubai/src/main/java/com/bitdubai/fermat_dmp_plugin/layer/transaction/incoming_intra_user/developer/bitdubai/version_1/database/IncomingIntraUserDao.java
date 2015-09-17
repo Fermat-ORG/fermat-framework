@@ -161,7 +161,7 @@ public class IncomingIntraUserDao {
 
     // TODO: Completar método cuando escriba el Relay Agent. El tipo de retorno va a cambiar
     public List<TransactionCompleteInformation> getAllTransactionsToBeApplied(){
-        return null;
+        return new ArrayList<>();
     }
 
 
