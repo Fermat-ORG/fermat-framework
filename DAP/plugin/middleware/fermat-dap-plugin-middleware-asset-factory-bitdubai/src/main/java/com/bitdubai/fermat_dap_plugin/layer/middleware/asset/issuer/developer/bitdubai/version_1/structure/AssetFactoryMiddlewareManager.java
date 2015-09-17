@@ -6,9 +6,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.*;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -61,6 +68,27 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         AssetFactoryMiddlewareDao dao = new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
         return dao;
     }
+
+    //TODO:El metodo privado debe de construir un objeto List<ContractProperty> contractProperties = new ArrayList<>()
+    //De esa forma poder almacenarlo en la tabla de contract seteando la variable assetFactory.setContractProperties
+    //Asi mismo cuando se vaya a enviar el DigitalAsset a la transaccion traer el objeto AssetFactory lleno, y las propiedades del contrato
+    //asignarselas mas adelante al objeto DigitalAssetContract, que a su vez sera seteado a ala propiedad setContract del DigitalAsset
+    //private void saveAssetFactoryInDatabase(As assetFactory) {
+//        DigitalAsset digitalAsset = new DigitalAsset();
+//        DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
+//        List<ContractProperty> contractProperties = new ArrayList<>();
+//        ContractProperty redeemable;
+//        ContractProperty expirationDate;
+//
+//        redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getReemable());
+//        expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, getExpirationDate());
+//
+//        contractProperties.add(redeemable);
+//        contractProperties.add(expirationDate);
+//
+//        assetFactory.setContractProperties(contractProperties);
+    //}
+
 
     @Override
     public void setErrorManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager) {

@@ -111,14 +111,12 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
     }
 
     private DatabaseTableRecord getContractDataRecord(String assetPublicKey,
-                                                      //UUID id,
                                                       String name,
                                                       String value) throws DatabaseOperationException, MissingAssetDataException
     {
         DatabaseTable databaseTable = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
-        //record.setUUIDValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ID_COLUMN, id);
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, assetPublicKey);
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN, value);
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN, name);
@@ -144,14 +142,25 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                 transaction.addRecordToInsert(table, resourceRecord);
             }
             else{
-                ////update Records
+                //update Records
                 table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, resourceRecord);
             }
 
             if(assetFactory.getResources() != null)
             {
-                //TODO: Verificar si debe haber una lista de Resource en la interfaz AseetFactory, para implementar dicha logica
+                for (Resource resources : assetFactory.getResources()) {
+                    DatabaseTableRecord record = getResourceDataRecord(assetFactory.getPublicKey(), resources);
+                    filter.setValue(resources.getId().toString());
+                    if (isNewRecord(table, filter))
+                        //New Records
+                        transaction.addRecordToInsert(table, record);
+                    else{
+                        //update Records
+                        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                        transaction.addRecordToUpdate(table, record);
+                    }
+                }
             }
         }
 
@@ -186,7 +195,18 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
 
             if(assetFactory.getContractProperties() != null)
             {
-                //TODO: Verificar si debe haber una lista de Contract en la interfaz AseetFactory, para implementar dicha logica
+                for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
+                    DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(), contractProperties.getValue().toString());
+                    filter.setValue(contractProperties.getName());
+                    if (isNewRecord(table, filter))
+                        //New Records
+                        transaction.addRecordToInsert(table, record);
+                    else{
+                        //update Records
+                        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                        transaction.addRecordToUpdate(table, record);
+                    }
+                }
             }
         }
 

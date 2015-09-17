@@ -81,14 +81,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_email"
+            android:src="@drawable/ic_action_email1"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onItemSelectedClicked"
 
             />
 
