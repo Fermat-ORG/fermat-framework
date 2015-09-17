@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exception;
+package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by francisco on 07/09/15.
  */
-public class CantGetJsonObjectException extends FermatException {
+public class CantGetInputStreamException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -15,9 +15,9 @@ public class CantGetJsonObjectException extends FermatException {
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
 
-    public static final String DEFAULT_MESSAGE = "CANT GET JSON OBJECT";
+    public static final String DEFAULT_MESSAGE ="CANT GET INPUTSTREAM";
 
-    public CantGetJsonObjectException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetInputStreamException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
