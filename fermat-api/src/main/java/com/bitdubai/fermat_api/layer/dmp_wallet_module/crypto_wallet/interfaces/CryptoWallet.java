@@ -164,4 +164,20 @@ public interface CryptoWallet extends Serializable{
               String deliveredToActorPublicKey,
               Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
 
+
+    //TODO:  LEON ponele lo que necesites de arriba, me creo los metodos y los hardcodeo
+    //TODO:  MALO TEAM FOREVER
+
+    List<CryptoWalletTransaction> getTransactionByContact();
+
+    List<PaymentRequest> getSendedPaymentRequest();
+
+    List<PaymentRequest> getReceivedPaymentRequest();
+
+    List<CryptoWalletWalletContact>  getContactOrdererByLastSendTransaction();
+
+    List<CryptoWalletWalletContact>  getContactOrdererByLastReceiveTransaction();
+
+
+
 }
