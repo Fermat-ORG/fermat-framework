@@ -691,6 +691,8 @@ public enum EventType implements FermatEnum {
             return new IncomingMoneyNotificationEvent(this);
         }
     },
+
+
     /**
      * Declaration of the Web Socket Communication Layer Events
      */
@@ -705,19 +707,19 @@ public enum EventType implements FermatEnum {
 
     COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_CRLCRN") {
         public FermatEventListener getListener(FermatEventMonitor eventMonitor) {
-            return new CompleteComponentRegistrationNotificationEventListener(this, eventMonitor);
+            return null;
         }
         public FermatEvent getEvent() {
-            return new CompleteComponentRegistrationNotificationEvent(this);
+            return null;
         }
     },
 
     COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("CL_CCCRN") {
         public FermatEventListener getListener(FermatEventMonitor eventMonitor) {
-            return new CompleteComponentRegistrationNotificationEventListener(this, eventMonitor);
+            return null;
         }
         public FermatEvent getEvent() {
-            return new CompleteComponentRegistrationNotificationEvent(this);
+            return null;
         }
     };
 
