@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-niche-fermatPacketType-wallet-multi-account-wallet-bitdubai
+# fermat-dmp-plugin-niche-type-wallet-multi-account-wallet-bitdubai
