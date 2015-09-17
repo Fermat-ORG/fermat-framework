@@ -28,17 +28,20 @@ public class AssetUserActorDatabaseConstants {
      */
     public static final String ASSET_USER_RELATION_ASSET_ISSUER_TABLE_NAME = "asset_user_relation_asset_issuer_actor";
 
+    static final String ASSET_USER_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME = "asset_user_relation_issuer_publicKey_actor";
     static final String ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME = "asset_issuer_name_actor";
     static final String ASSET_USER_RELATION_ISSUER_IDENTITY_COLUMN_NAME = "asset_issuer_identity_actor";
-    static final String ASSET_USER_ASSET_NAME_COLUMN_NAME = "asset_user_asset_name_actor";
-    static final String ASSET_USER_ASSET_DESCRIPTION_COLUMN_NAME = "asset_user_asset_descriptiom_actor";
-    static final String ASSET_USER_ASSET_ID_COLUMN_NAME = "asset_user_asset_id_actor";
-    static final String ASSET_USER_ASSET_HASH_COLUMN_NAME = "asset_user_asset_hash_actor";
-    static final String ASSET_USER_ASSET_STATUS_COLUMN_NAME = "asset_user_asset_status_actor";
-    static final String ASSET_USER_ASSET_RESOURCES_COLUMN_NAME = "asset_user_asset_resource_actor";
-    static final String ASSET_USER_ASSET_AMOUNT_COLUMN_NAME = "asset_user_asset_amount_actor";
-    static final String ASSET_USER_ASSET_CURRENCY_COLUMN_NAME = "asset_user_asset_currency_actor";
-    static final String ASSET_USER_ASSET_EXPIRATION_DATE_COLUMN_NAME = "asset_expiration_date_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_NAME_COLUMN_NAME = "asset_user_asset_name_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_DESCRIPTION_COLUMN_NAME = "asset_user_asset_descriptiom_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_ID_COLUMN_NAME = "asset_user_asset_id_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_HASH_COLUMN_NAME = "asset_user_asset_hash_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_STATUS_COLUMN_NAME = "asset_user_asset_status_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_RESOURCES_COLUMN_NAME = "asset_user_asset_resource_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_AMOUNT_COLUMN_NAME = "asset_user_asset_amount_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_CURRENCY_COLUMN_NAME = "asset_user_asset_currency_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_EXPIRATION_DATE_COLUMN_NAME = "asset_expiration_date_actor";
     static final String ASSET_USER_RELATION_REDEEMPTION_TIMESTAMP_COLUMN_NAME = "asset_user_redeemption_timestamp_actor";
     static final String ASSET_USER_RELATION_REDEEMPTION_DATE_COLUMN_NAME = "asset_user_redeemption_date_actor";
+
+    static final String ASSET_USER_RELATION_ISSUER_FIRST_KEY_COLUMN = "asset_user_relation_issuer_publicKey_actor";
 }

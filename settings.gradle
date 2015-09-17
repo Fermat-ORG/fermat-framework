@@ -1,4 +1,4 @@
-include ':fermat-android-api', ':fermat-dap-desktop-wallet-manager-bitdubai'
+include ':fermat-android-api'
 include ':fermat-android-core'
 
 include ':fermat-api'

@@ -38,7 +38,7 @@ public class AssetIssuerActorDatabaseConstants {
     static final String ASSET_ISSUER_RELATION_REDEEM_POINT_FIRST_KEY_COLUMN = "asset_issuer_redeem_point_publicKey_actor";
 
     /**
-     * Asset Issuer relation Asset User table definition.
+     * Asset Issuer relation Asset User Associate table definition.
      */
     public static final String ASSET_ISSUER_RELATION_USER_TABLE_NAME = "asset_issuer_relation_user_actor";
 

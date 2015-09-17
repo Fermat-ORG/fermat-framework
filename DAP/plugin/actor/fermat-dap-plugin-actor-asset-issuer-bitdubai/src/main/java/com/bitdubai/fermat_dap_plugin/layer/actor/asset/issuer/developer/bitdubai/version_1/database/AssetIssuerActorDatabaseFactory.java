@@ -131,6 +131,7 @@ public class AssetIssuerActorDatabaseFactory implements DealsWithPluginDatabaseS
 
         return database;
     }
+
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
