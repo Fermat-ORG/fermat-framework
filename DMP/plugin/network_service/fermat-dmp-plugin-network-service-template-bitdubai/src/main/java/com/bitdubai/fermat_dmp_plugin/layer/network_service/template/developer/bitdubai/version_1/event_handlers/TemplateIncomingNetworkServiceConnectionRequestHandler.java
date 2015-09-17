@@ -57,8 +57,7 @@ public class TemplateIncomingNetworkServiceConnectionRequestHandler implements F
              *  TemplateManager make the job
              */
             IncomingNetworkServiceConnectionRequestEvent incomingNetworkServiceConnectionRequestEvent = (IncomingNetworkServiceConnectionRequestEvent) fermatEvent;
-            ((TemplateNetworkServiceManager) this.templateManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getCommunicationChannels(),
-                                                                                                                      incomingNetworkServiceConnectionRequestEvent.getRemoteNetworkServicePublicKey());
+            ((TemplateNetworkServiceManager) this.templateManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getRemoteNetworkServicePublicKey());
 
         }
     }

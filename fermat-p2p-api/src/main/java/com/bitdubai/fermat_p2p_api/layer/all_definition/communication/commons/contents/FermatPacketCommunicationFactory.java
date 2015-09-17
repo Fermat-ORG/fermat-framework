@@ -33,13 +33,13 @@ public class FermatPacketCommunicationFactory {
      * @param sender
      * @param fermatPacketType
      * @param messageContentJsonString
-     * @param clientPrivateKeyToSing
+     * @param privateKeyToSing
      * @return FermatPacket
      */
-    public static FermatPacket constructFermatPacketEncryptedAndSinged(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String clientPrivateKeyToSing) {
+    public static FermatPacket constructFermatPacketEncryptedAndSinged(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String privateKeyToSing) {
 
         String messageHash = AsymmectricCryptography.encryptMessagePublicKey(messageContentJsonString, destination);
-        String signature = AsymmectricCryptography.createMessageSignature(messageHash, clientPrivateKeyToSing);
+        String signature = AsymmectricCryptography.createMessageSignature(messageHash, privateKeyToSing);
 
         return new FermatPacketCommunication(destination, sender, fermatPacketType, messageHash, signature);
     }

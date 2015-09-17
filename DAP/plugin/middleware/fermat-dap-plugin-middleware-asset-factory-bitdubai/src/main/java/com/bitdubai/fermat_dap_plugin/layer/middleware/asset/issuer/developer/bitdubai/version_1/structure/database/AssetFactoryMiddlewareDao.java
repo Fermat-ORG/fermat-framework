@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
@@ -17,10 +20,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.Contract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -155,7 +162,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         return transaction;
     }
 
-    private DatabaseTransaction addResourceContractToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory, UUID id) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
+    private DatabaseTransaction addResourceContractToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
     {
         //Contract contract = null;
 
@@ -168,7 +175,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
             DatabaseTableRecord contractRecord = getContractDataRecord(assetFactory.getPublicKey(), contractProperty.getName(), contractProperty.getValue().toString());
-            DatabaseTableFilter filter = getContractFilter(id.toString());
+            DatabaseTableFilter filter = getContractFilter(contractProperty.getName());
 
             if (isNewRecord(table, filter))
             {
@@ -245,6 +252,329 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         table.loadToMemory();
 
         return table.getRecords();
+    }
+
+    //TODO: Metodo privado para instancia un objeto assetfactory vacio
+    private AssetFactory getEmptyAssetFactory()
+    {
+        AssetFactory assetFactory = new AssetFactory() {
+            String publicKey;
+            String name;
+            String description;
+            Resource resource;
+            List<Resource> resources;
+            DigitalAssetContract digitalAssetContract;
+            ContractProperty contractProperty;
+            State state;
+            List<ContractProperty> contractProperties;
+            int quantity;
+            long amount;
+            long fee;
+            WalletCategory walletCategory;
+            WalletType walletType;
+            Timestamp creationTimestamp;
+            Timestamp lastModificationTimestamp;
+            String walletPublicKey;
+            String assetIssuerIdentityPublicKey;
+            @Override
+            public String getPublicKey() {
+                return publicKey;
+            }
+
+            @Override
+            public void setPublicKey(String publicKey) {
+                this.publicKey = publicKey;
+            }
+
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            @Override
+            public String getDescription() {
+                return description;
+            }
+
+            @Override
+            public void setDescription(String description) {
+                this.description = description;
+            }
+
+            @Override
+            public Resource getResource() {
+                return resource;
+            }
+
+            @Override
+            public void setResource(Resource resource) {
+                this.resource = resource;
+            }
+
+            @Override
+            public List<Resource> getResources() {
+                return resources;
+            }
+
+            @Override
+            public void setResources(List<Resource> resources) {
+                this.resources = resources;
+            }
+
+            @Override
+            public DigitalAssetContract getContract() {
+                return digitalAssetContract;
+            }
+
+            @Override
+            public void setContract(DigitalAssetContract contract) {
+                this.digitalAssetContract = contract;
+            }
+
+            @Override
+            public ContractProperty getContractProperty() {
+                return contractProperty;
+            }
+
+            @Override
+            public void setContractProperty(ContractProperty contractProperty) {
+                this.contractProperty = contractProperty;
+            }
+
+            @Override
+            public List<ContractProperty> getContractProperties() {
+                return contractProperties;
+            }
+
+            @Override
+            public void setContractProperties(List<ContractProperty> contractProperties) {
+                this.contractProperties = contractProperties;
+            }
+
+            @Override
+            public State getState() {
+                return state;
+            }
+
+            @Override
+            public void setState(State state) {
+                this.state = state;
+            }
+
+            @Override
+            public int getQuantity() {
+                return quantity;
+            }
+
+            @Override
+            public void setQuantity(int quantity) {
+                this.quantity = quantity;
+            }
+
+            @Override
+            public long getAmount() {
+                return amount;
+            }
+
+            @Override
+            public void setAmount(long amount) {
+                this.amount = amount;
+            }
+
+            @Override
+            public long getFee() {
+                return fee;
+            }
+
+            @Override
+            public void setFee(long fee) {
+                this.fee = fee;
+            }
+
+            @Override
+            public WalletCategory getWalletCategory() {
+                return walletCategory;
+            }
+
+            @Override
+            public void setWalletCategory(WalletCategory walletCategory) {
+                this.walletCategory = walletCategory;
+            }
+
+            @Override
+            public WalletType getWalletType() {
+                return walletType;
+            }
+
+            @Override
+            public void setWalletType(WalletType walletType) {
+                this.walletType = walletType;
+            }
+
+            @Override
+            public Timestamp getCreationTimestamp() {
+                return creationTimestamp;
+            }
+
+            @Override
+            public void setCreationTimestamp(Timestamp timestamp) {
+                this.creationTimestamp = timestamp;
+            }
+
+            @Override
+            public Timestamp getLastModificationTimestamp() {
+                return lastModificationTimestamp;
+            }
+
+            @Override
+            public void setLastModificationTimeststamp(Timestamp timestamp) {
+                this.lastModificationTimestamp = timestamp;
+            }
+
+            @Override
+            public String getWalletPublicKey() {
+                return walletPublicKey;
+            }
+
+            @Override
+            public void setWalletPublicKey(String walletPublicKey) {
+                this.walletPublicKey = walletPublicKey;
+            }
+
+            @Override
+            public String getAssetIssuerIdentityPublicKey() {
+                return assetIssuerIdentityPublicKey;
+            }
+
+            @Override
+            public void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey) {
+                this.assetIssuerIdentityPublicKey = assetUserIdentityPublicKey;
+            }
+        };
+
+       return assetFactory;
+    }
+
+    private AssetFactory getAssetFactory(DatabaseTableRecord assetFactoriesRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
+    {
+        AssetFactory assetFactory = getEmptyAssetFactory();
+
+        assetFactory.setPublicKey(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN));
+        assetFactory.setName(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN));
+        assetFactory.setDescription(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN));
+        assetFactory.setAmount(assetFactoriesRecord.getLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN));
+        assetFactory.setAssetUserIdentityPublicKey(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN));
+        assetFactory.setFee(assetFactoriesRecord.getLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN));
+        assetFactory.setQuantity(assetFactoriesRecord.getIntegerValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN));
+        assetFactory.setCreationTimestamp(Timestamp.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN)));
+        assetFactory.setLastModificationTimeststamp(Timestamp.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN)));
+
+        if (assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_TYPE_COLUMN) != null)
+        {
+            try {
+                assetFactory.setWalletType(WalletType.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_TYPE_COLUMN)));
+            }
+            catch (InvalidParameterException e)
+            {
+                assetFactory.setWalletType(WalletType.REFERENCE);
+            }
+        }
+
+        if (assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_CATEGORY_COLUMN) != null)
+        {
+            try {
+                assetFactory.setWalletCategory(WalletCategory.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_CATEGORY_COLUMN)));
+            }
+            catch (InvalidParameterException e)
+            {
+                assetFactory.setWalletCategory(WalletCategory.REFERENCE_WALLET);
+            }
+        }
+
+
+        return assetFactory;
+    }
+
+    public void saveAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException
+    {
+        try {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
+
+            DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
+            DatabaseTableRecord assetFactoryRecord = getAssetFactoryProjectRecord(assetFactory);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(assetFactory.getPublicKey());
+            filter.setColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, assetFactoryRecord);
+            else {
+                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, assetFactoryRecord);
+
+                transaction = addResourceRecordsToTransaction(transaction, assetFactory);
+
+                transaction = addResourceContractToTransaction(transaction, assetFactory);
+            }
+
+            //I execute the transaction and persist the database side of the asset.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Asset Factory in the database.", null);
+        }
+    }
+
+    public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter filter) throws DatabaseOperationException {
+        Database database= null;
+        try {
+            database = openDatabase();
+            List<AssetFactory> assetFactoryList =  new ArrayList<>();
+
+            // I will add the Asset Factory information from the database
+            for (DatabaseTableRecord assetFactoriesRecord : getAssetFactoryData(filter)){
+
+                AssetFactory assetFactory = getAssetFactory(assetFactoriesRecord);
+
+                List<ContractProperty> contractProperties =  new ArrayList<>();
+                // I will add the contract properties information from database
+                for (DatabaseTableRecord contractpropertyRecords : getContractsData(assetFactory.getPublicKey())){
+                    //TODO: Revisar este objeto contractProperty
+                    ContractProperty contractProperty = new ContractProperty(null, null);
+
+                    contractProperty.setName(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN));
+                    contractProperty.setValue(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN));
+
+                    contractProperties.add(contractProperty);
+                }
+
+                // I will add the resource properties information from database
+
+                assetFactory.setContractProperties(contractProperties);
+
+                //TODO: Falta la tabla recursos
+
+                assetFactoryList.add(assetFactory);
+            }
+
+            database.closeDatabase();
+
+            return assetFactoryList;
+        }catch (Exception e){
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get projects from the database with filter: " + filter.toString(), null);
+        }
+
     }
 
 }
