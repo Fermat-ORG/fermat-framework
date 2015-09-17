@@ -433,8 +433,8 @@ include ':fermat-dap-plugin-wallet-module-redeem-point-bitdubai'
 project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai').projectDir = new File('DAP/plugin/wallet_module/fermat-dap-plugin-wallet-module-redeem-point-bitdubai')
 
 //Sup app module
-include ':fermat-dap-plugin-sub-app-module-asset_factory-bitdubai'
-project(':fermat-dap-plugin-sub-app-module-asset_factory-bitdubai').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset_factory-bitdubai')
+include ':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai'
+project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
 
 include ':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai'
 project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
