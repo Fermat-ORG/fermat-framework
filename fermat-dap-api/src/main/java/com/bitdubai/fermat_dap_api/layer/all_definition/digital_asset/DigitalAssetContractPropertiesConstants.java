@@ -5,6 +5,5 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset;
  */
 public class DigitalAssetContractPropertiesConstants {
     public static final String REDEEMABLE = "redeemable";
-    public static final String TRANSFERABLE = "transferable";
     public static final String EXPIRATION_DATE = "expiration_date";
 }

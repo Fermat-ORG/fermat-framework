@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -257,35 +259,19 @@ public  class ReceiveFragment extends FermatWalletFragment {
             ViewHolder total;
             ViewHolder history;
 
-            if (groupPosition == 0)
-            {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_first_row, parent, false);
+            if (groupPosition == 0) {
+                convertView = inf.inflate(R.layout.wallet_receive_fragment_first_row, parent, false);
 
-                TextView tv;
+                AutoCompleteTextView contact_name = (AutoCompleteTextView) convertView.findViewById(R.id.contact_name);
 
-                tv = (TextView) convertView.findViewById(R.id.notes);
+                Button btn_address = (Button) convertView.findViewById(R.id.btn_address);
 
-
-                tv = (TextView) convertView.findViewById(R.id.amount);
+                Button btn_share = (Button) convertView.findViewById(R.id.btn_share);
 
 
-                tv = (TextView) convertView.findViewById(R.id.when);
+            }else{
 
-
-
-                //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
-
-
-                tv = (TextView) convertView.findViewById(R.id.contact_name);
-
-                //tv.setText("Name");
-            }
-            else
-            {
-
-                //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
-                // if (convertView == null) {
-                if (1 == 1) {
+                if (convertView == null) {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_header, parent, false);
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
@@ -293,8 +279,8 @@ public  class ReceiveFragment extends FermatWalletFragment {
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_receive_profile);
                      send_profile_picture.setTag("ReceiveFromContactActivity|" +groupPosition + "-0");
 
-                    ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
-                    history_picture.setTag("ReceiveAllHistoryActivity|" +groupPosition);
+                    //ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
+                    //history_picture.setTag("ReceiveAllHistoryActivity|" +groupPosition);
 
                     ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_send_message);
                     send_message.setTag("ContactsChatActivity|" + contacts[groupPosition].toString());
@@ -382,7 +368,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
 
 
-                holder.text.setText(getGroup(groupPosition).toString());
+               // holder.text.setText(getGroup(groupPosition).toString());
 
             }
 
