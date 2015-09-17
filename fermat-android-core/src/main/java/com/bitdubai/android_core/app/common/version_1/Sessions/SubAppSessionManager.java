@@ -69,10 +69,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 return null;
                 //throw new FermatException("")
         }
-
-
         return null;
-
     }
 
 

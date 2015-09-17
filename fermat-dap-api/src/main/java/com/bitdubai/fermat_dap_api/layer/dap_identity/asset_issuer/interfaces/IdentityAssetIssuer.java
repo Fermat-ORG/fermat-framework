@@ -8,7 +8,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.Ca
 public interface IdentityAssetIssuer {
 
     /**
-     * Get the alias of the represented translator identity
+     * Get the alias of the represented identity
      *
      * @return String Alias
      */

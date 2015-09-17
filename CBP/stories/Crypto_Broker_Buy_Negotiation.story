@@ -60,7 +60,7 @@ Scenario: Creation of a Buy Negotiation Contract
   When the "Buy Negotiation Contract" is created
   Then "Buy Negotiation Contract" should be marked has NEGOCIACION
     And it should send a message through the Crypto Broker Network Service PLugin with the "Contract" Information to the Crypto Broker
-    And it should be added to a list of Pending Buy Negotiations in the Crypto Customer Wallet
+    And it should be added to a list of Buy Negotiations in the Crypto Customer Wallet
     And it should add a register in the "Buy Negotiation Contract" Transactions Log
 Permutations:
 |Type of Merchandise  |Buy Negotiation Contract   |

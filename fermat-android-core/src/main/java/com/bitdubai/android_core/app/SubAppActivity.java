@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
@@ -119,7 +120,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      * @param fragmentType Type Id of fragment to show
      */
 
-    private void loadFragment(String fragmentType){
+    private void loadFragment(String fragmentType) throws InvalidParameterException {
 
 
         FragmentTransaction transaction;
@@ -510,9 +511,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
             intent.putExtra(WalletActivity.INSTALLED_WALLET, installedWallet);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            finish();
+
 
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -533,10 +535,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                 intent = new Intent(this, com.bitdubai.android_core.app.EditableWalletActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
+                finish();
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
+
 
             }catch (Exception e){
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -573,9 +575,10 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
             intent.putExtra(SubAppActivity.INSTALLED_SUB_APP, installedSubApp);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            finish();
+
 
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -632,7 +635,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
-    private void setOneFragmentInScreen(){
+    private void setOneFragmentInScreen() throws InvalidParameterException {
         RelativeLayout relativeLayout = ((RelativeLayout) findViewById(R.id.only_fragment_container));
         SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
         String subAppType = subAppRuntimeManager.getLastSubApp().getType().getCode();

@@ -508,97 +508,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
-    private String makeOrder() {
-
-        // I check the definition for the oder object, order direction, order columns names
-        // and build the ORDER BY statement
-        String order;
-        StringBuilder strOrder = new StringBuilder();
-
-        if (this.tableOrder != null) {
-            for (int i = 0; i < tableOrder.size(); ++i) {
-
-                switch (tableOrder.get(i).getDirection()) {
-                    case DESCENDING:
-                        strOrder.append(tableOrder.get(i).getColumName())
-                                .append(" DESC ");
-                        break;
-                    case ASCENDING:
-                        strOrder.append(tableOrder.get(i).getColumName());
-                        break;
-                    default:
-                        strOrder.append(" ");
-                        break;
-
-                }
-                if (i < tableOrder.size() - 1)
-                    strOrder.append(" , ");
-            }
-        }
-
-        order = strOrder.toString();
-        if (strOrder.length() > 0) order = " ORDER BY " + order;
-
-        return order;
-    }
-
-
-    private String makeInternalCondition(DatabaseTableFilter filter) {
-
-        StringBuilder strFilter = new StringBuilder();
-
-        strFilter.append(filter.getColumn());
-
-        switch (filter.getType()) {
-            case EQUAL:
-                strFilter.append(" ='")
-                        .append(filter.getValue())
-                        .append("'");
-                break;
-            case GRATER_THAN:
-                strFilter.append(" > ")
-                        .append(filter.getValue());
-                break;
-            case LESS_THAN:
-                strFilter.append(" < ")
-                        .append(filter.getValue());
-                break;
-            case LIKE:
-                strFilter.append(" Like '%")
-                        .append(filter.getValue())
-                        .append("%'");
-                break;
-            default:
-                strFilter.append(" ");
-        }
-        return strFilter.toString();
-    }
-
-    private String makeInternalConditionGroup(List<DatabaseTableFilter> filters, DatabaseFilterOperator operator) {
-
-        StringBuilder strFilter = new StringBuilder();
-
-        for (DatabaseTableFilter filter : filters) {
-            switch (operator) {
-                case AND:
-                    if (strFilter.length() > 0)
-                        strFilter.append(" AND ");
-
-                    strFilter.append(makeInternalCondition(filter));
-                    break;
-                case OR:
-                    if (strFilter.length() > 0)
-                        strFilter.append(" OR ");
-
-                    strFilter.append(makeInternalCondition(filter));
-                    break;
-                default:
-                    strFilter.append(" ");
-            }
-
-        }
-        return strFilter.toString();
-    }
 
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
@@ -708,11 +617,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
                 }
 
             } else {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
             }
             c.close();
             return tableRecord1;
         } catch (Exception e) {
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
         } finally {
             if (database != null)
@@ -753,5 +664,99 @@ public class AndroidDatabaseTable implements DatabaseTable {
     public String toString() {
         return tableName;
     }
+
+
+    private String makeOrder() {
+
+        // I check the definition for the oder object, order direction, order columns names
+        // and build the ORDER BY statement
+        String order;
+        StringBuilder strOrder = new StringBuilder();
+
+        if (this.tableOrder != null) {
+            for (int i = 0; i < tableOrder.size(); ++i) {
+
+                switch (tableOrder.get(i).getDirection()) {
+                    case DESCENDING:
+                        strOrder.append(tableOrder.get(i).getColumName())
+                                .append(" DESC ");
+                        break;
+                    case ASCENDING:
+                        strOrder.append(tableOrder.get(i).getColumName());
+                        break;
+                    default:
+                        strOrder.append(" ");
+                        break;
+
+                }
+                if (i < tableOrder.size() - 1)
+                    strOrder.append(" , ");
+            }
+        }
+
+        order = strOrder.toString();
+        if (strOrder.length() > 0) order = " ORDER BY " + order;
+
+        return order;
+    }
+
+
+    private String makeInternalCondition(DatabaseTableFilter filter) {
+
+        StringBuilder strFilter = new StringBuilder();
+
+        strFilter.append(filter.getColumn());
+
+        switch (filter.getType()) {
+            case EQUAL:
+                strFilter.append(" ='")
+                        .append(filter.getValue())
+                        .append("'");
+                break;
+            case GRATER_THAN:
+                strFilter.append(" > ")
+                        .append(filter.getValue());
+                break;
+            case LESS_THAN:
+                strFilter.append(" < ")
+                        .append(filter.getValue());
+                break;
+            case LIKE:
+                strFilter.append(" Like '%")
+                        .append(filter.getValue())
+                        .append("%'");
+                break;
+            default:
+                strFilter.append(" ");
+        }
+        return strFilter.toString();
+    }
+
+    private String makeInternalConditionGroup(List<DatabaseTableFilter> filters, DatabaseFilterOperator operator) {
+
+        StringBuilder strFilter = new StringBuilder();
+
+        for (DatabaseTableFilter filter : filters) {
+            switch (operator) {
+                case AND:
+                    if (strFilter.length() > 0)
+                        strFilter.append(" AND ");
+
+                    strFilter.append(makeInternalCondition(filter));
+                    break;
+                case OR:
+                    if (strFilter.length() > 0)
+                        strFilter.append(" OR ");
+
+                    strFilter.append(makeInternalCondition(filter));
+                    break;
+                default:
+                    strFilter.append(" ");
+            }
+
+        }
+        return strFilter.toString();
+    }
+
 }
 

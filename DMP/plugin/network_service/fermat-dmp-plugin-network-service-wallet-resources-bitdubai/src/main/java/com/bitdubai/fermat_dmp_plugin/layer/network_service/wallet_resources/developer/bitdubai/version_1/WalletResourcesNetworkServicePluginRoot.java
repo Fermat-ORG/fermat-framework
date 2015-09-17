@@ -5,15 +5,15 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.WalletInstalationProgress;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
@@ -44,8 +44,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.dev
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -97,7 +97,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -147,13 +147,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat-wallet-resources/master/";
 
 
-    private final String localStoragePath="wallet-resources/";
+    private final String LOCAL_STORAGE_PATH="wallet-resources/";
 
 
     /**
      *  Wallet instalation progress
      */
-    private WalletInstalationProgress walletInstalationProgress;;
+    private InstalationProgress instalationProgress;;
 
     //para testear
     private Map<String, byte[]> imagenes;
@@ -176,15 +176,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              * I will initialize the handling of com.bitdubai.platform events.
              */
             setUp();
-            EventListener eventListener;
-            EventHandler eventHandler;
+            FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
 
-            eventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
-            eventHandler = new BegunWalletInstallationEventHandler();
-            ((BegunWalletInstallationEventHandler) eventHandler).setWalletResourcesInstalationManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
+            fermatEventHandler = new BegunWalletInstallationEventHandler();
+            ((BegunWalletInstallationEventHandler) fermatEventHandler).setWalletResourcesInstalationManager(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             /**
              *  Create repository in database
@@ -234,8 +234,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
@@ -281,14 +281,14 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
 
-        String localStoragePath=this.localStoragePath+developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+        String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
 
         Skin skin = null;
 
         /**
          * add progress
          */
-        addProgress(WalletInstalationProgress.INSTALATION_START);
+        addProgress(InstalationProgress.INSTALATION_START);
 
         try {
 
@@ -362,14 +362,14 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
 
-        String localStoragePath=this.localStoragePath+developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+        String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
 
         Skin skin = null;
 
         /**
          * add progress
          */
-        addProgress(WalletInstalationProgress.INSTALATION_START);
+        addProgress(InstalationProgress.INSTALATION_START);
 
         try {
 
@@ -425,13 +425,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          *  download language
          */
         String linkToLanguage = linkToRepo + "languages/";
-        downloadLanguageFromRepo(linkToLanguage, skinId, languageName, localStoragePath, screenSize);
+        downloadLanguageFromRepo(linkToLanguage, skinId, languageName, LOCAL_STORAGE_PATH, screenSize);
 
         /**
          *  Fire event Wallet language installed
          */
 
-        /*PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_UNINSTALLED);
+        /*FermatEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_UNINSTALLED);
         WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) platformEvent;
         walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
         eventManager.raiseEvent(platformEvent);*/
@@ -452,10 +452,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          *  Fire event Wallet resource installed
          */
 
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_UNINSTALLED);
-        WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) platformEvent;
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.WALLET_UNINSTALLED);
+        WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) fermatEvent;
         walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
+        eventManager.raiseEvent(fermatEvent);
 
     }
 
@@ -488,8 +488,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
     @Override
-    public WalletInstalationProgress getWalletInstalationProgress(){
-        return  walletInstalationProgress;
+    public InstalationProgress getInstalationProgress(){
+        return instalationProgress;
     }
 
 
@@ -503,6 +503,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public UUID getResourcesId() {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
@@ -539,7 +540,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return null;
+        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
     }
 
 
@@ -595,7 +596,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public String getFontStyle(String styleName, UUID skinId) {
-        return null;
+        return "Method: getFontStyle - NO TIENE valor ASIGNADO para RETURN";
     }
 
 
@@ -650,7 +651,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         try {
 
 
-            skin = checkAndInstallSkinResources(linkToResources,localStoragePath);
+            skin = checkAndInstallSkinResources(linkToResources, LOCAL_STORAGE_PATH);
 
 
             /**
@@ -737,7 +738,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         //TODO: raise a event
         // fire event Wallet resource installed
-        /*PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
+        /*FermatEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
         ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
         eventManager.raiseEvent(platformEvent);
         */
@@ -755,7 +756,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         //TODO: raise a event
         // fire event Wallet resource installed
-        /*PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
+        /*FermatEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
         ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
         eventManager.raiseEvent(platformEvent);
         */
@@ -912,15 +913,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             }
 
 
-            PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
-            WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent=  (WalletNavigationStructureDownloadedEvent) platformEvent;
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED);
+            WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent=  (WalletNavigationStructureDownloadedEvent) fermatEvent;
             walletNavigationStructureDownloadedEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
             walletNavigationStructureDownloadedEvent.setFilename("navigation_structure.xml");
             walletNavigationStructureDownloadedEvent.setSkinId(skinId);
             walletNavigationStructureDownloadedEvent.setXmlText(navigationStructureXML);
             walletNavigationStructureDownloadedEvent.setLinkToRepo(localStoragePath);
             walletNavigationStructureDownloadedEvent.setWalletPublicKey(walletPublicKey);
-            eventManager.raiseEvent(platformEvent);
+            eventManager.raiseEvent(fermatEvent);
 
 
 
@@ -1265,8 +1266,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
-    private void addProgress(WalletInstalationProgress walletInstalationProgress){
-        this.walletInstalationProgress=walletInstalationProgress;
+    private void addProgress(InstalationProgress instalationProgress){
+        this.instalationProgress = instalationProgress;
     }
 
 

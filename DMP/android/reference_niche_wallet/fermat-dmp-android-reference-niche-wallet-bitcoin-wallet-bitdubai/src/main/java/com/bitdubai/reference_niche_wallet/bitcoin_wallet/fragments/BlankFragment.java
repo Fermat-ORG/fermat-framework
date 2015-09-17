@@ -1,7 +1,11 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -9,18 +13,24 @@ import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.squareup.picasso.Picasso;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -31,6 +41,8 @@ import java.io.InputStream;
 import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,166 +105,325 @@ public class BlankFragment extends FermatFragment {
 
         boolean firstElement = true;
 
-        try {
+        List<View> lstViews = new ArrayList<View>();
 
-            InputStream inputStream = getActivity().getApplication().getAssets().open("xml/fragment_blank.xml");
-
-
-
-
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(inputStream, null);
-
-            //xpp.setInput(new FileReader("/path/to/layout.xml"));
-
-            //LayoutInflater inflater1 =
-            //      (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            // contentView = inflater.inflate(xpp, null);
+        List<Integer> lstViewsDepth = new ArrayList<Integer>();
 
 
 
-            int eventType = xpp.getEventType();
-
-            View auxView = null;
-
-            ViewGroup auxViewGroup =null;
-
-            ViewGroup rootView = null;
-
-
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                String name = null;
-                switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT:
-                        //products = new ArrayList();
-                        rootView = null;
-                        break;
-                    case XmlPullParser.START_TAG:
-                        name = xpp.getName();
-                        System.out.println("Comienza tag: " + name);
-                        switch (name) {
-                            case "android.support.v4.widget.SwipeRefreshLayout":
-                                auxViewGroup = new android.support.v4.widget.SwipeRefreshLayout(getActivity());
-                                break;
-                            case "ScrollView":
-                                auxViewGroup = new ScrollView(getActivity());
-                                break;
-                            case "LinearLayout":
-                                auxViewGroup = new LinearLayout(getActivity());
-                                break;
-                            case "GridLayout":
-                                auxViewGroup = new GridLayout(getActivity());
-                                break;
-                            case "Space":
-                                auxView = new Space(getActivity());
-                                break;
-                            case "TextView":
-                                auxView = new TextView(getActivity());
-                                //if(!firstElement && auxView!=null){
-                                 //   viewGroup.addView(loadAtributes(auxView, xpp));
-                                //}
-                                break;
-                            case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
-                                auxView = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati(getActivity());
-                                break;
-
-                        }
-
-
-                        //auxView = loadAtributes(auxView, xpp);
-
-//                        for(int i=0;i<xpp.getAttributeCount();i++){
-//                            System.out.println(xpp.getAttributeName(i));
+       // try {
+//
+//            InputStream inputStream = getActivity().getApplication().getAssets().open("xml/fragment_blank.xml");
+//
+//
+//
+//
+//            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+//            factory.setNamespaceAware(true);
+//            XmlPullParser xpp = factory.newPullParser();
+//            xpp.setInput(inputStream, null);
+//
+//            //xpp.setInput(new FileReader("/path/to/layout.xml"));
+//
+//
+//
+//
+//
+//            int eventType = xpp.getEventType();
+//
+//            View auxView = null;
+//
+//            ViewGroup auxViewGroup =null;
+//
+//            ViewGroup rootView = null;
+//
+//            int depth = xpp.getDepth();
+//
+//            int count = xpp.getAttributeCount();
+//
+//
+//            while (eventType != XmlPullParser.END_DOCUMENT) {
+//                String name = null;
+//
+//                depth = xpp.getDepth();
+//
+//                count = xpp.getAttributeCount();
+//
+//                switch (eventType) {
+//                    case XmlPullParser.START_DOCUMENT:
+//                        //products = new ArrayList();
+//                        break;
+//
+//                    case XmlPullParser.START_TAG:
+//                        name = xpp.getName();
+//                        //System.out.println("Comienza tag: " + name);
+//                        switch (name) {
+//                            case "android.support.v4.widget.SwipeRefreshLayout":
+//                                //auxViewGroup = new android.support.v4.widget.SwipeRefreshLayout(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new android.support.v4.widget.SwipeRefreshLayout(getActivity()),xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "ScrollView":
+//                                //auxViewGroup = new ScrollView(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new ScrollView(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "LinearLayout":
+//                                //auxViewGroup = new LinearLayout(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new LinearLayout(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "RelativeLayout":
+//                                //auxViewGroup = new LinearLayout(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new RelativeLayout(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "GridLayout":
+//                                //auxViewGroup = new GridLayout(getActivity());
+//                                lstViews.add(loadAtributesViewGroup(new GridLayout(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "Space":
+//                                //auxView = new Space(getActivity());
+//                                lstViews.add(loadAtributes(new Space(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "TextView":
+//                                //auxView = new TextView(getActivity());
+//                                lstViews.add(loadAtributes(new TextView(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "ImageView":
+//                                lstViews.add(loadAtributes(new ImageView(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
+//                            case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
+//                                //auxView = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati(getActivity());
+//                                lstViews.add(loadAtributes(new com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati(getActivity()), xpp));
+//                                lstViewsDepth.add(depth);
+//                                break;
 //
 //                        }
+//
+//
+//                        //auxView = loadAtributes(auxView, xpp);
+//
+////                        }
+//                        break;
+//
+////                    case XmlPullParser.END_TAG:
+////                        name = xpp.getName();
+////                        //swipeRefreshLayout.setLayoutParams();
+////                        System.out.println("termina tag: " + name);
+////
+////                        if(depth!=0) {
+////                            switch (name) {
+////                                case "android.support.v4.widget.SwipeRefreshLayout":
+////                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
+////                                    break;
+////                                case "ScrollView":
+////                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
+////                                    break;
+////                                case "LinearLayout":
+////                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
+////                                    break;
+////                                case "GridLayout":
+////                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
+////                                    break;
+////                                case "Space":
+////                                    auxViewGroup.addView(loadAtributes(auxView, xpp));
+////                                    break;
+////                                case "TextView":
+////                                    //auxView = new TextView(getActivity());
+////                                    auxViewGroup.addView(loadAtributes(auxView, xpp));
+////                                    break;
+////                                case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
+////                                    auxViewGroup.addView(loadAtributes(auxViewGroup, xpp));
+////                                    break;
+////
+////                            }
+////
+////
+////                            if (auxViewGroup != null) {
+////                                viewGroup = loadAtributesViewGroup(auxViewGroup, xpp);
+////
+////                            }
+////                        }
+//
+//
+////                        if (name.equalsIgnoreCase("product") && currentProduct != null){
+////                            products.add(currentProduct);
+////                        }
+//
+//                        //break;
+//                    case XmlPullParser.END_DOCUMENT:
+//                        //rootView.addView(auxViewGroup);
+//                }
+//
+//
+//
+//
+//                //if(viewGroup!=null && !firstElement ){
+//
+//                //}
+//                eventType = xpp.next();
+//
+//
+//
+//
+//                //System.out.println("DEPTH: "+depth);
+//
+//                //System.out.println("COUNT: "+count);
+//            }
+//
+//
+//
+//        } catch (XmlPullParserException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // Inflate the layout for this fragment
+//        //return inflater.inflate(R.layout.fragment_blank, container, false);
+//
+////        for (int pos = 0; pos < lstViews.size(); pos++) {
+////            System.out.println("View: "+lstViews.get(pos)+" Profundidad: "+lstViewsDepth.get(pos));
+////        }
+//
+//        viewGroup = buildView(lstViews, lstViewsDepth);
 
 
-//                        if (name == "product"){
-//                            currentProduct = new Product();
-//                        } else if (currentProduct != null){
-//                            if (name == "productname"){
-//                                currentProduct.name = parser.nextText();
-//                            } else if (name == "productcolor"){
-//                                currentProduct.color = parser.nextText();
-//                            } else if (name == "productquantity"){
-//                                currentProduct.quantity= parser.nextText();
-//                            }
-//                        }
-                        break;
-                    case XmlPullParser.END_TAG:
-                        name = xpp.getName();
-                        //swipeRefreshLayout.setLayoutParams();
-                        System.out.println("termina tag: " + name);
-
-                        if(!firstElement){
-                            switch (name) {
-                                case "android.support.v4.widget.SwipeRefreshLayout":
-                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
-                                    break;
-                                case "ScrollView":
-                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
-                                    break;
-                                case "LinearLayout":
-                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
-                                    break;
-                                case "GridLayout":
-                                    auxViewGroup.addView(loadAtributesViewGroup(auxViewGroup, xpp));
-                                    break;
-                                case "Space":
-                                    auxViewGroup.addView(loadAtributes(auxView, xpp));
-                                    break;
-                                case "TextView":
-                                    //auxView = new TextView(getActivity());
-                                    auxViewGroup.addView(loadAtributes(auxView, xpp));
-                                    break;
-                                case "com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati":
-                                    auxViewGroup.addView(loadAtributes(auxViewGroup, xpp));
-                                    break;
-
-                            }
-                       }else {
-                            if(auxViewGroup!=null){
-                                viewGroup = loadAtributesViewGroup(auxViewGroup, xpp);
-                                firstElement = false;
-                            }
-                        }
-
-
-
-//                        if (name.equalsIgnoreCase("product") && currentProduct != null){
-//                            products.add(currentProduct);
-//                        }
-
-                        break;
-                    case XmlPullParser.END_DOCUMENT:
-                        rootView.addView(auxViewGroup);
-                }
-
-
-
-
-                //if(viewGroup!=null && !firstElement ){
-
-                //}
-                eventType = xpp.next();
-            }
-
-
-
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_blank, container, false);
 
         return viewGroup;
 
+    }
+
+    private ViewGroup buildView(List<View> lstViews,List<Integer> lstViewsDepth){
+        ViewGroup rootView=null;
+
+        int depth=0;
+        View view=null;
+
+        int depthElem;
+        int depthPrevElem;
+
+        View prevView;
+        View actualView;
+
+        rootView =(ViewGroup) lstViews.get(0);
+
+        for (int pos = 1; pos < lstViews.size(); pos++) {
+            depthElem = lstViewsDepth.get(pos);
+            depthPrevElem = lstViewsDepth.get(pos-1);
+            prevView = lstViews.get(pos-1);
+            actualView = lstViews.get(pos);
+
+            if(depthElem>depthPrevElem){
+                if(prevView instanceof ViewGroup){
+                    ((ViewGroup)prevView).addView(actualView);
+                }
+            }
+            if(depthElem==depthPrevElem){
+                boolean flag = false;
+                int elementNumber = pos-1;
+                while(!flag){
+                    elementNumber--;
+                    depthPrevElem = lstViewsDepth.get(elementNumber);
+                    prevView = lstViews.get(elementNumber);
+                    if (depthElem>depthPrevElem){
+                        System.out.print(prevView.getClass().getCanonicalName());
+                        if(prevView instanceof ViewGroup){
+                            ((ViewGroup)prevView).addView(actualView);
+                            flag=true;
+                        }
+                    }
+                }
+            }
+            if(depthElem<depthPrevElem){
+                boolean flag = false;
+                int elementNumber = pos-1;
+                while(!flag){
+                    elementNumber--;
+                    depthPrevElem = lstViewsDepth.get(elementNumber);
+                    prevView = lstViews.get(elementNumber);
+                    if (depthElem>depthPrevElem){
+                        if(prevView instanceof ViewGroup){
+                            ((ViewGroup)prevView).addView(actualView);
+                            flag=true;
+                        }
+                    }
+                }
+            }
+        }
+
+
+//        for (int pos = 0; pos < lstViews.size(); pos++) {
+//           // System.out.println("View: "+lstViews.get(pos)+" Profundidad: "+lstViewsDepth.get(pos));
+//            depth = lstViewsDepth.get(pos);
+//            view = lstViews.get(pos);
+//           if(depth==0){
+//               rootView = view;
+//           }else{
+//
+//           }
+//        }
+
+
+        return rootView;
+    }
+
+//    void rInflate(XmlPullParser parser, View parent, final AttributeSet attrs,
+//                  boolean finishInflate) throws XmlPullParserException, IOException { // Depth first inflate, all to ensure you are in the onFinish
+//        // Inflate()Can be found through the findViewById has created the child view
+//        final int depth = parser.getDepth();
+//        int type;
+//
+//        while (((type = parser.next()) != XmlPullParser.END_TAG ||
+//                parser.getDepth() > depth) && type != XmlPullParser.END_DOCUMENT) {
+//
+//            if (type != XmlPullParser.START_TAG) {
+//                continue;
+//            }
+//            // That is a START_TAG node
+//            final String name = parser.getName(); // Get tagName
+//
+//            if (TAG_REQUEST_FOCUS.equals(name)) { // Treatment of REQUEST_FOCUS tag
+//                parseRequestFocus(parser, parent);
+//            } else if (TAG_INCLUDE.equals(name)) { // Treatment of include tag
+//                if (parser.getDepth() == 0) { // The include node is not the root node, or throw an exception. .
+//                    throw new InflateException("<include /> cannot be the root element");
+//                }
+//                parseInclude(parser, parent, attrs);
+//            } else if (TAG_MERGE.equals(name)) { // The merge node must be the root node in the XML file, which means that there should no longer appear merge node.
+//                throw new InflateException("<merge /> must be the root element");
+//            } else if (TAG_1995.equals(name)) {
+//                final View view = new BlinkLayout(mContext, attrs);
+//                final ViewGroup viewGroup = (ViewGroup) parent;
+//                final ViewGroup.LayoutParams params = viewGroup.generateLayoutParams(attrs);
+//                rInflate(parser, view, attrs, true);
+//                viewGroup.addView(view, params);
+//            } else { // In general, Android view, widget view node or user defined
+//                final View view = createViewFromTag(parent, name, attrs);
+//                final ViewGroup viewGroup = (ViewGroup) parent;
+//                final ViewGroup.LayoutParams params = viewGroup.generateLayoutParams(attrs);
+//                rInflate(parser, view, attrs, true);
+//                viewGroup.addView(view, params);
+//            }
+//        }
+//
+//        if (finishInflate) parent.onFinishInflate(); // When all the children are inflate parent node is finished, call the onFinishInflate callback
+//    }
+
+    private void parseRequestFocus(XmlPullParser parser, View parent)
+            throws XmlPullParserException, IOException {
+        int type;
+        parent.requestFocus();
+        final int currentDepth = parser.getDepth();
+        while (((type = parser.next()) != XmlPullParser.END_TAG || // Ignore all the remaining START_TAG content of this node, until next new
+                parser.getDepth() > currentDepth) && type != XmlPullParser.END_DOCUMENT) {
+            // Empty
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -266,17 +437,31 @@ public class BlankFragment extends FermatFragment {
         int paddingBottom=0;
         int paddingRight=0;
 
+        float layout_weight=0;
+
+
+        // GridLayout param
+        int layout_row=-1;
+        int layout_column = -1;
+        int layout_columnSpan = -1;
+
+        int layout_gravity;
+
         for(int i=0;i<xpp.getAttributeCount();i++){
-            System.out.println(xpp.getAttributeName(i));
+            //System.out.println(xpp.getAttributeName(i));
             switch (xpp.getAttributeName(i)){
                 case "id":
-                    view.setId(Integer.valueOf(xpp.getAttributeValue(i)));
+                    //view.setId(Integer.valueOf(xpp.getAttributeValue(i)));
                     break;
                 case "layout_width":
                     if(xpp.getAttributeValue(i).equals("match_parent")){
                         widht = ViewGroup.LayoutParams.MATCH_PARENT;
                     }else if (xpp.getAttributeValue(i).equals("wrap_content")){
                         widht = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    }else if (xpp.getAttributeValue(i).equals("fill_parent")){
+                        widht = ViewGroup.LayoutParams.FILL_PARENT;
+                    }else{
+                        widht = matchIntFromString(xpp.getAttributeValue(i));
                     }
                     break;
                 case "layout_height":
@@ -284,25 +469,41 @@ public class BlankFragment extends FermatFragment {
                         height = ViewGroup.LayoutParams.MATCH_PARENT;
                     }else if (xpp.getAttributeValue(i).equals("wrap_content")){
                         height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    }else if (xpp.getAttributeValue(i).equals("fill_parent")){
+                        widht = ViewGroup.LayoutParams.FILL_PARENT;
+                    }else{
+                        height = matchIntFromString(xpp.getAttributeValue(i));
                     }
                     break;
                 case "background":
-                    view.setBackgroundColor(Color.parseColor(xpp.getAttributeValue(i)));
+                    String color = xpp.getAttributeValue(i);
+                    if(color.charAt(0)=='#'){
+                        view.setBackgroundColor(Color.parseColor(color));
+                    }else{
+                        //TODO: aca iria a buscar un drawable de fondo
+                    }
                     break;
                 case "orientation":
                     //((android.support.v4.widget.SwipeRefreshLayout)view).setO
+                    if(view instanceof LinearLayout){
+                        if(xpp.getAttributeValue(i).equals("vertical")){
+                            ((LinearLayout)view).setOrientation(LinearLayout.VERTICAL);
+                        }else{
+                            ((LinearLayout)view).setOrientation(LinearLayout.HORIZONTAL);
+                        }
+                    }
                     break;
                 case "paddingLeft":
-                    paddingLeft = Integer.valueOf(xpp.getAttributeValue(i));
+                    paddingLeft = matchIntFromString(xpp.getAttributeValue(i));
                     break;
                 case "paddingRight":
-                    paddingRight = Integer.valueOf(xpp.getAttributeValue(i));
+                    paddingRight = matchIntFromString(xpp.getAttributeValue(i));
                     break;
                 case "paddingBottom":
-                    paddingBottom = Integer.valueOf(xpp.getAttributeValue(i));
+                    paddingBottom = matchIntFromString(xpp.getAttributeValue(i));
                     break;
                 case "paddingTop":
-                    paddingTop = Integer.valueOf(xpp.getAttributeValue(i));
+                    paddingTop = matchIntFromString(xpp.getAttributeValue(i));
                     break;
                 case "gravity":
                     //((android.support.v4.widget.SwipeRefreshLayout)view).set
@@ -320,13 +521,18 @@ public class BlankFragment extends FermatFragment {
                     }
                     break;
                 case "textColor":
-                    ((TextView)view).setTextColor(Color.parseColor(xpp.getAttributeValue(i)));
+                    if(view instanceof TextView){
+                        //((TextView)view).setTextColor(Color.parseColor(xpp.getAttributeValue(i)));
+                    }
+
                     break;
                 case "textSize":
                     //((TextView)view).setTextSize(TypedValue.COMPLEX_UNIT_DIP,Integer.valueOf(xpp.getAttributeValue(i)));
                     break;
                 case "text":
-                    ((TextView)view).setText(xpp.getAttributeValue(i));
+                    if(view instanceof TextView){
+                        ((TextView)view).setText(xpp.getAttributeValue(i));
+                    }
                     break;
                 case "textStyle":
                     if(xpp.getAttributeName(i).equals("bold")){
@@ -334,19 +540,58 @@ public class BlankFragment extends FermatFragment {
                     }
                     break;
                 case "layout_row":
-
+                    layout_row = Integer.parseInt(xpp.getAttributeValue(i));
                     break;
                 case "layout_column":
+                    layout_column = Integer.parseInt(xpp.getAttributeValue(i));
                     break;
                 case "layout_columnSpan":
+                    layout_columnSpan = Integer.parseInt(xpp.getAttributeValue(i));
                     break;
                 case "layout_gravity":
-                    break;
+                    if (xpp.getAttributeValue(i).equals("fill")){
+                        layout_gravity = Gravity.FILL;
+                    }
 
+                    //layout_gravity = Integer.parseInt(xpp.getAttributeValue(i));
+                    break;
+                case "layout_weight":
+                    layout_weight =Float.parseFloat(xpp.getAttributeValue(i));
+                    break;
+                case "src":
+                    if(view instanceof ImageView){
+                        try {
+                            InputStream inputStreamImage = getActivity().getApplication().getAssets().open("drawables/person1.png");
+                            Bitmap bitmap = null;
+
+
+                                //BitmapFactory is an Android graphics utility for images
+                            bitmap = BitmapFactory.decodeStream(inputStreamImage);
+                            ((ImageView) view).setImageBitmap(bitmap);
+                            //Picasso.with(getActivity()).load(xpp.getAttributeValue(i)).into(();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        //Get the texture from the Android resource directory
+                        //InputStream is = context.getResources().openRawResource(R.drawable.radiocd5);
+
+
+                    }
+                    break;
             }
         }
 
         if(view!=null){
+            if(layout_column!=-1){
+                view.setLayoutParams(new TableRow.LayoutParams(layout_column));
+                //GridView.LayoutParams params = new GridView.LayoutParams();
+            }
+            if( view instanceof LinearLayout){
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        height,
+                        widht, layout_weight);
+            }
             view.setPadding(paddingLeft,paddingTop,paddingRight,paddingBottom);
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(widht,height);
             view.setLayoutParams(layoutParams);
@@ -356,7 +601,7 @@ public class BlankFragment extends FermatFragment {
         return view;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private ViewGroup loadAtributesViewGroup(ViewGroup view,XmlPullParser xpp){
 
         int widht=0;
@@ -367,17 +612,29 @@ public class BlankFragment extends FermatFragment {
         int paddingBottom=0;
         int paddingRight=0;
 
+        int layout_row;
+        int layout_column;
+        int layout_columnSpan;
+
+        int layout_gravity;
+
+        float layout_weight;
+
         for(int i=0;i<xpp.getAttributeCount();i++){
-            System.out.println(xpp.getAttributeName(i));
+            //System.out.println(xpp.getAttributeName(i));
             switch (xpp.getAttributeName(i)){
                 case "id":
-                    view.setId(Integer.valueOf(xpp.getAttributeValue(i)));
+                    //view.setId(Integer.valueOf(xpp.getAttributeValue(i)));
                     break;
                 case "layout_width":
                     if(xpp.getAttributeValue(i).equals("match_parent")){
                         widht = ViewGroup.LayoutParams.MATCH_PARENT;
                     }else if (xpp.getAttributeValue(i).equals("wrap_content")){
                         widht = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    }else if (xpp.getAttributeValue(i).equals("fill_parent")) {
+                        widht = ViewGroup.LayoutParams.FILL_PARENT;
+                    }else{
+                        height = matchIntFromString(xpp.getAttributeValue(i));
                     }
                     break;
                 case "layout_height":
@@ -385,25 +642,41 @@ public class BlankFragment extends FermatFragment {
                         height = ViewGroup.LayoutParams.MATCH_PARENT;
                     }else if (xpp.getAttributeValue(i).equals("wrap_content")){
                         height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    }else if (xpp.getAttributeValue(i).equals("fill_parent")) {
+                        height = ViewGroup.LayoutParams.FILL_PARENT;
+                    }else{
+                        height = matchIntFromString(xpp.getAttributeValue(i));
                     }
                     break;
                 case "background":
-                    view.setBackgroundColor(Color.parseColor(xpp.getAttributeValue(i)));
+                    String color = xpp.getAttributeValue(i);
+                    if(color.charAt(0)=='#'){
+                        view.setBackgroundColor(Color.parseColor(color));
+                    }else{
+                        //TODO: aca iria a buscar un drawable de fondo
+                    }
+
                     break;
                 case "orientation":
-                    //((android.support.v4.widget.SwipeRefreshLayout)view).setO
+                    if(view instanceof LinearLayout){
+                        if(xpp.getAttributeValue(i).equals("vertical")){
+                            ((LinearLayout)view).setOrientation(LinearLayout.VERTICAL);
+                        }else{
+                            ((LinearLayout)view).setOrientation(LinearLayout.HORIZONTAL);
+                        }
+                    }
                     break;
                 case "paddingLeft":
-                    paddingLeft = Integer.valueOf(xpp.getAttributeValue(i));
+                    paddingLeft = matchIntFromString(xpp.getAttributeValue(i));
                     break;
                 case "paddingRight":
-                    paddingRight = Integer.valueOf(xpp.getAttributeValue(i));
+                    paddingRight = matchIntFromString(xpp.getAttributeValue(i));
                     break;
                 case "paddingBottom":
-                    paddingBottom = Integer.valueOf(xpp.getAttributeValue(i));
+                    paddingBottom = matchIntFromString(xpp.getAttributeValue(i));
                     break;
                 case "paddingTop":
-                    paddingTop = Integer.valueOf(xpp.getAttributeValue(i));
+                    paddingTop = matchIntFromString(xpp.getAttributeValue(i));
                     break;
                 case "gravity":
                     //((android.support.v4.widget.SwipeRefreshLayout)view).set
@@ -435,15 +708,35 @@ public class BlankFragment extends FermatFragment {
                     }
                     break;
                 case "layout_row":
-
+                    layout_row = Integer.parseInt(xpp.getAttributeValue(i));
                     break;
                 case "layout_column":
+                    layout_column = Integer.parseInt(xpp.getAttributeValue(i));
                     break;
                 case "layout_columnSpan":
+                    layout_columnSpan = Integer.parseInt(xpp.getAttributeValue(i));
                     break;
                 case "layout_gravity":
-                    break;
+                    if (xpp.getAttributeValue(i).equals("fill")){
+                        layout_gravity = Gravity.FILL;
+                    }
 
+                    //layout_gravity = Integer.parseInt(xpp.getAttributeValue(i));
+                    break;
+                case "layout_weight":
+                    layout_weight =Float.parseFloat(xpp.getAttributeValue(i));
+                    break;
+                case "elevation":
+                    try {
+                        Float elevation = matchFloatFromString(xpp.getAttributeValue(i));
+                        if (!(Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT)){
+                            view.setElevation(elevation);
+                        }
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
             }
         }
 
@@ -457,6 +750,27 @@ public class BlankFragment extends FermatFragment {
 
 
         return view;
+    }
+
+    private int matchIntFromString(String str){
+        Pattern p = Pattern.compile("-?\\d+");
+        Matcher m = p.matcher(str);
+        StringBuffer stringBuffer = new StringBuffer();
+        while (m.find()) {
+            stringBuffer.append(m.group());
+        }
+        System.out.println("STRING BUFFER: "+stringBuffer.toString());
+        return Integer.parseInt(stringBuffer.toString());
+    }
+    private float matchFloatFromString(String str){
+        Pattern p = Pattern.compile("-?\\d+");
+        Matcher m = p.matcher(str);
+        StringBuffer stringBuffer = new StringBuffer();
+        while (m.find()) {
+            stringBuffer.append(m.group());
+        }
+        System.out.println("STRING BUFFER: "+stringBuffer.toString());
+        return Float.parseFloat(stringBuffer.toString());
     }
 
     // TODO: Rename method, update argument and hook method into UI event
