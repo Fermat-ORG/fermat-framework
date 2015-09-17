@@ -141,6 +141,7 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
     public void start() throws CantStartPluginException {
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
         try {
+            System.out.println("******* Asset Factory Init, Abriendo Base de Datos. Franklin ******");
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             database.closeDatabase();
         }
@@ -159,7 +160,6 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
                 throw new CantStartPluginException("Cannot start AssetFactoryMiddleware plugin.", FermatException.wrapException(exception), null, null);
             }
         }
-        System.out.println("******* Asset Factory Init. Franklin ******");
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
