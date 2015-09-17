@@ -3556,7 +3556,7 @@
 					<plugin
 						name="Appropriation Stats"
 						description=""
-						difficulty="10"
+						difficulty="8"
 						code-level="development"
 						>
 						<authors>
