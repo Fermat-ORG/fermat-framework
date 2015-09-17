@@ -6,12 +6,21 @@ include::documentationOrganization.asciidoc[]
 :leveloffset: 0
 include::platform/platformDescription.asciidoc[]
 
-:leveloffset: 0
-include::fermat-pip/fermatPIPLayersIndex.asciidoc[]
+:leveloffset: 2
+include::fermat_pip/fermatPIPLayersIndex.asciidoc[]
+
+:leveloffset: 3
+include::fermat_p2p/fermatP2PLayersIndex.asciidoc[]
+
+:leveloffset: 1
+include::fermat_dmp/fermatDMPLayersIndex.asciidoc[]
+
+:leveloffset: 1
+include::fermat_dap/fermatDAPLayersIndex.asciidoc[]
 
 :leveloffset: 0
-include::fermat-p2p/fermatP2PLayersIndex.asciidoc[]
+include::android/Iniciacion_android.asciidoc[]
 
-:leveloffset: 0
-include::fermat-dmp/fermatDMPLayersIndex.asciidoc[]
- 
+:leveloffset: 4
+include::fermat-book/FBK_Introduction.asciidoc[]
+
