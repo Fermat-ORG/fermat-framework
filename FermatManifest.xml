@@ -3480,6 +3480,22 @@
 						</certifications>
 					</plugin>
 					<plugin
+						name="Asset Reception"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
 						name="Asset Issuing"
 						description=""
 						difficulty="10"
@@ -3496,9 +3512,73 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Asset Redemption"
+						name="Issuer Redemption"
 						description=""
-						difficulty="8"
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="User Redemption"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="RedeemPoint Redemption"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Asset Appropriation"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Appropriation Stats"
+						description=""
+						difficulty="10"
 						code-level="development"
 						>
 						<authors>
@@ -6424,23 +6504,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin
-						name="Redeem Point Address Book"
-						description=""
-						difficulty="5"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="acostarodrigo"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
 				</plugins>
 			</layer>
 
@@ -6465,6 +6528,23 @@
 					</plugin>
 					<plugin
 						name="Assets Over Bitcoin"
+						description=""
+						difficulty="10"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+						</authors>
+						<mantainers>
+							<mantainer name="acostarodrigo"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Bitcoin Watch Only"
 						description=""
 						difficulty="10"
 						code-level="development"
