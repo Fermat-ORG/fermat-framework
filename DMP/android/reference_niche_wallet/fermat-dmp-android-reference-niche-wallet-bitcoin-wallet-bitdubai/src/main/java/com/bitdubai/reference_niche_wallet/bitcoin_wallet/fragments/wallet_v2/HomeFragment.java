@@ -22,9 +22,12 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
+import java.util.List;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 
@@ -55,6 +58,11 @@ public class HomeFragment extends FermatWalletFragment {
     private ReferenceWalletSession referenceWalletSession;
 
     private CryptoWallet cryptoWallet;
+
+    private List<PaymentRequest> lstPaymentRequestReceived;
+    private List<PaymentRequest> lstPaymentRequestSended;
+
+
 
     private int position;
 
@@ -101,6 +109,10 @@ public class HomeFragment extends FermatWalletFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
 
+        lstPaymentRequestReceived =  cryptoWallet.listReceivedPaymentRequest();
+
+        lstPaymentRequestSended = cryptoWallet.listSentPaymentRequest();
+
         return rootView;
     }
 
@@ -120,7 +132,7 @@ public class HomeFragment extends FermatWalletFragment {
         }
 
         lv = (ExpandableListView) view.findViewById(R.id.expListView);
-        lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
+        lv.setAdapter(new ExpandableListAdapter(contacts, transactions,7));
         lv.setGroupIndicator(null);
 
         lv.setOnItemClickListener(null);
@@ -197,20 +209,26 @@ public class HomeFragment extends FermatWalletFragment {
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
+        final int END_OF_FIRST_ROW = 2;
+
         private final LayoutInflater inf;
         private String[] contacts;
         private String[][] transactions;
 
-        public ExpandableListAdapter(String[] contacts, String[][] transactions) {
+        // es el numero para pintar los row en pantalla
+        private int groupCount;
+
+        public ExpandableListAdapter(String[] contacts, String[][] transactions,int groupCount) {
             this.contacts = contacts;
             this.transactions = transactions;
+            this.groupCount = groupCount;
             inf = LayoutInflater.from(getActivity());
         }
 
 
         @Override
         public int getGroupCount() {
-            return contacts.length;
+            return groupCount;
         }
 
         @Override
@@ -308,9 +326,10 @@ public class HomeFragment extends FermatWalletFragment {
 
                             break;
 
-                        // aca irian los ultimos 2 request recibidos
-                        case 3: case 4:
 
+                    }
+
+                    if(groupPosition>END_OF_FIRST_ROW && groupPosition<lstPaymentRequestReceived.size()+END_OF_FIRST_ROW){
                         convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
                         account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
@@ -351,58 +370,55 @@ public class HomeFragment extends FermatWalletFragment {
                                 account_picture.setImageResource(R.drawable.kimberly_profile_picture);
                                 break;
                         }
-                        break;
-                        // aca irian los request enviados
-                        case 6:case 7:
-                            convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
-                            account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+                    }else if(groupPosition == lstPaymentRequestReceived.size()+END_OF_FIRST_ROW){
+                        convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
+                        tv = ((TextView)convertView.findViewById(R.id.title));
+                        tv.setText("Requests sent waiting to be accepted");
+                    }else if(groupPosition>lstPaymentRequestReceived.size()+END_OF_FIRST_ROW){
+                        convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
+                        account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
 
-                            holder = new ViewHolder();
-                            holder.text = (TextView) convertView.findViewById(R.id.contact_name);
+                        holder = new ViewHolder();
+                        holder.text = (TextView) convertView.findViewById(R.id.contact_name);
 
-                            holder.text.setText(contacts[groupPosition].toString());
+                        holder.text.setText(contacts[groupPosition].toString());
 
-                            amount = new ViewHolder();
-                            amount.text = (TextView) convertView.findViewById(R.id.amount);
-
-
-                            amount.text.setText(amounts[groupPosition].toString());
-
-                            when = new ViewHolder();
-                            when.text = (TextView) convertView.findViewById(R.id.when);
+                        amount = new ViewHolder();
+                        amount.text = (TextView) convertView.findViewById(R.id.amount);
 
 
-                            when.text.setText(whens[groupPosition].toString());
+                        amount.text.setText(amounts[groupPosition].toString());
 
-                            note = new ViewHolder();
-                            note.text = (TextView) convertView.findViewById(R.id.notes);
-
-
-                            note.text.setText(notes[groupPosition].toString());
-
-                            send_message = (ImageView) convertView.findViewById(R.id.icon_edit_profile);
-                            send_message.setTag("ContactsChatActivity|"+contacts[groupPosition].toString());
+                        when = new ViewHolder();
+                        when.text = (TextView) convertView.findViewById(R.id.when);
 
 
-                            switch (groupPosition) {
+                        when.text.setText(whens[groupPosition].toString());
 
-                                case 6:
-                                    account_picture.setImageResource(R.drawable.dea_profile_picture);
-                                    break;
-                                case 7:
-                                    account_picture.setImageResource(R.drawable.deniz_profile_picture);
-                                    break;
-                            }
-                            break;
-                        case 5:
-                            convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
-                            tv = ((TextView)convertView.findViewById(R.id.title));
-                            tv.setText("Requests sent waiting to be accepted");
-                            break;
+                        note = new ViewHolder();
+                        note.text = (TextView) convertView.findViewById(R.id.notes);
+
+
+                        note.text.setText(notes[groupPosition].toString());
+
+                        send_message = (ImageView) convertView.findViewById(R.id.icon_edit_profile);
+                        send_message.setTag("ContactsChatActivity|"+contacts[groupPosition].toString());
+
+
+                        switch (groupPosition) {
+
+                            case 6:
+                                account_picture.setImageResource(R.drawable.dea_profile_picture);
+                                break;
+                            case 7:
+                                account_picture.setImageResource(R.drawable.deniz_profile_picture);
+                                break;
+                        }
+
                     }
-            }
 
+            }
 
             return convertView;
         }
