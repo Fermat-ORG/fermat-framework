@@ -1,13 +1,28 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_cash_money_sale.interfaces;
 
-import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
-
 /**
  * Created by Angel on 2015.09.16..
  */
 
-public interface CustomerBrokerCashMoneySale extends Contract {
+public interface CustomerBrokerCashMoneySale{
+
+    String getPublicKeyCustomer();
+
+    String getPublicKeyBroker();
+
+    String getStatus();
+
+    Float getAmount();
+
+    Float getPriceReference();
 
     String getCurrencyPurchase();
 
+    void setStatus(String status);
+
+    void setAmount(Float amount);
+
+    void setPriceReference(Float price);
+
+    void setCurrencyPurchase(String currencyPurchase);
 }
