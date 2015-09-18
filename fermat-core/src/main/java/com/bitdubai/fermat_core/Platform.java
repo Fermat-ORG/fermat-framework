@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
 import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
 import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
 import com.bitdubai.fermat_core.layer.dap_transaction.DAPTransactionLayer;
@@ -1223,7 +1224,11 @@ public class Platform implements Serializable {
                 ((DealsWithLogger) plugin).setLogManager(loggerSystemOs.getLoggerManager());
             }
 
-            if (plugin instanceof DealsWithWalletModuleCryptoWallet) {
+            if(plugin instanceof DealsWithDeviceLocation) {
+                ((DealsWithDeviceLocation) plugin).setLocationManager(locationSystemOs.getLocationSystem());
+            }
+
+                if (plugin instanceof DealsWithWalletModuleCryptoWallet) {
                 ((DealsWithWalletModuleCryptoWallet) plugin).setWalletModuleCryptoWalletManager((CryptoWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE));
             }
 

@@ -170,9 +170,9 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 databaseSystemOs.setContext(context);
                 platform.setDataBaseSystemOs(databaseSystemOs);
 
-                //    locationSystemOs = new AndroidOsLocationSystem();
-                //    locationSystemOs.setContext(context);
-                //    platform.setLocationSystemOs(locationSystemOs);
+                    locationSystemOs = new AndroidOsLocationSystem();
+                   locationSystemOs.setContext(context);
+                    platform.setLocationSystemOs(locationSystemOs);
 
                 loggerSystemOs = new LoggerAddonRoot();
                 try {
