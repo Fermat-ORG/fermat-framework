@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -152,7 +153,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         String digitalAssetPublicKey=this.digitalAsset.getPublicKey();
         long digitalAssetGenesisAmount=this.digitalAsset.getGenesisAmount();
-        long cryptoWalletBalance=this.cryptoWallet.getAvailableBalance(digitalAssetPublicKey);
+        long cryptoWalletBalance=this.cryptoWallet.getBalance(BalanceType.AVAILABLE, digitalAssetPublicKey);
 
         if(digitalAssetGenesisAmount>cryptoWalletBalance){
 

@@ -64,7 +64,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     private ErrorManager errorManager;
 
     View rootView;
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
 
     //Type face font
