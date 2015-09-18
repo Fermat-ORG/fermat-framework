@@ -7,6 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum TransactionStatus {
     FORMING_GENESIS("FGEN"),
+    GENESIS_OBTAINED("OGEN"),
+    GENESIS_SETTLED("SGEN"),
+    HASH_SETTLED("SHASH"),
     ISSUED("ISSUED");
 
     private String code;
@@ -21,6 +24,12 @@ public enum TransactionStatus {
         switch (code) {
             case "FGEN":
                 return TransactionStatus.FORMING_GENESIS;
+            case "OGEN":
+                return TransactionStatus.GENESIS_OBTAINED;
+            case "SGEN":
+                return TransactionStatus.GENESIS_SETTLED;
+            case "SHASH":
+                return TransactionStatus.HASH_SETTLED;
             case "ISSUED":
                 return TransactionStatus.ISSUED;
             default:
