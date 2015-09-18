@@ -3,11 +3,12 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.exceptions;
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by natalia on 17/09/15.
+ * Created by natalia on 18/09/15.
  */
-public class CantSearchCustomersException extends FermatException {
+public class CantModifyCustomerRelationshipException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T SEARCH BROKER'S CUSTOMERS";
+    public static final String DEFAULT_MESSAGE = "CAN'T MODIFY RELATION SHIP BEETWEEN BROKER AND CUSTOMER";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -16,7 +17,7 @@ public class CantSearchCustomersException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantSearchCustomersException(String message, Exception cause, String context, String possibleReason) {
+    public CantModifyCustomerRelationshipException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
