@@ -17,6 +17,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.google.zxing.WriterException;
 
@@ -88,6 +90,8 @@ public  class ReceiveFragment extends FermatWalletFragment {
     // TODO: Necesito saber de donde sacarlo
     String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
 
+    private LinearLayout linear_layout_receive_form;
+
 
     public static ReceiveFragment newInstance(int position) {
         ReceiveFragment f = new ReceiveFragment();
@@ -102,19 +106,19 @@ public  class ReceiveFragment extends FermatWalletFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
-        amounts = new String[]{"","$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
-        whens = new String[]{"","4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
-        notes = new String[]{"","New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
-        totalAmount = new String[]{"","$" + "17,485.00","$" + "156,340.00","$" + "422,545","$" + "62,735.00","$" + "45.00","$" + "12,360.00","$" + "75.00","$"+ "80,000"};
-        historyCount = new String[] {"","9 records","19 records","32 records","11 records","1 record","11 records","2 records","1 record"};
+        contacts = new String[]{"Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+        amounts = new String[]{"$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
+        whens = new String[]{"4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
+        notes = new String[]{"New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
+        totalAmount = new String[]{"$" + "17,485.00","$" + "156,340.00","$" + "422,545","$" + "62,735.00","$" + "45.00","$" + "12,360.00","$" + "75.00","$"+ "80,000"};
+        historyCount = new String[] {"9 records","19 records","32 records","11 records","1 record","11 records","2 records","1 record"};
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{
-                {},
+
                 {"New telephone","Hot dog","Telephone credit","Coffee"},
                 {"Old desk","Flat rent","New glasses","House in Europe","Coffee","Gum"},
-                {"Car oil","Headphones","Apartment"},
+                {"Car oil","Headphgiones","Apartment"},
                 {"Sandwich","New kitchen","Camera repair"},
                 {"Headphones"},
                 {"Computer monitor","New car"},
@@ -123,7 +127,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
         };
         transactions_amounts = new String[][]{
 
-                {},
+
                 {"$200.00", "$3.00", "$460.00", "$2.00", "$1.5"},
                 {"$3,000.00", "$34,200.00", "$4,500.00", "$4,000,000", "$2,00.00", "$0.50"},
                 {"$400,00", "$43.00", "$350,000.00"},
@@ -137,7 +141,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
         transactions_whens = new String[][]{
 
-                {},
+
                 {"4 hours ago","8 hours ago","yesterday 10:33 PM","yesterday 9:33 PM"},
                 {"5 hours ago","yesterday","20 Sep 14","16 Sep 14","13 Sep 14","12 Sep 14"},
                 {"yesterday 11:00 PM","23 May 14", "12 May 14"},
@@ -154,7 +158,44 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
+        rootView = inflater.inflate(R.layout.bitcoin_wallet_receive_fragment_base, container, false);
+
+        linear_layout_receive_form = (LinearLayout)rootView.findViewById(R.id.receive_form);
+
+        ((Button) rootView.findViewById(R.id.btn_expand_receive_form)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isShow =linear_layout_receive_form.isShown();
+                //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+                if(isShow){
+                    Fx.slide_up(getActivity(), linear_layout_receive_form);
+                    linear_layout_receive_form.setVisibility(View.GONE);
+                } else{
+                    linear_layout_receive_form.setVisibility(View.VISIBLE);
+                    Fx.slide_down(getActivity(), linear_layout_receive_form);
+                }
+
+            }
+        });
+
+        contact_name = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
+
+        Button btn_address = (Button) rootView.findViewById(R.id.btn_address);
+        btn_address.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                requestAddress(null);
+            }
+        });
+        btn_address.setTypeface(tf);
+
+        Button btn_share = (Button) rootView.findViewById(R.id.btn_share);
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                shareAddress();
+            }
+        });
+        btn_share.setTypeface(tf);
+
 
         return rootView;
     }
@@ -422,29 +463,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
             ViewHolder total;
             ViewHolder history;
 
-            if (groupPosition == 0) {
-                convertView = inf.inflate(R.layout.wallet_receive_fragment_first_row, parent, false);
 
-                 contact_name = (AutoCompleteTextView) convertView.findViewById(R.id.contact_name);
-
-                Button btn_address = (Button) convertView.findViewById(R.id.btn_address);
-                btn_address.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        requestAddress(null);
-                    }
-                });
-                btn_address.setTypeface(tf);
-
-                Button btn_share = (Button) convertView.findViewById(R.id.btn_share);
-                btn_share.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        shareAddress();
-                    }
-                });
-                btn_share.setTypeface(tf);
-
-
-            }else{
 
                 if (convertView == null) {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_header, parent, false);
@@ -544,8 +563,6 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
 
                // holder.text.setText(getGroup(groupPosition).toString());
-
-            }
 
 
             return convertView;
