@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
- * provides the methods for the Crypto Customer Community sub app, to ActorIdentity Management Customers and the relationship with other Customers.
+ * provides the methods for the Crypto Customer Community sub app, to Identity Management Customers and the relationship with other Customers.
  */
 public interface CryptoCustomerCommunityModuleManager {
 
