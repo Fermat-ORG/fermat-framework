@@ -1,26 +1,27 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners;
+package com.bitdubai.fermat_api.layer.all_definition.events.common;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 /**
  * Created by rodrigo on 2015.07.08..
  */
 public class GenericEventListener implements FermatEventListener {
+
     private FermatEventMonitor fermatEventMonitor;
-    private EventType eventType;
+    private FermatEventEnum eventType;
     private FermatEventHandler fermatEventHandler;
 
-    public GenericEventListener(final EventType eventType, final FermatEventMonitor fermatEventMonitor) {
+    public GenericEventListener(final FermatEventEnum eventType, final FermatEventMonitor fermatEventMonitor) {
         this.fermatEventMonitor = fermatEventMonitor;
         this.eventType = eventType;
     }
 
     @Override
-    public EventType getEventType() {
+    public FermatEventEnum getEventType() {
         return this.eventType;
     }
 
