@@ -10,4 +10,5 @@ public interface FermatTab {
     public String getLabel();
     public void setFragment(Fragments fragment);
     public Fragments getFragment();
+    public byte[] getIcon();
 }

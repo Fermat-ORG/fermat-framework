@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.interfaces;
 
 
-
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.exceptions.CantAcceptCryptoCustomerRequestException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.exceptions.CantGetCryptoCustomerListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.exceptions.CantLoginBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.exceptions.CryptoCustomerCancellingFailedException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.exceptions.CryptoCustomerConnectionRejectionFailedException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer.exceptions.CryptoCustomerDisconnectingFailedException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CantLoginCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CantStartRequestException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CryptoCustomerCancellingFailedException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
 
 import java.util.List;
 
@@ -38,9 +38,9 @@ public interface CryptoCustomerModuleManager {
      * @param cryptoCustomerToAddName      The name of the crypto customer to add
      * @param cryptoCustomerToAddPublicKey The public key of the crypto customer to add
      * @param profileImage            The profile image that the crypto customer has
-     * @throws CantAcceptCryptoCustomerRequestException
+     * @throws CantAcceptRequestException
      */
-    public void acceptCryptoCustomer(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws CantAcceptCryptoCustomerRequestException;
+    public void acceptCryptoCustomer(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException;
 
 
     /**
@@ -91,7 +91,7 @@ public interface CryptoCustomerModuleManager {
      *
      * @param customerPublicKey the public key of the crypto broker to log in
      */
-    public void login(String customerPublicKey) throws CantLoginBrokerException;
+    public void login(String customerPublicKey) throws CantLoginCustomerException;
 
 
 }

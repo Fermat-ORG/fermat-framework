@@ -25,7 +25,7 @@
             android:layout_width="94dp"
             android:layout_height="94dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/account_type_current_small"
+            android:src="@drawable/fermat_bitcoin2"
             android:layout_gravity="center"
             />
 
@@ -34,7 +34,7 @@
                 android:layout_width="94dp"
                 android:layout_height="94dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/account_type_savings_1_small"
+                android:src="@drawable/fermat_coin_1"
                 android:layout_gravity="center"
                 />
 
@@ -43,7 +43,7 @@
                 android:layout_width="94dp"
                 android:layout_height="94dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/account_type_savings_2_small"
+                android:src="@drawable/fermat_bitcoin2"
                 android:layout_gravity="center"
                 />
         </LinearLayout>
@@ -66,7 +66,7 @@
 
             >
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/balance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                 />
 
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/balance_available"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

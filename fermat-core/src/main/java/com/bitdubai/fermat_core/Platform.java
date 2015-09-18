@@ -23,10 +23,14 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.D
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
+
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+
 import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
 import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
 import com.bitdubai.fermat_core.layer.dap_transaction.DAPTransactionLayer;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
+import com.bitdubai.fermat_core.layer.pip_engine.EngineLayer;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.DealsWithAssetsVault;
@@ -225,6 +229,7 @@ public class Platform implements Serializable {
      */
     private LoggerSystemOs loggerSystemOs;
 
+
     /**
      * Constructor
      */
@@ -411,6 +416,7 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(), PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION);
             corePlatformContext.registerPlatformLayer(new DAPActorLayer(), PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPIdentityLayer(), PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER);
+            corePlatformContext.registerPlatformLayer(new EngineLayer(),PlatformLayers.BITDUBAI_ENGINE_LAYER);
 
             /*
              * Start all other platform layers
@@ -698,6 +704,12 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(intraUser, Plugins.BITDUBAI_USER_INTRA_USER);
 
 
+           /*
+             * Plugin Desktop runtime PIP
+             * -----------------------------
+             */
+            Plugin desktopRuntimePlugin = ((EngineLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ENGINE_LAYER)).getmDesktopRuntimePlugin();
+            injectPluginReferencesAndStart(desktopRuntimePlugin, Plugins.BITDUBAI_DESKTOP_RUNTIME);
 
             /*
              * Plugin Bitcoin Crypto Network
@@ -1370,6 +1382,10 @@ public class Platform implements Serializable {
             //}
             if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
                 ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
+            }
+            if(plugin instanceof DealsWithDeviceLocation){
+                ((DealsWithDeviceLocation) plugin).setLocationManager((LocationManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_LOCATION_WORLD));
+
             }
 
 
