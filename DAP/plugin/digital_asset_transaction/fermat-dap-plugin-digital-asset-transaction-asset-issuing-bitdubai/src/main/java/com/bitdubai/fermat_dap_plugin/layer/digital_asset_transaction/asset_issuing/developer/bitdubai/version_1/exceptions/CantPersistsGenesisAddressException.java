@@ -5,10 +5,10 @@ import com.bitdubai.fermat_api.layer.DAPException;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 17/09/15.
  */
-public class CantPersistsGenesisTransaction extends DAPException{
+public class CantPersistsGenesisAddressException extends DAPException {
     public static final String DEFAULT_MESSAGE = "There was an error persisting a Digital Asset genesis address in Asset Issuing database.";
 
-    public CantPersistsGenesisTransaction(Exception cause, String context, String possibleReason) {
+    public CantPersistsGenesisAddressException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 }

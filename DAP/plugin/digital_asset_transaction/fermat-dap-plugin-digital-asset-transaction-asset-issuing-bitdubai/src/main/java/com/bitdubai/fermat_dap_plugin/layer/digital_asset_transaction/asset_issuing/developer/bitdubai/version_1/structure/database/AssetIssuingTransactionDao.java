@@ -18,6 +18,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class AssetIssuingTransactionDao {
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable=this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_FIRST_KEY_COLUMN, transactionID.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID, transactionID.toString(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
@@ -90,7 +92,7 @@ public class AssetIssuingTransactionDao {
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable=this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_FIRST_KEY_COLUMN, transactionID.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID, transactionID.toString(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
@@ -135,7 +137,7 @@ public class AssetIssuingTransactionDao {
             throw new CantPersistDigitalAssetException(exception,"Persisting a forming genesis digital asset","Cannot insert a record in the Asset Issuing database");
         } catch (Exception exception){
             this.database.closeDatabase();
-            throw new CantPersistDigitalAssetException(exception, "Persisting a forming genesis digital asset", "Unexpected exception");
+            throw new CantPersistDigitalAssetException(FermatException.wrapException(exception), "Persisting a forming genesis digital asset", "Unexpected exception");
         }
 
     }
@@ -172,7 +174,7 @@ public class AssetIssuingTransactionDao {
             throw new CantCheckAssetIssuingProgressException(exception, "Checking Transaction Status","Invalid parameter in TransactionStatus");
         }catch (Exception exception){
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception,"Checking Transaction Status","Unexpected exception");
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Checking Transaction Status","Unexpected exception");
         }
     }
 
@@ -204,7 +206,7 @@ public class AssetIssuingTransactionDao {
             throw new CantCheckAssetIssuingProgressException(exception, "Checking pending Digital Assets PublicKeys", "Cannot load the database into memory");
         } catch (Exception exception){
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception,"Checking pending Digital Assets PublicKeys","Unexpected exception");
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Checking pending Digital Assets PublicKeys","Unexpected exception");
         }
     }
 
@@ -239,7 +241,7 @@ public class AssetIssuingTransactionDao {
             throw new CantCheckAssetIssuingProgressException(exception,"Getting pending digital assets transactions to issue","Cannot load to memory the Asset Issuing database");
         } catch (Exception exception){
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception,"Getting pending digital assets transactions to issue","Unexpected exception");
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Getting pending digital assets transactions to issue","Unexpected exception");
         }
 
     }
@@ -275,13 +277,13 @@ public class AssetIssuingTransactionDao {
             throw new CantCheckAssetIssuingProgressException(exception,"Loading Asset Issuing plugin database to memory","Cannot load the Asset Issuing database");
         } catch (Exception exception){
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception,"Checking pending assets to issue","Unexpected exception");
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Checking pending assets to issue","Unexpected exception");
         }
     }
 
-    public void persistGenesisAddress(UUID transactionID, String genesisAddress)throws CantPersistDigitalAssetException{
+    public void persistGenesisAddress(UUID transactionID, String genesisAddress)throws CantPersistsGenesisAddressException {
         try {
-            this.database=openDatabase();
+            this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
             record.setUUIDValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID, transactionID);
@@ -291,10 +293,43 @@ public class AssetIssuingTransactionDao {
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantPersistDigitalAssetException(exception, "Persisting Genesis Address in database","Cannot open or find the database");
+            throw new CantPersistsGenesisAddressException(exception, "Persisting Genesis Address in database", "Cannot open or find the database");
         } catch (CantInsertRecordException exception) {
             this.database.closeDatabase();
-            throw new CantPersistDigitalAssetException(exception, "Persisting Genesis Address in database","Cannot insert a new record in database");
+            throw new CantPersistsGenesisAddressException(exception, "Persisting Genesis Address in database", "Cannot insert a new record in database");
+        } catch (Exception exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsGenesisAddressException(FermatException.wrapException(exception), "Getting pending digital assets transactions to issue", "Unexpected exception");
+        }
+    }
+
+    public void persistGenesisTransaction(UUID transactionID, String genesisTransaction) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID, transactionID.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTransaction databaseTransaction=this.database.newTransaction();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1)
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Transaction ID:" + transactionID+ " Genesis Transaction:" + genesisTransaction);
+            else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.HASH_SETTLED.toString());
+            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsGenesisTransactionException(exception, "Persisting Genesis Transaction in database","Cannot open or find the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistsGenesisTransactionException(exception, "Persisting Genesis Transaction in database","Cannot load the database into memory");
+        } catch (Exception exception){
+            this.database.closeDatabase();
+            throw new CantPersistsGenesisTransactionException(FermatException.wrapException(exception), "Persisting Genesis Transaction in database","Unexpected exception");
         }
     }
 
@@ -324,7 +359,7 @@ public class AssetIssuingTransactionDao {
             throw new CantCheckAssetIssuingProgressException(exception,"Loading Asset Issuing plugin database to memory","Cannot load the Asset Issuing database");
         } catch (Exception exception){
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception,"Checking pending assets to issue","Unexpected exception");
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Checking pending assets to issue","Unexpected exception");
         }
     }
 
