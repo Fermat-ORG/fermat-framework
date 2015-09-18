@@ -1,14 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions;
+package com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by eze on 2015.06.17..
  */
-public class CantGetTransactionsException extends FermatException {
-
-    public static final String DEFAULT_MESSAGE = "CAN'T GET TRANSACTIONS";
-
+public class CantLoadWalletException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -17,24 +14,7 @@ public class CantGetTransactionsException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetTransactionsException(String message, Exception cause, String context, String possibleReason) {
+    public CantLoadWalletException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
-    }
-
-    public CantGetTransactionsException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantGetTransactionsException(final String message) {
-        this(message, null);
-    }
-
-    public CantGetTransactionsException(final Exception exception) {
-        this(exception.getMessage());
-        setStackTrace(exception.getStackTrace());
-    }
-
-    public CantGetTransactionsException() {
-        this(DEFAULT_MESSAGE);
     }
 }

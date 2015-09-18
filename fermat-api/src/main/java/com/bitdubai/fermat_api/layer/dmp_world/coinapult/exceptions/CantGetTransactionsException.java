@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer._11_world.coinapult.exceptions.CantGetTransactionsException</code>
+ * The Class <code>com.bitdubai.fermat_api.layer._11_world.coinapult.exceptions.CantListTransactionsException</code>
  * <p/>
  * Created by Roberto Requena - (rrequena) on 02/05/15.
  *

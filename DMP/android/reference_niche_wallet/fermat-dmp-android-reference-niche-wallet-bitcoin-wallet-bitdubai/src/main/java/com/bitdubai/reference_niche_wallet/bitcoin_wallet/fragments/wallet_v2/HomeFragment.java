@@ -122,9 +122,9 @@ public class HomeFragment extends FermatWalletFragment {
 
         try {
             String publicKey = referenceWalletSession.getWalletSessionType().getWalletPublicKey();
-            availableBalance = cryptoWallet.getAvailableBalance(publicKey);
+            availableBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE, publicKey);
 
-            bookBalance = cryptoWallet.getBookBalance(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            bookBalance = cryptoWallet.getBalance(BalanceType.BOOK, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
 
 
         } catch (CantGetBalanceException e) {
