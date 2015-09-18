@@ -1,8 +1,8 @@
-package com.bitdubai.sub_app.wallet_store.util;
+package com.bitdubai.desktop.sub_app_manager.util;
 
 import android.util.Log;
 
-import com.wallet_store.bitdubai.BuildConfig;
+import com.bitdubai.desktop.sub_app_manager.BuildConfig;
 
 
 /**

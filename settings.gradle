@@ -600,28 +600,28 @@ project(':fermat-csh-plugin-wallet-cash-money-bitdubai').projectDir = new File('
 //ANDROID
 
 //Desktop
-//include ':fermat-cbp-android-desktop-sub-app-manager-bitdubai'
-//project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai')
-//include ':fermat-cbp-android-desktop-wallet-manager-bitdubai'
-//project(':fermat-cbp-android-desktop-wallet-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-wallet-manager-bitdubai')
+include ':fermat-cbp-android-desktop-sub-app-manager-bitdubai'
+project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai')
+include ':fermat-cbp-android-desktop-wallet-manager-bitdubai'
+project(':fermat-cbp-android-desktop-wallet-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-wallet-manager-bitdubai')
 
 //Reference Wallet
-//include ':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai'
-//project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
-//include ':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai'
-//project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
+include ':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai'
+project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
+include ':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai'
+project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
 
 //Sub App
-//include ':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai'
-//project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
-//include ':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai'
-//project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
-//include ':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai'
-//project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
-//include ':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai'
-//project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
-//include ':fermat-cbp-android-sub-app-customers-bitdubai'
-//project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
+include ':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai'
+project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
+include ':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai'
+project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
+include ':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai'
+project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
+include ':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai'
+project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
+include ':fermat-cbp-android-sub-app-customers-bitdubai'
+project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
 
 //PLUGINS
 
