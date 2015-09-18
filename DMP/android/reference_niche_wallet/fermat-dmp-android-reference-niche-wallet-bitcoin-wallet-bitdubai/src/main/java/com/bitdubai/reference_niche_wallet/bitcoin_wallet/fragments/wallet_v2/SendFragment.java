@@ -1,33 +1,30 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -71,8 +68,11 @@ public  class SendFragment extends FermatWalletFragment {
     CryptoWallet cryptoWallet;
 
 
+    private EditText editTextAmount;
+
+
     private AutoCompleteTextView autocompleteContacts;
-    private EditText txtAddress;
+    private EditText editTextAddress;
     private WalletContactListAdapter adapter;
 
     public static SendFragment newInstance(int position, ReferenceWalletSession walletSession) {
@@ -308,8 +308,6 @@ public  class SendFragment extends FermatWalletFragment {
             ViewHolder when;
 
 
-
-            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
              if (convertView == null) {
 
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_send_list_detail, parent, false);
@@ -372,27 +370,65 @@ public  class SendFragment extends FermatWalletFragment {
                     @Override
                     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                         WalletContact walletContact = (WalletContact) arg0.getItemAtPosition(position);
-                        txtAddress.setText(walletContact.address);
+                        editTextAddress.setText(walletContact.address);
                     }
                 });
 
-                txtAddress = (EditText) convertView.findViewById(R.id.address);
+                editTextAddress = (EditText) convertView.findViewById(R.id.address);
 
                 TextView tv;
 
                 tv = (TextView) convertView.findViewById(R.id.notes);
 
 
-                tv = (TextView) convertView.findViewById(R.id.amount);
+                editTextAmount = (EditText) convertView.findViewById(R.id.amount);
+                /**
+                 *  Amount observer
+                 */
+                editTextAmount.addTextChangedListener(new TextWatcher() {
+                    public void afterTextChanged(Editable s) {
+                        try {
+                            Long amount = Long.parseLong(editTextAmount.getText().toString());
+                            if (amount > 0) {
+                                long actualBalance = cryptoWallet.getAvailableBalance(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+                                editTextAmount.setHint("Available amount: " + actualBalance + " bits");
+                            }
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+
+                /**
+                 * BarCode Scanner
+                 */
+                convertView.findViewById(R.id.scan_qr).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
+                        integrator.initiateScan();
+                    }
+                });
+
 
 
                 //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
 
+                Button btnSend = (Button) convertView.findViewById(R.id.send_button);
+                btnSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                tv = (TextView) convertView.findViewById(R.id.when);
+                    }
+                });
 
 
-                tv = (TextView) convertView.findViewById(R.id.contact_name);
 
                 //tv.setText("Name");
 
@@ -473,7 +509,9 @@ public  class SendFragment extends FermatWalletFragment {
                         @Override
                         public void onClick(View v) {
 
-                            if(isExpanded) ((ExpandableListView) parent).collapseGroup(groupPosition);
+                            if(isExpanded){
+                                ((ExpandableListView) parent).collapseGroup(groupPosition);
+                            }
                             else ((ExpandableListView) parent).expandGroup(groupPosition, true);
                         }
                     });
