@@ -23,7 +23,7 @@ llamaremos NotifierAgent. +
 Analicemos el envío de una transacción bitcoin a un intra user.
 
 Estemos enviando fiat o crypto al módulo transaccional siempre le llegará el valor crypto que debe
-enviar sea pasado por el ususario o calculado por la wallet que llama al módulo transaccional. +
+enviar sea pasado por el usuario o calculado por la wallet que llama al módulo transaccional. +
 Lo primero que debemos hacer es controlar los fondos de la wallet, si estos son suficientes registramos
 la creación de la transacción en una base de datos. +
 

@@ -63,30 +63,16 @@ public class IncomingExtraUserTransactionHandler implements DealsWithEvents,Deal
     public void handleTransaction(Transaction<CryptoTransaction> transaction) throws CantGetCryptoAddressBookRecordException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, UnexpectedTransactionException {
         try {
             try {
-                CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(transaction.getInformation().getAddressTo());
-                ReferenceWallet referenceWallet = cryptoAddressBookRecord.getWalletType();
-                String walletPublicKey = cryptoAddressBookRecord.getWalletPublicKey();
+                CryptoAddressBookRecord cryptoAddressBookRecord = this.cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(transaction.getInformation().getAddressTo());
+                ReferenceWallet         referenceWallet         = cryptoAddressBookRecord.getWalletType();
+                String                  walletPublicKey         = cryptoAddressBookRecord.getWalletPublicKey();
 
-                TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(bitcoinWalletManager, cryptoAddressBookManager);
-                TransactionExecutor executor = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
+                TransactionExecutorFactory executorFactory = new TransactionExecutorFactory(this.bitcoinWalletManager, this.cryptoAddressBookManager);
+                TransactionExecutor        executor        = executorFactory.newTransactionExecutor(referenceWallet, walletPublicKey);
 
                 executor.executeTransaction(transaction);
 
-                /**
-                 *  Fire event notification
-                 */
-
-                FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
-                IncomingMoneyNotificationEvent incomingMoneyNotificationEvent=  (IncomingMoneyNotificationEvent) fermatEvent;
-                incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_EXTRA_USER);
-                incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-                //incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
-                incomingMoneyNotificationEvent.setAmount(transaction.getInformation().getCryptoAmount());
-                incomingMoneyNotificationEvent.setCryptoCurrency(transaction.getInformation().getCryptoCurrency());
-                incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());
-
-
-                eventManager.raiseEvent(fermatEvent);
+                launchIncomingMoneyNotificationEvent(cryptoAddressBookRecord,transaction);
 
             } catch (CryptoAddressBookRecordNotFoundException exception) {
                 //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
@@ -98,6 +84,18 @@ public class IncomingExtraUserTransactionHandler implements DealsWithEvents,Deal
             //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
             throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
         }
+    }
+
+    private void launchIncomingMoneyNotificationEvent(CryptoAddressBookRecord cryptoAddressBookRecord,Transaction<CryptoTransaction> transaction) {
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
+        IncomingMoneyNotificationEvent incomingMoneyNotificationEvent =  (IncomingMoneyNotificationEvent) platformEvent;
+        incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_EXTRA_USER);
+        incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
+        //incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
+        incomingMoneyNotificationEvent.setAmount(transaction.getInformation().getCryptoAmount());
+        incomingMoneyNotificationEvent.setCryptoCurrency(transaction.getInformation().getCryptoCurrency());
+        incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());
+        eventManager.raiseEvent(platformEvent);
     }
 
     @Override

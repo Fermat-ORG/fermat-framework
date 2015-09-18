@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -42,13 +43,13 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
      * EventManager Interface implementation.
      */
     @Override
-    public FermatEventListener getNewListener(EventType eventType) {
-        return eventType.getListener(fermatEventMonitor);
+    public FermatEventListener getNewListener(FermatEventEnum eventType) {
+        return eventType.getNewListener(fermatEventMonitor);
     }
 
     @Override
-    public FermatEvent getNewEvent(EventType eventType) {
-        return eventType.getEvent();
+    public FermatEvent getNewEvent(FermatEventEnum eventType) {
+        return eventType.getNewEvent();
     }
 
     @Override
@@ -95,7 +96,7 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
         }
     }
 
-    private String buildMapKey(final FermatEnum fermatEnum) {
+    private String buildMapKey(final FermatEventEnum fermatEnum) {
         StringBuilder builder = new StringBuilder();
 
         if (fermatEnum.getPlatform() != null)
