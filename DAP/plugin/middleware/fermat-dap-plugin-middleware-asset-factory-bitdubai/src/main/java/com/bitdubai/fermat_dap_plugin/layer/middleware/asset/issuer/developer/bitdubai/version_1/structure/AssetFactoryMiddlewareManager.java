@@ -96,6 +96,8 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         ContractProperty expirationDate;
         redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
         expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+        //TODO: ELiminar leugo solo para prueba
+        assetFactory.setContractProperty(redeemable);
         contractProperties.add(redeemable);
         contractProperties.add(expirationDate);
         assetFactory.setContractProperties(contractProperties);
@@ -283,7 +285,53 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         }
     }
 
-    //getNewWalletFactoryProject() throws CantCreateWalletFactoryProjectException {
+    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException
+    {
+        // I define the filter to search for the public Key
+        DatabaseTableFilter filter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return null;
+            }
+
+            @Override
+            public String getValue() {
+                return null;
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+
+                return null;
+            }
+        };
+
+        List<AssetFactory> assetFactories;
+        try {
+            assetFactories = getAssetFactories(filter);
+            return assetFactories;
+        }
+        catch (DatabaseOperationException  | InvalidParameterException | CantLoadTableToMemoryException e)
+        {
+            throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryAll", "");
+        }
+    }
+
     public AssetFactory getNewAssetFactory() throws CantCreateAssetFactoryException
     {
         AssetFactory assetFactory = new AssetFactory() {

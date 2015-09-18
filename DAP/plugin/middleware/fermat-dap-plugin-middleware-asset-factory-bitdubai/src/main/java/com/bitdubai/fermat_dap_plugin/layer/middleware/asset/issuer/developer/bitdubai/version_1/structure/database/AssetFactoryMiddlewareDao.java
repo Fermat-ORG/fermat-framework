@@ -179,16 +179,16 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             DatabaseTableRecord contractRecord = getContractDataRecord(assetFactory.getPublicKey(), contractProperty.getName(), contractProperty.getValue().toString());
             DatabaseTableFilter filter = getContractFilter(contractProperty.getName());
 
-            if (isNewRecord(table, filter))
-            {
-                //New Records
-                transaction.addRecordToInsert(table, contractRecord);
-            }
-            else{
-                ////update Records
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                transaction.addRecordToUpdate(table, contractRecord);
-            }
+//            if (isNewRecord(table, filter))
+//            {
+//                //New Records
+//                transaction.addRecordToInsert(table, contractRecord);
+//            }
+//            else{
+//                ////update Records
+//                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+//                transaction.addRecordToUpdate(table, contractRecord);
+//            }
 
             if(assetFactory.getContractProperties() != null)
             {
@@ -493,6 +493,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
 
     public void saveAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException
     {
+
         try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
@@ -509,16 +510,12 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             else {
                 table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, assetFactoryRecord);
-
-                transaction = addResourceRecordsToTransaction(transaction, assetFactory);
-
-                transaction = addContractRecordsToTransaction(transaction, assetFactory);
             }
 
             // I wil add the Contracts to the transaction if there are any
             transaction = addContractRecordsToTransaction(transaction, assetFactory);
             // I wil add the resources to the transaction if there are any
-            transaction = addResourceRecordsToTransaction(transaction, assetFactory);
+            //transaction = addResourceRecordsToTransaction(transaction, assetFactory);
 
             //I execute the transaction and persist the database side of the asset.
             database.executeTransaction(transaction);

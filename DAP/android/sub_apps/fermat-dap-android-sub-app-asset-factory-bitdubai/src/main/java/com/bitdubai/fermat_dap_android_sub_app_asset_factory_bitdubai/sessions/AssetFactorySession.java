@@ -2,8 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class AssetFactorySession implements SubAppsSession {
     /**
      * Issuer Manager
      */
-    private AssetFactoryManager manager;
+    private AssetFactoryModuleManager manager;
     /**
      * SubApps type
      */
@@ -43,7 +42,7 @@ public class AssetFactorySession implements SubAppsSession {
      * @param errorManager Error Manager
      * @param manager      AssetIssuerWallet Manager
      */
-    public AssetFactorySession(SubApps subApps, ErrorManager errorManager, AssetFactoryManager manager) {
+    public AssetFactorySession(SubApps subApps, ErrorManager errorManager, AssetFactoryModuleManager manager) {
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -93,7 +92,7 @@ public class AssetFactorySession implements SubAppsSession {
      *
      * @return AssetIssuerWalletManager object
      */
-    public AssetFactoryManager getManager() {
+    public AssetFactoryModuleManager getManager() {
         return manager;
     }
 }
