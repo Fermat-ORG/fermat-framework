@@ -26,6 +26,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 09/09/15.
  */
+//TODO TERMINAR DE IMPLEMENTAR
 public class RedeemPointPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     /**
