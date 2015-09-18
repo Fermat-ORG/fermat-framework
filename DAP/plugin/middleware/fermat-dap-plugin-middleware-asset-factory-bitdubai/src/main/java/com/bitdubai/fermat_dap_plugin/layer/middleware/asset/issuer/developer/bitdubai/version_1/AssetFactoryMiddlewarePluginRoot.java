@@ -12,6 +12,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -150,9 +153,9 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
     public void start() throws CantStartPluginException {
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
         try {
-            System.out.println("******* Asset Factory Init, Abriendo Base de Datos. ******");
+            System.out.println("******* Asset Factory Init, Open Database. ******");
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            testAssetFactory();
+            //testAssetFactory();
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -229,21 +232,37 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
             java.util.Date date= new java.util.Date();
             System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
-            assetFactory.setPublicKey("111111222223333344444");
+            assetFactory.setPublicKey("ASD-125412541-BS-854");
             assetFactory.setDescription("Asset de Prueba");
-            assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_ASSET);
+            assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
             assetFactory.setAmount(1);
             assetFactory.setFee(1);
             assetFactory.setIsRedeemable(true);
             assetFactory.setName("Asset de Mcdonald - modificado");
-            assetFactory.setAssetUserIdentityPublicKey("99999999");
+            assetFactory.setAssetUserIdentityPublicKey("ASDS-99999999");
             assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
             assetFactory.setExpirationDate(new Timestamp(date.getTime()));
             assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
             assetFactory.setQuantity(100);
             assetFactory.setState(State.DRAFT);
-            //assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
-            assetFactory = assetFactoryMiddlewareManager.getAssetFactory("111111222223333344444");
+            Resource resource = new Resource();
+            resource.setId(UUID.randomUUID());
+            resource.setName("Foto 1");
+            resource.setFileName("imagen.png");
+            resource.setResourceType(ResourceType.IMAGE);
+            resource.setResourceDensity(ResourceDensity.HDPI);
+            //assetFactory.setResource(resource);
+            List<Resource> resources = new ArrayList<>();
+            resources.add(resource);
+            resource.setId(UUID.randomUUID());
+            resource.setName("Foto 2");
+            resource.setFileName("imagen2.png");
+            resource.setResourceType(ResourceType.IMAGE);
+            resource.setResourceDensity(ResourceDensity.HDPI);
+            resources.add(resource);
+            assetFactory.setResources(resources);
+            assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
+            //assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
             System.out.println("******* Metodo testAssetFactory. Franklin ******" + assetFactory + assetFactory.getName());
             return assetFactory;
         }catch (Exception e){

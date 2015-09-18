@@ -27,9 +27,6 @@ public interface AssetFactory {
     String getDescription();
     void setDescription(String description);
 
-    Resource getResource();
-    void setResource(Resource resource);
-
     List<Resource> getResources();
     void setResources(List<Resource> resources);
 

@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum AssetBehavior {
     REGENERATION_ASSET ("REGA"),
-    RECUPERATION_ASSET ("RECA");
+    RECUPERATION_BITCOINS ("RECA");
 
     private String code;
 
@@ -22,7 +22,7 @@ public enum AssetBehavior {
             case "REGA":
                 return AssetBehavior.REGENERATION_ASSET;
             case "RECA":
-                return AssetBehavior.RECUPERATION_ASSET;
+                return AssetBehavior.RECUPERATION_BITCOINS;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the AssetBehavior enum.");
         }

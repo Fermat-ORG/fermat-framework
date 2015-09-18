@@ -96,8 +96,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         ContractProperty expirationDate;
         redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
         expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-        //TODO: ELiminar leugo solo para prueba
-        assetFactory.setContractProperty(redeemable);
         contractProperties.add(redeemable);
         contractProperties.add(expirationDate);
         assetFactory.setContractProperties(contractProperties);
@@ -338,7 +336,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
             String publicKey;
             String name;
             String description;
-            Resource resource;
             List<Resource> resources;
             DigitalAssetContract digitalAssetContract;
             ContractProperty contractProperty;
@@ -382,16 +379,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
             @Override
             public void setDescription(String description) {
                 this.description = description;
-            }
-
-            @Override
-            public Resource getResource() {
-                return resource;
-            }
-
-            @Override
-            public void setResource(Resource resource) {
-                this.resource = resource;
             }
 
             @Override

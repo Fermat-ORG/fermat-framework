@@ -102,7 +102,8 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_FILE_NAME_COLUMN, resource.getFileName());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_DENSITY_COLUMN, resource.getResourceDensity().getCode());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN, resource.getResourceType().value());
-        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, resource.getResourceFile().getPath());
+        //record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, resource.getResourceFile().getPath());
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, "aca va el path del archivo");
         //TODO: Analizar crear una constante para que guarde los bytes del archivo asociado
 
         return record;
@@ -124,32 +125,13 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
 
     private DatabaseTransaction addResourceRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
     {
-        Resource resource = null;
-
-        resource = assetFactory.getResource();
-        //TODO:Revisar assetFactory.getResource()
-        if (resource != null) //Eliminar
-        {
             DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
-
-            DatabaseTableRecord resourceRecord = getResourceDataRecord(assetFactory.getPublicKey(), resource);
-            DatabaseTableFilter filter = getResourceFilter(resource.getId().toString());
-
-            if (isNewRecord(table, filter))
-            {
-                //New Records
-                transaction.addRecordToInsert(table, resourceRecord);
-            }
-            else{
-                //update Records
-                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                transaction.addRecordToUpdate(table, resourceRecord);
-            }
 
             if(assetFactory.getResources() != null)
             {
                 for (Resource resources : assetFactory.getResources()) {
                     DatabaseTableRecord record = getResourceDataRecord(assetFactory.getPublicKey(), resources);
+                    DatabaseTableFilter filter = getResourceFilter(resources.getId().toString());
                     filter.setValue(resources.getId().toString());
                     if (isNewRecord(table, filter))
                         //New Records
@@ -161,48 +143,27 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                     }
                 }
             }
-        }
 
         return transaction;
     }
 
     private DatabaseTransaction addContractRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
     {
-        ContractProperty contractProperty = null;
+        DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
-        contractProperty = assetFactory.getContractProperty();
-        //TODO: Revisar assetFactory.getContractProperty()
-        if (contractProperty != null) //Eliminar
+        if(assetFactory.getContractProperties() != null)
         {
-            DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
-
-            DatabaseTableRecord contractRecord = getContractDataRecord(assetFactory.getPublicKey(), contractProperty.getName(), contractProperty.getValue().toString());
-            DatabaseTableFilter filter = getContractFilter(contractProperty.getName());
-
-//            if (isNewRecord(table, filter))
-//            {
-//                //New Records
-//                transaction.addRecordToInsert(table, contractRecord);
-//            }
-//            else{
-//                ////update Records
-//                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-//                transaction.addRecordToUpdate(table, contractRecord);
-//            }
-
-            if(assetFactory.getContractProperties() != null)
-            {
-                for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
-                    DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(), contractProperties.getValue().toString());
-                    filter.setValue(contractProperties.getName());
-                    if (isNewRecord(table, filter))
-                        //New Records
-                        transaction.addRecordToInsert(table, record);
-                    else{
-                        //update Records
-                        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                        transaction.addRecordToUpdate(table, record);
-                    }
+            for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
+                DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(), contractProperties.getValue().toString());
+                DatabaseTableFilter filter = getContractFilter(contractProperties.getName());
+                filter.setValue(contractProperties.getName());
+                if (isNewRecord(table, filter))
+                    //New Records
+                    transaction.addRecordToInsert(table, record);
+                else{
+                    //update Records
+                    table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                    transaction.addRecordToUpdate(table, record);
                 }
             }
         }
@@ -273,7 +234,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             String publicKey;
             String name;
             String description;
-            Resource resource;
             List<Resource> resources;
             DigitalAssetContract digitalAssetContract;
             ContractProperty contractProperty;
@@ -317,16 +277,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             @Override
             public void setDescription(String description) {
                 this.description = description;
-            }
-
-            @Override
-            public Resource getResource() {
-                return resource;
-            }
-
-            @Override
-            public void setResource(Resource resource) {
-                this.resource = resource;
             }
 
             @Override
@@ -515,7 +465,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             // I wil add the Contracts to the transaction if there are any
             transaction = addContractRecordsToTransaction(transaction, assetFactory);
             // I wil add the resources to the transaction if there are any
-            //transaction = addResourceRecordsToTransaction(transaction, assetFactory);
+            transaction = addResourceRecordsToTransaction(transaction, assetFactory);
 
             //I execute the transaction and persist the database side of the asset.
             database.executeTransaction(transaction);
@@ -540,7 +490,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
 
                 List<ContractProperty> contractProperties =  new ArrayList<>();
                 // I will add the contract properties information from database
-                for (DatabaseTableRecord contractpropertyRecords : getContractsData(assetFactory.getPublicKey())){
+                for (DatabaseTableRecord contractpropertyRecords : getContractsData(assetFactory.getPublicKey())) {
                     //TODO: Revisar este objeto contractProperty
                     ContractProperty contractProperty = new ContractProperty(null, null);
 
