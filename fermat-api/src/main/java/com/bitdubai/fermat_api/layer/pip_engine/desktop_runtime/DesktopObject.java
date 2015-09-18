@@ -46,14 +46,6 @@ public interface DesktopObject {
 
 
     /**
-     *  set start screen
-     *
-     * @param activity
-     */
-
-    public void setStartActivity(Activities activity);
-
-    /**
      *  set languajes
      *
      * @return
