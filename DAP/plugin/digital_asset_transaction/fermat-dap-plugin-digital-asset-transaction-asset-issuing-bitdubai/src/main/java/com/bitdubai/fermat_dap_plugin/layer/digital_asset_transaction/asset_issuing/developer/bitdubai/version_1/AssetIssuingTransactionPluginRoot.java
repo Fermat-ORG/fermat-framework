@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -32,6 +33,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
@@ -169,6 +173,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Starting Asset Issuing plugin", "Unexpected exception");
         }
         this.serviceStatus = ServiceStatus.STARTED;
+        testIssueSingleAsset();
 
     }
 
@@ -278,6 +283,41 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+    private void testIssueSingleAsset(){
+        Logger LOG = Logger.getGlobal();
+        DigitalAsset digitalAsset=new DigitalAsset();
+        digitalAsset.setGenesisAmount(1);
+        digitalAsset.setDescription("TestAsset");
+        digitalAsset.setName("testName");
+        digitalAsset.setPublicKey("testPublicKey");
+        List<Resource> resources=new ArrayList<>();
+        digitalAsset.setResources(resources);
+        IdentityAssetIssuer identityAssetIssuer=new IdentityAssetIssuer() {
+            @Override
+            public String getAlias() {
+                return null;
+            }
+
+            @Override
+            public String getPublicKey() {
+                return null;
+            }
+
+            @Override
+            public String createMessageSignature(String mensage) throws CantSingMessageException {
+                return null;
+            }
+        };
+        digitalAsset.setIdentityAssetIssuer(identityAssetIssuer);
+        DigitalAssetContract digitalAssetContract=new DigitalAssetContract();
+        digitalAsset.setContract(digitalAssetContract);
+        try {
+            this.assetIssuingTransactionManager.issueAssets(digitalAsset,1);
+        } catch (CantIssueDigitalAssetsException e) {
+            LOG.info(e.getStackTrace().toString());
         }
     }
 

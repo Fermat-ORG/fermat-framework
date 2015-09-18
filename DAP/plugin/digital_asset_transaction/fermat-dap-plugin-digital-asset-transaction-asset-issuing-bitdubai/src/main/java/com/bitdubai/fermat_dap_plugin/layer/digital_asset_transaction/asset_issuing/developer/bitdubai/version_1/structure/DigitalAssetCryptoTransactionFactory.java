@@ -51,13 +51,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
-    //PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
     TransactionStatus transactionStatus;
     final String LOCAL_STORAGE_PATH="digital-asset/";
     String digitalAssetLocalFilePath;
     int assetsAmount;
+    private final int MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT=1;
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
@@ -219,7 +219,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         return transactionUUID;
     }
 
-    private List<String> getPendingAssets(String publicKey){
+    /*private List<String> getPendingAssets(String publicKey){
 
         List<String> pendingAssetIssuingTransactionIdList=new ArrayList<>();
 
@@ -233,14 +233,18 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         return pendingAssetIssuingTransactionIdList;
 
-    }
+    }*/
 
     public void issueDigitalAssets(DigitalAsset digitalAsset, int assetsAmount)throws CantIssueDigitalAssetsException{
 
         this.digitalAsset=digitalAsset;
         this.assetsAmount=assetsAmount;
+
         //Primero chequeamos si el asset está completo
         try {
+            if(assetsAmount<MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT){
+                throw new ObjectNotSetException("The assetsAmount "+assetsAmount+" is lower that "+MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT);
+            }
             areObjectsSettled();
             //Persistimos el Asset en archivo
             persistInLocalStorage();
@@ -303,14 +307,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 getDigitalAssetFileFromLocalStorage();
                 //Llamamos a la factory para que culmine el trabajo de emisión del Asset
                 createDigitalAssetCryptoTransaction();
-                //TODO: anializar reportsmanagers, terminar, este método y terminar de implementar los catches.
+                //TODO: analizar reportsmanagers, terminar este método.
             }
-        } catch (CantCheckAssetIssuingProgressException | UnexpectedResultReturnedFromDatabaseException exception) {
+        } catch (CantCreateDigitalAssetTransactionException | CantCheckAssetIssuingProgressException | CantGetDigitalAssetFromLocalStorageException | UnexpectedResultReturnedFromDatabaseException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-        } catch (CantGetDigitalAssetFromLocalStorageException e) {
-            e.printStackTrace();
-        } catch (CantCreateDigitalAssetTransactionException e) {
-            e.printStackTrace();
         }
     }
 
