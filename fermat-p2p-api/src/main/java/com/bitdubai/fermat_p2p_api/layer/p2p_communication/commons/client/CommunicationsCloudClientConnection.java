@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
@@ -54,7 +55,7 @@ public interface CommunicationsCloudClientConnection {
      * @param numRegister
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Double latitude, Double longitude, String name, String extraData, Integer firstRecord, Integer numRegister);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, String name, String extraData, Integer firstRecord, Integer numRegister);
 
     /**
      * Method that register a platform component with the Communication Cloud Server

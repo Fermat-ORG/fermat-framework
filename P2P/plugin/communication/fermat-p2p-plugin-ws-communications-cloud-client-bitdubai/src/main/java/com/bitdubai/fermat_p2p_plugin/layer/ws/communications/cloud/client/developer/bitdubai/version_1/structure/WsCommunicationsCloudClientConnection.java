@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
@@ -164,9 +165,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Double, Double, String, String, Integer, Integer)
+     * @see CommunicationsCloudClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, String, String, Integer, Integer)
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Double latitude, Double longitude, String name, String extraData, Integer firstRecord, Integer numberRegister){
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, String name, String extraData, Integer firstRecord, Integer numberRegister){
 
         //Validate parameters
         if (applicant == null){
@@ -176,7 +177,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
         /*
          * Construct a PlatformComponentProfile instance
          */
-        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, latitude, longitude, name, applicant.getNetworkServiceType(), applicant.getPlatformComponentType(), extraData, firstRecord, numberRegister);
+        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, name, applicant.getNetworkServiceType(), applicant.getPlatformComponentType(), extraData, firstRecord, numberRegister);
 
     }
 
