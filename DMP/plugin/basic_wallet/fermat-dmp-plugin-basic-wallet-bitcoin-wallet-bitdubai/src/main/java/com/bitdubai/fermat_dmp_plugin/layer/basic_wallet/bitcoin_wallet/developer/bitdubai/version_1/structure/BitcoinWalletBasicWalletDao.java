@@ -15,22 +15,23 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.Trans
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantFindTransactionException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterCreditException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantExecuteBitconTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.util.BitcoinWalletTransactionWrapper;
@@ -88,14 +89,42 @@ public class BitcoinWalletBasicWalletDao {
         }
     }
 
-    public List<BitcoinWalletTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
+    public List<BitcoinWalletTransaction> getTransactions(int max, int offset) throws CantListTransactionsException {
         try {
             DatabaseTable bitcoinwalletTable = filterBitcoinWalletTableMaxOffset(max, offset);
             return createTransactionList(bitcoinwalletTable.getRecords());
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+            throw new CantListTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
         } catch (Exception exception){
-            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
+    public List<BitcoinWalletTransaction> listTransactionsByActor(String actorPublicKey,
+                                                                  int max,
+                                                                  int offset) throws CantListTransactionsException {
+        try {
+            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
+
+            bitcoinWalletTable.setFilterTop(String.valueOf(max));
+            bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
+            bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            // filter by actor from and actor to (debits and credits related with this actor).
+            List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+            tableFilters.add(bitcoinWalletTable.getNewFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, DatabaseFilterType.EQUAL, actorPublicKey));
+            tableFilters.add(bitcoinWalletTable.getNewFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME  , DatabaseFilterType.EQUAL, actorPublicKey));
+
+            DatabaseTableFilterGroup filterGroup = bitcoinWalletTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
+
+            bitcoinWalletTable.setFilterGroup(filterGroup);
+
+            bitcoinWalletTable.loadToMemory();
+            return createTransactionList(bitcoinWalletTable.getRecords());
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
+        } catch (Exception exception){
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unhandled exception.");
         }
     }
 

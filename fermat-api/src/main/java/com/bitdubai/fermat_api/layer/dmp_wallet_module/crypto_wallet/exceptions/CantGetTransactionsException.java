@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions;
 
 /**
- * The interface <code>CantGetTransactionsException</code>
+ * The interface <code>CantListTransactionsException</code>
  * is thrown when i cant get transactions of the wallet.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/06/15.

@@ -47,12 +47,12 @@ import java.util.UUID;
 
 /**
  * Created by loui on 30/04/15.
+ * Modified by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
  */
-public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,DatabaseManagerForDevelopers,DealsWithErrors,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Service, Plugin {
+public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service, Plugin {
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
-    private Map<String, UUID> walletIds =  new HashMap<>();
-
+    private Map<String, UUID> walletIds = new HashMap<>();
 
     /**
      * DealsWithErrors Interface member variables.
@@ -79,7 +79,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
      * Service Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /*
      * DatabaseManagerForDevelopers methods implementation
@@ -88,9 +87,9 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         List<String> databasesNames = new ArrayList<>();
         Collection<UUID> ids = this.walletIds.values();
-        for(UUID id : ids)
+        for (UUID id : ids)
             databasesNames.add(id.toString());
-        DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(this.pluginId.toString(),databasesNames);
+        DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(this.pluginId.toString(), databasesNames);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
@@ -106,18 +105,18 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
             databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
             database.closeDatabase();
-        } catch (CantOpenDatabaseException cantOpenDatabaseException){
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        }  catch (Exception exception) {
-            FermatException e = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception exception) {
+            FermatException e = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return databaseTableRecords;
@@ -156,7 +155,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
      * DealsWithPluginIdentity methods implementation.
      */
     @Override
-    public void setId (UUID pluginId) {
+    public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
@@ -168,10 +167,11 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         try {
             loadWalletIdsMap();
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (CantStartPluginException exception){
+        } catch (CantStartPluginException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
-        } catch (Exception exception){
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
@@ -188,10 +188,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
     @Override
     public void stop() {
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-        listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -203,52 +199,50 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     @Override
     public BitcoinWalletWallet loadWallet(String walletId) throws CantLoadWalletException {
         try {
-            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
-            bitcoinWallet.setErrorManager(this.errorManager);
-            bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-            bitcoinWallet.setPluginFileSystem(pluginFileSystem);
+            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             UUID internalWalletId = walletIds.get(walletId);
             bitcoinWallet.initialize(internalWalletId);
 
             return bitcoinWallet;
-        } catch(CantInitializeBitcoinWalletBasicException exception){
-            throw new CantLoadWalletException("I can't initialize wallet",exception,"","");
-        } catch(Exception exception){
-            throw new CantLoadWalletException(CantLoadWalletException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"","");
+        } catch (CantInitializeBitcoinWalletBasicException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantLoadWalletException("I can't initialize wallet", exception, "", "");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantLoadWalletException(CantLoadWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "", "");
         }
     }
 
     @Override
     public void createWallet(String walletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(pluginId);
-            bitcoinWallet.setErrorManager(errorManager);
-            bitcoinWallet.setPluginDatabaseSystem(pluginDatabaseSystem);
-            bitcoinWallet.setPluginFileSystem(pluginFileSystem);
+            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             UUID internalWalletId = bitcoinWallet.create(walletId);
 
-            walletIds.put(walletId,internalWalletId);
-        }catch(CantCreateWalletException exception) {
-            throw new CantCreateWalletException("Wallet Creation Failed",exception,"walletId: "+walletId.toString(),"");
-        }catch(Exception exception){
-            throw new CantCreateWalletException("Wallet Creation Failed",FermatException.wrapException(exception),"walletId: "+walletId.toString(),"");
+            walletIds.put(walletId, internalWalletId);
+        } catch (CantCreateWalletException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantCreateWalletException("Wallet Creation Failed", exception, "walletId: " + walletId, "");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantCreateWalletException("Wallet Creation Failed", FermatException.wrapException(exception), "walletId: " + walletId, "");
         }
     }
 
-    private void loadWalletIdsMap() throws CantStartPluginException{
+    private void loadWalletIdsMap() throws CantStartPluginException {
         PluginTextFile walletIdsFile = getWalletIdsFile();
-        String[] stringWalletIds = walletIdsFile.getContent().split(";" , -1);
+        String[] stringWalletIds = walletIdsFile.getContent().split(";", -1);
 
-        for (String stringWalletId : stringWalletIds )
-            if(!stringWalletId.equals("")) {
+        for (String stringWalletId : stringWalletIds)
+            if (!stringWalletId.equals("")) {
                 String[] idPair = stringWalletId.split(",", -1);
-                walletIds.put(idPair[0],  UUID.fromString(idPair[1]));
+                walletIds.put(idPair[0], UUID.fromString(idPair[1]));
             }
     }
 
-    private PluginTextFile getWalletIdsFile() throws CantStartPluginException{
+    private PluginTextFile getWalletIdsFile() throws CantStartPluginException {
         try {
             PluginTextFile walletIdsFile = pluginFileSystem.getTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             walletIdsFile.loadFromMedia();
@@ -260,7 +254,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         }
     }
 
-    private PluginTextFile createWalletdsFile() throws CantStartPluginException{
+    private PluginTextFile createWalletdsFile() throws CantStartPluginException {
         try {
             PluginTextFile walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             walletIdsFile.persistToMedia();

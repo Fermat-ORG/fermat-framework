@@ -130,9 +130,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
     @Override
-    public DatabaseTableFilterGroup getEmptyTableFilterGroup() {
-        return new AndroidDatabaseTableFilterGroup();
+    public DatabaseTableFilter getNewFilter(String column, DatabaseFilterType type, String value) {
+        return new AndroidDatabaseTableFilter(column, type, value);
+    }
 
+    @Override
+    public DatabaseTableFilterGroup getNewFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator) {
+        return new AndroidDatabaseTableFilterGroup(tableFilters, filterGroups, filterOperator);
     }
 
     /**
@@ -141,6 +145,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
     @Override
     public void clearAllFilters() {
         this.tableFilter = null;
+        this.tableFilterGroup = null;
     }
 
     /**
@@ -367,21 +372,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
         filter.setType(type);
 
         this.tableFilter.add(filter);
-
-    }
-
-    @Override
-    public void setStateFilter(String columName, WalletFactoryProjectState walletFactoryProjectState, DatabaseFilterType type) {
-        if (this.tableFilter == null)
-            this.tableFilter = new ArrayList<>();
-
-        DatabaseTableFilter filter = new AndroidDatabaseTableFilter();
-
-        filter.setColumn(columName);
-        filter.setValue(walletFactoryProjectState.toString());
-        filter.setType(type);
-
-        this.tableFilter.add(filter);
     }
 
     /**
@@ -427,27 +417,19 @@ public class AndroidDatabaseTable implements DatabaseTable {
         this.tableSelectOperator.add(selectOperator);
     }
 
-
-
-
-
     /**
      * <p>Sets the filter and subgroup to filter for queries with grouped where
      *
-     * @param filters   list of DatabaseTableFilter object
-     * @param subGroups list of DatabaseTableFilterGroup objects
-     * @param operator  DatabaseFilterOperator enumerator
+     * @param filterGroup DatabaseTableFilterGroup object
      */
     @Override
-    public void setFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator operator) {
-
-        DatabaseTableFilterGroup filterGroup = new AndroidDatabaseTableFilterGroup();
-
-        filterGroup.setFilters(filters);
-        filterGroup.setSubGroups(subGroups);
-        filterGroup.setOperator(operator);
-
+    public void setFilterGroup(DatabaseTableFilterGroup filterGroup) {
         this.tableFilterGroup = filterGroup;
+    }
+
+    @Override
+    public void setFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator) {
+        this.tableFilterGroup = new AndroidDatabaseTableFilterGroup(tableFilters, filterGroups, filterOperator);
     }
 
     /**

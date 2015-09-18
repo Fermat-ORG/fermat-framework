@@ -18,12 +18,22 @@ public class AndroidDatabaseTableFilter implements DatabaseTableFilter {
      * DatabaseTableFilter Member Variables.
      */
     private String column;
+
     private DatabaseFilterType type;
+
     private String value;
 
     /**
      * DatabaseTableFilter interface implementation.
      */
+    public AndroidDatabaseTableFilter() {
+    }
+
+    public AndroidDatabaseTableFilter(String column, DatabaseFilterType type, String value) {
+        this.column = column;
+        this.type = type;
+        this.value = value;
+    }
 
     /**
      * <p>Sets the column to apply the filter

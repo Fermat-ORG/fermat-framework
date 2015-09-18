@@ -265,7 +265,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
             adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
 
-        } catch (CantGetTransactionsException e) {
+        } catch (CantListTransactionsException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
