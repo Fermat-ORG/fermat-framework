@@ -168,15 +168,21 @@ public interface CryptoWallet extends Serializable{
     //TODO:  LEON ponele lo que necesites de arriba, me creo los metodos y los hardcodeo
     //TODO:  MALO TEAM FOREVER
 
-    List<CryptoWalletTransaction> getTransactionByContact();
 
-    List<PaymentRequest> getSendedPaymentRequest();
+    List<CryptoWalletTransaction> listTransactionByActor();
 
-    List<PaymentRequest> getReceivedPaymentRequest();
+    List<PaymentRequest> listSentPaymentRequest();
 
-    List<CryptoWalletWalletContact>  getContactOrdererByLastSendTransaction();
+    List<PaymentRequest> listReceivedPaymentRequest();
 
-    List<CryptoWalletWalletContact>  getContactOrdererByLastReceiveTransaction();
+    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
+    List<CryptoWalletTransaction>  listContactOrdererByLastSendTransaction();
+
+    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
+    List<CryptoWalletTransaction>  listContactOrdererByLastReceiveTransaction();
+
+    // este te va a gustar
+    WalletInfo getWalletInfo();
 
 
 
