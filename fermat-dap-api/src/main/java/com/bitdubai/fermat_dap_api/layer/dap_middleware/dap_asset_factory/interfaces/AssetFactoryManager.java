@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
@@ -29,6 +30,11 @@ public interface AssetFactoryManager {
      */
     List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException;
 
+    /**
+     * This method returns the information stored about the all Asset Factory
+     */
+    List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException;
+
     //CRUD
     /**
      * This method create an empty object AssetFactory
@@ -43,7 +49,7 @@ public interface AssetFactoryManager {
     /**
      * This method mark object AssetFactory in database with close
      */
-    void markAssetFactoryState(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
+    void markAssetFactoryState(State state) throws CantSaveAssetFactoryException;
 
     /**
      * This method remove object AssetFactory in database
@@ -56,7 +62,7 @@ public interface AssetFactoryManager {
     long getAvailableBalance(long amount);
 
     /**
-     * TThis method publishes the asset digital object with the number and amount of Asset
+     * TThis method publishes the asset digital object with the number and amount of Asset, start the transaction
      */
     void publishAsset(AssetFactory assetFactory);
 }
