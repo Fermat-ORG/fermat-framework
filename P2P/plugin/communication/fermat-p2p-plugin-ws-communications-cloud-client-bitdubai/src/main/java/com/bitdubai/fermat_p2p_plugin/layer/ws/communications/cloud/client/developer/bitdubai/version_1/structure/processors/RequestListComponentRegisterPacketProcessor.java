@@ -107,7 +107,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
-
     }
 
     /**

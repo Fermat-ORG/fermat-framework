@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.CompleteComponentRegistrationNotificationEvent</code> is
@@ -21,10 +22,34 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Even
 public class CompleteComponentRegistrationNotificationEvent extends AbstractP2PFermatEvent {
 
 
- //   PlatformComponentProfile platformComponentProfile;
+    /**
+     * Represent the platformComponentProfileRegistered
+     */
+    private PlatformComponentProfile platformComponentProfileRegistered;
 
+    /**
+     * Constructor with parameters
+     *
+     * @param eventType
+     */
     public CompleteComponentRegistrationNotificationEvent(EventType eventType) {
         super(eventType);
+    }
+
+    /**
+     * Get the PlatformComponentProfileRegistered
+     * @return PlatformComponentProfile
+     */
+    public PlatformComponentProfile getPlatformComponentProfileRegistered() {
+        return platformComponentProfileRegistered;
+    }
+
+    /**
+     * Set the PlatformComponentProfileRegistered
+     * @param platformComponentProfileRegistered
+     */
+    public void setPlatformComponentProfileRegistered(PlatformComponentProfile platformComponentProfileRegistered) {
+        this.platformComponentProfileRegistered = platformComponentProfileRegistered;
     }
 
 }

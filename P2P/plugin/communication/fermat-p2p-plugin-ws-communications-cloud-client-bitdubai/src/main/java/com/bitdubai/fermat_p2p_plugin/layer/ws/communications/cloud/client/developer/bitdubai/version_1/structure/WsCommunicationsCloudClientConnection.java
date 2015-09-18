@@ -129,10 +129,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#constructPlatformComponentProfileFactory(String, String, Double, Double, String, NetworkServiceType, PlatformComponentType, String)
+     * @see CommunicationsCloudClientConnection#constructPlatformComponentProfileFactory(String, String, String, NetworkServiceType, PlatformComponentType, String)
      */
     @Override
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, Double latitude, Double longitude, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData){
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData){
 
         try {
 
@@ -140,8 +140,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
             if ((identityPublicKey == null || identityPublicKey == "") ||
                     (alias == null || alias == "")                     ||
                         (name == null || name == "")                   ||
-                             latitude == null                          ||
-                                longitude == null                      ||
                                     networkServiceType == null         ||
                                         platformComponentType == null  ||
                                             extraData == null){

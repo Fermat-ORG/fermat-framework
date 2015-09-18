@@ -14,7 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
@@ -127,9 +129,9 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     private Database dataBase;
 
     /**
-     * Represent the eccKeyPair
+     * Represent the identity
      */
-    private ECCKeyPair eccKeyPair;
+    private ECCKeyPair identity;
 
     /**
      * Constructor
@@ -272,20 +274,17 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Create a new key pair for this execution
              */
-            eccKeyPair = new ECCKeyPair();
+            identity = new ECCKeyPair();
 
             /*
              * Initialize the data base
              */
             initializeDb();
 
-            platformComponentProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(eccKeyPair.getPublicKey(), "TemplateNetworkService", new Double(0), new Double(0), "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
-
             /*
              * Listen and handle Complete Component Registration Notification Event
              */
-           // FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
-            FermatEventListener fermatEventListener = com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION.getNewListener();
+            FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
             fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
@@ -554,7 +553,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * Create a new instance
          */
-        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(platformComponentProfile, eccKeyPair, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
@@ -573,20 +572,47 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
-
     /**
      * Handles events that CompleteComponentRegistrationNotification
      */
-    public void handleCompleteComponentRegistrationNotificationEvent(){
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
         System.out.println(" TemplateNetworkServiceManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentInCommunicationCloudServer(platformComponentProfile);
+        /*
+         * If the communication cloud client is registered
+         */
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT){
 
-        //wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile);
+            /*
+             * Construct my profile and register me
+             */
+            platformComponentProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(), "TemplateNetworkService", "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentInCommunicationCloudServer(platformComponentProfile);
+
+        }
+
+        /*
+         * If the component registered have my profile and my identity public key
+         */
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE &&
+                    platformComponentProfileRegistered.getIdentityPublicKey() == identity.getPublicKey()){
+
+                /*
+                 * Construct the filter
+                 */
+                DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentProfile, null, null, null, null, null, null, null);
+
+                /*
+                 * Request the list of component registers
+                 */
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+
+        }
+
 
     }
-
 
     /**
      * Return a previously created instances of the template network service manager
@@ -598,7 +624,5 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
         return  templateNetworkServiceManagersCache.get(pluginClientId);
     }
-
-
 
 }

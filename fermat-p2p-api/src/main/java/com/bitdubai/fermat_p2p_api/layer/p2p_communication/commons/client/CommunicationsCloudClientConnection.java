@@ -29,15 +29,13 @@ public interface CommunicationsCloudClientConnection {
      *
      * @param identityPublicKey
      * @param alias
-     * @param latitude
-     * @param longitude
      * @param name
      * @param networkServiceType
      * @param platformComponentType
      *
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, Double latitude, Double longitude, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
 
     /**
      * Construct a DiscoveryQueryParameters instance, for use in the process
@@ -47,8 +45,7 @@ public interface CommunicationsCloudClientConnection {
      * @param applicant
      * @param alias
      * @param identityPublicKey
-     * @param latitude
-     * @param longitude
+     * @param location
      * @param name
      * @param extraData
      * @param firstRecord

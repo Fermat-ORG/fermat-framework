@@ -155,7 +155,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The Class <code>com.bitdubai.fermat_core.CorePlatformContext</code> start all
+ * The Class <code>com.bitdubai.fermat_core.Platform</code> start all
  * component of the platform and manage it
  * <p/>
  * <p/>

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
@@ -19,7 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum EventType implements FermatEnum {
+public enum EventType implements FermatEventEnum {
 
     /**
      * Declaration of the Web Socket Communication Layer Events
@@ -51,11 +52,26 @@ public enum EventType implements FermatEnum {
         }
     };
 
+
+
+    /**
+     * Represent the code of the message status
+     */
     private final String code;
 
+    /**
+     * Constructor whit parameter
+     *
+     * @param code the valid code
+     */
     EventType(String code) {
         this.code = code;
     }
+
+
+    public abstract FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor);
+
+    public abstract FermatEvent getNewEvent();
 
     /**
      * Return the enum by the code
@@ -73,18 +89,20 @@ public enum EventType implements FermatEnum {
         throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code isn't valid for the EventType Enum");
     }
 
-    public abstract FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor);
-
-    public abstract FermatEvent getNewEvent();
+    @Override
+    public Platforms getPlatform() {
+        return null;
+    }
 
     @Override
     public String getCode() {
         return this.code;
     }
 
+
     @Override
-    public Platforms getPlatform() {
-        return Platforms.COMMUNICATION_PLATFORM;
+    public String toString() {
+        return getCode();
     }
 
 }
