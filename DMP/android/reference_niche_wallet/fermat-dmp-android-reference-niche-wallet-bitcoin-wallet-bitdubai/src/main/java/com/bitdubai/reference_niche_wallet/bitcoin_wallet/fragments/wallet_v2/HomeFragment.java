@@ -215,6 +215,9 @@ public class HomeFragment extends FermatWalletFragment {
         private String[] contacts;
         private String[][] transactions;
 
+        boolean isTxtBalanceTouched=false;
+        boolean isTxtBalanceAmountTouched=false;
+
         // es el numero para pintar los row en pantalla
         private int groupCount;
 
@@ -233,6 +236,19 @@ public class HomeFragment extends FermatWalletFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
+            switch (groupPosition){
+                case 1:
+                    if(isTxtBalanceAmountTouched){
+                        changeBalanceType(txtBalance,balance_type);
+                        isTxtBalanceAmountTouched=false;
+                    }else if(isTxtBalanceTouched){
+                        changeBalance(txtBalance);
+                        isTxtBalanceTouched=false;
+                    }
+                    break;
+
+            }
+
             return transactions[groupPosition].length;
         }
 
@@ -271,7 +287,7 @@ public class HomeFragment extends FermatWalletFragment {
         public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
 
 
-       ImageView account_picture;
+            ImageView account_picture;
             ViewHolder holder;
             ViewHolder amount;
             ViewHolder when;
@@ -299,8 +315,8 @@ public class HomeFragment extends FermatWalletFragment {
                             txtBalance.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-
-                                    changeBalance(txtBalance);
+                                    isTxtBalanceTouched=true;
+                                    //changeBalance(txtBalance);
                                     //refreshBalance();
                                 }
                             });
@@ -310,7 +326,8 @@ public class HomeFragment extends FermatWalletFragment {
                             balance_type.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    changeBalanceType(txtBalance,balance_type);
+                                    isTxtBalanceAmountTouched = true;
+                                    //changeBalanceType(txtBalance,balance_type);
                                 }
                             });
                             balance_type.setText(getBalanceTypeInLetters());

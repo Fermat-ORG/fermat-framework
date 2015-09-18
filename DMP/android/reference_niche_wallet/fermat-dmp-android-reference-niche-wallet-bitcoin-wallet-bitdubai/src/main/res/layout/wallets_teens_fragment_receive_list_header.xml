@@ -51,7 +51,7 @@
             >
 
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/contact_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip"
                 android:paddingTop="10dip">
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                     android:layout_gravity="start" />
 
 
-                <TextView android:id="@+id/total_amount"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:id="@+id/total_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="$amount"
@@ -179,7 +179,7 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip"
                 android:weightSum="1">
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/when"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -190,7 +190,7 @@
                     android:gravity="start" android:paddingBottom="1dip"
                     android:paddingTop="1dip"/>
 
-                <TextView android:id="@+id/history_count"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView android:id="@+id/history_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="history count"
@@ -214,7 +214,7 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip">
 
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/notes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

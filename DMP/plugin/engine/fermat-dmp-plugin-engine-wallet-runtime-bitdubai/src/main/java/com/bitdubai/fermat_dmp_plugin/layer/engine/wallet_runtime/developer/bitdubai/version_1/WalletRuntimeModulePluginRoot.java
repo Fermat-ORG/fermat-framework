@@ -178,9 +178,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              *
              */
         try{
-            //factoryReset();
-            loadLastWalletNavigationStructure();
 
+            loadLastWalletNavigationStructure();
+            factoryReset();
 
         }catch(CantFactoryReset ex){
             String message = CantStartPluginException.DEFAULT_MESSAGE;
@@ -341,6 +341,68 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      * factory structure.
      */
     private void factoryReset() throws CantFactoryReset{
+
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+        WalletNavigationStructure runtimeWalletNavigationStructure;
+        TitleBar runtimeTitleBar;
+        SideMenu runtimeSideMenu;
+        MainMenu runtimeMainMenu;
+        MenuItem runtimeMenuItem;
+        TabStrip runtimeTabStrip;
+        StatusBar runtimeStatusBar;
+
+        Tab runtimeTab;
+
+        String publicKey;
+
+
+        /**
+         * Asset issuer
+         */
+
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        publicKey="asset_issuer";
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
+
+
+        runtimeActivity= new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setColor("#8bba9e");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("asset issuer wallet");
+        runtimeTitleBar.setLabelSize(16);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#72af9c");
+        //runtimeActivity.setColor("#d07b62");
+
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#72af9c");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment("DWAIMA");
+
+
+        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        //WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+
+
+        /**
+         * fin asset issuer
+         */
         //try{
 
 //            Activity runtimeActivity;
@@ -1527,6 +1589,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         /**
          *  Fin de menu
          */
+
+
 
 
 
