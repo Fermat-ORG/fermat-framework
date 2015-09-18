@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
  * */
 public interface DatabaseTable {
     
+    List<DatabaseTableRecord> customQuery(String query) throws CantLoadTableToMemoryException;
 
     DatabaseTableColumn newColumn();
 

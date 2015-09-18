@@ -304,6 +304,39 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
+    @Override
+    public List<DatabaseTableRecord> customQuery(String query) throws CantLoadTableToMemoryException {
+        Cursor cursor = null;
+        SQLiteDatabase database = null;
+        List<DatabaseTableRecord> databaseTableRecords = new ArrayList<>();
+        try {
+            database = this.database.getReadableDatabase();
+            cursor = database.rawQuery(query, null);
+            while (cursor.moveToNext()) {
+                DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
+                List<DatabaseRecord> recordValues = new ArrayList<>();
+                for (int i = 0 ; i < cursor.getColumnCount() ; i++) {
+                    DatabaseRecord recordValue = new AndroidRecord();
+                    recordValue.setName("Column"+i);
+                    recordValue.setValue(cursor.getString(i));
+                    recordValues.add(recordValue);
+                }
+
+                tableRecord.setValues(recordValues);
+                databaseTableRecords.add(tableRecord);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            if (cursor != null)
+                cursor.close();
+            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
+        } finally {
+            if (database != null)
+                database.close();
+        }
+        return databaseTableRecords;
+    }
+
     /**
      * <p>Check if the set will table in tableName variable exists
      *

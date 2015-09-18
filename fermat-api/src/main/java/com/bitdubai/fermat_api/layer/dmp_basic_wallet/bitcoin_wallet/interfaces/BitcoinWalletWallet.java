@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantListTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantStoreMemoException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantFindTransactionException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantGetActorTransactionSummaryException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantListTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantFindTransactionException;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,45 +20,42 @@ import java.util.UUID;
 public interface BitcoinWalletWallet {
 
     /**
-     * Throw the method <code>getAvailableBalance</code> you can get an instance of BitcoinWalletBalance that allows you
-     * to do all possible actions over the available balance.
+     * Throw the method <code>getBalance</code> you can get an instance of BitcoinWalletBalance that allows you
+     * to do all possible actions over the balance of the requested type.
      *
+     * @param balanceType type of balance that you need.
      * @return an instance of BitcoinWalletBalance.
      */
-    BitcoinWalletBalance getAvailableBalance();
+    BitcoinWalletBalance getBalance(BalanceType balanceType);
 
     /**
-     * Throw the method <code>getBookBalance</code> you can get an instance of BitcoinWalletBalance that allows you
-     * to do all possible actions over the book balance.
+     * Throw the method <code>listTransactions</code> you can list all the transactions made with the loaded wallet.
      *
-     * @return an instance of BitcoinWalletBalance.
-     */
-    BitcoinWalletBalance getBookBalance();
-
-    /**
-     * Throw the method <code>getTransactions</code> you can get all the transactions made with the loaded wallet.
-     *
+     * @param balanceType type of balance that you're trying to get
      * @param max quantity of instance you want to return
      * @param offset the point of start in the list you're trying to bring.
      * @return a list of bitcoin wallet transactions.
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<BitcoinWalletTransaction> getTransactions(int max,
-                                                   int offset) throws CantListTransactionsException;
+    List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,
+                                                    int         max,
+                                                    int         offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActor</code> you can get all the transactions made with the
      * loaded wallet related with an specific actor (both credits or debits).
      *
      * @param actorPublicKey public key of the actor from which we need the transaction
+     * @param balanceType type of balance that you're trying to get
      * @param max quantity of instance you want to return
      * @param offset the point of start in the list you're trying to bring.
      * @return a list of bitcoin wallet transactions.
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<BitcoinWalletTransaction> listTransactionsByActor(String actorPublicKey,
-                                                           int max,
-                                                           int offset) throws CantListTransactionsException;
+    List<BitcoinWalletTransaction> listTransactionsByActor(String      actorPublicKey,
+                                                           BalanceType balanceType,
+                                                           int         max,
+                                                           int         offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
@@ -68,4 +67,15 @@ public interface BitcoinWalletWallet {
      */
     void setTransactionDescription(UUID   transactionID,
                                    String description) throws CantStoreMemoException, CantFindTransactionException;
+
+    /**
+     * Throw the method <code>getActorTransactionSummary</code> you can get the summary of transaction of an specific user and balance type.
+     *
+     * @param actorPublicKey public key of the actor from which we need the transaction
+     * @param balanceType type of balance that you're trying to get
+     * @return an instance of BitcoinWalletTransactionSummary
+     * @throws CantGetActorTransactionSummaryException if something goes wrong.
+     */
+    BitcoinWalletTransactionSummary getActorTransactionSummary(String      actorPublicKey,
+                                                               BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 }

@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions;
+package com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by eze on 2015.06.17..
  */
-public class CantStoreMemoException extends FermatException {
+public class CantLoadWalletException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantStoreMemoException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantStoreMemoException(String message, Exception cause, String context, String possibleReason) {
+    public CantLoadWalletException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
