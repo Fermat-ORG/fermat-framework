@@ -15,7 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -160,7 +161,8 @@ public class CryptoAddressBookCryptoModulePluginRoot implements Crypto, CryptoAd
                                       String deliveredToActorPublicKey,
                                       Actors deliveredToType,
                                       Platforms platform,
-                                      Vaults vault,
+                                      VaultType vaultType,
+                                      String vaultIdentifier,
                                       String walletPublicKey,
                                       ReferenceWallet walletType) throws CantRegisterCryptoAddressBookRecordException {
         logManager.log(CryptoAddressBookCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Registering Crypto Address...", null, null);
@@ -173,7 +175,8 @@ public class CryptoAddressBookCryptoModulePluginRoot implements Crypto, CryptoAd
                     deliveredToActorPublicKey,
                     deliveredToType,
                     platform,
-                    vault,
+                    vaultType,
+                    vaultIdentifier,
                     walletPublicKey,
                     walletType
             );

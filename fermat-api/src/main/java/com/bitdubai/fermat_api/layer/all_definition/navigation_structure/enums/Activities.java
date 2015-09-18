@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * Created by rodrigo on 2015.07.20..
  */
@@ -15,7 +17,8 @@ public enum Activities {
      */
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN ("CWRWBWBV1M"),
     CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS("CWRWBWBV1T"),
-
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST("CWRWBWBV1PR"),
+    CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS("CWRWBWBV1C"),
     /**
      * Intra user
      */
@@ -69,7 +72,11 @@ public enum Activities {
     CWP_SUB_APP_ALL_DEVELOPER("CSAAD"),
     CWP_WALLET_FACTORY_MAIN ("CWFM"),
     CWP_WALLET_FACTORY_EDIT_WALLET ("CWFEW"),
-    CWP_WALLET_PUBLISHER_MAIN ("CWPM");
+    CWP_WALLET_PUBLISHER_MAIN ("CWPM"),
+
+    //Desktop
+    CCP_DESKTOP("CCPD"),
+    DAP_DESKTOP("DAPD");
 
     private String code;
 
@@ -83,7 +90,7 @@ public enum Activities {
         return code;
     }
 
-    public static Activities getValueFromString(String code) {
+    public static Activities getValueFromString(String code) throws InvalidParameterException {
         //for (Activities activities : Activities.values()) {
         //    if (activities.key.equals(name)) {
         //        return activities;
@@ -189,10 +196,17 @@ public enum Activities {
                 return CWP_INTRA_USER_ACTIVITY;
             case "CIUCA":
                 return CWP_INTRA_USER_CREATE_ACTIVITY;
-
+            case "CWRWBWBV1PR":
+                return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST;
+            case "CCPD":
+                return CCP_DESKTOP;
+            case "DAPD":
+                return DAP_DESKTOP;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
         // throw an IllegalArgumentException or return null
         //throw new IllegalArgumentException("the given number doesn't match any Status.");
-        return null;
+       // return null;
     }
 }

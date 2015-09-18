@@ -1,7 +1,7 @@
 <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Language>
     <id>79c0abf4-f2b7-4f2c-b7e3-73b67296e96e</id>
     <name>Default</name>
-    <fermatPacketType>AMERICAN_ENGLISH</fermatPacketType>
+    <type>AMERICAN_ENGLISH</type>
     <strings>
         <entry>
             <string>boton_aceptar</string>

@@ -19,10 +19,10 @@
     <property file="${user.properties.file}"/>
     <nbmproject2:property name="harness.dir" value="nbplatform.${nbplatform.active}.harness.dir" xmlns:nbmproject2="http://www.netbeans.org/ns/nb-module-project/2"/>
     <nbmproject2:property name="netbeans.dest.dir" value="nbplatform.${nbplatform.active}.netbeans.dest.dir" xmlns:nbmproject2="http://www.netbeans.org/ns/nb-module-project/2"/>
-    <fail fermatMessage="You must define 'nbplatform.${nbplatform.active}.harness.dir'">
+    <fail message="You must define 'nbplatform.${nbplatform.active}.harness.dir'">
         <condition>
             <not>
-                <available file="${harness.dir}" fermatPacketType="dir"/>
+                <available file="${harness.dir}" type="dir"/>
             </not>
         </condition>
     </fail>

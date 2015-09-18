@@ -83,8 +83,9 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
 
     public static ContactDetailFragment newInstance(ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
-        if (walletSession == null)
+        if (walletSession == null) {
             return null;
+        }
         ContactDetailFragment f = new ContactDetailFragment();
         f.setWalletSession(walletSession);
         f.setAccountName(walletSession.getAccountName());

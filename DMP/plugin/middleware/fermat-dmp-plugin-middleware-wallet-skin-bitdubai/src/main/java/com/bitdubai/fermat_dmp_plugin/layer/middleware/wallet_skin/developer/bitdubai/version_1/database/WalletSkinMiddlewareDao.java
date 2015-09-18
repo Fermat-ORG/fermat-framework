@@ -106,7 +106,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
      *
      * @return All Wallet Factory Projects Proposals who belongs to a developer.
      */
-    public List<WalletSkin> findAllSkinsByDesigner(String designerPublicKey) throws CantListWalletSkinsException {
+    public List<WalletSkin> findAllSkinsByDesigner(String designerPublicKey) throws CantListWalletSkinsException, InvalidParameterException {
 
         List<WalletSkin> walletSkins = new ArrayList<>();
 
@@ -152,7 +152,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public WalletSkin findSkinBySkinIdAndVersion(UUID skinId, Version version) throws CantGetWalletSkinException, SkinNotFoundException {
+    public WalletSkin findSkinBySkinIdAndVersion(UUID skinId, Version version) throws CantGetWalletSkinException, SkinNotFoundException, InvalidParameterException {
         try {
             database.openDatabase();
             DatabaseTable projectSkinTable = database.getTable(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_TABLE_NAME);
@@ -197,7 +197,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public WalletSkin findSkinById(UUID id) throws CantGetWalletSkinException, SkinNotFoundException {
+    public WalletSkin findSkinById(UUID id) throws CantGetWalletSkinException, SkinNotFoundException, InvalidParameterException {
         try {
             database.openDatabase();
             DatabaseTable projectSkinTable = database.getTable(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_TABLE_NAME);
@@ -242,7 +242,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public List<WalletSkin> findAllSkinsBySkinId(UUID skinId) throws CantListWalletSkinsException {
+    public List<WalletSkin> findAllSkinsBySkinId(UUID skinId) throws CantListWalletSkinsException, InvalidParameterException {
 
         List<WalletSkin> walletSkins = new ArrayList<>();
 
@@ -315,7 +315,7 @@ public class WalletSkinMiddlewareDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public void updateSkin(WalletSkin walletSkin) throws CantUpdateSkinException, SkinNotFoundException {
+    public void updateSkin(WalletSkin walletSkin) throws CantUpdateSkinException, SkinNotFoundException, InvalidParameterException {
         try {
             database.openDatabase();
             DatabaseTable projectSkinTable = database.getTable(WalletSkinMiddlewareDatabaseConstants.WALLET_SKIN_TABLE_NAME);

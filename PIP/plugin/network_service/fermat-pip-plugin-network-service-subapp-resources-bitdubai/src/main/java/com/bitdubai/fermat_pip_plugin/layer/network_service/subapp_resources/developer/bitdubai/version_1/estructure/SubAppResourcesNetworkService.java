@@ -63,7 +63,7 @@ public class SubAppResourcesNetworkService implements SubAppResources {
 
     @Override
     public String getManifest() throws CantGetManifestException {
-        return null;
+        return "Method: getManifest - NO TIENE valor ASIGNADO para RETURN";
     }
 
     /**
@@ -76,7 +76,7 @@ public class SubAppResourcesNetworkService implements SubAppResources {
 
     @Override
     public String getSkinFile(String fileName) throws CantGetSkinFileException {
-        return null;
+        return "Method: getSkinFile - NO TIENE valor ASIGNADO para RETURN";
     }
 
     /**
@@ -89,7 +89,7 @@ public class SubAppResourcesNetworkService implements SubAppResources {
 
     @Override
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return null;
+        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
     }
 
     /**
@@ -118,12 +118,12 @@ public class SubAppResourcesNetworkService implements SubAppResources {
 
     @Override
     public String getFontStyle(String styleName) {
-        return null;
+        return "Method: getFontStyle - NO TIENE valor ASIGNADO para RETURN";
     }
 
     @Override
     public String getLayoutResource(String layoutName) throws CantGetResourcesException {
-        return null;
+        return "Method: getLayoutResource - NO TIENE valor ASIGNADO para RETURN";
     }
 
 

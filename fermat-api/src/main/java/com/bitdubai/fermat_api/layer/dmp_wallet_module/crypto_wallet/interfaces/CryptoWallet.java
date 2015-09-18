@@ -3,7 +3,8 @@ package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.*;
 
@@ -108,7 +109,7 @@ public interface CryptoWallet extends Serializable{
      * find a wallet contact having in count its id
      *
      * @param contactId specific id of the contact that you're trying to find
-     * @return
+     * @return instance of a crypto wallet contact
      * @throws CantFindWalletContactException
      * @throws WalletContactNotFoundException
      */
@@ -121,7 +122,7 @@ public interface CryptoWallet extends Serializable{
      */
     long getAvailableBalance(String walletPublicKey) throws CantGetBalanceException;
 
-    long getBookBalance(String walletPublicKey)throws CantGetBalanceException; ;
+    long getBookBalance(String walletPublicKey)throws CantGetBalanceException;
 
     /**
      * Transactions Fragment methods
@@ -138,7 +139,8 @@ public interface CryptoWallet extends Serializable{
                                             String deliveredToActorPublicKey,
                                             Actors deliveredToActorType,
                                             Platforms platform,
-                                            Vaults vault,
+                                            VaultType vaultType,
+                                            String vaultIdentifier,
                                             String walletPublicKey,
                                             ReferenceWallet walletType) throws CantRequestCryptoAddressException;
 
@@ -146,7 +148,8 @@ public interface CryptoWallet extends Serializable{
                                                Actors deliveredByActorType,
                                                String deliveredToActorName,
                                                Platforms platform,
-                                               Vaults vault,
+                                               VaultType vaultType,
+                                               String vaultIdentifier,
                                                String walletPublicKey,
                                                ReferenceWallet walletType) throws CantRequestCryptoAddressException;
 
@@ -160,5 +163,27 @@ public interface CryptoWallet extends Serializable{
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
               Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
+
+
+    //TODO:  LEON ponele lo que necesites de arriba, me creo los metodos y los hardcodeo
+    //TODO:  MALO TEAM FOREVER
+
+
+    List<CryptoWalletTransaction> listTransactionByActor();
+
+    List<PaymentRequest> listSentPaymentRequest();
+
+    List<PaymentRequest> listReceivedPaymentRequest();
+
+    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
+    List<CryptoWalletTransaction>  listContactOrdererByLastSendTransaction();
+
+    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
+    List<CryptoWalletTransaction>  listContactOrdererByLastReceiveTransaction();
+
+    // este te va a gustar
+    WalletInfo getWalletInfo();
+
+
 
 }

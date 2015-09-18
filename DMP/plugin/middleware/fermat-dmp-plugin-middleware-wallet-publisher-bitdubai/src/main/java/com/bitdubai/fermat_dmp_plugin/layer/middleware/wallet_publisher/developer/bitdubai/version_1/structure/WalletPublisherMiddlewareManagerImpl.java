@@ -114,9 +114,10 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             return informationPublishedComponentDao.findAll(WalletPublisherMiddlewareDatabaseConstants.INFORMATION_PUBLISHED_COMPONENTS_PUBLISHER_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publisherIdentityPublicKey);
 
         } catch (CantReadRecordDataBaseException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             e.printStackTrace();
         }
-
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
@@ -143,9 +144,10 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             return informationPublishedComponentDao.findAll(filters);
 
         } catch (CantReadRecordDataBaseException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             e.printStackTrace();
         }
-
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
@@ -173,9 +175,10 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             return informationPublishedComponentDao.findAll(filters);
 
         } catch (CantReadRecordDataBaseException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             e.printStackTrace();
         }
-
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
@@ -202,9 +205,10 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
             return informationPublishedComponentDao.findAll(filters);
 
         } catch (CantReadRecordDataBaseException e) {
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             e.printStackTrace();
         }
-
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 

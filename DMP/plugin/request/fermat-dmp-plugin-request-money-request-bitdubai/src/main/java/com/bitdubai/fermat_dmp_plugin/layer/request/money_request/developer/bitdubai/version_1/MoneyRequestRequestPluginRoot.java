@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.request.money_request.developer.bit
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
@@ -16,12 +16,12 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exception
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfaces.CryptoRequest;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfaces.MoneyRequestNetworkServiceManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingMoneyRequestReceivedEvent;
@@ -42,13 +42,13 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
 
 
     /**
-     * Service Interface menber variables. 
+     * Service Interface menber variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
-     * PluginFileSystem interface member variables. 
+     * PluginFileSystem interface member variables.
      */
 
     PluginFileSystem pluginFileSystem;
@@ -59,88 +59,83 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     EventManager eventManager;
-
+    ErrorManager errorManager;
     /**
-     * Plugin interface menber varuiables. 
+     * Plugin interface menber varuiables.
      */
     UUID pluginId;
 
 
     /**
-     *  MoneyRequestNetworkServicePluginRoot methods implementation.
+     * MoneyRequestNetworkServicePluginRoot methods implementation.
      */
-    
-    public void sendMoneyRequest(){
-        
-        
+
+    public void sendMoneyRequest() {
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
-    
-    
-    public void events(){
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_REQUEST_RECEIVED);
-        ((IncomingMoneyRequestReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
 
-        PlatformEvent platformEvent_1 = eventManager.getNewEvent(EventType.OUTGOING_MONEY_REQUEST_DELIVERED);
-        ((OutgoingMoneyRequestDeliveredEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
 
-        PlatformEvent platformEvent_2 = eventManager.getNewEvent(EventType.OUTGOING_MONEY_REQUEST_APPROVED);
-        ((OutgoingMoneyRequestApprovedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
+    public void events() {
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_REQUEST_RECEIVED);
+        ((IncomingMoneyRequestReceivedEvent) fermatEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
 
-        PlatformEvent platformEvent_3 = eventManager.getNewEvent(EventType.OUTGOING_MONEY_REQUEST_REJECTED);
-        ((OutgoingMoneyRequestRejectedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
-        
+        FermatEvent fermatEvent_1 = eventManager.getNewEvent(EventType.OUTGOING_MONEY_REQUEST_DELIVERED);
+        ((OutgoingMoneyRequestDeliveredEvent) fermatEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
+
+        FermatEvent fermatEvent_2 = eventManager.getNewEvent(EventType.OUTGOING_MONEY_REQUEST_APPROVED);
+        ((OutgoingMoneyRequestApprovedEvent) fermatEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
+
+        FermatEvent fermatEvent_3 = eventManager.getNewEvent(EventType.OUTGOING_MONEY_REQUEST_REJECTED);
+        ((OutgoingMoneyRequestRejectedEvent) fermatEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
+
     }
 
     /**
-     * Service Interface implementation. 
+     * Service Interface implementation.
      */
-    
+
     @Override
     public void start() {
-        EventListener eventListener;
-        EventHandler eventHandler;
-        
-        
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
+
+
         this.serviceStatus = ServiceStatus.STARTED;
-        
+
     }
-    
+
     @Override
-    public void pause(){
-        
+    public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
-        
     }
-    
+
     @Override
     public void resume() {
-        
         this.serviceStatus = ServiceStatus.STARTED;
-        
     }
-    
+
     @Override
-    public void stop(){
+    public void stop() {
 
         /**
          * I will remove the evnt listeners registered with the event manager. 
          */
-        
-        for (EventListener eventListener : listenersAdded){
-            eventManager.removeListener(eventListener);
+
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
-        
+
         listenersAdded.clear();
-        
+
         this.serviceStatus = ServiceStatus.STOPPED;
     }
-    
+
     @Override
-    public ServiceStatus getStatus(){
+    public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
 
@@ -149,7 +144,7 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem){
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
 
@@ -158,7 +153,7 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     @Override
-    public void setEventManager(EventManager eventManager){
+    public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
@@ -167,8 +162,8 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     @Override
-    public void setErrorManager(ErrorManager errorManager){
-
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
     }
 
     /**
@@ -176,13 +171,13 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
      */
 
     @Override
-    public void setId(UUID pluginId){
+    public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
     @Override
     public UUID getId() {
-        return null;
+        return this.pluginId;
     }
 
     /*
@@ -191,33 +186,34 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
 
     @Override
     public List<CryptoRequest> getPendingReceivedCryptoRequests(String identityPublicKey) throws CantGetPendingCryptoRequestsException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public CryptoRequestState getSentRequestState(UUID requestId) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public void deleteFromPendingReceivedCryptoRequests(UUID requestId) throws CantDeleteFromPendingCryptoRequestsException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public void requestCrypto(UUID requestId, String receptorWalletPublicKey, CryptoAddress addressToSendThePayment, long cryptoAmount, String loggedInIntraUserPublicKey, String intraUserToSendRequestPublicKey, String description) throws CantSendCryptoRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public void requestMoney(String receptorWalletPublicKey, String requestSenderPublicKey, String requestDestinationPublicKey, String requestDescription, CryptoAddress addressToSendThePayment, FiatCurrency fiatCurrency, long fiatAmount) throws CantSendMoneyRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
-
 
 
     @Override
     public void rejectRequest(UUID requestId, String intraUserThatSentTheRequestPublicKey) throws CantRejectRequestException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 }

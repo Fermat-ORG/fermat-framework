@@ -24,7 +24,6 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
@@ -57,7 +56,7 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 public class MainFragment extends FermatListFragment<WalletFactoryProject>
-        implements FermatListItemListeners<WalletFactoryProject>, OnMenuItemClickListener {
+        implements FermatListItemListeners<WalletFactoryProject>, OnMenuItemClickListener, FermatWorkerCallBack {
 
     /**
      * Represent the TAG
@@ -123,42 +122,20 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
         if (dialog != null)
             dialog.dismiss();
         dialog = null;
-        dialog = new ProgressDialog(getActivity());
-        dialog.setTitle("Loading Projects Available to Publish");
-        dialog.setMessage("Please wait...");
-        dialog.show();
+        //dialog = new ProgressDialog(getActivity());
+        //dialog.setTitle("Loading Projects Available to Publish");
+        //dialog.setMessage("Please wait...");
+        //dialog.show();
+        onRefresh();
         showView(false, empty);
-        new FermatWorker(getActivity(), new FermatWorkerCallBack() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public void onPostExecute(Object... result) {
-                if (isAttached) {
-                    dialog.dismiss();
-                    dialog = null;
-                    if (adapter != null) {
-                        projects = (ArrayList<WalletFactoryProject>) result[0];
-                        adapter.changeDataSet(projects);
-                    }
-                    showEmpty();
-                }
-            }
+    }
 
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                if (isAttached) {
-                    dialog.dismiss();
-                    dialog = null;
-                    Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
-                    showEmpty();
-                }
-            }
-        }) {
-
-            @Override
-            protected Object doInBackground() throws Exception {
-                return walletPublisherModuleManager.getProjectsReadyToPublish();
-            }
-        }.execute();
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isAttached) {
+            onRefresh();
+        }
     }
 
     /**
@@ -261,33 +238,44 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     @Override
     public void onPostExecute(Object... result) {
         isRefreshing = false;
-        if (isAttached) { // -> this mean that this fragment is attached to he activity and it still active on the UI Thread
-            swipeRefreshLayout.setRefreshing(false);
-            if (result != null && result.length > 0) {
-                //informationPublishedComponentList = (ArrayList) result[0];
-                if (adapter != null) {
-                    //adapter.changeDataSet((ArrayList) informationPublishedComponentList);
-                }
+        if (isAttached) {
+            if (swipeRefreshLayout != null)
+                swipeRefreshLayout.setRefreshing(false);
+            if (dialog != null && dialog.isShowing())
+                dialog.dismiss();
+            dialog = null;
+            if (adapter != null) {
+                projects = (ArrayList<WalletFactoryProject>) result[0];
+                adapter.changeDataSet(projects);
             }
+            showEmpty();
         }
     }
 
-    /**
-     * @param ex Throwable object
-     */
     @Override
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
-        if (isAttached) {// -> this mean that this fragment is attached to he activity and it still active on the UI Thread
-            swipeRefreshLayout.setRefreshing(false);
-            //todo: alert to the user that error was thrown and need to try again...
+        if (isAttached) {
+            if (swipeRefreshLayout != null)
+                swipeRefreshLayout.setRefreshing(false);
+            if (dialog != null && dialog.isShowing())
+                dialog.dismiss();
+            dialog = null;
+            Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+            showEmpty();
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ArrayList<WalletFactoryProject> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        ArrayList<WalletFactoryProject> items = null;
-        return items; //todo: implement paging with refresh types and pos(values: 0 if the request is NEW and Last Item size if the request is OLD)
+        ArrayList<WalletFactoryProject> projects = null;
+        try {
+            projects = (ArrayList) walletPublisherModuleManager.getProjectsReadyToPublish();
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+        return projects;
     }
 
     ArrayList<WalletFactoryProject> getFakesProjects() {
@@ -297,6 +285,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
             WalletFactoryProject tmp = new WalletFactoryProject() {
                 @Override
                 public String getProjectPublicKey() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -327,16 +316,18 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public WalletType getWalletType() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
                 @Override
                 public void setWalletType(WalletType walletType) {
-
+                    //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 }
 
                 @Override
                 public WalletCategory getWalletCategory() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -357,6 +348,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public WalletFactoryProjectState getProjectState() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -367,6 +359,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public Timestamp getCreationTimestamp() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -377,6 +370,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public Timestamp getLastModificationTimestamp() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -397,6 +391,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public Skin getDefaultSkin() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -407,6 +402,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public List<Skin> getSkins() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -418,6 +414,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public Language getDefaultLanguage() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -428,6 +425,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public List<Language> getLanguages() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -439,6 +437,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public WalletNavigationStructure getNavigationStructure() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 

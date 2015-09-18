@@ -89,10 +89,20 @@ public enum Plugins {
     BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI),
 
     BITDUBAI_ASSET_ISSUING_TRANSACTION("BAIT", Developers.BITDUBAI),
-    BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI);
 
+    BITDUBAI_DAP_ISSUER_ACTOR_LAYER("BDAPIAL",Developers.BITDUBAI),
+    BITDUBAI_DAP_USER_ACTOR_LAYER("BDAPUAL",Developers.BITDUBAI),
+    BITDUBAI_DAP_REDEEM_POINT_ACTOR_LAYER("BDAPRPAL",Developers.BITDUBAI),
 
+    BITDUBAI_DAP_ISSUER_IDENTITY_LAYER("BDAPIIL",Developers.BITDUBAI),
+    BITDUBAI_DAP_USER_IDENTITY_LAYER("BDAPUIL",Developers.BITDUBAI),
+    BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER("BDAPRPIL",Developers.BITDUBAI),
 
+    BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI),
+
+    BITDUBAI_DESKTOP_RUNTIME("BDR",Developers.BITDUBAI)
+
+    ;
 
     private String code;
     private Developers developer;
@@ -122,13 +132,10 @@ public enum Plugins {
                 return Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK;
             case "BCLOUDC":
                 return Plugins.BITDUBAI_CLOUD_CHANNEL;
-
-
             case "BWSCCLSERVER":
                 return Plugins.BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER;
             case "BWSCCLIENTCH":
                 return Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL;
-
             case "BCLOUSC":
                 return Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION;
             case "BUSERNETS":
@@ -263,8 +270,22 @@ public enum Plugins {
                 return Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION;
             case "BAIT":
                 return Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION;
+            case "BDAPIAL":
+                return Plugins.BITDUBAI_DAP_ISSUER_ACTOR_LAYER;
+            case "BDAPUAL":
+                return Plugins.BITDUBAI_DAP_USER_ACTOR_LAYER;
+            case "BDAPRPAL":
+                return Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR_LAYER;
+            case "BDAPIIL":
+                return Plugins.BITDUBAI_DAP_ISSUER_IDENTITY_LAYER;
+            case "BDAPUIL":
+                return Plugins.BITDUBAI_DAP_USER_IDENTITY_LAYER;
+            case "BDAPRPIL":
+                return Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER;
             case "BASF":
                 return Plugins.BITDUBAI_ASSET_FACTORY;
+            case "BDR":
+                return BITDUBAI_DESKTOP_RUNTIME;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

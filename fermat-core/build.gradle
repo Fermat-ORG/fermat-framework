@@ -15,9 +15,11 @@ dependencies {
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai')
     compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
     compile project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
     // OSA Projects   --- Hace falta esto aca??
+
+    //BCH projects
+    compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 
     //compile project(':fermat-osa-addon-android-database-system-bitdubai')
 
@@ -47,8 +49,8 @@ dependencies {
     compile project(':fermat-dmp-plugin-identity-translator-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-crypto-transmission-bitdubai')
     compile project(':fermat-dmp-plugin-request-money-request-bitdubai')
-    /*
 
+    /*
     World layer projects on the pipeline:
 
     compile project(':fermat-dmp-plugin-world-blockchain-info-bitdubai')
@@ -108,7 +110,16 @@ dependencies {
     // DMP Projects (Addons)
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
     //DAP Projects (Plugins)
+    compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-actor-redeem-point-bitdubai')
+    compile project(':fermat-dap-plugin-identity-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-identity-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-identity-redeem-point-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
+
+    compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
+
 }
 

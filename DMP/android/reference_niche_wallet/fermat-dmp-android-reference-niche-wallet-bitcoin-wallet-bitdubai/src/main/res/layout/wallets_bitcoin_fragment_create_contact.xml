@@ -292,7 +292,7 @@
             android:elevation="2dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:hint="fermatPacketType"
+            android:hint="type"
             android:paddingBottom="7dip"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"

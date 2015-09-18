@@ -1,22 +1,24 @@
-include ':fermat-android-api', ':fermat-dap-plugin-actor-network-service-asset-user-bitdubai', ':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai'
+
+include ':fermat-android-api'
 include ':fermat-android-core'
 
 include ':fermat-api'
 include ':fermat-core'
+include ':fermat-bnk-api'
+include ':fermat-cbp-api'
 include ':fermat-cry-api'
+include ':fermat-csh-api'
 include ':fermat-dap-api'
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
 include ':fermat-wpd-api'
+include ':fermat-bch-api'
 
 // CRY Projects
 
 // Milestone 1 project:
 include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
 project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
-
-include ':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
-project(':fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 
 // Milestone 1 project:
 include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
@@ -262,12 +264,17 @@ project(':fermat-dmp-plugin-module-wallet-publisher-bitdubai').projectDir = new 
 include ':fermat-dmp-plugin-module-wallet-store-bitdubai'
 project(':fermat-dmp-plugin-module-wallet-store-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai')
 
-// Milestone 1 project:
+// engine
 include ':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai'
 project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai').projectDir = new File('DMP/plugin/engine/fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
 
 include ':fermat-dmp-plugin-engine-wallet-runtime-bitdubai'
 project(':fermat-dmp-plugin-engine-wallet-runtime-bitdubai').projectDir = new File('DMP/plugin/engine/fermat-dmp-plugin-engine-wallet-runtime-bitdubai')
+
+include ':fermat-pip-plugin-engine-desktop-runtime-bitdubai'
+project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai').projectDir = new File('PIP/plugin/engine/fermat-pip-plugin-engine-desktop-runtime-bitdubai')
+
+// end engine
 
 
 include ':fermat-dmp-plugin-middleware-bank-notes-bitdubai'
@@ -408,6 +415,7 @@ project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai').pr
 //project(':functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = new File('TEST/functional/functional-test-fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai')
 
 // DAP Projects
+
 //asset wallet
 include ':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai'
 project(':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai').projectDir = new File('DAP/plugin/wallet/fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai')
@@ -432,27 +440,57 @@ project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai').projectDir = n
 include ':fermat-dap-plugin-sub-app-module-asset_factory-bitdubai'
 project(':fermat-dap-plugin-sub-app-module-asset_factory-bitdubai').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset_factory-bitdubai')
 
+include ':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai'
+project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
+
+include ':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai'
+project(':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai')
+
+include ':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai'
+project(':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai')
 
 // middleware
 include ':fermat-dap-plugin-middleware-asset-factory-bitdubai'
 project(':fermat-dap-plugin-middleware-asset-factory-bitdubai').projectDir = new File('DAP/plugin/middleware/fermat-dap-plugin-middleware-asset-factory-bitdubai')
 
-// transaction
+// digital asset transaction
 include ':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
 
 include ':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai')
 
-include ':fermat-dap-plugin-digital-asset-transaction-asset-redemption-bitdubai'
-project(':fermat-dap-plugin-digital-asset-transaction-asset-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-redemption-bitdubai')
+include ':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
 
-include ':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai'
-project(':fermat-dap-plugin-transaction-outgoing-issuer-bitdubai').projectDir = new File('DAP/plugin/transaction/fermat-dap-plugin-transaction-outgoing-issuer-bitdubai')
+include ':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai')
+
+include ':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai')
+
+include ':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai')
+
+include ':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai')
+
+include ':fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai')
 
 // network-service
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
 project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
+
+// actor
+include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
+
+include ':fermat-dap-plugin-actor-asset-user-bitdubai'
+project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-user-bitdubai')
+
+include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
+project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
 
 // identity
 include ':fermat-dap-plugin-identity-asset-issuer-bitdubai'
@@ -463,6 +501,16 @@ project(':fermat-dap-plugin-identity-asset-user-bitdubai').projectDir = new File
 
 include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
 project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
+
+
+include ':fermat-dap-android-desktop-wallet-manager-bitdubai'
+project(':fermat-dap-android-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-android-desktop-wallet-manager-bitdubai')
+
+include ':fermat-dap-android-desktop-sub-app-manager-bitdubai'
+project(':fermat-dap-android-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-android-desktop-sub-app-manager-bitdubai')
+
+
+//module
 
 
 // actor network service
@@ -476,8 +524,182 @@ project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projec
 include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
 
-include ':fermat-dap-plugin-actor-asset-user-bitdubai'
-project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-user-bitdubai')
-
 include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
+
+// android dap wallets
+include ':fermat-dap-android-wallet-asset-issuer-bitdubai'
+project(':fermat-dap-android-wallet-asset-issuer-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-asset-issuer-bitdubai')
+
+include ':fermat-dap-android-wallet-asset-user-bitdubai'
+project(':fermat-dap-android-wallet-asset-user-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-asset-user-bitdubai')
+
+include ':fermat-dap-android-wallet-redeem-point-bitdubai'
+project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/wallets/fermat-dap-android-wallet-redeem-point-bitdubai')
+
+// android dap sub apps
+include ':fermat-dap-android-sub-app-asset-factory-bitdubai'
+project(':fermat-dap-android-sub-app-asset-factory-bitdubai').projectDir = new File('DAP/android/sub_apps/fermat-dap-android-sub-app-asset-factory-bitdubai')
+
+// BCH
+include ':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai'
+project(':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai')
+
+include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
+project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
+// WPD Projects
+
+// identity
+include ':fermat-wpd-plugin-identity-publisher-bitdubai'
+project(':fermat-wpd-plugin-identity-publisher-bitdubai').projectDir = new File('WPD/plugin/identity/fermat-wpd-plugin-identity-publisher-bitdubai')
+
+// MKT Projects
+
+// identity
+include ':fermat-mkt-plugin-identity-marketer-bitdubai'
+project(':fermat-mkt-plugin-identity-marketer-bitdubai').projectDir = new File('MKT/plugin/identity/fermat-mkt-plugin-identity-marketer-bitdubai')
+
+// SHP Projects
+
+//module
+include ':fermat-shp-plugin-sub-app-module-brand-bitdubai'
+project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new File('SHP/plugin/sub-app-module/fermat-shp-plugin-sub-app-module-brand-bitdubai')
+
+// identity
+include ':fermat-shp-plugin-identity-brand-bitdubai'
+project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
+
+
+// CBP projects
+
+//ANDROID
+
+//Desktop
+//include ':fermat-cbp-android-desktop-sub-app-manager-bitdubai'
+//project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-sub-app-manager-bitdubai')
+//include ':fermat-cbp-android-desktop-wallet-manager-bitdubai'
+//project(':fermat-cbp-android-desktop-wallet-manager-bitdubai').projectDir = new File('CBP/android/desktop/fermat-cbp-android-desktop-wallet-manager-bitdubai')
+
+//Reference Wallet
+//include ':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai'
+//project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
+//include ':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai'
+//project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai').projectDir = new File('CBP/android/reference_wallet/fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
+
+//Sub App
+//include ':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai'
+//project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
+//include ':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai'
+//project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
+//include ':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai'
+//project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
+//include ':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai'
+//project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
+//include ':fermat-cbp-android-sub-app-customers-bitdubai'
+//project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File('CBP/android/sub_app/fermat-cbp-android-sub-app-customers-bitdubai')
+
+//PLUGINS
+
+//Actor
+include ':fermat-cbp-plugin-actor-crypto-broker-bitdubai'
+project(':fermat-cbp-plugin-actor-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/actor/fermat-cbp-plugin-actor-crypto-broker-bitdubai')
+include ':fermat-cbp-plugin-actor-crypto-customer-bitdubai'
+project(':fermat-cbp-plugin-actor-crypto-customer-bitdubai').projectDir = new File('CBP/plugin/actor/fermat-cbp-plugin-actor-crypto-customer-bitdubai')
+
+//Actor Network Service
+include ':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai'
+project(':fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/actor_network_service/fermat-cbp-plugin-actor-network-service-crypto-broker-bitdubai')
+include ':fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai'
+project(':fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai').projectDir = new File('CBP/plugin/actor_network_service/fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai')
+
+//Agent
+include ':fermat-cbp-plugin-agent-crypto-broker-bitdubai'
+project(':fermat-cbp-plugin-agent-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/agent/fermat-cbp-plugin-agent-crypto-broker-bitdubai')
+
+//Business Transaction
+include ':fermat-cbp-plugin-business-transaction-bank-money-stock-replenishment-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-bank-money-stock-replenishment-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-bank-money-stock-replenishment-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-cash-money-stock-replenishment-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-cash-money-stock-replenishment-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-cash-money-stock-replenishment-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-crypto-money-stock-replenishment-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-crypto-money-stock-replenishment-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-crypto-money-stock-replenishment-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-bank-purchase-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-customer-broker-bank-sale-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-broker-bank-sale-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-bank-sale-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-customer-broker-cash-purchase-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-broker-cash-purchase-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-cash-purchase-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-customer-broker-cash-sale-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-broker-cash-sale-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-cash-sale-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-customer-broker-crypto-purchase-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-broker-crypto-purchase-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-crypto-purchase-bitdubai')
+include ':fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bitdubai'
+project(':fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bitdubai')
+
+//Contract
+include ':fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai')
+
+//Desktop Module
+include ':fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai'
+project(':fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai').projectDir = new File('CBP/plugin/desktop_module/fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai')
+include ':fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai'
+project(':fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai').projectDir = new File('CBP/plugin/desktop_module/fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai')
+
+//Identity
+include ':fermat-cbp-plugin-identity-crypto-broker-bitdubai'
+project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai')
+include ':fermat-cbp-plugin-identity-crypto-customer-bitdubai'
+project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai').projectDir = new File('CBP/plugin/identity/fermat-cbp-plugin-identity-crypto-customer-bitdubai')
+
+//Middleware
+include ':fermat-cbp-plugin-middleware-crypto-broker-wallet-identity-bitdubai'
+project(':fermat-cbp-plugin-middleware-crypto-broker-wallet-identity-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-wallet-identity-bitdubai')
+include ':fermat-cbp-plugin-middleware-customers-bitdubai'
+project(':fermat-cbp-plugin-middleware-customers-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-customers-bitdubai')
+include ':fermat-cbp-plugin-middleware-sub-app-manager-bitdubai'
+project(':fermat-cbp-plugin-middleware-sub-app-manager-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai')
+include ':fermat-cbp-plugin-middleware-wallet-manager-bitdubai'
+project(':fermat-cbp-plugin-middleware-wallet-manager-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-wallet-manager-bitdubai')
+
+//Request
+include ':fermat-cbp-plugin-request-customer-broker-purchase-bitdubai'
+project(':fermat-cbp-plugin-request-customer-broker-purchase-bitdubai').projectDir = new File('CBP/plugin/request/fermat-cbp-plugin-request-customer-broker-purchase-bitdubai')
+include ':fermat-cbp-plugin-request-customer-broker-sale-bitdubai'
+project(':fermat-cbp-plugin-request-customer-broker-sale-bitdubai').projectDir = new File('CBP/plugin/request/fermat-cbp-plugin-request-customer-broker-sale-bitdubai')
+
+//Sub App Module
+include ':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai'
+project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
+include ':fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai'
+project(':fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-community-bitdubai')
+include ':fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai'
+project(':fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai')
+include ':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai'
+project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+include ':fermat-cbp-plugin-sub-app-module-customers-bitdubai'
+project(':fermat-cbp-plugin-sub-app-module-customers-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-customers-bitdubai')
+
+//Wallet Module
+include ':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai'
+project(':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/wallet_module/fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai')
+include ':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai'
+project(':fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai').projectDir = new File('CBP/plugin/wallet_module/fermat-cbp-plugin-wallet-module-crypto-customer-bitdubai')
+
+//World
+include ':fermat-cbp-plugin-world-fiat-index-bitdubai'
+project(':fermat-cbp-plugin-world-fiat-index-bitdubai').projectDir = new File('CBP/plugin/world/fermat-cbp-plugin-world-fiat-index-bitdubai')
+
+//include ':'
+//project(':').projectDir = new File('CBP/plugin//')
+
