@@ -24,6 +24,7 @@ import android.view.animation.AnimationUtils;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -211,8 +212,8 @@ public  class SendFragment extends FermatWalletFragment {
                 try {
                     Long amount = Long.parseLong(editTextAmount.getText().toString());
                     if (amount > 0) {
-                        long actualBalance = cryptoWallet.getAvailableBalance(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                        editTextAmount.setHint("Available amount: " + actualBalance + " bits");
+                        //long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+                        //editTextAmount.setHint("Available amount: " + actualBalance + " bits");
                     }
                 }catch (Exception e) {
                     e.printStackTrace();
