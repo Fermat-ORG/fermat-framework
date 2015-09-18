@@ -1,19 +1,47 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.google.zxing.WriterException;
+
+import java.util.UUID;
+
+import static com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR.generateBitmap;
 
 
 public  class ReceiveFragment extends FermatWalletFragment {
@@ -33,10 +61,37 @@ public  class ReceiveFragment extends FermatWalletFragment {
     private String[][] transactions_amounts;
     private String[][] transactions_whens;
 
+    ReferenceWalletSession referenceWalletSession;
+
+    /**
+     * Wallet contact Adapter
+     */
+    private WalletContactListAdapter adapter;
+
+    private AutoCompleteTextView contact_name;
+
+    /**
+     * font Style
+     */
+    Typeface tf;
+
+
+    private String user_address_wallet = "";
+    final int colorQR = Color.BLACK;
+    final int colorBackQR = Color.WHITE;
+    final int width = 400;
+    final int height = 400;
+
+    private CryptoWallet cryptoWallet;
+
+
+    // TODO: Necesito saber de donde sacarlo
+    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
 
 
     public static ReceiveFragment newInstance(int position) {
         ReceiveFragment f = new ReceiveFragment();
+        f.setReferenceWalletSession((ReferenceWalletSession) f.walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -154,6 +209,117 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
     }
 
+    /**
+     * copy wallet address to clipboard
+     */
+
+    public void copyToClipboard() {
+
+        ClipboardManager myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData myClip = ClipData.newPlainText("text", this.user_address_wallet);
+        myClipboard.setPrimaryClip(myClip);
+        Toast.makeText(getActivity().getApplicationContext(), "Text Copied",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private void showQRCodeAndAddress() {
+        try {
+            // set qr image
+            ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
+            // get qr image
+
+
+            Bitmap bitmapQR = generateBitmap(user_address_wallet,width, height, GeneratorQR.MARGIN_AUTOMATIC, colorQR, colorBackQR);
+
+            imageQR.setImageBitmap(bitmapQR);
+            // show qr image
+            imageQR.setVisibility(View.VISIBLE);
+
+            // set string_address
+            TextView string_address = (TextView) rootView.findViewById(R.id.string_address);
+            string_address.setText(user_address_wallet);
+            // show string_address
+            string_address.setVisibility(View.VISIBLE);
+
+            // show share_btn
+            Button share_btn = (Button) rootView.findViewById(R.id.share_btn);
+            share_btn.setEnabled(true);
+            share_btn.setFocusable(true);
+            share_btn.setTextColor(Color.parseColor("#72af9c"));
+        } catch (WriterException writerException) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(writerException));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+
+    public void requestAddress(WalletContact walletcontact) {
+        if (contact_name != null && contact_name.getText().toString() != null && !contact_name.getText().toString().equals("")) {
+            if (walletcontact == null) {
+                getWalletAddress(contact_name.getText().toString());
+            } else {
+                getWalletAddress(walletcontact);
+            }
+            showQRCodeAndAddress();
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "Enter a name to share your address", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void shareAddress() {
+        Intent intent2 = new Intent();
+        intent2.setAction(Intent.ACTION_SEND);
+        intent2.setType("text/plain");
+        intent2.putExtra(Intent.EXTRA_TEXT, user_address_wallet);
+        startActivity(Intent.createChooser(intent2, "Share via"));
+    }
+
+    private void getWalletAddress(String contact_name) {
+        try {
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddressToNewExtraUser(
+                    user_id,
+                    Actors.INTRA_USER,
+                    contact_name,
+                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                    VaultType.CRYPTO_CURRENCY_VAULT,
+                    "BITV",
+                    referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+            ); user_address_wallet = cryptoAddress.getAddress();
+        } catch (CantRequestCryptoAddressException e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+    private void getWalletAddress(WalletContact walletContact) {
+        try {
+            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
+                    user_id,
+                    Actors.INTRA_USER,
+                    walletContact.actorPublicKey,
+                    Actors.EXTRA_USER,
+                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                    VaultType.CRYPTO_CURRENCY_VAULT,
+                    "BITV",
+                    referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+            );
+            user_address_wallet = cryptoAddress.getAddress();
+        } catch (CantRequestCryptoAddressException e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
+        this.referenceWalletSession = referenceWalletSession;
+    }
+
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         private final LayoutInflater inf;
@@ -209,9 +375,8 @@ public  class ReceiveFragment extends FermatWalletFragment {
             ViewHolder when;
 
 
-            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
-            // if (convertView == null) {
-            if (1 == 1) {
+            if (convertView == null) {
+
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_detail, parent, false);
                 holder = new ViewHolder();
 
@@ -257,35 +422,31 @@ public  class ReceiveFragment extends FermatWalletFragment {
             ViewHolder total;
             ViewHolder history;
 
-            if (groupPosition == 0)
-            {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_first_row, parent, false);
+            if (groupPosition == 0) {
+                convertView = inf.inflate(R.layout.wallet_receive_fragment_first_row, parent, false);
 
-                TextView tv;
+                 contact_name = (AutoCompleteTextView) convertView.findViewById(R.id.contact_name);
 
-                tv = (TextView) convertView.findViewById(R.id.notes);
+                Button btn_address = (Button) convertView.findViewById(R.id.btn_address);
+                btn_address.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        requestAddress(null);
+                    }
+                });
+                btn_address.setTypeface(tf);
+
+                Button btn_share = (Button) convertView.findViewById(R.id.btn_share);
+                btn_share.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        shareAddress();
+                    }
+                });
+                btn_share.setTypeface(tf);
 
 
-                tv = (TextView) convertView.findViewById(R.id.amount);
+            }else{
 
-
-                tv = (TextView) convertView.findViewById(R.id.when);
-
-
-
-                //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
-
-
-                tv = (TextView) convertView.findViewById(R.id.contact_name);
-
-                //tv.setText("Name");
-            }
-            else
-            {
-
-                //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
-                // if (convertView == null) {
-                if (1 == 1) {
+                if (convertView == null) {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_header, parent, false);
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
@@ -293,8 +454,8 @@ public  class ReceiveFragment extends FermatWalletFragment {
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_receive_profile);
                      send_profile_picture.setTag("ReceiveFromContactActivity|" +groupPosition + "-0");
 
-                    ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
-                    history_picture.setTag("ReceiveAllHistoryActivity|" +groupPosition);
+                    //ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
+                    //history_picture.setTag("ReceiveAllHistoryActivity|" +groupPosition);
 
                     ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_send_message);
                     send_message.setTag("ContactsChatActivity|" + contacts[groupPosition].toString());
@@ -382,7 +543,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
 
 
-                holder.text.setText(getGroup(groupPosition).toString());
+               // holder.text.setText(getGroup(groupPosition).toString());
 
             }
 

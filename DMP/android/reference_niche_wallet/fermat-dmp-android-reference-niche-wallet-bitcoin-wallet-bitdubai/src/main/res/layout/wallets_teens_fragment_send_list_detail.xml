@@ -36,7 +36,7 @@
             android:background="@drawable/object_frame_3x1_filled"
             />
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
         </LinearLayout>
 
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/when"
             android:layout_width="170dp"
             android:layout_height="30dp"
@@ -94,7 +94,7 @@
             android:layout_alignParentLeft="true"
             />
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

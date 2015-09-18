@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.develop
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -36,6 +35,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.ActorTransactionHistory;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantGetActorException;
@@ -434,6 +435,48 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
+    }
+
+    @Override
+    public List<CryptoWalletTransaction> listTransactionByActor() {
+        return new ArrayList<CryptoWalletTransaction>();
+    }
+
+    @Override
+    public List<PaymentRequest> listSentPaymentRequest() {
+        List<PaymentRequest> lst =  new ArrayList<PaymentRequest>();
+        CryptoWalletPaymentRequest cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null);
+        lst.add(cryptoWalletPaymentRequest);
+        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null);
+        lst.add(cryptoWalletPaymentRequest);
+
+        return lst;
+    }
+
+    @Override
+    public List<PaymentRequest> listReceivedPaymentRequest() {
+        List<PaymentRequest> lst =  new ArrayList<PaymentRequest>();
+        CryptoWalletPaymentRequest cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null);
+        lst.add(cryptoWalletPaymentRequest);
+        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null);
+        lst.add(cryptoWalletPaymentRequest);
+
+        return lst;
+    }
+
+    @Override
+    public List<CryptoWalletTransaction> listContactOrdererByLastSendTransaction() {
+        return null;
+    }
+
+    @Override
+    public List<CryptoWalletTransaction> listContactOrdererByLastReceiveTransaction() {
+        return null;
+    }
+
+    @Override
+    public ActorTransactionHistory getWalletInfo() {
+        return null;
     }
 
     @Override

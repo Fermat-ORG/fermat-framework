@@ -47,4 +47,11 @@ public interface FermatTabStrip {
 
     String getTabsIndicateColor();
 
+    int getStartItem();
+
+    public boolean isHasIcon();
+
+    public boolean isHasText();
+
+
 }

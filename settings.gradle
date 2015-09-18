@@ -1,3 +1,4 @@
+
 include ':fermat-android-api'
 include ':fermat-android-core'
 
@@ -146,19 +147,19 @@ project(':fermat-dmp-plugin-actor-intra-user-bitdubai').projectDir = new File('D
 include ':fermat-dmp-plugin-module-intra-user-bitdubai'
 project(':fermat-dmp-plugin-module-intra-user-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai')
 
+
+
+//World layer projects on the pipeline:
 /*
-
-World layer projects on the pipeline:
-
 include ':fermat-dmp-plugin-world-blockchain-info-bitdubai'
 project(':fermat-dmp-plugin-world-blockchain-info-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai')
 
 include ':fermat-dmp-plugin-world-coinapult-bitdubai'
 project(':fermat-dmp-plugin-world-coinapult-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai')
-
+*/
 include ':fermat-dmp-plugin-world-crypto-index-bitdubai'
 project(':fermat-dmp-plugin-world-crypto-index-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai')
-
+/*
 include ':fermat-dmp-plugin-world-location-bitdubai'
 project(':fermat-dmp-plugin-world-location-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai')
 
@@ -501,6 +502,14 @@ project(':fermat-dap-plugin-identity-asset-user-bitdubai').projectDir = new File
 include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
 project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
 
+
+include ':fermat-dap-android-desktop-wallet-manager-bitdubai'
+project(':fermat-dap-android-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-android-desktop-wallet-manager-bitdubai')
+
+include ':fermat-dap-android-desktop-sub-app-manager-bitdubai'
+project(':fermat-dap-android-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-android-desktop-sub-app-manager-bitdubai')
+
+
 //module
 
 
@@ -563,6 +572,7 @@ project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new Fil
 // identity
 include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
+
 
 //BNK projects
 

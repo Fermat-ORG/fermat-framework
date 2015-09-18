@@ -3,7 +3,6 @@ package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.*;
@@ -163,5 +162,27 @@ public interface CryptoWallet extends Serializable{
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
               Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
+
+
+    //TODO:  LEON ponele lo que necesites de arriba, me creo los metodos y los hardcodeo
+    //TODO:  MALO TEAM FOREVER
+
+
+    List<CryptoWalletTransaction> listTransactionByActor();
+
+    List<PaymentRequest> listSentPaymentRequest();
+
+    List<PaymentRequest> listReceivedPaymentRequest();
+
+    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
+    List<CryptoWalletTransaction>  listContactOrdererByLastSendTransaction();
+
+    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
+    List<CryptoWalletTransaction>  listContactOrdererByLastReceiveTransaction();
+
+    // este te va a gustar
+    ActorTransactionHistory getWalletInfo();
+
+
 
 }
