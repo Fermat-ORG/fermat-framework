@@ -5,6 +5,8 @@ package com.bitdubai.fermat_cbp_api.all_definition.business_transaction;
  */
 public interface BusinessTransaction {
 
+    String get
+
     String getStatus();
 
     Float getAmount();
@@ -12,13 +14,5 @@ public interface BusinessTransaction {
     Float getPrice();
 
     Float getReferenceCurrency();
-
-    void setStatus(String status);
-
-    void setAmount(Float amount);
-
-    void setPrice(Float price);
-
-    void setReferenceCurrency(Float ReferenceCurrency);
 
 }
