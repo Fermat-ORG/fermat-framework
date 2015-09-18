@@ -49,7 +49,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
      * BitcoinWalletBasicWallet member variables.
      */
     private Database database;
-    //private UUID internalWalletId;
 
     private Map<String, UUID> walletIds = new HashMap<>();
 

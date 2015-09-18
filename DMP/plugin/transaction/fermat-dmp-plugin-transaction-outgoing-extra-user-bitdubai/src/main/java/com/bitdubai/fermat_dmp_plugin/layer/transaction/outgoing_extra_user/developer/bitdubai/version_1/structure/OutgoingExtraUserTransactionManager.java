@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
@@ -119,7 +120,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
         try {
             dao.initialize(this.pluginId);
             bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
+            funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
             if (cryptoAmount > funds) {
                 throw new InsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
             }

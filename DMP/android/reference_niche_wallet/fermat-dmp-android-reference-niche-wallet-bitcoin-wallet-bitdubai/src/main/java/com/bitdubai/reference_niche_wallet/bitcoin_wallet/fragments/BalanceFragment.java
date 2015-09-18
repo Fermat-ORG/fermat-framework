@@ -44,7 +44,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class BalanceFragment extends FermatWalletFragment {
 
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
     private final String CRYPTO_WALLET_PARAM = "cryptoWalletParam";
 
@@ -139,12 +139,12 @@ public class BalanceFragment extends FermatWalletFragment {
             /**
              * Get AvailableBalance
              */
-            balanceAvailable = cryptoWallet.getAvailableBalance(walletPublicKey);
+            balanceAvailable = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
 
             /**
              * Get BookBalance
              */
-            bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
+            bookBalance = cryptoWallet.getBalance(BalanceType.BOOK, walletPublicKey);
         } catch (CantGetCryptoWalletException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -228,7 +228,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
             ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
             this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
-            lstCryptoWalletTransactions = cryptoWallet.getTransactions(referenceWalletPreferenceSettings.getTransactionsToShow(), 0, walletPublicKey);
+            lstCryptoWalletTransactions = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, referenceWalletPreferenceSettings.getTransactionsToShow(), 0);
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
                 if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
@@ -328,9 +328,9 @@ public class BalanceFragment extends FermatWalletFragment {
     private void refreshBalance() {
         try {
 
-            balanceAvailable = cryptoWallet.getAvailableBalance(walletPublicKey);
+            balanceAvailable = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
 
-            bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
+            bookBalance = cryptoWallet.getBalance(BalanceType.BOOK, walletPublicKey);
 
             if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));

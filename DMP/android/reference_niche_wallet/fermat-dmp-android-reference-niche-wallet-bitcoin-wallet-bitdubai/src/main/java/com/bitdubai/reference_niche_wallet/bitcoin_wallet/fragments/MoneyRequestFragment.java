@@ -60,7 +60,7 @@ public class MoneyRequestFragment extends FermatWalletFragment {
     private static final String ARG_POSITION = "position";
 
 
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
@@ -196,7 +196,7 @@ public class MoneyRequestFragment extends FermatWalletFragment {
             // Create the adapter to convert the array to views
 
 
-            lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
+            lstTransactions=cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions,pointerOffset);
 
 
             BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
@@ -331,7 +331,7 @@ public class MoneyRequestFragment extends FermatWalletFragment {
         try {
             if (lstTransactions.isEmpty()){
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
 
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
@@ -339,7 +339,7 @@ public class MoneyRequestFragment extends FermatWalletFragment {
             }
             else{
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
 

@@ -172,7 +172,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
             while (iterator.hasNext()) {
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
-                if (mapEntry.getValue().toString().equals(walletId.toString()))
+                if (mapEntry.getValue().toString().equals(walletId))
                     existWallet = true;
             }
 

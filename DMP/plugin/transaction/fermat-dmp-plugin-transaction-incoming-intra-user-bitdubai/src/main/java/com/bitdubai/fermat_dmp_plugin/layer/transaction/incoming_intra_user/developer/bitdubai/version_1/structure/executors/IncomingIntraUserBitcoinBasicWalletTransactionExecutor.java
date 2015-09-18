@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.dev
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
@@ -58,7 +59,7 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
     private void processOnCryptoNetworkTransaction(TransactionCompleteInformation transaction) throws CantRegisterCreditException {
         try {
             BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
-            bitcoinWallet.getBookBalance().credit(record);
+            bitcoinWallet.getBalance(BalanceType.BOOK).credit(record);
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
         }
@@ -67,7 +68,7 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
     private void processOnBlockChainTransaction(TransactionCompleteInformation transaction) throws CantRegisterCreditException{
         try {
             BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
-            bitcoinWallet.getAvailableBalance().credit(record);
+            bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(record);
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
         }
@@ -76,7 +77,7 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
     private void processReversedOnCryptoNetworkTransaction(TransactionCompleteInformation transaction) throws CantRegisterDebitException {
         try {
             BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
-            bitcoinWallet.getBookBalance().debit(record);
+            bitcoinWallet.getBalance(BalanceType.BOOK).debit(record);
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterDebitException("I couldn't generate the transaction",e,"","");
         }
@@ -85,7 +86,7 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
     private void processReversedOnBlockchainTransaction(TransactionCompleteInformation transaction) throws CantRegisterDebitException {
         try {
             BitcoinWalletTransactionRecord record = transaction.generateBitcoinTransaction(cryptoAddressBookManager);
-            bitcoinWallet.getAvailableBalance().debit(record);
+            bitcoinWallet.getBalance(BalanceType.AVAILABLE).debit(record);
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterDebitException("I couldn't generate the transaction",e,"","");
         }
