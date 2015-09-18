@@ -19,6 +19,11 @@ dependencies {
     compile 'org.json:json:20141113'
     compile 'com.vaadin.external.json:json:0.0.20080701'
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'org.apache.httpcomponents:fluent-hc:4.3.3'
+    compile 'org.apache.httpcomponents:httpclient-cache:4.3.3'
+    compile 'org.apache.httpcomponents:httpcore:4.1'
+    compile 'org.apache.httpcomponents:httpmime:4.3.3'
+    compile 'org.apache.httpcomponents:httpclient:4.3.3'
 }
 
 def jacocoHtmlReport = ""

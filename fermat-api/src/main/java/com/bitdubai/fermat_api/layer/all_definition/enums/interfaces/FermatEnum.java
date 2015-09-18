@@ -11,13 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 public interface FermatEnum {
 
     /**
-     * Throw the method <code>getPlatform</code> you can know to which platform the enum belongs.
-     *
-     * @return an instance of Platforms enum.
-     */
-    Platforms getPlatform();
-
-    /**
      * Throw the method <code>getCode</code> you can get the code of the specific element of the enum.
      *
      * @return the code of the enum.

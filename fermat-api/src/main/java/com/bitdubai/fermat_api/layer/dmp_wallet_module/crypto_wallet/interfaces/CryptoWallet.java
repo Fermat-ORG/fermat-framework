@@ -3,7 +3,6 @@ package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.*;
@@ -182,7 +181,7 @@ public interface CryptoWallet extends Serializable{
     List<CryptoWalletTransaction>  listContactOrdererByLastReceiveTransaction();
 
     // este te va a gustar
-    WalletInfo getWalletInfo();
+    ActorTransactionHistory getWalletInfo();
 
 
 
