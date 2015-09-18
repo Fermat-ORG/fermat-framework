@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_csh_api.all_definition.cash_money_transaction;
+package com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction;
 
 /**
  * Created by Yordin Alayn on 18.09.2015
  */
 
-public interface CashMoneyTransaction {
+public interface BankMoneyTransaction {
 
     String getTransactionId();
 
@@ -16,6 +16,8 @@ public interface CashMoneyTransaction {
 
     Float getAmount();
 
-    String getCashReference();
+    String getBank();
+
+    String getBankReference();
 
 }
