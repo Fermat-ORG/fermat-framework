@@ -159,7 +159,6 @@ public class IncomingIntraUserDao {
         registryTable.updateRecord(recordToUpdate);
     }
 
-    // TODO: Completar método cuando escriba el Relay Agent. El tipo de retorno va a cambiar
     public List<TransactionCompleteInformation> getAllTransactionsToBeApplied() throws InvalidParameterException, CantLoadTableToMemoryException {
         List<TransactionCompleteInformation> transactionsToBeApplied      = new ArrayList<>();
         List<Transaction<CryptoTransaction>> cryptoTransactionsToEvaluate = getAllTransactionsInState(TransactionStatus.RESPONSIBLE, ProtocolStatus.TO_BE_APPLIED);

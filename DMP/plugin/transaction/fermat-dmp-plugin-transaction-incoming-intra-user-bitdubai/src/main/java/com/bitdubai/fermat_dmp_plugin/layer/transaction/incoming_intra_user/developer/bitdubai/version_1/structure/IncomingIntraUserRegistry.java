@@ -144,7 +144,6 @@ public class IncomingIntraUserRegistry {
      *      Methods used by the Relay Agent     *
      ********************************************/
 
-    // TODO: REVISAR QUE DEVUELVA SÓLO LAS QUE ESTÁN CON LA METADATA SINCRONIZADA
     // Retorna las (R,TBA)
     public List<TransactionCompleteInformation> getResponsibleTBATransactions() throws IncomingIntraUserCantGetTransactionsException {
         try {
