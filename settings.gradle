@@ -1,4 +1,5 @@
-include ':fermat-android-api', ':fermat-dap-desktop-wallet-manager-bitdubai'
+
+include ':fermat-android-api'
 include ':fermat-android-core'
 
 include ':fermat-api'
@@ -468,14 +469,14 @@ project(':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai
 include ':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai')
 
-include ':fermat-dap-plugin-digital-asset-transaction-redeempoint-redemption-bitdubai'
-project(':fermat-dap-plugin-digital-asset-transaction-redeempoint-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-redeempoint-redemption-bitdubai')
+include ':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai')
 
-include ':fermat-dap-plugin-digital-asset-transaction-asset-appropiation-bitdubai'
-project(':fermat-dap-plugin-digital-asset-transaction-asset-appropiation-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-appropiation-bitdubai')
+include ':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai')
 
-include ':fermat-dap-plugin-digital-asset-transaction-appropiation-stats-bitdubai'
-project(':fermat-dap-plugin-digital-asset-transaction-appropiation-stats-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-appropiation-stats-bitdubai')
+include ':fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai'
+project(':fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai')
 
 // network-service
 include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
@@ -502,6 +503,13 @@ include ':fermat-dap-plugin-identity-redeem-point-bitdubai'
 project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-redeem-point-bitdubai')
 
 
+include ':fermat-dap-android-desktop-wallet-manager-bitdubai'
+project(':fermat-dap-android-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-android-desktop-wallet-manager-bitdubai')
+
+include ':fermat-dap-android-desktop-sub-app-manager-bitdubai'
+project(':fermat-dap-android-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-android-desktop-sub-app-manager-bitdubai')
+
+
 //module
 
 
@@ -516,12 +524,8 @@ project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projec
 include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
 
-include ':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai'
-project(':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai')
 include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
-include ':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai'
-project(':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai')
 
 // android dap wallets
 include ':fermat-dap-android-wallet-asset-issuer-bitdubai'
@@ -536,14 +540,6 @@ project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new Fil
 // android dap sub apps
 include ':fermat-dap-android-sub-app-asset-factory-bitdubai'
 project(':fermat-dap-android-sub-app-asset-factory-bitdubai').projectDir = new File('DAP/android/sub_apps/fermat-dap-android-sub-app-asset-factory-bitdubai')
-
-// Desktops
-include ':fermat-dap-desktop-sub-app-manager-bitdubai'
-project(':fermat-dap-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-desktop-sub-app-manager-bitdubai')
-
-include ':fermat-dap-desktop-wallet-manager-bitdubai'
-project(':fermat-dap-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-desktop-wallet-manager-bitdubai')
-
 
 // BCH
 include ':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai'
@@ -567,7 +563,7 @@ project(':fermat-mkt-plugin-identity-marketer-bitdubai').projectDir = new File('
 
 //module
 include ':fermat-shp-plugin-sub-app-module-brand-bitdubai'
-project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new File('SHP/plugin/module/fermat-shp-plugin-sub-app-module-brand-bitdubai')
+project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new File('SHP/plugin/sub-app-module/fermat-shp-plugin-sub-app-module-brand-bitdubai')
 
 // identity
 include ':fermat-shp-plugin-identity-brand-bitdubai'

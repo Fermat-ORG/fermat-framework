@@ -104,6 +104,8 @@ public enum Fragments implements FermatFragments {
 
     CWP_WALLET_PUBLISHER_MAIN("CWPM"),
 
+    DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
+
 
     /**
      * WAllet factory
@@ -278,6 +280,8 @@ public enum Fragments implements FermatFragments {
 
             case "CWRWBTCABTA":
                 return CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE;
+            case "DWAIMA":
+                return DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

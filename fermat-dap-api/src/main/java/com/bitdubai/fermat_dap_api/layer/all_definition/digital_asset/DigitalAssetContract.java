@@ -10,7 +10,6 @@ import java.util.List;
  */
 public class DigitalAssetContract implements com.bitdubai.fermat_dap_api.layer.all_definition.contracts.Contract {
     ContractProperty redeemable;
-    ContractProperty transferable;
     ContractProperty expirationDate;
     List<ContractProperty> properties;
 
@@ -20,10 +19,8 @@ public class DigitalAssetContract implements com.bitdubai.fermat_dap_api.layer.a
     public DigitalAssetContract() {
         properties = new ArrayList<>();
         redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
-        transferable = new ContractProperty(DigitalAssetContractPropertiesConstants.TRANSFERABLE, null);
         expirationDate= new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE.toString(), null);
         properties.add(redeemable);
-        properties.add(transferable);
         properties.add(expirationDate);
     }
 

@@ -79,6 +79,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
@@ -781,18 +782,35 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
 
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
-            SubApp subApp = getSubAppRuntimeMiddleware().getHomeScreen();
-            Activity activity = subApp.getLastActivity();
+
+            DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
+
+            for(DesktopObject desktopObject:desktopRuntimeManager.listDesktops()){
+                //TODO: este switch se cambiara por un FragmentFactory en algún momento al igual que el Activity factory
+                switch (desktopObject.getType()){
+                    case "DCCP":
+                        //por ahora va esto
+                        WalletManager manager = getWalletManager();
+                        WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
+                        fragments.add(walletDesktopFragment);
+
+                        SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
+
+                        fragments.add(subAppDesktopFragment);
+                        break;
+                    case "DDAP":
+                        com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment walletDesktopFragment1 = com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
+                        fragments.add(walletDesktopFragment1);
+                        com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
+                        fragments.add(dapDesktopFragment);
+
+                }
+            }
+            //Activity activity =  desktopObject.getLastActivity();
 
 
-            //por ahora va esto
-            WalletManager manager = getWalletManager();
-            WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-            fragments.add(walletDesktopFragment);
 
-            SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
 
-            fragments.add(subAppDesktopFragment);
 
 
             /*for (FermatFragments key : activity.getFragments().keySet()) {

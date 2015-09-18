@@ -72,7 +72,11 @@ public enum Activities {
     CWP_SUB_APP_ALL_DEVELOPER("CSAAD"),
     CWP_WALLET_FACTORY_MAIN ("CWFM"),
     CWP_WALLET_FACTORY_EDIT_WALLET ("CWFEW"),
-    CWP_WALLET_PUBLISHER_MAIN ("CWPM");
+    CWP_WALLET_PUBLISHER_MAIN ("CWPM"),
+
+    //Desktop
+    CCP_DESKTOP("CCPD"),
+    DAP_DESKTOP("DAPD");
 
     private String code;
 
@@ -194,6 +198,10 @@ public enum Activities {
                 return CWP_INTRA_USER_CREATE_ACTIVITY;
             case "CWRWBWBV1PR":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST;
+            case "CCPD":
+                return CCP_DESKTOP;
+            case "DAPD":
+                return DAP_DESKTOP;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
