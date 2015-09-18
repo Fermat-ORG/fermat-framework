@@ -5,7 +5,7 @@ package com.bitdubai.fermat_cbp_api.all_definition.business_transaction;
  */
 public interface BusinessTransaction {
 
-    String get
+    String getTransactionId();
 
     String getStatus();
 
