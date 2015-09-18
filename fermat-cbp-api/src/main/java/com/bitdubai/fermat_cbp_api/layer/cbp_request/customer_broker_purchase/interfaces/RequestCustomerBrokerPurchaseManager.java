@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.i
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.CantGetRequestListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.CantRequestCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.FailedToRejectTheRequestPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.RequestPurchaseRejectFailedException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.RequestUnexpectedErrorException;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public interface RequestCustomerBrokerPurchaseManager {
                                   CryptoAddress addressToSendThePayment,
                                   long cryptoAmount) throws RequestUnexpectedErrorException;
 
-    public void rejectRequestPurchase(UUID requestId) throws FailedToRejectTheRequestPurchaseException;
+    public void rejectRequestPurchase(UUID requestId) throws RequestPurchaseRejectFailedException;
 
     RequestCustomerBrokerPurchase createRequestCustomerBrokerPurchase(String senderWalletPublicKey,
                                                                       String requestSenderPublicKey,

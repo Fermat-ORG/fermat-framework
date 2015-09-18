@@ -101,9 +101,9 @@ public class CustomersSubAppSession implements SubAppsSession {
     }
 
     /**
-     * Return the Crypto Customer Identity Module Manager
+     * Return the Crypto Customer ActorIdentity Module Manager
      *
-     * @return reference to the Crypto Customer Identity Module Manager
+     * @return reference to the Crypto Customer ActorIdentity Module Manager
      */
     public Object getModuleManager() {
         return moduleManager;

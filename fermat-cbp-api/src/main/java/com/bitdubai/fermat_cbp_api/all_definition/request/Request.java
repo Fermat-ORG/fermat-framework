@@ -11,19 +11,24 @@ public interface Request {
 
     UUID getRequestId();
 
-    String getSenderWalletPublicKey();
-
-    String getReceptorWalletPublicKey();
-
     String getRequestSenderPublicKey();
 
     String getRequestDestinationPublicKey();
 
-    String getRequestDescription();
+    /*
+     * TODO esto deberia ser un ENUM
+     */
+    String getMerchandiseCurrency();
 
+    float getMerchandiseAmount();
+
+    /*
+     * TODO esto deberia ser un ENUM
+     */
     String getPaymentCurrency();
 
-    CryptoAddress getAddressToSendThePayment();
-
-    long getAmount();
+    /*
+     * TODO esto deberia ser un ENUM
+     */
+    String getRequestStatus();
 }
