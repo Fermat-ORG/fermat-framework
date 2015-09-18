@@ -586,40 +586,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
      */
     public List<WalletFactoryProject> getAllFactoryProjects() throws CantGetWalletFactoryProjectException {
         // I define a blank filter
-        DatabaseTableFilter filter = new DatabaseTableFilter() {
-            @Override
-            public void setColumn(String column) {
-
-            }
-
-            @Override
-            public void setType(DatabaseFilterType type) {
-
-            }
-
-            @Override
-            public void setValue(String value) {
-
-            }
-
-            @Override
-            public String getColumn() {
-                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                return null;
-            }
-
-            @Override
-            public String getValue() {
-                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                return null;
-            }
-
-            @Override
-            public DatabaseFilterType getType() {
-                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-                return null;
-            }
-        };
+        DatabaseTableFilter filter = null;
         List<WalletFactoryProject> walletFactoryProjects;
         try {
             walletFactoryProjects = getWalletFactoryProjects(filter);
