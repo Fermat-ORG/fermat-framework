@@ -118,7 +118,7 @@ public  class ReceiveFragment extends FermatWalletFragment {
 
                 {"New telephone","Hot dog","Telephone credit","Coffee"},
                 {"Old desk","Flat rent","New glasses","House in Europe","Coffee","Gum"},
-                {"Car oil","Headphones","Apartment"},
+                {"Car oil","Headphgiones","Apartment"},
                 {"Sandwich","New kitchen","Camera repair"},
                 {"Headphones"},
                 {"Computer monitor","New car"},
