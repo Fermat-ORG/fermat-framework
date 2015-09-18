@@ -367,7 +367,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         publicKey="asset_issuer";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
-        walletNavigationStructureOpen=runtimeWalletNavigationStructure;
+
 
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
@@ -390,28 +390,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
 
-        runtimeTabStrip = new TabStrip();
-
-        runtimeTabStrip.setTabsColor("#8bba9e");
-
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-
-        runtimeTabStrip.setTabsIndicateColor("#72af9c");
-
-
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Main");
-        runtimeTab.setFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTabStrip.setDividerColor(0x72af9c);
-        //runtimeTabStrip.setBackgroundColor("#72af9c");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
         runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment("DWAIMA");
+
 
         setNavigationStructureXml(runtimeWalletNavigationStructure);
         //WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
