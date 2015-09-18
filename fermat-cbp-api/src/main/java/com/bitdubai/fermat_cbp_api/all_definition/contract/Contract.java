@@ -9,10 +9,34 @@ public interface Contract {
 
     String getPublicKeyBroker();
 
+    /*
+     * TODO esto deberia ser un ENUM
+     */
     String getStatus();
 
-    long getAmount();
+    float getMerchandiseAmount();
 
-    long getPriceReference();
+    /*
+     * TODO esto deberia ser un ENUM
+     */
+    String getMerchandiseCurrency();
+
+    float getReferencePrice();
+
+    /*
+     * TODO esto deberia ser un ENUM
+     */
+    String getReferenceCurrency();
+
+    float getPaymentAmount();
+
+    /*
+     * TODO esto deberia ser un ENUM
+     */
+    String getPaymentCurrency();
+
+    long getPaymentExpirationDate();
+
+    long getMerchandiseDeliveryExpirationDate();
 
 }

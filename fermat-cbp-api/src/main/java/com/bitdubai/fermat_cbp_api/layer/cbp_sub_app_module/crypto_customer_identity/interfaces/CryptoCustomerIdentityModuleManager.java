@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager</code>
- * provides the methods for the Crypto Customer Identity sub app.
+ * provides the methods for the Crypto Customer ActorIdentity sub app.
  */
 
 public interface CryptoCustomerIdentityModuleManager {

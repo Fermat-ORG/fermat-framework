@@ -8,6 +8,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
 
 public interface CustomerBrokerBankMoneyPurchase extends Contract{
 
-    String getPaymentCurrency();
+
 
 }

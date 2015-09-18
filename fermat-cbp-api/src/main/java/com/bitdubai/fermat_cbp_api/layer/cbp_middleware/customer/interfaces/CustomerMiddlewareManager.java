@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CustomerType;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.exceptions.CantCreateCustomerRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.exceptions.CantListCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_middleware.customer.exceptions.CantListFrequentCustomersException;
@@ -34,7 +36,7 @@ public interface CustomerMiddlewareManager {
      * @return CryptoBrokerIdentityInformation object
      * @throws CantCreateCustomerRelationshipException
      */
-     CryptoBrokerIdentityInformation createCustomerRelationship(String brokerPublicKey,String customerPublicKey,String customerName, byte[] profileImage, CustomerType customerType) throws CantCreateCustomerRelationshipException;
+     BrokerCustomerRelationship createCustomerRelationship(CryptoBrokerIdentity brokerIdentity, CryptoCustomerIdentity customerIdentity, CustomerType customerType) throws CantCreateCustomerRelationshipException;
 
     /**
      * The method <code>getAllBrokerCustomers</code> returns the list of all broker's customers
@@ -43,7 +45,7 @@ public interface CustomerMiddlewareManager {
      * @return the list of broker's customers information
      * @throws CantListCustomersException
      */
-    List<CustomerInformation> getAllBrokerCustomers(String brokerPublicKey) throws CantListCustomersException;
+    List<BrokerCustomerRelationship> getAllBrokerCustomers(String brokerPublicKey) throws CantListCustomersException;
 
     /**
      * The method <code>getSporadicBrokerCustomers</code> returns the list of sporadic broker's customers
@@ -52,8 +54,7 @@ public interface CustomerMiddlewareManager {
      * @return the list of broker's customers information
      * @throws CantListSporadicCustomersException
      */
-
-    List<CustomerInformation> getSporadicBrokerCustomers(String brokerPublicKey) throws CantListSporadicCustomersException;
+    List<BrokerCustomerRelationship> getSporadicBrokerCustomers(String brokerPublicKey) throws CantListSporadicCustomersException;
 
 
     /**
@@ -62,7 +63,7 @@ public interface CustomerMiddlewareManager {
      * @param brokerPublicKey the Broker public key
      * @return the list of broker's customers information
      */
-    List<CustomerInformation> getFrequentBrokerCustomers(String brokerPublicKey) throws CantListFrequentCustomersException;
+    List<BrokerCustomerRelationship> getFrequentBrokerCustomers(String brokerPublicKey) throws CantListFrequentCustomersException;
 
     /**
      * The method <code>searchBrokerCustomerByName</code> returns the list of broker's customers searching by name
@@ -71,6 +72,6 @@ public interface CustomerMiddlewareManager {
      * @param customerName  the customer alias or name to search
      * @return the list of broker's customers information
      */
-     List<CustomerInformation> searchBrokerCustomerByName(String brokerPublicKey,String customerName) throws CantSearchCustomersException;
+     List<BrokerCustomerRelationship> searchBrokerCustomerByName(String brokerPublicKey,String customerName) throws CantSearchCustomersException;
 
 }
