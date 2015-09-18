@@ -133,9 +133,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         projectColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN);
         projectColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN);
         projectColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN);
-        projectColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_PUBLIC_KEY_COLUMN);
-        projectColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_TYPE_COLUMN);
-        projectColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_WALLET_CATEGORY_COLUMN);
+        projectColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN);
         DeveloperDatabaseTable assetFactoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME, projectColumns);
         tables.add(assetFactoryTable);
 
