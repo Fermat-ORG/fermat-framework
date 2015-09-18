@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -11,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
@@ -22,6 +24,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exception
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransaction;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -138,9 +143,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }
 
-    private void requestHashGenesisTransaction(){
+    private String requestHashGenesisTransaction(){
         //TODO: to implement
         //this.cryptoVaultManager.getTransactionManager().confirmReception();
+        return "fakeGenesisTransaction";
     }
 
     private void checkCryptoWalletBalance() throws CryptoWalletBalanceInsufficientException, CantGetBalanceException {
@@ -255,6 +261,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //Ahora emito los assets nuevos.
             //Llamamos a la factory de digital Assets
             createDigitalAssetCryptoTransaction();
+            //Emitimos el asset, ¿a donde? Por definir
         } catch (CantCreateDigitalAssetTransactionException | CantCheckAssetIssuingProgressException  exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
@@ -265,6 +272,35 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          *Este método debe verificar el estatus de cada Asset y proceder de acuerdo a cada uno de ellos.
          * El objetivo es finalizar los digital assets, ya persistidos en base de datos, pero sin emitir.
          */
+        try {
+            TransactionStatus digitalAssetTransactionStatus=this.assetIssuingTransactionDao.getDigitalAssetTransactionStatus(transactionId);
+            if(digitalAssetTransactionStatus==TransactionStatus.FORMING_GENESIS){
+                //Todo: iniciar todo el proceso.
+                //TODO: 18/09/2015 crear la lógica para iniciar desde cualquier estado de emisión del asset
+            }
+        } catch (CantCheckAssetIssuingProgressException | UnexpectedResultReturnedFromDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+        }
+    }
+
+    private void persistsGenesisAddress(UUID transactionId, String genesisAddress) throws CantPersistsGenesisAddressException {
+        this.assetIssuingTransactionDao.persistGenesisAddress(transactionId, genesisAddress);
+    }
+
+    //private String generateDigitalAssetMetadata(){}
+
+    private void setDigitalAssetGenesisAddress(UUID transactionID, String genesisAddress) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        //TODO: descomentar la siguiente línea una vez que esté lista la cryptoVault
+        //this.digitalAsset.setGenesisAddress(genesisAddress);
+        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionID, TransactionStatus.GENESIS_SETTLED);
+    }
+
+    private void setDigitalAssetGenesisTransaction(UUID transactionID, DigitalAssetMetadata digitalAssetMetadata) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException {
+
+        String genesisTransaction=digitalAssetMetadata.getDigitalAssetHash();
+        this.digitalAsset.setGenesisTransaction(genesisTransaction);
+        this.assetIssuingTransactionDao.persistGenesisTransaction(transactionID, genesisTransaction);
+
     }
 
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
@@ -274,6 +310,28 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          * Este método lo usaré para pedir las transacciones de cada digital asset, mucho de lo que estaba en este método ahora pertenece al
          * método issueDigitalAssets.
          */
+        try{
+            //Primero, asigno un UUID interno
+            UUID transactionUUID=generateTransactionUUID();
+            //Solicito la genesisAddress
+            String genesisAddress=requestHashGenesisTransaction();
+            //La persisto en base de datos
+            persistsGenesisAddress(transactionUUID,genesisAddress);
+            //Le asigno al Digital Asset la genesisAddress
+            setDigitalAssetGenesisAddress(transactionUUID,genesisAddress);
+            //Creo el digitalAssetMetadata
+            DigitalAssetMetadata digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
+            //Creo el hash y se lo asigno al digitalAsset
+            setDigitalAssetGenesisTransaction(transactionUUID,digitalAssetMetadata);
+
+        } catch (CantPersistsGenesisAddressException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis Address in database");
+        } catch (CantExecuteQueryException |UnexpectedResultReturnedFromDatabaseException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot update the Digital Asset Transaction Status in database");
+        } catch (CantPersistsGenesisTransactionException exception) {
+            throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis transaction in database");
+        }
+
 
     }
 
