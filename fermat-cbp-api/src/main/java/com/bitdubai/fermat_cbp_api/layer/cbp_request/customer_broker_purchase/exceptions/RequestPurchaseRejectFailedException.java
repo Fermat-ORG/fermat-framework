@@ -5,7 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by eze on 2015.07.31..
  */
-public class FailedToRejectTheRequestPurchaseException extends FermatException {
+public class RequestPurchaseRejectFailedException extends FermatException {
+
+    public static String DEFAULT_MESSAGE = "FAILED TO REJECT THE PURCHASE REQUEST";
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +16,7 @@ public class FailedToRejectTheRequestPurchaseException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public FailedToRejectTheRequestPurchaseException(String message, Exception cause, String context, String possibleReason) {
+    public RequestPurchaseRejectFailedException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

@@ -9,8 +9,6 @@ public enum CustomerType {
     SPORADIC("SPO"),
     FREQUENT ("FRQ");
 
-
-
     private String code;
 
     CustomerType(String code) {
@@ -25,7 +23,6 @@ public enum CustomerType {
         switch (code) {
             case "SPO": return CustomerType.SPORADIC;
             case "FRQ": return CustomerType.FREQUENT;
-
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }
