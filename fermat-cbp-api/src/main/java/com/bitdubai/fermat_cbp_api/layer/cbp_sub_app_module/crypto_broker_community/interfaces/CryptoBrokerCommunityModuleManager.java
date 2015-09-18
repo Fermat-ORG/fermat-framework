@@ -16,7 +16,7 @@ import java.util.List;
  * Created by natalia on 16/09/15.
  */
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerCommunityModuleManager</code>
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
  * provides the methods for the Crypto Broker Community sub app.
  */
 public interface CryptoBrokerCommunityModuleManager {
