@@ -11,19 +11,13 @@ import org.junit.Test;
  */
 public class TestGetTradingPair {
 
-    private String setUrl=null;
-
-    private String urlResult;
-
     CryptocoinchartsServiceAPI cryptocoinchartsServiceAPI = new CryptocoinchartsServiceAPI();
-    @Before
-    public void setValues(){
-        setUrl= "http://api.cryptocoincharts.info/tradingPair/btc_usd";
-    }
     @Test
-    public void getTradingPairTest(){
-        urlResult=cryptocoinchartsServiceAPI.getTradingPair("btc","usd");
-        Assertions.assertThat(setUrl).isEqualTo(urlResult);
+    public void TestGetUrlAPI_successful(){
+        String expectedValue="http://api.cryptocoincharts.info/tradingPair/BTC_USD";
+        String url;
+        url=cryptocoinchartsServiceAPI.getUrlAPI("BTC","USD");
+        Assertions.assertThat(url).isEqualTo(expectedValue);
     }
 
 }

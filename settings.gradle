@@ -147,19 +147,19 @@ project(':fermat-dmp-plugin-actor-intra-user-bitdubai').projectDir = new File('D
 include ':fermat-dmp-plugin-module-intra-user-bitdubai'
 project(':fermat-dmp-plugin-module-intra-user-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai')
 
+
+
+//World layer projects on the pipeline:
 /*
-
-World layer projects on the pipeline:
-
 include ':fermat-dmp-plugin-world-blockchain-info-bitdubai'
 project(':fermat-dmp-plugin-world-blockchain-info-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai')
 
 include ':fermat-dmp-plugin-world-coinapult-bitdubai'
 project(':fermat-dmp-plugin-world-coinapult-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai')
-
+*/
 include ':fermat-dmp-plugin-world-crypto-index-bitdubai'
 project(':fermat-dmp-plugin-world-crypto-index-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai')
-
+/*
 include ':fermat-dmp-plugin-world-location-bitdubai'
 project(':fermat-dmp-plugin-world-location-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai')
 
@@ -524,12 +524,8 @@ project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projec
 include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
 
-include ':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai'
-project(':fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-asset-user-community-bitdubai')
 include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
-include ':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai'
-project(':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai').projectDir = new File('DAP/plugin/module/fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai')
 
 // android dap wallets
 include ':fermat-dap-android-wallet-asset-issuer-bitdubai'
@@ -567,12 +563,11 @@ project(':fermat-mkt-plugin-identity-marketer-bitdubai').projectDir = new File('
 
 //module
 include ':fermat-shp-plugin-sub-app-module-brand-bitdubai'
-project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new File('SHP/plugin/module/fermat-shp-plugin-sub-app-module-brand-bitdubai')
+project(':fermat-shp-plugin-sub-app-module-brand-bitdubai').projectDir = new File('SHP/plugin/sub-app-module/fermat-shp-plugin-sub-app-module-brand-bitdubai')
 
 // identity
 include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
-
 
 // CBP projects
 
@@ -706,4 +701,3 @@ project(':fermat-cbp-plugin-world-fiat-index-bitdubai').projectDir = new File('C
 
 //include ':'
 //project(':').projectDir = new File('CBP/plugin//')
-
