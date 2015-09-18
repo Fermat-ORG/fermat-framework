@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1;
+package com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1;
 
 
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -16,22 +16,20 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeDesktopObject;
+import com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
+import com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeDesktopObject;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventDeveloper;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 
@@ -57,7 +55,7 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
      * MAp of desktop identifier + runtimeDesktopObject
      */
 
-    Map<String, DesktopObject> mapDesktops = new HashMap<String, DesktopObject>();
+    List<DesktopObject> lstDesktops = new ArrayList<DesktopObject>();
 
     /**
      * Last desktop-object
@@ -186,20 +184,26 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
     @Override
     public DesktopObject getLastDesktopObject() {
         if (lastDesktopObject != null) {
-            return mapDesktops.get(lastDesktopObject);
+            //return mapDesktops.get(lastDesktopObject);
         }
-        return mapDesktops.get(startDesktopObject);
+        return  null;
+        //return mapDesktops.get(startDesktopObject);
     }
 
     @Override
     public DesktopObject getDesktopObject(String desktopObjectType) {
-        DesktopObject desktopObject = mapDesktops.get(desktopObjectType);
-        if (desktopObject != null) {
-            lastDesktopObject = desktopObjectType;
-            return desktopObject;
-        }
+        //DesktopObject desktopObject = mapDesktops.get(desktopObjectType);
+//        if (desktopObject != null) {
+//            lastDesktopObject = desktopObjectType;
+//            return desktopObject;
+//        }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
+    }
+
+    @Override
+    public List<DesktopObject> listDesktops() {
+        return lstDesktops;
     }
 
     /**
@@ -287,7 +291,8 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
 
             runtimeDesktopObject = new RuntimeDesktopObject();
             runtimeDesktopObject.setType("DCCP");
-            mapDesktops.put("DCCP", runtimeDesktopObject);
+            lstDesktops.add(runtimeDesktopObject);
+            runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
 
             Activity activity = new Activity();
             /**
@@ -301,24 +306,67 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
             /**
              * Add WalletManager fragment
              */
-            fragment = new Fragment();
-            //fragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN.getKey());
-            fragment.setType("DCCPWH");
-            activity.addFragment("DCCPWH", fragment);
+
+            // CCP_WALLET_MANAGER_FRAGMENT
+            fragment.setType("CCPWMF");
+            activity.addFragment("CCPWMF",fragment);
 
             /**
              * Add home subApps fragment
              */
+
             fragment = new Fragment();
-            fragment.setType("DCCPSAH");
-            activity.addFragment("DCCPSAH", fragment);
+            // CCP_SUB_APP_MANAGER_FRAGMENT
+            fragment.setType("CCPSAMF");
+            activity.addFragment("CCPSAMF", fragment);
 
 
-            //homeScreen.setStartActivity(activity.getType());
-            //homeScreen.addActivity(activity);
+
 
             /**
              * End Desktop CCP
+             */
+
+            /**
+             * Desktop DAP
+             */
+
+            runtimeDesktopObject = new RuntimeDesktopObject();
+            runtimeDesktopObject.setType("DDAP");
+            lstDesktops.add(runtimeDesktopObject);
+            runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
+
+            activity = new Activity();
+            /**
+             * set type home
+             */
+            //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
+            //activity.setType(Activities.CCP_DESKTOP_HOME);
+            activity.setActivityType("DAPDHA");
+            fragment = new Fragment();
+
+            /**
+             * Add WalletManager fragment
+             */
+
+            // CCP_WALLET_MANAGER_FRAGMENT
+            fragment.setType("DAPWMF");
+            activity.addFragment("DAPWMF",fragment);
+
+            /**
+             * Add home subApps fragment
+             */
+
+            fragment = new Fragment();
+            // CCP_SUB_APP_MANAGER_FRAGMENT
+            fragment.setType("DAPSAMF");
+            activity.addFragment("DAPSAMF", fragment);
+
+
+
+
+            /**
+             * End Desktop DAP
              */
 
 

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.settings.WalletFactoryPreferenceSettings;
-import com.bitdubai.sub_app.wallet_factory.ui.fragments.DevProjectsFragment;
+import com.bitdubai.sub_app.wallet_factory.ui.fragments.MainFragment;
 
 /**
  * WalletFactoryFragmentFactory
@@ -28,7 +28,7 @@ public class WalletFactoryFragmentFactory extends FermatSubAppFragmentFactory<Wa
              * Executing fragments for BITCOIN REQUESTED.
              */
             case CWP_WALLET_FACTORY_DEVELOPER_PROJECTS:
-                currentFragment = DevProjectsFragment.newInstance();
+                currentFragment = MainFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");

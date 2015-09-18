@@ -119,6 +119,7 @@ dependencies {
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
 
+    compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
 
 }
 

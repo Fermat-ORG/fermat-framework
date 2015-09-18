@@ -22,12 +22,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.R;
-
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.R;
 
 /**
  * Created by Natalia on 12/01/2015.
@@ -88,16 +88,16 @@ public class SubAppDesktopFragment extends Fragment {
         mlist = new ArrayList<InstalledSubApp>();
 
 
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"wallet_factory","Wallet factory","wallet_factory","wallet_factory",new Version(1,0,0));
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"sub-app-asset-factory","Assets factory","sub-app-asset-factory","sub-app-asset-factory",new Version(1,0,0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet publisher","wallet_publisher","wallet_publisher",new Version(1,0,0));
-        mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet store","wallet_store","wallet_store",new Version(1,0,0));
-        mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer","developer_sub_app","developer_sub_app",new Version(1,0,0));
-        mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER,null,null,"intra_user_sub_app","Intra user","intra_user_sub_app","intra_user_sub_app",new Version(1,0,0));
-        mlist.add(installedSubApp);
+//        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet publisher","wallet_publisher","wallet_publisher",new Version(1,0,0));
+//        mlist.add(installedSubApp);
+//        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet store","wallet_store","wallet_store",new Version(1,0,0));
+//        mlist.add(installedSubApp);
+//        installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer","developer_sub_app","developer_sub_app",new Version(1,0,0));
+//        mlist.add(installedSubApp);
+//        installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER,null,null,"intra_user_sub_app","Intra user","intra_user_sub_app","intra_user_sub_app",new Version(1,0,0));
+//        mlist.add(installedSubApp);
 
         GridView gridView = new GridView(getActivity());
 
@@ -190,8 +190,8 @@ public class SubAppDesktopFragment extends Fragment {
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.sub_apps);
             switch (installedSubApp.getSubAppIcon())
             {
-                case "developer_sub_app":
-                    holder.imageView.setImageResource(R.drawable.developer_nuevo);
+                case "sub-app-asset-factory":
+                    holder.imageView.setImageResource(R.drawable.factory_nuevo);
                   holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {

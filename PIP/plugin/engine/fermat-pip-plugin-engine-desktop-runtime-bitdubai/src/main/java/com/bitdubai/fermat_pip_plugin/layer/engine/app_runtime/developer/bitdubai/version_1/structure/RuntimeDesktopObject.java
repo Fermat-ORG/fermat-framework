@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_pip_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -83,7 +83,6 @@ public class RuntimeDesktopObject implements DesktopObject {
         return activities.get(lastActivity);
     }
 
-    @Override
     public void setStartActivity(Activities activity) {
         this.startActivity=activity;
     }

@@ -21,13 +21,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitduai.fermat_dap_android_desktop_wallet_manager_bitdubai.R;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+import com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.R;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,9 +52,8 @@ public class WalletDesktopFragment extends Fragment {
 
     private List<InstalledWallet> lstInstalledWallet;
 
-    public static WalletDesktopFragment newInstance(int position, WalletManager walletManager) {
+    public static WalletDesktopFragment newInstance(int position) {
         WalletDesktopFragment f = new WalletDesktopFragment();
-        f.setWalletManager(walletManager);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -59,14 +64,44 @@ public class WalletDesktopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-        setHasOptionsMenu(true);
 
-        if (walletManager != null)
-            try {
-                lstInstalledWallet = walletManager.getUserWallets();
-            } catch (CantGetUserWalletException e) {
-                e.printStackTrace();
-            }
+        lstInstalledWallet = new ArrayList<InstalledWallet>();
+
+        // Harcoded para testear el circuito más arriba
+        InstalledWallet installedWallet= new com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                WalletType.REFERENCE,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "asset_issuer",
+                "asset issuer",
+                "asset_issuer",
+                "wallet_platform_identifier",
+                new Version(1,0,0));
+        lstInstalledWallet.add(installedWallet);
+
+        installedWallet= new com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                WalletType.REFERENCE,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "asset_user",
+                "asset user",
+                "asset_user",
+                "wallet_platform_identifier",
+                new Version(1,0,0));
+        lstInstalledWallet.add(installedWallet);
+
+        installedWallet= new com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                WalletType.REFERENCE,
+                new ArrayList<InstalledSkin>(),
+                new ArrayList<InstalledLanguage>(),
+                "redeem_point",
+                "redeem point",
+                "redeem_point",
+                "wallet_platform_identifier",
+                new Version(1,0,0));
+        lstInstalledWallet.add(installedWallet);
+
+
 
 
         GridView gridView = new GridView(getActivity());
@@ -162,8 +197,60 @@ public class WalletDesktopFragment extends Fragment {
             //Hardcodeado hasta que esté el wallet resources
             switch (installedWallet.getWalletIcon()) {
 
-                case "reference_wallet_icon":
-                    holder.imageView.setImageResource(R.drawable.fermat);
+                case "asset_issuer":
+                    holder.imageView.setImageResource(R.drawable.wallet_1);
+                    holder.imageView.setTag("WalletBitcoinActivity|4");
+                    linearLayout.setTag("WalletBitcoinActivity|4");
+
+                    linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+
+                        }
+                    });
+
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
+
+                        }
+                    });
+
+                    break;
+                case "asset_user":
+                    holder.imageView.setImageResource(R.drawable.wallet_2);
+                    holder.imageView.setTag("WalletBitcoinActivity|4");
+                    linearLayout.setTag("WalletBitcoinActivity|4");
+
+                    linearLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+
+                        }
+                    });
+
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
+
+                        }
+                    });
+
+                    break;
+                case "redeem_point":
+                    holder.imageView.setImageResource(R.drawable.wallet_3);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
 
