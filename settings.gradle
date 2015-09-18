@@ -60,11 +60,11 @@ project(':fermat-osa-addon-multi-os-database-system-bitdubai').projectDir = new 
 
 include ':fermat-osa-addon-multi-os-file-system-bitdubai'
 project(':fermat-osa-addon-multi-os-file-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai')
-
+*/
 include ':fermat-osa-addon-android-device-location-bitdubai'
 project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')
 
-*/
+
 
 // PIP Projects (Addons)
 
