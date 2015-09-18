@@ -34,12 +34,12 @@ import java.util.concurrent.ExecutorService;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class DevProjectsFragment extends FermatFragment implements FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener {
+public class MainFragment extends FermatFragment implements FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener {
 
     /**
      * CONSTANTS
      */
-    private static final String TAG = "DevFactory";
+    private static final String TAG = "MainFactory";
 
     /**
      * THREAD POOL EXECUTOR
@@ -74,6 +74,15 @@ public class DevProjectsFragment extends FermatFragment implements FermatWorkerC
     private RecyclerView recycler;
     private LinearLayoutManager layoutManager;
 
+    /**
+     * Get new developer projects fragment instance
+     *
+     * @return DevProjectsFragment Instance
+     */
+    public static MainFragment newInstance() {
+        return new MainFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,15 +91,6 @@ public class DevProjectsFragment extends FermatFragment implements FermatWorkerC
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
-    }
-
-    /**
-     * Get new developer projects fragment instance
-     *
-     * @return DevProjectsFragment Instance
-     */
-    public static DevProjectsFragment newInstance() {
-        return new DevProjectsFragment();
     }
 
     @Nullable
