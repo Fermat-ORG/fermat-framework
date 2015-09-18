@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.Plugin;
 /**
  * Created by franklin on 11/09/15.
  */
-public interface DAPModuleSubsytem {
+public interface DAPModuleSubsystem {
     public void start () throws CantStartSubsystemException;
     public Plugin getPlugin();
 }
