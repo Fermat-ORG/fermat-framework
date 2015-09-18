@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.all_definition.events.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 
 /**
@@ -20,7 +21,7 @@ public interface FermatEvent {
      * Throw the method <code>getEventType</code> you can get the information of the event type.
      * @return an instance of a Fermat Enum.
      */
-    FermatEnum getEventType();
+    FermatEventEnum getEventType();
 
     /**
      * Throw the method <code>setSource</code> you can set the source of the event.

@@ -1,0 +1,130 @@
+### World  Crypto Index
+
+El Objetivo de este plugin es obtener el mejor precio de mercado de las diferentes Crypto Currencies. Para esto se hacen uso de las APIs disponibles de diferentes proveedores que ofrecen precio de mercado en tiempo real.
+Los criterio para seleccionar los diferentes proveedores principalmente son:
+
+* Que proporcionen una API pública sin que haya la necesidad de que se tenga que gestionar una KeyAPI o un Token para acceder a la misma.
+* Dentro de lo posible que sean gratuitos, pero no es un requisito indispesable. pero para dar un avance importante al plugin se seleccionaron proveedores gratuitos.
+* Que proporcionen un servicio REST o JSON para que el plugin pueda consultar con rapidez el precio de mercado.
+* Que proporcionen una gama importante de Crypto Currencies.
+
+Dentro de la documentación referida a la issues 1067 se listaron diferentes  proveedores de los cuales algunos fueron utilizados  para este plugin y otros descartados.
+Los proveedores utilizados para este plugin fueron:
+
+* https://btc-e.com
+* https://bter.com/api
+* https://c-cex.com/?id=api
+* https://cex.io/api
+* https://www.cryptocoincharts.info/tools/api
+
+Dentro de la estructura del plugin, en el paquete “provider”, se crearon diferentes clases, una por cada proveedor y  se desarrolló una lógica en cada una de ellas para obtener las URL que proporcionarían el formato JSON. Cada API proporciona su información en forma diferente con respecto a las otras y es por eso que la lógica, en cada clase, difiere.
+
+Para desarrollar la lógica en cada clase se definió una interfaz conocida como “InterfaceUrlAPI” en el paquete “interfaces” y dentro de ella un método llamado “getUrlAPI” con dos parámetros String, uno para Crypto Currencies y otro para Fiat Currencies. Los parámetros String serán utilizados para completar las URL de las diferentes API con las Currencies consultadas.
+En cada clase de los proveedores se implementó esta interfaz.
+Un ejemplo de la interfaz aplicada dentro de una clase proveedor:
+
+`@Override`
+`public String getUrlAPI(String c, String f)  {`
+     `String pair = c + "_" + f;`
+     `UrlAPI="http://api.cryptocoincharts.info/tradingPair/"+ pair;`
+     `return UrlAPI;`
+ `}`
+
+Dentro de los parámetros se puede asignar estas Currencies:
+c=”BTC”
+f=”LTC”
+
+El método devolvería la siguiente URL  http://api.cryptocoincharts.info/tradingPair/BTC_USD y esta misma proporcionaría un formato JSON como el siguiente:
+
+`  { "id": "btc/usd",`
+    `"price": "234.32000000",`
+  `"price_before_24h": "230.38000000",`
+  `"volume_first": "25122.028442535186",`
+  `"volume_second": "5791645.630937811",`
+  `"volume_btc": "25122.03",`
+  `"best_market": "bitstamp",`
+  `"latest_trade": "2015-09-05 15:05:23",`
+  `"coin1": "Bitcoin",`
+  `"coin2": "US Dollar",`
+  `"markets": [`
+    `{`
+      `"market": "bitstamp",`
+      `"price": "234.32000000",`
+      `"volume": "19131.416233062744",`
+      `"volume_btc": "19131.416233062744"`
+    `},`
+    `{`
+      `"market": "btc-e",`
+      `"price": "229.98000000",`
+      `"volume": "5874.672722816467",`
+      `"volume_btc": "5874.672722816467"`
+    `},`
+    `{`
+      `"market": "kraken",`
+      `"price": "234.29000000",`
+      `"volume": "109.24951467849314",`
+      `"volume_btc": "109.24951467849314"`
+    `}`
+  `]`
+`}`
+
+### Deserializar el formato JSON.
+
+Dentro del paquete “structure” se creó una clase con el nombre HTTPJson que se encarga principalmente de devolver un Objeto Json. Dentro de esta clase se declaran cuatro variables “private”
+
+`private BufferedReader bufferedReader;`
+`private InputStream inputStream;`
+`private JSONObject jsonObject;`
+`private String json = "";`
+
+**Dentro de las mismas hay cuatro métodos:**
+
+`getInputStream(String url)`
+
+Este método devuelve la variable inputStream con el objeto HTTP proveniente de la url. Utilizando el método HTTPGet se envía una solicitud a la url para obtener el resultado de la misma y a través del método HTTPResponse interpretarlo, luego utilizando el método  HTTPEntity  se obtiene el mensaje entidad de la misma. Por último dicha entidad se guarda en la variable inputStream y la misma es retornada.
+
+`getBufferedReader(InputStream is)`
+
+En este método se espera el ingreso del parámetro InputStream que el mismo es obtenido del método que describió anteriormente. El objetivo de este método es devolver una variable del tipo BufferedReader con la lectura del contenido de la url. Que en este caso es un texto en formato Json.
+
+`getJsonObject(BufferedReader reader)`
+
+En este método se espera el ingreso de un parámetro del tipo BufferedReader para que el mismo sea leído, colocado en formato json y guardado como un String. Una vez hecho esto, dicho String, es ingresado en la variable jsonObject y por ultimo la variable JsonObject es retornada.
+
+`getJSONFromUrl(String url)`
+
+Por último este método es encargado de ejecutar todo los métodos anteriores y devolver un objeto Json.
+
+###Market Price.## ###
+
+Dentro del paquete “structure” se creo tambien la clase MarketPrice.
+El objetivo de esta clase es devolver el mejor precio del mercado de las diferentes crypto currencies. En la misma se hacen las consultas a los diferentes proveedores y también se realiza la lógica para obtener los datos de los objetos json provistos por los mismos.
+En esta clase hay dos métodos.
+
+`public double getBestMarketPrice (String crypto, String fiat )`
+
+Las url obtenidas de los proveedores es guardada en diferentes variable del tipo String. Dentro de la lógica se creó una lita de tipo String denominada priceList, en la misma se ingresan los precios de mercado.
+Para esto se instancia la clase HTTPJson con el nombre de jsonService, en este objeto llama al método getJSONFromUrl y se ingresa el parámetro String url para que el mismo se encargue de obtener el valor precio de los formatos json obtenidos de las diferentes APIs.     Una vez hecho estos son agregados a la lista priceList, esta es ordenada de menor a mayor y el último ítem de la lista (el cual seria el valor mayor ) se ingresa a la variable marketExchangeRate para que sea retornada.
+
+La forma de obtener el valor precio de las diferentes APIs cambia debido que estas proporcionan los datos en formas diferentes.
+
+`public double getHistoricalExchangeRate(CryptoCurrency c, FiatCurrency f, long time)`
+
+Dentro del paquete “interface” se creo la interfaz MarketRateProvider y dentro de la misma el método:
+double
+`getHistoricalExchangeRate(CryptoCurrency c, FiatCurrency f, long time)`
+
+Dentro de la clase se implementa la interfaz antes mencionada y se desarrolla lo lógica ingresando en dos variables String las las currencies que se quieren consultar. En este caso se obteine el tipo de currencies que se quiere consultar a través del enum CryporCurrency y FiatCurrency. Estas variables son pasadas como parámetros al método getBestMarketPrice quien realiza la lógica para consultar el mejor precio de mercado.
+
+Por ultimo el valore que proviene del método getBestMarketPrice es pasado a la variable marketExchangeRate y retornado.
+
+
+
+
+
+
+
+
+
+
+
