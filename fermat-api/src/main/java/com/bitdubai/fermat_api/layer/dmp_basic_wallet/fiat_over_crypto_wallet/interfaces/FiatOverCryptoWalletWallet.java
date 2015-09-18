@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_basic_wallet.fiat_over_crypto_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantFindTransactionException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantFindTransactionException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantListTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantStoreMemoException;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,9 +44,9 @@ public interface FiatOverCryptoWalletWallet {
      * @param max    the maximum number of transactions to take from the transaction list
      * @param offset the starting position from which we want the next transactions to come.
      * @return the list of transactions
-     * @throws CantGetTransactionsException
+     * @throws CantListTransactionsException
      */
-    public List<FiatOverCryptoWalletTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException;
+    public List<FiatOverCryptoWalletTransaction> getTransactions(int max, int offset) throws CantListTransactionsException;
 
     /**
      * The method <code>setDescription</code> lets the client set a description of a selected transaction
