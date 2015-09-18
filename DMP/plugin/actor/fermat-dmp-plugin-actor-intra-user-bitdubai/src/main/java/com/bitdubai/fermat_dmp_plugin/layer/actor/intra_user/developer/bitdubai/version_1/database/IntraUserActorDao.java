@@ -154,7 +154,7 @@ public class IntraUserActorDao implements Serializable{
                 record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
                 record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey);
                 record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
-                record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+                record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
 
                 table.insertRecord(record);
 
