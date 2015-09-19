@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_community.interfaces.CryptoCustomerInformation</code>
- * provides the method to extract information about an crypto customer.
+ * provides the method to extract information about a crypto customer.
  */
 public interface CryptoCustomerInformation {
     /**

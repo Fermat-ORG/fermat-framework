@@ -16,15 +16,15 @@ import java.util.List;
  */
 
 /**
- * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerCommunityModuleManager</code>
- * provides the methods for the Crypto Broker Community sub app.
+ * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
+ * provides the methods for the Crypto Customer Community sub app, to Identity Management Customers and the relationship with other Customers.
  */
 public interface CryptoCustomerCommunityModuleManager {
 
 
 
     /**
-     * The method <code>getSuggestionsToContact</code> searches for crypto broker that the logged in
+     * The method <code>getSuggestionsToContact</code> searches for crypto Customer that the logged in
      * crypto customer could be interested to add.
      *
      * @return a list with information of crypto customer
@@ -42,7 +42,7 @@ public interface CryptoCustomerCommunityModuleManager {
 
     /**
      * The method <code>askCryptoBrokerForAcceptance</code> initialize the request of contact between
-     * a crypto broker and a crypto customer.
+     * a crypto Customer and a other crypto customer.
      *
      * @param cryptoCustomerToAddName      The name of the crypto customer to add
      * @param cryptoCustomerToAddPublicKey The public key of the crypto customer to add
@@ -64,7 +64,7 @@ public interface CryptoCustomerCommunityModuleManager {
 
 
     /**
-     * The method <code>denyConnection</code> denies a conection request from other crypto Customer
+     * The method <code>denyConnection</code> denies a connection request from other crypto Customer
      *
      * @param cryptoCustomerToRejectPublicKey the public key of the user to deny its connection request
      * @throws CryptoCustomerConnectionRejectionFailedException
@@ -72,7 +72,7 @@ public interface CryptoCustomerCommunityModuleManager {
     public void denyConnection(String cryptoCustomerToRejectPublicKey) throws CryptoCustomerConnectionRejectionFailedException;
 
     /**
-     * The method <code>disconnectCryptoCustomerr</code> disconnect an crypto Broker from the list managed by this
+     * The method <code>disconnectCryptoCustomerr</code> disconnect an crypto Customer from the list managed by this
      * plugin
      *
      * @param cryptoCustomerToDisconnectPublicKey the public key of the crypto Customer to disconnect
@@ -89,7 +89,7 @@ public interface CryptoCustomerCommunityModuleManager {
 
     /**
      * The method <code>getAllCryptoCustomers</code> returns the list of all crypto Customer registered by the
-     * logged in crypto broker
+     * logged in crypto Customer
      *
      * @return the list of crypto Customer connected to the logged in broker
      * @throws CantGetCryptoCustomerListException
@@ -98,28 +98,28 @@ public interface CryptoCustomerCommunityModuleManager {
 
     /**
      * The method <code>getCryptoCustomersWaitingYourAcceptance</code> returns the list of crypto Customer waiting to be accepted
-     * or rejected by the logged in broker
+     * or rejected by the logged in Customer
      *
-     * @return the list of crypto Customer waiting to be accepted or rejected by the  logged in broker
+     * @return the list of crypto Customer waiting to be accepted or rejected by the  logged in Customer
      * @throws CantGetCryptoCustomerListException
      */
     public List<CryptoCustomerInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws CantGetCryptoCustomerListException;
 
     /**
      * The method <code>getCryptoBrokersWaitingTheirAcceptance</code> list the crypto Customer that haven't
-     * answered to a sent connection request by the current logged in broker.
+     * answered to a sent connection request by the current logged in Customer.
      *
      * @return the list of crypto Customer that haven't answered to a sent connection request by the current
-     * logged in broker.
+     * logged in Customer.
      * @throws CantGetCryptoCustomerListException
      */
     public List<CryptoCustomerInformation> getCryptoCustomersWaitingTheirAcceptance(int max, int offset) throws CantGetCryptoCustomerListException;
 
 
     /**
-     * The method <code>login</code> let an crypto broker log in
+     * The method <code>login</code> let an crypto Customer log in
      *
-     * @param customerPublicKey the public key of the crypto broker to log in
+     * @param customerPublicKey the public key of the crypto Customer to log in
      */
     public void login(String customerPublicKey) throws CantLoginCustomerException;
 

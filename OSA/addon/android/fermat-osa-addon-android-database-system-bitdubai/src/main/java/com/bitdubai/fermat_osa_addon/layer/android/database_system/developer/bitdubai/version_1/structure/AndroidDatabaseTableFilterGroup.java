@@ -8,87 +8,37 @@ import java.util.List;
 
 /**
  * Created by lnacosta on 05/15/2015.
- */
-
-/**
  * This class define methods to set and get the filter group of query.
- *
- * *
  */
 public class AndroidDatabaseTableFilterGroup implements DatabaseTableFilterGroup {
 
-    /**
-     * DatabaseTableFilterGroup Member Variables.
-     */
     private List<DatabaseTableFilter> filters;
 
     private List<DatabaseTableFilterGroup> subGroups;
 
     private DatabaseFilterOperator operator;
 
-    /**
-     * DatabaseTableFilterGroup interface implementation.
-     */
+    public AndroidDatabaseTableFilterGroup() {
+    }
 
-    /**
-     * <p>This method return a list of DatabaseTableFilter objects
-     *
-     * @return List of DatabaseTableFilter
-     */
+    public AndroidDatabaseTableFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator operator) {
+        this.filters = filters;
+        this.subGroups = subGroups;
+        this.operator = operator;
+    }
+
     @Override
     public List<DatabaseTableFilter> getFilters() {
         return filters;
     }
 
-    /**
-     *<p>This method sets a list of DatabaseTableFilter objects
-     *
-     * @param filters List of DatabaseTableFilter object
-     */
-    @Override
-    public void setFilters(List<DatabaseTableFilter> filters) {
-        this.filters = filters;
-    }
-
-    /**
-     * <p>This method gets a list of DatabaseTableFilterGroup objects
-     *
-     * @return List of DatabaseTableFilterGroup object
-     */
     @Override
     public List<DatabaseTableFilterGroup> getSubGroups() {
         return subGroups;
     }
 
-    /**
-     * <p>This method sets a list of DatabaseTableFilterGroup objects
-     *
-     * @param subGroups  List of DatabaseTableFilterGroup object
-     */
-    @Override
-    public void setSubGroups(List<DatabaseTableFilterGroup> subGroups) {
-        this.subGroups = subGroups;
-    }
-
-    /**
-     * <p>This method sets a list of DatabaseTableFilterGroup enum, in OR or AND
-     *
-     * @return
-     */
     @Override
     public DatabaseFilterOperator getOperator() {
         return operator;
     }
-
-
-    /**
-     * <p>This method sets a DatabaseTableFilterGroup enum, in OR or AND
-     *
-     * @param operator
-     */
-    @Override
-    public void setOperator(DatabaseFilterOperator operator) {
-        this.operator = operator;
-    }
-
 }

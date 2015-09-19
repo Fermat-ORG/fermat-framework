@@ -59,8 +59,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     }
 
     private DatabaseTable getDatabaseTable(String tableName) {
-        DatabaseTable databaseTable = database.getTable(tableName);
-        return databaseTable;
+        return database.getTable(tableName);
     }
 
     private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
@@ -339,7 +338,9 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
     private List<DatabaseTableRecord> getWalletFactoryProjectsData (DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME);
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        if (filter != null)
+            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
         table.loadToMemory();
 
         return table.getRecords();
