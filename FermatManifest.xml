@@ -3260,6 +3260,43 @@
 				</androids>
 			</layer>
 
+			<layer name="Desktop" language="java-android">
+				<androids>
+					<android
+						name="Sub App Manager"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+					<android
+						name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</android>
+				</androids>
+			</layer>
+
 			<layer name="Wallet Module" language="java">
 				<plugins>
 					<plugin
@@ -3379,6 +3416,43 @@
 						</authors>
 						<mantainers>
 							<mantainer name="Franklinmarcano1970"></mantainer>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
+			<layer name="Desktop Module" language="java">
+				<plugins>
+					<plugin
+						name="Sub App Manager"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+					<plugin
+						name="Wallet Manager"
+						description=""
+						difficulty="4"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -3544,7 +3618,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="RedeemPoint Redemption"
+						name="Redeem Point Redemption"
 						description=""
 						difficulty="10"
 						code-level="development"
@@ -4635,7 +4709,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 					<plugin
 						name="Wallet Manager"
 						description=""
@@ -4652,7 +4725,6 @@
 						<certifications>
 						</certifications>
 					</plugin>
-
 				</plugins>
 			</layer>
 
