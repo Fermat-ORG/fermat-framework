@@ -44,7 +44,7 @@ public abstract class FermatFragment extends Fragment {
         try {
             context = (WizardConfiguration) getActivity();
         } catch (Exception ex) {
-            throw new ClassCastException("cannot convert the current context to FermatActivity");
+            throw new ClassCastException("cannot convert the current context to WizardConfiguration");
         }
     }
 
