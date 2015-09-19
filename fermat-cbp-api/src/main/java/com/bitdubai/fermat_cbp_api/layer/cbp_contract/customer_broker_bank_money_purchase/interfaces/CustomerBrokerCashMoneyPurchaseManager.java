@@ -10,8 +10,21 @@ import java.util.List;
  */
 public interface CustomerBrokerCashMoneyPurchaseManager {
 
-    List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerCashMoneyPurchaseFromCurrentDeviceUser();
+    List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBackMoneyPurchaseFromCurrentDeviceUser();
 
-    CustomerBrokerBankMoneyPurchase createCustomerBrokerCashMoneyPurchase(final String getPublicKeyCustomer, final String getPublicKeyBroker, final Float amount, final Float priceReference, final Float paymentCurrency) throws CantCreateCustomerBrokerBankMoneyPurchaseException;
+    CustomerBrokerBankMoneyPurchase createCustomerBrokerBackMoneyPurchase(
+                                        final String publicKeyCustomer,
+                                        final String publicKeyBroker,
+                                        final Float merchandiseAmount,
+                                        final String merchandiseCurrency,
+                                        final Float referencePrice,
+                                        final String referenceCurrency,
+                                        final Float paymentAmount,
+                                        final String paymentCurrency,
+                                        final long paymentExpirationDate,
+                                        final long merchandiseDeliveryExpirationDate
+                                    ) throws CantCreateCustomerBrokerBankMoneyPurchaseException;
+
+    void updateStatusCustomerBrokerBackMoneyPurchase(final UUID ContractId) throws CantupdateStatusCustomerBrokerBackMoneyPurchaseException;
 
 }
