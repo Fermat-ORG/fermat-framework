@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 /**
  * Created by eze on 2015.09.02..
  */
-public class IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventListener extends GenericEventListener {
+public class IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventListener extends com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventListener {
     public IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventListener(final FermatEventMonitor fermatEventMonitor){
         super(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER, fermatEventMonitor);
     }

@@ -6,8 +6,8 @@ Actividad con dos Tabs:
 
 * Lista de Cosas Pendientes que debo resolver (Tab 1)
     * Negociaciones (Contracts) y Ejecuciones (Deals) Pendientes que necesitan de mi interaccion
-    * Esta lista va a estar ordenada por antiguedad (de la mas vieja a la mas nueva)
-    * Cada Item pude ser tener el design de las fichas de fermat.org
+    * Esta lista va a estar ordenada de mas antiguo a mas nuevo
+    * Cada Item pude tener el design de las fichas de fermat.org
     * Al pulsar sobre el item me dirige al detalle de la negociacion o ejecucion
     * Cada item de la lista debe tener un boton que te permita relizar acciones rapidas, dependiendo del estado del Deal o el Contract
 
@@ -25,7 +25,7 @@ Actividad con dos Tabs:
 
 ## Open Deals
 
-Actividad que te muestra las ejecuciones abiertas
+Actividad que te muestra de todas los Deals abiertas
 
 Se manejan dos listas:
 
@@ -34,11 +34,11 @@ Se manejan dos listas:
 
 Estas listas van a estar ordenadas por antiguedad, las mas viejas aparecen primero
 
-Cada item de la lista debe tener un boton que te permita relizar acciones rapidas, dependiendo del estado del Deal o el Contract
+Cada item de la lista debe tener un boton que te permita realizar acciones rapidas, dependiendo del estado del Deal
 
 ## Deals History
 
-Actividad que muestra de todas las ejecuciones en cualquier estado
+Actividad que muestra de todas los Deals en cualquier estado
 
 ## Deal Details
 
@@ -46,7 +46,7 @@ Actividad que muestra el detalle de un Deal y permite realizar acciones sobre es
 
 La informacion del Contract aparece como solo lectura, pero permite registrar pagos o envios
 
-Tener como un modo Solo Lectura para aquellos Deals cerrados y un Modo Edicion para Deals que todavia no se han cerrado
+* El detalle de los Deals cerrados o cancelados no podra ser editable
 
 ## Open Contracts
 
@@ -71,7 +71,7 @@ Actividad que muestra el detalle de un Contract y permite realizar acciones sobr
 
 Se puede editar informacion del Contract si esta esta en un estado que lo permita
 
-Tener como un modo Solo Lectura para aquellos Contracts cerrados y un Modo Edicion para Contracts que todavia no se han cerrado
+* El detalle de los Contract cerrados o cancelados no podra ser editable
 
 ## Settings
 
@@ -95,6 +95,7 @@ Navigation Drawer para acceder a las diferentes actividades de la Wallet:
 * Open Deals
 * Open Contracts
 * Deals History
+* Contracts History
 * Contract Deals
 * Settings
 
@@ -125,7 +126,7 @@ Actividad que muestra la lista de todos los Negotiations. Permite acceder a cada
 Actividad que muestra el detalle de un Contract y permite realizar acciones sobre ese Contract
 
 * Se puede editar informacion del Contract si esta esta en un estado que lo permita
-* El detalle de los Contract cerrados o canceladosno podra ser editable
+* El detalle de los Contract cerrados o cancelados no podra ser editable
 
 ## Deal Details
 
@@ -133,10 +134,6 @@ Actividad que muestra el detalle de un Deal y permite realizar acciones sobre es
 
 * La informacion del Contract aparece como solo lectura, pero permite regitrar pagos o envios
 * El detalle de los Deals cerrados no podra ser editable
-
-## Request Details
-
-Actividad que muestra el detalle de un Request
 
 ## Brokers
 

@@ -12,6 +12,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -23,6 +26,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
@@ -33,6 +44,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import java.io.Console;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -140,7 +153,9 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
     public void start() throws CantStartPluginException {
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
         try {
+            System.out.println("******* Asset Factory Init, Open Database. ******");
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
+            //testAssetFactory();
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -208,6 +223,52 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
             } else {
                 AssetFactoryMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
+        }
+    }
+
+    public AssetFactory testAssetFactory()
+    {
+        try {
+            java.util.Date date= new java.util.Date();
+            System.out.println(new Timestamp(date.getTime()));
+            AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
+            assetFactory.setPublicKey("ASD-125412541-BS-854");
+            assetFactory.setDescription("Asset de Prueba");
+            assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
+            assetFactory.setAmount(1);
+            assetFactory.setFee(1);
+            assetFactory.setIsRedeemable(true);
+            assetFactory.setName("Asset de Mcdonald - modificado");
+            assetFactory.setAssetUserIdentityPublicKey("ASDS-99999999");
+            assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
+            assetFactory.setExpirationDate(new Timestamp(date.getTime()));
+            assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
+            assetFactory.setQuantity(100);
+            assetFactory.setState(State.DRAFT);
+            Resource resource = new Resource();
+            resource.setId(UUID.randomUUID());
+            resource.setName("Foto 1");
+            resource.setFileName("imagen.png");
+            resource.setResourceType(ResourceType.IMAGE);
+            resource.setResourceDensity(ResourceDensity.HDPI);
+            //assetFactory.setResource(resource);
+            List<Resource> resources = new ArrayList<>();
+            resources.add(resource);
+            resource.setId(UUID.randomUUID());
+            resource.setName("Foto 2");
+            resource.setFileName("imagen2.png");
+            resource.setResourceType(ResourceType.IMAGE);
+            resource.setResourceDensity(ResourceDensity.HDPI);
+            resources.add(resource);
+            assetFactory.setResources(resources);
+            assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
+            //assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
+            System.out.println("******* Metodo testAssetFactory. Franklin ******" + assetFactory + assetFactory.getName());
+            return assetFactory;
+        }catch (Exception e){
+            System.out.println("******* Metodo testAssetFactory, Error. Franklin ******" );
+            e.printStackTrace();
+            return  null;
         }
     }
 }
