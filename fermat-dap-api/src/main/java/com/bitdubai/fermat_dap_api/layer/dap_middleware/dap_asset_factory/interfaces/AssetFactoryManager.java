@@ -64,5 +64,5 @@ public interface AssetFactoryManager {
     /**
      * TThis method publishes the asset digital object with the number and amount of Asset, start the transaction
      */
-    void publishAsset(AssetFactory assetFactory);
+    void publishAsset(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
 }

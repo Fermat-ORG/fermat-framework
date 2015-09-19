@@ -330,7 +330,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         }
     }
 
-    public AssetFactory getNewAssetFactory() throws CantCreateAssetFactoryException
+    public AssetFactory getNewAssetFactory() throws CantCreateAssetFactoryException, CantCreateAssetFactoryException
     {
         AssetFactory assetFactory = new AssetFactory() {
             String publicKey;
