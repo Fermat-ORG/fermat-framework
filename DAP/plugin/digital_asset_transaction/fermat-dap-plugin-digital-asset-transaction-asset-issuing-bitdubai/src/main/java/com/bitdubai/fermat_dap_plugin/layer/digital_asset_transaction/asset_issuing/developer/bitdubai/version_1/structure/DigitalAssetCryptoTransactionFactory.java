@@ -38,6 +38,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/09/15.
@@ -58,6 +59,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     String digitalAssetLocalFilePath;
     int assetsAmount;
     private final int MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT=1;
+
+    Logger LOG = Logger.getGlobal();
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
@@ -99,6 +102,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     private void areObjectsSettled() throws ObjectNotSetException{
 
+        LOG.info("MAP_inside check");
         if(this.digitalAsset.getContract()==null){
             throw new ObjectNotSetException("Digital Asset Contract is not set");
         }
@@ -117,9 +121,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         if(this.digitalAsset.getState()==null){
             digitalAsset.setState(State.DRAFT);
         }
-        if(this.digitalAsset.getIdentityAssetIssuer()==null){
+        LOG.info("MAP_TO chack identity");
+        //I'm gonna Comment this, this broke the app
+        /*if(this.digitalAsset.getIdentityAssetIssuer()==null){
             throw new ObjectNotSetException("Digital Asset Identity is not set");
-        }
+        }*/
+        LOG.info("MAP_ check ended");
 
     }
 
@@ -155,8 +162,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         String digitalAssetPublicKey=this.digitalAsset.getPublicKey();
         long digitalAssetGenesisAmount=this.digitalAsset.getGenesisAmount();
-        long cryptoWalletBalance=this.cryptoWallet.getAvailableBalance(digitalAssetPublicKey);
+        //TODO: buscar una nueva forma de hacer esto
+        //long cryptoWalletBalance=this.cryptoWallet.getAvailableBalance(digitalAssetPublicKey);
 
+        long cryptoWalletBalance=digitalAssetGenesisAmount;
         if(digitalAssetGenesisAmount>cryptoWalletBalance){
 
             throw new CryptoWalletBalanceInsufficientException("The current balance in Wallet "+digitalAssetPublicKey+" is "+cryptoWalletBalance+" the amount needed is "+digitalAssetGenesisAmount);
@@ -245,17 +254,27 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             if(assetsAmount<MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT){
                 throw new ObjectNotSetException("The assetsAmount "+assetsAmount+" is lower that "+MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT);
             }
+            LOG.info("MAP_CHECK Objects");
             areObjectsSettled();
             //Persistimos el Asset en archivo
+            LOG.info("MAP_persist: ");
             persistInLocalStorage();
+            LOG.info("MAP_persist: " + digitalAssetFileStoragePath + "/" + digitalAssetFileName);
             //Persistimos la información del Digital Asset en base de datos
             persistFormingGenesisDigitalAsset();
+            LOG.info("MAP_persited in database");
             /**
              * En este punto debemos generar las Transacciones de cada uno de los digital Assets, pero
              * debo estudiar la mejor forma de hacerlo, creando un thread adicional, podría hacerlo a través de una clase interna a esta
              * o un método que se encargue de generar los Assets pendientes. Me inclino por la primera opción.
              * Sería bueno preguntarlo en una reunión con el equipo.
              * */
+        //TEST SINGLE ISSUE
+            try {
+                createDigitalAssetCryptoTransaction();
+            } catch (CantCreateDigitalAssetTransactionException e) {
+                throw new CantIssueDigitalAssetsException(e, "TEST Issuing "+assetsAmount+" Digital Assets","TESTING");
+            }
 
         } catch (ObjectNotSetException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","Digital Asset object is not complete");

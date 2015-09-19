@@ -1,6 +1,10 @@
-# Fermat CBP Java Wallet Crypto Broker Market Crypto
+# Fermat BNK Plugin Wallet Bank Money
 
-Gestiona el balance Crypto del Crypto Broker.
+Gestiona el balance bancario del Crypto Broker.
+
+## Caracteristicas
+* Representa la situacion financiera en instituciones bancarias en un momento determinado
+* Calcula el activo, el pasivo y el capital de las actividades bancarias del autor.
 
 ## Developer
 

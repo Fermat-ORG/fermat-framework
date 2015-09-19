@@ -173,7 +173,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Starting Asset Issuing plugin", "Unexpected exception");
         }
         this.serviceStatus = ServiceStatus.STARTED;
-        testIssueSingleAsset();
+        //testIssueSingleAsset();
 
     }
 
@@ -288,36 +288,24 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     private void testIssueSingleAsset(){
         Logger LOG = Logger.getGlobal();
+        LOG.info("MAP_TEST_SINGLE");
         DigitalAsset digitalAsset=new DigitalAsset();
         digitalAsset.setGenesisAmount(1);
         digitalAsset.setDescription("TestAsset");
         digitalAsset.setName("testName");
         digitalAsset.setPublicKey("testPublicKey");
+        LOG.info("MAP_DigitalAsset:"+digitalAsset);
         List<Resource> resources=new ArrayList<>();
         digitalAsset.setResources(resources);
-        IdentityAssetIssuer identityAssetIssuer=new IdentityAssetIssuer() {
-            @Override
-            public String getAlias() {
-                return null;
-            }
 
-            @Override
-            public String getPublicKey() {
-                return null;
-            }
-
-            @Override
-            public String createMessageSignature(String mensage) throws CantSingMessageException {
-                return null;
-            }
-        };
-        digitalAsset.setIdentityAssetIssuer(identityAssetIssuer);
+        digitalAsset.setIdentityAssetIssuer(null);
         DigitalAssetContract digitalAssetContract=new DigitalAssetContract();
         digitalAsset.setContract(digitalAssetContract);
+        LOG.info("MAP_DigitalAsset2:"+digitalAsset);
         try {
             this.assetIssuingTransactionManager.issueAssets(digitalAsset,1);
         } catch (CantIssueDigitalAssetsException e) {
-            LOG.info(e.getStackTrace().toString());
+            LOG.info("MAP test exception:"+e);
         }
     }
 

@@ -56,7 +56,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 public class CreateContactFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
     /**
      * Wallet session

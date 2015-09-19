@@ -186,7 +186,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
         } catch (DatabaseOperationException | MissingProjectDataException | CantPersistFileException | CantCreateFileException e) {
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, walletFactoryProject.getName(), null);
         } catch (GitHubRepositoryNotFoundException | GitHubNotAuthorizedException e) {
-            //for now I'm ignoring github errors.
+            e.printStackTrace();
         } catch (Exception exception){
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, exception, walletFactoryProject.getName(), null);
         }

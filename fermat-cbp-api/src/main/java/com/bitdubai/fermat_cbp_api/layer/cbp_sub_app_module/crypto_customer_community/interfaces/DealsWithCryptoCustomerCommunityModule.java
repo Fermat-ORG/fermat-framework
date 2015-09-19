@@ -5,5 +5,5 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_com
  */
 public interface DealsWithCryptoCustomerCommunityModule {
 
-    public void setCryptoBrokerCommunityModuleManager(CryptoCustomerCommunityModuleManager cryptoBrokerCommunityModuleManager);
+    public void setCryptoBrokerCommunityModuleManager(CryptoCustomerCommunityModuleManager cryptoCustomerCommunityModuleManager);
 }

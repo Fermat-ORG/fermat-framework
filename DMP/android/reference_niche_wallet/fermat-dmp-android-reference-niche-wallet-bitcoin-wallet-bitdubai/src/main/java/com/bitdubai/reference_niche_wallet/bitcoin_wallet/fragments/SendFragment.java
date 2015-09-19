@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
@@ -70,7 +71,7 @@ public class SendFragment extends Fragment {
      */
     ReferenceWalletSession walletSession;
     View rootView;
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
     String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
     Typeface tf;
     CryptoWallet cryptoWallet;
@@ -212,7 +213,7 @@ public class SendFragment extends Fragment {
             });
 
             try {
-                long availableBalance = cryptoWallet.getAvailableBalance(walletPublicKey);
+                long availableBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
                 editAmount.setHint("available funds: " + availableBalance + " bits");
             } catch (Exception ex) {
 
@@ -286,7 +287,7 @@ public class SendFragment extends Fragment {
                         }
                     } catch (Exception e) {
                         try {
-                            long actualBalance = cryptoWallet.getAvailableBalance(walletPublicKey);
+                            long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
                             editAmount.setHint("Available amount: " + actualBalance + " bits");
                         } catch (Exception ex) {
 
