@@ -10,6 +10,7 @@ public enum TransactionStatus {
     GENESIS_OBTAINED("OGEN"),
     GENESIS_SETTLED("SGEN"),
     HASH_SETTLED("SHASH"),
+    ISSUING("ISSUING"),
     ISSUED("ISSUED");
 
     private String code;
@@ -30,6 +31,8 @@ public enum TransactionStatus {
                 return TransactionStatus.GENESIS_SETTLED;
             case "SHASH":
                 return TransactionStatus.HASH_SETTLED;
+            case "ISSUING":
+                return TransactionStatus.ISSUING;
             case "ISSUED":
                 return TransactionStatus.ISSUED;
             default:

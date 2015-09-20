@@ -69,6 +69,11 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     }
 
     @Override
+    public void issuePendingDigitalAssets(String publicKey) {
+        this.digitalAssetCryptoTransactionFactory.issuePendingDigitalAssets(publicKey);
+    }
+
+    @Override
     public void setCryptoWallet(CryptoWallet cryptoWallet) {
         this.cryptoWallet=cryptoWallet;
     }
@@ -115,7 +120,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
         try {
             AssetIssuingTransactionDao assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
-            assetIssuingTransactionDao.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
+            assetIssuingTransactionDao.updateTransactionProtocolStatus(transactionID.toString(), ProtocolStatus.RECEPTION_NOTIFIED);
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantConfirmTransactionException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, "Confirming Reception", "Cannot update the plugin database");
         } catch (CantExecuteQueryException exception) {
@@ -125,7 +130,6 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         } catch(Exception exception){
             throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Confirming Reception", "Unexpected Exception");
         }
-
     }
 
     @Override

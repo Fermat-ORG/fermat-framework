@@ -213,6 +213,11 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
+    public void issuePendingDigitalAssets(String publicKey) {
+        this.issuePendingDigitalAssets(publicKey);
+    }
+
+    @Override
     public void setCryptoWallet(CryptoWallet cryptoWallet){
         this.cryptoWallet=cryptoWallet;
     }
