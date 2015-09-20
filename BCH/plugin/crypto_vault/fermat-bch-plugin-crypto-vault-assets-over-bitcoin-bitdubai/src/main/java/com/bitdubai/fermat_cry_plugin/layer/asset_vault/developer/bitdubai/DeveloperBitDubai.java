@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.version_1.AssetsVaultPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.version_1.AssetVaultPluginRoot;
 
 /**
  * Created by rodrigo on 8/31/15.
@@ -25,7 +25,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
 
-        plugin = new AssetsVaultPluginRoot();
+        plugin = new AssetVaultPluginRoot();
 
     }
 
