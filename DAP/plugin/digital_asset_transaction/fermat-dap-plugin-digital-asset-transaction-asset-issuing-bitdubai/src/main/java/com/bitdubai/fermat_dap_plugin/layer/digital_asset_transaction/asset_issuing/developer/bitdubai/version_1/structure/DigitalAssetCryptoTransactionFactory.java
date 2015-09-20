@@ -317,6 +317,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         String digitalAssetPublicKey;
         try {
             TransactionStatus digitalAssetTransactionStatus=this.assetIssuingTransactionDao.getDigitalAssetTransactionStatus(transactionId);
+            //Caso Forming_genesis
             if(digitalAssetTransactionStatus==TransactionStatus.FORMING_GENESIS){
                 //FORMING_GENESIS: genesisAddress solicitada pero no presistida en base de datos, Asset persistido en archivo
                 //Es necesario leer el archivo para recobrar dicha transacción
@@ -324,11 +325,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 setDigitalAssetLocalFilePath(digitalAssetPublicKey);
                 //Leemos el archivo que contiene el digitalAsset
                 getDigitalAssetFileFromLocalStorage();
-                //Llamamos a la factory para que culmine el trabajo de emisión del Asset
-                createDigitalAssetCryptoTransaction();
-                //TODO: analizar reportsmanagers, terminar este método.
+                //Obtenemos la digital address y la persisitimos en base de datos
+                getDigitalAssetGenesisAddressByUUID(transactionId);
+                issueUnfinishedDigitalAsset(transactionId);
             }
-        } catch (CantCreateDigitalAssetTransactionException | CantCheckAssetIssuingProgressException | CantGetDigitalAssetFromLocalStorageException | UnexpectedResultReturnedFromDatabaseException exception) {
+            //Caso Genesis_obtained
+            //TODO: terminar este caso.
+        } catch (CantPersistsGenesisAddressException | CantCheckAssetIssuingProgressException | CantGetDigitalAssetFromLocalStorageException | UnexpectedResultReturnedFromDatabaseException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
@@ -351,6 +354,14 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.digitalAsset.setGenesisTransaction(genesisTransaction);
         this.assetIssuingTransactionDao.persistGenesisTransaction(transactionID, genesisTransaction);
 
+    }
+
+    private void getDigitalAssetGenesisAddressByUUID(String transactionId) throws CantPersistsGenesisAddressException {
+        //Solicito la genesisAddress
+        String genesisAddress=requestHashGenesisTransaction();
+        //La persisto en base de datos
+        UUID transactionUUID=UUID.fromString(transactionId);
+        persistsGenesisAddress(transactionUUID,genesisAddress);
     }
 
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
