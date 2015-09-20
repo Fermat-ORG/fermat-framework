@@ -1,46 +1,22 @@
-package com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.version_1;
+package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 
-import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.PeerAddress;
-import org.bitcoinj.core.PeerGroup;
-import org.bitcoinj.core.Wallet;
-import org.bitcoinj.net.discovery.DnsDiscovery;
-import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.SPVBlockStore;
-
-import java.io.File;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetVaultPluginRoot implements AssetsVaultManager,  DealsWithBitcoinCryptoNetwork, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
-
-    /**
-     * DealsWithBitcoinCryptoNetwork interface implementation
-     */
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
-    @Override
-    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
-        this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
-    }
+public class AssetVaultPluginRoot implements AssetVaultManager,  DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * DealsWithPluginDatabaseSystem interface variable and implementation
@@ -77,10 +53,7 @@ public class AssetVaultPluginRoot implements AssetsVaultManager,  DealsWithBitco
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     @Override
     public void start() throws CantStartPluginException {
-
-
         this.serviceStatus = ServiceStatus.STARTED;
-        System.out.println("Asset Vault started.");
     }
 
     @Override
@@ -104,5 +77,10 @@ public class AssetVaultPluginRoot implements AssetsVaultManager,  DealsWithBitco
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
+    }
+
+    @Override
+    public CryptoAddress getNewAssetVaultCryptoAddress() {
+        return null;
     }
 }

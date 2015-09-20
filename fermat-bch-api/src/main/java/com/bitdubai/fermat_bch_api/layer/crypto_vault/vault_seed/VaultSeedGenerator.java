@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -11,10 +11,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.BitcoinNetworkConfiguration;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.VaultSeed;
-import com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantCreateAssetVaultSeed;
-import com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantDeleteExistingVaultSeed;
-import com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantDeleteExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
 
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -24,13 +23,12 @@ import java.util.UUID;
 
 /**
  * Created by rodrigo on 9/19/15.
- * Defines the seed used to create the master Key of the Hierarchicaly structure in the vault.
- * It will persists this info into disk. The security of this file is handled by the platform itself.
+ * Creates and Stores in file the Seed used in the vault to create the Master Key that will be the root of the
+ * Hierarchical Deterministic tree of keys.
  */
-public class AssetVaultSeed implements VaultSeed, DealsWithPluginFileSystem {
-    private final String ASSET_VAULT_SEED_FILEPATH = "";
-    private final String ASSET_VAULT_SEED_FILENAME = "";
-
+public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem {
+    String filePath;
+    String fileName;
     UUID pluginId;
 
     /**
@@ -49,9 +47,11 @@ public class AssetVaultSeed implements VaultSeed, DealsWithPluginFileSystem {
      * Constructor
      * @param pluginFileSystem
      */
-    public AssetVaultSeed(PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public VaultSeedGenerator(PluginFileSystem pluginFileSystem, UUID pluginId, String filePath, String fileName) {
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.filePath = filePath;
+        this.fileName = fileName;
     }
 
     /**
@@ -103,11 +103,11 @@ public class AssetVaultSeed implements VaultSeed, DealsWithPluginFileSystem {
          */
         PluginTextFile seedFile = null;
         try {
-            seedFile = pluginFileSystem.createTextFile(pluginId, ASSET_VAULT_SEED_FILEPATH, ASSET_VAULT_SEED_FILENAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            seedFile = pluginFileSystem.createTextFile(pluginId, this.filePath,  this.fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             seedFile.setContent(XMLParser.parseObject(this));
             seedFile.persistToMedia();
         } catch (CantCreateFileException | CantPersistFileException e) {
-            throw new CantCreateAssetVaultSeed(CantCreateAssetVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + ASSET_VAULT_SEED_FILEPATH + " " + ASSET_VAULT_SEED_FILENAME, "file might already exists.");
+            throw new CantCreateAssetVaultSeed(CantCreateAssetVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + this.filePath + " " + this.fileName, "file might already exists.");
         }
     }
 
@@ -128,10 +128,10 @@ public class AssetVaultSeed implements VaultSeed, DealsWithPluginFileSystem {
          */
         PluginTextFile seedFile = null;
         try {
-            seedFile = pluginFileSystem.getTextFile(this.pluginId, ASSET_VAULT_SEED_FILEPATH, ASSET_VAULT_SEED_FILENAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            seedFile = pluginFileSystem.getTextFile(this.pluginId, this.filePath, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             seedFile.loadFromMedia();
         } catch (FileNotFoundException | CantCreateFileException | CantLoadFileException e) {
-            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + ASSET_VAULT_SEED_FILEPATH + " " + ASSET_VAULT_SEED_FILENAME, "File doesn't exists. Try creating a new Seed.");
+            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + filePath+ " " + fileName, "File doesn't exists. Try creating a new Seed.");
         }
 
         /**
@@ -154,7 +154,7 @@ public class AssetVaultSeed implements VaultSeed, DealsWithPluginFileSystem {
      */
     public boolean seedExists(){
         try {
-            PluginTextFile seedFile = pluginFileSystem.getTextFile(this.pluginId, ASSET_VAULT_SEED_FILEPATH, ASSET_VAULT_SEED_FILEPATH, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile seedFile = pluginFileSystem.getTextFile(this.pluginId, filePath, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             return true;
         } catch (FileNotFoundException | CantCreateFileException e) {
             return false;
@@ -167,7 +167,7 @@ public class AssetVaultSeed implements VaultSeed, DealsWithPluginFileSystem {
      */
     public void delete() throws CantDeleteExistingVaultSeed {
         try {
-            pluginFileSystem.deleteTextFile(pluginId, ASSET_VAULT_SEED_FILEPATH, ASSET_VAULT_SEED_FILEPATH, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginFileSystem.deleteTextFile(pluginId, filePath, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException | FileNotFoundException e) {
             throw new CantDeleteExistingVaultSeed(CantDeleteExistingVaultSeed.DEFAULT_MESSAGE, e, "Error trying to delete a seed file.", "file doesn't exists.");
         }

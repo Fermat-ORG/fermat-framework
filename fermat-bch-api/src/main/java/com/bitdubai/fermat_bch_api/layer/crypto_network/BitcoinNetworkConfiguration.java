@@ -8,4 +8,6 @@ import org.bitcoinj.params.RegTestParams;
  */
 public interface BitcoinNetworkConfiguration {
     public static final NetworkParameters NETWORK_PARAMETERS = RegTestParams.get();
+    public static final String BITCOIN_FULL__NODE_IP = "";
+    public static final String BITCOIN_FULL__NODE_PORT = "";
 }
