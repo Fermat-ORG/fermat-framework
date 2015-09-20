@@ -16,12 +16,16 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.*;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
@@ -38,7 +42,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 07/09/15.
  */
-public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
     /**
      * AssetFactoryMiddlewareManager member variables
      */
@@ -65,6 +69,11 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
     PluginFileSystem pluginFileSystem;
 
     /**
+     * DealsWithAssetIssuing interface member variables
+     */
+    AssetIssuingManager assetIssuingManager;
+
+    /**
      * Constructor
      *
      * @param errorManager
@@ -86,7 +95,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         return dao;
     }
 
-    //TODO: El metodo privado debe de construir un objeto List<ContractProperty> contractProperties = new ArrayList<>()
     //De esa forma poder almacenarlo en la tabla de contract seteando la variable assetFactory.setContractProperties
     //Asi mismo cuando se vaya a enviar el DigitalAsset a la transaccion traer el objeto AssetFactory lleno, y las propiedades del contrato
     //asignarselas mas adelante al objeto DigitalAssetContract, que a su vez sera seteado a ala propiedad setContract del DigitalAsset
@@ -112,6 +120,11 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         }
 
         return assetFactories;
+    }
+
+    @Override
+    public void setAssetIssuingManager(AssetIssuingManager assetIssuingManager) throws CantSetObjectException {
+        this.assetIssuingManager = assetIssuingManager;
     }
 
     @Override
@@ -330,7 +343,39 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         }
     }
 
-    public AssetFactory getNewAssetFactory() throws CantCreateAssetFactoryException
+    public void publishAsset(final AssetFactory assetFactory) throws CantSaveAssetFactoryException
+    {
+        try {
+            DigitalAsset digitalAsset = new DigitalAsset();
+            DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
+
+            for(ContractProperty property : assetFactory.getContractProperties())
+            {
+                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
+                digitalAssetContract.setContractProperty(contractProperty);
+            }
+            digitalAsset.setContract(digitalAssetContract);
+            digitalAsset.setName(assetFactory.getName());
+            digitalAsset.setDescription(assetFactory.getDescription());
+            digitalAsset.setPublicKey(assetFactory.getPublicKey());
+            digitalAsset.setGenesisAmount(assetFactory.getAmount());
+            digitalAsset.setState(assetFactory.getState());
+            digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
+            digitalAsset.setResources(assetFactory.getResources());
+            //Actualiza el State a Pending_Final del objeto assetFactory
+            assetFactory.setState(State.PENDING_FINAL);
+            saveAssetFactory(assetFactory);
+            //Llama al metodo AssetIssuer de la transaction
+            assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity());
+        }
+        catch (Exception e){
+            //TODO:Modificar para el manejo de excepciones
+            System.out.println("******* Metodo publishAsset, Error. Franklin ******" );
+            e.printStackTrace();
+        }
+    }
+
+    public AssetFactory getNewAssetFactory() throws CantCreateAssetFactoryException, CantCreateAssetFactoryException
     {
         AssetFactory assetFactory = new AssetFactory() {
             String publicKey;
@@ -338,7 +383,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
             String description;
             List<Resource> resources;
             DigitalAssetContract digitalAssetContract;
-            ContractProperty contractProperty;
             State state;
             List<ContractProperty> contractProperties;
             int quantity;
@@ -346,10 +390,19 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
             long fee;
             Timestamp creationTimestamp;
             Timestamp lastModificationTimestamp;
-            String assetIssuerIdentityPublicKey;
             boolean isRedeemable;
             Timestamp expirationDate;
             AssetBehavior assetBehavior;
+            IdentityAssetIssuer identityAssetIssuer;
+            @Override
+            public IdentityAssetIssuer getIdentyAssetIssuer() {
+                return identityAssetIssuer;
+            }
+
+            @Override
+            public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
+                this.identityAssetIssuer = identityAssetIssuer;
+            }
 
             @Override
             public String getPublicKey() {
@@ -399,16 +452,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
             @Override
             public void setContract(DigitalAssetContract contract) {
                 this.digitalAssetContract = contract;
-            }
-
-            @Override
-            public ContractProperty getContractProperty() {
-                return contractProperty;
-            }
-
-            @Override
-            public void setContractProperty(ContractProperty contractProperty) {
-                this.contractProperty = contractProperty;
             }
 
             @Override
@@ -510,18 +553,10 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
             public void setLastModificationTimeststamp(Timestamp timestamp) {
                 this.lastModificationTimestamp = timestamp;
             }
-
-            @Override
-            public String getAssetIssuerIdentityPublicKey() {
-                return assetIssuerIdentityPublicKey;
-            }
-
-            @Override
-            public void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey) {
-                this.assetIssuerIdentityPublicKey = assetUserIdentityPublicKey;
-            }
         };
 
         return assetFactory;
     }
+
+
 }
