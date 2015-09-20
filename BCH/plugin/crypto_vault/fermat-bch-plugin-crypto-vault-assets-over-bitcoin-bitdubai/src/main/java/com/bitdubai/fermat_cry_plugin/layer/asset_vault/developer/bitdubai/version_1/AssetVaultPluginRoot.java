@@ -4,6 +4,10 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
@@ -27,27 +31,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetsVaultPluginRoot implements AssetsVaultManager,  CryptoVault, DealsWithBitcoinCryptoNetwork, Plugin, Service {
-
-    Wallet vault;
-
-    /**
-     * CryptoVaultvariables and implementation
-     */
-    @Override
-    public void setUserPublicKey(String userPublicKey) {
-
-    }
-
-    @Override
-    public String getUserPublicKey() {
-        return "assets";
-    }
-
-    @Override
-    public Object getWallet() {
-        return vault;
-    }
+public class AssetVaultPluginRoot implements AssetsVaultManager,  DealsWithBitcoinCryptoNetwork, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * DealsWithBitcoinCryptoNetwork interface implementation
@@ -56,6 +40,24 @@ public class AssetsVaultPluginRoot implements AssetsVaultManager,  CryptoVault, 
     @Override
     public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
         this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem interface variable and implementation
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
+     * DealsWithPluginFileSystem interface variable and implementation
+     */
+    PluginFileSystem pluginFileSystem;
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**
@@ -75,18 +77,7 @@ public class AssetsVaultPluginRoot implements AssetsVaultManager,  CryptoVault, 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("Asset Vault starting...");
 
-        vault = new Wallet(RegTestParams.get());
-        System.out.println(vault.freshReceiveAddress().toString());
-
-        try {
-
-            bitcoinCryptoNetworkManager.setVault(this);
-            bitcoinCryptoNetworkManager.connectToBitcoinNetwork();
-        } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
-            cantConnectToBitcoinNetwork.printStackTrace();
-        }
 
         this.serviceStatus = ServiceStatus.STARTED;
         System.out.println("Asset Vault started.");

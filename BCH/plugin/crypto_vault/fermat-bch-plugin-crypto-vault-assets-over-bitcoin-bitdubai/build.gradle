@@ -9,4 +9,5 @@ dependencies {
         exclude module: 'scrypt'
     }
     testCompile 'junit:junit:4.12'
+    compile project(':fermat-bch-api')
 }
