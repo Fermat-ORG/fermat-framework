@@ -34,8 +34,8 @@ public interface AssetFactory {
     DigitalAssetContract getContract();
     void setContract(DigitalAssetContract contract);
 
-    ContractProperty getContractProperty();
-    void setContractProperty(ContractProperty contractProperty);
+//    ContractProperty getContractProperty();
+//    void setContractProperty(ContractProperty contractProperty);
 
     List<ContractProperty> getContractProperties();
     void setContractProperties(List<ContractProperty> contractProperties);

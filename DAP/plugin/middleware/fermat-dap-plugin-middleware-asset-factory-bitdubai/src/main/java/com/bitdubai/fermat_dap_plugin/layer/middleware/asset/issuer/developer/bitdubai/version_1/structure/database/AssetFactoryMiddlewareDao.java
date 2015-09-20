@@ -294,7 +294,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             String description;
             List<Resource> resources;
             DigitalAssetContract digitalAssetContract;
-            ContractProperty contractProperty;
             State state;
             List<ContractProperty> contractProperties;
             int quantity;
@@ -355,16 +354,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             @Override
             public void setContract(DigitalAssetContract contract) {
                 this.digitalAssetContract = contract;
-            }
-
-            @Override
-            public ContractProperty getContractProperty() {
-                return contractProperty;
-            }
-
-            @Override
-            public void setContractProperty(ContractProperty contractProperty) {
-                this.contractProperty = contractProperty;
             }
 
             @Override
