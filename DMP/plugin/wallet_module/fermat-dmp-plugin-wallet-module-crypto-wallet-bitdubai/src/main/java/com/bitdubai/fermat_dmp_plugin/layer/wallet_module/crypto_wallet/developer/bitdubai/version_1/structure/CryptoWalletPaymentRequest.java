@@ -25,21 +25,21 @@ public class CryptoWalletPaymentRequest implements PaymentRequest{
 
     @Override
     public String getDate() {
-        return null;
+        return date;
     }
 
     @Override
     public String getReason() {
-        return null;
+        return reason;
     }
 
     @Override
     public long getAmount() {
-        return 0;
+        return amount;
     }
 
     @Override
     public CryptoWalletWalletContact getContact() {
-        return null;
+        return cryptoWalletWalletContact;
     }
 }

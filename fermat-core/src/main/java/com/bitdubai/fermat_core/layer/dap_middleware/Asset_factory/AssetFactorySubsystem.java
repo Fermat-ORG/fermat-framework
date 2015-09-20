@@ -29,6 +29,6 @@ public class AssetFactorySubsystem implements DAPMiddlewareSubsystem{
 
     @Override
     public Plugin getPlugin() {
-        return this.plugin;
+        return plugin;
     }
 }

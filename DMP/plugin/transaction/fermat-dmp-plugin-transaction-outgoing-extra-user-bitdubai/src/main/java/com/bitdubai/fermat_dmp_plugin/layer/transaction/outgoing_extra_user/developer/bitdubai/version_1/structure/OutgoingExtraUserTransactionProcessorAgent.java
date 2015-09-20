@@ -3,9 +3,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.dev
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
@@ -223,13 +224,13 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
 
                 try {
                     bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
-                    funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
+                    funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
                     if (funds < transaction.getAmount()) {
                         dao.cancelTransaction(transaction);
                         // TODO: Lanzar un evento de fondos insuficientes
                     }
                     // If we have enough funds we debit them from the available balance
-                    bitcoinWalletWallet.getAvailableBalance().debit(transaction);
+                    bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(transaction);
                     // The we set that we register that we have executed the debit
                     dao.setToPIA(transaction);
                 } catch (CantLoadWalletException e) {
