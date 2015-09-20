@@ -30,10 +30,19 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProper
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
@@ -55,8 +64,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 9/7/15.
  */
-//TODO: implements AssetFactoryMiddlewareManager
-public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers,  DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
+public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, AssetFactoryManager, LogManagerForDevelopers,  DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
     /**
      * DealsWithErrors interface member variables
      */
@@ -86,6 +94,8 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
+
+    AssetIssuingManager assetIssuingManager;
 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<FermatEventListener> listenersAdded = new ArrayList<>();
@@ -132,6 +142,11 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
+    }
+
+    @Override
+    public void setAssetIssuingManager(AssetIssuingManager assetIssuingManager) throws CantSetObjectException {
+        this.assetIssuingManager = assetIssuingManager;
     }
 
     @Override
@@ -229,40 +244,41 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
     public AssetFactory testAssetFactory()
     {
         try {
-            java.util.Date date= new java.util.Date();
-            System.out.println(new Timestamp(date.getTime()));
+//            java.util.Date date= new java.util.Date();
+//            System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
-            assetFactory.setPublicKey("ASD-125412541-BS-854");
-            assetFactory.setDescription("Asset de Prueba");
-            assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
-            assetFactory.setAmount(1);
-            assetFactory.setFee(1);
-            assetFactory.setIsRedeemable(true);
-            assetFactory.setName("Asset de Mcdonald - modificado");
-            assetFactory.setAssetUserIdentityPublicKey("ASDS-99999999");
-            assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
-            assetFactory.setExpirationDate(new Timestamp(date.getTime()));
-            assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
-            assetFactory.setQuantity(100);
-            assetFactory.setState(State.DRAFT);
-            Resource resource = new Resource();
-            resource.setId(UUID.randomUUID());
-            resource.setName("Foto 1");
-            resource.setFileName("imagen.png");
-            resource.setResourceType(ResourceType.IMAGE);
-            resource.setResourceDensity(ResourceDensity.HDPI);
-            //assetFactory.setResource(resource);
-            List<Resource> resources = new ArrayList<>();
-            resources.add(resource);
-            resource.setId(UUID.randomUUID());
-            resource.setName("Foto 2");
-            resource.setFileName("imagen2.png");
-            resource.setResourceType(ResourceType.IMAGE);
-            resource.setResourceDensity(ResourceDensity.HDPI);
-            resources.add(resource);
-            assetFactory.setResources(resources);
-            assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
-            //assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
+//            assetFactory.setPublicKey("ASD-125412541-BS-854");
+//            assetFactory.setDescription("Asset de Prueba");
+//            assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
+//            assetFactory.setAmount(1);
+//            assetFactory.setFee(1);
+//            assetFactory.setIsRedeemable(true);
+//            assetFactory.setName("Asset de Mcdonald - modificado");
+//            assetFactory.setAssetUserIdentityPublicKey("ASDS-99999999");
+//            assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
+//            assetFactory.setExpirationDate(new Timestamp(date.getTime()));
+//            assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
+//            assetFactory.setQuantity(100);
+//            assetFactory.setState(State.DRAFT);
+//            Resource resource = new Resource();
+//            resource.setId(UUID.randomUUID());
+//            resource.setName("Foto 1");
+//            resource.setFileName("imagen.png");
+//            resource.setResourceType(ResourceType.IMAGE);
+//            resource.setResourceDensity(ResourceDensity.HDPI);
+//            //assetFactory.setResource(resource);
+//            List<Resource> resources = new ArrayList<>();
+//            resources.add(resource);
+//            resource.setId(UUID.randomUUID());
+//            resource.setName("Foto 2");
+//            resource.setFileName("imagen2.png");
+//            resource.setResourceType(ResourceType.IMAGE);
+//            resource.setResourceDensity(ResourceDensity.HDPI);
+//            resources.add(resource);
+//            assetFactory.setResources(resources);
+            //assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
+            assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
+            publishAsset(assetFactory);
             System.out.println("******* Metodo testAssetFactory. Franklin ******" + assetFactory + assetFactory.getName());
             return assetFactory;
         }catch (Exception e){
@@ -270,5 +286,56 @@ public class AssetFactoryMiddlewarePluginRoot implements LogManagerForDevelopers
             e.printStackTrace();
             return  null;
         }
+    }
+
+    @Override
+    public AssetFactory getAssetFactoryByPublicKey(String assetPublicKey) throws CantGetAssetFactoryException {
+        return assetFactoryMiddlewareManager.getAssetFactory(assetPublicKey);
+    }
+
+    @Override
+    public List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException {
+        //TODO:Modifcar este metodo ya que tenemos que buscar en la tabla del Identity, leer todo los registros asociados a el buscarlo en la tabla asset factory y devolver un objeto lleno del asset factory con todas sus propiedades
+        return assetFactoryMiddlewareManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
+    }
+
+    @Override
+    public List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException {
+        return assetFactoryMiddlewareManager.getAssetFactoryByState(state);
+    }
+
+    @Override
+    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException {
+        return assetFactoryMiddlewareManager.getAssetFactoryAll();
+    }
+
+    @Override
+    public AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException {
+        return null;
+    }
+
+    @Override
+    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException {
+        assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
+    }
+
+    @Override
+    public void markAssetFactoryState(State state) throws CantSaveAssetFactoryException {
+
+    }
+
+    @Override
+    public void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException {
+
+    }
+
+    @Override
+    public long getAvailableBalance(long amount) {
+        return 0;
+    }
+
+    @Override
+    public void publishAsset(final AssetFactory assetFactory) throws CantSaveAssetFactoryException{
+        assetFactoryMiddlewareManager.publishAsset(assetFactory);
     }
 }

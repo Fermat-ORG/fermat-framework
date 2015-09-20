@@ -16,7 +16,6 @@ import java.util.UUID;
  * Created by franklin on 08/09/15.
  */
 public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem {
-
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -71,6 +70,8 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN, DatabaseDataType.STRING, 150, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_SIGNATURE_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN, DatabaseDataType.STRING, 15, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
@@ -122,11 +123,23 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
 
             table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN);
 
+            /**
+             * Create Asset Identity Issuer Contract
+             */
+            table = databaseFactory.newTableFactory(ownerId, AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
+
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);
+
+            table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_FIRST_KEY_COLUMN);
+
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Asset Factory", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Asset Factory Identity Issuer", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
