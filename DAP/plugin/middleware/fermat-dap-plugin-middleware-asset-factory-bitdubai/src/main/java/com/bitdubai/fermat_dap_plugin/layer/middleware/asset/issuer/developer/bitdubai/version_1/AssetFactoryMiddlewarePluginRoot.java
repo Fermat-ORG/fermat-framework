@@ -170,7 +170,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
         try {
             System.out.println("******* Asset Factory Init, Open Database. ******");
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            testAssetFactory();
+            //testAssetFactory();
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)

@@ -25,4 +25,5 @@ public class DAPModuleLayer implements PlatformLayer {
             throw new CantStartLayerException();
         }
     }
+    public Plugin getPluginAssetFactoryModule() {return mSubAppAssetfactory;}
 }
