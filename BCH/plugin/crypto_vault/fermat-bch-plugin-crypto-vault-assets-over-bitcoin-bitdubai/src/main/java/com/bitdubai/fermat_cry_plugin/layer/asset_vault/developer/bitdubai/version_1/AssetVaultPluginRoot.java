@@ -8,30 +8,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.assets_vault.interfaces.AssetsVaultManager;
 
-import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.PeerAddress;
-import org.bitcoinj.core.PeerGroup;
-import org.bitcoinj.core.Wallet;
-import org.bitcoinj.net.discovery.DnsDiscovery;
-import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.SPVBlockStore;
-
-import java.io.File;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetVaultPluginRoot implements AssetsVaultManager,  DealsWithBitcoinCryptoNetwork, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+public class AssetVaultPluginRoot implements AssetVaultManager,  DealsWithBitcoinCryptoNetwork, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * DealsWithBitcoinCryptoNetwork interface implementation
