@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 
 
@@ -66,6 +67,9 @@ public interface AssetFactory {
     Timestamp getLastModificationTimestamp();
     void setLastModificationTimeststamp(Timestamp timestamp);
 
-    String getAssetIssuerIdentityPublicKey();
-    void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
+//    String getAssetIssuerIdentityPublicKey();
+//    void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
+
+    IdentityAssetIssuer getIdentyAssetIssuer();
+    void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer);
 }

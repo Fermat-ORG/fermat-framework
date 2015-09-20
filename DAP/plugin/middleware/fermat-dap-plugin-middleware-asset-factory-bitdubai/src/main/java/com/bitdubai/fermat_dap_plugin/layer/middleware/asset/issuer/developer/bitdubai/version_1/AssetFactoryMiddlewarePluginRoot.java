@@ -295,6 +295,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
 
     @Override
     public List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException {
+        //TODO:Modifcar este metodo ya que tenemos que buscar en la tabla del Identity, leer todo los registros asociados a el buscarlo en la tabla asset factory y devolver un objeto lleno del asset factory con todas sus propiedades
         return assetFactoryMiddlewareManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
     }
 
@@ -335,53 +336,6 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
 
     @Override
     public void publishAsset(final AssetFactory assetFactory) throws CantSaveAssetFactoryException{
-        try {
-
-            //TODO:Sacar para un metodo privado en el manager
-            DigitalAsset digitalAsset = new DigitalAsset();
-            DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
-
-            for(ContractProperty property : assetFactory.getContractProperties())
-            {
-                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
-                int a = property.hashCode();
-                digitalAssetContract.setContractProperty(contractProperty);
-            }
-            digitalAsset.setContract(digitalAssetContract);
-            digitalAsset.setName(assetFactory.getName());
-            digitalAsset.setDescription(assetFactory.getDescription());
-            digitalAsset.setPublicKey(assetFactory.getPublicKey());
-            digitalAsset.setGenesisAmount(assetFactory.getAmount());
-            digitalAsset.setState(assetFactory.getState());
-            //TODO:Modificar la interfaz AssetFactory para que acepte la propiedad IdentityAssetIssuer
-            IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
-                @Override
-                public String getAlias() {
-                    return "";
-                }
-
-                @Override
-                public String getPublicKey() {
-                    return assetFactory.getAssetIssuerIdentityPublicKey();
-                }
-
-                @Override
-                public String createMessageSignature(String mensage) throws CantSingMessageException {
-                    return "";
-                }
-            };
-            digitalAsset.setIdentityAssetIssuer(identityAssetIssuer);
-            digitalAsset.setResources(assetFactory.getResources());
-            //Actualiza el State a Pending_Final del objeto assetFactory
-            assetFactory.setState(State.PENDING_FINAL);
-            assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
-            //Llama al metodo AssetIssuer de la transaction
-            assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity());
-        }
-        catch (Exception e){
-            //TODO:Modificar para el manejo de excepciones
-            System.out.println("******* Metodo publishAsset, Error. Franklin ******" );
-            e.printStackTrace();
-        }
+        assetFactoryMiddlewareManager.publishAsset(assetFactory);
     }
 }
