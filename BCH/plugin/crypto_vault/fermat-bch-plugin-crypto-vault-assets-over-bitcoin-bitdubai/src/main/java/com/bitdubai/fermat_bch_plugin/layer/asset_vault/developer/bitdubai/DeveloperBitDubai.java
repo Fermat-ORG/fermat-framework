@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai;
+package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.version_1.AssetVaultPluginRoot;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.AssetVaultPluginRoot;
 
 /**
  * Created by rodrigo on 8/31/15.

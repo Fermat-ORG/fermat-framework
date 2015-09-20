@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_vault;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed;
 
 import java.util.List;
 
