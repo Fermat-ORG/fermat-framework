@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CryptoWalletBalanceInsufficientException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
@@ -36,6 +38,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/09/15.
@@ -49,13 +52,15 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     CryptoWallet cryptoWallet;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
-    //PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
     TransactionStatus transactionStatus;
     final String LOCAL_STORAGE_PATH="digital-asset/";
     String digitalAssetLocalFilePath;
     int assetsAmount;
+    private final int MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT=1;
+
+    Logger LOG = Logger.getGlobal();
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
@@ -97,6 +102,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     private void areObjectsSettled() throws ObjectNotSetException{
 
+        LOG.info("MAP_inside check");
         if(this.digitalAsset.getContract()==null){
             throw new ObjectNotSetException("Digital Asset Contract is not set");
         }
@@ -115,9 +121,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         if(this.digitalAsset.getState()==null){
             digitalAsset.setState(State.DRAFT);
         }
-        if(this.digitalAsset.getIdentityAssetIssuer()==null){
+        LOG.info("MAP_TO chack identity");
+        //I'm gonna Comment this, this broke the app
+        /*if(this.digitalAsset.getIdentityAssetIssuer()==null){
             throw new ObjectNotSetException("Digital Asset Identity is not set");
-        }
+        }*/
+        LOG.info("MAP_ check ended");
 
     }
 
@@ -153,8 +162,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         String digitalAssetPublicKey=this.digitalAsset.getPublicKey();
         long digitalAssetGenesisAmount=this.digitalAsset.getGenesisAmount();
-        long cryptoWalletBalance=this.cryptoWallet.getBalance(BalanceType.AVAILABLE, digitalAssetPublicKey);
+        //TODO: buscar una nueva forma de hacer esto
+        //long cryptoWalletBalance=this.cryptoWallet.getAvailableBalance(digitalAssetPublicKey);
 
+        long cryptoWalletBalance=digitalAssetGenesisAmount;
         if(digitalAssetGenesisAmount>cryptoWalletBalance){
 
             throw new CryptoWalletBalanceInsufficientException("The current balance in Wallet "+digitalAssetPublicKey+" is "+cryptoWalletBalance+" the amount needed is "+digitalAssetGenesisAmount);
@@ -164,11 +175,30 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }
 
     private void setDigitalAssetLocalFilePath(){
-
         this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+this.digitalAsset.getPublicKey();
+        setDigitalAssetLocalStoragePath();
+    }
+
+    private void setDigitalAssetLocalFilePath(String publicKey){
+        this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+publicKey;
+        setDigitalAssetLocalStoragePath();
+    }
+
+    private void setDigitalAssetLocalStoragePath(){
         this.digitalAssetFileName=this.digitalAsset.getName()+".xml";
         this.digitalAssetLocalFilePath=digitalAssetFileStoragePath+"/"+digitalAssetFileName;
+    }
 
+    private void getDigitalAssetFileFromLocalStorage() throws CantGetDigitalAssetFromLocalStorageException{
+        try {
+            PluginTextFile digitalAssetFile=this.pluginFileSystem.getTextFile(this.pluginId, this.digitalAssetFileStoragePath, this.digitalAssetFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String digitalAssetXMLString=digitalAssetFile.getContent();
+            this.digitalAsset= (DigitalAsset) XMLParser.parseXML(digitalAssetXMLString,this.digitalAsset);
+        } catch (FileNotFoundException exception) {
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find "+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
+        } catch (CantCreateFileException exception) {
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create "+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
+        }
     }
 
     private void persistInLocalStorage() throws CantCreateDigitalAssetFileException {
@@ -180,14 +210,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             digitalAssetFile.setContent(digitalAssetInnerXML);
 
         }catch(CantCreateFileException exception){
-            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Can't create '"+this+digitalAssetLocalFilePath+"' file");
-        }catch(Exception exception){
-            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Unexpected Exception");
+            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Can't create '"+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
         }
-
     }
 
-    private UUID generateTransactionUUID(){
+    private UUID generateTransactionUUID() throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         //Esto lo podría usar para identificación interna del Asset
         UUID transactionUUID=UUID.randomUUID();
         try {
@@ -197,10 +224,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         } catch (CantCheckAssetIssuingProgressException| UnexpectedResultReturnedFromDatabaseException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
+        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionUUID, TransactionStatus.FORMING_GENESIS);
         return transactionUUID;
     }
 
-    private List<String> getPendingAssets(String publicKey){
+    /*private List<String> getPendingAssets(String publicKey){
 
         List<String> pendingAssetIssuingTransactionIdList=new ArrayList<>();
 
@@ -214,25 +242,39 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         return pendingAssetIssuingTransactionIdList;
 
-    }
+    }*/
 
     public void issueDigitalAssets(DigitalAsset digitalAsset, int assetsAmount)throws CantIssueDigitalAssetsException{
 
         this.digitalAsset=digitalAsset;
         this.assetsAmount=assetsAmount;
+
         //Primero chequeamos si el asset está completo
         try {
+            if(assetsAmount<MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT){
+                throw new ObjectNotSetException("The assetsAmount "+assetsAmount+" is lower that "+MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT);
+            }
+            LOG.info("MAP_CHECK Objects");
             areObjectsSettled();
             //Persistimos el Asset en archivo
+            LOG.info("MAP_persist: ");
             persistInLocalStorage();
+            LOG.info("MAP_persist: " + digitalAssetFileStoragePath + "/" + digitalAssetFileName);
             //Persistimos la información del Digital Asset en base de datos
             persistFormingGenesisDigitalAsset();
+            LOG.info("MAP_persited in database");
             /**
              * En este punto debemos generar las Transacciones de cada uno de los digital Assets, pero
              * debo estudiar la mejor forma de hacerlo, creando un thread adicional, podría hacerlo a través de una clase interna a esta
              * o un método que se encargue de generar los Assets pendientes. Me inclino por la primera opción.
              * Sería bueno preguntarlo en una reunión con el equipo.
              * */
+        //TEST SINGLE ISSUE
+            try {
+                createDigitalAssetCryptoTransaction();
+            } catch (CantCreateDigitalAssetTransactionException e) {
+                throw new CantIssueDigitalAssetsException(e, "TEST Issuing "+assetsAmount+" Digital Assets","TESTING");
+            }
 
         } catch (ObjectNotSetException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","Digital Asset object is not complete");
@@ -272,13 +314,21 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          *Este método debe verificar el estatus de cada Asset y proceder de acuerdo a cada uno de ellos.
          * El objetivo es finalizar los digital assets, ya persistidos en base de datos, pero sin emitir.
          */
+        String digitalAssetPublicKey;
         try {
             TransactionStatus digitalAssetTransactionStatus=this.assetIssuingTransactionDao.getDigitalAssetTransactionStatus(transactionId);
             if(digitalAssetTransactionStatus==TransactionStatus.FORMING_GENESIS){
-                //Todo: iniciar todo el proceso.
-                //TODO: 18/09/2015 crear la lógica para iniciar desde cualquier estado de emisión del asset
+                //FORMING_GENESIS: genesisAddress solicitada pero no presistida en base de datos, Asset persistido en archivo
+                //Es necesario leer el archivo para recobrar dicha transacción
+                digitalAssetPublicKey=this.assetIssuingTransactionDao.getDigitalAssetTransactionPublicKeyById(transactionId);
+                setDigitalAssetLocalFilePath(digitalAssetPublicKey);
+                //Leemos el archivo que contiene el digitalAsset
+                getDigitalAssetFileFromLocalStorage();
+                //Llamamos a la factory para que culmine el trabajo de emisión del Asset
+                createDigitalAssetCryptoTransaction();
+                //TODO: analizar reportsmanagers, terminar este método.
             }
-        } catch (CantCheckAssetIssuingProgressException | UnexpectedResultReturnedFromDatabaseException exception) {
+        } catch (CantCreateDigitalAssetTransactionException | CantCheckAssetIssuingProgressException | CantGetDigitalAssetFromLocalStorageException | UnexpectedResultReturnedFromDatabaseException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
