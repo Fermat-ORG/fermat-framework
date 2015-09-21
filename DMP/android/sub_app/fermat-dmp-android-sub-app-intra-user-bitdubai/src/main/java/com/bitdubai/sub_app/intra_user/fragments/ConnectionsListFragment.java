@@ -130,6 +130,9 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+
         if (dialog != null)
             dialog.dismiss();
         dialog = null;

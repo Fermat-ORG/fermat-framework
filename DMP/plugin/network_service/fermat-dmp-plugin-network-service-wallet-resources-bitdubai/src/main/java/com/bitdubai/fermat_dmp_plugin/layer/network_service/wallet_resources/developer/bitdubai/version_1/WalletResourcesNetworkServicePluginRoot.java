@@ -293,7 +293,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         try {
 
             String linkToSkinFile=linkToResources+screenSize+"/";
-            skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath);
+            skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath,walletPublicKey);
 
 
             Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
@@ -328,13 +328,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize);
+            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize,walletPublicKey);
 
             /**
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
-            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath, screenSize);
+            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath, screenSize,walletPublicKey);
 
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
@@ -371,10 +371,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          */
         addProgress(InstalationProgress.INSTALATION_START);
 
-        try {
+        //try {
 
             String linkToSkinFile = linkToResources + screenSize + "/";
-            skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath);
+            //skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath,walletPublicKey);
 
 
             Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
@@ -395,15 +395,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize);
+            //downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize);
 
 
 
-        }catch (CantCheckResourcesException cantCheckResourcesException){
-            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
-        } catch (CantPersistFileException cantPersistFileException) {
-            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantPersistFileException,"Error persisting file","");
-        }
+//        }catch (CantCheckResourcesException cantCheckResourcesException){
+//            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
+//        } catch (CantPersistFileException cantPersistFileException) {
+//            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantPersistFileException,"Error persisting file","");
+//        }
 
 
     }
@@ -425,7 +425,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          *  download language
          */
         String linkToLanguage = linkToRepo + "languages/";
-        downloadLanguageFromRepo(linkToLanguage, skinId, languageName, LOCAL_STORAGE_PATH, screenSize);
+        //downloadLanguageFromRepo(linkToLanguage, skinId, languageName, LOCAL_STORAGE_PATH, screenSize);
 
         /**
          *  Fire event Wallet language installed
@@ -608,12 +608,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      * @throws CantGetResourcesException
      */
     @Override
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String walletPublicKey) throws CantGetResourcesException {
 
         String content = "";
         try {
             //get repo name
-            String reponame = "";//= Repositories.getValueFromType(walletType);
+            String reponame = "";//= Repositories.getValueFromType(walletPublicKey);
+            //reponame+="_"+orientation+"_"
             //get image from disk
             PluginTextFile layoutFile;
             layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, layoutName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
@@ -651,7 +652,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         try {
 
 
-            skin = checkAndInstallSkinResources(linkToResources, LOCAL_STORAGE_PATH);
+            //skin = checkAndInstallSkinResources(linkToResources, LOCAL_STORAGE_PATH,walletPublicKey);
 
 
             /**
@@ -713,7 +714,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    private void downloadResourcesFromRepo(String linkToRepo, Skin skin, String localStoragePath,String screenSize) {
+    private void downloadResourcesFromRepo(String linkToRepo, Skin skin, String localStoragePath,String screenSize,String walletPublicKey) {
 
         /**
          * download portrait resources
@@ -727,13 +728,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
          * download portrait layouts
          */
         String linkToPortraitLayouts = linkToRepo +screenSize+ "/portrait/layouts/";
-        downloadLayouts(linkToPortraitLayouts, skin.getPortraitLayouts(), skin.getId(),localStoragePath);
+        downloadLayouts(linkToPortraitLayouts, skin.getPortraitLayouts(), skin.getId(),localStoragePath,walletPublicKey);
 
         /**
          * download landscape layouts
          */
         String linkToLandscapeLayouts = linkToRepo +screenSize+ "/landscape/layouts/";
-        downloadLayouts(linkToLandscapeLayouts, skin.getLandscapeLayouts(), skin.getId(),localStoragePath);
+        downloadLayouts(linkToLandscapeLayouts, skin.getLandscapeLayouts(), skin.getId(),localStoragePath,walletPublicKey);
 
 
         //TODO: raise a event
@@ -745,13 +746,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
-    private void downloadLanguageFromRepo(String linkToLanguage, UUID skinId,String languajeName, String localStoragePath,String screenSize) {
+    private void downloadLanguageFromRepo(String linkToLanguage, UUID skinId,String languajeName, String localStoragePath,String screenSize,String walletPublicKey) {
 
         /**
          * download language
          */
         String linkToLanguageRepo = linkToLanguage+languajeName+".xml";
-        downloadLanguage(linkToLanguageRepo, languajeName, skinId, localStoragePath);
+        downloadLanguage(linkToLanguageRepo, languajeName, skinId, localStoragePath,walletPublicKey);
 
 
         //TODO: raise a event
@@ -827,7 +828,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
     }
 
-    private void downloadLayouts(String link, Map<String, Layout> resourceMap, UUID skinId,String localStoragePath) {
+    private void downloadLayouts(String link, Map<String, Layout> resourceMap, UUID skinId,String localStoragePath,String walletPublicKey) {
         try {
             for (Map.Entry<String, Layout> entry : resourceMap.entrySet()) {
 
@@ -839,7 +840,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
                 try {
 
-                    recordXML(layoutXML, entry.getKey(), skinId, localStoragePath);
+                    recordXML(layoutXML, entry.getKey(), skinId, localStoragePath,walletPublicKey);
 
                 } catch (CantCheckResourcesException e) {
                     e.printStackTrace();
@@ -854,11 +855,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         }
     }
-    private void downloadLanguage(String link,String languageName, UUID skinId,String localStoragePath) {
+    private void downloadLanguage(String link,String languageName, UUID skinId,String localStoragePath,String walletPublicKey) {
         try {
             String languageXML = githubConnection.getFile(link);
 
-            recordXML(languageXML, languageName, skinId, localStoragePath);
+            recordXML(languageXML, languageName, skinId, localStoragePath,walletPublicKey);
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -904,7 +905,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             try {
 
-                recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath);
+                recordXML(navigationStructureXML,navigationStructureName,skinId,localStoragePath,walletPublicKey);
 
             } catch (CantCheckResourcesException e) {
                 e.printStackTrace();
@@ -965,11 +966,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
-    private void recordXML(String xml, String name, UUID skinId, String reponame) throws CantCheckResourcesException, CantPersistFileException {
+    private void recordXML(String xml, String name, UUID skinId, String reponame,String publicKey) throws CantCheckResourcesException, CantPersistFileException {
 
         PluginTextFile layoutFile = null;
 
         String filename = skinId.toString() + "_" + name;
+
+
 
         try {
 
@@ -1049,7 +1052,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
 
-    private Skin checkAndInstallSkinResources(String linkToSkin,String localStoragePath) throws CantCheckResourcesException, CantPersistFileException {
+    private Skin checkAndInstallSkinResources(String linkToSkin,String localStoragePath,String walletPublicKey) throws CantCheckResourcesException, CantPersistFileException {
         String repoManifest = "";
         String skinFilename = "skin.xml";
         try {
@@ -1068,7 +1071,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              *  Skin record
              */
-            recordXML(repoManifest, skin.getName(), skin.getId(), localStoragePath);
+            recordXML(repoManifest, skin.getName(), skin.getId(), localStoragePath,walletPublicKey);
 
             return skin;
 
