@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -23,7 +28,10 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -134,7 +142,37 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     @Override
     public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
-        //TODO:implement this method
-        return null;
+return null;
+        /**
+        try{
+            List<Transaction> txs = new ArrayList<Transaction>();
+            AssetIssuingTransactionDao assetIssuingTransactionDao= new AssetIssuingTransactionDao(this.pluginDatabaseSystem, this.pluginId);
+
+            HashMap<String, String> transactionHeaders = assetIssuingTransactionDao.getPendingTransactionsHeaders();
+            for (Map.Entry<String, String> entry : transactionHeaders.entrySet()){
+                String txId = entry.getKey();
+                String txHash = entry.getValue();
+                //TODO: finish this
+                String[] addresses = getAddressFromTransaction(txHash);
+                CryptoAddress addressFrom = new CryptoAddress(addresses[0], CryptoCurrency.BITCOIN);
+                CryptoAddress addressTo = new CryptoAddress(addresses[1], CryptoCurrency.BITCOIN);
+                long amount = getAmountFromVault(txHash);
+
+
+
+                CryptoStatus cryptoStatus = db.getCryptoStatus(txId);
+
+
+                CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
+
+                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(UUID.fromString(txId),cryptoTransaction, Action.APPLY, getTransactionTimestampFromVault(txHash));
+                txs.add(tx);
+
+                db.updateTransactionProtocolStatus(UUID.fromString(txId), ProtocolStatus.SENDING_NOTIFIED);
+            }
+            return txs;
+        } catch (Exception e){
+            throw new CantDeliverPendingTransactionsException("I couldn't deliver pending transactions",e,null,null);
+        }*/
     }
 }

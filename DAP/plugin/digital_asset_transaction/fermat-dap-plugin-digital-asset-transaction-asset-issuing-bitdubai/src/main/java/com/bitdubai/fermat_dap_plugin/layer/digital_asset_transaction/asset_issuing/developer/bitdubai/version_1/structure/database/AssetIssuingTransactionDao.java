@@ -23,6 +23,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -419,6 +420,24 @@ public class AssetIssuingTransactionDao {
         } catch (Exception exception){
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Checking pending assets to issue","Unexpected exception");
+        }
+    }
+
+    public HashMap<String, String> getPendingTransactionsHeaders() throws CantCheckAssetIssuingProgressException {
+        try {
+            DatabaseTable databaseTable;
+            HashMap<String, String> transactionsIds = new HashMap<String, String>();
+            databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            for (DatabaseTableRecord record : databaseTable.getRecords()){
+                transactionsIds.put(record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME), record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME));
+            }
+            return transactionsIds;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantCheckAssetIssuingProgressException(exception, "Trying to check pending transaction headers", "Cannot load the table into memory.");
+        }catch(Exception exception){
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Trying to check pending transaction headers", "Unexpected exception.");
         }
     }
 
