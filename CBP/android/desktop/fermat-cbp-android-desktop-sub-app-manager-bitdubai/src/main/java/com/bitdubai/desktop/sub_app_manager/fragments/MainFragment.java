@@ -15,11 +15,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
  */
 public class MainFragment extends FermatFragment {
 
-
-    public MainFragment() {
-        // Required empty public constructor
-    }
-
     public static MainFragment newInstance() {
         return new MainFragment();
     }

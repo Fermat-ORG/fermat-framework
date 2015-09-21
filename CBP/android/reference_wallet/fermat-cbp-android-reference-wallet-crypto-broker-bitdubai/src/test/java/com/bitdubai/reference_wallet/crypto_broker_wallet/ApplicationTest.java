@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app;
+package com.bitdubai.reference_wallet.crypto_broker_wallet;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
