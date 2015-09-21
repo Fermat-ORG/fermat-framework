@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.*;
 
 import java.io.Serializable;
@@ -159,64 +160,100 @@ public interface CryptoWallet extends Serializable {
     /**
      * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need.
      *
-     * @param balanceType type of balance that you need
+     * @param balanceType     type of balance that you need
      * @param walletPublicKey public key of the wallet which you're working with.
+     *
      * @return the balance of the wallet in long format.
+     *
      * @throws CantGetBalanceException if something goes wrong
      */
     long getBalance(BalanceType balanceType,
-                    String walletPublicKey) throws CantGetBalanceException;
+                    String      walletPublicKey) throws CantGetBalanceException;
 
     /**
      * Throw the method <code>getTransactions</code> you cant get all the transactions for an specific balance type.
      *
-     * @param balanceType type of balance that you need
+     * @param balanceType     type of balance that you need
      * @param walletPublicKey of the wallet which you're working with.
-     * @param max quantity of instance you want to return
-     * @param offset the point of start in the list you're trying to bring.
+     * @param max             quantity of instance you want to return
+     * @param offset          the point of start in the list you're trying to bring.
+     *
      * @return a list of crypto wallet transactions (enriched crypto transactions).
+     *
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
-                                                  String walletPublicKey,
-                                                  int max,
-                                                  int offset) throws CantListTransactionsException;
+                                                  String      walletPublicKey,
+                                                  int         max,
+                                                  int         offset) throws CantListTransactionsException;
 
     /**
-     * Throw the method <code>listTransactionByActor</code> you cant get all the transactions related with an specific actor.
+     * Throw the method <code>listTransactionsByActor</code> you cant get all the transactions related with an specific actor.
      *
-     * @param balanceType type of balance that you need
+     * @param balanceType     type of balance that you need
      * @param walletPublicKey of the wallet which you're working with.
-     * @param actorPublicKey of the actor from which you need the transactions.
-     * @param max quantity of instance you want to return
-     * @param offset the point of start in the list you're trying to bring.
+     * @param actorPublicKey  of the actor from which you need the transactions.
+     * @param max             quantity of instance you want to return
+     * @param offset          the point of start in the list you're trying to bring.
+     *
      * @return a list of crypto wallet transactions (enriched crypto transactions).
+     *
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
-                                                          String walletPublicKey,
-                                                          String actorPublicKey,
-                                                          int max,
-                                                          int offset) throws CantListTransactionsException;
+                                                          String      walletPublicKey,
+                                                          String      actorPublicKey,
+                                                          int         max,
+                                                          int         offset) throws CantListTransactionsException;
+
     /**
      * Throw the method <code>getActorTransactionHistory</code> you can get the transaction history of an specific actor.
      *
-     * @param balanceType type of balance that you need
+     * @param balanceType     type of balance that you need
      * @param walletPublicKey public key of the wallet in where you're working.
-     * @param actorPublicKey public key of the actor that you're trying to find.
+     * @param actorPublicKey  public key of the actor that you're trying to find.
+     *
      * @return an instance of ActorTransactionSummary
+     *
      * @throws CantGetActorTransactionHistoryException if something goes wrong.
      */
     ActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,
-                                                       String walletPublicKey,
-                                                       String actorPublicKey) throws CantGetActorTransactionHistoryException;
+                                                       String      walletPublicKey,
+                                                       String      actorPublicKey) throws CantGetActorTransactionHistoryException;
 
+    /**
+     * Throw the method <code>listLastActorTransactionsByTransactionType</code> you can get the last transaction for each actor
+     * who have made transactions with the specified wallet.
+     *
+     * @param balanceType     type of balance that you need
+     * @param transactionType type of transaction you want to bring, credits or debits or both.
+     * @param walletPublicKey public key of the wallet in where you're working.
+     * @param max             quantity of instance you want to return
+     * @param offset          the point of start in the list you're trying to bring.
+     *
+     * @return a list of crypto wallet transactions (enriched crypto transactions).
+     *
+     * @throws CantListTransactionsException if something goes wrong.
+     */
+    List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
+                                                                             TransactionType transactionType,
+                                                                             String          walletPublicKey,
+                                                                             int             max,
+                                                                             int             offset) throws CantListTransactionsException;
 
-    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
-    List<CryptoWalletTransaction>  listContactOrdererByLastSendTransaction();
-
-    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
-    List<CryptoWalletTransaction>  listContactOrdererByLastReceiveTransaction();
+    /**
+     * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
+     *
+     * @param walletPublicKey public key of the wallet in where you're working.
+     * @param transactionID   to identify the transaction.
+     * @param description     string describing the transaction
+     *
+     * @throws CantSaveTransactionDescriptionException if something goes wrong.
+     * @throws TransactionNotFoundException if we cant find the transaction.
+     */
+    void setTransactionDescription(String walletPublicKey,
+                                   UUID   transactionID,
+                                   String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException;
 
     List<PaymentRequest> listSentPaymentRequest();
 
