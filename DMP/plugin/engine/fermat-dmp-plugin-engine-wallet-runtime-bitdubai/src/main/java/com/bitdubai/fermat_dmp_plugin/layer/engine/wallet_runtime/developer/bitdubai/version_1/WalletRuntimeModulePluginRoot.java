@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
@@ -1200,11 +1201,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         String publicKey="reference_wallet";
 
-//        try {
-//            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
-//        } catch (WalletResourcesInstalationException e) {
-//            e.printStackTrace();
-//        }
+        try {
+
+            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
+
+        } catch (WalletResourcesInstalationException e) {
+            e.printStackTrace();
+        }
 
 
         try{
@@ -1213,11 +1216,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
 
 
-            //WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
-            //if(walletNavigationStructure==null){
+            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
+            if(walletNavigationStructure==null){
                 setNavigationStructureXml(startWalletNavigationStructure());
-                WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
-            //}
+                walletNavigationStructure= getNavigationStructure(publicKey);
+            }
             //listWallets.put(publicKey, walletNavigationStructure);
             walletNavigationStructureOpen=walletNavigationStructure;
         }catch(Exception e){
@@ -1474,6 +1477,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setIcon("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
 
