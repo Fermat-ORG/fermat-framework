@@ -119,6 +119,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
      */
     @Override
     public void onPostExecute(Object... result) {
+        PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
+        setPlatformDeviceInfo(platformInfoManager);
         mDialog.dismiss();
 
         // Indicate that app was loaded.
@@ -202,8 +204,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 platformContext = platform.getCorePlatformContext();
 
 
-                PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
-                setPlatformDeviceInfo(platformInfoManager);
+
 
                 return true;
         }
