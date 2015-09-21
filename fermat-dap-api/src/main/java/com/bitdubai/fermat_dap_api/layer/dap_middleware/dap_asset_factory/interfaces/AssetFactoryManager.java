@@ -39,7 +39,7 @@ public interface AssetFactoryManager {
     /**
      * This method create an empty object AssetFactory
      */
-    AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException;
+    AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException, CantCreateAssetFactoryException;
 
     /**
      * This method save object AssetFactory in database
@@ -49,7 +49,7 @@ public interface AssetFactoryManager {
     /**
      * This method mark object AssetFactory in database with close
      */
-    void markAssetFactoryState(State state) throws CantSaveAssetFactoryException;
+    void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException;
 
     /**
      * This method remove object AssetFactory in database
