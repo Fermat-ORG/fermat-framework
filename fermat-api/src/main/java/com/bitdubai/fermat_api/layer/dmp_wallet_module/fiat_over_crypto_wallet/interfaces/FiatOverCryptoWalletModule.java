@@ -41,7 +41,7 @@ public interface FiatOverCryptoWalletModule {
     /**
      * Transactions related methods
      */
-    List<FiatOverCryptoWalletModuleTransaction> getTransactions(int max, int offset, String walletPublicKey);// throws CantGetTransactionsException;
+    List<FiatOverCryptoWalletModuleTransaction> getTransactions(int max, int offset, String walletPublicKey);// throws CantListTransactionsException;
 
     /**
      * Money Request information

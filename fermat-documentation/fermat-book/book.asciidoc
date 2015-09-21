@@ -1,0 +1,15 @@
+:bookseries: animal
+
+= Fermat 
+
+include::preface.asciidoc[]
+
+include::glossary.asciidoc[]
+
+include::fbk-01.asciidoc[]
+
+include::fbk-02.asciidoc[]
+
+include::index.asciidoc[]
+
+include::colo.asciidoc[]

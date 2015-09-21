@@ -7,11 +7,13 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
@@ -32,10 +34,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.DealsWithPlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
@@ -60,15 +60,13 @@ import java.util.UUID;
  */
 public class WalletPublisherModuleModulePluginRootPlugin implements Service, DealsWithPlatformInfo, DealsWithWalletFactory, DealsWithWalletPublisherMiddlewarePlugin, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, WalletPublisherModuleManager {
     /**
-     * Represent the logManager
-     */
-    private LogManager logManager;
-
-    /**
      * Represent the newLoggingLevel
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
+    /**
+     * Represent the logManager
+     */
+    private LogManager logManager;
     /**
      * Represent the errorManager
      */
@@ -92,7 +90,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
     /**
      * Represent the listenersAdded
      */
-    private List<EventListener> listenersAdded;
+    private List<FermatEventListener> listenersAdded;
 
     /**
      * Represent the walletPublisherMiddlewarePlugin
@@ -164,8 +162,8 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
          */
         validateInjectedResources();
 
-        EventListener eventListener;
-        EventHandler eventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
 
         this.serviceStatus = ServiceStatus.STARTED;
 
@@ -202,8 +200,8 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
@@ -468,7 +466,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(0, 0, 0), new Version(0, 0, 0), initialPlatformVersion, finalPlatformVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(1, 0, 0), new Version(1, 0, 0), initialPlatformVersion, finalPlatformVersion, new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet

@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent;
 
 import java.util.UUID;
@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 2015.08.03..
  */
-public class WalletNavigationStructureDownloadedHandler implements EventHandler {
+public class WalletNavigationStructureDownloadedHandler implements FermatEventHandler {
 
     private final WalletRuntimeManager walletRuntimeManager;
 
@@ -21,8 +21,8 @@ public class WalletNavigationStructureDownloadedHandler implements EventHandler 
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
-        WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent =(WalletNavigationStructureDownloadedEvent)platformEvent;
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+        WalletNavigationStructureDownloadedEvent walletNavigationStructureDownloadedEvent =(WalletNavigationStructureDownloadedEvent) fermatEvent;
         String xmlText = walletNavigationStructureDownloadedEvent.getXmlText();
         String link = walletNavigationStructureDownloadedEvent.getLinkToRepo();
         UUID skinId = walletNavigationStructureDownloadedEvent.getSkinId();

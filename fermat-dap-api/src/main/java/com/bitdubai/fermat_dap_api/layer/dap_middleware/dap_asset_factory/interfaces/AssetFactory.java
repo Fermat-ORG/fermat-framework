@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 
 
 import java.sql.Timestamp;
@@ -26,9 +27,6 @@ public interface AssetFactory {
     String getDescription();
     void setDescription(String description);
 
-    Resource getResource();
-    void setResource(Resource resource);
-
     List<Resource> getResources();
     void setResources(List<Resource> resources);
 
@@ -39,7 +37,7 @@ public interface AssetFactory {
     void setContractProperty(ContractProperty contractProperty);
 
     List<ContractProperty> getContractProperties();
-    void setContractProperties(ContractProperty contractProperties);
+    void setContractProperties(List<ContractProperty> contractProperties);
 
     State getState();
     void setState(State state);
@@ -53,20 +51,20 @@ public interface AssetFactory {
     long getFee();
     void setFee(long fee);
 
-    WalletCategory getWalletCategory();
-    void setWalletCategory(WalletCategory walletCategory);
+    boolean getIsRedeemable();
+    void setIsRedeemable(boolean isRedeemable);
 
-    WalletType getWalletType();
-    void setWalletType(WalletType walletType);
+    Timestamp getExpirationDate();
+    void setExpirationDate(Timestamp expirationDate);
+
+    AssetBehavior getAssetBehavior();
+    void setAssetBehavior(AssetBehavior assetBehavior);
 
     Timestamp getCreationTimestamp();
     void setCreationTimestamp(Timestamp timestamp);
 
     Timestamp getLastModificationTimestamp();
     void setLastModificationTimeststamp(Timestamp timestamp);
-
-    String getWalletPublicKey();
-    void setWalletPublicKey(String walletPublicKey);
 
     String getAssetIssuerIdentityPublicKey();
     void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
