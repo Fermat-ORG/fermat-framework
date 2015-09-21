@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidAccountNumberException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.VaultKeyHierarchyException;
 
 import org.bitcoinj.wallet.DeterministicSeed;
 
@@ -13,10 +18,11 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 9/19/15.
  */
-public class AssetVaultManager implements DealsWithPluginFileSystem {
+public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem {
     private final String ASSET_VAULT_SEED_FILEPATH = "AssetVaultSeed";
     private final String ASSET_VAULT_SEED_FILENAME = "Seed";
     UUID pluginId;
+    VaultKeyHierarchy vaultKeyHierarchy;
 
     /**
      * DealsWithPluginFileSystem interface variable and implementation
@@ -28,14 +34,27 @@ public class AssetVaultManager implements DealsWithPluginFileSystem {
         this.pluginFileSystem = pluginFileSystem;
     }
 
+
+    /**
+     * DealsWithPluginDatabaseSystem interface variable and implementation
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
     /**
      * Constructor
      * @param pluginId
      * @param pluginFileSystem
      */
-    public AssetVaultManager(UUID pluginId, PluginFileSystem pluginFileSystem) {
+    public AssetCryptoVaultManager(UUID pluginId, PluginFileSystem pluginFileSystem, PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+
+        createsKeyHierarchy();
     }
 
     /**
@@ -53,5 +72,27 @@ public class AssetVaultManager implements DealsWithPluginFileSystem {
 
         DeterministicSeed seed = new DeterministicSeed(vaultSeedGenerator.getSeedBytes(), vaultSeedGenerator.getMnemonicCode(), vaultSeedGenerator.getCreationTimeSeconds());
         return seed;
+    }
+
+    private void createsKeyHierarchy(){
+        try {
+            vaultKeyHierarchy = new VaultKeyHierarchy(getAssetVaultSeed(), this.pluginDatabaseSystem);
+        } catch (VaultKeyHierarchyException e) {
+            e.printStackTrace();
+        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
+            cantCreateAssetVaultSeed.printStackTrace();
+        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+            cantLoadExistingVaultSeed.printStackTrace();
+        }
+    }
+
+
+    public CryptoAddress getNewAssetVaultCryptoAddress() {
+        try {
+            return vaultKeyHierarchy.getNewCryptoAddressFromAccount(0);
+        } catch (InvalidAccountNumberException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
