@@ -3,6 +3,7 @@ package unit.com.bitdubai.desktop.sub_app_manager.fragments;
 import android.widget.TextView;
 
 import com.bitdubai.desktop.sub_app_manager.BuildConfig;
+import com.bitdubai.desktop.sub_app_manager.R;
 import com.bitdubai.desktop.sub_app_manager.fragments.MainFragment;
 
 import org.junit.Before;
