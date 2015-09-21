@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed;
 
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -10,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantDeleteExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -18,6 +17,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.Cant
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.wallet.DeterministicSeed;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,7 +88,7 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         /**
          * The Wallet class of bitcoinJ has a great entrophy level to generate a random seed.
          */
-        Wallet seedWallet = new Wallet(BitcoinNetworkConfiguration.NETWORK_PARAMETERS);
+        Wallet seedWallet = new Wallet(BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS);
         DeterministicSeed seed = seedWallet.getKeyChainSeed();
 
         /**
@@ -104,11 +104,21 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         PluginTextFile seedFile = null;
         try {
             seedFile = pluginFileSystem.createTextFile(pluginId, this.filePath,  this.fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            seedFile.setContent(XMLParser.parseObject(this));
+            seedFile.setContent(generateFileContent());
             seedFile.persistToMedia();
         } catch (CantCreateFileException | CantPersistFileException e) {
             throw new CantCreateAssetVaultSeed(CantCreateAssetVaultSeed.DEFAULT_MESSAGE, e, "seedFile:" + this.filePath + " " + this.fileName, "file might already exists.");
         }
+    }
+
+    private String generateFileContent() {
+        StringBuilder fileContent = new StringBuilder();
+        fileContent.append(this.mnemonicCode.toString());
+        fileContent.append(System.lineSeparator());
+        fileContent.append(this.creationTimeSeconds);
+        fileContent.append(System.lineSeparator());
+        fileContent.append(this.seedBytes.toString());
+        return fileContent.toString();
     }
 
     /**
@@ -135,16 +145,35 @@ public class VaultSeedGenerator implements VaultSeed, DealsWithPluginFileSystem 
         }
 
         /**
-         * By loading the XML from file and assigning the values to THIS, I'm re filling all originally saved values.
+         * I will load the file content into the variables
          */
-        String fileContent = seedFile.getContent();
-        XMLParser.parseXML(fileContent, this);
+        loadSeedFileContent(seedFile.getContent());
 
         /**
          * I make sure I have values in everything.
          */
         if (this.mnemonicCode == null || this.seedBytes == null || this.creationTimeSeconds == 0)
             throw new CantLoadExistingVaultSeed (CantLoadExistingVaultSeed.DEFAULT_MESSAGE, null, "Class values were not corretly populated after reading from file.", "failed in XMLParser class?");
+    }
+
+    private void loadSeedFileContent(String fileContent) throws CantLoadExistingVaultSeed {
+        try{
+            /**
+             * I split the content into lines, there should only be 3
+             */
+            String[] lines = fileContent.split("\\r?\\n");
+            //First line is the mnemonic Code, I remove the [] added by the toString.
+            lines[0] = lines[0].replace("[", "");
+            lines[0] = lines[0].replace("]", "");
+            this.mnemonicCode = Arrays.asList(lines[0].split("\\s*,\\s*"));
+            //second line is the creation time in seconds
+            this.creationTimeSeconds = Long.parseLong(lines[1]);
+            //third line are the seedBytes
+            this.seedBytes = lines[2].getBytes();
+        } catch (Exception e){
+            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "There was an error trying to load the content from the Seed File.", "Corrupted File.");
+        }
+
     }
 
     /**

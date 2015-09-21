@@ -5,10 +5,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidAccountNumberException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidChainNumberException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.VaultKeyHierarchyException;
 
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -49,7 +50,7 @@ public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, Deals
      * @param pluginId
      * @param pluginFileSystem
      */
-    public AssetCryptoVaultManager(UUID pluginId, PluginFileSystem pluginFileSystem, PluginDatabaseSystem pluginDatabaseSystem) {
+    public AssetCryptoVaultManager(UUID pluginId, PluginFileSystem pluginFileSystem, PluginDatabaseSystem pluginDatabaseSystem) throws CantCreateAssetVaultSeed, CantLoadExistingVaultSeed, VaultKeyHierarchyException {
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -74,23 +75,15 @@ public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, Deals
         return seed;
     }
 
-    private void createsKeyHierarchy(){
-        try {
-            vaultKeyHierarchy = new VaultKeyHierarchy(getAssetVaultSeed(), this.pluginDatabaseSystem);
-        } catch (VaultKeyHierarchyException e) {
-            e.printStackTrace();
-        } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
-            cantCreateAssetVaultSeed.printStackTrace();
-        } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
-            cantLoadExistingVaultSeed.printStackTrace();
-        }
+    private void createsKeyHierarchy() throws CantLoadExistingVaultSeed, CantCreateAssetVaultSeed, VaultKeyHierarchyException {
+        vaultKeyHierarchy = new VaultKeyHierarchy(getAssetVaultSeed(), this.pluginDatabaseSystem);
     }
 
 
-    public CryptoAddress getNewAssetVaultCryptoAddress() {
+    public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) {
         try {
-            return vaultKeyHierarchy.getNewCryptoAddressFromAccount(0);
-        } catch (InvalidAccountNumberException e) {
+            return vaultKeyHierarchy.getNewCryptoAddressFromChain(blockchainNetworkType, 0);
+        } catch (InvalidChainNumberException e) {
             e.printStackTrace();
             return null;
         }
