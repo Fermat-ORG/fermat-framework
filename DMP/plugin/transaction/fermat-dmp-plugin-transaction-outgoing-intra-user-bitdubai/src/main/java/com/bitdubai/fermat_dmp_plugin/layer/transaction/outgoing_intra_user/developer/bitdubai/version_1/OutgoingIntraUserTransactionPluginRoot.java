@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.CantGetOutgoingIntraUserTransactionManagerException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.OutgoingIntraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.OutgoingIntraUserTransactionManager;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.IntraUserCryptoTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -142,7 +142,7 @@ public class OutgoingIntraUserTransactionPluginRoot implements Service,OutgoingI
      */
 
     @Override
-    public OutgoingIntraUserTransactionManager getTransactionManager() throws CantGetOutgoingIntraUserTransactionManagerException {
+    public IntraUserCryptoTransactionManager getTransactionManager() throws CantGetOutgoingIntraUserTransactionManagerException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }

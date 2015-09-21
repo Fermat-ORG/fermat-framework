@@ -10,12 +10,12 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptio
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces-OutgoingIntraUserTransactionManager</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces-IntraUserCryptoTransactionManager</code>
  * provides the method to create crypto and money payments to other users.
  *
  * @author Ezequiel Postan
  */
-public interface OutgoingIntraUserTransactionManager {
+public interface IntraUserCryptoTransactionManager {
 
     /**
      * The method <code>payCryptoRequest</code> sends the payment of a request.
@@ -69,7 +69,9 @@ public interface OutgoingIntraUserTransactionManager {
 
 
     /**
-     * The method <code>sendMFiat</code> is used to send fiat currency to another intra user.
+     * TODO: THIS METHOD WILL BE MOVED TO A NEW TRANSACTIONAL PLUGIN SPECIALIZED IN FIAT TRANSACTIONS
+     *
+     * The method <code>sendFiat</code> is used to send fiat currency to another intra user.
      *
      * @param walletPublicKey           The public key of the wallet sending the transaction
      * @param destinationAddress        the crypto address of the user to send the money to
@@ -83,8 +85,8 @@ public interface OutgoingIntraUserTransactionManager {
      * @param receptorActorType         The type of actor receiving the transaction
      * @throws OutgoingIntraUserCantSendFundsExceptions
      * @throws OutgoingIntraUserInsufficientFundsException
-     */
-    public void sendMFiat(String walletPublicKey,
+     *
+    public void sendFiat(String walletPublicKey,
                           CryptoAddress destinationAddress,
                           long cryptoAmount,
                           FiatCurrency fiatCurrency,
@@ -95,4 +97,5 @@ public interface OutgoingIntraUserTransactionManager {
                           Actors senderActorType,
                           Actors receptorActorType) throws OutgoingIntraUserCantSendFundsExceptions,
                                                               OutgoingIntraUserInsufficientFundsException;
+    */
 }
