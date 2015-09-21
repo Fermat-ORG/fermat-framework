@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="generator" content="Asciidoctor 0.1.4">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fermat Decentralized Money Platform</title>
+<title>Fermat</title>
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
@@ -362,32 +362,704 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 </head>
 <body class="book">
 <div id="header">
-<h1>Fermat Decentralized Money Platform</h1>
+<h1>Fermat</h1>
 </div>
 <div id="content">
+<div class="sect1">
+<h2 id="_preface">Preface</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_being_part_of_fermat">Being part of Fermat</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_intended_audience">Intended Audience</h3>
+<div class="paragraph">
+<p>This book is mostly intended for coders. If you can use a programming language, this book will teach you how cryptographic currencies work, how to use them, and how to develop software that works with them. The first few chapters are also suitable as an in-depth introduction to bitcoin for noncoders—those trying to understand the inner workings of bitcoin and cryptocurrencies.</p>
+</div>
+<div class="paragraph">
+<p>===
+=== Conventions Used in This Book</p>
+</div>
+<div class="paragraph">
+<p>The following typographical conventions are used in this book:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><em>Italic</em></dt>
+<dd>
+<p>Indicates new terms, URLs, email addresses, filenames, and file extensions.</p>
+</dd>
+<dt class="hdlist1"><code>Constant width</code></dt>
+<dd>
+<p>Used for program listings, as well as within paragraphs to refer to program elements such as variable or function names, databases, data types, environment variables, statements, and keywords.</p>
+</dd>
+<dt class="hdlist1"><strong><code>Constant width bold</code></strong></dt>
+<dd>
+<p>Shows commands or other text that should be typed literally by the user.</p>
+</dd>
+<dt class="hdlist1"><em><code>Constant width italic</code></em></dt>
+<dd>
+<p>Shows text that should be replaced with user-supplied values or by values determined by context.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This icon signifies a tip, suggestion, or general note.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This icon indicates a warning or caution.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_code_examples">Code Examples</h3>
+<div class="paragraph">
+<p>The examples are illustrated in Python, C++, and using the command line of a Unix-like operating system such as Linux or Mac OS X. All code snippets are available in the <a href="https://github.com/aantonop/bitcoinbook">GitHub repository</a> in the <em>code</em> subdirectory of the main repo. Fork the book code, try the code examples, or submit corrections via GitHub.</p>
+</div>
+<div class="paragraph">
+<p>All the code snippets can be replicated on most operating systems with a minimal installation of compilers and interpreters for the corresponding languages. Where necessary, we provide basic installation instructions and step-by-step examples of the output of those instructions.</p>
+</div>
+<div class="paragraph">
+<p>Some of the code snippets and code output have been reformatted for print. In all such cases, the lines have been split by a backslash (\) character, followed by a newline character. When transcribing the examples, remove those two characters and join the lines again and you should see identical results as shown in the example.</p>
+</div>
+<div class="paragraph">
+<p>All the code snippets use real values and calculations where possible, so that you can build from example to example and see the same results in any code you write to calculate the same values. For example, the private keys and corresponding public keys and addresses are all real. The sample transactions, blocks, and blockchain references have all been introduced in the actual bitcoin blockchain and are part of the public ledger, so you can review them on any bitcoin system.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_code_examples">Using Code Examples</h3>
+<div class="paragraph">
+<p>This book is here to help you get your job done. In general, if example code is offered with this book, you may use it in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does require permission.</p>
+</div>
+<div class="paragraph">
+<p>We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: “<em>Mastering Bitcoin</em> by Andreas M. Antonopoulos (O’Reilly). Copyright 2015 Andreas M. Antonopoulos, 978-1-449-37404-4.”</p>
+</div>
+<div class="paragraph">
+<p>Some editions of this book are offered under an open source license, such as CC-BY-NC (creativecommons.org), in which case the terms of that license apply.</p>
+</div>
+<div class="paragraph">
+<p>If you feel your use of code examples falls outside fair use or the permission given above, feel free to contact us at <email>permissions@oreilly.com</email>.</p>
+</div>
+<div class="paragraph">
+<p>===
+=== How to Contact Us</p>
+</div>
+<div class="paragraph">
+<p>Please address comments and questions concerning this book to the publisher:</p>
+</div>
+<simplelist>
+<member>
+</member>
+</simplelist>
+<div class="paragraph">
+<p>We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at <a href="http:// ......... ">http:// ......... </a>.</p>
+</div>
+<div class="paragraph">
+<p>To comment or ask technical questions about this book, send email to <email>@bitdubai.com</email>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_acknowledgments">Acknowledgments</h3>
+<div class="paragraph">
+<p>This book represents the efforts and contributions of many people.</p>
+</div>
+<div class="sect3">
+<h4 id="github_contrib">Early Release Draft (GitHub Contributions)</h4>
+<div class="paragraph">
+<p>Many contributors offered comments, corrections, and additions to the early-release draft on GitHub. Thank you all for your contributions to this book. Following is a list of notable GitHub contributors, including their GitHub ID in parentheses:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quick_glossary">Quick Glossary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This quick glossary contains many of the terms used in relation to bitcoin. These terms are used throughout the book, so bookmark this for a quick reference.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">address</dt>
+<dd>
+<p>A bitcoin address looks like <code>1DSrfJdB2AnWaFNgSbv3MZC2m74996JafV</code>. It consists of a string of letters and numbers starting with a "1" (number one). Just like you ask others to send an email to your email address, you would ask others to send you bitcoin to your bitcoin address.</p>
+</dd>
+<dt class="hdlist1">bip</dt>
+<dd>
+<p>Bitcoin Improvement Proposals.  A set of proposals that members of the bitcoin community have submitted to improve bitcoin.  For example, BIP0021 is a proposal to improve the bitcoin uniform resource identifier (URI) scheme.</p>
+</dd>
+<dt class="hdlist1">bitcoin</dt>
+<dd>
+<p>The name of the currency unit (the coin), the network, and the software.</p>
+</dd>
+<dt class="hdlist1">block</dt>
+<dd>
+<p>A grouping of transactions, marked with a timestamp, and a fingerprint of the previous block. The block header is hashed to produce a proof of work, thereby validating the transactions. Valid blocks are added to the main blockchain by network consensus.</p>
+</dd>
+<dt class="hdlist1">blockchain</dt>
+<dd>
+<p>A list of validated blocks, each linking to its predecessor all the way to the genesis block.</p>
+</dd>
+<dt class="hdlist1">confirmations</dt>
+<dd>
+<p>Once a transaction is included in a block, it has one confirmation. As soon as <em>another</em> block is mined on the same blockchain, the transaction has two confirmations, and so on. Six or more confirmations is considered sufficient proof that a transaction cannot be reversed.</p>
+</dd>
+<dt class="hdlist1">difficulty</dt>
+<dd>
+<p>A network-wide setting that controls how much computation is required to produce a proof of work.</p>
+</dd>
+<dt class="hdlist1">difficulty target</dt>
+<dd>
+<p>A difficulty at which all the computation in the network will find blocks approximately every 10 minutes.</p>
+</dd>
+<dt class="hdlist1">difficulty retargeting</dt>
+<dd>
+<p>A network-wide recalculation of the difficulty that occurs once every 2,106 blocks and considers the hashing power of the previous 2,106 blocks.</p>
+</dd>
+<dt class="hdlist1">fees</dt>
+<dd>
+<p>The sender of a transaction often includes a fee to the network for processing the requested transaction.  Most transactions require a minimum fee of 0.5 mBTC.</p>
+</dd>
+<dt class="hdlist1">hash</dt>
+<dd>
+<p>A digital fingerprint of some binary input.</p>
+</dd>
+<dt class="hdlist1">genesis block</dt>
+<dd>
+<p>The first block in the blockchain, used to initialize the cryptocurrency.</p>
+</dd>
+<dt class="hdlist1">miner</dt>
+<dd>
+<p>A network node that finds valid proof of work for new blocks, by repeated hashing.</p>
+</dd>
+<dt class="hdlist1">network</dt>
+<dd>
+<p>A peer-to-peer network that propagates transactions and blocks to every bitcoin node on the network.</p>
+</dd>
+<dt class="hdlist1">Proof-Of-Work</dt>
+<dd>
+<p>A piece of data that requires significant computation to find. In bitcoin, miners must find a numeric solution to the SHA256 algorithm that meets a network-wide target, the difficulty target. </p>
+</dd>
+<dt class="hdlist1">reward</dt>
+<dd>
+<p>An amount included in each new block as a reward by the network to the miner who found the Proof-Of-Work solution. It is currently 25BTC per block.</p>
+</dd>
+<dt class="hdlist1">secret key (aka private key)</dt>
+<dd>
+<p>The secret number that unlocks bitcoins sent to the corresponding address.  A secret key looks like <code>5J76sF8L5jTtzE96r66Sf8cka9y44wdpJjMwCxR3tzLh3ibVPxh</code>.</p>
+</dd>
+<dt class="hdlist1">transaction</dt>
+<dd>
+<p>In simple terms, a transfer of bitcoins from one address to another. More precisely, a transaction is a signed data structure expressing a transfer of value. Transactions are transmitted over the bitcoin network, collected by miners, and included into blocks, made permanent on the blockchain.</p>
+</dd>
+<dt class="hdlist1">wallet</dt>
+<dd>
+<p>Software that holds all your bitcoin addresses and secret keys. Use it to send, receive, and store your bitcoin.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_beyond_bitcoin_fermat_dmp">Beyond Bitcoin: FERMAT DMP</h3>
+<h3 id="_beyond_bitcoin_fermat">Beyond Bitcoin: FERMAT</h3>
 <div class="paragraph">
-<p>FERMAT DMP (Decentralized Money Platform) is an Open Source P2P (Peer-to-Peer) System with a Plug-in Architecture running on end-user&#8217;s devices that features a new ground shaking concept: the development of the cryptocurrency value transport techology to a world-wide adopted system relying on the global intelligence already existent. Instead of begginning a new project in this industry completley from zero point, finding and implementing a new conceptual and technological standard based on solid mathemathical logic that lyes a common based for future developments BASED AND REUSING most of the global intelligence already present and available in the cryptoworld, giving by this mean a collective group coherence to grow safely in a collaborative way, yet respecting and giving credit ( recognition) to each and every one who makes an effort to develop and offer a valuable component to the whole.</p>
+<p>
+FERMAT is an inspired vision, a project to attain this vision, a group of pioneers of the software development industry working on it, a community supporting the core idea and providing the environment, and the whole world of potential users who will profit and be served by this.
+Fermat&#8217;s vision is based on the huge potential of the blockchain transaction technology underlying the first sucessfully implemented cryptocurrency: Bitcoin. The undeniable goal of Bitcoin&#8217;s crytographic based electronic signature protocol that builds a distributed public ledger of peer-to-peer electronic transactions opens the door to a new paradigma in economics, computer science, financial operations, and world-wide commerce. Sakamoto&#8217;s invention makes possible to unveil the world of financial transactions, to get rid of the necessity of trust into a third party institution or central goverments, to make money a secure thing, and transactions transparent and effortless, giving back the absolute control to the money&#8217;s owner. The cryptocurrency scheme encourages us to adopt a radical new point of view on money and the concept fo value itself and its transport, so radical, that it will take us some time and effort to really grasp it, because it leads to unconditionally honoring and empowering of each individual.
+Fermat as a project is also a big challenge to the open source software industry because it firmly believes that the comunnity has much more talent and intelligent collectively than isolated individuals, and the project is inscribed in the wolrd-wide cryptoindustry ecosystem with the conviction of laying the seeds of a global collaborative endeavourw ith a firm call to commited collaboration from peers and colleagues.
+Fermat from its conception is addressed to pioneers, and we have already engaged a solid core of software developers that is working in shaping the first version of the platform to be soon released.</p>
+</div>
+<div class="paragraph">
+<p>Fermat is, technically speaking , an Open Source P2P (Peer-to-Peer) System built on a Plug-in Architecture running on end-user&#8217;s devices. The first goal is to get very close to the end user offering and easy way of coming onboard the crytocurrency world by means of and insutitively easy to access cryptocurrency Wallet. At the same time, the open source plug-in platform allow any skilled actor in the community to jump in and develop applications and offering services with different abstractin levels and addressing a wide range of segmented markets. In fact, Fermat as whole sets a common ground, a kind of "Master Plan" for developing wallets, wallet services, p2p network services and all kind of future develpments based in blockchain tech, using the existent global talent and intelligence that the community already has and collaborating with very intense feedback in expanding this technology to reach rapidily end user&#8217;s mass adoption, giving all the participants in the different sectors a sense of trust, safety and equity, and the corresponding right to become a revenue for each one&#8217;s contribution and effort.
+Instead of begginning a new project in this industry completley from zero point, the clear and firm logic of Fermat can turn it to become a new standard in the industry by giving the collective a group coherence as it had never before, and encourages to grow safely in a collaborative way.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title">Development of the cryptoworld before FERMAT</div>
+<div class="title">Inspirations from the cryptoworld: issues to solve, seed of FERMAT</div>
 <div class="paragraph">
-<p> (&#8201;&#8212;&#8201;to be completed&#8201;&#8212;&#8201;)ction script)</p>
+<p> ( How will we do it?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>
+ finding the answers to the following questions:
+
+* How can we isolate ordinary people from the perceived complexity?
+* How can we use the collective intelligence of the developer community?
+* How can we reuse the entire current infrastructure already in place?
+* How do we integrate legacy financial institutions in a way they feel comfortable?
+* How do we integrate merchants, retailers and brands of all sizes in a clever way?
+
+The answers to each of these questions are addressed within the Fermat platform.
+
+What makes Fermat different from other wallet platforms or services?
+--------------------------------------------------------------------
+
+* **Fermat is P2P.** This makes it censorship resistent and difficult to be attacked.
+
+* **Fermat is built with plugins.** This enables functionality to be reused and opens the door to any developer to participate.
+
+* **Fermat runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party.
+
+* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat user base.
+
+* **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
+
+* **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. )
+</pre>
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ch02_FERMAT_overview">How Fermat Works</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_fermat_wallet_app">Fermat Wallet App</h3>
+<div class="paragraph">
+<p>The bitcoin system, unlike traditional banking and payment systems, is based on de-centralized trust. Instead of a central trusted authority, in bitcoin, trust is achieved as an emergent property from the interactions of different participants in the bitcoin system. In this chapter, we will examine bitcoin from a high level by tracking a single transaction through the bitcoin system and watch as it becomes "trusted" and accepted by the bitcoin mechanism of distributed consensus and is finally recorded on the blockchain, the distributed ledger of all transactions.</p>
+</div>
+<div class="paragraph">
+<p>Each example is based on an actual transaction made on the bitcoin network, simulating the interactions between the users (Joe, Alice, and Bob) by sending funds from one wallet to another. While tracking a transaction through the bitcoin network and blockchain, we will use a <em>blockchain explorer</em> site to visualize each step. A blockchain explorer is a web application that operates as a bitcoin search engine, in that it allows you to search for addresses, transactions, and blocks and see the relationships and flows between them.</p>
+</div>
+<div class="paragraph">
+<p>Popular blockchain explorers include: </p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://blockchain.info">Blockchain info</a></p>
+</li>
+<li>
+<p><a href="http://blockexplorer.com">Bitcoin Block Explorer</a></p>
+</li>
+<li>
+<p><a href="http://insight.bitpay.com">insight</a></p>
+</li>
+<li>
+<p><a href="http://blockr.io">blockr Block Reader</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each of these has a search function that can take an address, transaction hash, or block number and find the equivalent data on the bitcoin network and blockchain. With each example, we will provide a URL that takes you directly to the relevant entry, so you can study it in detail.</p>
+</div>
+<div class="sect3">
+<h4 id="_bitcoin_overview">Bitcoin Overview</h4>
+<div class="paragraph">
+<p>In the overview diagram shown in <a href="#bitcoin-overview">Bitcoin overview</a>, we see that the bitcoin system consists of users with wallets containing keys, transactions that are propagated across the network, and miners who produce (through competitive computation) the consensus blockchain, which is the authoritative ledger of all transactions. In this chapter, we will trace a single transaction as it travels across the network and examine the interactions between each part of the bitcoin system, at a high level. Subsequent chapters will delve into the technology behind wallets, mining, and merchant systems.</p>
+</div>
+<div id="bitcoin-overview" class="imageblock">
+<div class="content">
+<img src="images/msbt_0201.png" alt="Bitcoin Overview">
+</div>
+<div class="title">Figure 1. Bitcoin overview</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="cup_of_coffee">Buying a Cup of Coffee</h4>
+<div class="paragraph">
+<p>Alice, introduced in the previous chapter, is a new user who has just acquired her first bitcoin. In <a href="#getting_first_bitcoin">[getting_first_bitcoin]</a>, Alice met with her friend Joe to exchange some cash for bitcoin. The transaction created by Joe funded Alice&#8217;s wallet with 0.10 BTC. Now Alice will make her first retail transaction, buying a cup of coffee at Bob&#8217;s coffee shop in Palo Alto, California. Bob&#8217;s coffee shop recently started accepting bitcoin payments, by adding a bitcoin option to his point-of-sale system. The prices at Bob&#8217;s Cafe are listed in the local currency (US dollars), but at the register, customers have the option of paying in either dollars or bitcoin. Alice places her order for a cup of coffee and Bob enters the transaction at the register. The point-of-sale system will convert the total price from US dollars to bitcoins at the prevailing market rate and display the prices in both currencies, as well as show a QR code containing a <em>payment request</em> for this transaction (see <a href="#payment-request-QR">Payment request QR code (Hint: Try to scan this!)</a>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Total:
+$1.50 USD
+0.015 BTC</pre>
+</div>
+</div>
+<div id="payment-request-QR" class="imageblock">
+<div class="content">
+<img src="images/msbt_0202.png" alt="payment-request">
+</div>
+<div class="title">Figure 2. Payment request QR code (Hint: Try to scan this!)</div>
+</div>
+<div id="payment-request-URL" class="listingblock">
+<div class="title">The payment request QR code encodes the following URL, defined in BIP0021:</div>
+<div class="content">
+<pre>bitcoin:1GdK9UzpHBzqzX2A9JFP3Di4weBwqgmoQA?
+amount=0.015&amp;
+label=Bob%27s%20Cafe&amp;
+message=Purchase%20at%20Bob%27s%20Cafe
+
+Components of the URL
+
+A bitcoin address: "1GdK9UzpHBzqzX2A9JFP3Di4weBwqgmoQA"
+The payment amount: "0.015"
+A label for the recipient address: "Bob's Cafe"
+A description for the payment: "Purchase at Bob's Cafe"</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Unlike a QR code that simply contains a destination bitcoin address, a payment request is a QR-encoded URL that contains a destination address, a payment amount, and a generic description such as "Bob&#8217;s Cafe." This allows a bitcoin wallet application to prefill the information used to send the payment while showing a human-readable description to the user. You can scan the QR code with a bitcoin wallet application to see what Alice would see.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Bob says, "That&#8217;s one-dollar-fifty, or fifteen millibits."</p>
+</div>
+<div class="paragraph">
+<p>Alice uses her smartphone to scan the barcode on display. Her smartphone shows a payment of <code>0.0150 BTC</code> to <code>Bob&#8217;s Cafe</code> and she selects <code>Send</code> to authorize the payment. Within a few seconds (about the same amount of time as a credit card authorization), Bob would see the transaction on the register, completing the transaction.</p>
+</div>
+<div class="paragraph">
+<p>In the following sections we will examine this transaction in more detail, see how Alice&#8217;s wallet constructed it, how it was propagated across the network, how it was verified, and finally, how Bob can spend that amount in subsequent transactions.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The bitcoin network can transact in fractional values, e.g., from milli-bitcoins (1/1000th of a bitcoin) down to 1/100,000,000th of a bitcoin, which is known as a satoshi.  Throughout this book we’ll use the term “bitcoin” to refer to any quantity of bitcoin currency, from the smallest unit (1 satoshi) to the total number (21,000,000) of all bitcoins that will ever be mined.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bitcoin_transactions">Bitcoin Transactions</h3>
+<div class="paragraph">
+<p>In simple terms, a transaction tells the network that the owner of a number of bitcoins has authorized the transfer of some of those bitcoins to another owner. The new owner can now spend these bitcoins by creating another transaction that authorizes transfer to another owner, and so on, in a chain of ownership.</p>
+</div>
+<div class="paragraph">
+<p>Transactions are like lines in a double-entry bookkeeping ledger. In simple terms, each transaction contains one or more "inputs," which are debits against a bitcoin account. On the other side of the transaction, there are one or more "outputs," which are credits added to a bitcoin account. The inputs and outputs (debits and credits) do not necessarily add up to the same amount. Instead, outputs add up to slightly less than inputs and the difference represents an implied "transaction fee," which is a small payment collected by the miner who includes the transaction in the ledger. A bitcoin transaction is shown as a bookkeeping ledger entry in <a href="#transaction-double-entry">Transaction as double-entry bookkeeping</a>.</p>
+</div>
+<div class="paragraph">
+<p>The transaction also contains proof of ownership for each amount of bitcoin (inputs) whose value is transferred, in the form of a digital signature from the owner, which can be independently validated by anyone. In bitcoin terms, "spending" is signing a transaction that transfers value from a previous transaction over to a new owner identified by a bitcoin address.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><em>Transactions</em> move value from <em>transaction inputs</em> to <em>transaction outputs</em>. An input is where the coin value is coming from, usually a previous transaction&#8217;s output. A transaction output assigns a new owner to the value by associating it with a key. The destination key is called an <em>encumbrance</em>. It imposes a requirement for a signature for the funds to be redeemed in future transactions. Outputs from one transaction can be used as inputs in a new transaction, thus creating a chain of ownership as the value is moved from address to address (see <a href="#blockchain-mnemonic">A chain of transactions, where the output of one transaction is the input of the next transaction</a>).</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="transaction-double-entry" class="imageblock">
+<div class="content">
+<img src="images/msbt_0203.png" alt="Transaction Double-Entry">
+</div>
+<div class="title">Figure 3. Transaction as double-entry bookkeeping</div>
+</div>
+<div id="blockchain-mnemonic" class="imageblock">
+<div class="content">
+<img src="images/msbt_0204.png" alt="Transaction chain">
+</div>
+<div class="title">Figure 4. A chain of transactions, where the output of one transaction is the input of the next transaction</div>
+</div>
+<div class="paragraph">
+<p>Alice&#8217;s payment to Bob&#8217;s Cafe uses a previous transaction as its input. In the previous chapter Alice received bitcoin from her friend Joe in return for cash. That transaction has a number of bitcoins locked (encumbered) against Alice&#8217;s key. Her new transaction to Bob&#8217;s Cafe references the previous transaction as an input and creates new outputs to pay for the cup of coffee and receive change. The transactions form a chain, where the inputs from the latest transaction correspond to outputs from previous transactions. Alice&#8217;s key provides the signature that unlocks those previous transaction outputs, thereby proving to the bitcoin network that she owns the funds. She attaches the payment for coffee to Bob&#8217;s address, thereby "encumbering" that output with the requirement that Bob produces a signature in order to spend that amount. This represents a transfer of value between Alice and Bob. This chain of transactions, from Joe to Alice to Bob, is illustrated in <a href="#blockchain-mnemonic">A chain of transactions, where the output of one transaction is the input of the next transaction</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="_common_transaction_forms">Common Transaction Forms</h4>
+<div class="paragraph">
+<p>The most common form of transaction is a simple payment from one address to another, which often includes some "change" returned to the original owner. This type of transaction has one input and two outputs and is shown in <a href="#transaction-common">Most common transaction</a>.</p>
+</div>
+<div id="transaction-common" class="imageblock">
+<div class="content">
+<img src="images/msbt_0205.png" alt="Common Transaction">
+</div>
+<div class="title">Figure 5. Most common transaction</div>
+</div>
+<div class="paragraph">
+<p>Another common form of transaction is one that aggregates several inputs into a single output (see <a href="#transaction-aggregating">Transaction aggregating funds</a>). This represents the real-world equivalent of exchanging a pile of coins and currency notes for a single larger note. Transactions like these are sometimes generated by wallet applications to clean up lots of smaller amounts that were received as change for payments.</p>
+</div>
+<div id="transaction-aggregating" class="imageblock">
+<div class="content">
+<img src="images/msbt_0206.png" alt="Aggregating Transaction">
+</div>
+<div class="title">Figure 6. Transaction aggregating funds</div>
+</div>
+<div class="paragraph">
+<p>Finally, another transaction form that is seen often on the bitcoin ledger is a transaction that distributes one input to multiple outputs representing multiple recipients (see <a href="#transaction-distributing">Transaction distributing funds</a>). This type of transaction is sometimes used by commercial entities to distribute funds, such as when processing payroll payments to multiple employees.</p>
+</div>
+<div id="transaction-distributing" class="imageblock">
+<div class="content">
+<img src="images/msbt_0207.png" alt="Distributing Transaction">
+</div>
+<div class="title">Figure 7. Transaction distributing funds</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_constructing_a_transaction">Constructing a Transaction</h3>
+<div class="paragraph">
+<p>Alice&#8217;s wallet application contains all the logic for selecting appropriate inputs and outputs to build a transaction to Alice&#8217;s specification. Alice only needs to specify a destination and an amount and the rest happens in the wallet application without her seeing the details. Importantly, a wallet application can construct transactions even if it is completely offline. Like writing a check at home and later sending it to the bank in an envelope, the transaction does not need to be constructed and signed while connected to the bitcoin network. It only has to be sent to the network eventually for it to be executed.</p>
+</div>
+<div class="sect3">
+<h4 id="_getting_the_right_inputs">Getting the Right Inputs</h4>
+<div class="paragraph">
+<p>Alice&#8217;s wallet application will first have to find inputs that can pay for the amount she wants to send to Bob. Most wallet applications keep a small database of "unspent transaction outputs" that are locked (encumbered) with the wallet&#8217;s own keys. Therefore, Alice&#8217;s wallet would contain a copy of the transaction output from Joe&#8217;s transaction, which was created in exchange for cash (see <a href="#getting_first_bitcoin">[getting_first_bitcoin]</a>). A bitcoin wallet application that runs as a full-index client actually contains a copy of every unspent output from every transaction in the blockchain. This allows a wallet to construct transaction inputs as well as quickly verify incoming transactions as having correct inputs. However, because a full-index client takes up a lot of disk space, most user wallets run "lightweight" clients that track only the user&#8217;s own unspent outputs.</p>
+</div>
+<div class="paragraph">
+<p>If the wallet application does not maintain a copy of unspent transaction outputs, it can query the bitcoin network to retrieve this information, using a variety of APIs available by different providers or by asking a full-index node using the bitcoin JSON RPC API. <a href="#example_2-1">Look up all the unspent outputs for Alice&#8217;s bitcoin address</a> shows a RESTful API request, constructed as an HTTP GET command to a specific URL. This URL will return all the unspent transaction outputs for an address, giving any application the information it needs to construct transaction inputs for spending. We use the simple command-line HTTP client <em>cURL</em> to retrieve the response.</p>
+</div>
+<div id="example_2-1" class="exampleblock">
+<div class="title">Example 1. Look up all the unspent outputs for Alice&#8217;s bitcoin address</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="bash language-bash">$ curl https://blockchain.info/unspent?active=1Cdid9KFAaatwczBwBttQcwXYCpvK8h7FK</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="example_2-2" class="exampleblock">
+<div class="title">Example 2. Response to the lookup</div>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="json language-json">{
+
+	"unspent_outputs":[
+
+		{
+			"tx_hash":"186f9f998a5...2836dd734d2804fe65fa35779",
+			"tx_index":104810202,
+			"tx_output_n": 0,
+			"script":"76a9147f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a888ac",
+			"value": 10000000,
+			"value_hex": "00989680",
+			"confirmations":0
+		}
+
+	]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The response in <a href="#example_2-2">Response to the lookup</a> shows one unspent output (one that has not been redeemed yet) under the ownership of Alice&#8217;s address <code>1Cdid9KFAaatwczBwBttQcwXYCpvK8h7FK</code>. The response includes the reference to the transaction in which this unspent output is contained (the payment from Joe) and its value in satoshis, at 10 million, equivalent to 0.10 bitcoin. With this information, Alice&#8217;s wallet application can construct a transaction to transfer that value to new owner addresses.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>View the <a href="http://bit.ly/1tAeeGr">transaction from Joe to Alice</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>As you can see, Alice&#8217;s wallet contains enough bitcoins in a single unspent output to pay for the cup of coffee. Had this not been the case, Alice&#8217;s wallet application might have to "rummage" through a pile of smaller unspent outputs, like picking coins from a purse until it could find enough to pay for coffee. In both cases, there might be a need to get some change back, which we will see in the next section, as the wallet application creates the transaction outputs (payments).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_creating_the_outputs">Creating the Outputs</h4>
+<div class="paragraph">
+<p>A transaction output is created in the form of a script that creates an encumbrance on the value and can only be redeemed by the introduction of a solution to the script. In simpler terms, Alice&#8217;s transaction output will contain a script that says something like, "This output is payable to whoever can present a signature from the key corresponding to Bob&#8217;s public address." Because only Bob has the wallet with the keys corresponding to that address, only Bob&#8217;s wallet can present such a signature to redeem this output. Alice will therefore "encumber" the output value with a demand for a signature from Bob.</p>
+</div>
+<div class="paragraph">
+<p>This transaction will also include a second output, because Alice&#8217;s funds are in the form of a 0.10 BTC output, too much money for the 0.015 BTC cup of coffee. Alice will need 0.085 BTC in change. Alice&#8217;s change payment is created <em>by Alice&#8217;s wallet</em> in the very same transaction as the payment to Bob. Essentially, Alice&#8217;s wallet breaks her funds into two payments: one to Bob, and one back to herself. She can then use the change output in a subsequent transaction, thus spending it later.</p>
+</div>
+<div class="paragraph">
+<p>Finally, for the transaction to be processed by the network in a timely fashion, Alice&#8217;s wallet application will add a small fee. This is not explicit in the transaction; it is implied by the difference between inputs and outputs. If instead of taking 0.085 in change, Alice creates only 0.0845 as the second output, there will be 0.0005 BTC (half a millibitcoin) left over. The input&#8217;s 0.10 BTC is not fully spent with the two outputs, because they will add up to less than 0.10. The resulting difference is the <em>transaction fee</em> that is collected by the miner as a fee for including the transaction in a block and putting it on the blockchain ledger.</p>
+</div>
+<div class="paragraph">
+<p>The resulting transaction can be seen using a blockchain explorer web application, as shown in <a href="#transaction-alice">Alice&#8217;s transaction to Bob&#8217;s Cafe</a>.</p>
+</div>
+<div id="transaction-alice" class="imageblock">
+<div class="content">
+<img src="images/msbt_0208.png" alt="Alice Coffee Transaction">
+</div>
+<div class="title">Figure 8. Alice&#8217;s transaction to Bob&#8217;s Cafe</div>
+</div>
+<div id="transaction-alice-url" class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>View the <a href="http://bit.ly/1u0FIGs">transaction from Alice to Bob&#8217;s Cafe</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_adding_the_transaction_to_the_ledger">Adding the Transaction to the Ledger</h4>
+<div class="paragraph">
+<p>The transaction created by Alice&#8217;s wallet application is 258 bytes long and contains everything necessary to confirm ownership of the funds and assign new owners. Now, the transaction must be transmitted to the bitcoin network where it will become part of the distributed ledger (the blockchain). In the next section we will see how a transaction becomes part of a new block and how the block is "mined." Finally, we will see how the new block, once added to the blockchain, is increasingly trusted by the network as more blocks are added.</p>
+</div>
+<div class="sect4">
+<h5 id="_transmitting_the_transaction">Transmitting the transaction</h5>
+<div class="paragraph">
+<p>Because the transaction contains all the information necessary to process, it does not matter how or where it is transmitted to the bitcoin network. The bitcoin network is a peer-to-peer network, with each bitcoin client participating by connecting to several other bitcoin clients. The purpose of the bitcoin network is to propagate transactions and blocks to all participants.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_how_it_propagates">How it propagates</h5>
+<div class="paragraph">
+<p>Alice&#8217;s wallet application can send the new transaction to any of the other bitcoin clients it is connected to over any Internet connection: wired, WiFi, or mobile. Her bitcoin wallet does not have to be connected to Bob&#8217;s bitcoin wallet directly and she does not have to use the Internet connection offered by the cafe, though both those options are possible, too. Any bitcoin network node (other client) that receives a valid transaction it has not seen before will immediately forward it to other nodes to which it is connected. Thus, the transaction rapidly propagates out across the peer-to-peer network, reaching a large percentage of the nodes within a few seconds.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_bob_s_view">Bob&#8217;s view</h5>
+<div class="paragraph">
+<p>If Bob&#8217;s bitcoin wallet application is directly connected to Alice&#8217;s wallet application, Bob&#8217;s wallet application might be the first node to receive the transaction. However, even if Alice&#8217;s wallet sends the transaction through other nodes, it will reach Bob&#8217;s wallet within a few seconds. Bob&#8217;s wallet will immediately identify Alice&#8217;s transaction as an incoming payment because it contains outputs redeemable by Bob&#8217;s keys. Bob&#8217;s wallet application can also independently verify that the transaction is well formed, uses previously unspent inputs, and contains sufficient transaction fees to be included in the next block. At this point Bob can assume, with little risk, that the transaction will shortly be included in a block and confirmed.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>A common misconception about bitcoin transactions is that they must be "confirmed" by waiting 10 minutes for a new block, or up to 60 minutes for a full six confirmations. Although confirmations ensure the transaction has been accepted by the whole network, such a delay is unnecessary for small-value items such as a cup of coffee. A merchant may accept a valid small-value transaction with no confirmations, with no more risk than a credit card payment made without an ID or a signature, as merchants routinely accept today.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bitcoin_mining">Bitcoin Mining</h3>
+<div class="paragraph">
+<p>The transaction is now propagated on the bitcoin network. It does not become part of the shared ledger (the <em>blockchain</em>) until it is verified and included in a block by a process called <em>mining</em>. See <a href="#ch8">[ch8]</a> for a detailed explanation.</p>
+</div>
+<div class="paragraph">
+<p>The bitcoin system of trust is based on computation. Transactions are bundled into <em>blocks</em>, which require an enormous amount of computation to prove, but only a small amount of computation to verify as proven. The mining process serves two purposes in bitcoin:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Mining creates new bitcoins in each block, almost like a central bank printing new money. The amount of bitcoin created per block is fixed and diminishes with time.</p>
+</li>
+<li>
+<p>Mining creates trust by ensuring that transactions are only confirmed if enough computational power was devoted to the block that contains them. More blocks mean more computation, which means more trust.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A good way to describe mining is like a giant competitive game of sudoku that resets every time someone finds a solution and whose difficulty automatically adjusts so that it takes approximately 10 minutes to find a solution. Imagine a giant sudoku puzzle, several thousand rows and columns in size. If I show you a completed puzzle you can verify it quite quickly. However, if the puzzle has a few squares filled and the rest are empty, it takes a lot of work to solve! The difficulty of the sudoku can be adjusted by changing its size (more or fewer rows and columns), but it can still be verified quite easily even if it is very large. The "puzzle" used in bitcoin is based on a cryptographic hash and exhibits similar characteristics: it is asymmetrically hard to solve but easy to verify, and its difficulty can be adjusted.</p>
+</div>
+<div class="paragraph">
+<p>In <a href="#user-stories">[user-stories]</a>, we introduced Jing, a computer engineering student in Shanghai. Jing is participating in the bitcoin network as a miner. Every 10 minutes or so, Jing joins thousands of other miners in a global race to find a solution to a block of transactions. Finding such a solution, the so-called proof of work, requires quadrillions of hashing operations per second across the entire bitcoin network. The algorithm for proof of work involves repeatedly hashing the header of the block and a random number with the SHA256 cryptographic algorithm until a solution matching a predetermined pattern emerges. The first miner to find such a solution wins the round of competition and publishes that block into the blockchain.</p>
+</div>
+<div class="paragraph">
+<p>Jing started mining in 2010 using a very fast desktop computer to find a suitable proof of work for new blocks. As more miners started joining the bitcoin network, the difficulty of the problem increased rapidly. Soon, Jing and other miners upgraded to more specialized hardware, such as high-end dedicated graphical processing units (GPUs) cards such as those used in gaming desktops or consoles. At the time of this writing, the difficulty is so high that it is profitable only to mine with application-specific integrated circuits (ASIC), essentially hundreds of mining algorithms printed in hardware, running in parallel on a single silicon chip. Jing also joined a "mining pool," which much like a lottery pool allows several participants to share their efforts and the rewards. Jing now runs two USB-connected ASIC machines to mine for bitcoin 24 hours a day. He pays his electricity costs by selling the bitcoin he is able to generate from mining, creating some income from the profits. His computer runs a copy of bitcoind, the reference bitcoin client, as a backend to his specialized mining software.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mining_transactions_in_blocks">Mining Transactions in Blocks</h3>
+<div class="paragraph">
+<p>A transaction transmitted across the network is not verified until it becomes part of the global distributed ledger, the blockchain. Every 10 minutes on average, miners generate a new block that contains all the transactions since the last block. New transactions are constantly flowing into the network from user wallets and other applications. As these are seen by the bitcoin network nodes, they get added to a temporary pool of unverified transactions maintained by each node. As miners build a new block, they add unverified transactions from this pool to a new block and then attempt to solve a very hard problem (a.k.a., proof of work) to prove the validity of that new block. The process of mining is explained in detail in <a href="#mining">[mining]</a>.</p>
+</div>
+<div class="paragraph">
+<p>Transactions are added to the new block, prioritized by the highest-fee transactions first and a few other criteria. Each miner starts the process of mining a new block of transactions as soon as he receives the previous block from the network, knowing he has lost that previous round of competition. He immediately creates a new block, fills it with transactions and the fingerprint of the previous block, and starts calculating the proof of work for the new block. Each miner includes a special transaction in his block, one that pays his own bitcoin address a reward of newly created bitcoins (currently 25 BTC per block). If he finds a solution that makes that block valid, he "wins" this reward because his successful block is added to the global blockchain and the reward transaction he included becomes spendable. Jing, who participates in a mining pool, has set up his software to create new blocks that assign the reward to a pool address. From there, a share of the reward is distributed to Jing and other miners in proportion to the amount of work they contributed in the last round.</p>
+</div>
+<div class="paragraph">
+<p>Alice&#8217;s transaction was picked up by the network and included in the pool of unverified transactions. Because it had sufficient fees, it was included in a new block generated by Jing&#8217;s mining pool. Approximately five minutes after the transaction was first transmitted by Alice&#8217;s wallet, Jing&#8217;s ASIC miner found a solution for the block and published it as block #277316, containing 419 other transactions. Jing&#8217;s ASIC miner published the new block on the bitcoin network, where other miners validated it and started the race to generate the next block.</p>
+</div>
+<div class="paragraph">
+<p>You can see the block that includes <a href="https://blockchain.info/block-height/277316">Alice&#8217;s transaction</a>.</p>
+</div>
+<div class="paragraph">
+<p>A few minutes later, a new block, #277317, is mined by another miner. Because this new block is based on the previous block (#277316) that contained Alice&#8217;s transaction, it added even more computation on top of that block, thereby strengthening the trust in those transactions. The block containing Alice&#8217;s transaction is counted as one "confirmation" of that transaction. Each block mined on top of the one containing the transaction is an additional confirmation. As the blocks pile on top of each other, it becomes exponentially harder to reverse the transaction, thereby making it more and more trusted by the network.</p>
+</div>
+<div class="paragraph">
+<p>In the diagram in <a href="#block-alice1">Alice&#8217;s transaction included in block #277316</a>  we can see block #277316, which contains Alice&#8217;s transaction. Below it are 277,316 blocks (including block #0), linked to each other in a chain of blocks (blockchain) all the way back to block #0, known as the <em>genesis block</em>. Over time, as the "height" in blocks increases, so does the computation difficulty for each block and the chain as a whole. The blocks mined after the one that contains Alice&#8217;s transaction act as further assurance, as they pile on more computation in a longer and longer chain. By convention, any block with more than six confirmations is considered irrevocable, because it would require an immense amount of computation to invalidate and recalculate six blocks. We will examine the process of mining and the way it builds trust in more detail in <a href="#ch8">[ch8]</a>.</p>
+</div>
+<div id="block-alice1" class="imageblock">
+<div class="content">
+<img src="images/msbt_0209.png" alt="Alice's transaction included in a block">
+</div>
+<div class="title">Figure 9. Alice&#8217;s transaction included in block #277316</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spending_the_transaction">Spending the Transaction</h3>
+<div class="paragraph">
+<p>Now that Alice&#8217;s transaction has been embedded in the blockchain as part of a block, it is part of the distributed ledger of bitcoin and visible to all bitcoin applications. Each bitcoin client can independently verify the transaction as valid and spendable. Full-index clients can track the source of the funds from the moment the bitcoins were first generated in a block, incrementally from transaction to transaction, until they reach Bob&#8217;s address. Lightweight clients can do what is called a simplified payment verification (see <a href="#spv_nodes">[spv_nodes]</a>) by confirming that the transaction is in the blockchain and has several blocks mined after it, thus providing assurance that the network accepts it as valid.</p>
+</div>
+<div class="paragraph">
+<p>Bob can now spend the output from this and other transactions, by creating his own transactions that reference these outputs as their inputs and assign them new ownership. For example, Bob can pay a contractor or supplier by transferring value from Alice&#8217;s coffee cup payment to these new owners. Most likely, Bob&#8217;s bitcoin software will aggregate many small payments into a larger payment, perhaps concentrating all the day&#8217;s bitcoin revenue into a single transaction. This would move the various payments into a single address, used as the store&#8217;s general "checking" account. For a diagram of an aggregating transaction, see <a href="#transaction-aggregating">Transaction aggregating funds</a>.</p>
+</div>
+<div class="paragraph">
+<p>As Bob spends the payments received from Alice and other customers, he extends the chain of transactions, which in turn are added to the global blockchain ledger for all to see and trust. Let&#8217;s assume that Bob pays his web designer Gopesh in Bangalore for a new website page. Now the chain of transactions will look like <a href="#block-alice2">Alice&#8217;s transaction as part of a transaction chain from Joe to Gopesh</a>.</p>
+</div>
+<div id="block-alice2" class="imageblock">
+<div class="content">
+<img src="images/msbt_0210.png" alt="Alice's transaction as part of a transaction chain">
+</div>
+<div class="title">Figure 10. Alice&#8217;s transaction as part of a transaction chain from Joe to Gopesh</div>
+</div>
+</div>
+</div>
+</div>
+<h1 id="_index" class="sect0">Index</h1>
+
+<div class="sect1">
+<h2 id="_colophon">Colophon</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The cover image is from . The cover fonts are <em><em></em><em></em></em><em>. The text font is <em></em></em><em><em></em><em></em></em>; the heading font is <em><em></em><em></em></em><em><em>_; and the code font is </em><em></em></em><em><em></em><em></em></em>__.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-09-16 23:07:48 ART
+Last updated 2015-09-21 08:37:45 ART
 </div>
 </div>
 </body>
