@@ -36,6 +36,8 @@ public class WalletFragmentFactory {
                                     return new WalletAssetUserFragmentFactory();
                                 case "redeem_point":
                                     break;
+                                default:
+                                    return new ReferenceWalletFragmentFactory();
                             }
 
                         default:

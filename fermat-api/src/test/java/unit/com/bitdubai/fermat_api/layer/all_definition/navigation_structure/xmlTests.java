@@ -50,6 +50,7 @@ public class xmlTests {
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         publicKey="reference_wallet";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
+
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
 
         runtimeActivity= new Activity();

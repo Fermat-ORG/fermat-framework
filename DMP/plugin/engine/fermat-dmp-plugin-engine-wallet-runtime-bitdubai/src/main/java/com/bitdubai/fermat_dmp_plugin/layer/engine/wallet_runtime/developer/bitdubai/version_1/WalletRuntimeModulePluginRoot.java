@@ -1203,7 +1203,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         try {
 
-            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
+            walletResourcesManger.installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(),WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
 
         } catch (WalletResourcesInstalationException e) {
             e.printStackTrace();
@@ -1222,7 +1222,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
                 walletNavigationStructure= getNavigationStructure(publicKey);
             }
             //listWallets.put(publicKey, walletNavigationStructure);
-            walletNavigationStructureOpen=walletNavigationStructure;
+            //walletNavigationStructureOpen=walletNavigationStructure;
         }catch(Exception e){
             String message = CantFactoryReset.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
@@ -1582,22 +1582,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         //fin navigation
-
-        /**
-         * Menu
-         */
-
-        runtimeMainMenu = new MainMenu();
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
-
-
-        runtimeActivity.setMainMenu(runtimeMainMenu);
-
-        /**
-         *  Fin de menu
-         */
 
 
 
