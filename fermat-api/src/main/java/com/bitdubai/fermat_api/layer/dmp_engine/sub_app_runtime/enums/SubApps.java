@@ -14,6 +14,7 @@ public enum SubApps {
     CWP_DEVELOPER_APP ("CDA"),
     CWP_WALLET_PUBLISHER("CWP"),
     CWP_INTRA_USER("CIU"),
+    CBP_CUSTOMERS("CBPC"),
     CWP_SHELL("CS");
 
 
@@ -35,6 +36,7 @@ public enum SubApps {
             case "CDA": return SubApps.CWP_DEVELOPER_APP;
             case "CWP": return SubApps.CWP_WALLET_PUBLISHER;
             case "CIU": return SubApps.CWP_INTRA_USER;
+            case "CBPC": return CBP_CUSTOMERS;
             //Modified by Manuel Perez on 05/08/2015
             case "CS": return SubApps.CWP_SHELL;
             default:
