@@ -1,13 +1,23 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserCantSendFundsExceptions;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserInsufficientFundsException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.IntraUserCryptoTransactionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.database.OutgoingIntraUserDao;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraUserDaoException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.exceptions.OutgoingIntraUserCantInsertRecordException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.UUID;
 
@@ -52,7 +62,30 @@ public class OutgoingIntraUserTransactionManager implements IntraUserCryptoTrans
      * @throws OutgoingIntraUserInsufficientFundsException
      */
     @Override
-    public void sendCrypto(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType) throws OutgoingIntraUserCantSendFundsExceptions, OutgoingIntraUserInsufficientFundsException {
+    public void sendCrypto(String        walletPublicKey,
+                           CryptoAddress destinationAddress,
+                           long          cryptoAmount,
+                           String        description,
+                           String        senderPublicKey,
+                           String        receptorPublicKey,
+                           Actors        senderActorType,
+                           Actors        receptorActorType) throws OutgoingIntraUserCantSendFundsExceptions, OutgoingIntraUserInsufficientFundsException {
+        try {
+            BitcoinWalletWallet  bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);;
+            long                 funds               = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
 
+            if (cryptoAmount > funds)
+                throw new OutgoingIntraUserInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
+
+            OutgoingIntraUserDao dao                 = new OutgoingIntraUserDao(this.errorManager,this.pluginDatabaseSystem);
+            dao.initialize(this.pluginId);
+            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType);
+        } catch (OutgoingIntraUserCantInsertRecordException | CantLoadWalletException | CantCalculateBalanceException | CantInitializeOutgoingIntraUserDaoException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            throw new OutgoingIntraUserCantSendFundsExceptions("An exception happened",e,"","");
+        } catch (Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(e));
+            throw new OutgoingIntraUserCantSendFundsExceptions("An unexpected exception happened", FermatException.wrapException(e),"","");
+        }
     }
 }
