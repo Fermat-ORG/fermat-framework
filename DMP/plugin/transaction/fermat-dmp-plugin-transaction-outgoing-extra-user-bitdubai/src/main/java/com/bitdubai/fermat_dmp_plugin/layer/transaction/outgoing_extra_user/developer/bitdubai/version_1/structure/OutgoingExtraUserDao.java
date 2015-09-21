@@ -74,7 +74,6 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME);
-            database.closeDatabase();
         } catch (DatabaseNotFoundException e) {
 
             OutgoingExtraUserDatabaseFactory databaseFactory = new OutgoingExtraUserDatabaseFactory();
@@ -125,9 +124,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         List<TransactionWrapper> listAllInState = null;
         try {
             listAllInState = getAllInState(TransactionStatus.NEW);
-        } catch (CantLoadTableToMemoryException exception) {
-            throw exception;
-        } catch (InvalidParameterException exception) {
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -139,9 +136,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         List<TransactionWrapper> listAllInState = null;
         try {
             listAllInState = getAllInState(TransactionStatus.PERSISTED_IN_AVAILABLE);
-        } catch (CantLoadTableToMemoryException exception) {
-            throw exception;
-        } catch (InvalidParameterException exception) {
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -153,9 +148,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         List<TransactionWrapper> listAllInState = null;
         try {
             listAllInState = getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
-        } catch (CantLoadTableToMemoryException exception) {
-            throw exception;
-        } catch (InvalidParameterException exception) {
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -167,9 +160,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         List<TransactionWrapper> listAllInState = null;
         try {
             listAllInState = getAllInState(TransactionStatus.PERSISTED_IN_WALLET);
-        } catch (CantLoadTableToMemoryException exception) {
-            throw exception;
-        } catch (InvalidParameterException exception) {
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -181,9 +172,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         List<TransactionWrapper> listAllInState = null;
         try {
             listAllInState = getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
-        } catch (CantLoadTableToMemoryException exception) {
-            throw exception;
-        } catch (InvalidParameterException exception) {
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -195,11 +184,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
         try {
             setToState(bitcoinTransaction, TransactionStatus.CANCELED);
-        } catch (CantUpdateRecordException exception) {
-            throw exception;
-        } catch (InconsistentTableStateException exception) {
-            throw exception;
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -210,11 +195,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     public void setToNew(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         try {
             setToState(bitcoinTransaction, TransactionStatus.NEW);
-        } catch (CantUpdateRecordException exception) {
-            throw exception;
-        } catch (InconsistentTableStateException exception) {
-            throw exception;
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -224,11 +205,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     public void setToPIA(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         try {
             setToState(bitcoinTransaction, TransactionStatus.PERSISTED_IN_AVAILABLE);
-        } catch (CantUpdateRecordException exception) {
-            throw exception;
-        } catch (InconsistentTableStateException exception) {
-            throw exception;
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -238,11 +215,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     public void setToPIW(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         try {
             setToState(bitcoinTransaction, TransactionStatus.PERSISTED_IN_WALLET);
-        } catch (CantUpdateRecordException exception) {
-            throw exception;
-        } catch (InconsistentTableStateException exception) {
-            throw exception;
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -252,11 +225,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     public void setToSTCV(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         try {
             setToState(bitcoinTransaction, TransactionStatus.SENT_TO_CRYPTO_VOULT);
-        } catch (CantUpdateRecordException exception) {
-            throw exception;
-        } catch (InconsistentTableStateException exception) {
-            throw exception;
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -273,11 +242,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
             recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME, hash);
 
             transactionTable.updateRecord(recordToUpdate);
-        } catch (CantUpdateRecordException exception) {
-            throw exception;
-        } catch (InconsistentTableStateException exception) {
-            throw exception;
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -374,11 +339,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
             recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
 
             transactionTable.updateRecord(recordToUpdate);
-        } catch (CantUpdateRecordException exception) {
-            throw exception;
-        } catch (InconsistentTableStateException exception) {
-            throw exception;
-        } catch (CantLoadTableToMemoryException exception) {
+        } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);

@@ -16,7 +16,7 @@ public class OutgoingIntraUserTransactionDatabaseConstants {
     /**
      * Outgoing Intra User database name.
      */
-    static final String OUTGOING_INTRA_USER_DATABASE = "outgoing_intra_user_database";
+    static final String OUTGOING_INTRA_USER_DATABASE_NAME = "outgoing_intra_user_database";
 
     /**
      * Outgoing Intra User database table definition.
