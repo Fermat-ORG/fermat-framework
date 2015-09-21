@@ -12,6 +12,8 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
  * @since Java JDK 1.7
  */
 public class AssetVaultCryptoVaultDatabaseConstants {
+    static final String DATABASE_NAME = "assetVault";
+
     /**
      * Key_Hierarchy database table definition.
      */

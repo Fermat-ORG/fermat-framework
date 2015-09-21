@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeassetvaultcryptovaultDatabaseException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetVaultCryptoVaultDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,22 +59,22 @@ public class assetvaultcryptovaultDeveloperDatabaseFactory implements DealsWithP
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeassetvaultcryptovaultDatabaseException
+     * @throws CantInitializeAssetVaultCryptoVaultDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeassetvaultcryptovaultDatabaseException {
+    public void initializeDatabase() throws CantInitializeAssetVaultCryptoVaultDatabaseException {
         try {
 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetVaultCryptoVaultDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeassetvaultcryptovaultDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeAssetVaultCryptoVaultDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -82,18 +82,18 @@ public class assetvaultcryptovaultDeveloperDatabaseFactory implements DealsWithP
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            assetvaultcryptovaultDatabaseFactory assetvaultcryptovaultDatabaseFactory = new assetvaultcryptovaultDatabaseFactory(pluginDatabaseSystem);
+            AssetVaultCryptoVaultDatabaseFactory AssetVaultCryptoVaultDatabaseFactory = new AssetVaultCryptoVaultDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = assetvaultcryptovaultDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = AssetVaultCryptoVaultDatabaseFactory.createDatabase(pluginId, AssetVaultCryptoVaultDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeassetvaultcryptovaultDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeAssetVaultCryptoVaultDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }

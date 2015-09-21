@@ -22,7 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class assetvaultcryptovaultDatabaseFactory implements DealsWithPluginDatabaseSystem{
+public class AssetVaultCryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem{
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -34,7 +34,7 @@ public class assetvaultcryptovaultDatabaseFactory implements DealsWithPluginData
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public assetvaultcryptovaultDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public AssetVaultCryptoVaultDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
