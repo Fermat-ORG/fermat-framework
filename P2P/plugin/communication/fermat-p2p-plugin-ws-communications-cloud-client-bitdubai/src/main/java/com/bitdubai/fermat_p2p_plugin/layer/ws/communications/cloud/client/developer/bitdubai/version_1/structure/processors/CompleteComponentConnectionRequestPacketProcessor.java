@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
@@ -54,14 +55,26 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         String remoteIdentity                 = respond.getAsString();
 
         System.out.println("CompleteComponentConnectionRequestPacketProcessor - networkServiceType = "+networkServiceType);
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - remoteIdentity = "+remoteIdentity);
+        System.out.println("CompleteComponentConnectionRequestPacketProcessor - remoteIdentity = " + remoteIdentity);
 
         /*
-         * Create a raise a new event whit the networkServiceType and remoteIdentity
+         * Create a new event whit the networkServiceType and remoteIdentity
          */
         FermatEvent event = EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+
+        /*
+         * Configure the values
+         */
+        ((CompleteComponentConnectionRequestNotificationEvent)event).setNetworkServiceType(networkServiceType);
+        ((CompleteComponentConnectionRequestNotificationEvent)event).setRemoteIdentity(remoteIdentity);
+
+        /*
+         * Raise the event
+         */
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
+
+        System.out.println("CompleteComponentConnectionRequestPacketProcessor - Fire a event = EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
 
     }
 

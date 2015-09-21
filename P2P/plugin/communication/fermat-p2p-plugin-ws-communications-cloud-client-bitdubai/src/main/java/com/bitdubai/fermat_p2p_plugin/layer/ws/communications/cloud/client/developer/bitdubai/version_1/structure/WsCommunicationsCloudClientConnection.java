@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
@@ -141,19 +142,54 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
                     (alias == null || alias == "")                     ||
                         (name == null || name == "")                   ||
                                     networkServiceType == null         ||
-                                        platformComponentType == null  ||
-                                            extraData == null){
+                                        platformComponentType == null  ){
 
                 throw new IllegalArgumentException("All argument are required, can not be null ");
 
             }
 
+            Location pointOne = new Location() {
+                @Override
+                public double getLatitude() {
+                    return 32.9697;
+                }
+
+                @Override
+                public double getLongitude() {
+                    return -96.80322;
+                }
+
+                @Override
+                public double getAltitude() {
+                    return 0;
+                }
+
+                @Override
+                public long getTime() {
+                    return 0;
+                }
+
+                @Override
+                public LocationProvider getProvider() {
+                    return null;
+                }
+            };
+
+
+
             /*
              * Construct a PlatformComponentProfile instance
              */
-            return new PlatformComponentProfileCommunication(alias, wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(), identityPublicKey, locationManager.getLocation(), name, networkServiceType, platformComponentType, extraData);
+            return new PlatformComponentProfileCommunication(alias,
+                                                             wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
+                                                             identityPublicKey,
+                                                             pointOne, //locationManager.getLocation(),
+                                                             name,
+                                                             networkServiceType,
+                                                             platformComponentType,
+                                                             extraData);
 
-        } catch (CantGetDeviceLocationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException(e);
         }

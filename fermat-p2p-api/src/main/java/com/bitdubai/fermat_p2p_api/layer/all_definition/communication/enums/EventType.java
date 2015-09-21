@@ -7,8 +7,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentRegistrationNotificationEventListener;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteRequestListComponentRegisteredNotificationEventListener;
 
 /**
  * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType</code>
@@ -36,23 +40,21 @@ public enum EventType implements FermatEventEnum {
 
     COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_CRLCRN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return null;
+            return new CompleteRequestListComponentRegisteredNotificationEventListener(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
-            return null;
+            return new CompleteRequestListComponentRegisteredNotificationEvent(this);
         }
     },
 
     COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("CL_CCCRN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return null;
+            return new CompleteComponentConnectionRequestNotificationEventListener(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
-            return null;
+            return new CompleteComponentConnectionRequestNotificationEvent(this);
         }
     };
-
-
 
     /**
      * Represent the code of the message status

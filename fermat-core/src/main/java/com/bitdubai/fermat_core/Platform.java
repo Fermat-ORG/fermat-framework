@@ -1401,10 +1401,10 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
                 ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
             }
-            if(plugin instanceof DealsWithDeviceLocation){
+         /*   if(plugin instanceof DealsWithDeviceLocation){
                 ((DealsWithDeviceLocation) plugin).setLocationManager((LocationManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_LOCATION_WORLD));
 
-            }
+            } */
 
 
             /*

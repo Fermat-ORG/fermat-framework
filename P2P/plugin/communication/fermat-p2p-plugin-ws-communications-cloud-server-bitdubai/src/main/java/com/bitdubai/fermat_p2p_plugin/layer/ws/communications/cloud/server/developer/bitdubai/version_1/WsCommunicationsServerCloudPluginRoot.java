@@ -147,6 +147,9 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("errorManager: " + errorManager);
 
+
+            System.out.println("WsCommunicationsServerCloudPluginRoot - contextBuffer = "+contextBuffer);
+
             String context = contextBuffer.toString();
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
@@ -172,7 +175,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
             /*
              * Validate required resources
              */
-            validateInjectedResources();
+           // validateInjectedResources();
 
             if (disableServerFlag) {
                 System.out.println("WsCommunicationsServerCloudPluginRoot - Local Server is Disable, no started");

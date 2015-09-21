@@ -50,6 +50,9 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
+        System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
+
+
         if (((Service) this.templateNetworkServicePluginRoot).getStatus() == ServiceStatus.STARTED) {
 
             /*

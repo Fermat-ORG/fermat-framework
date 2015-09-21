@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
@@ -56,7 +57,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          /*
          * Get the list
          */
-        List<PlatformComponentProfile> list = gson.fromJson(messageContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>(){}.getType());
+        List<PlatformComponentProfile> list = gson.fromJson(messageContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+        }.getType());
 
 
         System.out.println("WsCommunicationsCloudClientPluginRoot - list = "+list);
@@ -101,11 +103,23 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
 
          /*
-         * Create a raise a new event whit the list
+         * Create a new event whit the list
          */
         FermatEvent event =  EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+
+        /*
+         * Set the list
+         */
+        ((CompleteRequestListComponentRegisteredNotificationEvent)event).setRegisteredComponentList(list);
+
+        /*
+         * Raise the event
+         */
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - Fire a event = EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
+
 
     }
 

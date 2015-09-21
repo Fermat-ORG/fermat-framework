@@ -145,6 +145,9 @@ public class DeviceLocationManager implements LocationManager,LocationListener{
             }
 
         } catch (Exception e) {
+
+            e.printStackTrace();
+
             /**
              * unexpected error
              */

@@ -295,12 +295,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             this.serviceStatus = ServiceStatus.STARTED;
 
 
-       /* } catch (CommunicationException e) {
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationsCloudClientConnection. Error reason: "+e.getMessageContent()));
-            throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
-
-      */  } catch (CantInitializeNetworkTemplateDataBaseException exception) {
+       } catch (CantInitializeNetworkTemplateDataBaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
