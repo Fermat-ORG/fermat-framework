@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -30,20 +31,32 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+//import com.google.common.io.Files;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ViewInflater;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.codec.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//import com.google.common.io.Files;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -95,6 +108,10 @@ public class BlankFragment extends FermatFragment {
         }
     }
 
+
+    public static final String PREFIX = "stream2file";
+    public static final String SUFFIX = ".tmp";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -107,11 +124,99 @@ public class BlankFragment extends FermatFragment {
 
         List<View> lstViews = new ArrayList<View>();
 
-        List<Integer> lstViewsDepth = new ArrayList<Integer>();
+        List<Integer> lstViewsDepth = new ArrayList<Integer>();          //StringWriter writer = new StringWriter();
+        //IOUtils.copy(inputStream, writer, encoding);
+        //String theString = writer.toString();
+
+        //File file = new File(/);
+
+//            File file = new File("");
+//
+//
+//            String fileStr = file.getAbsolutePath();
+//            System.out.println("ACAAaaa:"+file.getAbsolutePath());
+
+//        try {
+//
+      //      InputStream inputStream = getActivity().getApplication().getAssets().open("xml/fragment_blank.xml");
 
 
 
-       // try {
+
+        //String data = getIntent().getStringExtra(DATA);
+
+        ViewInflater inflater1 = new ViewInflater(getActivity());
+
+        XmlPullParser parse;
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            parse = factory.newPullParser();
+
+            parse.setInput(new StringReader("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                    "<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
+                    "              android:layout_width=\"fill_parent\"\n" +
+                    "              android:layout_height=\"wrap_content\"\n" +
+                    "              android:orientation=\"horizontal\"\n" +
+                    "              android:paddingBottom=\"10dp\"\n" +
+                    "              android:paddingTop=\"10dp\"\n" +
+                    "              android:paddingLeft=\"16dp\"\n" +
+                    "              android:paddingRight=\"16dp\"\n" +
+                    "              android:weightSum=\"1\"\n" +
+                    "              android:background=\"#a2ba12\">\n" +
+                    "\n" +
+                    "    <ImageView\n" +
+                    "        android:layout_width=\"wrap_content\"\n" +
+                    "        android:layout_height=\"match_parent\"\n" +
+                    "        android:layout_weight=\"0.6\"\n" +
+                    "        android:src=\"@drawable/person1\"/>\n" +
+                    "\n" +
+                    "    <TextView\n" +
+                    "        android:id=\"@+id/row_title\"\n" +
+                    "        android:layout_width=\"fill_parent\"\n" +
+                    "        android:layout_height=\"wrap_content\"\n" +
+                    "        android:layout_weight=\"0.4\"\n" +
+                    "        android:gravity=\"center_vertical\"\n" +
+                    "        android:padding=\"10dp\"\n" +
+                    "        android:singleLine=\"true\"\n" +
+                    "        android:textSize=\"18sp\"\n" +
+                    "        android:textColor=\"@color/color_black\"\n" +
+                    "        android:text=\"Nelson Alfonso Ramirez Noguera\"\n" +
+                    "        />\n" +
+                    "\n" +
+                    "\n" +
+                    "</LinearLayout>"));
+
+            View v = inflater1.inflate(parse);
+            return v;
+        }
+        catch (XmlPullParserException ex) { ex.printStackTrace(); }
+        catch (IOException ex) { ex.printStackTrace(); }
+
+
+//
+//            final File tempFile = File.createTempFile(PREFIX, SUFFIX);
+//            tempFile.deleteOnExit();
+//            try (FileOutputStream out = new FileOutputStream(tempFile)) {
+//                IOUtils.copy(inputStream, out);
+//            }
+//
+//
+//
+//            String xmlText = Files.toString(tempFile, Charsets.UTF_8);
+//            String xmlText1 = xmlText.replaceAll("\\\\n", "");
+//            byte[] data = xmlText.getBytes("UTF-8");
+//            String base64 = Base64.encodeToString(data, Base64.DEFAULT);
+//            //String layout = Base64.encodeToString(xmlText);
+//
+//            return inflater.inflate(getParser(base64), container, false);
+//
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+        // try {
 //
 //            InputStream inputStream = getActivity().getApplication().getAssets().open("xml/fragment_blank.xml");
 //
@@ -297,6 +402,41 @@ public class BlankFragment extends FermatFragment {
 
         return viewGroup;
 
+    }
+
+    /**
+     * return XmlPullParser
+     * @param xml compiled XML encoded in base64
+     * @return XmlPullParser
+     */
+    public static XmlPullParser getParser(String xml) {
+        try {
+            byte[] data = Base64.decode(xml, Base64.DEFAULT);
+
+            // XmlBlock block = new XmlBlock(LAYOUT.getBytes("UTF-8"));
+            Class<?> clazz = Class.forName("android.content.res.XmlBlock");
+            Constructor<?> constructor = clazz.getDeclaredConstructor(byte[].class);
+            constructor.setAccessible(true);
+            Object block = constructor.newInstance(data);
+
+            // XmlPullParser parser = block.newParser();
+            Method method = clazz.getDeclaredMethod("newParser");
+            method.setAccessible(true);
+            return (XmlPullParser) method.invoke(block);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private ViewGroup buildView(List<View> lstViews,List<Integer> lstViewsDepth){
