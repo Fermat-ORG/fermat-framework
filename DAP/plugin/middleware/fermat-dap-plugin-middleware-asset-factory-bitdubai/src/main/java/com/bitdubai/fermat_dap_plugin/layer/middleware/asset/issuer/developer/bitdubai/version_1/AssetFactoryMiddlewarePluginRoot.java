@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
@@ -244,41 +245,56 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     public AssetFactory testAssetFactory()
     {
         try {
-//            java.util.Date date= new java.util.Date();
-//            System.out.println(new Timestamp(date.getTime()));
+            java.util.Date date= new java.util.Date();
+            System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
-//            assetFactory.setPublicKey("ASD-125412541-BS-854");
-//            assetFactory.setDescription("Asset de Prueba");
-//            assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
-//            assetFactory.setAmount(1);
-//            assetFactory.setFee(1);
-//            assetFactory.setIsRedeemable(true);
-//            assetFactory.setName("Asset de Mcdonald - modificado");
-//            assetFactory.setAssetUserIdentityPublicKey("ASDS-99999999");
-//            assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
-//            assetFactory.setExpirationDate(new Timestamp(date.getTime()));
-//            assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
-//            assetFactory.setQuantity(100);
-//            assetFactory.setState(State.DRAFT);
-//            Resource resource = new Resource();
-//            resource.setId(UUID.randomUUID());
-//            resource.setName("Foto 1");
-//            resource.setFileName("imagen.png");
-//            resource.setResourceType(ResourceType.IMAGE);
-//            resource.setResourceDensity(ResourceDensity.HDPI);
-//            //assetFactory.setResource(resource);
-//            List<Resource> resources = new ArrayList<>();
-//            resources.add(resource);
-//            resource.setId(UUID.randomUUID());
-//            resource.setName("Foto 2");
-//            resource.setFileName("imagen2.png");
-//            resource.setResourceType(ResourceType.IMAGE);
-//            resource.setResourceDensity(ResourceDensity.HDPI);
-//            resources.add(resource);
-//            assetFactory.setResources(resources);
+/*            assetFactory.setPublicKey("ASD-125412541-BS-854");
+            assetFactory.setDescription("Asset de Prueba");
+            assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
+            assetFactory.setAmount(1);
+            assetFactory.setFee(1);
+            assetFactory.setIsRedeemable(true);
+            assetFactory.setName("Asset de Mcdonald - modificado");
+            assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
+            assetFactory.setExpirationDate(new Timestamp(date.getTime()));
+            assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
+            assetFactory.setQuantity(100);
+            assetFactory.setState(State.DRAFT);
+            Resource resource = new Resource();
+            resource.setId(UUID.randomUUID());
+            resource.setName("Foto 1");
+            resource.setFileName("imagen.png");
+            resource.setResourceType(ResourceType.IMAGE);
+            resource.setResourceDensity(ResourceDensity.HDPI);
+            List<Resource> resources = new ArrayList<>();
+            resources.add(resource);
+            resource.setId(UUID.randomUUID());
+            resource.setName("Foto 2");
+            resource.setFileName("imagen2.png");
+            resource.setResourceType(ResourceType.IMAGE);
+            resource.setResourceDensity(ResourceDensity.HDPI);
+            resources.add(resource);
+            assetFactory.setResources(resources);
+            IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
+                @Override
+                public String getAlias() {
+                    return "Franklin Marcano";
+                }
+
+                @Override
+                public String getPublicKey() {
+                    return "ASDS-10087982";
+                }
+
+                @Override
+                public String createMessageSignature(String mensage) throws CantSingMessageException {
+                    return "signature";
+                }
+            };
+            assetFactory.setIdentityAssetIssuer(identityAssetIssuer);*/
             //assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
             assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
-            publishAsset(assetFactory);
+            //publishAsset(assetFactory);
             System.out.println("******* Metodo testAssetFactory. Franklin ******" + assetFactory + assetFactory.getName());
             return assetFactory;
         }catch (Exception e){
@@ -310,8 +326,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     }
 
     @Override
-    public AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException {
-        return null;
+    public AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException, CantCreateAssetFactoryException {
+        return assetFactoryMiddlewareManager.getNewAssetFactory();
     }
 
     @Override
@@ -320,8 +336,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     }
 
     @Override
-    public void markAssetFactoryState(State state) throws CantSaveAssetFactoryException {
-
+    public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException {
+        assetFactoryMiddlewareManager.markAssetFactoryState(state, assetPublicKey);
     }
 
     @Override

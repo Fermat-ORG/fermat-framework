@@ -123,6 +123,13 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
 
             table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN);
 
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Asset Factory", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
             /**
              * Create Asset Identity Issuer Contract
              */
