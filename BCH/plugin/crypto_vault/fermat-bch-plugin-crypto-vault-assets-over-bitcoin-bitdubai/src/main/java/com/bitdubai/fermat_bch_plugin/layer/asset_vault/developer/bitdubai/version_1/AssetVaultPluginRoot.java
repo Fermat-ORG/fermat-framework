@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
 
 import java.util.UUID;
 
@@ -53,6 +54,7 @@ public class AssetVaultPluginRoot implements AssetVaultManager,  DealsWithPlugin
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     @Override
     public void start() throws CantStartPluginException {
+        getNewAssetVaultCryptoAddress();
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -81,6 +83,7 @@ public class AssetVaultPluginRoot implements AssetVaultManager,  DealsWithPlugin
 
     @Override
     public CryptoAddress getNewAssetVaultCryptoAddress() {
-        return null;
+        AssetCryptoVaultManager assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId, pluginFileSystem, pluginDatabaseSystem);
+        return assetCryptoVaultManager.getNewAssetVaultCryptoAddress();
     }
 }

@@ -334,7 +334,7 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
             runtimeDesktopObject = new RuntimeDesktopObject();
             runtimeDesktopObject.setType("DDAP");
             lstDesktops.add(runtimeDesktopObject);
-            runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
+            runtimeDesktopObject.setStartActivity(Activities.DAP_DESKTOP);
 
             activity = new Activity();
             /**
@@ -362,11 +362,47 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
             fragment.setType("DAPSAMF");
             activity.addFragment("DAPSAMF", fragment);
 
-
-
-
             /**
              * End Desktop DAP
+             */
+
+            /**
+             * Desktop CBP
+             */
+
+            runtimeDesktopObject = new RuntimeDesktopObject();
+            runtimeDesktopObject.setType("DCBP");
+            lstDesktops.add(runtimeDesktopObject);
+            runtimeDesktopObject.setStartActivity(Activities.CBP_DESKTOP);
+
+            activity = new Activity();
+            /**
+             * set type home
+             */
+            //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
+            //activity.setType(Activities.CCP_DESKTOP_HOME);
+            activity.setActivityType("CBPDHA");
+            fragment = new Fragment();
+
+            /**
+             * Add WalletManager fragment
+             */
+
+            // CCP_WALLET_MANAGER_FRAGMENT
+            fragment.setType("CBPWMF");
+            activity.addFragment("CBPWMF",fragment);
+
+            /**
+             * Add home subApps fragment
+             */
+
+            fragment = new Fragment();
+            // CCP_SUB_APP_MANAGER_FRAGMENT
+            fragment.setType("CBPSAMF");
+            activity.addFragment("CBPSAMF", fragment);
+
+            /**
+             * End Desktop CBP
              */
 
 
