@@ -2,13 +2,15 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_mone
 
 
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantupdateStatusCustomerBrokerBackMoneyPurchaseException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by angel on 16/9/15.
  */
-public interface CustomerBrokerCashMoneyPurchaseManager {
+public interface CustomerBrokerBackMoneyPurchaseManager {
 
     List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBackMoneyPurchaseFromCurrentDeviceUser();
 
