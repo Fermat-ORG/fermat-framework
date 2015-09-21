@@ -100,6 +100,8 @@ public enum Plugins {
 
     BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI),
 
+    BITDUBAI_DESKTOP_RUNTIME("BDR",Developers.BITDUBAI)
+
     ;
 
     private String code;
@@ -282,6 +284,8 @@ public enum Plugins {
                 return Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER;
             case "BASF":
                 return Plugins.BITDUBAI_ASSET_FACTORY;
+            case "BDR":
+                return BITDUBAI_DESKTOP_RUNTIME;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

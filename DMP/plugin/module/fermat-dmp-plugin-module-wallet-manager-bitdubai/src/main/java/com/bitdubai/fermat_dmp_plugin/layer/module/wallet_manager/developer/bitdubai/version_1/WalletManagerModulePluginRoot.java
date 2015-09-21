@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantCreateWalletException;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
@@ -172,7 +172,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
             while (iterator.hasNext()) {
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
-                if (mapEntry.getValue().toString().equals(walletId.toString()))
+                if (mapEntry.getValue().toString().equals(walletId))
                     existWallet = true;
             }
 
@@ -623,7 +623,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
     @Override
     public InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
-
+        InstalledWallet installedWallet = null;
 
         //TODO: Hardcoded for testing purpose, hice esto que va a andar cuando la tengamos instalada.  mati
 //        com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet wallet = walletMiddlewareManager.getInstalledWallet(walletPublicKey);
@@ -636,17 +636,61 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 //                    wallet.getWalletPublicKey(),
 //                    wallet.getWalletPlatformIdentifier(),
 //                    wallet.getWalletVersion());
+        switch (walletPublicKey){
+            case "reference_wallet":
+                installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "reference_wallet_icon",
+                        "Bitcoin Reference Wallet",
+                        "reference_wallet",
+                        "wallet_platform_identifier",
+                        new Version(1,0,0));
+                break;
+            case "asset_issuer":
+                installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "asset_issuer",
+                        "asset issuer",
+                        "asset_issuer",
+                        "wallet_platform_identifier",
+                        new Version(1,0,0));
+                break;
+            case "asset_user":
+                installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "asset_user",
+                        "asset user",
+                        "asset_user",
+                        "wallet_platform_identifier",
+                        new Version(1,0,0));
+                break;
+            case "redeem_point":
+                installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "redeem_point",
+                        "redeem point",
+                        "redeem_point",
+                        "wallet_platform_identifier",
+                        new Version(1,0,0));
+                break;
+            default:
+                throw new CantCreateNewWalletException("No existe public key",null,null,null);
+        }
 
 
-        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
-                WalletType.REFERENCE,
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "reference_wallet_icon",
-                "Bitcoin Reference Wallet",
-                "reference_wallet",
-                "wallet_platform_identifier",
-                new Version(1,0,0));
+
+
+
+
+
 
         return installedWallet;
     }

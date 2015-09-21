@@ -10,16 +10,24 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
+import java.util.List;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 
@@ -37,6 +45,9 @@ public class HomeFragment extends FermatWalletFragment {
     private String[][] transactions;
     private static final String ARG_POSITION = "position";
 
+    TextView txtBalance;
+    TextView balance_type;
+
 
     /**
      *
@@ -47,6 +58,11 @@ public class HomeFragment extends FermatWalletFragment {
     private ReferenceWalletSession referenceWalletSession;
 
     private CryptoWallet cryptoWallet;
+
+    private List<PaymentRequest> lstPaymentRequestReceived;
+    private List<PaymentRequest> lstPaymentRequestSended;
+
+
 
     private int position;
 
@@ -93,6 +109,10 @@ public class HomeFragment extends FermatWalletFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
 
+        lstPaymentRequestReceived =  cryptoWallet.listReceivedPaymentRequest();
+
+        lstPaymentRequestSended = cryptoWallet.listSentPaymentRequest();
+
         return rootView;
     }
 
@@ -102,9 +122,9 @@ public class HomeFragment extends FermatWalletFragment {
 
         try {
             String publicKey = referenceWalletSession.getWalletSessionType().getWalletPublicKey();
-            availableBalance = cryptoWallet.getAvailableBalance(publicKey);
+            availableBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE, publicKey);
 
-            bookBalance = cryptoWallet.getBookBalance(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            bookBalance = cryptoWallet.getBalance(BalanceType.BOOK, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
 
 
         } catch (CantGetBalanceException e) {
@@ -112,7 +132,7 @@ public class HomeFragment extends FermatWalletFragment {
         }
 
         lv = (ExpandableListView) view.findViewById(R.id.expListView);
-        lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
+        lv.setAdapter(new ExpandableListAdapter(contacts, transactions,7));
         lv.setGroupIndicator(null);
 
         lv.setOnItemClickListener(null);
@@ -138,30 +158,97 @@ public class HomeFragment extends FermatWalletFragment {
         });*/
 
 
+    }
 
+    /**
+     * Method to change the balance amount
+     */
+    private void changeBalance(TextView textView) {
+        try {
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+                textView.setText(formatBalanceString(availableBalance, referenceWalletSession.getTypeAmount()));
+            } else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
+                textView.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+            }
+        } catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    /**
+     * Method to change the balance type
+     */
+    private void changeBalanceType(TextView txtViewBalance,TextView txtViewTypeBalance) {
+
+        try {
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+                txtViewBalance.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+                txtViewTypeBalance.setText(R.string.book_balance);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
+            } else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
+                txtViewBalance.setText(formatBalanceString(availableBalance, referenceWalletSession.getTypeAmount()));
+                txtViewTypeBalance.setText(R.string.available_balance);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+            }
+        } catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String getBalanceTypeInLetters(){
+        String balanceType="";
+        if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+            balanceType = "Available";
+        }else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
+            balanceType = "Book";
+        }
+        return balanceType;
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
+
+        final int END_OF_FIRST_ROW = 2;
 
         private final LayoutInflater inf;
         private String[] contacts;
         private String[][] transactions;
 
-        public ExpandableListAdapter(String[] contacts, String[][] transactions) {
+        boolean isTxtBalanceTouched=false;
+        boolean isTxtBalanceAmountTouched=false;
+
+        // es el numero para pintar los row en pantalla
+        private int groupCount;
+
+        public ExpandableListAdapter(String[] contacts, String[][] transactions,int groupCount) {
             this.contacts = contacts;
             this.transactions = transactions;
+            this.groupCount = groupCount;
             inf = LayoutInflater.from(getActivity());
         }
 
 
         @Override
         public int getGroupCount() {
-            return contacts.length;
+            return groupCount;
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
+            switch (groupPosition){
+                case 1:
+                    if(isTxtBalanceAmountTouched){
+                        changeBalanceType(txtBalance,balance_type);
+                        isTxtBalanceAmountTouched=false;
+                    }else if(isTxtBalanceTouched){
+                        changeBalance(txtBalance);
+                        isTxtBalanceTouched=false;
+                    }
+                    break;
+
+            }
+
             return transactions[groupPosition].length;
         }
 
@@ -200,7 +287,7 @@ public class HomeFragment extends FermatWalletFragment {
         public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
 
 
-       ImageView account_picture;
+            ImageView account_picture;
             ViewHolder holder;
             ViewHolder amount;
             ViewHolder when;
@@ -224,12 +311,26 @@ public class HomeFragment extends FermatWalletFragment {
 
                             convertView = inf.inflate(R.layout.wallets_teens_fragment_home_list_item, parent, false);
 
-                            tv = ((TextView)convertView.findViewById(R.id.balance));
-                            tv.setText(formatBalanceString(availableBalance, ShowMoneyType.BITCOIN.getCode()));
+                            txtBalance = ((TextView)convertView.findViewById(R.id.balance));
+                            txtBalance.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    isTxtBalanceTouched=true;
+                                    //changeBalance(txtBalance);
+                                    //refreshBalance();
+                                }
+                            });
+                            changeBalance(txtBalance);
 
-
-                            tv = ((TextView)convertView.findViewById(R.id.balance_available));
-                            tv.setText(formatBalanceString(bookBalance, ShowMoneyType.BITCOIN.getCode())+" book");
+                            balance_type = ((TextView)convertView.findViewById(R.id.balance_available));
+                            balance_type.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    isTxtBalanceAmountTouched = true;
+                                    //changeBalanceType(txtBalance,balance_type);
+                                }
+                            });
+                            balance_type.setText(getBalanceTypeInLetters());
 
                             break;
 
@@ -242,9 +343,10 @@ public class HomeFragment extends FermatWalletFragment {
 
                             break;
 
-                        // aca irian los ultimos 2 request recibidos
-                        case 3: case 4:
 
+                    }
+
+                    if(groupPosition>END_OF_FIRST_ROW && groupPosition<lstPaymentRequestReceived.size()+END_OF_FIRST_ROW){
                         convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
                         account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
@@ -285,58 +387,55 @@ public class HomeFragment extends FermatWalletFragment {
                                 account_picture.setImageResource(R.drawable.kimberly_profile_picture);
                                 break;
                         }
-                        break;
-                        // aca irian los request enviados
-                        case 6:case 7:
-                            convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
-                            account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+                    }else if(groupPosition == lstPaymentRequestReceived.size()+END_OF_FIRST_ROW){
+                        convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
+                        tv = ((TextView)convertView.findViewById(R.id.title));
+                        tv.setText("Requests sent waiting to be accepted");
+                    }else if(groupPosition>lstPaymentRequestReceived.size()+END_OF_FIRST_ROW){
+                        convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
+                        account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
 
-                            holder = new ViewHolder();
-                            holder.text = (TextView) convertView.findViewById(R.id.contact_name);
+                        holder = new ViewHolder();
+                        holder.text = (TextView) convertView.findViewById(R.id.contact_name);
 
-                            holder.text.setText(contacts[groupPosition].toString());
+                        holder.text.setText(contacts[groupPosition].toString());
 
-                            amount = new ViewHolder();
-                            amount.text = (TextView) convertView.findViewById(R.id.amount);
-
-
-                            amount.text.setText(amounts[groupPosition].toString());
-
-                            when = new ViewHolder();
-                            when.text = (TextView) convertView.findViewById(R.id.when);
+                        amount = new ViewHolder();
+                        amount.text = (TextView) convertView.findViewById(R.id.amount);
 
 
-                            when.text.setText(whens[groupPosition].toString());
+                        amount.text.setText(amounts[groupPosition].toString());
 
-                            note = new ViewHolder();
-                            note.text = (TextView) convertView.findViewById(R.id.notes);
-
-
-                            note.text.setText(notes[groupPosition].toString());
-
-                            send_message = (ImageView) convertView.findViewById(R.id.icon_edit_profile);
-                            send_message.setTag("ContactsChatActivity|"+contacts[groupPosition].toString());
+                        when = new ViewHolder();
+                        when.text = (TextView) convertView.findViewById(R.id.when);
 
 
-                            switch (groupPosition) {
+                        when.text.setText(whens[groupPosition].toString());
 
-                                case 6:
-                                    account_picture.setImageResource(R.drawable.dea_profile_picture);
-                                    break;
-                                case 7:
-                                    account_picture.setImageResource(R.drawable.deniz_profile_picture);
-                                    break;
-                            }
-                            break;
-                        case 5:
-                            convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
-                            tv = ((TextView)convertView.findViewById(R.id.title));
-                            tv.setText("Requests sent waiting to be accepted");
-                            break;
+                        note = new ViewHolder();
+                        note.text = (TextView) convertView.findViewById(R.id.notes);
+
+
+                        note.text.setText(notes[groupPosition].toString());
+
+                        send_message = (ImageView) convertView.findViewById(R.id.icon_edit_profile);
+                        send_message.setTag("ContactsChatActivity|"+contacts[groupPosition].toString());
+
+
+                        switch (groupPosition) {
+
+                            case 6:
+                                account_picture.setImageResource(R.drawable.dea_profile_picture);
+                                break;
+                            case 7:
+                                account_picture.setImageResource(R.drawable.deniz_profile_picture);
+                                break;
+                        }
+
                     }
-            }
 
+            }
 
             return convertView;
         }
