@@ -305,27 +305,46 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
     @Override
-    public List<DatabaseTableRecord> customQuery(String query) throws CantLoadTableToMemoryException {
+    public List<DatabaseTableRecord> customQuery(final String query, final boolean customResult) throws CantLoadTableToMemoryException {
         Cursor cursor = null;
         SQLiteDatabase database = null;
+        List<String> columns = null;
+
         List<DatabaseTableRecord> databaseTableRecords = new ArrayList<>();
         try {
             database = this.database.getReadableDatabase();
+
+            if (!customResult)
+                columns = getColumns(database);
+
             cursor = database.rawQuery(query, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
                 List<DatabaseRecord> recordValues = new ArrayList<>();
-                for (int i = 0 ; i < cursor.getColumnCount() ; i++) {
-                    DatabaseRecord recordValue = new AndroidRecord();
-                    recordValue.setName("Column"+i);
-                    recordValue.setValue(cursor.getString(i));
-                    recordValues.add(recordValue);
+
+                if (customResult) {
+                    for (int i = 0; i < cursor.getColumnCount(); i++) {
+                        DatabaseRecord recordValue = new AndroidRecord();
+                        recordValue.setName("Column" + i);
+                        recordValue.setValue(cursor.getString(i));
+                        recordValues.add(recordValue);
+                    }
+                } else {
+                    for (final String column : columns) {
+                        DatabaseRecord recordValue = new AndroidRecord();
+                        recordValue.setName(column);
+                        recordValue.setValue(cursor.getString(cursor.getColumnIndex(column)));
+                        recordValue.setChange(false);
+                        recordValue.setUseValueofVariable(false);
+                        recordValues.add(recordValue);
+                    }
                 }
 
                 tableRecord.setValues(recordValues);
                 databaseTableRecords.add(tableRecord);
             }
             cursor.close();
+
         } catch (Exception e) {
             if (cursor != null)
                 cursor.close();
