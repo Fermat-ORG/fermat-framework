@@ -161,7 +161,7 @@ public  class SendFragment extends FermatWalletFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.bitcoin_wallet_send_fragment_base, container, false);
+        rootView =   inflater.inflate(R.layout.bitcoin_wallet_send_fragment_base, container, false);
 
          linear_layout_send_form = (LinearLayout)rootView.findViewById(R.id.send_form);
 
