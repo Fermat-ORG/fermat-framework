@@ -20,6 +20,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.*;
@@ -196,7 +197,16 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         List<AssetFactory> assetFactories;
         try {
             assetFactories = getAssetFactories(filter);
-            return assetFactories.get(0);
+            AssetFactory assetFactory = assetFactories.get(0);
+            ContractProperty redeemable;
+            ContractProperty expirationDate;
+            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+            assetFactory.setIsRedeemable(Boolean.valueOf(redeemable1.getValue().toString()));
+            assetFactory.setExpirationDate(Timestamp.valueOf(expirationDate1.getValue().toString()));
+            return assetFactory;
         }
         catch (DatabaseOperationException  | InvalidParameterException | CantLoadTableToMemoryException e)
         {
@@ -368,14 +378,22 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             //Llama al metodo AssetIssuer de la transaction
             assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity());
         }
+        catch (CantSaveAssetFactoryException exception)
+        {
+            throw new CantSaveAssetFactoryException(exception, "Cant Save Asset Factory", "Method: publishAsset");
+        }
         catch (Exception e){
-            //TODO:Modificar para el manejo de excepciones
-            System.out.println("******* Metodo publishAsset, Error. Franklin ******" );
-            e.printStackTrace();
+            throw new CantSaveAssetFactoryException(e, "Exception General", "Method: publishAsset");
         }
     }
 
-    public AssetFactory getNewAssetFactory() throws CantCreateAssetFactoryException, CantCreateAssetFactoryException
+    public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException{
+        AssetFactory assetFactory = getAssetFactory(assetPublicKey);
+        assetFactory.setState(state);
+        saveAssetFactory(assetFactory);
+    }
+
+    public AssetFactory getNewAssetFactory() throws  CantCreateAssetFactoryException, CantCreateEmptyAssetFactoryException
     {
         AssetFactory assetFactory = new AssetFactory() {
             String publicKey;

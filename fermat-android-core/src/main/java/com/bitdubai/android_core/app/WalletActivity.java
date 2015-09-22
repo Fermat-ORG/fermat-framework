@@ -60,6 +60,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     private InstalledWallet lastWallet;
 
 
+
     /**
      *  Called when the activity is first created
      * @param savedInstanceState
