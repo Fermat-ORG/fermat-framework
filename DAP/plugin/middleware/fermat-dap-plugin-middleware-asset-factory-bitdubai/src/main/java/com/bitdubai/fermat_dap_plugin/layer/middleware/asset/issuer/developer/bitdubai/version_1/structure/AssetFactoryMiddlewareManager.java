@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -353,7 +354,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public void publishAsset(final AssetFactory assetFactory) throws CantSaveAssetFactoryException
+    public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException
     {
         try {
             DigitalAsset digitalAsset = new DigitalAsset();
@@ -377,7 +378,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
             //TODO: Franklin, esto lo comenté para que pudiera compilar, hice refactor del AssetIssuingManager para que le pases al objeto BlockchainNetworkType
-            //assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity());
+            assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
         }
         catch (CantSaveAssetFactoryException exception)
         {

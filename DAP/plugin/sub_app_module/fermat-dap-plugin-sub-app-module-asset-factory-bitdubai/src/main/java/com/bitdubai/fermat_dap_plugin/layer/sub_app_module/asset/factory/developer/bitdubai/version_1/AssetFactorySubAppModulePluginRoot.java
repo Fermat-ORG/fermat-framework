@@ -51,7 +51,7 @@ public class AssetFactorySubAppModulePluginRoot implements DealsWithLogger, LogM
     @Override
     public void start() throws CantStartPluginException {
         assetFactorySupAppModuleManager = new AssetFactorySupAppModuleManager(assetFactoryManager);
-        System.out.println("******* Asset Factory Module Init ******");
+        //System.out.println("******* Asset Factory Module Init ******");
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
