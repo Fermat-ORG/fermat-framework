@@ -55,23 +55,23 @@ public class DistanceCalculator {
 
         Location pointOne = new Location() {
             @Override
-            public double getLatitude() {
+            public Double getLatitude() {
                 return 32.9697;
             }
 
             @Override
-            public double getLongitude() {
+            public Double getLongitude() {
                 return -96.80322;
             }
 
             @Override
-            public double getAltitude() {
-                return 0;
+            public Double getAltitude() {
+                return 0.0;
             }
 
             @Override
-            public long getTime() {
-                return 0;
+            public Long getTime() {
+                return new Long(0);
             }
 
             @Override
@@ -83,23 +83,23 @@ public class DistanceCalculator {
 
         Location pointTwo = new Location() {
             @Override
-            public double getLatitude() {
+            public Double getLatitude() {
                 return 29.46786;
             }
 
             @Override
-            public double getLongitude() {
+            public Double getLongitude() {
                 return -98.53506;
             }
 
             @Override
-            public double getAltitude() {
-                return 0;
+            public Double getAltitude() {
+                return 0.0;
             }
 
             @Override
-            public long getTime() {
-                return 0;
+            public Long getTime() {
+                return new Long(0);
             }
 
             @Override
