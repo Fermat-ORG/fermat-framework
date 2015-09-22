@@ -195,7 +195,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         }
 
-        if (discoveryQueryParameters.getNumberRegister() != new Integer(0) && discoveryQueryParameters.firstRecord() != new Integer(0)){
+        if ((discoveryQueryParameters.getNumberRegister() != 0) && (discoveryQueryParameters.firstRecord() != 0)){
 
             /*
              * Apply pagination
