@@ -22,6 +22,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.Contract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -79,7 +81,9 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getPublicKey());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN, assetFactory.getName());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN, assetFactory.getDescription());
-        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN, assetFactory.getAssetIssuerIdentityPublicKey());
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN, assetFactory.getIdentyAssetIssuer().getAlias());
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_SIGNATURE_COLUMN, "signature");
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN, assetFactory.getIdentyAssetIssuer().getPublicKey());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN, assetFactory.getState().getCode());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN, assetFactory.getFee());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, assetFactory.getAmount());
@@ -119,6 +123,22 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, assetPublicKey);
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN, value);
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN, name);
+
+        return record;
+    }
+
+    private DatabaseTableRecord getIdentityIssuerDataRecord(String assetPublicKey,
+                                                            String publicKey,
+                                                            String name,
+                                                            String signature) throws DatabaseOperationException, MissingAssetDataException
+    {
+        DatabaseTable databaseTable = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
+        DatabaseTableRecord record = databaseTable.getEmptyRecord();
+
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, assetPublicKey);
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN, name);
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN, publicKey);
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN, signature);
 
         return record;
     }
@@ -171,6 +191,35 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         return transaction;
     }
 
+    private DatabaseTransaction addIdentityIssuerRecordsToTransaction(DatabaseTransaction transaction, AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantLoadTableToMemoryException
+    {
+        DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
+
+                DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getPublicKey(), assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
+                DatabaseTableFilter filter = getIdentityIssuerFilter(assetFactory.getIdentyAssetIssuer().getPublicKey());
+                filter.setValue(assetFactory.getIdentyAssetIssuer().getPublicKey());
+                if (isNewRecord(table, filter))
+                    //New Records
+                    transaction.addRecordToInsert(table, record);
+                else{
+                    //update Records
+                    table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                    transaction.addRecordToUpdate(table, record);
+        }
+
+        return transaction;
+    }
+
+    private DatabaseTableFilter getIdentityIssuerFilter(String value)
+    {
+        DatabaseTableFilter filter = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME).getEmptyTableFilter();
+        filter.setColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
+        filter.setType(DatabaseFilterType.EQUAL);
+        filter.setValue(value);
+
+        return  filter;
+    }
+
     private DatabaseTableFilter getContractFilter(String value)
     {
         DatabaseTableFilter filter = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME).getEmptyTableFilter();
@@ -209,6 +258,15 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         return table.getRecords();
     }
 
+    private List<DatabaseTableRecord> getIdentityIssuerData(String assetFactoryPublicKey) throws CantLoadTableToMemoryException {
+        DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
+
+        table.setStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, assetFactoryPublicKey, DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+
+        return table.getRecords();
+    }
+
     private List<DatabaseTableRecord> getContractsData(String assetFactoryPublicKey) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
@@ -236,7 +294,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             String description;
             List<Resource> resources;
             DigitalAssetContract digitalAssetContract;
-            ContractProperty contractProperty;
             State state;
             List<ContractProperty> contractProperties;
             int quantity;
@@ -244,10 +301,10 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             long fee;
             Timestamp creationTimestamp;
             Timestamp lastModificationTimestamp;
-            String assetIssuerIdentityPublicKey;
             boolean isRedeemable;
             Timestamp expirationDate;
             AssetBehavior assetBehavior;
+            IdentityAssetIssuer identityAssetIssuer;
 
             @Override
             public String getPublicKey() {
@@ -297,16 +354,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             @Override
             public void setContract(DigitalAssetContract contract) {
                 this.digitalAssetContract = contract;
-            }
-
-            @Override
-            public ContractProperty getContractProperty() {
-                return contractProperty;
-            }
-
-            @Override
-            public void setContractProperty(ContractProperty contractProperty) {
-                this.contractProperty = contractProperty;
             }
 
             @Override
@@ -410,20 +457,20 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             }
 
             @Override
-            public String getAssetIssuerIdentityPublicKey() {
-                return assetIssuerIdentityPublicKey;
+            public IdentityAssetIssuer getIdentyAssetIssuer() {
+                return identityAssetIssuer;
             }
 
             @Override
-            public void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey) {
-                this.assetIssuerIdentityPublicKey = assetUserIdentityPublicKey;
+            public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
+                this.identityAssetIssuer = identityAssetIssuer;
             }
         };
 
        return assetFactory;
     }
 
-    private AssetFactory getAssetFactory(DatabaseTableRecord assetFactoriesRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
+    private AssetFactory getAssetFactory(final DatabaseTableRecord assetFactoriesRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
     {
         AssetFactory assetFactory = getEmptyAssetFactory();
 
@@ -431,7 +478,26 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         assetFactory.setName(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN));
         assetFactory.setDescription(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN));
         assetFactory.setAmount(assetFactoriesRecord.getLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN));
-        assetFactory.setAssetUserIdentityPublicKey(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN));
+
+        IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
+            @Override
+            public String getAlias() {
+                return assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN);
+            }
+
+            @Override
+            public String getPublicKey() {
+                return assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
+            }
+
+            @Override
+            public String createMessageSignature(String mensage) throws CantSingMessageException {
+                return "signature";
+            }
+        };
+        //assetFactory.setAssetUserIdentityPublicKey(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN));
+        assetFactory.setIdentityAssetIssuer(identityAssetIssuer);
+        assetFactory.setState(State.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN)));
         assetFactory.setFee(assetFactoriesRecord.getLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN));
         assetFactory.setQuantity(assetFactoriesRecord.getIntegerValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN));
         assetFactory.setCreationTimestamp(Timestamp.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN)));
@@ -466,6 +532,8 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             transaction = addContractRecordsToTransaction(transaction, assetFactory);
             // I wil add the resources to the transaction if there are any
             transaction = addResourceRecordsToTransaction(transaction, assetFactory);
+            // I wil add the identity issuer to the transaction if there are any
+            transaction = addIdentityIssuerRecordsToTransaction(transaction, assetFactory);
 
             //I execute the transaction and persist the database side of the asset.
             database.executeTransaction(transaction);
@@ -486,7 +554,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
             // I will add the Asset Factory information from the database
             for (DatabaseTableRecord assetFactoriesRecord : getAssetFactoryData(filter)){
 
-                AssetFactory assetFactory = getAssetFactory(assetFactoriesRecord);
+                final AssetFactory assetFactory = getAssetFactory(assetFactoriesRecord);
 
                 List<ContractProperty> contractProperties =  new ArrayList<>();
                 // I will add the contract properties information from database
@@ -498,6 +566,30 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                     contractProperty.setValue(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN));
 
                     contractProperties.add(contractProperty);
+                }
+
+                List<IdentityAssetIssuer> identityAssetIssuers =  new ArrayList<>();
+                // I will add the indetity issuer information from database
+
+                for (final DatabaseTableRecord identityIssuerRecords : getIdentityIssuerData(assetFactory.getPublicKey())) {
+                    IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
+                        @Override
+                        public String getAlias() {
+                            return identityIssuerRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN);
+                        }
+
+                        @Override
+                        public String getPublicKey() {
+                            return identityIssuerRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
+                        }
+
+                        @Override
+                        public String createMessageSignature(String mensage) throws CantSingMessageException {
+                            return null;
+                        }
+                    };
+
+                    identityAssetIssuers.add(identityAssetIssuer);
                 }
 
                 List<Resource> resources =  new ArrayList<>();

@@ -1,17 +1,21 @@
 package unit.com.bitdubai.desktop.sub_app_manager.fragments;
 
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.widget.TextView;
 
 import com.bitdubai.desktop.sub_app_manager.BuildConfig;
+import com.bitdubai.desktop.sub_app_manager.R;
 import com.bitdubai.desktop.sub_app_manager.fragments.MainFragment;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.FragmentTestUtil;
+
+import unit.com.bitdubai.desktop.sub_app_manager.TestActivity;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -23,23 +27,40 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class MainFragmentTest {
 
     private MainFragment fragment;
+    private TestActivity activity;
 
     @Before
     public void setUp() {
         fragment = MainFragment.newInstance();
+
+        activity = Robolectric.setupActivity(TestActivity.class);
+
+        FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+        ft.add(fragment, null);
+        ft.commit();
     }
 
-    @Ignore
     @Test
-    public void fragmentVisible_showHelloFragmentText() {
+    public void fragmentIsVisibleInActivity() {
+        Activity resultActivity = fragment.getActivity();
+        assertThat(resultActivity).isInstanceOf(TestActivity.class);
+    }
+
+    @Test
+    public void helloTextViewIsNotNull() {
+
+        TextView helloText = (TextView) fragment.getView().findViewById(R.id.helloText);
+        assertThat(helloText).isNotNull();
+    }
+
+    @Test
+    public void helloTextViewShowCorrectText() {
         final String expectedText = "HELLO FRAGMENT!";
 
-        FragmentTestUtil.startVisibleFragment(fragment);
-
-        TextView helloText = (TextView) fragment.getActivity().findViewById(R.id.helloText);
+        TextView helloText = (TextView) fragment.getView().findViewById(R.id.helloText);
         String actualText = helloText.getText().toString();
-
         assertThat(actualText).isEqualTo(expectedText);
     }
+
 
 }

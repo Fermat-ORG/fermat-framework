@@ -65,8 +65,8 @@ public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_andro
                     currentFragment = TransactionsFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
-                    currentFragment = ContactsFragment.newInstance(refereceWalletSession, walletResourcesProviderManager);
-                    //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ContactsFragment.newInstance();
+                    //currentFragment = ContactsFragment.newInstance(refereceWalletSession, walletResourcesProviderManager);
+                    currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ContactsFragment.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS:
                     currentFragment = CreateContactFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);

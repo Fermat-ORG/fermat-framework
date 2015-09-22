@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,14 +19,12 @@ public interface CryptoWalletWalletContact {
 
     /**
      * Return the contactId
-     *
      * @return UUID
      */
     UUID getContactId();
 
     /**
      * Return the walletPublicKey
-     *
      * @return String
      */
     String getWalletPublicKey();
@@ -33,35 +32,30 @@ public interface CryptoWalletWalletContact {
 
     /**
      * Return the actorType
-     *
      * @return Actors
      */
     Actors getActorType();
 
     /**
      * Return the deliveredCryptoAddress
-     *
-     * @return CryptoAddress
+     * @return a list of crypto addresses
      */
-    CryptoAddress getReceivedCryptoAddress();
+    List<CryptoAddress> getReceivedCryptoAddress();
 
     /**
      * Return the actor public key
-     *
      * @return UUID
      */
     String getActorPublicKey();
 
     /**
      * Return the actorName
-     *
      * @return String
      */
     String getActorName();
 
     /**
      * Return the profilePicture
-     *
      * @return byte[]
      */
     byte[] getProfilePicture();

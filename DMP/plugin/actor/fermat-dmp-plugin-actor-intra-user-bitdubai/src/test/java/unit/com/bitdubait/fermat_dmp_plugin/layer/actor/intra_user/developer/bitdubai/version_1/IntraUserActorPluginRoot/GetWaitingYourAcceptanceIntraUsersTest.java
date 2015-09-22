@@ -2,7 +2,7 @@ package unit.com.bitdubait.fermat_dmp_plugin.layer.actor.intra_user.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -160,7 +160,7 @@ public class GetWaitingYourAcceptanceIntraUsersTest  extends TestCase
 
         assertThat(caughtException())
                 .isNotNull()
-                .isInstanceOf(CantGetIntraUSersException.class);
+                .isInstanceOf(CantGetIntraUsersException.class);
 
     }
 }
