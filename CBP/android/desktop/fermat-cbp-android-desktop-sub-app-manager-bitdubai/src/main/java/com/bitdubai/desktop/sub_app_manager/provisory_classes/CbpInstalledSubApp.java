@@ -1,4 +1,4 @@
-package com.bitdubai.desktop.sub_app_manager.fragments.provisory_classes;
+package com.bitdubai.desktop.sub_app_manager.provisory_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp{
+public class CbpInstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp{
 
     private SubApps subApps;
     private List<InstalledSkin> skinsId;
@@ -22,7 +22,7 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     private String walletPlatformIdentifier;
     private Version version;
 
-    public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+    public CbpInstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.subApps = subApps;
         this.skinsId = skinsId;
         this.languajesId = languajesId;

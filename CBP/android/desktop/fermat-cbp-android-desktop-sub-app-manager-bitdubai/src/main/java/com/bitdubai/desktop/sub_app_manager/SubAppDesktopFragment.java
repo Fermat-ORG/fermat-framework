@@ -1,4 +1,4 @@
-package com.bitdubai.desktop.sub_app_manager.fragments;
+package com.bitdubai.desktop.sub_app_manager;
 
 import android.app.Fragment;
 import android.app.Service;
@@ -17,12 +17,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bitdubai.desktop.sub_app_manager.R;
-import com.bitdubai.desktop.sub_app_manager.fragments.provisory_classes.InstalledSubApp;
+import com.bitdubai.desktop.sub_app_manager.provisory_classes.CbpInstalledSubApp;
+import com.bitdubai.desktop.sub_app_manager.util.CbpSubAppListGenerator;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
 
 
 import java.io.Serializable;
@@ -41,7 +42,6 @@ public class SubAppDesktopFragment extends Fragment {
     private static final String CWP_WALLET_PUBLISHER_MAIN = Activities.CWP_WALLET_PUBLISHER_MAIN.getCode();
     private static final String CWP_WALLET_RUNTIME_STORE_MAIN = Activities.CWP_WALLET_RUNTIME_STORE_MAIN.getCode();
 
-    private ArrayList<InstalledSubApp> mlist;
     private static int tabId;
 
     private int position;
@@ -51,53 +51,37 @@ public class SubAppDesktopFragment extends Fragment {
         SubAppDesktopFragment f = new SubAppDesktopFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
-    //    f.setArguments(b);
+        //    f.setArguments(b);
         return f;
     }
 
-   // @Override
+    // @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      //  setHasOptionsMenu(true);
+        //  setHasOptionsMenu(true);
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
-        String[] installed =
-                {  "true",
-                        "true",
-                        "true",
-                        "true",
-                        "true"
-                };
-        String[] sub_app_names =
-                { "Developer",
-                   "Wallet Factory",
-                   "Wallet Publisher",
-                        "Wallet Store",
-                        "Intra user"
-                };
-
-
-        String[] sub_app_picture =
-                {"developer_sub_app",
-                        "wallet_factory",
-                        "wallet_publisher",
-                        "wallet_store",
-                        "intra_user"
-                };
-
-        mlist = new ArrayList<InstalledSubApp>();
-
-
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CBP_CUSTOMERS,null,null,"sub-app-crypto-customers","crypto customers","sub-app-crypto-customers","sub-app-crypto-customers",new Version(1,0,0));
-        mlist.add(installedSubApp);
-//        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet publisher","wallet_publisher","wallet_publisher",new Version(1,0,0));
-//        mlist.add(installedSubApp);
-//        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet store","wallet_store","wallet_store",new Version(1,0,0));
-//        mlist.add(installedSubApp);
-//        installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer","developer_sub_app","developer_sub_app",new Version(1,0,0));
-//        mlist.add(installedSubApp);
-//        installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER,null,null,"intra_user_sub_app","Intra user","intra_user_sub_app","intra_user_sub_app",new Version(1,0,0));
-//        mlist.add(installedSubApp);
+        String[] installed = {
+                "true",
+                "true",
+                "true",
+                "true",
+                "true"
+        };
+        String[] sub_app_names = {
+                "Developer",
+                "Wallet Factory",
+                "Wallet Publisher",
+                "Wallet Store",
+                "Intra user"
+        };
+        String[] sub_app_picture = {
+                "developer_sub_app",
+                "wallet_factory",
+                "wallet_publisher",
+                "wallet_store",
+                "intra_user"
+        };
 
         GridView gridView = new GridView(getActivity());
 
@@ -108,22 +92,24 @@ public class SubAppDesktopFragment extends Fragment {
             gridView.setNumColumns(4);
         }
 
-        //@SuppressWarnings("unchecked")
-        //   ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_sub_app_desktop_fragment_grid_item ,mlist);
-        _adpatrer.notifyDataSetChanged();
-        gridView.setAdapter(_adpatrer);
+        List<InstalledSubApp> subAppsList = CbpSubAppListGenerator.instance.createSubAppsList();
 
+        AppListAdapter adapter = new AppListAdapter(
+                getActivity(),
+                R.layout.shell_sub_app_desktop_fragment_grid_item,
+                subAppsList);
 
+        adapter.notifyDataSetChanged();
+        gridView.setAdapter(adapter);
 
         return gridView;
     }
 
 
-  //  @Override
+    //  @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-     //   inflater.inflate(R.menu.shell_shop_desktop_fragment_menu, menu);
-      //  super.onCreateOptionsMenu(menu,inflater);
+        //   inflater.inflate(R.menu.shell_shop_desktop_fragment_menu, menu);
+        //  super.onCreateOptionsMenu(menu,inflater);
     }
 
 
@@ -143,7 +129,6 @@ public class SubAppDesktopFragment extends Fragment {
         public String Address;
 
 
-
         public float rate;
 
         public int value;
@@ -159,7 +144,6 @@ public class SubAppDesktopFragment extends Fragment {
     }
 
 
-
     public class AppListAdapter extends ArrayAdapter<InstalledSubApp> {
 
 
@@ -170,12 +154,12 @@ public class SubAppDesktopFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            final InstalledSubApp installedSubApp = getItem(position);
+            final InstalledSubApp cbpInstalledSubApp = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-               convertView = inflater.inflate(R.layout.shell_sub_app_desktop_fragment_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.shell_sub_app_desktop_fragment_grid_item, parent, false);
                 holder = new ViewHolder();
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
@@ -184,27 +168,13 @@ public class SubAppDesktopFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(installedSubApp.getSubAppName());
+            holder.companyTextView.setText(cbpInstalledSubApp.getSubAppName());
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
-            LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.sub_apps);
-            switch (installedSubApp.getSubAppIcon())
-            {
-                case "sub-app-crypto-customers":
-                    holder.imageView.setImageResource(R.drawable.publisher_nuevo);
-                  holder.imageView.setTag("DevelopersActivity|1");
-                    linearLayout.setTag("DevelopersActivity|1");
-                    holder.imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+            LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.sub_apps);
+            switch (cbpInstalledSubApp.getSubAppIcon()) {
 
-                            //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
-
-                        }
-                    });
-                    break;
-                case "wallet_factory":
+                case "sub_app_crypto_broker_identity":
                     holder.imageView.setImageResource(R.drawable.factory_nuevo);
                     holder.imageView.setTag("FactoryActivity|1");
                     linearLayout.setTag("FactoryActivity|1");
@@ -212,53 +182,63 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(cbpInstalledSubApp);
                         }
                     });
                     break;
 
-                case "wallet_publisher":
+                case "sub_app_crypto_broker_community":
                     holder.imageView.setImageResource(R.drawable.publisher_nuevo);
                     holder.imageView.setTag("PublisherActivity|1");
                     linearLayout.setTag("PublisherActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(cbpInstalledSubApp);
                         }
                     });
                     break;
 
-                case "wallet_store":
+                case "sub_app_crypto_customer_identity":
                     holder.imageView.setImageResource(R.drawable.store_nuevo);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
-          //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(cbpInstalledSubApp);
                         }
                     });
                     break;
-                case "intra_user_sub_app":
+
+                case "sub_app_crypto_customer_community":
                     holder.imageView.setImageResource(R.drawable.intra_user);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(cbpInstalledSubApp);
                         }
                     });
+                    break;
 
+                case "sub_app_customers":
+                    holder.imageView.setImageResource(R.drawable.publisher_nuevo);
+                    holder.imageView.setTag("DevelopersActivity|1");
+                    linearLayout.setTag("DevelopersActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(cbpInstalledSubApp);
+                        }
+                    });
+                    break;
             }
-
 
             return convertView;
         }
