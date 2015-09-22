@@ -151,7 +151,6 @@ public class OutgoingIntraUserDao {
         databaseTableRecord.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_DESCRIPTION_COLUMN_NAME, notes);
         databaseTableRecord.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode());
 
-
         databaseTableRecord.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME, deliveredByActorPublicKey);
         databaseTableRecord.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_TYPE_COLUMN_NAME, deliveredByActorType.getCode());
         databaseTableRecord.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME, deliveredToActorPublicKey);
@@ -160,26 +159,24 @@ public class OutgoingIntraUserDao {
 
 
     private void setToState(OutgoingIntraUserTransactionWrapper bitcoinTransaction, TransactionState status) throws CantUpdateRecordException, OutgoingIntraUserInconsistentTableStateException, CantLoadTableToMemoryException {
-        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
-
-        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
-
+        DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
+        DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
         recordToUpdate.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
-
         transactionTable.updateRecord(recordToUpdate);
     }
 
 
     private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, OutgoingIntraUserInconsistentTableStateException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
-        List<DatabaseTableRecord> records;
 
         transactionTable.setStringFilter(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
-        records = transactionTable.getRecords();
+        List<DatabaseTableRecord> records = transactionTable.getRecords();
 
         if (records.size() != 1)
             throw new OutgoingIntraUserInconsistentTableStateException("The number of records with a primary key is different thatn one ", null, "The id is: " + id.toString(), "");
+
+        transactionTable.clearAllFilters();
 
         return records.get(0);
     }
@@ -187,25 +184,19 @@ public class OutgoingIntraUserDao {
     private List<OutgoingIntraUserTransactionWrapper> getAllInState(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
 
         DatabaseTable transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
-        List<DatabaseTableRecord> records;
-
         transactionTable.setStringFilter(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
-
-        records = transactionTable.getRecords();
+        List<DatabaseTableRecord> records = transactionTable.getRecords();
+        transactionTable.clearAllFilters();
 
         return mapConvertToBT(records);
-
     }
 
     public void setToCryptoStatus(OutgoingIntraUserTransactionWrapper transactionWrapper, CryptoStatus cryptoStatus) throws CantUpdateRecordException, CantLoadTableToMemoryException, OutgoingIntraUserInconsistentTableStateException {
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
-
             DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionWrapper.getIdTransaction());
-
             recordToUpdate.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
-
             transactionTable.updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException | OutgoingIntraUserInconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
@@ -217,27 +208,27 @@ public class OutgoingIntraUserDao {
     private OutgoingIntraUserTransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
         OutgoingIntraUserTransactionWrapper bitcoinTransaction = new OutgoingIntraUserTransactionWrapper();
 
-        String walletPublicKey = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
-        UUID transactionId = record.getUUIDValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_ID_COLUMN_NAME);
-        String transactionHash = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_HASH_COLUMN_NAME);
-        CryptoAddress addressFrom = new CryptoAddress(
-                record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ADDRESS_FROM_COLUMN_NAME),
-                CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_CURRENCY_COLUMN_NAME))
-        );
-        CryptoAddress addressTo = new CryptoAddress(
-                record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ADDRESS_TO_COLUMN_NAME),
-                CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_CURRENCY_COLUMN_NAME))
-        );
-        long amount = record.getLongValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_AMOUNT_COLUMN_NAME);
-        TransactionState state = TransactionState.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_STATUS_COLUMN_NAME));
-        long timestamp = record.getLongValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TIMESTAMP_COLUMN_NAME);
-        String memo = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_DESCRIPTION_COLUMN_NAME);
-        CryptoStatus cryptoStatus = CryptoStatus.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_STATUS_COLUMN_NAME));
+        String           walletPublicKey    = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
+        UUID             transactionId      = record.getUUIDValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_ID_COLUMN_NAME);
+        String           transactionHash    = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_HASH_COLUMN_NAME);
+        long             amount             = record.getLongValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_AMOUNT_COLUMN_NAME);
+        TransactionState state              = TransactionState.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_STATUS_COLUMN_NAME));
+        long             timestamp          = record.getLongValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TIMESTAMP_COLUMN_NAME);
+        String           memo               = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_DESCRIPTION_COLUMN_NAME);
+        CryptoStatus     cryptoStatus       = CryptoStatus.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_STATUS_COLUMN_NAME));
+        Actors           actorFromType      = Actors.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_TYPE_COLUMN_NAME));
+        Actors           actorToType        = Actors.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_TYPE_COLUMN_NAME));
+        String           actorFromPublicKey = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
+        String           actorToPublicKey   = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
+        CryptoAddress    addressFrom        = new CryptoAddress(
+                                                    record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ADDRESS_FROM_COLUMN_NAME),
+                                                    CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_CURRENCY_COLUMN_NAME))
+                                                  );
+        CryptoAddress    addressTo          = new CryptoAddress(
+                                                    record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ADDRESS_TO_COLUMN_NAME),
+                                                    CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_CURRENCY_COLUMN_NAME))
+                                                  );
 
-        Actors actorFromType = Actors.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_TYPE_COLUMN_NAME));
-        Actors actorToType = Actors.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_TYPE_COLUMN_NAME));
-        String actorFromPublicKey = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
-        String actorToPublicKey = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
 
         bitcoinTransaction.setWalletPublicKey(walletPublicKey);
         bitcoinTransaction.setIdTransaction(transactionId);

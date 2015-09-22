@@ -71,15 +71,18 @@ public class OutgoingIntraUserTransactionManager implements IntraUserCryptoTrans
                            Actors        senderActorType,
                            Actors        receptorActorType) throws OutgoingIntraUserCantSendFundsExceptions, OutgoingIntraUserInsufficientFundsException {
         try {
-            BitcoinWalletWallet  bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);;
-            long                 funds               = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+            BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
+            ;
+            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
 
             if (cryptoAmount > funds)
                 throw new OutgoingIntraUserInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
 
-            OutgoingIntraUserDao dao                 = new OutgoingIntraUserDao(this.errorManager,this.pluginDatabaseSystem);
+            OutgoingIntraUserDao dao = new OutgoingIntraUserDao(this.errorManager, this.pluginDatabaseSystem);
             dao.initialize(this.pluginId);
             dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType);
+        } catch (OutgoingIntraUserInsufficientFundsException e) {
+            throw e;
         } catch (OutgoingIntraUserCantInsertRecordException | CantLoadWalletException | CantCalculateBalanceException | CantInitializeOutgoingIntraUserDaoException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new OutgoingIntraUserCantSendFundsExceptions("An exception happened",e,"","");
