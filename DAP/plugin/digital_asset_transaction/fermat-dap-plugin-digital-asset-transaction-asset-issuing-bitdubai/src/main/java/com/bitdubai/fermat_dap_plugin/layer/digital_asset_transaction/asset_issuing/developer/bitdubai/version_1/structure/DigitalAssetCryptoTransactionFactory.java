@@ -160,7 +160,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }*/
 
     private void persistFormingGenesisDigitalAsset() throws CantPersistDigitalAssetException {
-        this.assetIssuingTransactionDao.persistDigitalAsset(digitalAsset.getPublicKey(), this.digitalAssetFileStoragePath, this.assetsAmount);
+        this.assetIssuingTransactionDao.persistDigitalAsset(digitalAsset.getPublicKey(), this.digitalAssetFileStoragePath, this.assetsAmount, this.blockchainNetworkType);
     }
 
     private String requestHashGenesisTransaction(){
@@ -346,6 +346,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 setDigitalAssetGenesisTransaction(transactionId, digitalAssetMetadata);
                 issueDigitalAssetToAssetWallet(transactionId, digitalAssetMetadata);
             }
+            //TODO: caso SENDING BITCOINS
         } catch (CantPersistsGenesisTransactionException | CantExecuteQueryException | CantPersistsGenesisAddressException | CantCheckAssetIssuingProgressException | CantGetDigitalAssetFromLocalStorageException | UnexpectedResultReturnedFromDatabaseException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
