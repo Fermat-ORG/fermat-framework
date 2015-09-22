@@ -17,6 +17,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
@@ -321,25 +322,25 @@ public class ViewInflater {
                         if(value.indexOf("@")==-1){
                                 //view.setBackground();
                         }else{
-                                view.setBackgroundColor(Color.parseColor(value));
+                               // view.setBackgroundColor(Color.parseColor(value));
                         }
                 }
                 // elevation
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                        value = findAttribute(atts,"android:elevation");
-                        if(value!=null){
-                                view.setElevation(Float.parseFloat(value));
-                        }
+                        //value = findAttribute(atts,"android:elevation");
+                        //if(value!=null){
+                                //view.setElevation(Float.parseFloat(value));
+                        //}
                 }
 
                 if(view instanceof TextView){
                         value = findAttribute(atts,"android:textSize");
                         if(value!=null){
-                                ((TextView) view).setTextSize(Float.parseFloat(value));
+                                //((TextView) view).setTextSize(Float.parseFloat(value));
                         }
                         value = findAttribute(atts,"android:textColor");
                         if(value!=null){
-                                ((TextView) view).setTextColor(Color.parseColor(value));
+                                //((TextView) view).setTextColor(Color.parseColor(value));
                         }
                 }
 
@@ -430,7 +431,10 @@ public class ViewInflater {
                         LinearLayout.LayoutParams l = (LinearLayout.LayoutParams)lps;
                         String gravity = findAttribute(atts, "android:layout_gravity");
                         if (gravity != null) {
-                                l.gravity = Integer.parseInt(gravity);
+                                if(gravity.equals("center")){
+                                        l.gravity = Gravity.CENTER;
+                                }
+                                //l.gravity = Integer.parseInt(gravity);
                         }
                         
                         String weight = findAttribute(atts, "android:layout_weight");
