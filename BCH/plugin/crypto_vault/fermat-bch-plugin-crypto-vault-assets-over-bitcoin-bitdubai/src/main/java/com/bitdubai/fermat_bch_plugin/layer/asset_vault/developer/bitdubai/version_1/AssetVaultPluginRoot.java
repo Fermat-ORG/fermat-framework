@@ -97,8 +97,7 @@ public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithPluginD
         return serviceStatus;
     }
 
-    @Override
-    public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+    @Override public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
         return assetCryptoVaultManager.getNewAssetVaultCryptoAddress(blockchainNetworkType);
     }
 }
