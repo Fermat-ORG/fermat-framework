@@ -1,30 +1,17 @@
-package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
+package com.bitdubai.fermat_api.layer.pip_engine.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletNavigationStructureException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletResourcesException;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.UUID;
 
 /**
- *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesInstalationManager/code> is a interface
- *     that define the methods to retrieve wallets resource files.
- *
- *
- *  @author  Loui
- *  @version 1.0.0
- *  @since   18/02/15.
- * */
-public interface WalletResourcesProviderManager extends ResourceProviderManager{
-
+ * Created by Matias Furszyfer on 2015.09.21..
+ */
+public interface ResourceProviderManager {
 
     /**
      * This method returns the resourcesId
@@ -41,7 +28,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    public Skin getSkinFile(String fileName,UUID skinId) throws CantGetSkinFileException,CantGetResourcesException;
+    public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -60,7 +47,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName,UUID skinId) throws CantGetResourcesException;
+    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a video referenced by a name
@@ -69,7 +56,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return the video represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getVideoResource(String videoName,UUID skinId) throws CantGetResourcesException;
+    public byte[] getVideoResource(String videoName, UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a sound referenced by a name
@@ -78,7 +65,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return the sound represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getSoundResource(String soundName,UUID skinId) throws CantGetResourcesException;
+    public byte[] getSoundResource(String soundName, UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a font style referenced by a name
@@ -87,7 +74,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return the font style represented as the content of a ttf file
      * @throws CantGetResourcesException
      */
-    public String getFontStyle(String styleName,UUID skinId);
+    public String getFontStyle(String styleName, UUID skinId);
 
     /**
      * This method let us get a layout referenced by a name
@@ -96,8 +83,5 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return the layiut represented as String
      * @throws CantGetResourcesException
      */
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation,UUID skinId,String walletPublicKey) throws CantGetResourcesException;
-
-
-
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String walletPublicKey) throws CantGetResourcesException;
 }
