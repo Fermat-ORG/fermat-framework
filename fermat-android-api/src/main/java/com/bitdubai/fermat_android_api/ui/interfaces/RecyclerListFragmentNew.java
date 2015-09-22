@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_android_api.ui.interfaces;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
@@ -9,12 +8,12 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 /**
  * RecyclerListFragment
  *
- * @author Francisco Vasquez
+ * @author Matias Furszyfer
  * @version 1.0
  */
-public interface RecyclerListFragment {
+public interface RecyclerListFragmentNew {
 
-    FermatAdapter getAdapter();
+    FermatAdapterNew getAdapter();
 
     RecyclerView.LayoutManager getLayoutManager();
 
