@@ -55,6 +55,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.dev
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletUninstalledEvent;
 
+import org.apache.commons.collections.map.HashedMap;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.BufferedReader;
@@ -157,6 +159,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     //para testear
     private Map<String, byte[]> imagenes;
+    private Map<String, String> layouts;
 
 
     /**
@@ -210,6 +213,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         //for testing purpose
         imagenes = new HashMap<String, byte[]>();
+        layouts = new HashMap<String,String>();
     }
 
     @Override
@@ -610,31 +614,40 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String walletPublicKey) throws CantGetResourcesException {
 
-        String content = "";
-        try {
-            //get repo name
-            String reponame = "";//= Repositories.getValueFromType(walletPublicKey);
-            //reponame+="_"+orientation+"_"
-            //get image from disk
-            PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, layoutName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        //For testing purpose
+        return layouts.get(layoutName);
 
-            content = layoutFile.getContent();
-        } catch (FileNotFoundException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error write layout file resource  ", "");
-
-        } catch (CantCreateFileException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error created image file resource ", "");
-
-        }
-
-        return content;
+//        String content = "";
+//        try {
+//
+//            //get repo name
+//            Repository repository =  repositoriesName.get(skinId);
+//            String reponame = repository.getPath()+walletPublicKey+"/";
+//
+//            String filename = skinId.toString() + "_" + layoutName;
+//
+//
+//            //reponame+="_"+orientation+"_"
+//            //get image from disk
+//            PluginTextFile layoutFile;
+//            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+//
+//            content = layoutFile.getContent();
+//        } catch (FileNotFoundException e) {
+//            /**
+//             * I cant continue if this happens.
+//             */
+//            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error write layout file resource  ", "");
+//
+//        } catch (CantCreateFileException e) {
+//            /**
+//             * I cant continue if this happens.
+//             */
+//            throw new CantGetResourcesException("CAN'T GET REQUESTED RESOURCES:", e, "Error created image file resource ", "");
+//
+//        }
+//
+//        return content;
     }
 
 
@@ -733,8 +746,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         /**
          * download landscape layouts
          */
-        String linkToLandscapeLayouts = linkToRepo +screenSize+ "/landscape/layouts/";
-        downloadLayouts(linkToLandscapeLayouts, skin.getLandscapeLayouts(), skin.getId(),localStoragePath,walletPublicKey);
+        //String linkToLandscapeLayouts = linkToRepo +screenSize+ "/landscape/layouts/";
+       // downloadLayouts(linkToLandscapeLayouts, skin.getLandscapeLayouts(), skin.getId(),localStoragePath,walletPublicKey);
 
 
         //TODO: raise a event
@@ -837,6 +850,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
                 // this is because the main repository is private
                 String layoutXML = githubConnection.getFile(link+entry.getValue().getFilename());
+
+                layouts.put(entry.getValue().getName(),layoutXML);
 
                 try {
 
@@ -972,7 +987,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         String filename = skinId.toString() + "_" + name;
 
-
+        reponame+=publicKey+"/";
 
         try {
 
