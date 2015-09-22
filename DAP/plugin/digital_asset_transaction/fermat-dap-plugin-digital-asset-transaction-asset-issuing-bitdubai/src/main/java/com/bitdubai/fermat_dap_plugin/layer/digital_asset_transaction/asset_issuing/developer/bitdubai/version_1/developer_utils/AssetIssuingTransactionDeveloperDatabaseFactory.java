@@ -124,6 +124,7 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
         digitalAssetTransactionColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_LOCAL_STORAGE_PATH_COLUMN_NAME);
         digitalAssetTransactionColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE);
         digitalAssetTransactionColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED);
+        digitalAssetTransactionColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
         /**
          * Table Digital Asset Transaction addition.
          */

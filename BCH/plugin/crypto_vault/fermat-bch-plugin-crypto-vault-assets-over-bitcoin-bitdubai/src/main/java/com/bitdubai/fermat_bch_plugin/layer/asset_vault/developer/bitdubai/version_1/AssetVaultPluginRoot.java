@@ -9,7 +9,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
 
 import java.util.UUID;
@@ -17,7 +19,9 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetVaultPluginRoot implements AssetVaultManager,  DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+
+    AssetCryptoVaultManager assetCryptoVaultManager;
 
     /**
      * DealsWithPluginDatabaseSystem interface variable and implementation
@@ -54,7 +58,19 @@ public class AssetVaultPluginRoot implements AssetVaultManager,  DealsWithPlugin
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     @Override
     public void start() throws CantStartPluginException {
-        getNewAssetVaultCryptoAddress();
+        /**
+         * I create the VaultManager that will load or create the seed and recreate the key hierarchy.
+         */
+        try{
+            assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId, pluginFileSystem, pluginDatabaseSystem);
+        } catch (Exception e){
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
+        }
+
+
+        /**
+         * Nothing left to do.
+         */
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -81,9 +97,7 @@ public class AssetVaultPluginRoot implements AssetVaultManager,  DealsWithPlugin
         return serviceStatus;
     }
 
-    @Override
-    public CryptoAddress getNewAssetVaultCryptoAddress() {
-        AssetCryptoVaultManager assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId, pluginFileSystem, pluginDatabaseSystem);
-        return assetCryptoVaultManager.getNewAssetVaultCryptoAddress();
+    @Override public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        return assetCryptoVaultManager.getNewAssetVaultCryptoAddress(blockchainNetworkType);
     }
 }

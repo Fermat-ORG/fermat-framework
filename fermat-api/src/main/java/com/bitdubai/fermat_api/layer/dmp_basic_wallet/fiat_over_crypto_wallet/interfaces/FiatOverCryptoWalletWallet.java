@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_basic_wallet.fiat_over_crypto_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantFindTransactionException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantListTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantFindTransactionException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantListTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantStoreMemoException;
 
 import java.util.List;
 import java.util.UUID;

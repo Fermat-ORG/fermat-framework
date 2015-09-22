@@ -33,6 +33,7 @@ public class GetFermatFragmentTest {
         assertThat(actualFragment).isInstanceOf(FermatFragment.class);
     }
 
+    @Test
     public void fragmentNotFound() throws Exception {
         catchException(fragmentFactory).getFermatFragment(null);
 

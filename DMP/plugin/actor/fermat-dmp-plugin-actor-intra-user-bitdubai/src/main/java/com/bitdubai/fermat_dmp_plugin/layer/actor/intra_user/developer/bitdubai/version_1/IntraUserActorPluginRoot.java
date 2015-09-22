@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelI
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
@@ -237,16 +237,16 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      *
      * @param intraUserLoggedInPublicKey the public key of the intra user logged in
      * @return the list of intra users the logged in intra user has as connections.
-     * @throws CantGetIntraUSersException
+     * @throws CantGetIntraUsersException
      */
     @Override
-    public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUsersException {
         try {
             return this.intraUserActorDao.getAllIntraUsers(intraUserLoggedInPublicKey, max, offset);
         } catch (CantGetIntraUsersListException e) {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
+            throw new CantGetIntraUsersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
         } catch (Exception e) {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER CONNECTIONS", FermatException.wrapException(e), "", "");
+            throw new CantGetIntraUsersException("CAN'T LIST INTRA USER CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -257,17 +257,17 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      *
      * @param intraUserLoggedInPublicKey the public key of the intra user logged in
      * @return the list of intra users the logged in intra user has as connections.
-     * @throws CantGetIntraUSersException
+     * @throws CantGetIntraUsersException
      */
 
     @Override
-    public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUsersException {
         try {
             return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraUsersListException e) {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", e, "", "");
+            throw new CantGetIntraUsersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
+            throw new CantGetIntraUsersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -278,17 +278,17 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      *
      * @param intraUserLoggedInPublicKey the public key of the intra user logged in
      * @return the list of intra users the logged in intra user has as connections.
-     * @throws CantGetIntraUSersException
+     * @throws CantGetIntraUsersException
      */
 
     @Override
-    public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUSersException {
+    public List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraUsersException {
         try {
             return this.intraUserActorDao.getIntraUsers(intraUserLoggedInPublicKey, ContactState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraUsersListException e) {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
+            throw new CantGetIntraUsersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
-            throw new CantGetIntraUSersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
+            throw new CantGetIntraUsersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
 
