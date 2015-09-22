@@ -55,5 +55,12 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      */
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException;
 
+    /**
+     * Generates a CryptoTransaction that is not yet commited or send. It allows edition before sending.
+     * @param addressTo the destination CryptoAddress
+     * @param cryptoAmount the amount of bitcoins in Satoshis.
+     * @return the CryptoTransaction object with some information, that includes the transaction hash.
+     * @throws CoultNotCreateCryptoTransaction
+     */
     public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress addressTo, long cryptoAmount) throws CoultNotCreateCryptoTransaction;
 }
