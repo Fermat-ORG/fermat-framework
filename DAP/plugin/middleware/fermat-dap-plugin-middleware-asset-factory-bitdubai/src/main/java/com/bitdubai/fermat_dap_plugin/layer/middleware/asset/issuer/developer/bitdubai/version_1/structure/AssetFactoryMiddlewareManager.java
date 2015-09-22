@@ -217,7 +217,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     public List<AssetFactory> getAssetFactoryByIssuer(final String issuerIdentityPublicKey) throws CantGetAssetFactoryException
     {
-        // I define the filter to search for the public Key
+        // I define the filter to search for the issuer identity public Key
         DatabaseTableFilter filter = new DatabaseTableFilter() {
             @Override
             public void setColumn(String column) {
@@ -263,7 +263,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     public List<AssetFactory> getAssetFactoryByState(final State state) throws CantGetAssetFactoryException
     {
-        // I define the filter to search for the public Key
+        // I define the filter to search for the state
         DatabaseTableFilter filter = new DatabaseTableFilter() {
             @Override
             public void setColumn(String column) {
@@ -309,39 +309,8 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException
     {
-        // I define the filter to search for the public Key
-        DatabaseTableFilter filter = new DatabaseTableFilter() {
-            @Override
-            public void setColumn(String column) {
-
-            }
-
-            @Override
-            public void setType(DatabaseFilterType type) {
-
-            }
-
-            @Override
-            public void setValue(String value) {
-
-            }
-
-            @Override
-            public String getColumn() {
-                return null;
-            }
-
-            @Override
-            public String getValue() {
-                return null;
-            }
-
-            @Override
-            public DatabaseFilterType getType() {
-
-                return null;
-            }
-        };
+        // I define the filter to null for all
+        DatabaseTableFilter filter = null;
 
         List<AssetFactory> assetFactories;
         try {
@@ -365,6 +334,16 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
                 ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
                 digitalAssetContract.setContractProperty(contractProperty);
             }
+            ContractProperty redeemable;
+            ContractProperty expirationDate;
+            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+            redeemable1.setValue(assetFactory.getIsRedeemable());
+            expirationDate1.setValue(assetFactory.getExpirationDate());
+            digitalAssetContract.setContractProperty(redeemable1);
+            digitalAssetContract.setContractProperty(expirationDate1);
             digitalAsset.setContract(digitalAssetContract);
             digitalAsset.setName(assetFactory.getName());
             digitalAsset.setDescription(assetFactory.getDescription());
@@ -377,7 +356,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             assetFactory.setState(State.PENDING_FINAL);
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
-            //TODO: Franklin, esto lo comenté para que pudiera compilar, hice refactor del AssetIssuingManager para que le pases al objeto BlockchainNetworkType
+            //TODO: Revisar porque la asignacion del value al property no la asigna
             assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
         }
         catch (CantSaveAssetFactoryException exception)

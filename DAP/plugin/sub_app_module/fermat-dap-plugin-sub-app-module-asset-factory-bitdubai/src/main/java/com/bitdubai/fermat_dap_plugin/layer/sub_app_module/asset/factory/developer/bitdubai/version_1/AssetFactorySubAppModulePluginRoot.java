@@ -165,16 +165,16 @@ public class AssetFactorySubAppModulePluginRoot implements DealsWithAssetFactory
         return assetFactorySupAppModuleManager.getAssetsFactoryAll();
     }
 
-    public AssetFactory test(){
+    public List<AssetFactory> test(){
+        List<AssetFactory> assetFactory = null;
         try {
-            AssetFactory assetFactory = newAssetFactoryEmpty();
-            assetFactory = getAssetFactoryByPublicKey("ASD-125412541-BS-854");
-            return assetFactory;
+            assetFactory = getAssetFactoryAll();
+
         }catch (Exception e){
             System.out.println("******* Test Asset Factory Module, Error. Franklin ******" );
             e.printStackTrace();
-            return null;
         }
+        return assetFactory;
     }
 
     @Override

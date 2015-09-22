@@ -280,7 +280,9 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
     {
         DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
 
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        if (filter != null)
+            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
         table.loadToMemory();
 
         return table.getRecords();
@@ -565,6 +567,13 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                     contractProperty.setName(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN));
                     contractProperty.setValue(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN));
 
+                    if (contractProperty.getName() == "redeemable"){
+                        assetFactory.setIsRedeemable(Boolean.valueOf(contractProperty.getValue().toString()));
+                    }
+
+                    if (contractProperty.getName() == "expiration_date"){
+                        assetFactory.setExpirationDate(Timestamp.valueOf(contractProperty.getValue().toString()));
+                    }
                     contractProperties.add(contractProperty);
                 }
 
@@ -633,7 +642,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         }catch (Exception e){
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get projects from the database with filter: " + filter.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get assets factory from the database with filter: " + filter.toString(), null);
         }
 
     }
