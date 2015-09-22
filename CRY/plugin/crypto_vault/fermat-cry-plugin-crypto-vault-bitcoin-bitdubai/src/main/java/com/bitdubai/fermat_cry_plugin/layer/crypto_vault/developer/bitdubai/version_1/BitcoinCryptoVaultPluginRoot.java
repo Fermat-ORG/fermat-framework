@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CoultNotCreateCryptoTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -539,5 +540,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + transactionId.toString(), "Duplicated transaction Id in the database.");
         }
+    }
+
+    @Override
+    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress genesisAddress, long cryptoAmount) throws CoultNotCreateCryptoTransaction {
+        //todo rodrigo implementar.
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CoultNotCreateCryptoTransaction;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
@@ -53,4 +54,6 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      * @throws CouldNotGetCryptoStatusException
      */
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException;
+
+    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress genesisAddress, long cryptoAmount) throws CoultNotCreateCryptoTransaction;
 }
