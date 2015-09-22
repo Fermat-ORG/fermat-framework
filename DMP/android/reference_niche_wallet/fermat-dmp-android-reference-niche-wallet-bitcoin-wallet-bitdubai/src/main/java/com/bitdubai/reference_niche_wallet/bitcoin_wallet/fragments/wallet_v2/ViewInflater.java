@@ -13,9 +13,11 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
@@ -27,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.DigitalClock;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,6 +45,9 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
 
 /**
@@ -58,12 +64,15 @@ public class ViewInflater {
         Hashtable<String, Integer> ids;
         Context context;
         int idg;
+
+        ResourceProviderManager resourceProviderManager;
         
-        public ViewInflater(Context context) {
+        public ViewInflater(Context context,ResourceProviderManager resourceProviderManager) {
                 this.layoutStack = new Stack<ViewGroup>();
                 this.ids = new Hashtable<String, Integer>();
                 this.context = context;
                 this.idg = 0;
+                this.resourceProviderManager = resourceProviderManager;
         }
         
         public View inflate(String text) {
@@ -148,6 +157,9 @@ public class ViewInflater {
                 }
                 else if (name.equals("FrameLayout")) {
                         result = new FrameLayout(context );
+                }
+                else if (name.equals("ExpandableListView")) {
+                        result = new ExpandableListView(context);
                 }
                 else if (name.equals("TextView")) {
                         result = new TextView(context );
@@ -307,8 +319,32 @@ public class ViewInflater {
                 //value = atts.getAttributeValue(NAMESPACE,"background");
                 value = findAttribute(atts,"android:background");
                 if(value!=null){
-                        view.setBackgroundColor(Color.parseColor(value));
+                        if(value.indexOf("@")==-1){
+                                //view.setBackground();
+                        }else{
+                               // view.setBackgroundColor(Color.parseColor(value));
+                        }
                 }
+                // elevation
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                        //value = findAttribute(atts,"android:elevation");
+                        //if(value!=null){
+                                //view.setElevation(Float.parseFloat(value));
+                        //}
+                }
+
+                if(view instanceof TextView){
+                        value = findAttribute(atts,"android:textSize");
+                        if(value!=null){
+                                //((TextView) view).setTextSize(Float.parseFloat(value));
+                        }
+                        value = findAttribute(atts,"android:textColor");
+                        if(value!=null){
+                                //((TextView) view).setTextColor(Color.parseColor(value));
+                        }
+                }
+
+
 
         }
         
@@ -395,7 +431,10 @@ public class ViewInflater {
                         LinearLayout.LayoutParams l = (LinearLayout.LayoutParams)lps;
                         String gravity = findAttribute(atts, "android:layout_gravity");
                         if (gravity != null) {
-                                l.gravity = Integer.parseInt(gravity);
+                                if(gravity.equals("center")){
+                                        l.gravity = Gravity.CENTER;
+                                }
+                                //l.gravity = Integer.parseInt(gravity);
                         }
                         
                         String weight = findAttribute(atts, "android:layout_weight");

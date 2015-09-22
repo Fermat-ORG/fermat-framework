@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions;
 
 /**
- * The Class <code>CantCreateWalletContactException</code>
+ * The exception <code>com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException</code>
  * is thrown when an error occurs trying to create a new contact for a wallet
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/06/15.
@@ -11,7 +11,7 @@ package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions
  */
 public class CantCreateWalletContactException extends CryptoWalletException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T CREATE REQUESTED CONTACT EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T CREATE WALLET CONTACT EXCEPTION";
 
     public CantCreateWalletContactException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

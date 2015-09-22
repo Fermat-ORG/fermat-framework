@@ -145,7 +145,7 @@ public class BlankFragment extends FermatFragment {
 
         //String data = getIntent().getStringExtra(DATA);
 
-        ViewInflater inflater1 = new ViewInflater(getActivity());
+        ViewInflater inflater1 = new ViewInflater(getActivity(),null);
 
         XmlPullParser parse;
         try {

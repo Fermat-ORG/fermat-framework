@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ import java.util.UUID;
  *  @version 1.0.0
  *  @since   4/08/15.
  * */
-public interface SubAppResourcesProviderManager {
+public interface SubAppResourcesProviderManager extends ResourceProviderManager {
 
 
     /**
@@ -91,7 +92,7 @@ public interface SubAppResourcesProviderManager {
      * @return the layiut represented as String
      * @throws CantGetResourcesException
      */
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException;
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String walletPublicKey) throws CantGetResourcesException;
 
 
 

@@ -270,7 +270,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0, 0, 0), new Version(0, 0, 0), publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(1, 0, 0), new Version(1, 0, 0), publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
     }
 
@@ -295,7 +295,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0, 0, 0), new Version(0, 0, 0), publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(1, 0, 0), new Version(1, 0, 0), publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
     }
 
@@ -320,7 +320,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * publish the component
          */
-        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(0, 0, 0), new Version(0, 0, 0), initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+        publishComponent(informationPublishedComponentMiddlewareImpl, walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, new Version(1, 0, 0), new Version(1, 0, 0), initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
     }
 
 
