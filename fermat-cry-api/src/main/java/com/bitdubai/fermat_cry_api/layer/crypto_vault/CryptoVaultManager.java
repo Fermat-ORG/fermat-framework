@@ -55,5 +55,5 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      */
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException;
 
-    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress genesisAddress, long cryptoAmount) throws CoultNotCreateCryptoTransaction;
+    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress addressTo, long cryptoAmount) throws CoultNotCreateCryptoTransaction;
 }
