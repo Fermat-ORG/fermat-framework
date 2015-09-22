@@ -113,8 +113,8 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
         List<DatabaseTableFilter> filters = new ArrayList<>();
         filters.add(databaseTable.getNewFilter(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseFilterType.EQUAL, String.valueOf(accountNumber)));
         filters.add(databaseTable.getNewFilter(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_CHAIN_NUMBER_COLUMN_NAME, DatabaseFilterType.EQUAL, String.valueOf(chainNumber)));
-
-        DatabaseTableFilterGroup filterGroup = databaseTable.getNewFilterGroup(filters,null, DatabaseFilterOperator.AND);
+        List<DatabaseTableFilterGroup> filterGroups = new ArrayList<>();
+        DatabaseTableFilterGroup filterGroup = databaseTable.getNewFilterGroup(filters,filterGroups, DatabaseFilterOperator.AND);
         return filterGroup;
     }
 
