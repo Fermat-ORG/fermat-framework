@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.RegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
@@ -132,6 +133,17 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * Represent the identity
      */
     private ECCKeyPair identity;
+
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
+    /**
+     * Represent the registrationProcessNetworkServiceAgent
+     */
+    private RegistrationProcessNetworkServiceAgent registrationProcessNetworkServiceAgent;
+
 
     /**
      * Constructor
@@ -288,6 +300,12 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
+
+            /*
+             * Initialize the agent and start
+             */
+            registrationProcessNetworkServiceAgent = new RegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+            registrationProcessNetworkServiceAgent.start();
 
             /*
              * Its all ok, set the new status
@@ -580,10 +598,16 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT){
 
             /*
-             * Construct my profile and register me
+             * Is not register
              */
-            platformComponentProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(), "TemplateNetworkService", "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentInCommunicationCloudServer(platformComponentProfile);
+            if (!isRegister()){
+                /*
+                 * Construct my profile and register me
+                 */
+                platformComponentProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(), "TemplateNetworkService", "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentInCommunicationCloudServer(platformComponentProfile);
+
+            }
 
         }
 
@@ -592,17 +616,22 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE &&
-                    platformComponentProfileRegistered.getIdentityPublicKey() == identity.getPublicKey()){
+                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
-                /*
-                 * Construct the filter
-                 */
-                DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentProfile, null, null, null, null, null, null, null);
+            /*
+             * Mark as register
+             */
+             this.register = Boolean.TRUE;
 
-                /*
-                 * Request the list of component registers
-                 */
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            /*
+             * Construct the filter
+             */
+            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentProfile, null, null, null, null, null, null, null);
+
+            /*
+             * Request the list of component registers
+             */
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
 
         }
 
@@ -618,6 +647,41 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     public TemplateNetworkServiceManager getTemplateNetworkServiceManager(UUID pluginClientId){
 
         return  templateNetworkServiceManagersCache.get(pluginClientId);
+    }
+
+    /**
+     * Get the IdentityPublicKey
+     *
+     * @return String
+     */
+    public String getIdentityPublicKey(){
+        return this.identity.getPublicKey();
+    }
+
+    /**
+     * Get the PlatformComponentProfile
+     *
+     * @return PlatformComponentProfile
+     */
+    public PlatformComponentProfile getPlatformComponentProfile() {
+        return platformComponentProfile;
+    }
+
+    /**
+     * Set the PlatformComponentProfile
+     *
+     * @param platformComponentProfile
+     */
+    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
+        this.platformComponentProfile = platformComponentProfile;
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    public boolean isRegister() {
+        return register;
     }
 
 }
