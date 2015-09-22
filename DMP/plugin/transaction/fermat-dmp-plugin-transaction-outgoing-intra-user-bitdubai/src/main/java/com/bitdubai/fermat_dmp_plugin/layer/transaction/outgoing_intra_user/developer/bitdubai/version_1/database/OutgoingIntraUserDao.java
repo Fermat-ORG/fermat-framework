@@ -13,13 +13,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.exceptions.CantInitializeOutgoingIntraUserDaoException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.exceptions.OutgoingIntraUserCantCancelTransactionException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.exceptions.OutgoingIntraUserCantGetTransactionsException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.exceptions.OutgoingIntraUserCantInsertRecordException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.exceptions.OutgoingIntraUserCantSetTranactionHashException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.exceptions.OutgoingIntraUserInconsistentTableStateException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.util.OutgoingIntraUserTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -77,45 +81,109 @@ public class OutgoingIntraUserDao {
                                        Actors        deliveredByActorType,
                                        String        deliveredToActorPublicKey,
                                        Actors        deliveredToActorType) throws OutgoingIntraUserCantInsertRecordException {
-
+        try {
+            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
+            DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
+            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
+            transactionTable.insertRecord(recordToInsert);
+        } catch (CantInsertRecordException e) {
+            throw new OutgoingIntraUserCantInsertRecordException("An exception happened",e,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantInsertRecordException(OutgoingIntraUserCantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
     }
 
-    public List<OutgoingIntraUserTransactionWrapper> getNewTransactions() {
-        return new ArrayList<>();
+    public List<OutgoingIntraUserTransactionWrapper> getNewTransactions() throws OutgoingIntraUserCantGetTransactionsException {
+        try {
+            return getAllInState(TransactionState.NEW);
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
+            throw new OutgoingIntraUserCantGetTransactionsException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
 
-    public List<OutgoingIntraUserTransactionWrapper> getPersistedInAvailable() {
-        return new ArrayList<>();
+    public List<OutgoingIntraUserTransactionWrapper> getPersistedInAvailable() throws OutgoingIntraUserCantGetTransactionsException {
+        try {
+            return getAllInState(TransactionState.PERSISTED_IN_AVAILABLE);
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
+            throw new OutgoingIntraUserCantGetTransactionsException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
 
-    public List<OutgoingIntraUserTransactionWrapper> getDiscountedAvailableBalance() {
-        return new ArrayList<>();
+    public List<OutgoingIntraUserTransactionWrapper> getSentToCryptoVaultTransactions() throws OutgoingIntraUserCantGetTransactionsException {
+        try {
+            return getAllInState(TransactionState.SENT_TO_CRYPTO_VOULT);
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
+            throw new OutgoingIntraUserCantGetTransactionsException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
 
-    public List<OutgoingIntraUserTransactionWrapper> getPersistedInWalletTransactions() {
-        return new ArrayList<>();
+    public void cancelTransaction(OutgoingIntraUserTransactionWrapper bitcoinTransaction) throws OutgoingIntraUserCantCancelTransactionException {
+        try {
+            setToState(bitcoinTransaction, TransactionState.CANCELED);
+        } catch (CantUpdateRecordException | OutgoingIntraUserInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
 
-    public List<OutgoingIntraUserTransactionWrapper> getSentToCryptoVaultTransactions() {
-        return new ArrayList<>();
+    public void setToNew(OutgoingIntraUserTransactionWrapper bitcoinTransaction) throws OutgoingIntraUserCantCancelTransactionException {
+        try {
+            setToState(bitcoinTransaction, TransactionState.NEW);
+        } catch (CantUpdateRecordException | OutgoingIntraUserInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
 
-    public void cancelTransaction(OutgoingIntraUserTransactionWrapper bitcoinTransaction) {
+    public void setToPIA(OutgoingIntraUserTransactionWrapper bitcoinTransaction) throws OutgoingIntraUserCantCancelTransactionException {
+        try {
+            setToState(bitcoinTransaction, TransactionState.PERSISTED_IN_AVAILABLE);
+        } catch (CantUpdateRecordException | OutgoingIntraUserInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
 
-    public void setToNew(OutgoingIntraUserTransactionWrapper bitcoinTransaction) {
+    public void setToPIW(OutgoingIntraUserTransactionWrapper bitcoinTransaction) throws OutgoingIntraUserCantCancelTransactionException {
+        try {
+            setToState(bitcoinTransaction, TransactionState.PERSISTED_IN_WALLET);
+        } catch (CantUpdateRecordException | OutgoingIntraUserInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
 
-    public void setToPIA(OutgoingIntraUserTransactionWrapper bitcoinTransaction) {
-    }
-
-    public void setToPIW(OutgoingIntraUserTransactionWrapper bitcoinTransaction) {
-    }
-
-    public void setToSTCV(OutgoingIntraUserTransactionWrapper bitcoinTransaction) {
+    public void setToSTCV(OutgoingIntraUserTransactionWrapper bitcoinTransaction) throws OutgoingIntraUserCantCancelTransactionException {
+        try {
+            setToState(bitcoinTransaction, TransactionState.SENT_TO_CRYPTO_VOULT);
+        } catch (CantUpdateRecordException | OutgoingIntraUserInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
     
-    public void setTransactionHash(OutgoingIntraUserTransactionWrapper bitcoinTransaction, String hash) {
+    public void setTransactionHash(OutgoingIntraUserTransactionWrapper bitcoinTransaction, String hash) throws OutgoingIntraUserCantSetTranactionHashException {
+        try {
+            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
+            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
+            recordToUpdate.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_HASH_COLUMN_NAME, hash);
+            transactionTable.updateRecord(recordToUpdate);
+        } catch (CantUpdateRecordException | OutgoingIntraUserInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new OutgoingIntraUserCantSetTranactionHashException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraUserCantSetTranactionHashException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
     }
 
 
