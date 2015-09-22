@@ -76,6 +76,21 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
     }
 
 
+    public int getAvailableKeyPosition(int accountNumber, int chainNumber){
+        return 0;
+    }
+
+    public int setNewAvailableKeyPosition(int accountNumber, int chainNumber){
+        return 0;
+    }
+
+    public int getChainNumber(int accountNumber, String chainPublicKey){
+        return 0;
+    }
+
+    public boolean isValidChainNumber(int accountNumber, int chainNumber){
+        return true;
+    }
 
 
 }

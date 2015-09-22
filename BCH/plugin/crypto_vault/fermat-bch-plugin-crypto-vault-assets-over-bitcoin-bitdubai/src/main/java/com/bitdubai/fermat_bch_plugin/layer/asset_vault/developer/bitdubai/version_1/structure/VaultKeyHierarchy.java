@@ -83,7 +83,8 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
         /**
          * I validate that I have this Chain number registered.
          */
-        if (!isValidChainNumber(chainNumber))
+        int accountNumber = BitcoinNetworkSelector.getNetworkAccountNumber(blockchainNetworkType);
+        if (!isValidChainNumber(accountNumber, chainNumber))
             throw new InvalidChainNumberException(InvalidChainNumberException.DEFAULT_MESSAGE, null, "Chain Number: " + chainNumber, "invalid account number.");
 
         /**
@@ -93,7 +94,7 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
          * m/1 Test
          * m/2 RegTest
          */
-        List<ChildNumber> path = ImmutableList.of(new ChildNumber(BitcoinNetworkSelector.getNetworkAccountNumber(blockchainNetworkType), true),new ChildNumber(chainNumber, true), new ChildNumber(getAvailablePositionFromChain(chainNumber), true));
+        List<ChildNumber> path = ImmutableList.of(new ChildNumber(accountNumber, true),new ChildNumber(chainNumber, true), new ChildNumber(getAvailablePositionFromChain(chainNumber), true));
         DeterministicKey keyAtPosition = masterHierarchy.deriveChild(path, false, true, ChildNumber.ZERO);
 
         /**
@@ -112,12 +113,8 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
     }
 
 
-    private boolean isValidChainNumber(int chainNumber){
+    private boolean isValidChainNumber(int accountNumber, int chainNumber){
         return true;
-    }
-
-    public CryptoAddress getUsedCryptoAddressFromChain(int chainNumber, int position){
-        return null;
     }
 
      private int getAvailablePositionFromChain (int chainNumber){
