@@ -5,7 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.*;
 
 import java.io.Serializable;
@@ -22,14 +23,12 @@ import java.util.UUID;
 public interface CryptoWallet extends Serializable {
 
     /**
-     * Contacts Fragment methods...
-     */
-
-    /**
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey publick key of the wallet in which we are working.
+     *
      * @return a list of instances of wallet contact records
+     *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
     List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
@@ -38,48 +37,97 @@ public interface CryptoWallet extends Serializable {
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey public key of the wallet in which we are working.
-     * @param max quantity of instance you want to return
-     * @param offset the point of start in the list you're trying to bring.
+     * @param max             quantity of instance you want to return
+     * @param offset          the point of start in the list you're trying to bring.
+     *
      * @return a list of instances of wallet contact records
+     *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    List<CryptoWalletWalletContact> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException;
+    List<CryptoWalletWalletContact> listWalletContactsScrolling(String  walletPublicKey,
+                                                                Integer max,
+                                                                Integer offset) throws CantGetAllWalletContactsException;
+
+    /**
+     * Throw the method <code>listAllIntraUserConnections</code> you can get all the connections of the intra user selected.
+     *
+     * @param intraUserSelectedPublicKey the public key of the intra user that the user select.
+     * @param walletPublicKey            public key of the wallet in which we are working.
+     * @param max                        quantity of instance you want to return
+     * @param offset                     the point of start in the list you're trying to bring.
+     *
+     * @return a list of crypto wallet intra user actors
+     *
+     * @throws CantGetAllIntraUserConnectionsException if something goes wrong.
+     */
+    List<CryptoWalletIntraUserActor> listAllIntraUserConnections(String  intraUserSelectedPublicKey,
+                                                                 String  walletPublicKey,
+                                                                 Integer max,
+                                                                 Integer offset) throws CantGetAllIntraUserConnectionsException;
 
     /**
      * Create a new contact for an specific wallet
      *
      * @param receivedCryptoAddress the crypto address of the contact
-     * @param actorName the actor name or alias for the person we're adding like contact
-     * @param actorType type of actor that we're adding
-     * @param referenceWallet type of reference wallet
-     * @param walletPublicKey public key of the wallet in which we are working
-     * @return an instance of the created publick key
+     * @param actorAlias            the actor alias for the person we're adding like contact
+     * @param actorFirstName        string containing actor first name
+     * @param actorLastName         string containing actor last name
+     * @param actorType             type of actor that we're adding
+     * @param walletPublicKey       public key of the wallet in which we are working
+     *
+     * @return an instance of the created public key
+     *
      * @throws CantCreateWalletContactException if something goes wrong
      */
     CryptoWalletWalletContact createWalletContact(CryptoAddress receivedCryptoAddress,
-                                                  String actorName,
-                                                  Actors actorType,
-                                                  ReferenceWallet referenceWallet,
-                                                  String walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+                                                  String        actorAlias,
+                                                  String        actorFirstName,
+                                                  String        actorLastName,
+                                                  Actors        actorType,
+                                                  String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
      * Create a new contact with a photo for an specific wallet
      *
      * @param receivedCryptoAddress the crypto address of the contact
-     * @param actorName the actor name or alias for the person we're adding like contact
-     * @param actorType type of actor that we're adding
-     * @param referenceWallet type of reference wallet
-     * @param walletPublicKey public key of the wallet in which we are working
-     * @param photo bite array with photo information
-     * @return an instance of the created publick key
+     * @param actorAlias            the actor alias for the person we're adding like contact
+     * @param actorFirstName        string containing actor first name
+     * @param actorLastName         string containing actor last name
+     * @param actorType             type of actor that we're adding
+     * @param walletPublicKey       public key of the wallet in which we are working
+     * @param photo                 bite array with photo information
+     *
+     * @return an instance of the created wallet contact
+     *
      * @throws CantCreateWalletContactException if something goes wrong
      * @throws ContactNameAlreadyExistsException if the name of the contact already exists
      */
     CryptoWalletWalletContact createWalletContactWithPhoto(CryptoAddress receivedCryptoAddress,
-                                                           String actorName, Actors actorType,
-                                                           ReferenceWallet referenceWallet,
-                                                           String walletPublicKey,
-                                                           byte[] photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+                                                           String        actorAlias,
+                                                           String        actorFirstName,
+                                                           String        actorLastName,
+                                                           Actors        actorType,
+                                                           String        walletPublicKey,
+                                                           byte[]        photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+
+    /**
+     * Throw the method <code>addIntraUserActorLikeContact</code> you can add an intra user connection like contact
+     *
+     * @param intraUserPublicKey the public key of the actor that you want to add.
+     * @param alias              the actor name or alias for the person we're adding like contact
+     * @param actorFirstName     string containing actor first name
+     * @param actorLastName      string containing actor last name
+     * @param walletPublicKey    public key of the wallet in which we are working
+     *
+     * @return an instance of the created wallet contact
+     *
+     * @throws CantCreateWalletContactException if something goes wrong.
+     */
+    CryptoWalletWalletContact addIntraUserActorLikeContact(String intraUserPublicKey,
+                                                           String alias,
+                                                           String actorFirstName,
+                                                           String actorLastName,
+                                                           String walletPublicKey) throws CantCreateWalletContactException;
 
     /**
      * updates the photo of an actor
@@ -96,6 +144,8 @@ public interface CryptoWallet extends Serializable {
     void updateWalletContact(UUID contactId,
                              CryptoAddress receivedCryptoAddress,
                              String actorName) throws CantUpdateWalletContactException;
+
+
 
     /**
      * deletes a contact having in count the contact id
@@ -115,11 +165,16 @@ public interface CryptoWallet extends Serializable {
      */
     CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException;
 
-    boolean isValidAddress(CryptoAddress cryptoAddress);
-
     /**
-     * Receive methods
+     * Throw the method <code>isValidAddress</code> you can validate in the specific vault if a specific crypto address is valid.
+     *
+     * @param cryptoAddress to validate
+     * @return boolean value, true if positive, false if negative.
      */
+    boolean isValidAddress(CryptoAddress cryptoAddress);
+    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
+
+
     CryptoAddress requestAddressToKnownUser(String deliveredByActorPublicKey,
                                             Actors deliveredByActorType,
                                             String deliveredToActorPublicKey,
@@ -129,6 +184,7 @@ public interface CryptoWallet extends Serializable {
                                             String vaultIdentifier,
                                             String walletPublicKey,
                                             ReferenceWallet walletType) throws CantRequestCryptoAddressException;
+    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
                                                Actors deliveredByActorType,
@@ -138,10 +194,8 @@ public interface CryptoWallet extends Serializable {
                                                String vaultIdentifier,
                                                String walletPublicKey,
                                                ReferenceWallet walletType) throws CantRequestCryptoAddressException;
+    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
-    /**
-     * Send money methods
-     */
     void send(long cryptoAmount,
               CryptoAddress destinationAddress,
               String notes, String walletPublicKey,
@@ -151,72 +205,103 @@ public interface CryptoWallet extends Serializable {
               Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
 
 
-    //TODO:  LEON ponele lo que necesites de arriba, me creo los metodos y los hardcodeo
-    //TODO:  MALO TEAM FOREVER
-    //TODO:  VAMOS RACING CARAJO.
-
-
     /**
      * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need.
      *
-     * @param balanceType type of balance that you need
+     * @param balanceType     type of balance that you need
      * @param walletPublicKey public key of the wallet which you're working with.
+     *
      * @return the balance of the wallet in long format.
+     *
      * @throws CantGetBalanceException if something goes wrong
      */
     long getBalance(BalanceType balanceType,
-                    String walletPublicKey) throws CantGetBalanceException;
+                    String      walletPublicKey) throws CantGetBalanceException;
 
     /**
      * Throw the method <code>getTransactions</code> you cant get all the transactions for an specific balance type.
      *
-     * @param balanceType type of balance that you need
+     * @param balanceType     type of balance that you need
      * @param walletPublicKey of the wallet which you're working with.
-     * @param max quantity of instance you want to return
-     * @param offset the point of start in the list you're trying to bring.
+     * @param max             quantity of instance you want to return
+     * @param offset          the point of start in the list you're trying to bring.
+     *
      * @return a list of crypto wallet transactions (enriched crypto transactions).
+     *
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
-                                                  String walletPublicKey,
-                                                  int max,
-                                                  int offset) throws CantListTransactionsException;
+                                                  String      walletPublicKey,
+                                                  int         max,
+                                                  int         offset) throws CantListTransactionsException;
 
     /**
-     * Throw the method <code>listTransactionByActor</code> you cant get all the transactions related with an specific actor.
+     * Throw the method <code>listTransactionsByActor</code> you cant get all the transactions related with an specific actor.
      *
-     * @param balanceType type of balance that you need
+     * @param balanceType     type of balance that you need
      * @param walletPublicKey of the wallet which you're working with.
-     * @param actorPublicKey of the actor from which you need the transactions.
-     * @param max quantity of instance you want to return
-     * @param offset the point of start in the list you're trying to bring.
+     * @param actorPublicKey  of the actor from which you need the transactions.
+     * @param max             quantity of instance you want to return
+     * @param offset          the point of start in the list you're trying to bring.
+     *
      * @return a list of crypto wallet transactions (enriched crypto transactions).
+     *
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
-                                                          String walletPublicKey,
-                                                          String actorPublicKey,
-                                                          int max,
-                                                          int offset) throws CantListTransactionsException;
+                                                          String      walletPublicKey,
+                                                          String      actorPublicKey,
+                                                          int         max,
+                                                          int         offset) throws CantListTransactionsException;
+
     /**
      * Throw the method <code>getActorTransactionHistory</code> you can get the transaction history of an specific actor.
      *
-     * @param balanceType type of balance that you need
+     * @param balanceType     type of balance that you need
      * @param walletPublicKey public key of the wallet in where you're working.
-     * @param actorPublicKey public key of the actor that you're trying to find.
+     * @param actorPublicKey  public key of the actor that you're trying to find.
+     *
      * @return an instance of ActorTransactionSummary
+     *
      * @throws CantGetActorTransactionHistoryException if something goes wrong.
      */
     ActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,
-                                                       String walletPublicKey,
-                                                       String actorPublicKey) throws CantGetActorTransactionHistoryException;
+                                                       String      walletPublicKey,
+                                                       String      actorPublicKey) throws CantGetActorTransactionHistoryException;
 
+    /**
+     * Throw the method <code>listLastActorTransactionsByTransactionType</code> you can get the last transaction for each actor
+     * who have made transactions with the specified wallet.
+     *
+     * @param balanceType     type of balance that you need
+     * @param transactionType type of transaction you want to bring, credits or debits or both.
+     * @param walletPublicKey public key of the wallet in where you're working.
+     * @param max             quantity of instance you want to return
+     * @param offset          the point of start in the list you're trying to bring.
+     *
+     * @return a list of crypto wallet transactions (enriched crypto transactions).
+     *
+     * @throws CantListTransactionsException if something goes wrong.
+     */
+    List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
+                                                                             TransactionType transactionType,
+                                                                             String          walletPublicKey,
+                                                                             int             max,
+                                                                             int             offset) throws CantListTransactionsException;
 
-    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
-    List<CryptoWalletTransaction>  listContactOrdererByLastSendTransaction();
-
-    // aca solo devolveme la ultima transaccion que igualmente viene con el actor pegado
-    List<CryptoWalletTransaction>  listContactOrdererByLastReceiveTransaction();
+    /**
+     * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
+     *
+     * @param walletPublicKey public key of the wallet in where you're working.
+     * @param transactionID   to identify the transaction.
+     * @param description     string describing the transaction
+     *
+     * @throws CantSaveTransactionDescriptionException if something goes wrong.
+     * @throws TransactionNotFoundException if we cant find the transaction.
+     */
+    void setTransactionDescription(String walletPublicKey,
+                                   UUID   transactionID,
+                                   String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException;
 
     List<PaymentRequest> listSentPaymentRequest();
 

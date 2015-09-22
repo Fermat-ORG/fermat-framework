@@ -24,6 +24,7 @@ public class DigitalAsset  implements Serializable{
     DigitalAssetContract contract;
     long genesisAmount;
 
+
     /**
      * Properties defined by the Asset Issuer Transaction
      */

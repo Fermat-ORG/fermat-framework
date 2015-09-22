@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.except
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetWalletResourcesException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ import java.util.UUID;
  *  @version 1.0.0
  *  @since   18/02/15.
  * */
-public interface WalletResourcesProviderManager {
+public interface WalletResourcesProviderManager extends ResourceProviderManager{
 
 
     /**
@@ -95,7 +96,7 @@ public interface WalletResourcesProviderManager {
      * @return the layiut represented as String
      * @throws CantGetResourcesException
      */
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation,UUID skinId) throws CantGetResourcesException;
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation,UUID skinId,String walletPublicKey) throws CantGetResourcesException;
 
 
 
