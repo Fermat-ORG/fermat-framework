@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,7 +25,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
 
     private final Actors actorType;
 
-    private final CryptoAddress receivedCryptoAddress;
+    private final List<CryptoAddress> receivedCryptoAddress;
 
     private final String actorPublicKey;
 
@@ -36,7 +37,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         this.contactId = walletContactRecord.getContactId();
         this.walletPublicKey = walletContactRecord.getWalletPublicKey();
         this.actorType = walletContactRecord.getActorType();
-        this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses().get(0);
+        this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses();
         this.actorPublicKey = walletContactRecord.getActorPublicKey();
         this.actorName = walletContactRecord.getActorAlias();
         this.profilePicture = profilePicture != null ? profilePicture.clone() : null;
@@ -62,7 +63,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     }
 
     @Override
-    public CryptoAddress getReceivedCryptoAddress() {
+    public List<CryptoAddress> getReceivedCryptoAddress() {
         return receivedCryptoAddress;
     }
 
