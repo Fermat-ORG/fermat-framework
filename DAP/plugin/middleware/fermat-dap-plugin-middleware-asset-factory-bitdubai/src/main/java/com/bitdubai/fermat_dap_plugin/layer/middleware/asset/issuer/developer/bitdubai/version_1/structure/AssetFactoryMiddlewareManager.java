@@ -376,7 +376,8 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             assetFactory.setState(State.PENDING_FINAL);
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
-            assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity());
+            //TODO: Franklin, esto lo comenté para que pudiera compilar, hice refactor del AssetIssuingManager para que le pases al objeto BlockchainNetworkType
+            //assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity());
         }
         catch (CantSaveAssetFactoryException exception)
         {

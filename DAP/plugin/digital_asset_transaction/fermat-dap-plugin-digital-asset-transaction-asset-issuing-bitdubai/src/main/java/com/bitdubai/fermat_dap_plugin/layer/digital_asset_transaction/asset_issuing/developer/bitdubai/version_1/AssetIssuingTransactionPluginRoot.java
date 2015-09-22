@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -147,16 +148,16 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public void start() throws CantStartPluginException {
         //delete this
-        printSomething("Starting Asset Issuing plugin");
+        //printSomething("Starting Asset Issuing plugin");
 
         try{
             this.assetIssuingDatabase = this.pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
         }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
             //TODO: delete this printStackTrace in production
             //exception.printStackTrace();
-            printSomething("CANNOT OPEN PLUGIN DATABASE: "+this.pluginId);
+            //printSomething("CANNOT OPEN PLUGIN DATABASE: "+this.pluginId);
             try {
-                printSomething("CREATING A PLUGIN DATABASE.");
+                //printSomething("CREATING A PLUGIN DATABASE.");
                 createAssetIssuingTransactionDatabase();
             } catch (CantCreateDatabaseException innerException) {
                 throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Issuing plugin - "+this.pluginId, "Cannot open or create the plugin database");
@@ -224,8 +225,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetsException {
-        this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount);
+    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
+        this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount, blockchainNetworkType);
     }
 
     @Override
@@ -324,7 +325,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setContract(digitalAssetContract);
         LOG.info("MAP_DigitalAsset2:"+digitalAsset);
         try {
-            this.assetIssuingTransactionManager.issueAssets(digitalAsset,1);
+            this.assetIssuingTransactionManager.issueAssets(digitalAsset,1,BlockchainNetworkType.REG_TEST);
         } catch (CantIssueDigitalAssetsException e) {
             LOG.info("MAP test exception:"+e);
         }
