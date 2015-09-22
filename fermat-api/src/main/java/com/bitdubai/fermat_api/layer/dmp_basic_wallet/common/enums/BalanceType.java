@@ -1,9 +1,10 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums;
+package com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums;
 
 /**
  * Created by natalia on 06/07/15.
  */
 public enum BalanceType {
+
     AVAILABLE("AVAILABLE"),
     BOOK("BOOK");
 
@@ -18,14 +19,9 @@ public enum BalanceType {
     public static BalanceType getByCode(String code) {
 
         switch (code) {
-            case "BOOK": return BalanceType.BOOK;
-            case "AVAILABLE": return BalanceType.AVAILABLE;
-
+            case "BOOK":      return BOOK;
+            case "AVAILABLE": return AVAILABLE;
+            default:          return AVAILABLE;
         }
-
-        /**
-         * Return by default.
-         */
-        return BalanceType.AVAILABLE;
     }
 }

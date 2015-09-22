@@ -1,15 +1,11 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions;
+package com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantGetActorTransactionSummaryException</code>
- * is thrown when i cant get an actor transaction summary.
- *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
- * @version 1.0
+ * Created by eze on 2015.06.17..
  */
-public class CantGetActorTransactionSummaryException extends FermatException {
+public class CantRegisterDebitException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -18,7 +14,7 @@ public class CantGetActorTransactionSummaryException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetActorTransactionSummaryException(String message, Exception cause, String context, String possibleReason) {
+    public CantRegisterDebitException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
