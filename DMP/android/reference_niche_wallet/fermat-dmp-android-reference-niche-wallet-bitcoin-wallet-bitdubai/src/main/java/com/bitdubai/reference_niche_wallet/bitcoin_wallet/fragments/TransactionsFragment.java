@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
@@ -497,6 +498,8 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         }
         return adapter;
     }
+
+
     private void loadTransactionMap(List<CryptoWalletTransaction> lstTransactions){
         Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
         for(CryptoWalletTransaction transaction:lstTransactions){
