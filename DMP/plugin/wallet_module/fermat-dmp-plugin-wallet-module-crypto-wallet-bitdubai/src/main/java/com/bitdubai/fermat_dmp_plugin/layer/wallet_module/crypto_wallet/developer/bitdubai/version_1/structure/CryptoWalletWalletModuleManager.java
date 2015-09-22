@@ -250,25 +250,26 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
 
     @Override
     public CryptoWalletWalletContact createWalletContactWithPhoto(CryptoAddress receivedCryptoAddress,
-                                                         String actorName,
-                                                         Actors actorType,
-                                                         ReferenceWallet referenceWallet,
-                                                         String walletPublicKey,
-                                                         byte[] photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
+                                                                  String        actorAlias,
+                                                                  String        actorFirstName,
+                                                                  String        actorLastName,
+                                                                  Actors        actorType,
+                                                                  String        walletPublicKey,
+                                                                  byte[]        photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
             try {
-                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorName, walletPublicKey);
+                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
 
             } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                String actorPublicKey = createActor(actorName, actorType, photo);
+                String actorPublicKey = createActor(actorAlias, actorType, photo);
                 List<CryptoAddress> cryptoAddresses = new ArrayList<>();
                 cryptoAddresses.add(receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
-                        actorName,
-                        null,
-                        null,
+                        actorAlias,
+                        actorFirstName,
+                        actorLastName,
                         actorType,
                         cryptoAddresses,
                         walletPublicKey
@@ -291,25 +292,26 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
 
     @Override
     public CryptoWalletWalletContact createWalletContact(CryptoAddress receivedCryptoAddress,
-                                                         String actorName,
-                                                         Actors actorType,
-                                                         ReferenceWallet referenceWallet,
-                                                         String walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
+                                                         String        actorAlias,
+                                                         String        actorFirstName,
+                                                         String        actorLastName,
+                                                         Actors        actorType,
+                                                         String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
             try {
-                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorName, walletPublicKey);
+                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
 
             } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
 
-                String actorPublicKey = createActor(actorName, actorType);
+                String actorPublicKey = createActor(actorAlias, actorType);
                 List<CryptoAddress> cryptoAddresses = new ArrayList<>();
                 cryptoAddresses.add(receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
-                        actorName,
-                        null,
-                        null,
+                        actorAlias,
+                        actorFirstName,
+                        actorLastName,
                         actorType,
                         cryptoAddresses,
                         walletPublicKey
@@ -368,6 +370,31 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
             throw new WalletContactNotFoundException(WalletContactNotFoundException.DEFAULT_MESSAGE, e);
         } catch (Exception e) {
             throw new CantFindWalletContactException(CantFindWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public CryptoWalletWalletContact addIntraUserActorLikeContact(String intraUserPublicKey,
+                                                                  String alias,
+                                                                  String firstName,
+                                                                  String lastName,
+                                                                  String walletPublicKey) throws CantCreateWalletContactException {
+        try {
+            WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
+                    intraUserPublicKey,
+                    alias,
+                    firstName,
+                    lastName,
+                    Actors.INTRA_USER,
+                    null,
+                    walletPublicKey
+            );
+
+            return new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+        } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException e) {
+            throw new CantCreateWalletContactException();
+        } catch (Exception e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
