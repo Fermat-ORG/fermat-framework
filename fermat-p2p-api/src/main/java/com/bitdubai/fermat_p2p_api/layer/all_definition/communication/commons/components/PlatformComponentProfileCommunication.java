@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
@@ -49,7 +50,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     /**
      * Represent the location
      */
-    private Location location;
+    private DeviceLocation location;
 
     /**
      * Represent the platformComponentType
@@ -101,7 +102,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
         this.alias = alias;
         this.communicationCloudClientIdentity = communicationCloudClientIdentity;
         this.identityPublicKey = identityPublicKey;
-        this.location = location;
+        this.location = (DeviceLocation) location;
         this.name = name;
         this.networkServiceType = networkServiceType;
         this.platformComponentType = platformComponentType;

@@ -6,9 +6,9 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
@@ -50,7 +50,7 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
     /**
      * Represent the location
      */
-    private Location location;
+    private DeviceLocation location;
 
     /**
      * Represent the platformComponentType
@@ -90,8 +90,8 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
         this.networkServiceType = null;
         this.platformComponentType = null;
         this.extraData = null;
-        this.firstRecord = null;
-        this.numberRegister = null;
+        this.firstRecord  = new Integer(0);
+        this.numberRegister = new Integer(0);
     }
 
     /**
@@ -108,7 +108,7 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
         super();
         this.alias = alias;
         this.identityPublicKey = identityPublicKey;
-        this.location = location;
+        this.location = (DeviceLocation) location;
         this.name = name;
         this.networkServiceType = networkServiceType;
         this.platformComponentType = platformComponentType;
