@@ -14,6 +14,7 @@ public class CryptoTransaction{
     private CryptoCurrency cryptoCurrency;
     private long cryptoAmount;
     private CryptoStatus cryptoStatus;
+    private String op_Return;
 
 
     public CryptoTransaction(String transactionHash,
@@ -51,5 +52,13 @@ public class CryptoTransaction{
 
     public CryptoStatus getCryptoStatus() {
         return cryptoStatus;
+    }
+
+    public String getOp_Return() {
+        return op_Return;
+    }
+
+    public void setOp_Return(String op_Return) {
+        this.op_Return = op_Return;
     }
 }
