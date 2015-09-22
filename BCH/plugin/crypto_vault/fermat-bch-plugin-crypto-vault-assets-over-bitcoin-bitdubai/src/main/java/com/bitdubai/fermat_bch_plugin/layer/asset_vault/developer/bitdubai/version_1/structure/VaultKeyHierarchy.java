@@ -9,6 +9,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkT
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetVaultCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetVaultCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InconsistentDatabaseResultException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidChainNumberException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.VaultKeyHierarchyException;
@@ -170,14 +171,14 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
      * @throws CantExecuteDatabaseOperationException
      */
     private void setNextAvailablePositionForChain(int accountNumber, int chainNumber) throws InconsistentDatabaseResultException, CantExecuteDatabaseOperationException {
-        getAssetVaultCryptoVaultDao().setNewAvailableKeyPosition(accountNumber, chainNumber);
+            getAssetVaultCryptoVaultDao().setNewAvailableKeyPosition(accountNumber, chainNumber);
     }
 
     /**
      * gets the DAO object to access the database methods.
      * @return
      */
-    private AssetVaultCryptoVaultDao getAssetVaultCryptoVaultDao(){
+    private AssetVaultCryptoVaultDao getAssetVaultCryptoVaultDao() {
         AssetVaultCryptoVaultDao assetVaultCryptoVaultDao = new AssetVaultCryptoVaultDao(this.pluginId, this.pluginDatabaseSystem);
         return assetVaultCryptoVaultDao;
     }
