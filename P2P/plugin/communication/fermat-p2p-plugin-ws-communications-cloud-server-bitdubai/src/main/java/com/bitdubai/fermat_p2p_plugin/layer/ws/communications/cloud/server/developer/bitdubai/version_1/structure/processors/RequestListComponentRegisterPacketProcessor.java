@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
@@ -59,7 +60,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Construct the json object
          */
         Gson gson = new Gson();
-        DiscoveryQueryParameters discoveryQueryParameters = gson.fromJson(messageContentJsonStringRepresentation, DiscoveryQueryParameters.class);
+        DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(messageContentJsonStringRepresentation);
 
         /*
          * Get the filters
@@ -139,42 +140,51 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         int filterMatched = 0;
         List<PlatformComponentProfile>  filteredLis = new ArrayList<>();
 
-        /*
-         * Apply the basic filter
-         */
-        for (PlatformComponentProfile platformComponentProfile: list) {
 
-            if (discoveryQueryParameters.getIdentityPublicKey() != null && discoveryQueryParameters.getIdentityPublicKey() != ""){
-                if (platformComponentProfile.getIdentityPublicKey() == discoveryQueryParameters.getIdentityPublicKey()){
-                    filterMatched += 1;
+        if (totalFilterToApply > 0){
+
+            /*
+             * Apply the basic filter
+             */
+            for (PlatformComponentProfile platformComponentProfile: list) {
+
+                if (discoveryQueryParameters.getIdentityPublicKey() != null && discoveryQueryParameters.getIdentityPublicKey() != ""){
+                    if (platformComponentProfile.getIdentityPublicKey() == discoveryQueryParameters.getIdentityPublicKey()){
+                        filterMatched += 1;
+                    }
                 }
-            }
 
-            if (discoveryQueryParameters.getAlias() != null && discoveryQueryParameters.getAlias() != ""){
-                if (platformComponentProfile.getAlias() == discoveryQueryParameters.getAlias()){
-                    filterMatched += 1;
+                if (discoveryQueryParameters.getAlias() != null && discoveryQueryParameters.getAlias() != ""){
+                    if (platformComponentProfile.getAlias() == discoveryQueryParameters.getAlias()){
+                        filterMatched += 1;
+                    }
                 }
-            }
 
-            if (discoveryQueryParameters.getName() != null && discoveryQueryParameters.getName() != ""){
-                if (platformComponentProfile.getName() == discoveryQueryParameters.getName()){
-                    filterMatched += 1;
+                if (discoveryQueryParameters.getName() != null && discoveryQueryParameters.getName() != ""){
+                    if (platformComponentProfile.getName() == discoveryQueryParameters.getName()){
+                        filterMatched += 1;
+                    }
                 }
-            }
 
-            if (discoveryQueryParameters.getExtraData() != null && discoveryQueryParameters.getExtraData() != ""){
-                if (platformComponentProfile.getExtraData() == discoveryQueryParameters.getExtraData()){
-                    filterMatched += 1;
+                if (discoveryQueryParameters.getExtraData() != null && discoveryQueryParameters.getExtraData() != ""){
+                    if (platformComponentProfile.getExtraData() == discoveryQueryParameters.getExtraData()){
+                        filterMatched += 1;
+                    }
                 }
+
+                //if al filter matched
+                if (totalFilterToApply == filterMatched){
+                    //Add to the list
+                    filteredLis.add(platformComponentProfile);
+                }
+
             }
 
-            //if al filter matched
-            if (totalFilterToApply == filterMatched){
-                //Add to the list
-                filteredLis.add(platformComponentProfile);
-            }
+        }else {
 
+            filteredLis = list;
         }
+
 
         /*
          * Apply geo location filter
@@ -185,12 +195,18 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         }
 
-        /*
-         * Apply pagination
-         */
-        if (filteredLis.size() > discoveryQueryParameters.getNumberRegister() &&
-                filteredLis.size() > discoveryQueryParameters.firstRecord()){
-            filteredLis =  filteredLis.subList(discoveryQueryParameters.firstRecord(), discoveryQueryParameters.getNumberRegister());
+        if (discoveryQueryParameters.getNumberRegister() != new Integer(0) && discoveryQueryParameters.firstRecord() != new Integer(0)){
+
+            /*
+             * Apply pagination
+             */
+            if (filteredLis.size() > discoveryQueryParameters.getNumberRegister() &&
+                    filteredLis.size() > discoveryQueryParameters.firstRecord()){
+                filteredLis =  filteredLis.subList(discoveryQueryParameters.firstRecord(), discoveryQueryParameters.getNumberRegister());
+            }else if (filteredLis.size() > 100) {
+                filteredLis = filteredLis.subList(discoveryQueryParameters.firstRecord(), 100);
+            }
+
         }else if (filteredLis.size() > 100) {
             filteredLis = filteredLis.subList(0, 100);
         }
