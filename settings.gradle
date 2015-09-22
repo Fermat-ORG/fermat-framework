@@ -534,8 +534,8 @@ project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai').projectDir
 include ':fermat-dap-android-reference-wallet-asset-user-bitdubai'
 project(':fermat-dap-android-reference-wallet-asset-user-bitdubai').projectDir = new File('DAP/android/reference_wallet/fermat-dap-android-reference-wallet-asset-user-bitdubai')
 
-include ':fermat-dap-android-wallet-redeem-point-bitdubai'
-project(':fermat-dap-android-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/reference_wallet/fermat-dap-android-wallet-redeem-point-bitdubai')
+include ':fermat-dap-android-reference-wallet-redeem-point-bitdubai'
+project(':fermat-dap-android-reference-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/reference_wallet/fermat-dap-android-reference-wallet-redeem-point-bitdubai')
 
 // android dap sub apps
 include ':fermat-dap-android-sub-app-asset-factory-bitdubai'

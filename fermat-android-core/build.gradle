@@ -116,7 +116,7 @@ dependencies {
 
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-user-bitdubai')
-    compile project(':fermat-dap-android-wallet-redeem-point-bitdubai')
+    compile project(':fermat-dap-android-reference-wallet-redeem-point-bitdubai')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
