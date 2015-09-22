@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragmentNew;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
@@ -156,7 +157,7 @@ public abstract class FermatListFragmentNew<M> extends FermatWalletFragment
      *
      * @param refreshType Fermat Refresh Enum Type
      */
-    public ArrayList<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+    public List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         return null;
     }
 

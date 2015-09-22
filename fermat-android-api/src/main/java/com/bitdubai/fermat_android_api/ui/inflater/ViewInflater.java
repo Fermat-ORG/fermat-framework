@@ -2,6 +2,8 @@ package com.bitdubai.fermat_android_api.ui.inflater;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
@@ -147,6 +149,12 @@ public class ViewInflater {
                 }
                 else if (name.equals("RelativeLayout")) {
                         result = new RelativeLayout(context );
+                }
+                else if (name.equals("android.support.v4.widget.SwipeRefreshLayout")) {
+                        result = new SwipeRefreshLayout(context );
+                }
+                else if (name.equals("android.support.v7.widget.RecyclerView")) {
+                        result = new RecyclerView(context );
                 }
                 else if (name.equals("ScrollView")) {
                         result = new ScrollView(context );
@@ -406,6 +414,9 @@ public class ViewInflater {
                 }
                 else if (vg instanceof LinearLayout) {
                         lps = new LinearLayout.LayoutParams(w,h);
+                }
+                else if (vg instanceof SwipeRefreshLayout){
+                        lps = new SwipeRefreshLayout.LayoutParams(w,h);
                 }
                 else if (vg instanceof AbsoluteLayout) {
                         String x = findAttribute(atts, "android:layout_x");

@@ -39,7 +39,7 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
         this.resourceProviderManager = resourceProviderManager;
     }
 
-    protected FermatAdapterNew(Context context, ArrayList<M> dataSet,ViewInflater viewInflater,ResourceProviderManager resourceProviderManager) {
+    protected FermatAdapterNew(Context context, List<M> dataSet,ViewInflater viewInflater,ResourceProviderManager resourceProviderManager) {
         this.context = context;
         this.dataSet = dataSet;
         this.viewInflater = viewInflater;
