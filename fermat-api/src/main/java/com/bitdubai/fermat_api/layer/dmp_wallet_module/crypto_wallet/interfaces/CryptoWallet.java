@@ -23,10 +23,6 @@ import java.util.UUID;
 public interface CryptoWallet extends Serializable {
 
     /**
-     * Contacts Fragment methods...
-     */
-
-    /**
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey publick key of the wallet in which we are working.
@@ -73,9 +69,10 @@ public interface CryptoWallet extends Serializable {
      * Create a new contact for an specific wallet
      *
      * @param receivedCryptoAddress the crypto address of the contact
-     * @param actorName             the actor name or alias for the person we're adding like contact
+     * @param actorAlias            the actor alias for the person we're adding like contact
+     * @param actorFirstName        string containing actor first name
+     * @param actorLastName         string containing actor last name
      * @param actorType             type of actor that we're adding
-     * @param referenceWallet       type of reference wallet
      * @param walletPublicKey       public key of the wallet in which we are working
      *
      * @return an instance of the created public key
@@ -83,29 +80,54 @@ public interface CryptoWallet extends Serializable {
      * @throws CantCreateWalletContactException if something goes wrong
      */
     CryptoWalletWalletContact createWalletContact(CryptoAddress receivedCryptoAddress,
-                                                  String actorName,
-                                                  Actors actorType,
-                                                  ReferenceWallet referenceWallet,
-                                                  String walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+                                                  String        actorAlias,
+                                                  String        actorFirstName,
+                                                  String        actorLastName,
+                                                  Actors        actorType,
+                                                  String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
      * Create a new contact with a photo for an specific wallet
      *
      * @param receivedCryptoAddress the crypto address of the contact
-     * @param actorName the actor name or alias for the person we're adding like contact
-     * @param actorType type of actor that we're adding
-     * @param referenceWallet type of reference wallet
-     * @param walletPublicKey public key of the wallet in which we are working
-     * @param photo bite array with photo information
-     * @return an instance of the created publick key
+     * @param actorAlias            the actor alias for the person we're adding like contact
+     * @param actorFirstName        string containing actor first name
+     * @param actorLastName         string containing actor last name
+     * @param actorType             type of actor that we're adding
+     * @param walletPublicKey       public key of the wallet in which we are working
+     * @param photo                 bite array with photo information
+     *
+     * @return an instance of the created wallet contact
+     *
      * @throws CantCreateWalletContactException if something goes wrong
      * @throws ContactNameAlreadyExistsException if the name of the contact already exists
      */
     CryptoWalletWalletContact createWalletContactWithPhoto(CryptoAddress receivedCryptoAddress,
-                                                           String actorName, Actors actorType,
-                                                           ReferenceWallet referenceWallet,
-                                                           String walletPublicKey,
-                                                           byte[] photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+                                                           String        actorAlias,
+                                                           String        actorFirstName,
+                                                           String        actorLastName,
+                                                           Actors        actorType,
+                                                           String        walletPublicKey,
+                                                           byte[]        photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+
+    /**
+     * Throw the method <code>addIntraUserActorLikeContact</code> you can add an intra user connection like contact
+     *
+     * @param intraUserPublicKey the public key of the actor that you want to add.
+     * @param alias              the actor name or alias for the person we're adding like contact
+     * @param actorFirstName     string containing actor first name
+     * @param actorLastName      string containing actor last name
+     * @param walletPublicKey    public key of the wallet in which we are working
+     *
+     * @return an instance of the created wallet contact
+     *
+     * @throws CantCreateWalletContactException if something goes wrong.
+     */
+    CryptoWalletWalletContact addIntraUserActorLikeContact(String intraUserPublicKey,
+                                                           String alias,
+                                                           String actorFirstName,
+                                                           String actorLastName,
+                                                           String walletPublicKey) throws CantCreateWalletContactException;
 
     /**
      * updates the photo of an actor
@@ -122,6 +144,8 @@ public interface CryptoWallet extends Serializable {
     void updateWalletContact(UUID contactId,
                              CryptoAddress receivedCryptoAddress,
                              String actorName) throws CantUpdateWalletContactException;
+
+
 
     /**
      * deletes a contact having in count the contact id
@@ -141,11 +165,16 @@ public interface CryptoWallet extends Serializable {
      */
     CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException;
 
-    boolean isValidAddress(CryptoAddress cryptoAddress);
-
     /**
-     * Receive methods
+     * Throw the method <code>isValidAddress</code> you can validate in the specific vault if a specific crypto address is valid.
+     *
+     * @param cryptoAddress to validate
+     * @return boolean value, true if positive, false if negative.
      */
+    boolean isValidAddress(CryptoAddress cryptoAddress);
+    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
+
+
     CryptoAddress requestAddressToKnownUser(String deliveredByActorPublicKey,
                                             Actors deliveredByActorType,
                                             String deliveredToActorPublicKey,
@@ -155,6 +184,7 @@ public interface CryptoWallet extends Serializable {
                                             String vaultIdentifier,
                                             String walletPublicKey,
                                             ReferenceWallet walletType) throws CantRequestCryptoAddressException;
+    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
                                                Actors deliveredByActorType,
@@ -164,10 +194,8 @@ public interface CryptoWallet extends Serializable {
                                                String vaultIdentifier,
                                                String walletPublicKey,
                                                ReferenceWallet walletType) throws CantRequestCryptoAddressException;
+    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
-    /**
-     * Send money methods
-     */
     void send(long cryptoAmount,
               CryptoAddress destinationAddress,
               String notes, String walletPublicKey,
@@ -175,11 +203,6 @@ public interface CryptoWallet extends Serializable {
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
               Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
-
-
-    //TODO:  LEON ponele lo que necesites de arriba, me creo los metodos y los hardcodeo
-    //TODO:  MALO TEAM FOREVER
-    //TODO:  VAMOS RACING CARAJO.
 
 
     /**
