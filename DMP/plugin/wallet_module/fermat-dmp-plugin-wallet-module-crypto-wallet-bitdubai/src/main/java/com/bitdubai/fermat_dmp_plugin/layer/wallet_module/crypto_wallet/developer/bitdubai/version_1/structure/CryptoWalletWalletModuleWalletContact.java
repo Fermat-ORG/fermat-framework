@@ -18,21 +18,21 @@ import java.util.UUID;
  */
 public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWalletContact {
 
-    private UUID contactId;
+    private final UUID contactId;
 
-    private String walletPublicKey;
+    private final String walletPublicKey;
 
-    private Actors actorType;
+    private final Actors actorType;
 
-    private CryptoAddress receivedCryptoAddress;
+    private final CryptoAddress receivedCryptoAddress;
 
-    private String actorPublicKey;
+    private final String actorPublicKey;
 
-    private String actorName;
+    private final String actorName;
 
-    private byte[] profilePicture;
+    private final byte[] profilePicture;
 
-    public CryptoWalletWalletModuleWalletContact(WalletContactRecord walletContactRecord, byte[] profilePicture) {
+    public CryptoWalletWalletModuleWalletContact(final WalletContactRecord walletContactRecord, final byte[] profilePicture) {
         this.contactId = walletContactRecord.getContactId();
         this.walletPublicKey = walletContactRecord.getWalletPublicKey();
         this.actorType = walletContactRecord.getActorType();

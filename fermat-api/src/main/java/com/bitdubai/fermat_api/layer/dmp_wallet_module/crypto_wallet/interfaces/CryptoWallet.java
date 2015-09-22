@@ -30,7 +30,9 @@ public interface CryptoWallet extends Serializable {
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey publick key of the wallet in which we are working.
+     *
      * @return a list of instances of wallet contact records
+     *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
     List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
@@ -39,22 +41,45 @@ public interface CryptoWallet extends Serializable {
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey public key of the wallet in which we are working.
-     * @param max quantity of instance you want to return
-     * @param offset the point of start in the list you're trying to bring.
+     * @param max             quantity of instance you want to return
+     * @param offset          the point of start in the list you're trying to bring.
+     *
      * @return a list of instances of wallet contact records
+     *
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    List<CryptoWalletWalletContact> listWalletContactsScrolling(String walletPublicKey, Integer max, Integer offset) throws CantGetAllWalletContactsException;
+    List<CryptoWalletWalletContact> listWalletContactsScrolling(String  walletPublicKey,
+                                                                Integer max,
+                                                                Integer offset) throws CantGetAllWalletContactsException;
+
+    /**
+     * Throw the method <code>listAllIntraUserConnections</code> you can get all the connections of the intra user selected.
+     *
+     * @param intraUserSelectedPublicKey the public key of the intra user that the user select.
+     * @param walletPublicKey            public key of the wallet in which we are working.
+     * @param max                        quantity of instance you want to return
+     * @param offset                     the point of start in the list you're trying to bring.
+     *
+     * @return a list of crypto wallet intra user actors
+     *
+     * @throws CantGetAllIntraUserConnectionsException if something goes wrong.
+     */
+    List<CryptoWalletIntraUserActor> listAllIntraUserConnections(String  intraUserSelectedPublicKey,
+                                                                 String  walletPublicKey,
+                                                                 Integer max,
+                                                                 Integer offset) throws CantGetAllIntraUserConnectionsException;
 
     /**
      * Create a new contact for an specific wallet
      *
      * @param receivedCryptoAddress the crypto address of the contact
-     * @param actorName the actor name or alias for the person we're adding like contact
-     * @param actorType type of actor that we're adding
-     * @param referenceWallet type of reference wallet
-     * @param walletPublicKey public key of the wallet in which we are working
-     * @return an instance of the created publick key
+     * @param actorName             the actor name or alias for the person we're adding like contact
+     * @param actorType             type of actor that we're adding
+     * @param referenceWallet       type of reference wallet
+     * @param walletPublicKey       public key of the wallet in which we are working
+     *
+     * @return an instance of the created public key
+     *
      * @throws CantCreateWalletContactException if something goes wrong
      */
     CryptoWalletWalletContact createWalletContact(CryptoAddress receivedCryptoAddress,
