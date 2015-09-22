@@ -1,16 +1,16 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BitcoinNetworkConfiguration;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidAccountNumberException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidChainNumberException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.VaultKeyHierarchyException;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.google.common.collect.ImmutableList;
 
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -42,8 +42,8 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
      * Receives the seed that was created or stored for this vault.
      * Uses the seed to generate a Master Key.
      * Create the Hierarchy with the master Key
-     * Generates the Account number 0 which is the ones used by the vault (m/0)
-     * New RedeemPoints will be m/1, m/2,..., m/n
+     * Generates the Chain number 0 which is the ones used by the vault (m/AccountNumber/ChainNumber)
+     * New RedeemPoints will be m/0/0, m/0/1,..., m/0/n
      * @param seed the seed used to create the master key and the hierarchy.
      */
     public VaultKeyHierarchy(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem) throws VaultKeyHierarchyException {
@@ -69,64 +69,62 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
         masterHierarchy = new DeterministicHierarchy(rootKey);
     }
 
-    public void addNewRedeemPoint(int accountNumber){
+    public void addNewRedeemPoint(){
 
     }
 
     /**
-     * Generates a new CryptoAddress from the passed account number by deriving a new key from the hierarchy.
-     * @param accountNumber
+     * Generates a new CryptoAddress from the passed chain number by deriving a new key from the hierarchy.
+     * @param chainNumber
      * @return
-     * @throws InvalidAccountNumberException
+     * @throws InvalidChainNumberException
      */
-    public CryptoAddress getNewCryptoAddressFromAccount(int accountNumber) throws InvalidAccountNumberException {
+    public CryptoAddress getNewCryptoAddressFromChain(BlockchainNetworkType blockchainNetworkType,int chainNumber) throws InvalidChainNumberException {
         /**
-         * I validate that I have this account number registered.
+         * I validate that I have this Chain number registered.
          */
-        if (!isValidAccountNumber(accountNumber))
-            throw new InvalidAccountNumberException(InvalidAccountNumberException.DEFAULT_MESSAGE, null, "Account Number: " + accountNumber, "invalid account number.");
+        if (!isValidChainNumber(chainNumber))
+            throw new InvalidChainNumberException(InvalidChainNumberException.DEFAULT_MESSAGE, null, "Chain Number: " + chainNumber, "invalid account number.");
 
         /**
-         * I create the path that I will used to retrieve the key
+         * I create the path that I will used to retrieve the key.
+         * Depending on the crypto network, I will get the key from different branches.
+         * m/0 Production
+         * m/1 Test
+         * m/2 RegTest
          */
-        List<ChildNumber> path = ImmutableList.of(new ChildNumber(accountNumber, true), new ChildNumber(getNextAvailablePositionFromAccount(accountNumber), true));
+        List<ChildNumber> path = ImmutableList.of(new ChildNumber(BitcoinNetworkSelector.getNetworkAccountNumber(blockchainNetworkType), true),new ChildNumber(chainNumber, true), new ChildNumber(getAvailablePositionFromChain(chainNumber), true));
         DeterministicKey keyAtPosition = masterHierarchy.deriveChild(path, false, true, ChildNumber.ZERO);
 
         /**
-         * With the key and get I generate the bitcoin Address
+         * Depending on the BlockchainNetworkType specified, I form the correct Address
          */
-        CryptoAddress cryptoAddress = new CryptoAddress(keyAtPosition.toAddress(BitcoinNetworkConfiguration.NETWORK_PARAMETERS).toString(), CryptoCurrency.BITCOIN);
+        NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+        CryptoAddress cryptoAddress = new CryptoAddress(keyAtPosition.toAddress(networkParameters).toString(), CryptoCurrency.BITCOIN);
 
         /**
          * I update the next available position in the path
          */
-        setNextAvailablePositionFromAccont(accountNumber);
+        setNextAvailablePositionForChain(chainNumber);
 
 
         return cryptoAddress;
     }
 
-    public PublicKey getNewPublicKeyFromAccount(int accountNumber){
+
+    private boolean isValidChainNumber(int chainNumber){
+        return true;
+    }
+
+    public CryptoAddress getUsedCryptoAddressFromChain(int chainNumber, int position){
         return null;
     }
 
-    public DeterministicKey getNewExtendedPublicKeyFromAccount(int accountNumber){
-        return null;
-    }
-
-    private boolean isValidAccountNumber(int accountNumber){
-        return false;
-    }
-
-    public CryptoAddress getUsedCryptoAddressFromAccount(int accountNumber, int position){
-        return null;
-    }
-
-     private int getNextAvailablePositionFromAccount (int accountNumber){
+     private int getAvailablePositionFromChain (int chainNumber){
         return 0;
     }
 
-    private void setNextAvailablePositionFromAccont(int accountNumber){
+    private void setNextAvailablePositionForChain(int chainNumber){
 
     }
 }
