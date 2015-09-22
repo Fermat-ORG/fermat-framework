@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
@@ -75,18 +76,24 @@ public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, Deals
         return seed;
     }
 
+    /**
+     * Creates the key hierarchy using the seed we load from disk.
+     * @throws CantLoadExistingVaultSeed
+     * @throws CantCreateAssetVaultSeed
+     * @throws VaultKeyHierarchyException
+     */
     private void createKeyHierarchy() throws CantLoadExistingVaultSeed, CantCreateAssetVaultSeed, VaultKeyHierarchyException {
-        vaultKeyHierarchy = new VaultKeyHierarchy(getAssetVaultSeed(), this.pluginDatabaseSystem);
+        vaultKeyHierarchy = new VaultKeyHierarchy(getAssetVaultSeed(), this.pluginDatabaseSystem, this.pluginId);
     }
 
 
-    public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) {
-        try {
+    /**
+     * Will get a new crypto address from the asset vault account.
+     * @param blockchainNetworkType
+     * @return
+     * @throws GetNewCryptoAddressException
+     */
+    public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
             return vaultKeyHierarchy.getNewCryptoAddressFromChain(blockchainNetworkType, 0);
-        } catch (InvalidChainNumberException e) {
-            //todo handle this
-            e.printStackTrace();
-            return null;
-        }
     }
 }

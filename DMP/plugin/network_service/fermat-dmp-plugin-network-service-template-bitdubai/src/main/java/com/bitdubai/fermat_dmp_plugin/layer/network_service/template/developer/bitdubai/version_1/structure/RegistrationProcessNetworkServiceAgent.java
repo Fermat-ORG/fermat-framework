@@ -59,6 +59,7 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
      */
     @Override
     public void run() {
+        active = false;
         while (active){
 
             if (communicationsCloudClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
