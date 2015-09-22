@@ -543,7 +543,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     }
 
     @Override
-    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress genesisAddress, long cryptoAmount) throws CoultNotCreateCryptoTransaction {
+    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress addressTo, long cryptoAmount) throws CoultNotCreateCryptoTransaction {
         //todo rodrigo implementar.
         return null;
     }
