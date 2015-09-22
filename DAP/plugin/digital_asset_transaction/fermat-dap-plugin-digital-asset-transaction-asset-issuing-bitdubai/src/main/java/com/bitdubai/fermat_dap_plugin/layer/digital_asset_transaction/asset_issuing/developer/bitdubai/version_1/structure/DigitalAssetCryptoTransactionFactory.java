@@ -13,13 +13,19 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantSendGenesisAmountException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
@@ -59,6 +65,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     final String LOCAL_STORAGE_PATH="digital-asset/";
     String digitalAssetLocalFilePath;
     int assetsAmount;
+    BlockchainNetworkType blockchainNetworkType;
     private final int MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT=1;
 
     Logger LOG = Logger.getGlobal();
@@ -76,9 +83,14 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
         this.errorManager=errorManager;
+    }
 
+    private void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType)throws ObjectNotSetException{
+        if(blockchainNetworkType==null){
+            throw new ObjectNotSetException("The BlockchainNetworkType is null");
+        }
+        this.blockchainNetworkType=blockchainNetworkType;
     }
 
     private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
@@ -148,7 +160,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }*/
 
     private void persistFormingGenesisDigitalAsset() throws CantPersistDigitalAssetException {
-        this.assetIssuingTransactionDao.persistDigitalAsset(digitalAsset.getPublicKey(), this.digitalAssetFileStoragePath, this.assetsAmount);
+        this.assetIssuingTransactionDao.persistDigitalAsset(digitalAsset.getPublicKey(), this.digitalAssetFileStoragePath, this.assetsAmount, this.blockchainNetworkType);
     }
 
     private String requestHashGenesisTransaction(){
@@ -241,13 +253,14 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }*/
 
-    public void issueDigitalAssets(DigitalAsset digitalAsset, int assetsAmount)throws CantIssueDigitalAssetsException{
+    public void issueDigitalAssets(DigitalAsset digitalAsset, int assetsAmount, BlockchainNetworkType blockchainNetworkType)throws CantIssueDigitalAssetsException{
 
         this.digitalAsset=digitalAsset;
         this.assetsAmount=assetsAmount;
         int counter=0;
         //Primero chequeamos si el asset está completo
         try {
+            setBlockchainNetworkType(blockchainNetworkType);
             if(assetsAmount<MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT){
                 throw new ObjectNotSetException("The assetsAmount "+assetsAmount+" is lower that "+MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT);
             }
@@ -333,6 +346,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 setDigitalAssetGenesisTransaction(transactionId, digitalAssetMetadata);
                 issueDigitalAssetToAssetWallet(transactionId, digitalAssetMetadata);
             }
+            //TODO: caso SENDING BITCOINS
         } catch (CantPersistsGenesisTransactionException | CantExecuteQueryException | CantPersistsGenesisAddressException | CantCheckAssetIssuingProgressException | CantGetDigitalAssetFromLocalStorageException | UnexpectedResultReturnedFromDatabaseException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
@@ -343,7 +357,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }
 
     private void setDigitalAssetGenesisAddress(String transactionID, String genesisAddress) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        //TODO: descomentar la siguiente línea una vez que esté lista la cryptoVault
         CryptoAddress cryptoGenesisAddress=new CryptoAddress();
         cryptoGenesisAddress.setAddress(genesisAddress);
         this.digitalAsset.setGenesisAddress(cryptoGenesisAddress);
@@ -368,6 +381,25 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
         //Todo: por definir con Franklin que hacer aca
         //Establecer protocolo de traspaso de responsabilidad
+    }
+
+    private void sendBitcoinsToAssetWallet(String transactionId, UUID genesisTransaction, CryptoAddress genesisAddress, long genesisAmount) throws CantSendGenesisAmountException{
+        try {
+            this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_BITCOINS);
+            this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
+        } catch (InsufficientMoneyException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The balance is insufficient to deliver the genesis amount: "+genesisAmount);
+        } catch (InvalidSendToAddressException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The sendToAddress is invalid: "+genesisTransaction);
+        } catch (CouldNotSendMoneyException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot send the money");
+        } catch (CryptoTransactionAlreadySentException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The crypto transaction is already sent: "+genesisTransaction);
+        } catch (CantExecuteQueryException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the database: "+transactionId);
+        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Unexpected result reading database: "+genesisTransaction);
+        }
     }
 
     //This method can change in the future, I prefer design an monitor to create Digital Asset.
