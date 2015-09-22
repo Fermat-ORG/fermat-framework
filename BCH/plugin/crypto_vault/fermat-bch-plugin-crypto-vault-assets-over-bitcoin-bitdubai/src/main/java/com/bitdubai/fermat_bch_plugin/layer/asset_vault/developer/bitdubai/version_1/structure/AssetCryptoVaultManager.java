@@ -55,7 +55,7 @@ public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, Deals
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
 
-        createsKeyHierarchy();
+        createKeyHierarchy();
     }
 
     /**
@@ -75,7 +75,7 @@ public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, Deals
         return seed;
     }
 
-    private void createsKeyHierarchy() throws CantLoadExistingVaultSeed, CantCreateAssetVaultSeed, VaultKeyHierarchyException {
+    private void createKeyHierarchy() throws CantLoadExistingVaultSeed, CantCreateAssetVaultSeed, VaultKeyHierarchyException {
         vaultKeyHierarchy = new VaultKeyHierarchy(getAssetVaultSeed(), this.pluginDatabaseSystem);
     }
 
@@ -84,6 +84,7 @@ public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, Deals
         try {
             return vaultKeyHierarchy.getNewCryptoAddressFromChain(blockchainNetworkType, 0);
         } catch (InvalidChainNumberException e) {
+            //todo handle this
             e.printStackTrace();
             return null;
         }
