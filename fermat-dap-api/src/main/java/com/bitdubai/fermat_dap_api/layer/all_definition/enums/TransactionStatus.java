@@ -11,6 +11,8 @@ public enum TransactionStatus {
     GENESIS_SETTLED("SGEN"),
     HASH_SETTLED("SHASH"),
     ISSUING("ISSUING"),
+    SENDING_BITCOINS("TXBTC"),
+    SENDING_BITCOINS_FAILED("FTXBTC"),
     ISSUED("ISSUED");
 
     private String code;
@@ -33,6 +35,10 @@ public enum TransactionStatus {
                 return TransactionStatus.HASH_SETTLED;
             case "ISSUING":
                 return TransactionStatus.ISSUING;
+            case "TXBTC":
+                return TransactionStatus.SENDING_BITCOINS;
+            case "FTXBTC":
+                return TransactionStatus.SENDING_BITCOINS_FAILED;
             case "ISSUED":
                 return TransactionStatus.ISSUED;
             default:
