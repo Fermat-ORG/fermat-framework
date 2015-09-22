@@ -36,18 +36,12 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
     Database database;
     String userPublicKey;
-
     MonitorAgent monitorAgent;
     Thread agentThread;
-
     LogManager logManager;
-
     EventManager eventManager;
-
     ErrorManager errorManager;
-
     PluginDatabaseSystem pluginDatabaseSystem;
-
     UUID pluginId;
 
     public AssetIssuingTransactionMonitorAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, String userPublicKey){
