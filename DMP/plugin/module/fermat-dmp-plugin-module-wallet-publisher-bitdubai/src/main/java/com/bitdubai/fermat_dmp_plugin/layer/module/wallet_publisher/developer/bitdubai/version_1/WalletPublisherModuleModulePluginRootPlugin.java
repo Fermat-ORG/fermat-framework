@@ -407,7 +407,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0, 0, 0), new Version(0, 0, 0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(1, 0, 0), new Version(1, 0, 0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet
@@ -437,7 +437,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
             /**
              * Create the signature
              */
-            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(0, 0, 0), new Version(0, 0, 0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
+            String signature = createSignature(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, new Version(1, 0, 0), new Version(1, 0, 0), new URL(publisherIdentity.getWebsiteurl()), publisherIdentity);
 
             /*
              * Publish the wallet

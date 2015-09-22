@@ -19,6 +19,8 @@ public class AssertFactoryMiddlewareDatabaseConstant {
     static final String ASSET_FACTORY_NAME_COLUMN = "name";
     static final String ASSET_FACTORY_DESCRIPTION_COLUMN = "description";
     public static final String ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN = "issuer_identity_public_key";
+    public static final String ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN = "alias";
+    public static final String ASSET_FACTORY_ISSUER_IDENTITY_SIGNATURE_COLUMN = "signature";
     public static final String ASSET_FACTORY_STATE_COLUMN = "state";
     static final String ASSET_FACTORY_AMOUNT_COLUMN = "amount";
     static final String ASSET_FACTORY_QUANTITY_COLUMN = "quantity";
@@ -57,5 +59,17 @@ public class AssertFactoryMiddlewareDatabaseConstant {
     static final String ASSET_FACTORY_CONTRACT_VALUE_COLUMN = "value";
 
     static final String ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN = "name";
+
+    /**
+     * Asset Factory Identity Issuer database table definition.
+     */
+    static final String ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME = "asset_factory_identiy_issuer";
+
+    static final String ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN = "public_key";
+    static final String ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN = "asset_public_key";
+    static final String ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN = "name";
+    static final String ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN = "signature";
+
+    static final String ASSET_FACTORY_IDENTITY_ISSUER_FIRST_KEY_COLUMN = "public_key";
 
 }

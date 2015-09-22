@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelI
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
@@ -530,7 +530,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
             }
             return intraUserList;
         }
-        catch(CantGetIntraUSersException e)
+        catch(CantGetIntraUsersException e)
         {
             throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",e,"","");
         }
@@ -568,7 +568,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
 
             return intraUserList;
         }
-       catch(CantGetIntraUSersException e)
+       catch(CantGetIntraUsersException e)
         {
             //throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
             /**
@@ -605,7 +605,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
             }
             return intraUserList;
         }
-        catch(CantGetIntraUSersException e)
+        catch(CantGetIntraUsersException e)
         {
             throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE",e,"","Error on IntraUserActor Manager");
         }
