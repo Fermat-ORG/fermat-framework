@@ -24,6 +24,6 @@ public class AssetVaultCryptoVaultDatabaseConstants {
     static final String KEY_HIERARCHY_CHAIN_PUBLICKEY_COLUMN_NAME = "chain_publickey";
     static final String KEY_HIERARCHY_KEY_POSITION_COLUMN_NAME = "key_position";
 
-    static final String KEY_HIERARCHY_FIRST_KEY_COLUMN = "accountnumber";
+    static final String KEY_HIERARCHY_FIRST_KEY_COLUMN = "account_number";
 
 }
