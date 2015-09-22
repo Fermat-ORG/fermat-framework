@@ -51,8 +51,8 @@ public class ReferenceWalletFragmentFactory implements com.bitdubai.fermat_andro
                  * Executing fragments for BITCOIN REQUESTED.
                  */
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
-                   // currentFragment = /*BlankFragment.newInstance(null,null);*/BalanceFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
-                    currentFragment = HomeFragment.newInstance(0,refereceWalletSession);
+                    currentFragment = /*BlankFragment.newInstance(null,null);*/BalanceFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
+                   // currentFragment = HomeFragment.newInstance(0,refereceWalletSession);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                     currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);

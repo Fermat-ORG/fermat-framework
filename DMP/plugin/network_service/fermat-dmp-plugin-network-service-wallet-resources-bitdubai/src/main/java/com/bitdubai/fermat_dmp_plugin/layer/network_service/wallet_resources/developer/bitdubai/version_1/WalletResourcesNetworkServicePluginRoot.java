@@ -588,10 +588,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             Repository repository= repositoriesName.get(skinId);
 
             PluginBinaryFile imageFile;
+           // String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + imageName + "/" + screenSize + "/";
 
             String filename= skinId.toString()+"_"+imageName;
 
-            String path = repository.getPath()+"/skins/"+repository.getSkinName()+"/";
+            String path = repository.getPath()+"skins/"+repository.getSkinName()+"/";
 
             imageFile = pluginFileSystem.getBinaryFile(pluginId, path, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
@@ -640,7 +641,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
        try {
            //get repo name
            Repository repository =  repositoriesName.get(skinId);
-            String reponame = repository.getPath()+walletPublicKey+"/";
+
+           //String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + layoutName + "/" + screenSize + "/";
+
+           String reponame = repository.getPath()+"skins/"+repository.getSkinName()+"/";
 
             String filename = skinId.toString() + "_" + layoutName;
 
@@ -1006,6 +1010,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             String filename = skinId.toString() + "_" + name;
 
             reponame+=publicKey+"/";
+
             layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             layoutFile.setContent(xml);
             layoutFile.persistToMedia();
