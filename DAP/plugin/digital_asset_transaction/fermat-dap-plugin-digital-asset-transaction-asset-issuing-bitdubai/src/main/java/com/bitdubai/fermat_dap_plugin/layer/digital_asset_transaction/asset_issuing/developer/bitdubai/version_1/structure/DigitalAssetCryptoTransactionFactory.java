@@ -1,6 +1,11 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
@@ -14,6 +19,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
@@ -53,10 +62,12 @@ import java.util.logging.Logger;
 public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     private AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetVaultManager assetVaultManager;
     String digitalAssetFileName;
     String digitalAssetFileStoragePath;
     CryptoVaultManager cryptoVaultManager;
     CryptoWallet cryptoWallet;
+    CryptoAddressBookManager cryptoAddressBookManager;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
     PluginFileSystem pluginFileSystem;
@@ -70,12 +81,14 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     Logger LOG = Logger.getGlobal();
 
-    public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem/*, CryptoAddressBookManager cryptoAddressBookManager*/) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+    public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, AssetVaultManager assetVaultManager, CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         this.cryptoVaultManager=cryptoVaultManager;
         this.cryptoWallet=cryptoWallet;
         this.pluginFileSystem=pluginFileSystem;
         this.pluginId=pluginId;
+        this.assetVaultManager=assetVaultManager;
+        this.cryptoAddressBookManager=cryptoAddressBookManager;
         //this.pluginDatabaseSystem=pluginDatabaseSystem;
         assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 
@@ -163,9 +176,15 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.assetIssuingTransactionDao.persistDigitalAsset(digitalAsset.getPublicKey(), this.digitalAssetFileStoragePath, this.assetsAmount, this.blockchainNetworkType);
     }
 
-    private String requestHashGenesisTransaction(){
+    private String requestHashGenesisAddress(){
         //this.cryptoVaultManager.getTransactionManager().confirmReception();
-        CryptoAddress genesisAddress = this.cryptoVaultManager.getAddress();
+        CryptoAddress genesisAddress = null;
+        try {
+            genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
+        } catch (GetNewCryptoAddressException e) {
+            //TODO: handle this.
+            e.printStackTrace();
+        }
         return genesisAddress.getAddress();
     }
 
@@ -363,17 +382,21 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionID, TransactionStatus.GENESIS_SETTLED);
     }
 
+    private String requestGenesistransaction(){
+        //TODO: mejorar esto con los cambios en la interfaz de la vault.
+        return "testGenesisTransaction";
+    }
+
     private void setDigitalAssetGenesisTransaction(String transactionID, DigitalAssetMetadata digitalAssetMetadata) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException {
 
-        String genesisTransaction=digitalAssetMetadata.getDigitalAssetHash();
+        String genesisTransaction=requestGenesistransaction();
         this.digitalAsset.setGenesisTransaction(genesisTransaction);
         this.assetIssuingTransactionDao.persistGenesisTransaction(transactionID, genesisTransaction);
-
     }
 
     private void getDigitalAssetGenesisAddressByUUID(String transactionId) throws CantPersistsGenesisAddressException {
         //Solicito la genesisAddress
-        String genesisAddress=requestHashGenesisTransaction();
+        String genesisAddress=requestHashGenesisAddress();
         persistsGenesisAddress(transactionId, genesisAddress);
     }
 
@@ -381,6 +404,23 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
         //Todo: por definir con Franklin que hacer aca
         //Establecer protocolo de traspaso de responsabilidad
+    }
+
+    private void registerGenesisAddressInCryptoAddressBook(String genesisAddress) throws CantRegisterCryptoAddressBookRecordException{
+        //TODO: solicitar los publickeys de los actors, la publicKey de la wallet
+        CryptoAddress cryptoGenesisAddress=new CryptoAddress();
+        cryptoGenesisAddress.setAddress(genesisAddress);
+        //I'm gonna harcode the actors publicKey
+        this.cryptoAddressBookManager.registerCryptoAddress(cryptoGenesisAddress,
+                "testDeliveredByActorPublicKey",
+                Actors.INTRA_USER,
+                "testDeliveredToActorPublicKey",
+                Actors.ASSET_ISSUER,
+                Platforms.DIGITAL_ASSET_PLATFORM,
+                VaultType.ASSET_VAULT,
+                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                "testWalletPublicKey",
+                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
     }
 
     private void sendBitcoinsToAssetWallet(String transactionId, UUID genesisTransaction, CryptoAddress genesisAddress, long genesisAmount) throws CantSendGenesisAmountException{
@@ -414,14 +454,16 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             UUID transactionUUID=generateTransactionUUID();
             String transactionId=transactionUUID.toString();
             //Solicito la genesisAddress
-            String genesisAddress=requestHashGenesisTransaction();
+            String genesisAddress=requestHashGenesisAddress();
             //La persisto en base de datos
             persistsGenesisAddress(transactionId,genesisAddress);
+            //Registro genesisAddress in AddressBook
+            registerGenesisAddressInCryptoAddressBook(genesisAddress);
             //Le asigno al Digital Asset la genesisAddress
             setDigitalAssetGenesisAddress(transactionId,genesisAddress);
             //Creo el digitalAssetMetadata
             DigitalAssetMetadata digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
-            //Creo el hash y se lo asigno al digitalAsset
+            //Creo la genesisTransaction y se lo asigno al digitalAsset
             setDigitalAssetGenesisTransaction(transactionId,digitalAssetMetadata);
 
         } catch (CantPersistsGenesisAddressException exception) {
@@ -430,6 +472,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot update the Digital Asset Transaction Status in database");
         } catch (CantPersistsGenesisTransactionException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis transaction in database");
+        } catch (CantRegisterCryptoAddressBookRecordException exception){
+            throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot register the Digital Asset genesis transaction in address book");
         }
 
 
