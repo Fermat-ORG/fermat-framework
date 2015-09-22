@@ -2739,7 +2739,7 @@
 						name="Brand"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2840,7 +2840,7 @@
 						name="Brand"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -2892,7 +2892,7 @@
 						name="Brand"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3027,7 +3027,7 @@
 						name="Brand"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3858,7 +3858,7 @@
 						name="Wallet Branding"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3874,7 +3874,7 @@
 						name="Marketer"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3895,7 +3895,7 @@
 						name="Voucher Wallet"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3946,7 +3946,7 @@
 						name="Wallet Branding"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3961,7 +3961,7 @@
 						name="Marketer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3981,7 +3981,7 @@
 						name="Marketer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4001,7 +4001,7 @@
 						name="Voucher Wallet"
 						description=""
 						difficulty="3"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4052,7 +4052,7 @@
 						name="Incoming Voucher"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4068,7 +4068,7 @@
 						name="Outgoing Voucher"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4149,7 +4149,7 @@
 						name="Voucher"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4200,7 +4200,7 @@
 						name="Marketer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
