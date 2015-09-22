@@ -876,7 +876,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         language.setWalletId(walletId);
         language.setId(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME));
         if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME) != null)
-            language.setLanguageName(Languages.valueOf(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME)));
+            language.setLanguageName(Languages.fromValue(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_NAME_COLUMN_NAME)));
         if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME) != null)
             language.setFinalWalletVersion(new Version(record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETFINALVERSION_COLUMN_NAME)));
         if (record.getStringValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_WALLETINITIALVERSION_COLUMN_NAME) != null)

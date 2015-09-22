@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.cry_cypto_vault.assets;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CantStartSubsystemException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultSubsystem;
-import com.bitdubai.fermat_cry_plugin.layer.asset_vault.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.DeveloperBitDubai;
 
 
 /**
