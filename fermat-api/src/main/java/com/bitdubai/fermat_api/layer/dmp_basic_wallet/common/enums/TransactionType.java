@@ -1,9 +1,10 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums;
+package com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums;
 
 /**
  * Created by eze on 2015.06.17..
  */
 public enum TransactionType {
+
     DEBIT("DEBIT"),
     CREDIT("CREDIT");
 
@@ -20,7 +21,6 @@ public enum TransactionType {
         switch (code) {
             case "DEBIT": return TransactionType.DEBIT;
             case "CREDIT": return TransactionType.CREDIT;
-
         }
 
         /**
