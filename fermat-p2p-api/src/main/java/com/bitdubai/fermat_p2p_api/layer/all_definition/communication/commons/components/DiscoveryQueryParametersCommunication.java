@@ -1,5 +1,5 @@
 /*
- * @#PlatformComponentProfileCommunication.java - 2015
+ * @#DiscoveryQueryParametersCommunication.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -8,7 +8,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.c
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
@@ -17,15 +17,15 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication</code> represent
- * the platform component profile.
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication</code> is the implementation
+ * of the <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters</code>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 04/09/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 16/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class PlatformComponentProfileCommunication implements PlatformComponentProfile, Serializable {
+public class DiscoveryQueryParametersCommunication implements DiscoveryQueryParameters, Serializable {
 
     /**
      * Represent the serialVersionUID
@@ -63,55 +63,63 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     private NetworkServiceType networkServiceType;
 
     /**
-     * Represent the communicationCloudClientIdentity
-     */
-    private String communicationCloudClientIdentity;
-
-    /**
      * Represent the extraData
      */
     private String extraData;
 
     /**
+     * Represent the firstRecord
+     */
+    private Integer firstRecord;
+
+    /**
+     * Represent the numberRegister
+     */
+    private Integer numberRegister;
+
+
+    /**
      * Constructor
      */
-    public PlatformComponentProfileCommunication() {
+    public DiscoveryQueryParametersCommunication() {
         super();
         this.alias = null;
-        this.communicationCloudClientIdentity = null;
         this.identityPublicKey = null;
         this.location = null;
         this.name = null;
         this.networkServiceType = null;
         this.platformComponentType = null;
         this.extraData = null;
+        this.firstRecord  = new Integer(0);
+        this.numberRegister = new Integer(0);
     }
 
     /**
      * Constructor whit parameters
      *
      * @param alias
-     * @param communicationCloudClientIdentity
      * @param identityPublicKey
+     * @param location
      * @param name
      * @param networkServiceType
      * @param platformComponentType
      */
-    public PlatformComponentProfileCommunication(String alias, String communicationCloudClientIdentity, String identityPublicKey, Location location, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData) {
+    public DiscoveryQueryParametersCommunication(String alias, String identityPublicKey, Location location, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer firstRecord, Integer numberRegister) {
         super();
         this.alias = alias;
-        this.communicationCloudClientIdentity = communicationCloudClientIdentity;
         this.identityPublicKey = identityPublicKey;
         this.location = (DeviceLocation) location;
         this.name = name;
         this.networkServiceType = networkServiceType;
         this.platformComponentType = platformComponentType;
         this.extraData = extraData;
+        this.firstRecord = firstRecord;
+        this.numberRegister = numberRegister;
     }
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#getIdentityPublicKey()
+     * @see DiscoveryQueryParameters#getIdentityPublicKey()
      */
     @Override
     public String getIdentityPublicKey() {
@@ -120,7 +128,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#getAlias()
+     * @see DiscoveryQueryParameters#getAlias()
      */
     @Override
     public String getAlias() {
@@ -129,7 +137,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#getName()
+     * @see DiscoveryQueryParameters#getName()
      */
     @Override
     public String getName() {
@@ -138,7 +146,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#getLocation()
+     * @see DiscoveryQueryParameters#getLocation()
      */
     @Override
     public Location getLocation() {
@@ -147,7 +155,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#getPlatformComponentType()
+     * @see DiscoveryQueryParameters#getPlatformComponentType()
      */
     @Override
     public PlatformComponentType getPlatformComponentType() {
@@ -156,7 +164,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#getNetworkServiceType()
+     * @see DiscoveryQueryParameters#getNetworkServiceType()
      */
     @Override
     public NetworkServiceType getNetworkServiceType() {
@@ -165,16 +173,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#getCommunicationCloudClientIdentity()
-     */
-    @Override
-    public String getCommunicationCloudClientIdentity() {
-        return communicationCloudClientIdentity;
-    }
-
-    /**
-     * (non-javadoc)
-     * @see PlatformComponentProfile#getExtraData()
+     * @see DiscoveryQueryParameters#getExtraData()
      */
     @Override
     public String getExtraData() {
@@ -183,7 +182,23 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#toJson()
+     * @see DiscoveryQueryParameters#firstRecord()
+     */
+    public Integer firstRecord(){
+        return firstRecord;
+    }
+
+    /**
+     * (non-javadoc)
+     * @see DiscoveryQueryParameters#getNumberRegister()
+     */
+    public Integer getNumberRegister(){
+        return numberRegister;
+    }
+
+    /**
+     * (non-javadoc)
+     * @see DiscoveryQueryParameters#toJson()
      */
     @Override
     public String toJson() {
@@ -194,13 +209,13 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#fromJson(String)
+     * @see DiscoveryQueryParameters#fromJson(String)
      */
     @Override
-    public PlatformComponentProfile fromJson(String json) {
+    public DiscoveryQueryParametersCommunication fromJson(String json) {
 
         Gson gson = new Gson();
-        return gson.fromJson(json, PlatformComponentProfileCommunication.class);
+        return gson.fromJson(json, DiscoveryQueryParametersCommunication.class);
     }
 
     /**
@@ -210,16 +225,17 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PlatformComponentProfileCommunication)) return false;
-        PlatformComponentProfileCommunication that = (PlatformComponentProfileCommunication) o;
+        if (!(o instanceof DiscoveryQueryParametersCommunication)) return false;
+        DiscoveryQueryParametersCommunication that = (DiscoveryQueryParametersCommunication) o;
         return Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
                 Objects.equals(getAlias(), that.getAlias()) &&
                 Objects.equals(getName(), that.getName()) &&
                 Objects.equals(getLocation(), that.getLocation()) &&
                 Objects.equals(getPlatformComponentType(), that.getPlatformComponentType()) &&
                 Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
-                Objects.equals(getCommunicationCloudClientIdentity(), that.getCommunicationCloudClientIdentity()) &&
-                Objects.equals(getExtraData(), that.getExtraData());
+                Objects.equals(getExtraData(), that.getExtraData()) &&
+                Objects.equals(firstRecord, that.firstRecord) &&
+                Objects.equals(getNumberRegister(), that.getNumberRegister());
     }
 
     /**
@@ -228,7 +244,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLocation(), getPlatformComponentType(), getNetworkServiceType(), getCommunicationCloudClientIdentity(), getExtraData());
+        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLocation(), getPlatformComponentType(), getNetworkServiceType(), getExtraData(), firstRecord, getNumberRegister());
     }
 
     /**
@@ -237,14 +253,16 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
      */
     @Override
     public String toString() {
-        return "PlatformComponentProfileCommunication{" +
+        return "DiscoveryQueryParametersCommunication{" +
                 "alias='" + alias + '\'' +
                 ", identityPublicKey='" + identityPublicKey + '\'' +
                 ", name='" + name + '\'' +
-                ", location =" + location +
+                ", location=" + location +
                 ", platformComponentType=" + platformComponentType +
                 ", networkServiceType=" + networkServiceType +
-                ", communicationCloudClientIdentity='" + communicationCloudClientIdentity + '\'' +
-                ", extraData() "+extraData + '}';
+                ", extraData='" + extraData + '\'' +
+                ", firstRecord=" + firstRecord +
+                ", numberRegister=" + numberRegister +
+                '}';
     }
 }
