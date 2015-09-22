@@ -307,4 +307,6 @@ public interface CryptoWallet extends Serializable {
 
     List<PaymentRequest> listReceivedPaymentRequest();
 
+    List<PaymentRequest> listPaymentRequestDatOrder();
+
 }
