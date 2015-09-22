@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.RequestStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.CantGetRequestListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.CantRequestCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.RequestPurchaseRejectFailedException;
@@ -15,23 +16,27 @@ import java.util.UUID;
 
 public interface RequestCustomerBrokerPurchaseManager {
 
-    List<RequestCustomerBrokerPurchase> getRequestPurchaseSent(String walletPublicKey) throws CantGetRequestListException;
+    List<RequestCustomerBrokerPurchase> getRequestPurchaseSent(String requestSenderPublicKey) throws CantGetRequestListException;
 
-    List<RequestCustomerBrokerPurchase> getReceivedRequestPurchase(String walletPublicKey) throws CantGetRequestListException;
+    List<RequestCustomerBrokerPurchase> getReceivedRequestPurchase(String requestSenderPublicKey) throws CantGetRequestListException;
 
-    public void sendRequestPurchase(String senderWalletPublicKey,
-                                  String requestSenderPublicKey,
-                                  String requestDestinationPublicKey,
-                                  String requestDescription,
-                                  CryptoAddress addressToSendThePayment,
-                                  long cryptoAmount) throws RequestUnexpectedErrorException;
+    public void sendRequestPurchase(
+        String requestSenderPublicKey,
+        String requestDestinationPublicKey,
+        CurrencyType merchandiseCurrency,
+        float merchandiseAmount,
+        CurrencyType paymentCurrency,
+        RequestStatus requestStatus
+    ) throws RequestUnexpectedErrorException;
 
     public void rejectRequestPurchase(UUID requestId) throws RequestPurchaseRejectFailedException;
 
-    RequestCustomerBrokerPurchase createRequestCustomerBrokerPurchase(String senderWalletPublicKey,
-                                                                      String requestSenderPublicKey,
-                                                                      String requestDestinationPublicKey,
-                                                                      String requestDescription,
-                                                                      CryptoAddress addressToSendThePayment,
-                                                                      long cryptoAmount) throws CantRequestCustomerBrokerPurchaseException;
+    RequestCustomerBrokerPurchase createRequestCustomerBrokerPurchase(
+        String requestSenderPublicKey,
+        String requestDestinationPublicKey,
+        CurrencyType merchandiseCurrency,
+        float merchandiseAmount,
+        CurrencyType paymentCurrency
+    ) throws CantRequestCustomerBrokerPurchaseException;
 }
+
