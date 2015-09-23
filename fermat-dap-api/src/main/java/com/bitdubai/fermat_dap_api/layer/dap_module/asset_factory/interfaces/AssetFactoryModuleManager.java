@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces;
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -24,7 +26,7 @@ public interface AssetFactoryModuleManager {
     /**
      * This method save object AssetFactory in database
      */
-    void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
+    void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException;
 
     /**
      * This method remove object AssetFactory in database

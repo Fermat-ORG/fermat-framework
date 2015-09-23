@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
@@ -37,7 +39,7 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
         return assetFactoryManager.createEmptyAssetFactory();
     }
 
-    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException {
+    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException {
         assetFactoryManager.saveAssetFactory(assetFactory);
     }
 

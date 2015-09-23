@@ -8,7 +8,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
@@ -45,6 +50,7 @@ import java.util.UUID;
  * Created by franklin on 07/09/15.
  */
 public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+    public static final String PATH_DIRECTORY = "assetFactory/resources";
     /**
      * AssetFactoryMiddlewareManager member variables
      */
@@ -100,16 +106,31 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
     //De esa forma poder almacenarlo en la tabla de contract seteando la variable assetFactory.setContractProperties
     //Asi mismo cuando se vaya a enviar el DigitalAsset a la transaccion traer el objeto AssetFactory lleno, y las propiedades del contrato
     //asignarselas mas adelante al objeto DigitalAssetContract, que a su vez sera seteado a ala propiedad setContract del DigitalAsset
-    private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException{
-        List<ContractProperty> contractProperties = new ArrayList<>();
-        ContractProperty redeemable;
-        ContractProperty expirationDate;
-        redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-        expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-        contractProperties.add(redeemable);
-        contractProperties.add(expirationDate);
-        assetFactory.setContractProperties(contractProperties);
-        getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
+    private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantCreateFileException, CantPersistFileException{
+        try {
+            List<ContractProperty> contractProperties = new ArrayList<>();
+            ContractProperty redeemable;
+            ContractProperty expirationDate;
+            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+            contractProperties.add(redeemable);
+            contractProperties.add(expirationDate);
+            assetFactory.setContractProperties(contractProperties);
+            getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
+            for (Resource resource : assetFactory.getResources()) {
+                PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                imageFile.setContent(resource.getResourceBinayData());
+                imageFile.persistToMedia();
+            }
+        }catch (CantCreateFileException cantCreateFileException)
+        {
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: saveAssetFactoryInDatabase", "cant create el file");
+        }
+        catch (CantPersistFileException cantPersistFileException)
+        {
+            throw new CantPersistFileException(CantPersistFileException.DEFAULT_MESSAGE, cantPersistFileException, "Asset Factory Method: saveAssetFactoryInDatabase", "cant persist el file");
+        }
+
     }
 
     private List<AssetFactory> getAssetFactories(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException
@@ -149,7 +170,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException
+    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException
     {
         try {
             saveAssetFactoryInDatabase(assetFactory);
@@ -368,7 +389,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException{
+    public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException, CantCreateFileException, CantPersistFileException{
         AssetFactory assetFactory = getAssetFactory(assetPublicKey);
         assetFactory.setState(state);
         saveAssetFactory(assetFactory);

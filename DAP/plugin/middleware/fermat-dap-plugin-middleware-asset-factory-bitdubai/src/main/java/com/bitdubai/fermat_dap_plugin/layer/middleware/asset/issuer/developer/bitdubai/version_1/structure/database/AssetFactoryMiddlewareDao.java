@@ -108,7 +108,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN, resource.getResourceType().value());
         //record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, resource.getResourceFile().getPath());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, "aca va el path del archivo");
-        //TODO: Analizar crear una constante para que guarde los bytes del archivo asociado
 
         return record;
     }
@@ -625,8 +624,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                     {
                         resource.setResourceType(ResourceType.IMAGE);
                     }
-                    //TODO: Revisar que hacer con resource.setResourceFile() ya que es el archivo como tal, de donde lo saco, desde un binario o el path donde se guardo el archivo.
-                    //resource.setResourceFile();
 
                     resources.add(resource);
                 }
