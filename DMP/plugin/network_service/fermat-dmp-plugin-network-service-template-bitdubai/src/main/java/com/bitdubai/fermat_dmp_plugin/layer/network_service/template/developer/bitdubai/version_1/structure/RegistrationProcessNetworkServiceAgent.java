@@ -62,27 +62,31 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
         active = false;
         while (active){
 
-            if (communicationsCloudClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
+            // todo corregir
+// comentado para que compile
 
-                /*
-                 * Construct my profile and register me
-                 */
-                PlatformComponentProfile platformComponentProfile =  communicationsCloudClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
-                communicationsCloudClientConnection.registerComponentInCommunicationCloudServer(platformComponentProfile);
-                templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
-                active = Boolean.FALSE;
+//            if (communicationsCloudClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
+//
+//                /*
+//                 * Construct my profile and register me
+//                 */
+//                PlatformComponentProfile platformComponentProfile =  communicationsCloudClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
+//                communicationsCloudClientConnection.registerComponentInCommunicationCloudServer(platformComponentProfile);
+//                templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+//                active = Boolean.FALSE;
+//
+//            }else if (!templateNetworkServicePluginRoot.isRegister()){
+//                try {
+//
+//                    sleep(RegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+//
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }else if (!templateNetworkServicePluginRoot.isRegister()){
+//                active = Boolean.FALSE;
+//            }
 
-            }else if (!templateNetworkServicePluginRoot.isRegister()){
-                try {
-
-                    sleep(RegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }else if (!templateNetworkServicePluginRoot.isRegister()){
-                active = Boolean.FALSE;
-            }
 
         }
     }
