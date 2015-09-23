@@ -126,7 +126,7 @@ public class NetworkServicesWalletResourcesDAO {
      *  @param repositoryName String repository name
      * */
 
-    public void delete(UUID skinId,String repositoryName) throws com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException, ProjectNotFoundException, com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
+    public void delete(UUID skinId,String repositoryName) throws CantDeleteRepositoryException {
 
         if (skinId == null || repositoryName==null){
             throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, null, "", "The id amd the name is required, can not be null");
@@ -141,6 +141,10 @@ public class NetworkServicesWalletResourcesDAO {
             // Register the failure.
             database.closeDatabase();
             throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+        } catch (RepositoryNotFoundException e) {
+            // Register the failure.
+            database.closeDatabase();
+            throw new CantDeleteRepositoryException(CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, repository not found.");
 
         } catch (CantLoadTableToMemoryException e) {
             // Register the failure.

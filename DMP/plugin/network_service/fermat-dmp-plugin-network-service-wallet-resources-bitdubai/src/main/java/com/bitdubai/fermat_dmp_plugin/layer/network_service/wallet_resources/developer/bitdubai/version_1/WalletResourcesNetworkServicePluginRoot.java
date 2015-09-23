@@ -313,7 +313,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
 
             String linkToNavigationStructure = linkToRepo + "navigation_structure/" + skin.getNavigationStructureCompatibility() + "/";
-            donwloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath,walletPublicKey);
+            downloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath,walletPublicKey);
 
             /**
              *  download resources
@@ -475,9 +475,43 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
 
     @Override
-    public void uninstallSkinForWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String walletPublicKey) throws WalletResourcesUnninstallException {
+    public void uninstallSkinForWallet( UUID skinId,String walletPublicKey) throws WalletResourcesUnninstallException {
+
+        try {
+            //String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
+
+           // String linkToResources = linkToRepo + "skins/skin.xml/";
 
 
+            //String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
+
+            Skin skin;
+
+          //  String linkToSkinFile = linkToResources + screenSize + "/";
+           // skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath,walletPublicKey);
+
+
+            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+
+            /**
+             *  delete skin resources
+             */
+
+           // downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize, walletPublicKey);
+
+            networkServicesWalletResourcesDAO.delete(skinId,repository.getSkinName());
+
+        } catch (CantGetRepositoryPathRecordException e) {
+            throw new WalletResourcesUnninstallException("CAN'T INSTALL WALLET RESOURCES",e,"Error save skin on data base","");
+
+      //  }catch (CantCheckResourcesException cantCheckResourcesException){
+       //     throw new WalletResourcesUnninstallException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error check exception","");
+        }catch (CantDeleteRepositoryException cantCheckResourcesException){
+            throw new WalletResourcesUnninstallException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error check exception","");
+
+     //   }  catch (CantDownloadResourceFromRepo cantDownloadResourceFromRepo) {
+          //  throw new WalletResourcesUnninstallException("CAN'T INSTALL WALLET RESOURCES", cantDownloadResourceFromRepo, "Error download resources", "");
+        }
 
     }
 
@@ -720,10 +754,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         } catch (CantDeleteRepositoryException e) {
             throw new CantUninstallWallet("CAN'T UNINSTALL WALLET:", e, "Error Delete repository ", "");
 
-        } catch (ProjectNotFoundException e) {
-            throw new CantUninstallWallet("CAN'T UNINSTALL WALLET:", e, "Project Not Found ", "");
-        } catch (RepositoryNotFoundException e) {
-            throw new CantUninstallWallet("CAN'T UNINSTALL WALLET:", e, "Repository Not Found ", "");
         } catch (CantDeleteLayouts e) {
             throw new CantUninstallWallet("CAN'T UNINSTALL WALLET:", e, "Error Delete layouts ", "");
         } catch (CantDeleteResourcesFromDisk e) {
@@ -929,7 +959,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    private void donwloadNavigationStructure(String link, UUID skinId,String localStoragePath,String walletPublicKey) throws CantDonwloadNavigationStructure {
+    private void downloadNavigationStructure(String link, UUID skinId,String localStoragePath,String walletPublicKey) throws CantDonwloadNavigationStructure {
         try {
 
 
@@ -996,7 +1026,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             String filename = skinId.toString() + "_" + name;
 
-            reponame= reponame+publicKey + "/";
+            reponame= reponame + publicKey + "/";
 
             layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             layoutFile.setContent(xml);
