@@ -523,6 +523,16 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    OUTGOING_INTRA_ACTOR_TRANSACTION_SENT("OMRA") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new OutgoingIntraActorTransactionSentEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new OutgoingIntraActorTransactionSentEvent();
+        }
+    },
+
     OUTGOING_MONEY_REQUEST_APPROVED("OMRA") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new OutgoingMoneyRequestApprovedEventListener(this, fermatEventMonitor);
