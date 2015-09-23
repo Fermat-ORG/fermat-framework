@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by natalia on 17/09/15.
  */
 public class CantSearchCustomersException extends FermatException {
+
+    public static final String DEFAULT_MESSAGE = "CAN'T SEARCH BROKER'S CUSTOMERS";
     /**
      * This is the constructor that every inherited FermatException must implement
      *

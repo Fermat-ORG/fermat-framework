@@ -256,7 +256,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     }
 
     // Retorna las que están en (A,TBN)
-    protected List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantGetTransactionsException
+    protected List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantListTransactionsException
         List<Transaction<CryptoTransaction>> tbaList = new ArrayList<>();
 
         DatabaseTable registryTable = database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);

@@ -56,7 +56,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 public class CreateContactFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
     /**
      * Wallet session
@@ -283,7 +283,14 @@ public class CreateContactFragment extends Fragment {
             if (validAddress != null) {
 
                 // first i add the contact
-                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
+                cryptoWallet.createWalletContact(
+                        validAddress,
+                        contact_name.getText().toString(),
+                        null,
+                        null,
+                        Actors.EXTRA_USER,
+                        walletPublicKey
+                );
 
                 Toast.makeText(getActivity().getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
                 returnToContacts();

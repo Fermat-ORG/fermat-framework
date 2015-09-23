@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
@@ -178,9 +179,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              *
              */
         try{
-            //factoryReset();
-            loadLastWalletNavigationStructure();
 
+            loadLastWalletNavigationStructure();
+            factoryReset();
 
         }catch(CantFactoryReset ex){
             String message = CantStartPluginException.DEFAULT_MESSAGE;
@@ -341,6 +342,68 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      * factory structure.
      */
     private void factoryReset() throws CantFactoryReset{
+
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+        WalletNavigationStructure runtimeWalletNavigationStructure;
+        TitleBar runtimeTitleBar;
+        SideMenu runtimeSideMenu;
+        MainMenu runtimeMainMenu;
+        MenuItem runtimeMenuItem;
+        TabStrip runtimeTabStrip;
+        StatusBar runtimeStatusBar;
+
+        Tab runtimeTab;
+
+        String publicKey;
+
+
+        /**
+         * Asset issuer
+         */
+
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        publicKey="asset_issuer";
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
+
+
+        runtimeActivity= new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setColor("#8bba9e");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("asset issuer wallet");
+        runtimeTitleBar.setLabelSize(16);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#72af9c");
+        //runtimeActivity.setColor("#d07b62");
+
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#72af9c");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment("DWAIMA");
+
+
+        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        //WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+
+
+        /**
+         * fin asset issuer
+         */
         //try{
 
 //            Activity runtimeActivity;
@@ -1138,11 +1201,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         String publicKey="reference_wallet";
 
-//        try {
-//            walletResourcesManger.installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
-//        } catch (WalletResourcesInstalationException e) {
-//            e.printStackTrace();
-//        }
+        try {
+
+            walletResourcesManger.installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(),WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
+
+        } catch (WalletResourcesInstalationException e) {
+            e.printStackTrace();
+        }
 
 
         try{
@@ -1151,13 +1216,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
 
 
-            //WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
-            //if(walletNavigationStructure==null){
+            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
+            if(walletNavigationStructure==null){
                 setNavigationStructureXml(startWalletNavigationStructure());
-                WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
-            //}
+                walletNavigationStructure= getNavigationStructure(publicKey);
+            }
             //listWallets.put(publicKey, walletNavigationStructure);
-            walletNavigationStructureOpen=walletNavigationStructure;
+            //walletNavigationStructureOpen=walletNavigationStructure;
         }catch(Exception e){
             String message = CantFactoryReset.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
@@ -1285,7 +1350,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Bitdubai Bitcoin Reference Wallet");
+        runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");
         runtimeTitleBar.setLabelSize(16);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -1307,15 +1372,18 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeTabStrip.setTabsIndicateColor("#72af9c");
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Balance");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeTabStrip.addTab(runtimeTab);
+
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Send");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
         runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Balance");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTabStrip.setStartItem(1);
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Receive");
@@ -1391,30 +1459,31 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Personal Wallets");
+        runtimeMenuItem.setLabel("Contacts");
+        runtimeMenuItem.setIcon("contacts");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Shops");
+        runtimeMenuItem.setLabel("Transactions");
+        runtimeMenuItem.setIcon("transactions");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Commercial wallets");
+        runtimeMenuItem.setLabel("Payment request");
+        runtimeMenuItem.setIcon("Payment_request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Factory Projects");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Published Wallets");
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setIcon("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Wallet Store");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
         runtimeMenuItem = new MenuItem();
@@ -1454,7 +1523,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("itdubai bitcoin Wallet");
+        runtimeTitleBar.setLabel("bitdubai bitcoin Wallet");
         runtimeTitleBar.setLabelSize(16);
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#72af9c");
@@ -1514,21 +1583,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         //fin navigation
 
-        /**
-         * Menu
-         */
 
-        runtimeMainMenu = new MainMenu();
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
-
-
-        runtimeActivity.setMainMenu(runtimeMainMenu);
-
-        /**
-         *  Fin de menu
-         */
 
 
 

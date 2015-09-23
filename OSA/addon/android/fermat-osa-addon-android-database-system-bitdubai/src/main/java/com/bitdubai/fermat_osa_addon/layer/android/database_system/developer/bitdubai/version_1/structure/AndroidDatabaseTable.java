@@ -130,9 +130,13 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
     @Override
-    public DatabaseTableFilterGroup getEmptyTableFilterGroup() {
-        return new AndroidDatabaseTableFilterGroup();
+    public DatabaseTableFilter getNewFilter(String column, DatabaseFilterType type, String value) {
+        return new AndroidDatabaseTableFilter(column, type, value);
+    }
 
+    @Override
+    public DatabaseTableFilterGroup getNewFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator) {
+        return new AndroidDatabaseTableFilterGroup(tableFilters, filterGroups, filterOperator);
     }
 
     /**
@@ -141,6 +145,7 @@ public class AndroidDatabaseTable implements DatabaseTable {
     @Override
     public void clearAllFilters() {
         this.tableFilter = null;
+        this.tableFilterGroup = null;
     }
 
     /**
@@ -299,6 +304,58 @@ public class AndroidDatabaseTable implements DatabaseTable {
         }
     }
 
+    @Override
+    public List<DatabaseTableRecord> customQuery(final String query, final boolean customResult) throws CantLoadTableToMemoryException {
+        Cursor cursor = null;
+        SQLiteDatabase database = null;
+        List<String> columns = null;
+
+        List<DatabaseTableRecord> databaseTableRecords = new ArrayList<>();
+        try {
+            database = this.database.getReadableDatabase();
+
+            if (!customResult)
+                columns = getColumns(database);
+
+            cursor = database.rawQuery(query, null);
+            while (cursor.moveToNext()) {
+                DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
+                List<DatabaseRecord> recordValues = new ArrayList<>();
+
+                if (customResult) {
+                    for (int i = 0; i < cursor.getColumnCount(); i++) {
+                        DatabaseRecord recordValue = new AndroidRecord();
+                        recordValue.setName("Column" + i);
+                        recordValue.setValue(cursor.getString(i));
+                        recordValues.add(recordValue);
+                    }
+                } else {
+                    for (final String column : columns) {
+                        DatabaseRecord recordValue = new AndroidRecord();
+                        recordValue.setName(column);
+                        recordValue.setValue(cursor.getString(cursor.getColumnIndex(column)));
+                        recordValue.setChange(false);
+                        recordValue.setUseValueofVariable(false);
+                        recordValues.add(recordValue);
+                    }
+                }
+
+                tableRecord.setValues(recordValues);
+                databaseTableRecords.add(tableRecord);
+            }
+            cursor.close();
+
+        } catch (Exception e) {
+            if (cursor != null)
+                cursor.close();
+            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, "Check the cause for this error");
+        } finally {
+            if (database != null)
+                database.close();
+        }
+        return databaseTableRecords;
+    }
+
     /**
      * <p>Check if the set will table in tableName variable exists
      *
@@ -367,21 +424,6 @@ public class AndroidDatabaseTable implements DatabaseTable {
         filter.setType(type);
 
         this.tableFilter.add(filter);
-
-    }
-
-    @Override
-    public void setStateFilter(String columName, WalletFactoryProjectState walletFactoryProjectState, DatabaseFilterType type) {
-        if (this.tableFilter == null)
-            this.tableFilter = new ArrayList<>();
-
-        DatabaseTableFilter filter = new AndroidDatabaseTableFilter();
-
-        filter.setColumn(columName);
-        filter.setValue(walletFactoryProjectState.toString());
-        filter.setType(type);
-
-        this.tableFilter.add(filter);
     }
 
     /**
@@ -427,27 +469,19 @@ public class AndroidDatabaseTable implements DatabaseTable {
         this.tableSelectOperator.add(selectOperator);
     }
 
-
-
-
-
     /**
      * <p>Sets the filter and subgroup to filter for queries with grouped where
      *
-     * @param filters   list of DatabaseTableFilter object
-     * @param subGroups list of DatabaseTableFilterGroup objects
-     * @param operator  DatabaseFilterOperator enumerator
+     * @param filterGroup DatabaseTableFilterGroup object
      */
     @Override
-    public void setFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator operator) {
-
-        DatabaseTableFilterGroup filterGroup = new AndroidDatabaseTableFilterGroup();
-
-        filterGroup.setFilters(filters);
-        filterGroup.setSubGroups(subGroups);
-        filterGroup.setOperator(operator);
-
+    public void setFilterGroup(DatabaseTableFilterGroup filterGroup) {
         this.tableFilterGroup = filterGroup;
+    }
+
+    @Override
+    public void setFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator) {
+        this.tableFilterGroup = new AndroidDatabaseTableFilterGroup(tableFilters, filterGroups, filterOperator);
     }
 
     /**

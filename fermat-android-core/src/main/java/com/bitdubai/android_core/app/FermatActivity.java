@@ -38,6 +38,7 @@ import com.bitdubai.android_core.app.common.version_1.Sessions.SubAppSessionMana
 import com.bitdubai.android_core.app.common.version_1.Sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapterWithIcons;
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.fragments.WizardFragment;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
@@ -78,6 +79,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
+import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
@@ -117,6 +120,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Screen adapters
      */
     private TabsPagerAdapter adapter;
+    private TabsPagerAdapterWithIcons adapterWithIcons;
     private ScreenPagerAdapter screenPagerAdapter;
     /**
      * WizardTypes
@@ -384,26 +388,46 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void setPagerTabs(WalletNavigationStructure wallet, TabStrip tabStrip, WalletSession walletSession) {
 
         PagerSlidingTabStrip pagerSlidingTabStrip = ((PagerSlidingTabStrip) findViewById(R.id.tabs));
+        pagerSlidingTabStrip.setShouldExpand(true);
 
         ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
         pagertabs.setVisibility(View.VISIBLE);
 
-        adapter = new TabsPagerAdapter(getFragmentManager(),
-                getApplicationContext(),
-                WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
-                tabStrip,
-                walletSession,
-                getWalletResourcesProviderManager());
+        if(tabStrip.isHasIcon()){
+            adapterWithIcons = new TabsPagerAdapterWithIcons(getFragmentManager(),
+                    getApplicationContext(),
+                    WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
+                    tabStrip,
+                    walletSession,
+                    getWalletResourcesProviderManager(),
+                    getResources());
+            pagertabs.setAdapter(adapterWithIcons);
+        }else{
+            adapter = new TabsPagerAdapter(getFragmentManager(),
+                    getApplicationContext(),
+                    WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey()),
+                    tabStrip,
+                    walletSession,
+                    getWalletResourcesProviderManager(),
+                    getResources());
+            pagertabs.setAdapter(adapter);
+        }
 
-        pagertabs.setAdapter(adapter);
+
+
+
+
+        //pagertabs.setCurrentItem();
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pagertabs.setPageMargin(pageMargin);
+        pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
+
         /**
          * Put tabs in pagerSlidingTabsStrp
          */
         pagerSlidingTabStrip.setViewPager(pagertabs);
-
+        pagerSlidingTabStrip.setShouldExpand(true);
         pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
 
     }
@@ -758,18 +782,43 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
 
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
-            SubApp subApp = getSubAppRuntimeMiddleware().getHomeScreen();
-            Activity activity = subApp.getLastActivity();
+
+            DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
+
+            for(DesktopObject desktopObject:desktopRuntimeManager.listDesktops()){
+                //TODO: este switch se cambiara por un FragmentFactory en algún momento al igual que el Activity factory
+                switch (desktopObject.getType()){
+                    case "DCCP":
+                        //por ahora va esto
+                        WalletManager manager = getWalletManager();
+                        WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
+                        fragments.add(walletDesktopFragment);
+
+                        SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
+
+                        fragments.add(subAppDesktopFragment);
+                        break;
+                    case "DDAP":
+                        com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment walletDesktopFragment1 = com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
+                        fragments.add(walletDesktopFragment1);
+                        com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
+                        fragments.add(dapDesktopFragment);
+                        break;
+                    case "DCBP":
+
+                        com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment dapDesktopFragment3 = com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment.newInstance(0);
+                        fragments.add(dapDesktopFragment3);
+                        com.bitdubai.desktop.sub_app_manager.fragments.SubAppDesktopFragment walletDesktopFragment2 = com.bitdubai.desktop.sub_app_manager.fragments.SubAppDesktopFragment.newInstance(0);
+                        fragments.add(walletDesktopFragment2);
+                        break;
+
+                }
+            }
+            //Activity activity =  desktopObject.getLastActivity();
 
 
-            //por ahora va esto
-            WalletManager manager = getWalletManager();
-            WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-            fragments.add(walletDesktopFragment);
 
-            SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
 
-            fragments.add(subAppDesktopFragment);
 
 
             /*for (FermatFragments key : activity.getFragments().keySet()) {
@@ -968,6 +1017,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     public NotificationManagerMiddleware getNotificationManager() {
         return (NotificationManagerMiddleware) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION);
+    }
+    /**
+     * Get DesktopRuntimeManager
+     */
+    public DesktopRuntimeManager getDesktopRuntimeManager() {
+        return (DesktopRuntimeManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DESKTOP_RUNTIME);
     }
 
 

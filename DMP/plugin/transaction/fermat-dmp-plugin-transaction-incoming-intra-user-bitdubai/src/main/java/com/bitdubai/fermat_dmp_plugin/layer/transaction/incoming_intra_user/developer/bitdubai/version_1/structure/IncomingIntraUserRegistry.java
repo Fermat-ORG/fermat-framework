@@ -24,6 +24,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserExpectedTransactionNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.EventWrapper;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.util.TransactionCompleteInformation;
 
 import java.util.List;
 import java.util.UUID;
@@ -143,10 +144,15 @@ public class IncomingIntraUserRegistry {
      *      Methods used by the Relay Agent     *
      ********************************************/
 
-    // TODO: REVISAR QUE DEVUELVA SÓLO LAS QUE ESTÁN CON LA METADATA SINCRONIZADA
     // Retorna las (R,TBA)
-    public List<Transaction<CryptoTransaction>> getResponsibleTBATransactions() {
+    public List<TransactionCompleteInformation> getResponsibleTBATransactions() throws IncomingIntraUserCantGetTransactionsException {
+        try {
             return this.incomingIntraUserDao.getAllTransactionsToBeApplied();
+        } catch (InvalidParameterException | CantLoadTableToMemoryException e) {
+            throw new IncomingIntraUserCantGetTransactionsException("An exception happened",e,"","");
+        } catch (Exception e) {
+            throw new IncomingIntraUserCantGetTransactionsException("An unexpected exception happened",FermatException.wrapException(e),"","");
+        }
     }
 
     // Pasa la transacción a APPLIED.

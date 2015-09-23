@@ -107,7 +107,7 @@ public class ReceiveFragment extends Fragment {
     /**
      * Hardcoded walletPublicKey and user_id
      */
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
     String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
 
     /**
@@ -241,7 +241,7 @@ public class ReceiveFragment extends Fragment {
         try {
             List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress()));
             }
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

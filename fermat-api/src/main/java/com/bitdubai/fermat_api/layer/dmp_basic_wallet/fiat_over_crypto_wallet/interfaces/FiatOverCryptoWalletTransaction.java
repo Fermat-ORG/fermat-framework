@@ -3,8 +3,8 @@ package com.bitdubai.fermat_api.layer.dmp_basic_wallet.fiat_over_crypto_wallet.i
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 
 import java.util.UUID;
 
