@@ -45,6 +45,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
@@ -172,9 +173,9 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     public void start() throws CantStartPluginException {
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
         try {
-            //System.out.println("******* Asset Factory Init, Open Database. ******");
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            testAssetFactory();
+            //testSaveAssetFactory();
+            //testPublishAsset();
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -245,13 +246,13 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
         }
     }
 
-    public AssetFactory testAssetFactory()
+    public void testSaveAssetFactory()
     {
         try {
             java.util.Date date= new java.util.Date();
             System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
-/*            assetFactory.setPublicKey("ASD-125412541-BS-854");
+            assetFactory.setPublicKey("ASD-125412541-BS-854");
             assetFactory.setDescription("Asset de Prueba");
             assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
             assetFactory.setAmount(1);
@@ -264,15 +265,9 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             assetFactory.setQuantity(100);
             assetFactory.setState(State.DRAFT);
             Resource resource = new Resource();
+            List<Resource> resources = new ArrayList<>();
             resource.setId(UUID.randomUUID());
             resource.setName("Foto 1");
-            resource.setFileName("imagen.png");
-            resource.setResourceType(ResourceType.IMAGE);
-            resource.setResourceDensity(ResourceDensity.HDPI);
-            List<Resource> resources = new ArrayList<>();
-            resources.add(resource);
-            resource.setId(UUID.randomUUID());
-            resource.setName("Foto 2");
             resource.setFileName("imagen2.png");
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
@@ -295,37 +290,48 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
                     return "signature";
                 }
             };
-            assetFactory.setIdentityAssetIssuer(identityAssetIssuer);*/
-            //assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
-            assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
-            //publishAsset(assetFactory, BlockchainNetworkType.DEFAULT);
-            System.out.println("******* Metodo testAssetFactory. Franklin ******" + assetFactory + assetFactory.getName());
-            return assetFactory;
+            assetFactory.setIdentityAssetIssuer(identityAssetIssuer);
+            assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
         }catch (Exception e){
             System.out.println("******* Metodo testAssetFactory, Error. Franklin ******" );
             e.printStackTrace();
-            return  null;
+        }
+    }
+
+    public AssetFactory testPublishAsset(){
+        try{
+            java.util.Date date= new java.util.Date();
+            System.out.println(new Timestamp(date.getTime()));
+            AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
+            assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
+            publishAsset(assetFactory, BlockchainNetworkType.DEFAULT);
+            return assetFactory;
+        }
+        catch (Exception e){
+            System.out.println("******* Metodo testAssetFactory, Error. Franklin ******" );
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Override
-    public AssetFactory getAssetFactoryByPublicKey(String assetPublicKey) throws CantGetAssetFactoryException {
+    public AssetFactory getAssetFactoryByPublicKey(String assetPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryMiddlewareManager.getAssetFactory(assetPublicKey);
     }
 
     @Override
-    public List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         //TODO:Modifcar este metodo ya que tenemos que buscar en la tabla del Identity, leer todo los registros asociados a el buscarlo en la tabla asset factory y devolver un objeto lleno del asset factory con todas sus propiedades
         return assetFactoryMiddlewareManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
     }
 
     @Override
-    public List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryMiddlewareManager.getAssetFactoryByState(state);
     }
 
     @Override
-    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryMiddlewareManager.getAssetFactoryAll();
     }
 

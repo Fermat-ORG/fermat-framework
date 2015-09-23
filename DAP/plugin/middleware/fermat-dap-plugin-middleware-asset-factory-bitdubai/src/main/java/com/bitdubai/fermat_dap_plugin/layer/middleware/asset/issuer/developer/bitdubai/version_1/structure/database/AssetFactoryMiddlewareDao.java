@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.Contract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -564,7 +565,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         }
     }
 
-    public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
+    public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantCreateFileException {
         Database database= null;
         try {
             database = openDatabase();
@@ -642,16 +643,20 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                     {
                         resource.setResourceType(ResourceType.IMAGE);
                     }
-                    if(resource.getResourceBinayData() != null) {
-                        try {
+                    //TODO; Revisar porque al buscar el archivo da un nullpointer exception
+//                    try {
+//                         PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+//                         resource.setResourceBinayData(imageFile.getContent());
+//
+//                    } catch (CantCreateFileException cantCreateFileException) {
+//                        throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: getAssetFactoryList", "cant create el file");
+//                    } catch (FileNotFoundException fileNotFoundException){
+//                        throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, fileNotFoundException, "Asset Factory Method: getAssetFactoryList", "file not found");
+//                    }
 
-                            PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-                            resource.setResourceBinayData(imageFile.getContent());
+                    //TODO: Solo para testear
+                    resource.setResourceBinayData(new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff});
 
-                        } catch (CantCreateFileException cantCreateFileException) {
-                            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: getAssetFactoryList", "cant create el file");
-                        }
-                    }
                     resources.add(resource);
                 }
                 assetFactory.setContractProperties(contractProperties);
@@ -663,7 +668,12 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
             database.closeDatabase();
 
             return assetFactoryList;
-        }catch (Exception e){
+        }//catch (CantCreateFileException cantCreateFileException) {
+        //    if (database != null)
+        //        database.closeDatabase();
+        //    throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: getAssetFactoryList", "cant create el file");
+        //}
+        catch (Exception e){
             if (database != null)
                 database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get assets factory from the database with filter: " + filter.toString(), null);
