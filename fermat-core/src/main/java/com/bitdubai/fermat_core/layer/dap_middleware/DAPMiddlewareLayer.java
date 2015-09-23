@@ -32,6 +32,6 @@ public class DAPMiddlewareLayer implements PlatformLayer {
         }
     }
 
-    public Plugin getPlugin() {return mAssetFactoryPlugin;}
+    public Plugin getPluginAssetFactory() {return mAssetFactoryPlugin;}
 
 }

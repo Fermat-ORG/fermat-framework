@@ -12,12 +12,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -32,6 +34,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
@@ -42,11 +47,14 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingTransactionMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,11 +67,12 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, TransactionProtocolManager {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, TransactionProtocolManager {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     //CryptoAddressBookManager cryptoAddressBookManager;
     AssetIssuingTransactionManager assetIssuingTransactionManager;
+    AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
     CryptoWallet cryptoWallet;
     CryptoVaultManager cryptoVaultManager;
     //DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
@@ -75,6 +84,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     UUID pluginId;
     ServiceStatus serviceStatus= ServiceStatus.CREATED;
     Database assetIssuingDatabase;
+    DeviceUserManager deviceUserManager;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -131,9 +141,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public void setEventManager(EventManager eventManager) {
-
         this.eventManager=eventManager;
-
     }
 
     @Override
@@ -160,16 +168,28 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.errorManager);
+            //Start the plugin monitor agent
+            //I will comment tha MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
+            /*String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            this.assetIssuingTransactionMonitorAgent=new AssetIssuingTransactionMonitorAgent(this.eventManager,
+                    this.pluginDatabaseSystem,
+                    this.errorManager,
+                    this.pluginId,
+                    userPublicKey);
+            this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
+            this.assetIssuingTransactionMonitorAgent.start();*/
         }
         catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "Cannot set an object, probably is null");
         }catch(CantExecuteDatabaseOperationException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetCryptoTransactionFactory", "Error in constructor method AssetIssuingTransactionDao");
-        }catch(Exception exception){
+        }/*catch(CantStartAgentException exception){
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "cannot start monitor agent");
+        }*/catch(Exception exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Starting Asset Issuing plugin", "Unexpected exception");
         }
         this.serviceStatus = ServiceStatus.STARTED;
-
+        //testIssueSingleAsset();
     }
 
     @Override
@@ -184,6 +204,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public void stop(){
+        this.assetIssuingTransactionMonitorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -205,6 +226,11 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetsException {
         this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount);
+    }
+
+    @Override
+    public void issuePendingDigitalAssets(String publicKey) {
+        this.issuePendingDigitalAssets(publicKey);
     }
 
     @Override
@@ -281,4 +307,31 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }
     }
 
+    private void testIssueSingleAsset(){
+        Logger LOG = Logger.getGlobal();
+        LOG.info("MAP_TEST_SINGLE");
+        DigitalAsset digitalAsset=new DigitalAsset();
+        digitalAsset.setGenesisAmount(1);
+        digitalAsset.setDescription("TestAsset");
+        digitalAsset.setName("testName");
+        digitalAsset.setPublicKey("testPublicKey");
+        LOG.info("MAP_DigitalAsset:"+digitalAsset);
+        List<Resource> resources=new ArrayList<>();
+        digitalAsset.setResources(resources);
+
+        digitalAsset.setIdentityAssetIssuer(null);
+        DigitalAssetContract digitalAssetContract=new DigitalAssetContract();
+        digitalAsset.setContract(digitalAssetContract);
+        LOG.info("MAP_DigitalAsset2:"+digitalAsset);
+        try {
+            this.assetIssuingTransactionManager.issueAssets(digitalAsset,1);
+        } catch (CantIssueDigitalAssetsException e) {
+            LOG.info("MAP test exception:"+e);
+        }
+    }
+
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager=deviceUserManager;
+    }
 }

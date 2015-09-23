@@ -1,28 +1,15 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,19 +17,18 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentsObjects;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.ListComponent;
@@ -50,15 +36,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoney
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.res.Resources;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 
@@ -67,7 +46,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class BalanceFragment extends FermatWalletFragment {
 
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
     private final String CRYPTO_WALLET_PARAM = "cryptoWalletParam";
 
@@ -142,6 +121,14 @@ public class BalanceFragment extends FermatWalletFragment {
         //setRetainInstance(true);
 
 
+        try {
+
+           String layout = referenceWalletSession.getWalletResourcesProviderManager().getLayoutResource("balance_fragment", ScreenOrientation.PORTRAIT,referenceWalletSession.getWalletSessionType().getSkinsId().get(0).getId(),referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+
+        } catch (CantGetResourcesException e) {
+            e.printStackTrace();
+        }
+
         /**
          *
          */
@@ -162,12 +149,12 @@ public class BalanceFragment extends FermatWalletFragment {
             /**
              * Get AvailableBalance
              */
-            balanceAvailable = cryptoWallet.getAvailableBalance(walletPublicKey);
+            balanceAvailable = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
 
             /**
              * Get BookBalance
              */
-            bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
+            bookBalance = cryptoWallet.getBalance(BalanceType.BOOK, walletPublicKey);
         } catch (CantGetCryptoWalletException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -251,7 +238,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
             ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
             this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
-            lstCryptoWalletTransactions = cryptoWallet.getTransactions(referenceWalletPreferenceSettings.getTransactionsToShow(), 0, walletPublicKey);
+            lstCryptoWalletTransactions = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, referenceWalletPreferenceSettings.getTransactionsToShow(), 0);
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
                 if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
@@ -283,7 +270,7 @@ public class BalanceFragment extends FermatWalletFragment {
                     ((FermatScreenSwapper) getActivity()).changeActivity("CWRWBWBV1T");
                 }
             });
-        } catch (CantGetTransactionsException e) {
+        } catch (CantListTransactionsException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -351,9 +338,9 @@ public class BalanceFragment extends FermatWalletFragment {
     private void refreshBalance() {
         try {
 
-            balanceAvailable = cryptoWallet.getAvailableBalance(walletPublicKey);
+            balanceAvailable = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
 
-            bookBalance = cryptoWallet.getBookBalance(walletPublicKey);
+            bookBalance = cryptoWallet.getBalance(BalanceType.BOOK, walletPublicKey);
 
             if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 txtViewBalance.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));

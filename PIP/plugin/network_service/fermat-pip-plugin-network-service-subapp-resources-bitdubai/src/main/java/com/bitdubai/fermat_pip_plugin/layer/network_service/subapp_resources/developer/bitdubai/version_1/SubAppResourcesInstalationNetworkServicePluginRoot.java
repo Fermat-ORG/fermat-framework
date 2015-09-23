@@ -354,7 +354,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * @throws CantGetResourcesException
      */
     @Override
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId) throws CantGetResourcesException {
+    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String walletPublicKey) throws CantGetResourcesException {
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }

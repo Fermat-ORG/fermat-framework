@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai
 /**
  * Created by Nerio on 16/09/15.
  */
+//TODO DEFINICION BD PARA MEJORAR
 public class AssetUserActorDatabaseConstants {
     /**
      * Asset User database table definition.
@@ -11,20 +12,36 @@ public class AssetUserActorDatabaseConstants {
 
     public static final String ASSET_USER_TABLE_NAME = "asset_user_actor";
 
-    static final String ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME = "asset_user_publicKey";
-    static final String ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME = "asset_issuer_name";
-    static final String ASSET_USER_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME = "asset_issuer_user_publicKey";
-    static final String ASSET_USER_USER_NAME_COLUMN_NAME = "asset_user_name";
-    static final String ASSET_USER_USER_ID_COLUMN_NAME = "asset_user_id";
-    static final String ASSET_USER_USER_HASH_COLUMN_NAME = "asset_user_hash";
-    static final String ASSET_USER_AMOUNT_COLUMN_NAME = "asset_user_amount";
-    static final String ASSET_USER_CURRENCY_COLUMN_NAME = "asset_user_currency";
-    static final String ASSET_USER_USER_EXPIRATION_DATE_COLUMN_NAME = "asset_expiration_date";
-    static final String ASSET_USER_ASSET_STATUS_COLUMN_NAME = "asset_user_status";
-    static final String ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME = "asset_user_registration_date";
-    static final String ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME = "asset_user_modified_date";
-    static final String ASSET_USER_USER_REDEEMPTION_TIMESTAMP_COLUMN_NAME = "asset_user_timestamp";
-    static final String ASSET_USER_USER_REDEEMPTION_DATE_COLUMN_NAME = "asset_user_redeemption_date";
+    static final String ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME = "asset_user_publicKey_actor";
+    static final String ASSET_USER_USER_NAME_COLUMN_NAME = "asset_user_name_actor";
+    static final String ASSET_USER_USER_SEX_COLUMN_NAME = "asset_user_sex_actor";
+    static final String ASSET_USER_USER_UBICACION_COLUMN_NAME = "asset_user_ubicacion_actor";
+    static final String ASSET_USER_USER_PHOTO_COLUMN_NAME = "asset_user_photo_actor";
+    static final String ASSET_USER_USER_AGE_COLUMN_NAME = "asset_user_age_actor";
+    static final String ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME = "asset_user_registration_date_actor";
+    static final String ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME = "asset_user_modified_date_actor";
 
-    static final String ASSET_USER_FIRST_KEY_COLUMN = "asset_user_publicKey";
+    static final String ASSET_USER_FIRST_KEY_COLUMN = "asset_user_publicKey_actor";
+
+    /**
+     * Asset User Relation Asset Issuer database table definition.
+     */
+    public static final String ASSET_USER_RELATION_ASSET_ISSUER_TABLE_NAME = "asset_user_relation_asset_issuer_actor";
+
+    static final String ASSET_USER_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME = "asset_user_relation_issuer_publicKey_actor";
+    static final String ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME = "asset_issuer_name_actor";
+    static final String ASSET_USER_RELATION_ISSUER_IDENTITY_COLUMN_NAME = "asset_issuer_identity_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_NAME_COLUMN_NAME = "asset_user_asset_name_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_DESCRIPTION_COLUMN_NAME = "asset_user_asset_descriptiom_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_ID_COLUMN_NAME = "asset_user_asset_id_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_HASH_COLUMN_NAME = "asset_user_asset_hash_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_STATUS_COLUMN_NAME = "asset_user_asset_status_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_RESOURCES_COLUMN_NAME = "asset_user_asset_resource_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_AMOUNT_COLUMN_NAME = "asset_user_asset_amount_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_CURRENCY_COLUMN_NAME = "asset_user_asset_currency_actor";
+    static final String ASSET_USER_RELATION_ISSUER_ASSET_EXPIRATION_DATE_COLUMN_NAME = "asset_expiration_date_actor";
+    static final String ASSET_USER_RELATION_REDEEMPTION_TIMESTAMP_COLUMN_NAME = "asset_user_redeemption_timestamp_actor";
+    static final String ASSET_USER_RELATION_REDEEMPTION_DATE_COLUMN_NAME = "asset_user_redeemption_date_actor";
+
+    static final String ASSET_USER_RELATION_ISSUER_FIRST_KEY_COLUMN = "asset_user_relation_issuer_publicKey_actor";
 }

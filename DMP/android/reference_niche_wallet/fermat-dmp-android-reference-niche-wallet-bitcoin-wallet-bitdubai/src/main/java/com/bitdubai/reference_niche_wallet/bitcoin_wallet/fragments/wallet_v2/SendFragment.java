@@ -14,7 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
@@ -27,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -69,6 +72,7 @@ public  class SendFragment extends FermatWalletFragment {
 
 
     private EditText editTextAmount;
+    private LinearLayout linear_layout_send_form;
 
 
     private AutoCompleteTextView autocompleteContacts;
@@ -96,17 +100,16 @@ public  class SendFragment extends FermatWalletFragment {
 
 
 
-            contacts = new String[]{ "", "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
-            amounts = new String[]{ "", "$1,400.00", "$325.00", "$0.50", "$25.00"};
-            whens = new String[]{ "", "2 hours ago", "3 min ago", "today 9:24 AM", "yesterday"};
-            notes = new String[]{"", "Flat rent",  "Plasma TV", "Test address", "More pictures"};
-            totalAmount = new String[]{"","$22,730.00","$785.00","$0.50","$125.00"};
-            historyCount = new String[] {"","16 records","7 records","1 record","6 records"};
-            pictures = new String[]{"", "guillermo_profile_picture", "luis_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
+            contacts = new String[]{  "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
+            amounts = new String[]{  "$1,400.00", "$325.00", "$0.50", "$25.00"};
+            whens = new String[]{  "2 hours ago", "3 min ago", "today 9:24 AM", "yesterday"};
+            notes = new String[]{ "Flat rent",  "Plasma TV", "Test address", "More pictures"};
+            totalAmount = new String[]{"$22,730.00","$785.00","$0.50","$125.00"};
+            historyCount = new String[] {"16 records","7 records","1 record","6 records"};
+            pictures = new String[]{ "guillermo_profile_picture", "luis_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
             transactions = new String[][]{
 
-                    {},
                     {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
                     {"Plasma TV","New chair","New desk"},
                     {"Test address"},
@@ -115,7 +118,6 @@ public  class SendFragment extends FermatWalletFragment {
 
             transactions_amounts = new String[][]{
 
-                    {},
                     {"$1,400.00","$1,200.00","$1,400.00","$40.00","$1,900.00","$10,550.00","$1.00"},
                     {"$325.00","$55.00","$420.00"},
                     {"$0.50"},
@@ -124,7 +126,6 @@ public  class SendFragment extends FermatWalletFragment {
 
             transactions_whens = new String[][]{
 
-                    {},
                     {"2 hours ago ","1 months ago","2 months ago","4 months ago","4 months ago","5 months ago","6 months ago"},
                     {"3 min ago","a week ago","last month"},
                     {"today 9:24 AM"},
@@ -140,9 +141,110 @@ public  class SendFragment extends FermatWalletFragment {
 
     }
 
+
+
+//...
+
+
+
+    /**
+     * onClick handler
+     */
+    public void toggle_contents(View v){
+
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
+        rootView =   inflater.inflate(R.layout.bitcoin_wallet_send_fragment_base, container, false);
+
+         linear_layout_send_form = (LinearLayout)rootView.findViewById(R.id.send_form);
+
+                ((Button) rootView.findViewById(R.id.btn_expand_send_form)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        boolean isShow =linear_layout_send_form.isShown();
+                        //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+                        if(isShow){
+                            Fx.slide_up(getActivity(), linear_layout_send_form);
+                            linear_layout_send_form.setVisibility(View.GONE);
+                        }
+                        else{
+                            linear_layout_send_form.setVisibility(View.VISIBLE);
+                            Fx.slide_down(getActivity(), linear_layout_send_form);
+                        }
+
+                    }
+                });
+
+        autocompleteContacts = (AutoCompleteTextView)rootView.findViewById(R.id.contact_name);
+
+        adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
+
+        autocompleteContacts.setAdapter(adapter);
+        //autocompleteContacts.setTypeface(tf);
+        autocompleteContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                WalletContact walletContact = (WalletContact) arg0.getItemAtPosition(position);
+                editTextAddress.setText(walletContact.address);
+            }
+        });
+
+        editTextAddress = (EditText) rootView.findViewById(R.id.address);
+
+        TextView tv;
+
+        tv = (TextView) rootView.findViewById(R.id.notes);
+
+
+        editTextAmount = (EditText) rootView.findViewById(R.id.amount);
+        /**
+         *  Amount observer
+         */
+        editTextAmount.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                try {
+                    Long amount = Long.parseLong(editTextAmount.getText().toString());
+                    if (amount > 0) {
+                        //long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+                        //editTextAmount.setHint("Available amount: " + actualBalance + " bits");
+                    }
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        /**
+         * BarCode Scanner
+         */
+        rootView.findViewById(R.id.scan_qr).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
+                integrator.initiateScan();
+            }
+        });
+
+
+
+        //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
+
+        Button btnSend = (Button) rootView.findViewById(R.id.send_button);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         return rootView;
     }
@@ -243,7 +345,7 @@ public  class SendFragment extends FermatWalletFragment {
         try {
             List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress()));
             }
         } catch (CantGetAllWalletContactsException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -282,7 +384,8 @@ public  class SendFragment extends FermatWalletFragment {
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return transactions[groupPosition][childPosition];
+            Toast.makeText(getActivity(),"transaccion"+childPosition,Toast.LENGTH_SHORT).show();
+            return null;//transactions[groupPosition][childPosition];
         }
 
         @Override
@@ -340,7 +443,7 @@ public  class SendFragment extends FermatWalletFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.text.setText(getChild(groupPosition, childPosition).toString());
+            //holder.text.setText(getChild(groupPosition, childPosition).toString());
 
             return convertView;
         }
@@ -356,85 +459,6 @@ public  class SendFragment extends FermatWalletFragment {
             ViewHolder history;
             ViewHolder new_name;
 
-            if (groupPosition == 0){
-
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_first_row, parent, false);
-
-                autocompleteContacts = (AutoCompleteTextView)convertView.findViewById(R.id.contact_name);
-
-                adapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
-
-                autocompleteContacts.setAdapter(adapter);
-                //autocompleteContacts.setTypeface(tf);
-                autocompleteContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                        WalletContact walletContact = (WalletContact) arg0.getItemAtPosition(position);
-                        editTextAddress.setText(walletContact.address);
-                    }
-                });
-
-                editTextAddress = (EditText) convertView.findViewById(R.id.address);
-
-                TextView tv;
-
-                tv = (TextView) convertView.findViewById(R.id.notes);
-
-
-                editTextAmount = (EditText) convertView.findViewById(R.id.amount);
-                /**
-                 *  Amount observer
-                 */
-                editTextAmount.addTextChangedListener(new TextWatcher() {
-                    public void afterTextChanged(Editable s) {
-                        try {
-                            Long amount = Long.parseLong(editTextAmount.getText().toString());
-                            if (amount > 0) {
-                                long actualBalance = cryptoWallet.getAvailableBalance(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                                editTextAmount.setHint("Available amount: " + actualBalance + " bits");
-                            }
-                        }catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                });
-
-                /**
-                 * BarCode Scanner
-                 */
-                convertView.findViewById(R.id.scan_qr).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
-                        integrator.initiateScan();
-                    }
-                });
-
-
-
-                //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
-
-                Button btnSend = (Button) convertView.findViewById(R.id.send_button);
-                btnSend.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                });
-
-
-
-                //tv.setText("Name");
-
-
-            }
-            else {
 
                 //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
                 if (convertView == null) {
@@ -450,18 +474,20 @@ public  class SendFragment extends FermatWalletFragment {
 
 
                     switch (groupPosition){
-                        case 1:
+                        case 0:
                             profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
                             break;
-                        case 2:
+                        case 1:
                             profile_picture.setImageResource(R.drawable.brant_profile_picture);
+                            break;
+                        case 2:
+                            profile_picture.setImageResource(R.drawable.mati_profile);
                             break;
                         case 3:
                             profile_picture.setImageResource(R.drawable.mati_profile);
                             break;
-                        case 4:
+                        default:
                             profile_picture.setImageResource(R.drawable.mati_profile);
-                            break;
                     }
 
 
@@ -518,8 +544,8 @@ public  class SendFragment extends FermatWalletFragment {
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
-                holder.text.setText(getGroup(groupPosition).toString());
-            }
+                //holder.text.setText(getGroup(groupPosition).toString());
+
             return convertView;
         }
         @Override
