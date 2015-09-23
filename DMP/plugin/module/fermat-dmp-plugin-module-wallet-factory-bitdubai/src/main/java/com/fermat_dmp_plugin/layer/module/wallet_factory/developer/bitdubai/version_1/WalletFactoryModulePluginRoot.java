@@ -11,9 +11,12 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableProjectsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetInstalledWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryDeveloper;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -202,5 +205,26 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
         } catch (Exception e){
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
         }
+    }
+
+    /**
+     * Lists the installed wallets in the platform.
+     * @return
+     * @throws CantGetInstalledWalletsException
+     */
+    @Override
+    public List<InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException {
+        return null;
+    }
+
+    /**
+     * Clones a previously installed wallet under the new assigned name.
+     * @param walletToClone
+     * @param newName
+     * @throws CantCloneInstalledWalletException
+     */
+    @Override
+    public void cloneInstalledWallets(InstalledWallet walletToClone, String newName) throws CantCloneInstalledWalletException {
+
     }
 }

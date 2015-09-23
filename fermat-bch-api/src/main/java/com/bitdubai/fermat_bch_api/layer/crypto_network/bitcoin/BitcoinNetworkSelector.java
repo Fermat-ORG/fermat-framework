@@ -26,6 +26,11 @@ public class BitcoinNetworkSelector {
         }
     }
 
+    /**
+     * For Asset Vault key hierarcht configuration, we need to for mthe correct Account Number
+     * @param blockchainNetworkType
+     * @return
+     */
     public static int getNetworkAccountNumber(BlockchainNetworkType blockchainNetworkType){
         switch (blockchainNetworkType){
             case PRODUCTION:
