@@ -32,6 +32,11 @@ public class CryptoTransaction{
         this.cryptoStatus = cryptoStatus;
     }
 
+    /**
+     * Default constructor.
+     */
+    public CryptoTransaction(){}
+
     public String getTransactionHash() {
         return transactionHash;
     }
