@@ -54,6 +54,7 @@ public interface IntraUserCryptoTransactionManager {
      * @param receptorPublicKey         The public key of the actor that we are sending the transaction to
      * @param senderActorType           The type of actor sending the transaction
      * @param receptorActorType         The type of actor receiving the transaction
+     * @param referenceWallet           The type of the wallet sending the transaction
      * @throws OutgoingIntraUserCantSendFundsExceptions
      * @throws OutgoingIntraUserInsufficientFundsException
      */
@@ -64,8 +65,9 @@ public interface IntraUserCryptoTransactionManager {
                            String senderPublicKey,
                            String receptorPublicKey,
                            Actors senderActorType,
-                           Actors receptorActorType) throws OutgoingIntraUserCantSendFundsExceptions,
-                                                            OutgoingIntraUserInsufficientFundsException;
+                           Actors receptorActorType,
+                           ReferenceWallet referenceWallet) throws OutgoingIntraUserCantSendFundsExceptions,
+                                                                   OutgoingIntraUserInsufficientFundsException;
 
 
     /**

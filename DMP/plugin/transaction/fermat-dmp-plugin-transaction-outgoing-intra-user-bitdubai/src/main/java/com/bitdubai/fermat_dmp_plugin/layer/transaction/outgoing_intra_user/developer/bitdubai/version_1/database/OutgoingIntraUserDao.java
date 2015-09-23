@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -73,18 +74,19 @@ public class OutgoingIntraUserDao {
     }
 
 
-    public void registerNewTransaction(String        walletPublicKey,
-                                       CryptoAddress destinationAddress,
-                                       long          cryptoAmount,
-                                       String        notes,
-                                       String        deliveredByActorPublicKey,
-                                       Actors        deliveredByActorType,
-                                       String        deliveredToActorPublicKey,
-                                       Actors        deliveredToActorType) throws OutgoingIntraUserCantInsertRecordException {
+    public void registerNewTransaction(String          walletPublicKey,
+                                       CryptoAddress   destinationAddress,
+                                       long            cryptoAmount,
+                                       String          notes,
+                                       String          deliveredByActorPublicKey,
+                                       Actors          deliveredByActorType,
+                                       String          deliveredToActorPublicKey,
+                                       Actors          deliveredToActorType,
+                                       ReferenceWallet referenceWallet) throws OutgoingIntraUserCantInsertRecordException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
+            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new OutgoingIntraUserCantInsertRecordException("An exception happened",e,"","");
@@ -188,14 +190,15 @@ public class OutgoingIntraUserDao {
 
 
     private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
-                                 String walletPublicKey,
-                                 CryptoAddress destinationAddress,
-                                 long cryptoAmount,
-                                 String notes,
-                                 String deliveredByActorPublicKey,
-                                 Actors deliveredByActorType,
-                                 String deliveredToActorPublicKey,
-                                 Actors deliveredToActorType) {
+                                 String              walletPublicKey,
+                                 CryptoAddress       destinationAddress,
+                                 long                cryptoAmount,
+                                 String              notes,
+                                 String              deliveredByActorPublicKey,
+                                 Actors              deliveredByActorType,
+                                 String              deliveredToActorPublicKey,
+                                 Actors              deliveredToActorType,
+                                 ReferenceWallet     referenceWallet) {
 
         UUID transactionId = UUID.randomUUID();
 
@@ -288,6 +291,7 @@ public class OutgoingIntraUserDao {
         Actors           actorToType        = Actors.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_TYPE_COLUMN_NAME));
         String           actorFromPublicKey = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
         String           actorToPublicKey   = record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
+        ReferenceWallet  referenceWallet    = ReferenceWallet.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_WALLET_REFERENCE_TYPE_COLUMN_NAME));
         CryptoAddress    addressFrom        = new CryptoAddress(
                                                     record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ADDRESS_FROM_COLUMN_NAME),
                                                     CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_CURRENCY_COLUMN_NAME))
@@ -312,6 +316,7 @@ public class OutgoingIntraUserDao {
         bitcoinTransaction.setActorFromType(actorFromType);
         bitcoinTransaction.setActorToPublicKey(actorToPublicKey);
         bitcoinTransaction.setActorToType(actorToType);
+        bitcoinTransaction.setReferenceWallet(referenceWallet);
 
         return bitcoinTransaction;
     }

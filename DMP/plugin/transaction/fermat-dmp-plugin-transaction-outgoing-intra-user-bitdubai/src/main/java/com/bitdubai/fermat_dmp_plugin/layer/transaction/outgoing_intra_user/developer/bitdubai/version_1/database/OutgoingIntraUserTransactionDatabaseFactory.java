@@ -89,6 +89,7 @@ public class OutgoingIntraUserTransactionDatabaseFactory implements DealsWithPlu
             table.addColumn(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
             table.addColumn(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_WALLET_REFERENCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_FIRST_KEY_COLUMN);
 

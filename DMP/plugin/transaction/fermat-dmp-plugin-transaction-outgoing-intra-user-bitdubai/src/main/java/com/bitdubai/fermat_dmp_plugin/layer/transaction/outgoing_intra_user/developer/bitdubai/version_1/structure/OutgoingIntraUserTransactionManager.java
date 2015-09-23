@@ -3,12 +3,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.dev
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common_exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserCantSendFundsExceptions;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserInsufficientFundsException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.IntraUserCryptoTransactionManager;
@@ -62,14 +63,15 @@ public class OutgoingIntraUserTransactionManager implements IntraUserCryptoTrans
      * @throws OutgoingIntraUserInsufficientFundsException
      */
     @Override
-    public void sendCrypto(String        walletPublicKey,
-                           CryptoAddress destinationAddress,
-                           long          cryptoAmount,
-                           String        description,
-                           String        senderPublicKey,
-                           String        receptorPublicKey,
-                           Actors        senderActorType,
-                           Actors        receptorActorType) throws OutgoingIntraUserCantSendFundsExceptions, OutgoingIntraUserInsufficientFundsException {
+    public void sendCrypto(String          walletPublicKey,
+                           CryptoAddress   destinationAddress,
+                           long            cryptoAmount,
+                           String          description,
+                           String          senderPublicKey,
+                           String          receptorPublicKey,
+                           Actors          senderActorType,
+                           Actors          receptorActorType,
+                           ReferenceWallet referenceWallet) throws OutgoingIntraUserCantSendFundsExceptions, OutgoingIntraUserInsufficientFundsException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
             ;
@@ -80,7 +82,7 @@ public class OutgoingIntraUserTransactionManager implements IntraUserCryptoTrans
 
             OutgoingIntraUserDao dao = new OutgoingIntraUserDao(this.errorManager, this.pluginDatabaseSystem);
             dao.initialize(this.pluginId);
-            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType);
+            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
         } catch (OutgoingIntraUserInsufficientFundsException e) {
             throw e;
         } catch (OutgoingIntraUserCantInsertRecordException | CantLoadWalletException | CantCalculateBalanceException | CantInitializeOutgoingIntraUserDaoException e) {

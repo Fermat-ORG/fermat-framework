@@ -134,6 +134,8 @@ public class OutgoingIntraUserTransactionDeveloperDatabaseFactory implements Dea
         outgoingIntraUserColumns.add(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_FROM_TYPE_COLUMN_NAME);
         outgoingIntraUserColumns.add(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
         outgoingIntraUserColumns.add(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_ACTOR_TO_TYPE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_WALLET_REFERENCE_TYPE_COLUMN_NAME);
+
         /**
          * Table Outgoing Intra User addition.
          */
