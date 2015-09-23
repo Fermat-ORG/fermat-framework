@@ -55,6 +55,9 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.params.RegTestParams;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -550,8 +553,10 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         cryptoTransaction.setCryptoAmount(cryptoAmount);
         cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
         cryptoTransaction.setCryptoStatus(CryptoStatus.PENDING_SUBMIT);
-        cryptoTransaction.setTransactionHash("MegaHash");
 
+
+        Transaction transaction = new Transaction(RegTestParams.get());
+        cryptoTransaction.setTransactionHash(transaction.getHash().toString());
         return cryptoTransaction;
     }
 }
