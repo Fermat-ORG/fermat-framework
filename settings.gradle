@@ -20,6 +20,8 @@ include ':fermat-bch-api'
 include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
 
+include ':fermat-ccp-plugin-identity-intra-user-bitdubai'
+project(':fermat-ccp-plugin-identity-intra-user-bitdubai').projectDir = new File('CCP/plugin/identity/fermat-ccp-plugin-identity-intra-user-bitdubai')
 
 // CRY Projects
 
@@ -130,9 +132,6 @@ include ':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai'
 project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
 
 // DMP Projects (Plugins)
-
-include ':fermat-dmp-plugin-identity-intra-user-bitdubai'
-project(':fermat-dmp-plugin-identity-intra-user-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
 
 include ':fermat-dmp-plugin-identity-publisher-bitdubai'
 project(':fermat-dmp-plugin-identity-publisher-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-publisher-bitdubai')
@@ -555,8 +554,12 @@ include ':fermat-dap-android-sub-app-redeem-point-community-bitdubai'
 project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-redeem-point-community-bitdubai')
 
 // BCH
-include ':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai'
-project(':fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-crypto-vault-bitcoin-watch-only-bitdubai')
+
+include ':fermat-bch-plugin-crypto-network-bitcoin-bitdubai'
+project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_network/fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
+
+include ':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai'
+project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
 
 include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
