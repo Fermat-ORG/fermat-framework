@@ -644,7 +644,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
            //String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + layoutName + "/" + screenSize + "/";
 
-           String reponame = repository.getPath()+"skins/"+repository.getSkinName()+"/";
+           String reponame = repository.getPath()+walletPublicKey+"/"; //+"skins/"+repository.getSkinName()+"/";
 
             String filename = skinId.toString() + "_" + layoutName;
 
@@ -652,7 +652,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             //reponame+="_"+orientation+"_"
             //get image from disk
             PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
         } catch (FileNotFoundException e) {
@@ -673,7 +673,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    // Private instances methods declarations.
+    /**
+     *   Private instances methods declarations.
+     */
+
 
 
     private void UninstallWallet(String walletCategory,String walletType,String developer,String skinName,UUID skinId, String screenSize,String navigationStructureVersion,boolean isLastWallet) throws CantUninstallWallet {
@@ -968,15 +971,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             walletNavigationStructureDownloadedEvent.setWalletPublicKey(walletPublicKey);
             eventManager.raiseEvent(fermatEvent);
 
-     } catch (CantCheckResourcesException e) {
-        throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error save navigation Structure ", "");
+         } catch (CantCheckResourcesException e) {
+            throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error save navigation Structure ", "");
 
-     }
-     catch (IOException e) {
-        throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error get navigation Structure for github ", "");
+         }
+         catch (IOException e) {
+            throw new CantDonwloadNavigationStructure("CAN'T DOWNLOAD RESOURCES", e, "Error get navigation Structure for github ", "");
 
+        }
     }
-}
 
     private void recordImageResource(byte[] image, String name, UUID skinId, String reponame) throws CantCheckResourcesException {
         try {
@@ -1009,7 +1012,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             String filename = skinId.toString() + "_" + name;
 
-            reponame+=publicKey+"/";
+            reponame=reponame+publicKey+"/";
 
             layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             layoutFile.setContent(xml);
