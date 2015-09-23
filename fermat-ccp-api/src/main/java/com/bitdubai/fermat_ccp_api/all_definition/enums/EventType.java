@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressReceivedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressRequestedEvent;
 
 /**
  * The enum <code>com.bitdubai.fermat_cry_api.layer.definition.enums.EventType</code>
@@ -24,9 +25,13 @@ public enum EventType implements FermatEventEnum {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
 
-    CRYPTO_ADDRESS_RECEIVED("CRYADDR") {
+    CRYPTO_ADDRESS_RECEIVED("CRYARVD") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
         public FermatEvent getNewEvent() { return new CryptoAddressReceivedEvent(this); }
+    },
+    CRYPTO_ADDRESS_REQUESTED("CRYAREQ") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
+        public FermatEvent getNewEvent() { return new CryptoAddressRequestedEvent(this); }
     };
 
     private final String code;
