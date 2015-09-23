@@ -644,7 +644,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
            //String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + layoutName + "/" + screenSize + "/";
 
-           String reponame = repository.getPath()+"skins/"+repository.getSkinName()+"/";
+           String reponame = repository.getPath()+walletPublicKey+"/"; //+"skins/"+repository.getSkinName()+"/";
 
             String filename = skinId.toString() + "_" + layoutName;
 
@@ -652,7 +652,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             //reponame+="_"+orientation+"_"
             //get image from disk
             PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
         } catch (FileNotFoundException e) {
@@ -1012,7 +1012,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             String filename = skinId.toString() + "_" + name;
 
-            reponame+=publicKey+"/";
+            reponame=reponame+publicKey+"/";
 
             layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             layoutFile.setContent(xml);
