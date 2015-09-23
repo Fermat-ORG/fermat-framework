@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 
@@ -301,7 +302,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * @throws CantGetResourcesException
      */
     @Override
-    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetResourcesException {
+    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetImageResourceException {
         return new byte[0];
     }
 
