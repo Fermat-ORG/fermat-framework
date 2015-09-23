@@ -3,8 +3,8 @@ package com.bitdubai.android_core.app.common.version_1.FragmentFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory.WalletAssetIssuerFragmentFactory;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.WalletAssetUserFragmentFactory;
+//import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory.WalletAssetIssuerFragmentFactory;
+//import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.WalletAssetUserFragmentFactory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceWalletFragmentFactory;
 
 
@@ -30,10 +30,10 @@ public class WalletFragmentFactory {
                             switch (walletPublicKey){
                                 case "reference_wallet":
                                     return new ReferenceWalletFragmentFactory();
-                                case "asset_issuer":
-                                    return new WalletAssetIssuerFragmentFactory();
-                                case "asset_user":
-                                    return new WalletAssetUserFragmentFactory();
+//                                case "asset_issuer":
+//                                    return new WalletAssetIssuerFragmentFactory();
+//                                case "asset_user":
+//                                    return new WalletAssetUserFragmentFactory();
                                 case "redeem_point":
                                     break;
                                 default:
