@@ -7,30 +7,17 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import org.java_websocket.WebSocket;
 
 import java.util.List;
 
@@ -70,7 +57,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          /*
          * Get the list
          */
-        List<PlatformComponentProfile> list = gson.fromJson(messageContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>(){}.getType());
+        List<PlatformComponentProfile> list = gson.fromJson(messageContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+        }.getType());
 
 
         System.out.println("WsCommunicationsCloudClientPluginRoot - list = "+list);
@@ -115,11 +103,22 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
 
          /*
-         * Create a raise a new event whit the list
+         * Create a new event whit the list
          */
-        FermatEvent event = getWsCommunicationsCloudClientChannel().getEventManager().getNewEvent(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        FermatEvent event =  EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+
+        /*
+         * Set the list
+         */
+        ((CompleteRequestListComponentRegisteredNotificationEvent)event).setRegisteredComponentList(list);
+
+        /*
+         * Raise the event
+         */
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - Fire a event = EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
 
 
     }
