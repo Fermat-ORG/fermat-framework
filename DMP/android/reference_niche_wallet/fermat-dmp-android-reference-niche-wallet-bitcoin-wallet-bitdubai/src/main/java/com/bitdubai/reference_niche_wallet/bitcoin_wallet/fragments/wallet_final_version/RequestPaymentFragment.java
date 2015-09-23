@@ -61,12 +61,14 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
      */
     public static RequestPaymentFragment newInstance() {
         RequestPaymentFragment requestPaymentFragment = new RequestPaymentFragment();
-        requestPaymentFragment.setReferenceWalletSession((ReferenceWalletSession)requestPaymentFragment.walletSession);
         return new RequestPaymentFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        referenceWalletSession = (ReferenceWalletSession)walletSession;
+
         super.onCreate(savedInstanceState);
         try {
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 /**
@@ -72,10 +73,13 @@ public abstract class FermatListFragmentNew<M> extends FermatWalletFragment
         _executor = Executors.newFixedThreadPool(2);
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        viewInflater = new ViewInflater(getActivity(),walletSession.getWalletResourcesProviderManager());
+        WalletResourcesProviderManager walletResourcesProviderManager = walletSession.getWalletResourcesProviderManager();
+        viewInflater = new ViewInflater(getActivity(),walletResourcesProviderManager);
         View rootView = viewInflater.inflate(getLayoutResourceName());  //inflater.inflate(getLayoutResource(), container, false);
         initViews(rootView);
         return rootView;
