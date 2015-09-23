@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -31,6 +32,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -67,7 +73,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DatabaseManagerForDevelopers, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, TransactionProtocolManager {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, TransactionProtocolManager {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     //CryptoAddressBookManager cryptoAddressBookManager;
@@ -85,6 +91,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     ServiceStatus serviceStatus= ServiceStatus.CREATED;
     Database assetIssuingDatabase;
     DeviceUserManager deviceUserManager;
+    AssetVaultManager assetVaultManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -147,16 +155,16 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public void start() throws CantStartPluginException {
         //delete this
-        printSomething("Starting Asset Issuing plugin");
+        //printSomething("Starting Asset Issuing plugin");
 
         try{
             this.assetIssuingDatabase = this.pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
         }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
             //TODO: delete this printStackTrace in production
             //exception.printStackTrace();
-            printSomething("CANNOT OPEN PLUGIN DATABASE: "+this.pluginId);
+            //printSomething("CANNOT OPEN PLUGIN DATABASE: "+this.pluginId);
             try {
-                printSomething("CREATING A PLUGIN DATABASE.");
+                //printSomething("CREATING A PLUGIN DATABASE.");
                 createAssetIssuingTransactionDatabase();
             } catch (CantCreateDatabaseException innerException) {
                 throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Issuing plugin - "+this.pluginId, "Cannot open or create the plugin database");
@@ -167,7 +175,9 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.cryptoWallet,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
-                    this.errorManager);
+                    this.errorManager,
+                    this.assetVaultManager,
+                    this.cryptoAddressBookManager);
             //Start the plugin monitor agent
             //I will comment tha MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
             /*String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
@@ -224,8 +234,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount) throws CantIssueDigitalAssetsException {
-        this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount);
+    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
+        this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount, blockchainNetworkType);
     }
 
     @Override
@@ -270,6 +280,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public List<String> getClassesFullPath() {
+        //TODO: to implement
         return null;
     }
 
@@ -324,7 +335,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setContract(digitalAssetContract);
         LOG.info("MAP_DigitalAsset2:"+digitalAsset);
         try {
-            this.assetIssuingTransactionManager.issueAssets(digitalAsset,1);
+            this.assetIssuingTransactionManager.issueAssets(digitalAsset,1,BlockchainNetworkType.REG_TEST);
         } catch (CantIssueDigitalAssetsException e) {
             LOG.info("MAP test exception:"+e);
         }
@@ -333,5 +344,15 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager=deviceUserManager;
+    }
+
+    @Override
+    public void setAssetVaultManager(AssetVaultManager assetVaultManager) {
+        this.assetVaultManager=assetVaultManager;
+    }
+
+    @Override
+    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+        this.cryptoAddressBookManager=cryptoAddressBookManager;
     }
 }
