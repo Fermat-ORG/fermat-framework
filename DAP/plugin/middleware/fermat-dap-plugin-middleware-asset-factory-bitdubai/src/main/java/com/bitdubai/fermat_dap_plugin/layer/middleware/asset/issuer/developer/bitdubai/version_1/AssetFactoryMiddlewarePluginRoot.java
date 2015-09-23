@@ -23,9 +23,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -169,7 +172,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     public void start() throws CantStartPluginException {
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
         try {
-            System.out.println("******* Asset Factory Init, Open Database. ******");
+            //System.out.println("******* Asset Factory Init, Open Database. ******");
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             //testAssetFactory();
             database.closeDatabase();
@@ -331,12 +334,12 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     }
 
     @Override
-    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException {
+    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException {
         assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
     }
 
     @Override
-    public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException {
+    public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException, CantCreateFileException, CantPersistFileException {
         assetFactoryMiddlewareManager.markAssetFactoryState(state, assetPublicKey);
     }
 
@@ -351,7 +354,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     }
 
     @Override
-    public void publishAsset(final AssetFactory assetFactory) throws CantSaveAssetFactoryException{
-        assetFactoryMiddlewareManager.publishAsset(assetFactory);
+    public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException{
+        assetFactoryMiddlewareManager.publishAsset(assetFactory, blockchainNetworkType);
     }
 }

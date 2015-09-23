@@ -12,8 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 
 import java.util.UUID;
 
-import javax.xml.crypto.Data;
-
 /**
  *  The Class  <code>com.bitdubai.fermat_dap_api.layer.transaction.asset_issuing.developer.bitdubai.version_1.database.Asset IssuingtransactionDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
@@ -113,7 +111,7 @@ public class AssetIssuingTransactionDatabaseFactory implements DealsWithPluginDa
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING,100,Boolean.FALSE);
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.FALSE);
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_HASH, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION, DatabaseDataType.STRING, 100, Boolean.FALSE);
             assetIssuingTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             assetIssuingTable.addIndex(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_FIRST_KEY_COLUMN);

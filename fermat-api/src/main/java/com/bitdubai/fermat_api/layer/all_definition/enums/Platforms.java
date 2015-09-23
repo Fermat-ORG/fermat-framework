@@ -12,6 +12,7 @@ public enum Platforms {
     CRYPTO_COMMODITY_MONEY("CCM"),
     CRYPTO_CURRENCY_PLATFORM("CCP"),
     DIGITAL_ASSET_PLATFORM("DAP"),
+    BLOCKCHAINS("BCH"),
     COMMUNICATION_PLATFORM("CP");
 
     private String code;
