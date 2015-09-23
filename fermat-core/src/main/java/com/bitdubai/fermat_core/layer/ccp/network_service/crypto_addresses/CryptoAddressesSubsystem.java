@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.ccp.network_service.crypto_addresses;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_ccp_api.layer.network_service.CantStartSubsystemException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.NetworkServiceSubsystem;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/2015.
