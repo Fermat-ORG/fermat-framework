@@ -504,10 +504,10 @@ project(':fermat-dap-plugin-identity-redeem-point-bitdubai').projectDir = new Fi
 
 
 include ':fermat-dap-android-desktop-wallet-manager-bitdubai'
-project(':fermat-dap-android-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-android-desktop-wallet-manager-bitdubai')
+project(':fermat-dap-android-desktop-wallet-manager-bitdubai').projectDir = new File('DAP/android/desktop/fermat-dap-android-desktop-wallet-manager-bitdubai')
 
 include ':fermat-dap-android-desktop-sub-app-manager-bitdubai'
-project(':fermat-dap-android-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktops/fermat-dap-android-desktop-sub-app-manager-bitdubai')
+project(':fermat-dap-android-desktop-sub-app-manager-bitdubai').projectDir = new File('DAP/android/desktop/fermat-dap-android-desktop-sub-app-manager-bitdubai')
 
 
 //module
