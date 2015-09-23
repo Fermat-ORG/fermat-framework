@@ -34,6 +34,7 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
 
     public PaymentRequestPendingAdapter(Context context, List<PaymentRequest> dataSet,ViewInflater viewInflater,ReferenceWalletSession referenceWalletSession) {
         super(context, dataSet,viewInflater,referenceWalletSession.getWalletResourcesProviderManager());
+        this.referenceWalletSession = referenceWalletSession;
         this.viewInflater = viewInflater;
     }
 
@@ -54,7 +55,7 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
 
-        holder.getTxt_contactName().setText(data.getContact().getActorName());
+        holder.getTxt_contactName().setText("Juan");//data.getContact().getActorName());
 
         holder.getTxt_notes().setText(data.getReason());
 
