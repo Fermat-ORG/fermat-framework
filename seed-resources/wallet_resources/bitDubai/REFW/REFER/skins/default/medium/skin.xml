@@ -54,6 +54,15 @@
         <name>pending_request_row</name>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
     </entry>
+    <entry>
+      <string>pending_request_row2</string>
+      <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+        <id>2494c954-d3c9-48b7-82a7-0992813fffff</id>
+        <filename>pending_request_row2.xml</filename>
+        <name>pending_request_row2</name>
+      </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+    </entry>
+    <entry>
   </portraitLayouts>
   <landscapeLayouts>
     <entry>
