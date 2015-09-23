@@ -79,9 +79,8 @@ public  class SendFragment extends FermatWalletFragment {
     private EditText editTextAddress;
     private WalletContactListAdapter adapter;
 
-    public static SendFragment newInstance(int position, ReferenceWalletSession walletSession) {
+    public static SendFragment newInstance(int position) {
         SendFragment f = new SendFragment();
-        f.setWalletSession(walletSession);
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

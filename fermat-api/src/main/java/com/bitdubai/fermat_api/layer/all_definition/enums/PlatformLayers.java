@@ -49,13 +49,17 @@ public enum PlatformLayers {
     BITDUBAI_PIP_MODULE_LAYER("BPIPML", Developers.BITDUBAI),
     BITDUBAI_REQUEST_LAYER("BRL", Developers.BITDUBAI),
     BITDUBAI_PIP_NETWORK_SERVICE_LAYER("BPIPNSL", Developers.BITDUBAI),
-    BITDUBAI_CCP_NETWORK_SERVICE_LAYER("BCCPNSL", Developers.BITDUBAI),
     BITDUBAI_DIGITAL_ASSET_TRANSACTION("BDAT", Developers.BITDUBAI),
     BITDUBAI_DAP_ACTOR_LAYER("BDAPAL",Developers.BITDUBAI),
     BITDUBAI_DAP_IDENTITY_LAYER("BDAPIL", Developers.BITDUBAI),
     BITDUBAI_DAP_MODULE_LAYER("BDAPML", Developers.BITDUBAI),
     BITDUBAI_DIGITAL_ASSET_FACTORY("BDAF", Developers.BITDUBAI),
-    BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI)
+    BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI),
+
+    // CCP Layers
+    BITDUBAI_CCP_IDENTITY_LAYER("BCCPIDL", Developers.BITDUBAI),
+    BITDUBAI_CCP_NETWORK_SERVICE_LAYER("BCCPNSL", Developers.BITDUBAI)
+
     ;
 
     /**
@@ -147,8 +151,6 @@ public enum PlatformLayers {
                 return BITDUBAI_WALLET_MODULE_LAYER;
             case "BACTL":
                 return BITDUBAI_ACTOR_LAYER;
-            case "BCCPNSL":
-                return BITDUBAI_CCP_NETWORK_SERVICE_LAYER;
             case "BPACTL":
                 return BITDUBAI_PIP_ACTOR_LAYER;
             case "BPIDL":
@@ -173,6 +175,12 @@ public enum PlatformLayers {
                 return BITDUBAI_DAP_MODULE_LAYER;
             case "BEL":
                 return BITDUBAI_ENGINE_LAYER;
+
+            // CCP Layers
+            case "BCCPIDL":
+                return BITDUBAI_CCP_IDENTITY_LAYER;
+            case "BCCPNSL":
+                return BITDUBAI_CCP_NETWORK_SERVICE_LAYER;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");
 
