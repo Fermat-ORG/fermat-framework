@@ -15,6 +15,12 @@ include ':fermat-p2p-api'
 include ':fermat-wpd-api'
 include ':fermat-bch-api'
 
+// CCP Projects
+
+include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
+project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
+
+
 // CRY Projects
 
 // Milestone 1 project:
@@ -221,9 +227,6 @@ project(':fermat-dmp-plugin-wallet-module-multi-account-wallet-bitdubai').projec
 
 include ':fermat-dmp-plugin-network-service-bank-notes-bitdubai'
 project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai')
-
-include ':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai'
-project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')
 
 include ':fermat-dmp-plugin-network-service-money-transmission-bitdubai'
 project(':fermat-dmp-plugin-network-service-money-transmission-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-transmission-bitdubai')
