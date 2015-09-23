@@ -6,5 +6,5 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptio
  * Created by loui on 20/02/15.
  */
 public interface OutgoingIntraUserManager {
-    public OutgoingIntraUserTransactionManager getTransactionManager() throws CantGetOutgoingIntraUserTransactionManagerException;
+    public IntraUserCryptoTransactionManager getTransactionManager() throws CantGetOutgoingIntraUserTransactionManagerException;
 }
