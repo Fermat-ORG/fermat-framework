@@ -16,7 +16,10 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGe
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetInstalledWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryDeveloper;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -32,7 +35,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 07/08/15.
  */
-public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, LogManagerForDevelopers,WalletFactoryManager, Service, Plugin {
+public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, DealsWithWalletManagerDesktopModule, LogManagerForDevelopers,WalletFactoryManager, Service, Plugin {
 
     WalletFactoryModuleManager  walletFactoryModuleManager ;
     UUID pluginId;
@@ -52,6 +55,15 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
     @Override
     public void setWalletFactoryProjectManager(WalletFactoryProjectManager walletFactoryProjectManager) {
         this.walletFactoryProjectManager = walletFactoryProjectManager;
+    }
+
+    /**
+     * DealsWithWalletManagerDesktopModule interface variable and implementation
+     */
+    WalletManagerModule walletManagerModule;
+    @Override
+    public void setWalletManagerModule(WalletManagerModule walletManagerModule) {
+        this.walletManagerModule = walletManagerModule;
     }
 
     /**
@@ -214,7 +226,11 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
      */
     @Override
     public List<InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException {
-        return null;
+        try {
+            return walletManagerModule.getInstalledWallets();
+        } catch (WalletsListFailedToLoadException e) {
+            throw new CantGetInstalledWalletsException(CantGetInstalledWalletsException.DEFAULT_MESSAGE, e, "there was an error trying to get the installed wallets from the Desktop Manager Module.", "check the wallet desktop manager.");
+        }
     }
 
     /**
