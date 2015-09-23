@@ -1,5 +1,6 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network;
+package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 
 import org.bitcoinj.core.NetworkParameters;
@@ -21,7 +22,7 @@ public class BitcoinNetworkSelector {
             case REG_TEST:
                 return RegTestParams.get();
             default:
-                return  com.bitdubai.fermat_bch_api.layer.crypto_network.interfaces.BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS;
+                return  BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS;
         }
     }
 

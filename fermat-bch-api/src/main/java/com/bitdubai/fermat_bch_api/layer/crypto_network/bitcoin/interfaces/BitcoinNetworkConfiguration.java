@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.interfaces;
+package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.RegTestParams;
