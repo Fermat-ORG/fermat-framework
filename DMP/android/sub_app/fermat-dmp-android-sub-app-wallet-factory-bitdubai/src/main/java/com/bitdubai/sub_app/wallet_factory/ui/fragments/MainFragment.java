@@ -19,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
+import com.bitdubai.sub_app.wallet_factory.adapters.WalletFactoryProjectsAdapter;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
 import com.bitdubai.sub_app.wallet_factory.utils.Utils;
@@ -73,6 +74,7 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
     private SwipeRefreshLayout swipe;
     private RecyclerView recycler;
     private LinearLayoutManager layoutManager;
+    private WalletFactoryProjectsAdapter adapter;
 
     /**
      * Get new developer projects fragment instance
@@ -115,7 +117,9 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
         //layout manager
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(layoutManager);
-        //// TODO: 10/09/15 setup adapter
+        // adapter
+        adapter = new WalletFactoryProjectsAdapter(getActivity());
+        recycler.setAdapter(adapter);
 
         return rootView;
     }
@@ -162,7 +166,8 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
             dismissDialog();
             if (result != null && result.length > 0) {
                 dataSet = (ArrayList<WalletFactoryProject>) result[0];
-                //// TODO: 10/09/15 Change DataSet
+                if (adapter != null)
+                    adapter.changeDataSet(dataSet);
                 checkEmptyDataSet();
             }
             showOrHideAction(true);
@@ -242,6 +247,5 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
-
 
 }
