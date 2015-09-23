@@ -8,9 +8,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -44,6 +50,7 @@ import java.util.UUID;
  * Created by franklin on 07/09/15.
  */
 public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+    public static final String PATH_DIRECTORY = "assetFactory/resources";
     /**
      * AssetFactoryMiddlewareManager member variables
      */
@@ -99,16 +106,31 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
     //De esa forma poder almacenarlo en la tabla de contract seteando la variable assetFactory.setContractProperties
     //Asi mismo cuando se vaya a enviar el DigitalAsset a la transaccion traer el objeto AssetFactory lleno, y las propiedades del contrato
     //asignarselas mas adelante al objeto DigitalAssetContract, que a su vez sera seteado a ala propiedad setContract del DigitalAsset
-    private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException{
-        List<ContractProperty> contractProperties = new ArrayList<>();
-        ContractProperty redeemable;
-        ContractProperty expirationDate;
-        redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-        expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-        contractProperties.add(redeemable);
-        contractProperties.add(expirationDate);
-        assetFactory.setContractProperties(contractProperties);
-        getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
+    private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantCreateFileException, CantPersistFileException{
+        try {
+            List<ContractProperty> contractProperties = new ArrayList<>();
+            ContractProperty redeemable;
+            ContractProperty expirationDate;
+            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+            contractProperties.add(redeemable);
+            contractProperties.add(expirationDate);
+            assetFactory.setContractProperties(contractProperties);
+            getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
+            for (Resource resource : assetFactory.getResources()) {
+                PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                imageFile.setContent(resource.getResourceBinayData());
+                imageFile.persistToMedia();
+            }
+        }catch (CantCreateFileException cantCreateFileException)
+        {
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: saveAssetFactoryInDatabase", "cant create el file");
+        }
+        catch (CantPersistFileException cantPersistFileException)
+        {
+            throw new CantPersistFileException(CantPersistFileException.DEFAULT_MESSAGE, cantPersistFileException, "Asset Factory Method: saveAssetFactoryInDatabase", "cant persist el file");
+        }
+
     }
 
     private List<AssetFactory> getAssetFactories(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException
@@ -148,7 +170,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException
+    public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException
     {
         try {
             saveAssetFactoryInDatabase(assetFactory);
@@ -216,7 +238,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     public List<AssetFactory> getAssetFactoryByIssuer(final String issuerIdentityPublicKey) throws CantGetAssetFactoryException
     {
-        // I define the filter to search for the public Key
+        // I define the filter to search for the issuer identity public Key
         DatabaseTableFilter filter = new DatabaseTableFilter() {
             @Override
             public void setColumn(String column) {
@@ -262,7 +284,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     public List<AssetFactory> getAssetFactoryByState(final State state) throws CantGetAssetFactoryException
     {
-        // I define the filter to search for the public Key
+        // I define the filter to search for the state
         DatabaseTableFilter filter = new DatabaseTableFilter() {
             @Override
             public void setColumn(String column) {
@@ -308,39 +330,8 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException
     {
-        // I define the filter to search for the public Key
-        DatabaseTableFilter filter = new DatabaseTableFilter() {
-            @Override
-            public void setColumn(String column) {
-
-            }
-
-            @Override
-            public void setType(DatabaseFilterType type) {
-
-            }
-
-            @Override
-            public void setValue(String value) {
-
-            }
-
-            @Override
-            public String getColumn() {
-                return null;
-            }
-
-            @Override
-            public String getValue() {
-                return null;
-            }
-
-            @Override
-            public DatabaseFilterType getType() {
-
-                return null;
-            }
-        };
+        // I define the filter to null for all
+        DatabaseTableFilter filter = null;
 
         List<AssetFactory> assetFactories;
         try {
@@ -353,7 +344,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public void publishAsset(final AssetFactory assetFactory) throws CantSaveAssetFactoryException
+    public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException
     {
         try {
             DigitalAsset digitalAsset = new DigitalAsset();
@@ -364,6 +355,16 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
                 ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
                 digitalAssetContract.setContractProperty(contractProperty);
             }
+            ContractProperty redeemable;
+            ContractProperty expirationDate;
+            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+            redeemable1.setValue(assetFactory.getIsRedeemable());
+            expirationDate1.setValue(assetFactory.getExpirationDate());
+            digitalAssetContract.setContractProperty(redeemable1);
+            digitalAssetContract.setContractProperty(expirationDate1);
             digitalAsset.setContract(digitalAssetContract);
             digitalAsset.setName(assetFactory.getName());
             digitalAsset.setDescription(assetFactory.getDescription());
@@ -376,8 +377,8 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             assetFactory.setState(State.PENDING_FINAL);
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
-            //TODO: Franklin, esto lo comenté para que pudiera compilar, hice refactor del AssetIssuingManager para que le pases al objeto BlockchainNetworkType
-            //assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity());
+            //TODO: Revisar porque la asignacion del value al property no la asigna
+            assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
         }
         catch (CantSaveAssetFactoryException exception)
         {
@@ -388,7 +389,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException{
+    public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException, CantCreateFileException, CantPersistFileException{
         AssetFactory assetFactory = getAssetFactory(assetPublicKey);
         assetFactory.setState(state);
         saveAssetFactory(assetFactory);
