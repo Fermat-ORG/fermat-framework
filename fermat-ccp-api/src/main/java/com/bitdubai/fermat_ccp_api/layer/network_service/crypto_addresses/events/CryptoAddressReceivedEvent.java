@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events;
 
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 
