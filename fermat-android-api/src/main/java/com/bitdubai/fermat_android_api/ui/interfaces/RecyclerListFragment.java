@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 
 /**
  * RecyclerListFragment
@@ -17,6 +16,4 @@ public interface RecyclerListFragment {
     FermatAdapter getAdapter();
 
     RecyclerView.LayoutManager getLayoutManager();
-
-
 }

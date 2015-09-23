@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api;
+package com.bitdubai.fermat_api.layer.dmp_network_service;
 
 import java.util.UUID;
 
@@ -7,6 +7,5 @@ import java.util.UUID;
  */
 public interface NetworkService {
     
-    UUID getId();
-
+    public UUID getId();
 }

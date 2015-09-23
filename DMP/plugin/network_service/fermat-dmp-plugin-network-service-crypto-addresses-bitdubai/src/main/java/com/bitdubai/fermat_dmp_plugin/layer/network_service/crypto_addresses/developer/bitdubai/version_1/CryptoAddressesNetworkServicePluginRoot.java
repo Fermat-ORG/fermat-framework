@@ -3,19 +3,19 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.NetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addressees.enums.AddressExchangeRequestState;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addressees.exceptions.CantConfirmAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addressees.exceptions.CantGetPendingAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addressees.exceptions.CantSendAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addressees.exceptions.CantListPendingAddressExchangeRequestsException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addressees.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.enums.ContactRequestState;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantAcceptContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantConfirmContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantCreateContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantDenyContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.exceptions.CantGetPendingContactRequestsListException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addressees.interfaces.PendingAddressExchangeRequest;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces.PendingContactRequest;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -30,69 +30,63 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * This plugin manages the exchange of crypto addresses between actors.
- *
- * Created by Leon Acosta (laion.cj91@gmail.com) on 22/09/2015.
+ * Created by loui on 20/02/15.
  */
-public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesManager, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, NetworkService, Plugin, Service {
+public class CryptoAddressesNetworkServicePluginRoot implements Service, NetworkService, CryptoAddressesManager,DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.
      */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
      */
-    private ErrorManager errorManager;
-
+    EventManager eventManager;
+    ErrorManager errorManager;
     /**
-     * DealWithEvents Interface member variables.
+     * UsesFileSystem Interface member variables.
      */
-    private EventManager eventManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
-    private PluginFileSystem pluginFileSystem;
+    PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
      */
-    private UUID pluginId;
+    UUID pluginId;
 
 
     @Override
-    public void sendAddressExchangeRequest(String walletPublicKey, CryptoAddress cryptoAddressToSend, Actors actorType, String requesterActorPublicKey, String actorToRequestPublicKey) throws CantSendAddressExchangeRequestException {
-
+    public void createContactRequest(String walletPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressToSend, String intraUserToContactPublicKey, String requesterIntraUserPublicKey, String requesterIntraUserName, String requesterIntraUserProfileImage) throws CantCreateContactRequestException {
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
-    public void acceptAddressExchangeRequest(UUID requestId, CryptoAddress cryptoAddressReceived, String result) throws CantConfirmAddressExchangeRequestException {
-
+    public void acceptContactRequest(UUID requestId, String walletAcceptingTheRequestPublicKey, ReferenceWallet referenceWallet, CryptoAddress cryptoAddressReceived, String intraUserAcceptingTheRequestPublicKey) throws CantAcceptContactRequestException {
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
-    public List<PendingAddressExchangeRequest> listPendingRequests(Actors actorType, AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException {
+    public void denyContactRequest(UUID requestId) throws CantDenyContactRequestException {
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+    }
+
+    @Override
+    public List<PendingContactRequest> listPendingRequests(String intraUserLoggedInPublicKey, String walletPublicKey, ContactRequestState contactRequestState) throws CantGetPendingContactRequestsListException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
-    public PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException {
+    public PendingContactRequest getPendingRequest(UUID requestId) throws CantGetPendingContactRequestException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
-    public void confirmExchangeAddressRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
-
+    public void confirmContactRequest(UUID requestId) throws CantConfirmContactRequestException {
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
-
 
     /**
      * Service Interface implementation.
@@ -143,51 +137,48 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
     /**
      * NetworkService Interface implementation.
      */
+
     @Override
     public UUID getId() {
         return pluginId;
     }
 
+    /**
+     * UsesFileSystem Interface implementation.
+     */
 
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
 
 
     /**
      * DealWithEvents Interface implementation.
      */
+
     @Override
-    public void setEventManager(final EventManager eventManager) {
+    public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
+
     /**
-     * DealWithErrors Interface implementation.
+     *DealWithErrors Interface implementation.
      */
+
     @Override
-    public void setErrorManager(final ErrorManager errorManager) {
+    public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(final PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
 
     /**
      * DealsWithPluginIdentity methods implementation.
      */
+
     @Override
-    public void setId(final UUID pluginId) {
+    public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
