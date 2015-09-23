@@ -8,19 +8,18 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.WebSocket;
@@ -61,14 +60,13 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Construct the json object
          */
         Gson gson = new Gson();
-        JsonParser parser = new JsonParser();
-        JsonObject filters = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
+        DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(messageContentJsonStringRepresentation);
 
         /*
          * Get the filters
          */
-        PlatformComponentType platformComponentType = gson.fromJson(filters.get(AttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE), PlatformComponentType.class);
-        NetworkServiceType networkServiceType       = gson.fromJson(filters.get(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE), NetworkServiceType.class);
+        PlatformComponentType platformComponentType = discoveryQueryParameters.getPlatformComponentType();
+        NetworkServiceType networkServiceType       = discoveryQueryParameters.getNetworkServiceType();
 
         System.out.println("RequestListComponentRegisterPacketProcessor - platformComponentType = "+platformComponentType);
         System.out.println("RequestListComponentRegisterPacketProcessor - networkServiceType    = "+networkServiceType);
@@ -100,12 +98,15 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         }
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - list.size()    = "+list.size());
+
+        List<PlatformComponentProfile>  filteredLis = applyDiscoveryQueryParams(list, discoveryQueryParameters);
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size()    = "+filteredLis.size());
 
         /*
          * Convert to json representation
          */
-        String jsonListRepresentation = gson.toJson(list, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
+        String jsonListRepresentation = gson.toJson(filteredLis, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
 
         System.out.println("RequestListComponentRegisterPacketProcessor - gson.toJson(list)    = "+jsonListRepresentation);
 
@@ -124,6 +125,125 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         */
         clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
     }
+
+
+    /**
+     * Filter the PlatformComponentProfile that match with the discoveryQueryParameters
+     *
+     * @param list
+     * @param discoveryQueryParameters
+     * @return List<PlatformComponentProfile>
+     */
+    private  List<PlatformComponentProfile> applyDiscoveryQueryParams(List<PlatformComponentProfile>  list, DiscoveryQueryParameters discoveryQueryParameters){
+
+        int totalFilterToApply = countFilers(discoveryQueryParameters);
+        int filterMatched = 0;
+        List<PlatformComponentProfile>  filteredLis = new ArrayList<>();
+
+
+        if (totalFilterToApply > 0){
+
+            /*
+             * Apply the basic filter
+             */
+            for (PlatformComponentProfile platformComponentProfile: list) {
+
+                if (discoveryQueryParameters.getIdentityPublicKey() != null && discoveryQueryParameters.getIdentityPublicKey() != ""){
+                    if (platformComponentProfile.getIdentityPublicKey() == discoveryQueryParameters.getIdentityPublicKey()){
+                        filterMatched += 1;
+                    }
+                }
+
+                if (discoveryQueryParameters.getAlias() != null && discoveryQueryParameters.getAlias() != ""){
+                    if (platformComponentProfile.getAlias() == discoveryQueryParameters.getAlias()){
+                        filterMatched += 1;
+                    }
+                }
+
+                if (discoveryQueryParameters.getName() != null && discoveryQueryParameters.getName() != ""){
+                    if (platformComponentProfile.getName() == discoveryQueryParameters.getName()){
+                        filterMatched += 1;
+                    }
+                }
+
+                if (discoveryQueryParameters.getExtraData() != null && discoveryQueryParameters.getExtraData() != ""){
+                    if (platformComponentProfile.getExtraData() == discoveryQueryParameters.getExtraData()){
+                        filterMatched += 1;
+                    }
+                }
+
+                //if al filter matched
+                if (totalFilterToApply == filterMatched){
+                    //Add to the list
+                    filteredLis.add(platformComponentProfile);
+                }
+
+            }
+
+        }else {
+
+            filteredLis = list;
+        }
+
+
+        /*
+         * Apply geo location filter
+         */
+        if (discoveryQueryParameters.getLocation() != null &&
+                discoveryQueryParameters.getLocation().getLatitude() != 0 &&
+                    discoveryQueryParameters.getLocation().getLongitude() != 0){
+
+        }
+
+        if ((discoveryQueryParameters.getNumberRegister() != 0) && (discoveryQueryParameters.firstRecord() != 0)){
+
+            /*
+             * Apply pagination
+             */
+            if (filteredLis.size() > discoveryQueryParameters.getNumberRegister() &&
+                    filteredLis.size() > discoveryQueryParameters.firstRecord()){
+                filteredLis =  filteredLis.subList(discoveryQueryParameters.firstRecord(), discoveryQueryParameters.getNumberRegister());
+            }else if (filteredLis.size() > 100) {
+                filteredLis = filteredLis.subList(discoveryQueryParameters.firstRecord(), 100);
+            }
+
+        }else if (filteredLis.size() > 100) {
+            filteredLis = filteredLis.subList(0, 100);
+        }
+
+        return filteredLis;
+
+    }
+
+    /**
+     * Count the number of filter to apply
+     *
+     * @param discoveryQueryParameters
+     * @return int
+     */
+    private int countFilers(DiscoveryQueryParameters discoveryQueryParameters){
+
+        int total = 0;
+
+        if (discoveryQueryParameters.getIdentityPublicKey() != null && discoveryQueryParameters.getIdentityPublicKey() != ""){
+            total += 1;
+        }
+
+        if (discoveryQueryParameters.getAlias() != null && discoveryQueryParameters.getAlias() != ""){
+            total += 1;
+        }
+
+        if (discoveryQueryParameters.getName() != null && discoveryQueryParameters.getName() != ""){
+            total += 1;
+        }
+
+        if (discoveryQueryParameters.getExtraData() != null && discoveryQueryParameters.getExtraData() != ""){
+            total += 1;
+        }
+
+        return  total;
+    }
+
 
     /**
      * (no-javadoc)

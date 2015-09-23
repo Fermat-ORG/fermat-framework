@@ -74,9 +74,9 @@ public class AssetVaultCryptoVaultDatabaseFactory implements DealsWithPluginData
             table = databaseFactory.newTableFactory(ownerId, AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_TABLE_NAME);
 
             table.addColumn(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 2, Boolean.TRUE);
-            table.addColumn(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_CHAIN_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 5, Boolean.TRUE);
-            table.addColumn(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_CHAIN_PUBLICKEY_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
-            table.addColumn(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_KEY_POSITION_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
+            table.addColumn(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_CHAIN_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 8, Boolean.TRUE);
+            table.addColumn(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_CHAIN_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_KEY_POSITION_COLUMN_NAME, DatabaseDataType.INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_FIRST_KEY_COLUMN);
 
