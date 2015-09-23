@@ -13,14 +13,11 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
  */
 public class OutgoingIntraUserTransactionHandlerFactory {
 
-    private ErrorManager         errorManager;
     private BitcoinWalletManager bitcoinWalletManager;
     private OutgoingIntraUserDao outgoingIntraUserDao;
 
-    public OutgoingIntraUserTransactionHandlerFactory(ErrorManager         errorManager,
-                                                      BitcoinWalletManager bitcoinWalletManager,
+    public OutgoingIntraUserTransactionHandlerFactory(BitcoinWalletManager bitcoinWalletManager,
                                                       OutgoingIntraUserDao outgoingIntraUserDao) {
-        this.errorManager         = errorManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.outgoingIntraUserDao = outgoingIntraUserDao;
     }
@@ -28,7 +25,7 @@ public class OutgoingIntraUserTransactionHandlerFactory {
     public OutgoingIntraUserTransactionHandler getHandler(ReferenceWallet referenceWallet) throws OutgoingIntraUserCantFindHandlerException {
         switch (referenceWallet) {
             case BASIC_WALLET_BITCOIN_WALLET:
-                return new OutgoingIntraUserBitcoinWalletTransactionHandler(this.errorManager,this.bitcoinWalletManager,this.outgoingIntraUserDao);
+                return new OutgoingIntraUserBitcoinWalletTransactionHandler(this.bitcoinWalletManager,this.outgoingIntraUserDao);
             default:
                 throw new OutgoingIntraUserCantFindHandlerException("No handler was found",null,"","");
         }

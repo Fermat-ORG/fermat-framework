@@ -154,7 +154,7 @@ public class OutgoingIntraUserTransactionPluginRoot implements DealsWithBitcoinW
         try {
             this.outgoingIntraUserDao = new OutgoingIntraUserDao(this.errorManager, this.pluginDatabaseSystem);
             this.outgoingIntraUserDao.initialize(this.pluginId);
-            this.transactionHandlerFactory = new OutgoingIntraUserTransactionHandlerFactory(this.errorManager, this.bitcoinWalletManager, this.outgoingIntraUserDao);
+            this.transactionHandlerFactory = new OutgoingIntraUserTransactionHandlerFactory(this.bitcoinWalletManager, this.outgoingIntraUserDao);
             this.transactionProcessorAgent = new OutgoingIntraUserTransactionProcessorAgent(this.errorManager,
                                                                                             this.cryptoVaultManager,
                                                                                             this.bitcoinWalletManager,
