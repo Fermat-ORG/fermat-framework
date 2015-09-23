@@ -34,17 +34,12 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Created by loui on 17/02/15.
- * Modified by Leon Acosta (laion.cj91@gmail.com) on 10/09/2015.
- * <p/>
- * This plugin manages list of contacts.
- * <p/>
+ * This plugin manages the list of contacts of each wallet.
  * A contact list is associated with one or more wallets. This is useful if a user want to share contacts between
- * wallets. A single wallet can be part of more tha one list also.
- * <p/>
- * * * * * *
+ * wallets. A single wallet can be part of more than one list also.
+ *
+ * Created by Leon Acosta (laion.cj91@gmail.com) on 10/09/2015.
  */
-
 public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletContactsManager {
 
     /**

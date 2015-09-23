@@ -106,10 +106,10 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
     }
 
     public List<WalletContactRecord> listWalletContactRecords(DatabaseTable walletContactsTable,
-                                                              Integer max,
-                                                              Integer offset) throws CantGetAllWalletContactsException {
+                                                              Integer       max,
+                                                              Integer       offset) throws CantGetAllWalletContactsException {
         try {
-            walletContactsTable.setFilterTop(max.toString());
+            walletContactsTable.setFilterTop   (max   .toString());
             walletContactsTable.setFilterOffSet(offset.toString());
 
             walletContactsTable.loadToMemory();
@@ -122,23 +122,27 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
                 walletContactRecordList.add(buildRecord(record));
             }
             return walletContactRecordList;
+
         } catch (CantLoadTableToMemoryException e) {
+
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }  catch (CantGetWalletContactException e) {
+
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e, "", "This contact cannot be loaded.");
-        } catch(InvalidParameterException exception){
-            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, exception);
+        } catch(InvalidParameterException       e) {
+
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
         }
     }
 
-    public WalletContactRecord createWalletContact(UUID contactId,
-                                                   String actorPublicKey,
-                                                   String actorAlias,
-                                                   String actorFirstName,
-                                                   String actorLastName,
-                                                   Actors actorType,
+    public WalletContactRecord createWalletContact(UUID                contactId,
+                                                   String              actorPublicKey,
+                                                   String              actorAlias,
+                                                   String              actorFirstName,
+                                                   String              actorLastName,
+                                                   Actors              actorType,
                                                    List<CryptoAddress> cryptoAddresses,
-                                                   String walletPublicKey) throws CantCreateWalletContactException {
+                                                   String              walletPublicKey) throws CantCreateWalletContactException {
 
         try {
             DatabaseTable walletContactTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_TABLE_NAME);
@@ -148,9 +152,9 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
             entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME , actorPublicKey     );
             entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME      , actorAlias         );
             entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME , actorFirstName     );
-            entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME, actorLastName);
-            entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_TYPE_COLUMN_NAME, actorType.getCode());
-            entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey);
+            entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME  , actorLastName      );
+            entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_TYPE_COLUMN_NAME       , actorType.getCode());
+            entityRecord.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey    );
 
             insertCryptoAddresses(contactId, cryptoAddresses);
 
@@ -400,7 +404,7 @@ public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSyste
     private WalletContactRecord buildRecord(DatabaseTableRecord databaseTableRecord) throws InvalidParameterException, CantGetWalletContactException {
 
         UUID   contactId       = databaseTableRecord.getUUIDValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME       );
-        String actorPublicKey = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME );
+        String actorPublicKey  = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME );
         String actorTypeString = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_TYPE_COLUMN_NAME       );
         String actorAlias      = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME      );
         String actorFirstName  = databaseTableRecord.getStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME );
