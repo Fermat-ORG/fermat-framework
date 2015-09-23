@@ -13,15 +13,11 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.RegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -32,6 +28,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateEstablishedRequestedNetworkServiceConnectionHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.TemplateIncomingNetworkServiceConnectionRequestHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInitializeNetworkTemplateDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseFactory;
@@ -42,6 +40,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 
 
@@ -75,14 +74,11 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
-     * Represent the platformComponentProfile
+     * DealsWithCommunicationLayerManager Interface member variables.
      */
-    private PlatformComponentProfile platformComponentProfile;
+    private CommunicationLayerManager communicationLayerManager;
 
-    /**
-     * Represent the wsCommunicationsCloudClientManager
-     */
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+    private CommunicationsCloudClientConnection communicationsCloudClientConnection;
 
     /**
      * Represent the status of the network service
@@ -130,21 +126,11 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     private Database dataBase;
 
     /**
-     * Represent the identity
+     * Represent the eccKeyPair
      */
-    private ECCKeyPair identity;
+    private ECCKeyPair eccKeyPair;
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
-    /**
-     * Represent the registrationProcessNetworkServiceAgent
-     */
-    private RegistrationProcessNetworkServiceAgent registrationProcessNetworkServiceAgent;
-
-
+    PlatformComponentProfile platformComponentProfile;
     /**
      * Constructor
      */
@@ -166,7 +152,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          /*
          * If all resources are inject
          */
-        if (wsCommunicationsCloudClientManager == null ||
+        if (communicationsCloudClientConnection == null ||
                 pluginDatabaseSystem  == null ||
                     errorManager      == null ||
                         eventManager  == null) {
@@ -175,7 +161,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append("communicationsCloudClientConnection: " + communicationsCloudClientConnection);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -202,20 +188,20 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     private void initializeListener(TemplateNetworkServiceManager templateNetworkServiceManager){
 
         /*
-         * Listen and handle Complete Component Registration Notification Event
+         * Listen and handle incoming network service connection request event
          */
-       // FermatEventListener fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
-       // fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
-       // eventManager.addListener(fermatEventListener);
-       // listenersAdded.add(fermatEventListener);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
+        fermatEventListener.setEventHandler(new TemplateIncomingNetworkServiceConnectionRequestHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
         /*
          * Listen and handle established network service connection event
          */
-       // fermatEventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
-       // fermatEventListener.setEventHandler(new TemplateEstablishedRequestedNetworkServiceConnectionHandler(this));
-       // eventManager.addListener(fermatEventListener);
-       // listenersAdded.add(fermatEventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
+        fermatEventListener.setEventHandler(new TemplateEstablishedRequestedNetworkServiceConnectionHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -274,7 +260,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     @Override
     public void start() throws CantStartPluginException {
 
-        logManager.log(TemplateNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
+        logManager.log(TemplateNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "Starting", "Starting", "Starting");
 
         /*
          * Validate required resources
@@ -286,7 +272,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Create a new key pair for this execution
              */
-            identity = new ECCKeyPair();
+            eccKeyPair = new ECCKeyPair();
 
             /*
              * Initialize the data base
@@ -294,18 +280,10 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             initializeDb();
 
             /*
-             * Listen and handle Complete Component Registration Notification Event
+             * TODO: Register this network service whit the communicationsCloudClientConnection
              */
-            FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
-            fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+            //communicationsCloudClientConnection.registerNetworkService(NetworkServices.TEMPLATE, eccKeyPair.getPublicKey());
 
-            /*
-             * Initialize the agent and start
-             */
-            registrationProcessNetworkServiceAgent = new RegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
-            registrationProcessNetworkServiceAgent.start();
 
             /*
              * Its all ok, set the new status
@@ -313,7 +291,12 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             this.serviceStatus = ServiceStatus.STARTED;
 
 
-       } catch (CantInitializeNetworkTemplateDataBaseException exception) {
+       /* } catch (CommunicationException e) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationsCloudClientConnection. Error reason: "+e.getMessageContent()));
+            throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+
+      */  } catch (CantInitializeNetworkTemplateDataBaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -430,12 +413,13 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * (non-Javadoc)
-     * @see DealsWithWsCommunicationsCloudClientManager#setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager)
+     * Configure the WsCommunicationsCloudClientManager in the plugin
+     *
+     * @param wsCommunicationsCloudClientManager
      */
     @Override
     public void setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
-        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
+        this.communicationsCloudClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
     }
 
     /**
@@ -559,14 +543,14 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * This is a factory method for create new instances of the intra user network service manager
      *
      * @param pluginClientId the plugin client id
-     * @return TemplateNetworkServiceManager the template network service manager
+     * @return TemplateNetworkServiceManager the intra user network service manager
      */
     public TemplateNetworkServiceManager templateNetworkServiceManagerFactory(UUID pluginClientId){
 
         /*
          * Create a new instance
          */
-        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        TemplateNetworkServiceManager manager = new TemplateNetworkServiceManager(platformComponentProfile, eccKeyPair, communicationsCloudClientConnection, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
@@ -586,59 +570,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Handles events that CompleteComponentRegistrationNotification
-     */
-    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
-
-        System.out.println(" TemplateNetworkServiceManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
-
-        /*
-         * If the communication cloud client is registered
-         */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT){
-
-            /*
-             * Is not register
-             */
-            if (!isRegister()){
-                /*
-                 * Construct my profile and register me
-                 */
-                platformComponentProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(), "TemplateNetworkService", "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentInCommunicationCloudServer(platformComponentProfile);
-
-            }
-
-        }
-
-        /*
-         * If the component registered have my profile and my identity public key
-         */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE &&
-                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
-
-            /*
-             * Mark as register
-             */
-             this.register = Boolean.TRUE;
-
-            /*
-             * Construct the filter
-             */
-            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentProfile, null, null, null, null, null, null, null);
-
-            /*
-             * Request the list of component registers
-             */
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
-
-        }
-
-
-    }
-
-    /**
      * Return a previously created instances of the template network service manager
      *
      * @param pluginClientId
@@ -648,40 +579,4 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
         return  templateNetworkServiceManagersCache.get(pluginClientId);
     }
-
-    /**
-     * Get the IdentityPublicKey
-     *
-     * @return String
-     */
-    public String getIdentityPublicKey(){
-        return this.identity.getPublicKey();
-    }
-
-    /**
-     * Get the PlatformComponentProfile
-     *
-     * @return PlatformComponentProfile
-     */
-    public PlatformComponentProfile getPlatformComponentProfile() {
-        return platformComponentProfile;
-    }
-
-    /**
-     * Set the PlatformComponentProfile
-     *
-     * @param platformComponentProfile
-     */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    public boolean isRegister() {
-        return register;
-    }
-
 }

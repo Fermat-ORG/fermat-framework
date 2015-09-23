@@ -35,6 +35,8 @@ public class Resource implements Serializable {
 
     File resourceFile;
 
+    byte[] resourceBinayData;
+
 
     /**
      * Resource Class Constructors
@@ -42,21 +44,23 @@ public class Resource implements Serializable {
     public Resource() {
     }
 
-    public Resource(String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
+    public Resource(String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity, byte[] resourceBinayData) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.fileName = fileName;
         this.resourceType = resourceType;
         this.resourceDensity = resourceDensity;
+        this.resourceBinayData = resourceBinayData;
     }
 
 
-    public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity) {
+    public Resource(UUID id, String name, String fileName, ResourceType resourceType,ResourceDensity resourceDensity, byte[] resourceBinayData) {
         this.id = id;
         this.name = name;
         this.fileName = fileName;
         this.resourceType = resourceType;
         this.resourceDensity=resourceDensity;
+        this.resourceBinayData = resourceBinayData;
     }
 
 
@@ -114,4 +118,11 @@ public class Resource implements Serializable {
     public void setResourceFile(File resourceFile) {
         this.resourceFile = resourceFile;
     }
+
+    public void setResourceBinayData(byte[] resourceBinayData){
+        this.resourceBinayData = resourceBinayData;
+    }
+
+    public byte[] getResourceBinayData(){ return resourceBinayData;}
+
 }
