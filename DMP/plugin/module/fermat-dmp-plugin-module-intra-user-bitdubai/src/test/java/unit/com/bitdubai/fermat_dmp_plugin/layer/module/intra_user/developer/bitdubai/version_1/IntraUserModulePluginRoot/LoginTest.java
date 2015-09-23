@@ -20,7 +20,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import junit.framework.TestCase;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

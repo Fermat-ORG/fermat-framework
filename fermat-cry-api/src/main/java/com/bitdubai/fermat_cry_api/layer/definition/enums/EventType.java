@@ -82,7 +82,7 @@ public enum EventType implements FermatEventEnum {
 
     @Override
     public Platforms getPlatform() {
-        return Platforms.CRYPTO_CURRENCY_PLATFORM;
+        return Platforms.BLOCKCHAINS;
     }
 
 }
