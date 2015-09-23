@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by natalia on 10/09/15.

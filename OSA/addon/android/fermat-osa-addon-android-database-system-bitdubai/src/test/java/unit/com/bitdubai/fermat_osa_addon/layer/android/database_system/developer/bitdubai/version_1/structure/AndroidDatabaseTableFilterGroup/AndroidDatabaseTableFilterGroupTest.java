@@ -48,9 +48,10 @@ public class AndroidDatabaseTableFilterGroupTest{
             filters_2.add(new AndroidDatabaseTableFilter());
             subGroups_2.add(new AndroidDatabaseTableFilterGroup());
 
-        FilterGroup_1.setFilters(filters_1);
-        FilterGroup_1.setSubGroups(subGroups_1);
-        FilterGroup_1.setOperator(DatabaseFilterOperator.AND);
+
+        //FilterGroup_1.setFilters(filters_1);
+        //FilterGroup_1.setSubGroups(subGroups_1);
+        //FilterGroup_1.setOperator(DatabaseFilterOperator.AND);
     }
 
     @Test

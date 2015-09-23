@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.dmp_identity.IdentitySubsystem;
 import com.bitdubai.fermat_api.layer.dmp_identity.CantStartSubsystemException;
-import com.bitdubai.fermat_core.layer.dmp_identity.intra_user.IntraUserSubsystem;
+import com.bitdubai.fermat_core.layer.ccp.identity.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_identity.designer.DesignerIdentitySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_identity.publisher.PublisherIdentitySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_identity.translator.TranslatorIdentitySubsystem;
@@ -15,8 +15,6 @@ import com.bitdubai.fermat_core.layer.dmp_identity.translator.TranslatorIdentity
  * Modified by Leon Acosta on 28/08/2015.
  */
 public class IdentityLayer implements PlatformLayer {
-
-    private Plugin mIntraUser;
 
     private Plugin mPublisherIdentity;
 
@@ -28,7 +26,6 @@ public class IdentityLayer implements PlatformLayer {
 
         mDesignerIdentity = getPlugin(new DesignerIdentitySubsystem());
 
-        mIntraUser = getPlugin(new IntraUserSubsystem());
 
         mPublisherIdentity = getPlugin(new PublisherIdentitySubsystem());
 
@@ -43,10 +40,6 @@ public class IdentityLayer implements PlatformLayer {
         } catch (CantStartSubsystemException e) {
             throw new CantStartLayerException();
         }
-    }
-
-    public Plugin getIntraUser() {
-        return mIntraUser;
     }
 
     public Plugin getPublisherIdentity() {

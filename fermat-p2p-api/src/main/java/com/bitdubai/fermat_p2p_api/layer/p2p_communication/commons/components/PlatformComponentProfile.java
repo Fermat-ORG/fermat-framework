@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 
@@ -46,18 +47,11 @@ public interface PlatformComponentProfile {
     public String getName();
 
     /**
-     * Get the latitude for geo localization
+     * Get the location for geo localization
      *
      * @return Double
      */
-    public Double getLatitude();
-
-    /**
-     * Get the longitude for geo localization
-     *
-     * @return Double
-     */
-    public Double getLongitude();
+    public Location getLocation();
 
     /**
      * Return the platform component type
@@ -82,6 +76,13 @@ public interface PlatformComponentProfile {
     public String getCommunicationCloudClientIdentity();
 
     /**
+     * Return the extra data
+     *
+     * @return String
+     */
+    public String getExtraData();
+
+    /**
      * Convert this object to json string
      *
      * @return String json
@@ -89,10 +90,10 @@ public interface PlatformComponentProfile {
     public String toJson();
 
     /**
-     * Convert to FermatPacketCommunication from json
+     * Convert to PlatformComponentProfile from json
      *
      * @param json string object
-     * @return FermatPacket
+     * @return PlatformComponentProfile
      */
     public PlatformComponentProfile fromJson(String json);
 
