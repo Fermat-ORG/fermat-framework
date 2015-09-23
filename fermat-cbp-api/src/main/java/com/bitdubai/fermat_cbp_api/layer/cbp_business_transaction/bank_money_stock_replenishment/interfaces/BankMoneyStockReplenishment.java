@@ -8,7 +8,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessT
 
 public interface BankMoneyStockReplenishment  extends BusinessTransaction {
 
-    String getBank();
+    /*
+     *
+     */
+    String getBankAccount();
+
+    String getBankName();
 
     String getBankReference();
 
