@@ -112,7 +112,7 @@ public class InstallSkinForWalletTest extends TestCase {
 
     }
 
-
+//payment_request_base (layout)
     @Test
     public void testInstallCompleteWallet_FileNotFoundThrowsWalletResourcesInstalationException() throws Exception {
 
