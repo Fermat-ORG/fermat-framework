@@ -18,6 +18,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.Contract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -37,13 +44,19 @@ import java.util.UUID;
 /**
  * Created by franklin on 15/09/15.
  */
-public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem {
+public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+    public static final String PATH_DIRECTORY = "assetFactory/resources";
     Database database;
     UUID pluginId;
     /**
      * DealsWithPluginDatabaseSystem interface variable and implementation
      */
     PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithPluginFileSystem interface member variables
+     */
+    PluginFileSystem pluginFileSystem;
 
     /**
      * Constructor
@@ -56,6 +69,11 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     private DatabaseTable getDatabaseTable(String tableName) {
@@ -624,7 +642,16 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                     {
                         resource.setResourceType(ResourceType.IMAGE);
                     }
+                    if(resource.getResourceBinayData() != null) {
+                        try {
 
+                            PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                            resource.setResourceBinayData(imageFile.getContent());
+
+                        } catch (CantCreateFileException cantCreateFileException) {
+                            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, cantCreateFileException, "Asset Factory Method: getAssetFactoryList", "cant create el file");
+                        }
+                    }
                     resources.add(resource);
                 }
                 assetFactory.setContractProperties(contractProperties);
@@ -643,5 +670,4 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         }
 
     }
-
 }

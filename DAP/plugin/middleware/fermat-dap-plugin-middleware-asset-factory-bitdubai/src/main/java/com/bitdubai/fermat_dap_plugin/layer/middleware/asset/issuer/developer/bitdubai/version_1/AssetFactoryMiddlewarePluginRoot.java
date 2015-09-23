@@ -174,7 +174,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
         try {
             //System.out.println("******* Asset Factory Init, Open Database. ******");
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            //testAssetFactory();
+            testAssetFactory();
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -276,6 +276,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             resource.setFileName("imagen2.png");
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
+            resource.setResourceBinayData(new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff});
             resources.add(resource);
             assetFactory.setResources(resources);
             IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
@@ -297,7 +298,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             assetFactory.setIdentityAssetIssuer(identityAssetIssuer);*/
             //assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
             assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
-            //publishAsset(assetFactory);
+            //publishAsset(assetFactory, BlockchainNetworkType.DEFAULT);
             System.out.println("******* Metodo testAssetFactory. Franklin ******" + assetFactory + assetFactory.getName());
             return assetFactory;
         }catch (Exception e){
@@ -350,6 +351,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
 
     @Override
     public long getAvailableBalance(long amount) {
+        //TODO:Implementar de la Crypto Vault
         return 0;
     }
 

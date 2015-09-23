@@ -118,9 +118,11 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             assetFactory.setContractProperties(contractProperties);
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
             for (Resource resource : assetFactory.getResources()) {
-                PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-                imageFile.setContent(resource.getResourceBinayData());
-                imageFile.persistToMedia();
+                if (resource.getResourceBinayData() != null) {
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    imageFile.setContent(resource.getResourceBinayData());
+                    imageFile.persistToMedia();
+                }
             }
         }catch (CantCreateFileException cantCreateFileException)
         {
@@ -350,11 +352,11 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             DigitalAsset digitalAsset = new DigitalAsset();
             DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
 
-            for(ContractProperty property : assetFactory.getContractProperties())
-            {
-                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
-                digitalAssetContract.setContractProperty(contractProperty);
-            }
+//            for(ContractProperty property : assetFactory.getContractProperties())
+//            {
+//                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
+//                digitalAssetContract.setContractProperty(contractProperty);
+//            }
             ContractProperty redeemable;
             ContractProperty expirationDate;
             redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
@@ -363,8 +365,13 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
             redeemable1.setValue(assetFactory.getIsRedeemable());
             expirationDate1.setValue(assetFactory.getExpirationDate());
-            digitalAssetContract.setContractProperty(redeemable1);
-            digitalAssetContract.setContractProperty(expirationDate1);
+            try {
+
+                digitalAssetContract.setContractProperty(redeemable1);
+            }
+            catch (Exception e){
+                digitalAssetContract.setContractProperty(expirationDate1);
+            }
             digitalAsset.setContract(digitalAssetContract);
             digitalAsset.setName(assetFactory.getName());
             digitalAsset.setDescription(assetFactory.getDescription());
