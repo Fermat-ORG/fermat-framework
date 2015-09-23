@@ -1,5 +1,5 @@
 /*
- * @#java - 2015
+ * @#PlatformLayers.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -49,7 +49,6 @@ public enum PlatformLayers {
     BITDUBAI_PIP_MODULE_LAYER("BPIPML", Developers.BITDUBAI),
     BITDUBAI_REQUEST_LAYER("BRL", Developers.BITDUBAI),
     BITDUBAI_PIP_NETWORK_SERVICE_LAYER("BPIPNSL", Developers.BITDUBAI),
-    BITDUBAI_CCP_NETWORK_SERVICE_LAYER("BCCPNSL", Developers.BITDUBAI),
     BITDUBAI_DIGITAL_ASSET_TRANSACTION("BDAT", Developers.BITDUBAI),
     BITDUBAI_DAP_ACTOR_LAYER("BDAPAL",Developers.BITDUBAI),
     BITDUBAI_DAP_IDENTITY_LAYER("BDAPIL", Developers.BITDUBAI),
@@ -108,69 +107,67 @@ public enum PlatformLayers {
         switch (code) {
 
             case "BCOMML":
-                return BITDUBAI_COMMUNICATION_LAYER;
+                return PlatformLayers.BITDUBAI_COMMUNICATION_LAYER;
             case "BDEFL":
-                return BITDUBAI_DEFINITION_LAYER;
+                return PlatformLayers.BITDUBAI_DEFINITION_LAYER;
             case "BPSL":
-                return BITDUBAI_PLATFORM_SERVICE_LAYER;
+                return PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER;
             case "BOSL":
-                return BITDUBAI_OS_LAYER;
+                return PlatformLayers.BITDUBAI_OS_LAYER;
             case "BHARDWL":
-                return BITDUBAI_HARDWARE_LAYER;
+                return PlatformLayers.BITDUBAI_HARDWARE_LAYER;
             case "BUSERL":
-                return BITDUBAI_USER_LAYER;
+                return PlatformLayers.BITDUBAI_USER_LAYER;
             case "BLICL":
-                return BITDUBAI_LICENSE_LAYER;
+                return PlatformLayers.BITDUBAI_LICENSE_LAYER;
             case "BWORLDL":
-                return BITDUBAI_WORLD_LAYER;
+                return PlatformLayers.BITDUBAI_WORLD_LAYER;
             case "BCRYPTL":
-                return BITDUBAI_CRYPTO_LAYER;
+                return PlatformLayers.BITDUBAI_CRYPTO_LAYER;
             case "BCRYPTNL":
-                return BITDUBAI_CRYPTO_NETWORK_LAYER;
+                return PlatformLayers.BITDUBAI_CRYPTO_NETWORK_LAYER;
             case "BCRYPTVL":
-                return BITDUBAI_CRYPTO_VAULT_LAYER;
+                return PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER;
             case "BCRYPTRL":
-                return BITDUBAI_CRYPTO_ROUTER_LAYER;
+                return PlatformLayers.BITDUBAI_CRYPTO_ROUTER_LAYER;
             case "BNETSL":
-                return BITDUBAI_NETWORK_SERVICE_LAYER;
+                return PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER;
             case "BTRANSL":
-                return BITDUBAI_TRANSACTION_LAYER;
+                return PlatformLayers.BITDUBAI_TRANSACTION_LAYER;
             case "BMIDDL":
-                return BITDUBAI_MIDDLEWARE_LAYER;
+                return PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER;
             case "BMODL":
-                return BITDUBAI_MODULE_LAYER;
+                return PlatformLayers.BITDUBAI_MODULE_LAYER;
             case "BAGL":
-                return BITDUBAI_AGENT_LAYER;
+                return PlatformLayers.BITDUBAI_AGENT_LAYER;
             case "BWALL":
-                return BITDUBAI_BASIC_WALLET_LAYER;
+                return PlatformLayers.BITDUBAI_BASIC_WALLET_LAYER;
             case "BWALML":
-                return BITDUBAI_WALLET_MODULE_LAYER;
+                return PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER;
             case "BACTL":
-                return BITDUBAI_ACTOR_LAYER;
-            case "BCCPNSL":
-                return BITDUBAI_CCP_NETWORK_SERVICE_LAYER;
+                return PlatformLayers.BITDUBAI_ACTOR_LAYER;
             case "BPACTL":
-                return BITDUBAI_PIP_ACTOR_LAYER;
+                return PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER;
             case "BPIDL":
-                return BITDUBAI_PIP_IDENTITY_LAYER;
+                return PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER;
             case "BIDL":
-                return BITDUBAI_IDENTITY_LAYER;
+                return PlatformLayers.BITDUBAI_IDENTITY_LAYER;
             case "BPIPML":
-                return BITDUBAI_PIP_MODULE_LAYER;
+                return PlatformLayers.BITDUBAI_PIP_MODULE_LAYER;
             case "BRL":
-                return BITDUBAI_REQUEST_LAYER;
+                return PlatformLayers.BITDUBAI_REQUEST_LAYER;
             case "BPIPNSL":
-                return BITDUBAI_PIP_NETWORK_SERVICE_LAYER;
+                return PlatformLayers.BITDUBAI_PIP_NETWORK_SERVICE_LAYER;
             case "BDAT":
-                return BITDUBAI_DIGITAL_ASSET_TRANSACTION;
+                return PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION;
             case "BDAPAL":
-                return BITDUBAI_DAP_ACTOR_LAYER;
+                return PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER;
             case "BDAPIL":
-                return BITDUBAI_DAP_IDENTITY_LAYER;
+                return PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER;
             case "BDAF":
-                return BITDUBAI_DIGITAL_ASSET_FACTORY;
+                return PlatformLayers.BITDUBAI_DIGITAL_ASSET_FACTORY;
             case "BDAPML":
-                return BITDUBAI_DAP_MODULE_LAYER;
+                return PlatformLayers.BITDUBAI_DAP_MODULE_LAYER;
             case "BEL":
                 return BITDUBAI_ENGINE_LAYER;
             default:

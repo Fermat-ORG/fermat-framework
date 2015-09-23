@@ -17,7 +17,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -83,7 +83,6 @@ public class CryptoAddressesNetworkServiceDatabaseFactory implements DealsWithPl
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_ACCEPTING_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_TO_RECEIVE_COLUMN_NAME, DatabaseDataType.STRING, 40, Boolean.FALSE);
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_RESULT_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
 
             table.addIndex(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_FIRST_KEY_COLUMN);
 
