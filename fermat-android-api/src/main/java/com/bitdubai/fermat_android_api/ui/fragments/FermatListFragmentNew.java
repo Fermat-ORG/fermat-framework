@@ -82,7 +82,6 @@ public abstract class FermatListFragmentNew<M> extends FermatWalletFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         WalletResourcesProviderManager walletResourcesProviderManager = walletSession.getWalletResourcesProviderManager();
-        viewInflater = new ViewInflater(getActivity(),walletResourcesProviderManager);
         String layout = null;
         try {
            layout = walletResourcesProviderManager.getLayoutResource(getLayoutResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"),walletSession.getWalletSessionType().getWalletPublicKey());

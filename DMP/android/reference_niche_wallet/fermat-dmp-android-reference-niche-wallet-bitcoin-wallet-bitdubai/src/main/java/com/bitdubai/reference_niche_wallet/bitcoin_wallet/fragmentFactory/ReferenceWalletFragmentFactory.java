@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BlankFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.CreateContactFragment;
