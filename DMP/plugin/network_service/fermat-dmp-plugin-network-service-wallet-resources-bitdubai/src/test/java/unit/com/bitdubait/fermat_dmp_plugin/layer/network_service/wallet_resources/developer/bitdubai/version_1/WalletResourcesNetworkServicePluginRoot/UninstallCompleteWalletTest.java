@@ -115,8 +115,7 @@ public class UninstallCompleteWalletTest extends TestCase {
     public void testUninstallCompleteWallet() throws Exception {
         walletResourcePluginRoot.start();
         //TODO este metodo no retorna exceptions y deberia
-        //TODO error parseando el skin, al parecer la estructura subida al repo no es correcta - se debe actualizar
-        catchException(walletResourcePluginRoot).unninstallCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "mati_wallet_verde", UUID.randomUUID(), "medium", "navigationStructureVersion", true);
+         catchException(walletResourcePluginRoot).uninstallCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "mati_wallet_verde", UUID.randomUUID(), "medium", "navigationStructureVersion", true,"walletKey");
         assertThat(caughtException()).isNotNull();
 
     }
