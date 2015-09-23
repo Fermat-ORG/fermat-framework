@@ -166,7 +166,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The Class <code>com.bitdubai.fermat_core.CorePlatformContext</code> start all
+ * The Class <code>com.bitdubai.fermat_core.Platform</code> start all
  * component of the platform and manage it
  * <p/>
  * <p/>
@@ -637,7 +637,13 @@ public class Platform implements Serializable {
             Plugin wsCommunicationCloudClient = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getWsCommunicationCloudClientPlugin();
             injectPluginReferencesAndStart(wsCommunicationCloudClient, Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL);
 
-
+             /*
+             * Plugin Template Network Service
+             * -----------------------------
+             */
+            Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
+            injectLayerReferences(templateNetworkService);
+            injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
 
             /*
              * Plugin Blockchain Info World
@@ -1125,15 +1131,6 @@ public class Platform implements Serializable {
             Plugin intraUserModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getIntraUser();
             injectPluginReferencesAndStart(intraUserModule, Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
 
-
-           /*
-             * Plugin Template Network Service
-             * -----------------------------
-             */
-            Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
-            injectLayerReferences(templateNetworkService);
-            injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
-
             /*
              * Plugin Request
              * -----------------------------
@@ -1413,10 +1410,10 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
                 ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
             }
-            if(plugin instanceof DealsWithDeviceLocation){
+         /*   if(plugin instanceof DealsWithDeviceLocation){
                 ((DealsWithDeviceLocation) plugin).setLocationManager((LocationManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_LOCATION_WORLD));
 
-            }
+            } */
 
             if(plugin instanceof DealsWithCryptoAddressesNetworkService)
                 ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesNetworkServiceManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
