@@ -1,0 +1,8 @@
+== First run on FERMAT 
+
+=== Fermat Reference Distribution
+==== Downloading and installing
+==== Fermat Basic Wallet creation 
+
+
+
