@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -544,7 +545,13 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress addressTo, long cryptoAmount) throws CoultNotCreateCryptoTransaction {
-        //todo rodrigo implementar.
-        return null;
+        CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        cryptoTransaction.setAddressTo(addressTo);
+        cryptoTransaction.setCryptoAmount(cryptoAmount);
+        cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        cryptoTransaction.setCryptoStatus(CryptoStatus.PENDING_SUBMIT);
+        cryptoTransaction.setTransactionHash("MegaHash");
+
+        return cryptoTransaction;
     }
 }
