@@ -40,6 +40,18 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
 
 
     /**
+     * Send bitcoins using a user defined transaction.
+     * If the passed Transaction is not complete, I will add the missing values.
+     * @param cryptoTransaction
+     * @throws InsufficientMoneyException
+     * @throws InvalidSendToAddressException
+     * @throws CouldNotSendMoneyException
+     * @throws CryptoTransactionAlreadySentException
+     */
+    public void sendBitcoins (CryptoTransaction cryptoTransaction) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+
+
+    /**
      * Validates if the passes CryptoAddress is valid in the current network or not.
      * @param addressTo
      * @return true if is valid and we can use it, or false if not.
