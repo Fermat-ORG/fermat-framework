@@ -365,8 +365,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 cryptoAssetGenesisAddress.setAddress(digitalAssetGenesisAddress);
                 setDigitalAssetGenesisAddress(transactionId, cryptoAssetGenesisAddress);
                 DigitalAssetMetadata digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
-                setDigitalAssetGenesisTransaction(transactionId, digitalAssetMetadata);
-                issueDigitalAssetToAssetWallet(transactionId, digitalAssetMetadata);
+                CryptoTransaction genesisTransaction=requestGenesisTransaction(cryptoAssetGenesisAddress);
+                setDigitalAssetGenesisTransaction(transactionId,genesisTransaction);
+                //Obtengo el hash del digital Asset
+                String digitalAssetHash=getDigitalAssetHash(digitalAssetMetadata, transactionId);
             }
             //TODO: caso SENDING BITCOINS
         } catch (CoultNotCreateCryptoTransaction | CantGetGenesisAddressException | CantPersistsGenesisTransactionException | CantExecuteQueryException | CantPersistsGenesisAddressException | CantCheckAssetIssuingProgressException | CantGetDigitalAssetFromLocalStorageException | UnexpectedResultReturnedFromDatabaseException exception) {
@@ -383,19 +385,17 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionID, TransactionStatus.GENESIS_SETTLED);
     }
 
-    private String requestGenesisTransaction(CryptoAddress genesisAddress) throws CoultNotCreateCryptoTransaction {
+    private CryptoTransaction requestGenesisTransaction(CryptoAddress genesisAddress) throws CoultNotCreateCryptoTransaction {
         //TODO: mejorar esto con los cambios en la interfaz de la vault.
        // Crypto
-        CryptoTransaction genesisCryptoTransaction = this.cryptoVaultManager.generateDraftCryptoTransaction(genesisAddress, this.digitalAsset.getGenesisAmount());
-        String genesisTransaction = genesisCryptoTransaction.getTransactionHash();
+        CryptoTransaction genesisTransaction = this.cryptoVaultManager.generateDraftCryptoTransaction(genesisAddress, this.digitalAsset.getGenesisAmount());
         return genesisTransaction;
     }
 
-    private void setDigitalAssetGenesisTransaction(String transactionID, DigitalAssetMetadata digitalAssetMetadata) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException, CoultNotCreateCryptoTransaction {
+    private void setDigitalAssetGenesisTransaction(String transactionID, CryptoTransaction genesisTransaction) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException, CoultNotCreateCryptoTransaction {
 
-        String genesisTransaction=requestGenesisTransaction(this.digitalAsset.getGenesisAddress());
-        this.digitalAsset.setGenesisTransaction(genesisTransaction);
-        this.assetIssuingTransactionDao.persistGenesisTransaction(transactionID, genesisTransaction);
+        this.digitalAsset.setGenesisTransaction(genesisTransaction.getTransactionHash());
+        this.assetIssuingTransactionDao.persistGenesisTransaction(transactionID, genesisTransaction.getTransactionHash());
     }
 
     private void getDigitalAssetGenesisAddressByUUID(String transactionId) throws CantPersistsGenesisAddressException, CantGetGenesisAddressException {
@@ -425,12 +425,20 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
     }
 
-    private void sendBitcoinsToAssetWallet(String transactionId, UUID genesisTransaction, CryptoAddress genesisAddress, long genesisAmount) throws CantSendGenesisAmountException{
+    private String getDigitalAssetHash(DigitalAssetMetadata digitalAssetMetadata, String transactionId) throws CantPersistsGenesisTransactionException, UnexpectedResultReturnedFromDatabaseException {
+        String digitalAssetHash=digitalAssetMetadata.getDigitalAssetHash();
+        this.assetIssuingTransactionDao.persistDigitalAssetHash(transactionId, digitalAssetHash);
+        return digitalAssetHash;
+    }
+
+    private void sendBitcoins(CryptoTransaction genesisTransaction, String digitalAssetHash, String transactionId) throws CantSendGenesisAmountException{
         try {
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_BITCOINS);
-            this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
+            //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
+            genesisTransaction.setOp_Return(digitalAssetHash);
+            this.cryptoVaultManager.sendBitcoins(genesisTransaction);
         } catch (InsufficientMoneyException exception) {
-            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The balance is insufficient to deliver the genesis amount: "+genesisAmount);
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The balance is insufficient to deliver the genesis amount: "+this.digitalAsset.getGenesisAmount());
         } catch (InvalidSendToAddressException exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The sendToAddress is invalid: "+genesisTransaction);
         } catch (CouldNotSendMoneyException exception) {
@@ -466,7 +474,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //Creo el digitalAssetMetadata
             DigitalAssetMetadata digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
             //Creo la genesisTransaction y se lo asigno al digitalAsset
-            setDigitalAssetGenesisTransaction(transactionId,digitalAssetMetadata);
+            CryptoTransaction genesisTransaction=requestGenesisTransaction(genesisAddress);
+            setDigitalAssetGenesisTransaction(transactionId,genesisTransaction);
+            //Obtengo el hash del digital Asset
+            String digitalAssetHash=getDigitalAssetHash(digitalAssetMetadata, transactionId);
 
         } catch (CantPersistsGenesisAddressException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis Address in database");

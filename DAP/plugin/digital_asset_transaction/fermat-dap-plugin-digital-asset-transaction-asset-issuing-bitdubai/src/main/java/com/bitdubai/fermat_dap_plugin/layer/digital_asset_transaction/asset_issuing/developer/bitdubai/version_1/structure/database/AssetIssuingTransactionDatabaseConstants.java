@@ -20,8 +20,8 @@ public class AssetIssuingTransactionDatabaseConstants {
 
     public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME = "digital_asset_public_key";
     public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_LOCAL_STORAGE_PATH_COLUMN_NAME = "digital_asset_local_storage_path";
-    public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE="digital_asset_assets_to_generate";
-    public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED="digital_asset_assets_generated";
+    public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE_COLUMN_NAME ="digital_asset_assets_to_generate";
+    public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME ="digital_asset_assets_generated";
     public static final String DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME="blockchain_network_type";
 
     public static final String DIGITAL_ASSET_TRANSACTION_FIRST_KEY_COLUMN = "digital_asset_public_key";
@@ -47,8 +47,8 @@ public class AssetIssuingTransactionDatabaseConstants {
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME = "digital_asset_genesis_transaction";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME = "digital_asset_genesis_address";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME = "digital_asset_transaction_state";
-    public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS = "digital_asset_protocol_status";
-    public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION = "digital_asset_hash";
+    public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME = "digital_asset_protocol_status";
+    public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME = "digital_asset_hash";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY="public_key";
 
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_FIRST_KEY_COLUMN = "transaction_id";
