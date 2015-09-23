@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_network_service.crypto_addressees.interfaces;
+package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addressees.interfaces;
 
 /**
  * Created by eze on 2015.07.30..
