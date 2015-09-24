@@ -8,13 +8,19 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.util.FermatInterfaceAdapter;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor</code>
@@ -62,9 +68,11 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
 
         System.out.println("CompleteRegistrationComponentPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
-         /*
+        /*
          * Convert in platformComponentProfile
          */
+        //Gson gson = new GsonBuilder().registerTypeHierarchyAdapter(Location.class, new FermatInterfaceAdapter()).create();
+        //PlatformComponentProfile platformComponentProfile = gson.fromJson(messageContentJsonStringRepresentation, PlatformComponentProfileCommunication.class);
         PlatformComponentProfile platformComponentProfile = new PlatformComponentProfileCommunication().fromJson(messageContentJsonStringRepresentation);
 
         if (platformComponentProfile.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT){
@@ -77,15 +85,24 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
             System.out.println("CompleteRegistrationComponentPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() = "+ getWsCommunicationsCloudClientChannel().isRegister());
         }
 
-
-        System.out.println("CompleteRegistrationComponentPacketProcessor - Fire a event = EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
-
         /*
          * Create a raise a new event whit the platformComponentProfile registered
          */
-        FermatEvent event = getWsCommunicationsCloudClientChannel().getEventManager().getNewEvent(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        FermatEvent event = EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
+
+        /*
+         * Set the component already register
+         */
+        ((CompleteComponentRegistrationNotificationEvent)event).setPlatformComponentProfileRegistered(platformComponentProfile);
+
+        /*
+         * Raise the event
+         */
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
+
+        System.out.println("CompleteRegistrationComponentPacketProcessor - Fire a event = EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
+
 
     }
 

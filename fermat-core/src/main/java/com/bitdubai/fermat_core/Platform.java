@@ -24,8 +24,10 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
+import com.bitdubai.fermat_core.layer.ccp.identity.CCPIdentityLayer;
+import com.bitdubai.fermat_core.layer.ccp.network_service.CCPNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
 import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
 import com.bitdubai.fermat_core.layer.dap_middleware.DAPMiddlewareLayer;
@@ -61,8 +63,8 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraU
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.DealsWithIdentityIntraUser;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.DealsWithIdentityIntraUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentityManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
@@ -163,7 +165,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The Class <code>com.bitdubai.fermat_core.CorePlatformContext</code> start all
+ * The Class <code>com.bitdubai.fermat_core.Platform</code> start all
  * component of the platform and manage it
  * <p/>
  * <p/>
@@ -426,6 +428,11 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new DAPModuleLayer(), PlatformLayers.BITDUBAI_DAP_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new EngineLayer(),PlatformLayers.BITDUBAI_ENGINE_LAYER);
 
+            // CCP Layers
+            corePlatformContext.registerPlatformLayer(new CCPIdentityLayer(), PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPNetworkServiceLayer(), PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER);
+
+
             /*
              * Start all other platform layers
              */
@@ -633,7 +640,13 @@ public class Platform implements Serializable {
             Plugin wsCommunicationCloudClient = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getWsCommunicationCloudClientPlugin();
             injectPluginReferencesAndStart(wsCommunicationCloudClient, Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL);
 
-
+             /*
+             * Plugin Template Network Service
+             * -----------------------------
+             */
+            Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
+            injectLayerReferences(templateNetworkService);
+            injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
 
             /*
              * Plugin Blockchain Info World
@@ -768,6 +781,14 @@ public class Platform implements Serializable {
              */
             Plugin walletStatisticsNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getWalletStatistics();
             injectPluginReferencesAndStart(walletStatisticsNetworkService, Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE);
+
+
+             /*
+             * Plugin Crypto Addresses Network Service
+             * -----------------------------
+             */
+            Plugin cryptoAddressesNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoAddressesPlugin();
+            injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
 
              /*
@@ -1102,7 +1123,7 @@ public class Platform implements Serializable {
              * Plugin Intra User Identity
              * -----------------------------
              */
-            Plugin intraUserIdentity = ((IdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_IDENTITY_LAYER)).getIntraUser();
+            Plugin intraUserIdentity = ((CCPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER)).getIntraUser();
             injectPluginReferencesAndStart(intraUserIdentity, Plugins.BITDUBAI_INTRA_USER_IDENTITY);
 
 
@@ -1112,15 +1133,6 @@ public class Platform implements Serializable {
              */
             Plugin intraUserModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getIntraUser();
             injectPluginReferencesAndStart(intraUserModule, Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
-
-
-           /*
-             * Plugin Template Network Service
-             * -----------------------------
-             */
-            Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
-            injectLayerReferences(templateNetworkService);
-            injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
 
             /*
              * Plugin Request
@@ -1401,10 +1413,14 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
                 ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
             }
-            if(plugin instanceof DealsWithDeviceLocation){
+         /*   if(plugin instanceof DealsWithDeviceLocation){
                 ((DealsWithDeviceLocation) plugin).setLocationManager((LocationManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_LOCATION_WORLD));
 
-            }
+            } */
+
+            if(plugin instanceof DealsWithCryptoAddressesNetworkService)
+                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
+
 
 
             /*

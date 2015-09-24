@@ -11,12 +11,17 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
@@ -437,7 +442,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Call Wallet Resource to install Language
              */
-            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), languageId, language.value());
+            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), languageId, language.value(),installedWallet.getWalletPublicKey());
 
             /**
              * Save language in the Data Base
@@ -483,7 +488,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              * Call Wallet Resource to install Skin
              */
 
-            walletResources.installSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), alias,installedWallet.getWalletNavigationStructureVersion());
+            walletResources.installSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(), alias, installedWallet.getWalletNavigationStructureVersion(), installedWallet.getWalletPublicKey());
 
             /**
              * Save Skin in the Data Base
@@ -558,7 +563,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Call Wallet Resource to uninstall Skin
              */
-           walletResources.unninstallLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), true);
+           walletResources.uninstallLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), true, installedWallet.getWalletPublicKey());
 
             walletMangerDao.deleteWalletLanguage(walletCatalogueId, languageId);
 
@@ -602,7 +607,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Conected with Wallet Resource to unistalld resources
              */
-           walletResources.unninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true);
+           walletResources.uninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true, installedWallet.getWalletPublicKey());
             /**
              * I delete skin from database
              */
@@ -643,7 +648,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              */
             //TODO: Falta que reciba el Public key de la wallet y la lista de skins y language instalados
 
-            walletResources.unninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true);
+            walletResources.uninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true, installedWallet.getWalletPublicKey());
 
             /**
              * Delete wallet for DataBase
@@ -736,6 +741,23 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
     }
 
+
+    // TODO DO THIS RIGHT.
+    @Override
+    public InstalledWallet getDefaultWallet(CryptoCurrency cryptoCurrency,
+                                            Actors actorType,
+                                            BlockchainNetworkType blockchainNetworkType) throws CantGetInstalledWalletException {
+
+        try {
+            List<InstalledWallet> installedWalletList = this.getInstalledWallets();
+            if (installedWalletList.isEmpty())
+                return null;
+            else
+                return installedWalletList.get(0);
+        } catch (CantListWalletsException e) {
+            throw new CantGetInstalledWalletException(e, null, null);
+        }
+    }
 
     /*
      * DealsWithPluginDatabaseSystem interface methods implementation

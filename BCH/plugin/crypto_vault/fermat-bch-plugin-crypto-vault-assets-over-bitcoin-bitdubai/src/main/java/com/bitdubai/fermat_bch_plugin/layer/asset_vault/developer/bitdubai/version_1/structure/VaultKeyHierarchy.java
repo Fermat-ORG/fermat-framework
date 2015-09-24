@@ -1,11 +1,16 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.BitcoinNetworkSelector;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetVaultCryptoVaultDao;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InconsistentDatabaseResultException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidChainNumberException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.VaultKeyHierarchyException;
 import com.google.common.collect.ImmutableList;
@@ -19,6 +24,7 @@ import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by rodrigo on 9/20/15.
@@ -27,6 +33,8 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
     DeterministicSeed seed;
     DeterministicKey rootKey;
     DeterministicHierarchy masterHierarchy;
+
+    UUID pluginId;
 
     /**
      * DealsWithPluginDatabaseSystem interface variables and implementation
@@ -46,9 +54,10 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
      * New RedeemPoints will be m/0/0, m/0/1,..., m/0/n
      * @param seed the seed used to create the master key and the hierarchy.
      */
-    public VaultKeyHierarchy(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem) throws VaultKeyHierarchyException {
+    public VaultKeyHierarchy(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws VaultKeyHierarchyException {
         this.seed = seed;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
 
         try {
             /**
@@ -64,6 +73,9 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
         }
     }
 
+    /**
+     * this will create the master hierarchy using the saved seed.
+     */
     private void createMasterNode(){
         rootKey = HDKeyDerivation.createMasterPrivateKey(seed.getSeedBytes());
         masterHierarchy = new DeterministicHierarchy(rootKey);
@@ -79,13 +91,17 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
      * @return
      * @throws InvalidChainNumberException
      */
-    public CryptoAddress getNewCryptoAddressFromChain(BlockchainNetworkType blockchainNetworkType,int chainNumber) throws InvalidChainNumberException {
+    public CryptoAddress getNewCryptoAddressFromChain(BlockchainNetworkType blockchainNetworkType,int chainNumber) throws GetNewCryptoAddressException {
         /**
          * I validate that I have this Chain number registered.
          */
         int accountNumber = BitcoinNetworkSelector.getNetworkAccountNumber(blockchainNetworkType);
-        if (!isValidChainNumber(accountNumber, chainNumber))
-            throw new InvalidChainNumberException(InvalidChainNumberException.DEFAULT_MESSAGE, null, "Chain Number: " + chainNumber, "invalid account number.");
+        try {
+            if (!isValidChainNumber(accountNumber, chainNumber))
+                throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, null, "Chain Number: " + chainNumber, "invalid account number.");
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new GetNewCryptoAddressException (GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "error trying to get a result from database." , null);
+        }
 
         /**
          * I create the path that I will used to retrieve the key.
@@ -94,7 +110,12 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
          * m/1 Test
          * m/2 RegTest
          */
-        List<ChildNumber> path = ImmutableList.of(new ChildNumber(accountNumber, true),new ChildNumber(chainNumber, true), new ChildNumber(getAvailablePositionFromChain(chainNumber), true));
+        List<ChildNumber> path = null;
+        try {
+            path = ImmutableList.of(new ChildNumber(accountNumber, true), new ChildNumber(chainNumber, true), new ChildNumber(getAvailablePositionFromChain(accountNumber, chainNumber), true));
+        } catch (InconsistentDatabaseResultException | CantExecuteDatabaseOperationException e) {
+            throw new GetNewCryptoAddressException (GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "couldn't form the path of the hierarchy chain. There was a problem in the database.", null);
+        }
         DeterministicKey keyAtPosition = masterHierarchy.deriveChild(path, false, true, ChildNumber.ZERO);
 
         /**
@@ -106,23 +127,60 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
         /**
          * I update the next available position in the path
          */
-        setNextAvailablePositionForChain(chainNumber);
+        try {
+            setNextAvailablePositionForChain(accountNumber, chainNumber);
+        } catch (InconsistentDatabaseResultException e) {
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "The specified Account and Chain numbers doesn't exists.", "data inconsistency.");
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "this was a database problem.", "DB plugin issue.");
+        }
 
 
         return cryptoAddress;
     }
 
 
-    private boolean isValidChainNumber(int accountNumber, int chainNumber){
-        return true;
+    /**
+     * Validates if the account and chain combination is valid
+     * @param accountNumber
+     * @param chainNumber
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private boolean isValidChainNumber(int accountNumber, int chainNumber) throws CantExecuteDatabaseOperationException {
+        return getAssetVaultCryptoVaultDao().isValidChainNumber(accountNumber, chainNumber);
     }
 
-     private int getAvailablePositionFromChain (int chainNumber){
-        return 0;
+    /**
+     * Will get the position available to use to get a new key
+     * @param accountNumber
+     * @param chainNumber
+     * @return
+     * @throws InconsistentDatabaseResultException
+     * @throws CantExecuteDatabaseOperationException
+     */
+     private int getAvailablePositionFromChain (int accountNumber, int chainNumber) throws InconsistentDatabaseResultException, CantExecuteDatabaseOperationException {
+        return getAssetVaultCryptoVaultDao().getAvailableKeyPosition(accountNumber, chainNumber);
     }
 
-    private void setNextAvailablePositionForChain(int chainNumber){
+    /**
+     * Will increase by 1 the next available position to get a new key
+     * @param accountNumber
+     * @param chainNumber
+     * @throws InconsistentDatabaseResultException
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private void setNextAvailablePositionForChain(int accountNumber, int chainNumber) throws InconsistentDatabaseResultException, CantExecuteDatabaseOperationException {
+            getAssetVaultCryptoVaultDao().setNewAvailableKeyPosition(accountNumber, chainNumber);
+    }
 
+    /**
+     * gets the DAO object to access the database methods.
+     * @return
+     */
+    private AssetVaultCryptoVaultDao getAssetVaultCryptoVaultDao() {
+        AssetVaultCryptoVaultDao assetVaultCryptoVaultDao = new AssetVaultCryptoVaultDao(this.pluginId, this.pluginDatabaseSystem);
+        return assetVaultCryptoVaultDao;
     }
 }
 

@@ -38,6 +38,22 @@
         <name>reference_wallet_contact_fragment</name>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
     </entry>
+    <entry>
+      <string>payment_request_base</string>
+      <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+        <id>2494c954-d3c9-48b7-82a7-0992823fffff</id>
+        <filename>payment_request_base.xml</filename>
+        <name>payment_request_base</name>
+      </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+    </entry>
+    <entry>
+      <string>pending_request_row</string>
+      <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+        <id>2494c934-d3c9-48b7-81a7-09978f3fffff</id>
+        <filename>pending_request_row.xml</filename>
+        <name>pending_request_row</name>
+      </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
+    </entry>
   </portraitLayouts>
   <landscapeLayouts>
     <entry>
