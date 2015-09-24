@@ -77,16 +77,11 @@ public interface WalletResourcesInstalationManager {
 
     /**
      *
-     * @param walletCategory
-     * @param walletType
-     * @param developer
      * @param skinId
-     * @param screenSize
-     * @param navigationStructureVersion
-     * @param isLastWallet
+     * @param walletPublicKey
+     * @throws WalletResourcesUnninstallException
      */
-
-    public void uninstallSkinForWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String walletPublicKey)throws WalletResourcesUnninstallException;
+    public void uninstallSkinForWallet(UUID skinId,String walletPublicKey)throws WalletResourcesUnninstallException;
 
 
     /**

@@ -602,7 +602,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Conected with Wallet Resource to unistalld resources
              */
-           walletResources.uninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true, installedWallet.getWalletPublicKey());
+           walletResources.uninstallSkinForWallet( skinId,installedWallet.getWalletPublicKey());
             /**
              * I delete skin from database
              */

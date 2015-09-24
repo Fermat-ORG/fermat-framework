@@ -106,19 +106,18 @@ public class InstallSkinForWalletTest extends TestCase {
 
     @Test
     public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
-//TODO error parseando el skin, al parecer la estructura subida al repo no es correcta - se debe actualizar
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde",  "navigationStructureVersion");
-          assertThat(caughtException()).isNotNull();
+        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde",  "navigationStructureVersion","walletKey");
+          assertThat(caughtException()).isNull();
 
     }
 
-
+//payment_request_base (layout)
     @Test
     public void testInstallCompleteWallet_FileNotFoundThrowsWalletResourcesInstalationException() throws Exception {
 
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "skin",  "navigationStructureVersion");
+        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "skin",  "navigationStructureVersion","walletKey");
         assertThat(caughtException()).isInstanceOf(WalletResourcesInstalationException.class);
 
     }
