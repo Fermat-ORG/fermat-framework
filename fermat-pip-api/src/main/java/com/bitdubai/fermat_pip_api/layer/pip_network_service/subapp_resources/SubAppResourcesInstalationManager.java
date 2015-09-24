@@ -19,7 +19,7 @@ public interface SubAppResourcesInstalationManager {
 
 
 
-     void installCompleteWallet(String subAppType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion,String subAppPublickey) throws CantInstallCompleteSubAppResourcesException;
+     void installCompleteSubApp(String subAppType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion,String subAppPublickey) throws CantInstallCompleteSubAppResourcesException;
 
 
     /**
@@ -39,11 +39,11 @@ public interface SubAppResourcesInstalationManager {
 
     //TODO: la wallet puede tener mas de un lenguage y skin, este metodo va a recibir el array de skins y language?
 
-     void uninstallCompleteSubApp(String subAppType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String subAppPublicKey) throws CantUninstallCompleteSubAppException;
+     void uninstallCompleteSubApp(String subAppType, String developer, String subAppName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String subAppPublicKey) throws CantUninstallCompleteSubAppException;
 
 
 
-    public void uninstallSkinForSubApp(String subAppType,String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String subAppPublicKey) throws CantUninstallSubAppSkinException;
+    public void uninstallSkinForSubApp(String subAppType,String developer, String subAppName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String subAppPublicKey) throws CantUninstallSubAppSkinException;
 
 
     /**
@@ -51,7 +51,7 @@ public interface SubAppResourcesInstalationManager {
      * @param isLastWallet
      */
 
-    public void uninstallLanguageForSubApp(String subAppType,String languageId, String developer,String walletName, boolean isLastWallet,String subAppPublicKey) throws CantUninstallSubAppLanguageException;
+    public void uninstallLanguageForSubApp(String subAppType,String languageId, String developer,String subAppName, boolean isLastWallet,String subAppPublicKey) throws CantUninstallSubAppLanguageException;
 
 
 
