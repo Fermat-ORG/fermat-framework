@@ -6,12 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
-
-import java.util.List;
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection</code> represent
@@ -30,15 +29,30 @@ public interface CommunicationsCloudClientConnection {
      *
      * @param identityPublicKey
      * @param alias
-     * @param latitude
-     * @param longitude
      * @param name
      * @param networkServiceType
      * @param platformComponentType
      *
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, Double latitude, Double longitude, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType);
+    public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
+
+    /**
+     * Construct a DiscoveryQueryParameters instance, for use in the process
+     * of the discovery query to search all component register in the communication
+     * cloud server that match with the params
+     *
+     * @param applicant
+     * @param alias
+     * @param identityPublicKey
+     * @param location
+     * @param name
+     * @param extraData
+     * @param firstRecord
+     * @param numRegister
+     * @return DiscoveryQueryParameters
+     */
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, String name, String extraData, Integer firstRecord, Integer numRegister);
 
     /**
      * Method that register a platform component with the Communication Cloud Server
@@ -49,11 +63,12 @@ public interface CommunicationsCloudClientConnection {
     public void registerComponentInCommunicationCloudServer(PlatformComponentProfile platformComponentProfile);
 
     /**
-     * Method that request to the communication cloud server the list of component registered.
+     * Method that request to the communication cloud server the list of component registered that mathc
+     * whit the discovery query params
      *
-     * @param requestedPlatformComponentProfile
+     * @param discoveryQueryParameters
      */
-    public void requestListComponentRegistered(PlatformComponentProfile requestedPlatformComponentProfile);
+    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters);
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and

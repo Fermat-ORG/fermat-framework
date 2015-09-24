@@ -101,11 +101,11 @@ public class NetworkServicesWalletResourcesDAO {
             DatabaseTable RepositoryTable = getRepositoriesTable();
             DatabaseTableRecord entityRecord = RepositoryTable.getEmptyRecord();
 
-            entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME, UUID.randomUUID().toString());
-            entityRecord.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME, skinId);
-            entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repository.getSkinName());
-            entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME, repository.getNavigationStructureVersion());
-            entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME, repository.getPath());
+            entityRecord.setStringValue(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME, UUID.randomUUID().toString());
+            entityRecord.setUUIDValue(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId);
+            entityRecord.setStringValue(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repository.getSkinName());
+            entityRecord.setStringValue(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME, repository.getNavigationStructureVersion());
+            entityRecord.setStringValue(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATH_TO_REPO_COLUMN_NAME, repository.getPath());
 
 
             DatabaseTransaction transaction = database.newTransaction();
@@ -168,7 +168,7 @@ public class NetworkServicesWalletResourcesDAO {
      * @throws com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException
      */
     private DatabaseTableRecord getRepositoryDatabaseTableRecord(DatabaseTable repositoryTable,UUID skinId,String repositoryName) throws CantLoadTableToMemoryException, com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
-        repositoryTable.setUUIDFilter(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+        repositoryTable.setUUIDFilter(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
         repositoryTable.setStringFilter(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
         repositoryTable.loadToMemory();
         List<DatabaseTableRecord> databaseTableRecordList = repositoryTable.getRecords();
@@ -187,7 +187,7 @@ public class NetworkServicesWalletResourcesDAO {
     private Repository getRepository(String repositoryName,UUID skinId) throws CantGetRepositoryPathRecordException, com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
 
         DatabaseTableRecord databaseTableRecord= getRepositoryDatabaseTableRecord(repositoryName,skinId);
-        String pathToRepo = databaseTableRecord.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME);
+        String pathToRepo = databaseTableRecord.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATH_TO_REPO_COLUMN_NAME);
         String navigationStructureVersion = databaseTableRecord.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
 
         return new Repository(repositoryName,navigationStructureVersion,pathToRepo);
