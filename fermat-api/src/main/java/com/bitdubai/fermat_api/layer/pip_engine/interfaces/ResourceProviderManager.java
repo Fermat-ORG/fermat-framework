@@ -29,7 +29,7 @@ public interface ResourceProviderManager {
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException,CantGetResourcesException;
+    public Skin getSkinFile(String fileName, UUID skinId,String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -48,7 +48,7 @@ public interface ResourceProviderManager {
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetImageResourceException;
+    public byte[] getImageResource(String imageName, UUID skinId, String walletPublicKey) throws CantGetImageResourceException;
 
     /**
      * This method let us get a video referenced by a name

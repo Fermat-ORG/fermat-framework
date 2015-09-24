@@ -82,7 +82,8 @@ public class ViewInflater {
                         return inflate(parse);
                 }
                 catch (XmlPullParserException ex) { return null; }
-                catch (IOException ex) { return null; }
+                catch (IOException ex) { ex.printStackTrace();
+                return null;}
         }
         
         public View inflate(XmlPullParser parse) 

@@ -1,13 +1,16 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.UUID;
@@ -40,7 +43,7 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    public Skin getSkinFile(String fileName,UUID skinId) throws CantGetSkinFileException,CantGetResourcesException;
+    public Skin getSkinFile(String fileName,UUID skinId,String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -53,13 +56,33 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
 
 
     /**
+     * Returns the language specified by Id.
+     * @param languageId
+     * @param walletPublicKey
+     * @return
+     * @throws CantGetLanguageFileException
+     */
+    public Language getLanguage(UUID languageId, String walletPublicKey) throws CantGetLanguageFileException;
+
+
+    /**
+     * returns the associated navigation structure of the wallet
+     * @param publicKey
+     * @param skinId
+     * @return
+     * @throws CantGetWalletNavigationStructureException
+     */
+    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure getNavigationStructure(String publicKey, UUID skinId) throws CantGetWalletNavigationStructureException;
+
+
+    /**
      * This method let us get an image referenced by a name
      *
      * @param imageName the name of the image resource found in the skin file
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName,UUID skinId) throws CantGetImageResourceException;
+    public byte[] getImageResource(String imageName,UUID skinId, String walletPublicKey) throws CantGetImageResourceException;
 
     /**
      * This method let us get a video referenced by a name

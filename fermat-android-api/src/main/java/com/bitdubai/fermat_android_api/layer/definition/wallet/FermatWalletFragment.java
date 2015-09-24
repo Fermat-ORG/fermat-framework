@@ -50,6 +50,7 @@ public class FermatWalletFragment extends Fragment {
         super.onCreate(savedInstanceState);
         try {
             context = (WizardConfiguration) getActivity();
+            viewInflater = new ViewInflater(getActivity(),walletResourcesProviderManager);
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to FermatActivity");
         }

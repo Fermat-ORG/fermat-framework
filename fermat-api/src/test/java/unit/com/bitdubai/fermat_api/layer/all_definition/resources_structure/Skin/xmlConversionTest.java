@@ -180,6 +180,58 @@ public class xmlConversionTest extends TestCase {
 
 
         /**End Wallet Factory*/
+
+        Skin skin = new Skin();
+
+        skin.setId(UUID.randomUUID());
+
+        skin.setName("default");
+
+        skin.setScreenSize(ScreenSize.MEDIUM);
+
+        skin.setVersion(new Version(1, 0, 0));
+
+        Map<String,Layout> layoutHashMap = new HashMap<String,Layout>();
+        Layout layout;
+
+        layout = new Layout(UUID.randomUUID(),"payment_request_base.xml","payment_request_base");
+
+        layoutHashMap.put("payment_request_base",layout);
+
+        layout = new Layout(UUID.randomUUID(),"pending_request_row.xml","pending_request_row");
+
+        layoutHashMap.put("pending_request_row",layout);
+
+        layout = new Layout(UUID.randomUUID(),"pending_request_row2.xml","pending_request_row2");
+
+        layoutHashMap.put("pending_request_row2", layout);
+
+
+        skin.setPortraitLayouts(layoutHashMap);
+
+        Map<String,Resource> resourceHashMap = new HashMap<String,Resource>();
+
+        Resource resource;
+
+        resource = new Resource();
+
+        resource.setId(UUID.randomUUID());
+        resource.setName("person1");
+        resource.setFileName("person1.png");
+
+        resourceHashMap.put("person1", resource);
+
+        skin.setResources(resourceHashMap);
+
+        try {
+            skin.setNavigationStructureCompatibility(new VersionCompatibility(new Version(1,0,0),new Version(1,0,0)));
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println(XMLParser.parseObject(skin));
+
     }
 
 }

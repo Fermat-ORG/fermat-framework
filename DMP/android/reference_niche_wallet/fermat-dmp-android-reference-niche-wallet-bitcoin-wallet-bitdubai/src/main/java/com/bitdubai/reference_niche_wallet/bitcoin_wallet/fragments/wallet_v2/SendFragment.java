@@ -1,6 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -154,6 +156,23 @@ public  class SendFragment extends FermatWalletFragment {
 
     }
 
+    public void showDialog() {
+        CharSequence[] items = {"Red", "Green", "Blue"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setSingleChoiceItems(items, 0,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView =   inflater.inflate(R.layout.bitcoin_wallet_send_fragment_base, container, false);
@@ -168,6 +187,7 @@ public  class SendFragment extends FermatWalletFragment {
                         if(isShow){
                             Fx.slide_up(getActivity(), linear_layout_send_form);
                             linear_layout_send_form.setVisibility(View.GONE);
+                            showDialog();
                         }
                         else{
                             linear_layout_send_form.setVisibility(View.VISIBLE);
@@ -342,7 +362,7 @@ public  class SendFragment extends FermatWalletFragment {
 //            }
 //        }.execute();
         try {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts("reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress()));
             }
