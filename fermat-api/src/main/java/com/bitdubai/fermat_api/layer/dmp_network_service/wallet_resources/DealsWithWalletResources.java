@@ -7,5 +7,5 @@ package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
  */
 public interface DealsWithWalletResources {
 
-    public void setWalletResourcesManager (WalletResourcesInstalationManager walletResources);
+    void setWalletResourcesManager (WalletResourcesInstalationManager walletResources);
 }
