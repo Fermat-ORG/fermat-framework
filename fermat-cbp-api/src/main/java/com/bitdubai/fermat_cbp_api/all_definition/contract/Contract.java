@@ -15,26 +15,21 @@ public interface Contract {
     UUID getContractId();
 
     String getPublicKeyCustomer();
-
     String getPublicKeyBroker();
 
-    ContractStatus getStatus();
-
-    float getMerchandiseAmount();
-
+    CurrencyType getPaymentCurrency();
     CurrencyType getMerchandiseCurrency();
 
     float getReferencePrice();
-
     ReferenceCurrency getReferenceCurrency();
 
     float getPaymentAmount();
-
-    CurrencyType getPaymentCurrency();
+    float getMerchandiseAmount();
 
     long getPaymentExpirationDate();
-
     long getMerchandiseDeliveryExpirationDate();
+
+    ContractStatus getStatus();
 
 }
 
