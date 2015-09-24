@@ -8,4 +8,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessT
 
 public interface CashMoneyStockReplenishment  extends BusinessTransaction {
 
+    /*
+     * deberia ser un enum esto este en csh-api
+     */
+    String getCashCurrencyType();
+
 }

@@ -179,7 +179,7 @@ import java.util.List;
 
             try {
                 if(walletFragmentFactory !=null){
-                    currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletResourcesProviderManager);
+                    currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettings,walletResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();

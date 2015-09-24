@@ -1,25 +1,30 @@
 package com.bitdubai.fermat_cbp_api.all_definition.business_transaction;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import java.util.UUID;
 
 /**
  * Created by jorgegonzalez on 2015.09.15..
  */
+
 public interface BusinessTransaction {
 
-    //VA EL BROKER
-    String getPublicKeyBroker();
-
-    //ES UUID
     UUID getTransactionId();
 
-    //DEBE SER UN ENUM
-    String getStatus();
+    String getPublicKeyBroker();
 
-    Float getAmount();
+    String getCryptoBrokerPublicKey();
 
-    Float getPrice();
+    BusinessTransactionStatus getStatus();
 
-    //DEBE SER UN ENUM PERO YA EXISTE
-    Float getReferenceCurrency();
+    CurrencyType getCurrency();
+
+    float getAmount();
+
+    ReferenceCurrency getReferenceCurrency();
+
+    float getReferenceCurrencyPrice();
+
 }

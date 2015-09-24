@@ -1,14 +1,9 @@
 package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
 
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-
-import java.util.UUID;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 

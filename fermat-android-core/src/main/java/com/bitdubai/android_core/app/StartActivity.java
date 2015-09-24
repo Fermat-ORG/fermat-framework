@@ -89,7 +89,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 mDialog = new ProgressDialog(this);
                 mDialog.setMessage("Please wait...");
                 mDialog.setCancelable(false);
-                mDialog.show();
+                    mDialog.show();
                 GetTask getTask = new GetTask(this,this);
                 getTask.setCallBack(this);
                 getTask.execute();

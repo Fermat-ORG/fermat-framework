@@ -69,7 +69,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         /*
          * Construct a Communications Cloud Client Profile for this component and send and fermat packet type FermatPacketType.COMPONENT_REGISTRATION_REQUEST
          */
-        PlatformComponentProfile communicationsCloudClientProfile = new PlatformComponentProfileCommunication("WsCommunicationsCloudClientChannel", getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(), new Double(0), new Double(0), "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT);
+        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsCloudClientChannel().getWsCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(), "WsCommunicationsCloudClientChannel",  "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT, null);
         getWsCommunicationsCloudClientChannel().setPlatformComponentProfile(communicationsCloudClientProfile);
 
         /* ------------------------------------

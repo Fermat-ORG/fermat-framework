@@ -16,11 +16,14 @@ public class CryptoWalletPaymentRequest implements PaymentRequest{
 
     private CryptoWalletWalletContact cryptoWalletWalletContact;
 
-    public CryptoWalletPaymentRequest(String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact) {
+    private int type;
+
+    public CryptoWalletPaymentRequest(String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact,int type) {
         this.date = date;
         this.reason = reason;
         this.amount = amount;
         this.cryptoWalletWalletContact = cryptoWalletWalletContact;
+        this.type=type;
     }
 
     @Override
@@ -42,4 +45,11 @@ public class CryptoWalletPaymentRequest implements PaymentRequest{
     public CryptoWalletWalletContact getContact() {
         return cryptoWalletWalletContact;
     }
+
+    @Override
+    public int getType() {
+        return type;
+    }
+
+
 }
