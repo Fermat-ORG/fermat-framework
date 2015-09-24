@@ -530,10 +530,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                 String publicKey="reference_wallet";
 
-                WalletNavigationStructure walletNavigationStructure= getWalletRuntimeManager().getWallet(publicKey);
-
-
                 intent = new Intent(this, com.bitdubai.android_core.app.EditableWalletActivity.class);
+                intent.putExtra(EditableWalletActivity.WALLET_NAVIGATION_STRUCTURE,(WalletNavigationStructure)objects[0]);
+
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 finish();
                 startActivity(intent);

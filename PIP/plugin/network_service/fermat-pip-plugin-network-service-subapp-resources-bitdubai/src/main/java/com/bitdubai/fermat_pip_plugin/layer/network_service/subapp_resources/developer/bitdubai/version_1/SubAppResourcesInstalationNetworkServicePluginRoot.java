@@ -362,7 +362,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * @throws CantGetSkinFileException
      */
     @Override
-    public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException, CantGetResourcesException {
+    public Skin getSkinFile(String fileName, UUID skinId,String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
         String content = "";
         try {
             //get repo name
@@ -413,7 +413,7 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
      * @throws CantGetResourcesException
      */
     @Override
-    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetImageResourceException {
+    public byte[] getImageResource(String imageName, UUID skinId,String walletPublicKey) throws CantGetImageResourceException {
         try {
             // Testing purpose
             //  return imagenes.get(imageName);

@@ -108,7 +108,7 @@ public class InstallLanguageForWalletTest extends TestCase {
     @Test
     public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installLanguageForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", UUID.randomUUID(), "en");
+        catchException(walletResourcePluginRoot).installLanguageForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", UUID.randomUUID(), "en","walletKey");
         assertThat(caughtException()).isNull();
 
     }
@@ -119,7 +119,7 @@ public class InstallLanguageForWalletTest extends TestCase {
 
         //TODO el metodo no esta disparando exceptions cuando el archivo no existe
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installLanguageForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", UUID.randomUUID(), "pt");
+        catchException(walletResourcePluginRoot).installLanguageForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", UUID.randomUUID(), "pt","walletKey");
        assertThat(caughtException()).isNull();
 
     }

@@ -21,9 +21,12 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
@@ -79,8 +82,13 @@ public abstract class FermatListFragmentNew<M> extends FermatWalletFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         WalletResourcesProviderManager walletResourcesProviderManager = walletSession.getWalletResourcesProviderManager();
-        viewInflater = new ViewInflater(getActivity(),walletResourcesProviderManager);
-        View rootView = viewInflater.inflate(getLayoutResourceName());  //inflater.inflate(getLayoutResource(), container, false);
+        String layout = null;
+        try {
+           layout = walletResourcesProviderManager.getLayoutResource(getLayoutResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"),walletSession.getWalletSessionType().getWalletPublicKey());
+        } catch (CantGetResourcesException e) {
+            e.printStackTrace();
+        }
+        View rootView = viewInflater.inflate(layout);  //inflater.inflate(getLayoutResource(), container, false);
         initViews(rootView);
         return rootView;
     }

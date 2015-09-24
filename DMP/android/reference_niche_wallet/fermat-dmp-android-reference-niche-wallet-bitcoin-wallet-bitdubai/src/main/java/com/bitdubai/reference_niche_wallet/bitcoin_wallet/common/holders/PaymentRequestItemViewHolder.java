@@ -26,11 +26,11 @@ public class PaymentRequestItemViewHolder extends FermatViewHolder {
     public PaymentRequestItemViewHolder(View itemView, ViewInflater viewInflater) {
         super(itemView);
 
-        contactIcon = (ImageView) itemView.findViewById(viewInflater.getIdFromName("txt_contact_name"));
+        contactIcon = (ImageView) itemView.findViewById(viewInflater.getIdFromName("imageView_contact"));
         txt_contactName = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_contact_name"));
-        txt_amount = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_contact_name"));
-        txt_notes = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_contact_name"));
-        txt_time = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_contact_name"));
+        txt_amount = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_amount"));
+        txt_notes = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_notes"));
+        txt_time = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_time"));
 
     }
 

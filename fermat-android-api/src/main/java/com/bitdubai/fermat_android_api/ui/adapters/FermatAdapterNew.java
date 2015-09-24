@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Fermat Adapter
@@ -50,7 +51,7 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
     public H onCreateViewHolder(ViewGroup viewGroup, int type) {
         //pensar como sería sin esto
         try{
-            return createHolder(viewInflater.inflate(resourceProviderManager.getLayoutResource(getCardViewResourceName(), ScreenOrientation.PORTRAIT,null,"reference_wallet")),type);
+            return createHolder(viewInflater.inflate(resourceProviderManager.getLayoutResource(getCardViewResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"), "reference_wallet")),type);
         }catch (Exception e){
             e.printStackTrace();
         }

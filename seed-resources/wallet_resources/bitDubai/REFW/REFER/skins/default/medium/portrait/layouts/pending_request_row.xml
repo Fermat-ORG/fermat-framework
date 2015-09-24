@@ -32,12 +32,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="25 btc"
+            android:id="@+id/txt_amount"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Matias Furszyfer"
+            android:id="@+id/txt_contact_name"
             />
 
     </LinearLayout>
@@ -56,12 +58,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Conference ticket"
+            android:id="@+id/txt_notes"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="09 ago 2015"
+            android:id="@+id/txt_time"
             />
 
 
