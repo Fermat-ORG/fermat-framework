@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserCantGetCryptoStatusException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -265,8 +266,8 @@ public class OutgoingIntraUserDao {
 
     public void setToCryptoStatus(OutgoingIntraUserTransactionWrapper transactionWrapper, CryptoStatus cryptoStatus) throws CantUpdateRecordException, CantLoadTableToMemoryException, OutgoingIntraUserInconsistentTableStateException {
         try {
-            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
-            DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionWrapper.getIdTransaction());
+            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
+            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(transactionWrapper.getIdTransaction());
             recordToUpdate.setStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
             transactionTable.updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException | OutgoingIntraUserInconsistentTableStateException | CantLoadTableToMemoryException exception) {
@@ -330,5 +331,20 @@ public class OutgoingIntraUserDao {
 
         return bitcoinTransactionList;
     }
-    
+
+    public CryptoStatus getCryptoStatus(String transactionHash) throws OutgoingIntraUserCantGetCryptoStatusException {
+        try {
+            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TABLE_NAME);
+            transactionTable.setStringFilter(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_TRANSACTION_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
+            transactionTable.loadToMemory();
+            List<DatabaseTableRecord> records = transactionTable.getRecords();
+            transactionTable.clearAllFilters();
+
+            return CryptoStatus.getByCode(records.get(0).getStringValue(OutgoingIntraUserTransactionDatabaseConstants.OUTGOING_INTRA_USER_CRYPTO_STATUS_COLUMN_NAME));
+        } catch (InvalidParameterException | CantLoadTableToMemoryException e) {
+            throw new OutgoingIntraUserCantGetCryptoStatusException("An exception happened",e,"","");
+        } catch (Exception e) {
+            throw new OutgoingIntraUserCantGetCryptoStatusException("An unexpected exception happened",FermatException.wrapException(e),"","");
+        }
+    }
 }
