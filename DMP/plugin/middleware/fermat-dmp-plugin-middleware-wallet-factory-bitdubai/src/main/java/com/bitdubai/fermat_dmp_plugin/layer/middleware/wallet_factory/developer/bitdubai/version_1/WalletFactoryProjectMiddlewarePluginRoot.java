@@ -34,6 +34,10 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResourcesProvider;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -64,7 +68,7 @@ import java.util.Map;
 import java.util.UUID;
 
 
-public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, WalletFactoryProjectManager {
+public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManagerForDevelopers, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletResourcesProvider, LogManagerForDevelopers, Plugin, Service, WalletFactoryProjectManager {
     WalletFactoryProjectMiddlewareManager walletFactoryProjectMiddlewareManager;
 
     /**
@@ -88,6 +92,11 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     PluginFileSystem pluginFileSystem;
+
+    /**
+     * DealsWithWalletResourcesProvider interface member variable
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
 
     /**
      * Plugin Interface member variables.
@@ -148,9 +157,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     }
 
 
-    /**
-     * DatabaseManagerForDevelopers Interface Implementation
-     */
+
     /**
      * DatabaseManagerForDevelopers interface implementation
      * Returns the list of databases implemented on this plug in.
@@ -264,6 +271,15 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
+    }
+
+    /**
+     * DealsWithWalletResourcesProvider interface implementation
+     * @param walletResourcesProviderManager
+     */
+    @Override
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
     /**
@@ -401,5 +417,10 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void cloneInstalledWallet(InstalledWallet wallet, String newName) throws CantCloneInstalledWalletException {
+        walletFactoryProjectMiddlewareManager.cloneInstalledWallet(wallet, newName);
     }
 }
