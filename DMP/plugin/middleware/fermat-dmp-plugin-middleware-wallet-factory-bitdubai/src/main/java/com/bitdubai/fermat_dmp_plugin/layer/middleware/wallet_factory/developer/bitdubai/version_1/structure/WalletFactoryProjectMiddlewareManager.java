@@ -14,8 +14,15 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResourcesProvider;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -45,7 +52,7 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by rodrigo on 8/17/15.
  */
-public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletResourcesProvider {
 
     UUID pluginId;
 
@@ -65,6 +72,16 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
+    }
+
+    /**
+     * DealsWithWalletResourcesProvider interface variable and implementation
+     */
+    WalletResourcesProviderManager walletResourcesProviderManager;
+
+    @Override
+    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
+        this.walletResourcesProviderManager = walletResourcesProviderManager;
     }
 
     /**
@@ -599,6 +616,47 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, "Mismatch between database records and XML files.");
         } catch (Exception e){
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, "Unknown.");
+        }
+    }
+
+    /**
+     * Clones a previously installed wallets.
+     * @param wallet
+     * @param newName
+     * @throws CantCloneInstalledWalletException
+     */
+    public void cloneInstalledWallet(InstalledWallet wallet, String newName) throws CantCloneInstalledWalletException {
+        try {
+            /**
+             * I will create a new WFP and fill in basic information
+             */
+            WalletFactoryProject clonedWalletFactoryProject = this.getNewWalletFactoryProject();
+            clonedWalletFactoryProject.setName(newName);
+            clonedWalletFactoryProject.setWalletType(wallet.getWalletType());
+            clonedWalletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
+            java.util.Date date= new java.util.Date();
+            clonedWalletFactoryProject.setCreationTimestamp(new Timestamp(date.getTime()));
+            clonedWalletFactoryProject.setProjectPublickKey(new ECCKeyPair().getPublicKey());
+            clonedWalletFactoryProject.setDescription("Clone from wallet " + wallet.getWalletName());
+            clonedWalletFactoryProject.setProjectState(WalletFactoryProjectState.IN_PROGRESS);
+            clonedWalletFactoryProject.setWalletCategory(wallet.getWalletCategory());
+
+            /**
+             * Then I will get the Navigation Structure from the Wallet Resources plugin and save it.
+             */
+            for (InstalledSkin installedSkin : wallet.getSkinsId()){
+                walletResourcesProviderManager.getSkinFile(null, installedSkin.getId());
+            }
+
+
+
+
+        } catch (CantCreateWalletFactoryProjectException e) {
+            e.printStackTrace();
+        } catch (CantGetResourcesException e) {
+            e.printStackTrace();
+        } catch (CantGetSkinFileException e) {
+            e.printStackTrace();
         }
     }
 

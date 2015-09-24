@@ -1,13 +1,16 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 import java.util.UUID;
@@ -50,6 +53,12 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @throws CantGetLanguageFileException
      */
     public String getLanguageFile(String fileName) throws CantGetLanguageFileException;
+
+    //todo implementar
+    public Language getLanguage(UUID languageId) throws CantGetLanguageFileException;
+
+    //todo implementar
+    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure getNavigationStructure(UUID navigationStructure) throws CantGetWalletNavigationStructureException;
 
 
     /**
