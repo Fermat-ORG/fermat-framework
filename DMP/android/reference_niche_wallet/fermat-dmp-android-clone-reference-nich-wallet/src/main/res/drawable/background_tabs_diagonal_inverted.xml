@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/tabs_pattern_diagonal_inverted"
+    android:tileMode="repeat" /><!-- From: file:/C:/bitDubai-system/fermat-dmp-android-wallet-store-bitdubai/src/main/res/drawable/background_tabs_diagonal_inverted.xml --><!-- From: file:/C:/bitDubai-system/fermat-dmp-android-core/build/intermediates/exploded-aar/bitDubai-system/fermat-dmp-android-wallet-store-bitdubai/unspecified/res/drawable/background_tabs_diagonal_inverted.xml --><!-- From: file:/C:/bitDubai-system/fermat-dmp-android-wallet-factory-bitdubai/src/main/res/drawable/background_tabs_diagonal_inverted.xml --><!-- From: file:/C:/bitDubai-system/fermat-dmp-android-core/build/intermediates/exploded-aar/bitDubai-system/fermat-dmp-android-wallet-factory-bitdubai/unspecified/res/drawable/background_tabs_diagonal_inverted.xml -->

@@ -241,6 +241,6 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
      */
     @Override
     public void cloneInstalledWallets(InstalledWallet walletToClone, String newName) throws CantCloneInstalledWalletException {
-
+        walletFactoryModuleManager.cloneInstalledWallets(walletToClone, newName);
     }
 }
