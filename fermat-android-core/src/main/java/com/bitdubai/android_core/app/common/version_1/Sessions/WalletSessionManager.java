@@ -33,20 +33,28 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
 
     @Override
     public WalletSession openWalletSession(InstalledWallet installedWallet,CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager,ErrorManager errorManager) {
-
-        switch (installedWallet.getWalletCategory()){
-            case REFERENCE_WALLET:
-                WalletSession walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
-                lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
-                return walletSession;
-            case NICHE_WALLET:
-                break;
-            case BRANDED_NICHE_WALLET:
-                break;
-            case BRANDED_REFERENCE_WALLET:
-                break;
+        WalletSession walletSession = null;
+        if(installedWallet!=null){
+            switch (installedWallet.getWalletCategory()){
+                case REFERENCE_WALLET:
+                    walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
+                    lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
+                    return walletSession;
+                case NICHE_WALLET:
+                    break;
+                case BRANDED_NICHE_WALLET:
+                    break;
+                case BRANDED_REFERENCE_WALLET:
+                    break;
+                default:
+                    walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
+                    break;
+            }
+        }else{
+            walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
         }
-        return null;
+
+        return walletSession;
     }
 
 
