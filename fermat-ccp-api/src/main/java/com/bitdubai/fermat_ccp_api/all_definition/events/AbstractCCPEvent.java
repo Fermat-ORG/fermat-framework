@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events;
+package com.bitdubai.fermat_ccp_api.all_definition.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -13,13 +13,13 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class AbstractFermatEvent implements FermatEvent {
+public abstract class AbstractCCPEvent implements FermatEvent {
 
     private final FermatEventEnum eventType;
 
     private EventSource eventSource;
 
-    public AbstractFermatEvent(FermatEventEnum eventType) {
+    public AbstractCCPEvent(FermatEventEnum eventType) {
         this.eventType = eventType;
     }
 
