@@ -38,7 +38,7 @@ public class OutgoingIntraUserTransactionDatabaseConstants {
     static final String OUTGOING_INTRA_USER_ACTOR_FROM_TYPE_COLUMN_NAME         = "actor_from_type";
     static final String OUTGOING_INTRA_USER_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME     = "actor_to_public_key";
     static final String OUTGOING_INTRA_USER_ACTOR_TO_TYPE_COLUMN_NAME           = "actor_to_type";
-    static final String OUTGOING_INTRA_USER_WALLET_REFERENCE_TYPE_COLUMN_NAME   = "actor_to_type";
+    static final String OUTGOING_INTRA_USER_WALLET_REFERENCE_TYPE_COLUMN_NAME   = "reference_wallet";
 
     static final String OUTGOING_INTRA_USER_FIRST_KEY_COLUMN = "transaction_id";
 }

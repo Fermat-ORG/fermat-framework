@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.dev
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
@@ -20,18 +22,24 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.util.OutgoingIntraUserTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.OutgoingIntraActorTransactionSentEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 /**
  * Created by eze on 2015.09.21..
  */
 public class OutgoingIntraUserBitcoinWalletTransactionHandler implements OutgoingIntraUserTransactionHandler {
 
+    private EventManager         eventManager;
     private BitcoinWalletManager bitcoinWalletManager;
     private OutgoingIntraUserDao dao;
     private BitcoinWalletWallet  bitcoinWallet;
 
-    public OutgoingIntraUserBitcoinWalletTransactionHandler(BitcoinWalletManager bitcoinWalletManager,
+    public OutgoingIntraUserBitcoinWalletTransactionHandler(EventManager         eventManager,
+                                                            BitcoinWalletManager bitcoinWalletManager,
                                                             OutgoingIntraUserDao outgoingIntraUserDao) {
+        this.eventManager         = eventManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.dao                  = outgoingIntraUserDao;
     }
@@ -85,6 +93,7 @@ public class OutgoingIntraUserBitcoinWalletTransactionHandler implements Outgoin
             case IRREVERSIBLE:
                 bitcoinWallet.getBalance(BalanceType.BOOK).debit(transaction);
                 dao.setToPIW(transaction);
+                raiseNotificationEvent(transaction);
                 return;
             default:
                 throw new OutgoingIntraUserUnexpectedCryptoStatusException("Unexpected crypto status", null, "Old crypto status: " + transaction.getCryptoStatus().getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "CryptoStatus found: " + newCryptoStatus.getCode(),"");
@@ -119,6 +128,7 @@ public class OutgoingIntraUserBitcoinWalletTransactionHandler implements Outgoin
             case IRREVERSIBLE:
                 bitcoinWallet.getBalance(BalanceType.BOOK).debit(transaction);
                 dao.setToPIW(transaction);
+                raiseNotificationEvent(transaction);
                 return;
             default:
                 throw new OutgoingIntraUserUnexpectedCryptoStatusException("Unexpected crypto status", null, "Old crypto status: " + transaction.getCryptoStatus().getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "CryptoStatus found: " + newCryptoStatus.getCode(),"");
@@ -143,9 +153,16 @@ public class OutgoingIntraUserBitcoinWalletTransactionHandler implements Outgoin
                 return;
             case IRREVERSIBLE:
                 dao.setToPIW(transaction);
+                raiseNotificationEvent(transaction);
                 return;
             default:
                 throw new OutgoingIntraUserUnexpectedCryptoStatusException("Unexpected crypto status", null, "Old crypto status: " + transaction.getCryptoStatus().getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "CryptoStatus found: " + newCryptoStatus.getCode(),"");
         }
+    }
+
+    private void raiseNotificationEvent(OutgoingIntraUserTransactionWrapper transaction) {
+        FermatEvent eventToLaunch = this.eventManager.getNewEvent(EventType.OUTGOING_INTRA_ACTOR_TRANSACTION_SENT);
+        ((OutgoingIntraActorTransactionSentEvent) eventToLaunch).setTransactionHash(transaction.getTransactionHash());
+        this.eventManager.raiseEvent(eventToLaunch);
     }
 }
