@@ -32,7 +32,7 @@ public class CCPIdentityLayer implements PlatformLayer {
         }
     }
 
-    public Plugin getIntraUser() {
+    public Plugin getIntraUserPlugin() {
         return mIntraUser;
     }
 
