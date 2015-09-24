@@ -1,6 +1,70 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
+group = "com.bitdubai.wallet"
+sourceCompatibility = 1.7
+version = '1.0.0'
+
+configurations {
+    deployerJars
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'fermat-dmp-plugin-network-service-asset-transmission-bitdubai',
+                'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+pmd {
+    toolVersion = '5.1.3'
+}
+
+sourceCompatibility = 1.7
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+
     compile project(':fermat-dap-api')
+    compile project(':fermat-api')
+    compile project(':fermat-p2p-api')
+    compile project(':fermat-pip-api')
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+
+uploadArchives {
+
+    repositories {
+
+        flatDir {
+
+            dirs 'repos'
+        }
+
+        mavenDeployer {
+            configuration = configurations.deployerJars
+            repository (url: "dav:https://repository-fermat.forge.cloudbees.com/release/") {
+                authentication(userName: 'raul-pena', password: 'bAvE19G77_')
+            }
+        }
+    }
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }

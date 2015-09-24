@@ -6,8 +6,6 @@
  */
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 import java.util.UUID;
@@ -23,17 +21,8 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserLoggedInEvent implements PlatformEvent {
+public class IntraUserLoggedInEvent extends AbstractFermatEvent {
 
-    /**
-     * Represent the eventType
-     */
-    private EventType eventType;
-
-    /**
-     * Represent the eventSource
-     */
-    private EventSource eventSource;
 
     /**
      * Represent the intraUserId
@@ -46,51 +35,23 @@ public class IntraUserLoggedInEvent implements PlatformEvent {
      * @param eventType
      */
     public IntraUserLoggedInEvent(EventType eventType){
-        this.eventType = eventType;
+        super(eventType);
     }
+
 
     /**
      * Constructor with parameters
      *
-     * @param eventSource
      * @param eventType
      * @param intraUserId
      */
-    public IntraUserLoggedInEvent(EventSource eventSource, EventType eventType, UUID intraUserId) {
-        this.eventSource = eventSource;
-        this.eventType = eventType;
+    public IntraUserLoggedInEvent(EventType eventType, UUID intraUserId) {
+        super(eventType);
+
         this.intraUserId = intraUserId;
     }
 
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#getEventType()
-     */
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
 
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#setSource(EventSource)
-     */
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    /**
-     * (non-Javadoc)
-     *
-     * @see PlatformEvent#getSource()
-     */
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
-    }
 
     /**
      * Get the id of the intra user logged in

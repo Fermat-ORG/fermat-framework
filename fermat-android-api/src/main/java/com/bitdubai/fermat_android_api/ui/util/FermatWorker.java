@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_android_api.ui.util;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Fermat Background Worker
@@ -15,6 +18,10 @@ import java.util.concurrent.Callable;
  */
 public abstract class FermatWorker extends Thread {
 
+    private final String TAG = "FermatWorker";
+    /**
+     * References Fields
+     */
     private Activity context;
     private FermatWorkerCallBack callBack;
 
@@ -54,7 +61,11 @@ public abstract class FermatWorker extends Thread {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.onPostExecute(result);
+                        try {
+                            callBack.onPostExecute(result);
+                        } catch (Exception ex) {
+                            Log.i(TAG, "Cannot call onPostExecute method...", ex);
+                        }
                     }
                 });
             }
@@ -63,12 +74,28 @@ public abstract class FermatWorker extends Thread {
                 context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.onErrorOccurred(ex);
+                        try {
+                            callBack.onErrorOccurred(ex);
+                        } catch (Exception ex) {
+                            Log.i(TAG, "Cannot call onErrorOccurred...", ex);
+                        }
                     }
                 });
             }
         }
         super.run();
+    }
+
+
+    /**
+     * Execute this thread with single thread executor service
+     *
+     * @return ExecutorService Reference to handled this thread. <b>Use executor.shutDown for stop the current thread instance</b>
+     */
+    public ExecutorService execute() {
+        ExecutorService exec = Executors.newSingleThreadExecutor();
+        exec.execute(this);
+        return exec;
     }
 
     /**

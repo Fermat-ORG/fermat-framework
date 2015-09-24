@@ -14,15 +14,15 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -53,7 +53,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
     private static final String ARG_POSITION = "position";
 
 
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
@@ -85,7 +85,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
      */
     //TODO: esto deberia ir en preference setting
     private int pointerOffset = 0;
-    private int cantTransactions = 5;
+    private int cantTransactions = 50;
 
 
     /**
@@ -265,7 +265,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
             adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
 
-        } catch (CantGetTransactionsException e) {
+        } catch (CantListTransactionsException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
@@ -388,7 +388,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         try {
             if (lstTransactions.isEmpty()){
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
 
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
@@ -396,7 +396,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
             }
             else{
 
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(cantTransactions, pointerOffset, walletPublicKey);
+                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
                 for (CryptoWalletTransaction transaction : lst) {
                     lstTransactions.add(0, transaction);
 
@@ -409,7 +409,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
             }
         }
 
-        catch (CantGetTransactionsException e)
+        catch (CantListTransactionsException e)
         {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -469,7 +469,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
             //ErrorManager errorManager = subAppsSession.getErrorManager();
             //ArrayList<Item> data = CatalogueItemDao.getTestData(getResources());
             try {
-                lstTransactions=cryptoWallet.getTransactions(cantTransactions,pointerOffset, walletPublicKey);
+                lstTransactions=cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions,pointerOffset);
                 BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
                 lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
 
@@ -489,7 +489,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
 //                    }
 //                }
 
-            } catch (CantGetTransactionsException e) {
+            } catch (CantListTransactionsException e) {
                 e.printStackTrace();
             }
             adapter = new TransactionAdapter(getActivity(), items);
@@ -498,6 +498,8 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         }
         return adapter;
     }
+
+
     private void loadTransactionMap(List<CryptoWalletTransaction> lstTransactions){
         Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
         for(CryptoWalletTransaction transaction:lstTransactions){

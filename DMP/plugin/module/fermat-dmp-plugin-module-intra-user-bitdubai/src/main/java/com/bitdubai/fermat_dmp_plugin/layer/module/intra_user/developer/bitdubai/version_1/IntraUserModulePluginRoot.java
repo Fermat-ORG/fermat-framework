@@ -15,17 +15,18 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelI
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantCreateNewIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.DealsWithIdentityIntraUser;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantSetNewProfileImageException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.DealsWithIdentityIntraUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentityManager;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSaveProfileImageException;
@@ -223,7 +224,7 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
 
             List<IntraUserLoginIdentity> intraUserLoginIdentityList = new ArrayList<IntraUserLoginIdentity>();
 
-            List<IntraUserIdentity>  intraUserIdentityList =  this.intraUserIdentityManager.getIntraUsersFromCurrentDeviceUser();
+            List<IntraUserIdentity>  intraUserIdentityList =  this.intraUserIdentityManager.getAllIntraUsersFromCurrentDeviceUser();
 
             for (IntraUserIdentity intraUserIdentity : intraUserIdentityList) {
                 intraUserLoginIdentityList.add(new IntraUserModuleLoginIdentity(intraUserIdentity.getAlias(),intraUserIdentity.getPublicKey(),intraUserIdentity.getProfileImage()));
@@ -298,13 +299,13 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getSuggestionsToContact() throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws CantGetIntraUsersListException {
 
         try {
 
             List<IntraUserInformation>  intraUserInformationList = new ArrayList<IntraUserInformation>();
 
-            List<IntraUser> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions();
+            List<IntraUser> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
 
             for (IntraUser intraUser : intraUserList) {
                 intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage()));
@@ -516,20 +517,20 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getAllIntraUsers() throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getAllIntraUsers(int max,int offset) throws CantGetIntraUsersListException {
         try
         {
             List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
 
 
-            List<ActorIntraUser> actorsList = this.actorIntraUserManager.getAllIntraUsers(this.intraUserLoggedPublicKey);
+            List<ActorIntraUser> actorsList = this.actorIntraUserManager.getAllIntraUsers(this.intraUserLoggedPublicKey, max, offset);
 
             for (ActorIntraUser intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
             }
             return intraUserList;
         }
-        catch(CantGetIntraUSersException e)
+        catch(CantGetIntraUsersException e)
         {
             throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",e,"","");
         }
@@ -548,21 +549,33 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance() throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(int max,int offset) throws CantGetIntraUsersListException {
+        List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
+
+        intraUserList.add(new IntraUserModuleInformation("Matias Furszyfer","public_key",null));
+        intraUserList.add(new IntraUserModuleInformation("Jorge Gonzales","public_key",null));
+        intraUserList.add(new IntraUserModuleInformation("Cher Munish","public_key",null));
+        intraUserList.add(new IntraUserModuleInformation("Scrowe Math","public_key",null));
         try
         {
-            List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
 
-            List<ActorIntraUser> actorsList = this.actorIntraUserManager.getWaitingYourAcceptanceIntraUsers(this.intraUserLoggedPublicKey);
+
+            List<ActorIntraUser> actorsList = this.actorIntraUserManager.getWaitingYourAcceptanceIntraUsers(this.intraUserLoggedPublicKey, max, offset);
 
             for (ActorIntraUser intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
             }
+
             return intraUserList;
         }
-       catch(CantGetIntraUSersException e)
+       catch(CantGetIntraUsersException e)
         {
-            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
+            //throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
+            /**
+             * Testing purpose
+             */
+
+            return intraUserList;
         }
         catch(Exception e)
         {
@@ -580,25 +593,55 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance() throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(int max,int offset) throws CantGetIntraUsersListException {
         try
         {
             List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
 
-             List<ActorIntraUser> actorsList = this.actorIntraUserManager.getWaitingTheirAcceptanceIntraUsers(this.intraUserLoggedPublicKey);
+             List<ActorIntraUser> actorsList = this.actorIntraUserManager.getWaitingTheirAcceptanceIntraUsers(this.intraUserLoggedPublicKey, max, offset);
 
             for (ActorIntraUser intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
             }
             return intraUserList;
         }
-        catch(CantGetIntraUSersException e)
+        catch(CantGetIntraUsersException e)
         {
             throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE",e,"","Error on IntraUserActor Manager");
         }
         catch(Exception e)
         {
             throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING THEIR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
+        }
+    }
+
+    @Override
+    public IntraUserLoginIdentity getActiveIntraUserIdentity() throws CantGetActiveLoginIdentityException
+    {
+        try {
+
+            IntraUserLoginIdentity intraUserLoginIdentity = null;
+
+            List<IntraUserIdentity>  intraUserIdentityList = this.intraUserIdentityManager.getAllIntraUsersFromCurrentDeviceUser();
+
+            for (IntraUserIdentity intraUserIdentity : intraUserIdentityList) {
+
+                if(intraUserIdentity.getPublicKey().equals(intraUserLoggedPublicKey))
+                {
+                    intraUserLoginIdentity =  new IntraUserModuleLoginIdentity(intraUserIdentity.getAlias(),intraUserIdentity.getPublicKey(),intraUserIdentity.getProfileImage());
+                    break;
+                }
+             }
+
+            return intraUserLoginIdentity;
+
+        } catch (CantGetUserIntraUserIdentitiesException e) {
+
+            throw new CantGetActiveLoginIdentityException("CAN'T GET Active Login Identities",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetActiveLoginIdentityException("CAN'T GET active Login Identities",FermatException.wrapException(e),"","unknown exception");
         }
     }
 

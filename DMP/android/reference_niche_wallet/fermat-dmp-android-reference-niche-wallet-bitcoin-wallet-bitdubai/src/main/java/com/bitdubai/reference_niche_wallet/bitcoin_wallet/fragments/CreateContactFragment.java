@@ -45,6 +45,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.squareup.picasso.Picasso;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.validateAddress;
 
@@ -55,7 +56,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 public class CreateContactFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
     /**
      * Wallet session
@@ -187,10 +188,10 @@ public class CreateContactFragment extends Fragment {
                 public void onClick(View view) {
                     if (!detailsVisible) {
                         showDetails();
-                        detailsButton.setImageDrawable(rootView.getResources().getDrawable(R.drawable.ic_arrow_up_grey));
+                        Picasso.with(getActivity()).load(R.drawable.ic_arrow_up_grey).into(detailsButton);
                     } else {
                         hideDetails();
-                        detailsButton.setImageDrawable(rootView.getResources().getDrawable(R.drawable.ic_arrow_down_grey));
+                        Picasso.with(getActivity()).load(R.drawable.ic_arrow_down_grey).into(detailsButton);
                     }
                 }
             });
@@ -282,7 +283,14 @@ public class CreateContactFragment extends Fragment {
             if (validAddress != null) {
 
                 // first i add the contact
-                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
+                cryptoWallet.createWalletContact(
+                        validAddress,
+                        contact_name.getText().toString(),
+                        null,
+                        null,
+                        Actors.EXTRA_USER,
+                        walletPublicKey
+                );
 
                 Toast.makeText(getActivity().getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
                 returnToContacts();

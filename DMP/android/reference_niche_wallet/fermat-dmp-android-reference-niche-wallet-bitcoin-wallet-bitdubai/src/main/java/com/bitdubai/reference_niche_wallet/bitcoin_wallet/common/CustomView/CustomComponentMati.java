@@ -98,6 +98,10 @@ public class CustomComponentMati extends LinearLayout implements Animation.Anima
         initData();
     }
 
+    public CustomComponentMati(Context context) {
+        super(context);
+    }
+
     private void initData() {
         lstData= new ArrayList<CustomComponentsObjects>();
         listPosition++;
@@ -240,7 +244,6 @@ public class CustomComponentMati extends LinearLayout implements Animation.Anima
         Bitmap imageBitmap = null;
             Drawable drawableImage = null;
             if(image!=null){
-                //drawableImage = new BitmapDrawable(BitmapFactory.decodeByteArray(image, 0, image.length));
                 imageBitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
                 imageBitmap = Bitmap.createScaledBitmap(imageBitmap, imageView_transaction.getWidth(), imageView_transaction.getHeight(), true);
             }else{
@@ -260,6 +263,10 @@ public class CustomComponentMati extends LinearLayout implements Animation.Anima
             }
             //imageView_transaction.setImageDrawable(imageBitmap);
         if(imageBitmap!=null){
+            imageView_transaction.setBackground(new RoundedDrawable(imageBitmap, imageView_transaction));
+            imageView_transaction.setImageDrawable(null);
+        }else{
+            imageBitmap =BitmapFactory.decodeResource(resources,R.drawable.person1);
             imageView_transaction.setBackground(new RoundedDrawable(imageBitmap, imageView_transaction));
             imageView_transaction.setImageDrawable(null);
         }

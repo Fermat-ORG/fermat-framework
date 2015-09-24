@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -91,7 +92,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
      */
 	public CloudClientCommunicationNetworkServiceConnection(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String identityPublicKeyRemoteServer, final String identityPublicKeyNetworkServiceRegistered, final NetworkServices networkService) throws IllegalArgumentException {
 
-        super(serverAddress, executor, clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey), CloudFMPConnectionManagerMode.FMP_CLIENT);
+        super(serverAddress, executor, new ECCKeyPair(clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey)), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.identityPublicKeyRemoteServer = identityPublicKeyRemoteServer;
         this.identityPublicKeyNetworkServiceRegistered = identityPublicKeyNetworkServiceRegistered;
 		this.networkService = networkService;
@@ -387,12 +388,13 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
              */
 			SelectionKey serverConnection = clientChannel.register(selector, SelectionKey.OP_CONNECT);
 
+            System.out.println("clientChannel.connect = " + communicationChannelAddress);
+
             /*
              * Connect the client channel whit the server
              */
 			clientChannel.connect(communicationChannelAddress.getSocketAddress());
 
-            System.out.println("clientChannel.connect = " + communicationChannelAddress);
             System.out.println("clientChannel.isConnectionPending() = "+clientChannel.isConnectionPending());
 
             /*
@@ -654,7 +656,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Client Public Key: " + identity.getPublicKey();
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
-		context += "Packet Sender: " + packet.getSender();
+		context += "FermatPacketCommunication Sender: " + packet.getSender();
 		String possibleReason = "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
 		possibleReason += "This can also be an unexpected attack from an unexpected sender.";
 
@@ -671,7 +673,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 	private IllegalPacketSignatureException constructIllegalPacketSignatureException(final FMPPacket packet){
 
 		String message = IllegalPacketSignatureException.DEFAULT_MESSAGE;
-		String context = "Data Packet Information: " + packet.toString();
+		String context = "Data FermatPacketCommunication Information: " + packet.toString();
 		String possibleReason = "There was an improper signature associated with this packet; check if you're using the standard Asymmetric Cryptography Signature method";
 
 		return new IllegalPacketSignatureException(message, null, context, possibleReason);
@@ -698,10 +700,10 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Type: " + type;
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
-		context += "Message Hash: " + messageHash;
+		context += "FermatMessage Hash: " + messageHash;
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Signature: " + signature;
-		String possibleReason = "The FMP Packet construction failed, check the cause and the values in the context";
+		String possibleReason = "The FMP FermatPacketCommunication construction failed, check the cause and the values in the context";
 
 		return new CloudCommunicationException(message, cause, context, possibleReason);
 	}

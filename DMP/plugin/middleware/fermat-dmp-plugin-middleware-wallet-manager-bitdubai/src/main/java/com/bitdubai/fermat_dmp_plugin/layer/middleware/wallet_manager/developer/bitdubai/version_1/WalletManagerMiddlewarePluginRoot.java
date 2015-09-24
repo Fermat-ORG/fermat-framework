@@ -15,10 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-//import com.bitdubai.fermat_api.layer.all_definition.event.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
@@ -133,7 +131,6 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-
     PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
@@ -231,16 +228,16 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              * The database exists but cannot be open. I can not handle this situation.
              */
             FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         } catch(Exception exception){
             FermatException e = new CantDeliverDatabaseException("Unexpected Exception",exception,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
-        // If we are here the database could not be opened, so we return an empry list
+        // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
     }
 
@@ -440,7 +437,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Call Wallet Resource to install Language
              */
-            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), languageId, language.value());
+            walletResources.installLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), languageId, language.value(),installedWallet.getWalletPublicKey());
 
             /**
              * Save language in the Data Base
@@ -486,7 +483,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              * Call Wallet Resource to install Skin
              */
 
-            walletResources.installSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), alias,installedWallet.getWalletNavigationStructureVersion());
+            walletResources.installSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(),installedWallet.getWalletScreenSize(), alias,installedWallet.getWalletNavigationStructureVersion(),installedWallet.getWalletPublicKey());
 
             /**
              * Save Skin in the Data Base
@@ -523,8 +520,11 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
      */
     public WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException{
         try {
-
+            Logger LOG = Logger.getGlobal();
+            LOG.info("MAP_WALLET_CATEGORY:"+walletCategory);
+            LOG.info("MAP_WPI:"+walletPlatformIdentifier);
             eventManager.raiseEvent( new WalletInstalledEvent(EventType.WALLET_INSTALLED));
+            LOG.info("MAP_EVENT:"+eventManager.toString());
             return new WalletManagerMiddlewareInstallationProcess(this.walletResources,walletCategory,walletPlatformIdentifier,this.pluginDatabaseSystem,pluginId);
 
         } catch (Exception e){
@@ -558,22 +558,22 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Call Wallet Resource to uninstall Skin
              */
-           walletResources.unninstallLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), true);
+           walletResources.uninstallLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), true, installedWallet.getWalletPublicKey());
 
             walletMangerDao.deleteWalletLanguage(walletCatalogueId, languageId);
 
 
         } catch (WalletResourcesUnninstallException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL WALLET LANGUAGE",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL WALLET LANGUAGE",e, null, null);
 
         } catch (CantDeleteWalletLanguageException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",e, null, null);
         }
         catch (CantExecuteDatabaseOperationException e){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",e, null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",e, null, null);
         }
         catch (Exception exception){
-            throw new CantUninstallLanguageException("CAN'T UNISTALL REQUESTED PUBLISHED",FermatException.wrapException(exception), null, null);
+            throw new CantUninstallLanguageException("CAN'T UNINSTALL REQUESTED PUBLISHED",FermatException.wrapException(exception), null, null);
         }
     }
 
@@ -602,7 +602,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Conected with Wallet Resource to unistalld resources
              */
-           walletResources.unninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(),true);
+           walletResources.uninstallSkinForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), skinId, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true, installedWallet.getWalletPublicKey());
             /**
              * I delete skin from database
              */
@@ -643,7 +643,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              */
             //TODO: Falta que reciba el Public key de la wallet y la lista de skins y language instalados
 
-            walletResources.unninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(),true);
+            walletResources.uninstallCompleteWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), null, null, installedWallet.getWalletScreenSize(), installedWallet.getWalletNavigationStructureVersion(), true, installedWallet.getWalletPublicKey());
 
             /**
              * Delete wallet for DataBase
@@ -713,6 +713,29 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
     }
 
+    /**
+     * get Installed wallet
+     *
+     * @return
+     */
+    @Override
+    public InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
+
+        try{
+            WalletManagerMiddlewareDao walletManagerMiddlewareDao = new WalletManagerMiddlewareDao(pluginDatabaseSystem,pluginId);
+            return walletManagerMiddlewareDao.getInstalledWallet(walletPublicKey);
+
+        } catch (CantGetInstalledWalletsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
+        } catch (CantExecuteDatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
+        }
+
+
+    }
+
 
     /*
      * DealsWithPluginDatabaseSystem interface methods implementation
@@ -761,7 +784,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             wIP.startInstallation(WalletType.NICHE,"testWallet","123456","654321","098765",null,testUUID,testVersion, ScreenSize.MEDIUM.toString(),testUUID,testVersion,"Skin",null,testUUID,testVersion,Languages.LATIN_AMERICAN_SPANISH, "es","MAP","1.0.0");
             LOG.info("Rastro Atómico:"+wIP.getInstallationProgress().getCode());
         } catch (Exception e) {
-            LOG.info(e.getMessage());
+            LOG.info("TEST ERROR:"+e.getMessage());
             e.printStackTrace();
         }
 

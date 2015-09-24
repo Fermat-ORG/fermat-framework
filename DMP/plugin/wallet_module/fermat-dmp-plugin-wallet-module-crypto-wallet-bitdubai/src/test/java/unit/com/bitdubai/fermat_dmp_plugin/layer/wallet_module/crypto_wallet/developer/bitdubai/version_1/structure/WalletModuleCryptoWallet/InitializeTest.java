@@ -4,13 +4,10 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 
@@ -28,12 +25,6 @@ import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitializeTest extends TestCase {
-
-    /**
-     * DealsWithActorAddressBook interface Mocked
-     */
-    @Mock
-    ActorAddressBookManager actorAddressBookManager;
 
     /**
      * DealsWithBitcoinWallet interface Mocked
@@ -66,10 +57,10 @@ public class InitializeTest extends TestCase {
     OutgoingExtraUserManager outgoingExtraUserManager;
 
     /**
-     * DealsWithWalletAddressBook interface Mocked
+     * DealsWithCryptoAddressBook interface Mocked
      */
     @Mock
-    WalletAddressBookManager walletAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithWalletContacts interface Mocked
@@ -78,18 +69,17 @@ public class InitializeTest extends TestCase {
     WalletContactsManager walletContactsManager;
 
 
-    WalletModuleCryptoWallet walletModuleCryptoWallet;
+    CryptoWalletWalletModuleManager walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
-        walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
+        walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setBitcoinWalletManager(bitcoinWalletManager);
         walletModuleCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setExtraUserManager(extraUserManager);
         walletModuleCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
-        walletModuleCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
+        walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
         walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
     }
 
@@ -97,16 +87,6 @@ public class InitializeTest extends TestCase {
     public void testGetCryptoWallet_Success() throws Exception {
         catchException(walletModuleCryptoWallet).initialize();
         assertThat(caughtException()).isNull();
-    }
-
-    @Test
-    public void testInitialize_CantGetActorAddressBookRegistryException() throws Exception {
-        doThrow(new CantGetActorAddressBookRegistryException()).when(actorAddressBookManager).getActorAddressBookRegistry();
-
-        catchException(walletModuleCryptoWallet).initialize();
-        assertThat(caughtException())
-                .isNotNull()
-                .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
     }
 
     @Test
@@ -118,25 +98,4 @@ public class InitializeTest extends TestCase {
                 .isNotNull()
                 .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
     }
-
-    @Test
-    public void testInitialize_CantGetWalletAddressBookRegistryException() throws Exception {
-        doThrow(new CantGetWalletAddressBookRegistryException()).when(walletAddressBookManager).getWalletAddressBookRegistry();
-
-        catchException(walletModuleCryptoWallet).initialize();
-        assertThat(caughtException())
-                .isNotNull()
-                .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
-    }
-
-    @Test
-    public void testInitialize_NullPointerException_ThrowCantInitializeCryptoWalletManagerException() throws Exception {
-        walletModuleCryptoWallet.setActorAddressBookManager(null);
-
-        catchException(walletModuleCryptoWallet).initialize();
-        assertThat(caughtException())
-                .isNotNull()
-                .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
-    }
-
 }

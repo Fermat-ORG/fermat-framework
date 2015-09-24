@@ -64,7 +64,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     private ErrorManager errorManager;
 
     View rootView;
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
+    String walletPublicKey = "reference_wallet";
 
 
     //Type face font
@@ -100,8 +100,10 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
 
     public static ContactsFragment newInstance(ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
-        if (walletSession == null)
+        if (walletSession == null) {
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
+        }
         ContactsFragment f = new ContactsFragment();
         f.setWalletSession(walletSession);
         f.setWalletResourcesProviderManager(walletResourcesProviderManager);
@@ -496,6 +498,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
                 }
 
             }
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
         }
 

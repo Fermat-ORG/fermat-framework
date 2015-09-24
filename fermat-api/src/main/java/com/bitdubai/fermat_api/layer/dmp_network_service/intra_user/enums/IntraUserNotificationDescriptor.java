@@ -7,7 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum IntraUserNotificationDescriptor {
     //Modified by Manuel Perez on 05/08/2015
+    ASKFORACCEPTANCE("ASK"),
     ACCEPTED("ACP"),
+    CANCEL("CAN"),
     DISCONNECTED("DIS"),
     RECEIVED("REC"),
     DENIED("DEN");
@@ -30,6 +32,10 @@ public enum IntraUserNotificationDescriptor {
 
         switch (code){
 
+            case "ASK":
+                return IntraUserNotificationDescriptor.ASKFORACCEPTANCE;
+            case "CAN":
+                return IntraUserNotificationDescriptor.CANCEL;
             case "ACP":
                 return IntraUserNotificationDescriptor.ACCEPTED;
             case "DIS":

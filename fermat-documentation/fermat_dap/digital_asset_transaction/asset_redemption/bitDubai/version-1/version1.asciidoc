@@ -1,0 +1,42 @@
+[[digital-asset-transaction-asset-redemption-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+Transaction Flow on Prezi: https://prezi.com/jwnuv7i13mnb/dap-asset-redemption/
+
+.Escenario:
+
+Nos encontramos en el dispositivo del usuario con al menos un asset disponible en su Asset User Wallet y los fondos necesarios en su Asset Vault
+para al menos pagar el fee de una transacción.
+
+El asset se encuentra confirmado y el Asset está disponible en el available Balance.
+
+En la Asset user Reference Wallet el usuario tiene disponibles algunos Redeem Point obtenidos automáticamente por el Redeem Point Network Service.
+El usuario selecciona el que tiene más cerca y se dirige a ese Redeem Point.
+
+El redeem point seleccionado, tiene direcciones bitcoin generadas en forma independiente, a partir de una extended key enviada por el issuer.
+
+Para redimir el asset en ese Reedem Point especifico el usuario pulsa la opcion Redeem habiendo seleccionado el Redeem Point correspondiente.
+
+La transacción Asset Redemption ejecuta los siguientes pasos:
+
+Se repiten los mismos pasos de la transacción Asset Distribution, con la diferencia que el asset se envía a un redeem point pero básicamente.
+
+1) Verifica que el contrato del Asset permite que sea redimible. Luego valida que el Asset a enviar sigue siendo válido y no fue modificado.
+
+2) Envía la metadata al Redeem Point para que haga las validaciones correspondientes del contrato.
+
+3) Si es aceptado, hace el envío de bitcoins y genera el débito en la User Wallet.
+
+4) El redeem point recibe los bitcoins con el asset publicKey en el output y marca genera el crédito en la Redeem Point wallet.
+
+5) En el Asset Issuer se reciben también los bitcoins y se tiene registrada que la dirección a la que fueron enviados a que rama del árbol HD corresponden.
+Con esta información, actualiza la estadística de la redimición de assets en la Issuer SubAp. Los bitcoins ingresados son enviados en una nueva transacción a la crypto Vault
+ya que no pertenecen a ningún asset.
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

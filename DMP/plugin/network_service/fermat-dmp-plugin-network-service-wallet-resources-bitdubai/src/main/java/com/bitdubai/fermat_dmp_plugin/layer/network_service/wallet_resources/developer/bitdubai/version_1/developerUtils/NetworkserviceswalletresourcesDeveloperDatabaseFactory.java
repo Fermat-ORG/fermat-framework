@@ -102,6 +102,14 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory implements D
                 throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
+        catch (Exception e) {
+
+             /*
+              * The database exists but cannot be open. I can not handle this situation.
+              */
+            throw new CantInitializeNetworkServicesWalletResourcesDatabaseException(e.getMessage());
+
+        }
     }
 
 
@@ -124,8 +132,8 @@ public class NetworkserviceswalletresourcesDeveloperDatabaseFactory implements D
            List<String> repositoriesColumns = new ArrayList<String>();
 
               repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME);
-              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME);
-              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME);
+              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME);
+              repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATH_TO_REPO_COLUMN_NAME);
               repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME);
               repositoriesColumns.add(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
            /**

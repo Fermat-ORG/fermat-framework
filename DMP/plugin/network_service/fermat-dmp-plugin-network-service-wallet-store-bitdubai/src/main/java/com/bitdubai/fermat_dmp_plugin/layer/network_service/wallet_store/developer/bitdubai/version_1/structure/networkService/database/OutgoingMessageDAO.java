@@ -45,6 +45,7 @@ public class OutgoingMessageDAO {
 
     /**
      * Return the Database
+     *
      * @return Database
      */
     Database getDataBase() {
@@ -53,6 +54,7 @@ public class OutgoingMessageDAO {
 
     /**
      * Return the DatabaseTable
+     *
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
@@ -62,13 +64,13 @@ public class OutgoingMessageDAO {
     /**
      * Method that find an WalletStoreNetworkServiceMessage by id in the data base.
      *
-     *  @param id Long id.
-     *  @return WalletStoreNetworkServiceMessage found.
-     *  @throws CantReadRecordDataBaseException
+     * @param id Long id.
+     * @return WalletStoreNetworkServiceMessage found.
+     * @throws CantReadRecordDataBaseException
      */
-    public WalletStoreNetworkServiceMessage findById (String id) throws CantReadRecordDataBaseException {
+    public WalletStoreNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException {
 
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
@@ -79,7 +81,7 @@ public class OutgoingMessageDAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable incomingMessageTable =  getDatabaseTable();
+            DatabaseTable incomingMessageTable = getDatabaseTable();
             incomingMessageTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
@@ -92,7 +94,7 @@ public class OutgoingMessageDAO {
             /*
              * 3 - Convert into WalletStoreNetworkServiceMessage objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 3.1 - Create and configure a  WalletStoreNetworkServiceMessage
@@ -112,15 +114,15 @@ public class OutgoingMessageDAO {
         }
 
         return walletStoreNetworkServiceMessage;
-    };
+    }
 
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All WalletStoreNetworkServiceMessage.
-     *  @throws CantReadRecordDataBaseException
+     * @return All WalletStoreNetworkServiceMessage.
+     * @throws CantReadRecordDataBaseException
      */
-    public List<WalletStoreNetworkServiceMessage> findAll () throws CantReadRecordDataBaseException {
+    public List<WalletStoreNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException {
 
 
         List<WalletStoreNetworkServiceMessage> list = null;
@@ -130,7 +132,7 @@ public class OutgoingMessageDAO {
             /*
              * 1 - load the data base to memory
              */
-            DatabaseTable networkIntraUserTable =  getDatabaseTable();
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
             networkIntraUserTable.loadToMemory();
 
             /*
@@ -147,7 +149,7 @@ public class OutgoingMessageDAO {
             /*
              * 4 - Convert into WalletStoreNetworkServiceMessage objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 4.1 - Create and configure a  WalletStoreNetworkServiceMessage
@@ -176,22 +178,22 @@ public class OutgoingMessageDAO {
          * return the list
          */
         return list;
-    };
+    }
 
-
-    /** Method that list the all entities on the data base. The valid value of
+    /**
+     * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>WalletStoreNetworkServiceDatabaseConstants</code>
      *
-     *  @see WalletStoreNetworkServiceDatabaseConstants
-     *  @return All WalletStoreNetworkServiceMessage.
-     *  @throws CantReadRecordDataBaseException
+     * @return All WalletStoreNetworkServiceMessage.
+     * @throws CantReadRecordDataBaseException
+     * @see WalletStoreNetworkServiceDatabaseConstants
      */
-    public List<WalletStoreNetworkServiceMessage> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<WalletStoreNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
                 columnValue == null ||
-                columnValue.isEmpty()){
+                columnValue.isEmpty()) {
 
             throw new IllegalArgumentException("The filter are required, can not be null or empty");
         }
@@ -204,7 +206,7 @@ public class OutgoingMessageDAO {
             /*
              * 1 - load the data base to memory with filters
              */
-            DatabaseTable templateTable =  getDatabaseTable();
+            DatabaseTable templateTable = getDatabaseTable();
             templateTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             templateTable.loadToMemory();
 
@@ -222,7 +224,7 @@ public class OutgoingMessageDAO {
             /*
              * 4 - Convert into WalletStoreNetworkServiceMessage objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 4.1 - Create and configure a  WalletStoreNetworkServiceMessage
@@ -251,8 +253,7 @@ public class OutgoingMessageDAO {
          * return the list
          */
         return list;
-    };
-
+    }
 
     /**
      * Method that list the all entities on the data base. The valid value of
@@ -262,10 +263,10 @@ public class OutgoingMessageDAO {
      * @return List<WalletStoreNetworkServiceMessage>
      * @throws CantReadRecordDataBaseException
      */
-    public List<WalletStoreNetworkServiceMessage> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<WalletStoreNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
-                filters.isEmpty()){
+                filters.isEmpty()) {
 
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
@@ -279,9 +280,9 @@ public class OutgoingMessageDAO {
             /*
              * 1- Prepare the filters
              */
-            DatabaseTable templateTable =  getDatabaseTable();
+            DatabaseTable templateTable = getDatabaseTable();
 
-            for (String key: filters.keySet()){
+            for (String key : filters.keySet()) {
 
                 DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
@@ -311,7 +312,7 @@ public class OutgoingMessageDAO {
             /*
              * 5 - Convert into WalletStoreNetworkServiceMessage objects
              */
-            for (DatabaseTableRecord record : records){
+            for (DatabaseTableRecord record : records) {
 
                 /*
                  * 5.1 - Create and configure a  WalletStoreNetworkServiceMessage
@@ -340,17 +341,19 @@ public class OutgoingMessageDAO {
          * return the list
          */
         return list;
-    };
+    }
+
+    ;
 
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param entity WalletStoreNetworkServiceMessage to create.
-     *  @throws CantInsertRecordDataBaseException
+     * @param entity WalletStoreNetworkServiceMessage to create.
+     * @throws CantInsertRecordDataBaseException
      */
-    public void create (WalletStoreNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
+    public void create(WalletStoreNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
 
-        if (entity == null){
+        if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
@@ -386,12 +389,12 @@ public class OutgoingMessageDAO {
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity WalletStoreNetworkServiceMessage to update.
-     *  @throws CantUpdateRecordDataBaseException
+     * @param entity WalletStoreNetworkServiceMessage to update.
+     * @throws CantUpdateRecordDataBaseException
      */
     public void update(WalletStoreNetworkServiceMessage entity) throws CantUpdateRecordDataBaseException {
 
-        if (entity == null){
+        if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
@@ -426,12 +429,12 @@ public class OutgoingMessageDAO {
     /**
      * Method that delete a entity in the data base.
      *
-     *  @param id Long id.
-     *  @throws CantDeleteRecordDataBaseException
+     * @param id Long id.
+     * @throws CantDeleteRecordDataBaseException
      */
-    public void delete (Long id) throws CantDeleteRecordDataBaseException {
+    public void delete(Long id) throws CantDeleteRecordDataBaseException {
 
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("The id is required can not be null");
         }
 
@@ -462,11 +465,10 @@ public class OutgoingMessageDAO {
 
 
     /**
-     *
      * @param record with values from the table
      * @return WalletStoreNetworkServiceMessage setters the values from table
      */
-    private WalletStoreNetworkServiceMessage constructFrom(DatabaseTableRecord record){
+    private WalletStoreNetworkServiceMessage constructFrom(DatabaseTableRecord record) {
 
         WalletStoreNetworkServiceMessage walletStoreNetworkServiceMessage = new WalletStoreNetworkServiceMessage();
 
@@ -474,15 +476,17 @@ public class OutgoingMessageDAO {
 
             walletStoreNetworkServiceMessage.setId(record.getLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME));
             walletStoreNetworkServiceMessage.setSender(UUID.fromString(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME)));
-            walletStoreNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));;
+            walletStoreNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));
+            ;
             walletStoreNetworkServiceMessage.setTextContent(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
             walletStoreNetworkServiceMessage.setMessageType(MessagesTypes.getByCode(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME)));
             walletStoreNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-            walletStoreNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));;
+            walletStoreNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
+            ;
             walletStoreNetworkServiceMessage.setStatus(MessagesStatus.getByCode(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
-
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             //this should not happen, but if it happens return null
             return null;
         }
@@ -497,7 +501,7 @@ public class OutgoingMessageDAO {
      * @param incomingIntraUserNetworkServiceMessage the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(WalletStoreNetworkServiceMessage incomingIntraUserNetworkServiceMessage){
+    private DatabaseTableRecord constructFrom(WalletStoreNetworkServiceMessage incomingIntraUserNetworkServiceMessage) {
 
         /*
          * Create the record to the entity
@@ -507,14 +511,14 @@ public class OutgoingMessageDAO {
         /*
          * Set the entity values
          */
-        entityRecord.setLongValue  (WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME,                 incomingIntraUserNetworkServiceMessage.getId());
-        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          incomingIntraUserNetworkServiceMessage.getSender().toString());
-        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME,        incomingIntraUserNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME,       incomingIntraUserNetworkServiceMessage.getTextContent());
-        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME,               incomingIntraUserNetworkServiceMessage.getMessageType().getCode());
-        entityRecord.setLongValue  (WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getShippingTimestamp().getTime());
-        entityRecord.setLongValue  (WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME,             incomingIntraUserNetworkServiceMessage.getStatus().getCode());
+        entityRecord.setLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getId());
+        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getSender().toString());
+        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getReceiver().toString());
+        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getTextContent());
+        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getMessageType().getCode());
+        entityRecord.setLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getShippingTimestamp().getTime());
+        entityRecord.setLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getDeliveryTimestamp().getTime());
+        entityRecord.setStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getStatus().getCode());
 
         /*
          * return the new table record

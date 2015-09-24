@@ -56,6 +56,6 @@ public class CreateDatabaseTest {
         testDatabase.createDatabase(testDatabaseName);
         catchException(testDatabase).createDatabase(testDatabaseName);
         assertThat(caughtException()).isInstanceOf(CantCreateDatabaseException.class);
-        caughtException().printStackTrace();
+
     }
 }

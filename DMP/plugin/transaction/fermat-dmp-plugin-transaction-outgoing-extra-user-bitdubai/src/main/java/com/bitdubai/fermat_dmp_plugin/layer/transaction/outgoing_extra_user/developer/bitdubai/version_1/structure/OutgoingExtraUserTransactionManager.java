@@ -5,8 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
@@ -102,7 +103,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
 
 
     @Override
-    public void send(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException {
+    public void send(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException {
         /*
          * TODO: Create a class fir tge selection of the correct wallet
          *       We will have as parameter the walletPublicKey and walletType
@@ -119,11 +120,11 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
         try {
             dao.initialize(this.pluginId);
             bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
+            funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
             if (cryptoAmount > funds) {
                 throw new InsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
             }
-            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorId, deliveredByActorType, deliveredToActorId, deliveredToActorType);
+            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
         } catch (InsufficientFundsException exception) {
             throw exception;
         } catch (CantInitializeDaoException e) {

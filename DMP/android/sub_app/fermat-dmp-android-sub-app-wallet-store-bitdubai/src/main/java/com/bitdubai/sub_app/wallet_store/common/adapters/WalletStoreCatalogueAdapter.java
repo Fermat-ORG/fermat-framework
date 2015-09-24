@@ -3,12 +3,13 @@ package com.bitdubai.sub_app.wallet_store.common.adapters;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.sub_app.wallet_store.common.models.CatalogueItemDao;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
+import com.bitdubai.sub_app.wallet_store.common.holders.CatalogItemViewHolder;
+import com.bitdubai.sub_app.wallet_store.common.interfaces.WalletStoreItemPopupMenuListener;
+import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
@@ -19,9 +20,13 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao, WalletStoreCatalogueAdapter.CatalogItemViewHolder> {
-    public WalletStoreCatalogueAdapter(Context context, ArrayList<CatalogueItemDao> dataSet) {
+public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListItem, CatalogItemViewHolder> {
+
+    private WalletStoreItemPopupMenuListener menuClickListener;
+
+    public WalletStoreCatalogueAdapter(Context context, ArrayList<WalletStoreListItem> dataSet, WalletStoreItemPopupMenuListener listener) {
         super(context, dataSet);
+        menuClickListener = listener;
     }
 
     @Override
@@ -35,26 +40,29 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<CatalogueItemDao,
     }
 
     @Override
-    protected void bindHolder(CatalogItemViewHolder holder, CatalogueItemDao data, int position) {
-        holder.walletName.setText(data.getWalletName());
-        holder.walletPublisherName.setText(data.getDeveloperName());
-        holder.installStatus.setText(data.getInstallationStatusText());
-        holder.walletIcon.setImageDrawable(data.getWalletIcon());
+    protected void bindHolder(final CatalogItemViewHolder holder, final WalletStoreListItem data, final int position) {
+        holder.getWalletName().setText(data.getWalletName());
+        holder.getWalletIcon().setImageBitmap(data.getWalletIcon());
+        holder.getWalletPublisherName().setText("Publisher Name");
+
+        InstallationStatus installStatus = data.getInstallationStatus();
+        int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
+        holder.getInstallStatus().setText(resId);
+
+        final ImageView menu = holder.getMenu();
+        if (menuClickListener != null) {
+            menu.setVisibility(View.VISIBLE);
+            menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    menuClickListener.onMenuItemClickListener(menu, data, position);
+                }
+            });
+        } else
+            menu.setVisibility(View.INVISIBLE);
     }
 
-    class CatalogItemViewHolder extends FermatViewHolder {
-        ImageView walletIcon;
-        FermatTextView walletName;
-        FermatTextView walletPublisherName;
-        FermatTextView installStatus;
-
-        protected CatalogItemViewHolder(View itemView) {
-            super(itemView);
-
-            walletIcon = (ImageView) itemView.findViewById(R.id.wallet_icon_image);
-            walletName = (FermatTextView) itemView.findViewById(R.id.wallet_name);
-            walletPublisherName = (FermatTextView) itemView.findViewById(R.id.wallet_publisher_name);
-            installStatus = (FermatTextView) itemView.findViewById(R.id.wallet_installation_status);
-        }
+    public void setMenuClickListener(WalletStoreItemPopupMenuListener listener) {
+        this.menuClickListener = listener;
     }
 }

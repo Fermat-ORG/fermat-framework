@@ -78,21 +78,21 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
     /**
      * Constructor with parameters
      *
-     * @param eccKeyPair from the plugin root
-     * @param remoteNetworkServicePublicKey the public key
-     * @param serviceToServiceOnlineConnection  the serviceToServiceOnlineConnection instance
-     * @param errorManager  instance
-     * @param incomingMessageDao instance
-     * @param outgoingMessageDao instance
+     * @param eccKeyPair                       from the plugin root
+     * @param remoteNetworkServicePublicKey    the public key
+     * @param serviceToServiceOnlineConnection the serviceToServiceOnlineConnection instance
+     * @param errorManager                     instance
+     * @param incomingMessageDao               instance
+     * @param outgoingMessageDao               instance
      */
     public WalletStoreNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, String remoteNetworkServicePublicKey, ServiceToServiceOnlineConnection serviceToServiceOnlineConnection, ErrorManager errorManager, IncomingMessageDAO incomingMessageDao, OutgoingMessageDAO outgoingMessageDao) {
 
         super();
-        this.eccKeyPair                       = eccKeyPair;
-        this.remoteNetworkServicePublicKey    = remoteNetworkServicePublicKey;
+        this.eccKeyPair = eccKeyPair;
+        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
         this.serviceToServiceOnlineConnection = serviceToServiceOnlineConnection;
-        this.errorManager                     = errorManager;
-        this.running                          = Boolean.FALSE;
+        this.errorManager = errorManager;
+        this.running = Boolean.FALSE;
         this.incomingMessageDao = incomingMessageDao;
         this.outgoingMessageDao = outgoingMessageDao;
 
@@ -120,10 +120,10 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
     /**
      * Start the internal threads to make the job
      */
-    public void start(){
+    public void start() {
 
         //Set to running
-        this.running  = Boolean.TRUE;
+        this.running = Boolean.TRUE;
 
         //Start the Threads
         toReceive.start();
@@ -134,21 +134,21 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
     /**
      * Pause the internal threads
      */
-    public void pause(){
-        this.running  = Boolean.FALSE;
+    public void pause() {
+        this.running = Boolean.FALSE;
     }
 
     /**
      * Resume the internal threads
      */
-    public void resume(){
-        this.running  = Boolean.TRUE;
+    public void resume() {
+        this.running = Boolean.TRUE;
     }
 
     /**
      * Stop the internal threads
      */
-    public void stop(){
+    public void stop() {
 
         //Stop the Threads
         toReceive.interrupt();
@@ -163,14 +163,14 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
      * data base in the table <code>incoming_messages</code> and notify all observers
      * to the new messages received
      */
-    private void processMessageReceived(){
+    private void processMessageReceived() {
 
         try {
 
             /**
              * Verified the status of the connection
              */
-            if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED){
+            if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
 
                 /**
                  * process all pending messages
@@ -227,7 +227,7 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
         }
 
     }
@@ -237,7 +237,7 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
      * the table <code>outbox_messages</code> and encrypt the message content,
      * sing the message and send it
      */
-    public void processMessageToSend(){
+    public void processMessageToSend() {
 
         try {
 
@@ -253,7 +253,7 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
                     /*
                      * For each message
                      */
-                    for (WalletStoreNetworkServiceMessage message: messages){
+                    for (WalletStoreNetworkServiceMessage message : messages) {
 
                         /*
                          * Encrypt the content of the message whit the remote public key
@@ -281,7 +281,7 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
                 } catch (CantSendMessageException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message to remote network service "));
                 } catch (CantUpdateRecordDataBaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
                 } catch (CantReadRecordDataBaseException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
                 }

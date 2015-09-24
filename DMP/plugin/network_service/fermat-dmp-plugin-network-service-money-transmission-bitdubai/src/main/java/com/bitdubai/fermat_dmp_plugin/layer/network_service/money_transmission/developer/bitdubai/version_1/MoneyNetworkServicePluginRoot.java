@@ -2,21 +2,22 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.money_transmission.
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money.interfaces.MoneyNetworkServiceManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.MoneyReceivedEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,19 +26,20 @@ import java.util.UUID;
  * Created by loui on 20/02/15.
  */
 
-public class MoneyNetworkServicePluginRoot implements Service, NetworkService, MoneyNetworkServiceManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class MoneyNetworkServicePluginRoot implements Service, NetworkService, MoneyNetworkServiceManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
 
+    ErrorManager errorManager;
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -48,21 +50,21 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
      */
     UUID pluginId;
 
-    
+
     /**
      * MoneyPluginRoot Interface implementation.
      */
 
-    public void sendMoney(){
+    public void sendMoney() {
 
 
     }
 
-    private void moneyReceived(){
+    private void moneyReceived() {
 
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
-        ((MoneyReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
+        ((MoneyReceivedEvent) fermatEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
 
     }
 
@@ -75,43 +77,33 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
         /**
          * I will initialize the handling of platform events.
          */
-
-        EventListener eventListener;
-        EventHandler eventHandler;
-
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
-
-
         /**
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -126,11 +118,10 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
 
     @Override
     public UUID getId() {
-        return null;
+        return this.pluginId;
     }
-    
 
-    
+
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -151,12 +142,12 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
 
 
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
 
@@ -168,7 +159,6 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
 
 
 }

@@ -1,17 +1,21 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -97,11 +101,12 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 defaultSkinFile =  pluginFileSystem.createTextFile(pluginId, walletFactoryProject.getProjectPublicKey(), defaultSkin.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             }
 
-            defaultSkinFile.setContent(XMLParser.parseObject(defaultSkin));
+            String skinXML = XMLParser.parseObject(defaultSkin);
+            defaultSkinFile.setContent(skinXML);
             defaultSkinFile.persistToMedia();
 
             // I will also save any other skin available
-            if (!walletFactoryProject.getSkins().isEmpty()){
+            if (walletFactoryProject.getSkins() !=null){
                 for (Skin skin : walletFactoryProject.getSkins()){
                     PluginTextFile skinFile;
                     try {
@@ -133,7 +138,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             defaultLanguageFile.persistToMedia();
 
             // I will also save any other skin available
-            if (!walletFactoryProject.getLanguages().isEmpty()){
+            if (walletFactoryProject.getLanguages() !=null){
                 for (Language language : walletFactoryProject.getLanguages()){
                     PluginTextFile languageFile;
                     try {
@@ -175,11 +180,13 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             saveWalletFactoryProjectNavigationStructureXML(walletFactoryProject);
 
             //once I have every saved locally (both in db and XML files) I will upload them to github
-            GithubManager githubManager = new GithubManager("acostarodrigo/testFermat", "acostarodrigo", "");
+            GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "");
             githubManager.saveWalletFactoryProject(walletFactoryProject);
 
         } catch (DatabaseOperationException | MissingProjectDataException | CantPersistFileException | CantCreateFileException e) {
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, walletFactoryProject.getName(), null);
+        } catch (GitHubRepositoryNotFoundException | GitHubNotAuthorizedException e) {
+            e.printStackTrace();
         } catch (Exception exception){
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, exception, walletFactoryProject.getName(), null);
         }
@@ -193,150 +200,176 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     public WalletFactoryProject getNewWalletFactoryProject() throws CantCreateWalletFactoryProjectException {
         try{
             WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
+                String publicKey;
+                String name;
+                String description;
+                WalletType walletType;
+                WalletFactoryProjectState walletFactoryProjectState;
+                Timestamp creationTimestamp;
+                Timestamp lastModificationTimestamp;
+                Skin skin;
+                List<Skin> skins;
+                Language language;
+                List<Language> languages;
+                WalletNavigationStructure navigationStructure;
+                int size;
+                WalletCategory walletCategory;
+                FactoryProjectType factoryProjectType;
+
+
                 @Override
                 public String getProjectPublicKey() {
-                    ECCKeyPair publicKey = new ECCKeyPair();
-                    return publicKey.getPublicKey().toString();
+                    return publicKey;
                 }
 
                 @Override
                 public void setProjectPublickKey(String publickKey) {
-
+                    this.publicKey = publickKey;
                 }
 
                 @Override
                 public String getName() {
-                    return null;
+                    return this.name;
                 }
 
                 @Override
                 public void setName(String name) {
-
+                    this.name = name;
                 }
 
                 @Override
                 public String getDescription() {
-                    return null;
+                    return this.description;
                 }
 
                 @Override
                 public void setDescription(String description) {
-
+                    this.description = description;
                 }
 
                 @Override
                 public WalletType getWalletType() {
-                    return null;
+                    return walletType;
                 }
 
                 @Override
                 public void setWalletType(WalletType walletType) {
-
+                    this.walletType = walletType;
                 }
 
                 @Override
                 public WalletFactoryProjectState getProjectState() {
-                    return WalletFactoryProjectState.IN_PROGRESS;
+                    return walletFactoryProjectState;
                 }
 
                 @Override
                 public void setProjectState(WalletFactoryProjectState projectState) {
-
+                    this.walletFactoryProjectState = projectState;
                 }
 
                 @Override
                 public Timestamp getCreationTimestamp() {
-                    java.util.Date date = new java.util.Date();
-                    return new Timestamp(date.getTime());
+                    return creationTimestamp;
                 }
 
                 @Override
                 public void setCreationTimestamp(Timestamp timestamp) {
-
+                    this.creationTimestamp = timestamp;
                 }
 
                 @Override
                 public Timestamp getLastModificationTimestamp() {
-                    return null;
+                    return lastModificationTimestamp;
                 }
 
                 @Override
                 public void setLastModificationTimeststamp(Timestamp timestamp) {
-
+                    lastModificationTimestamp = timestamp;
                 }
 
                 @Override
                 public Skin getDefaultSkin() {
-                    return null;
+                    return skin;
                 }
 
                 @Override
                 public void setDefaultSkin(Skin skin) {
-
+                    this.skin = skin;
                 }
 
                 @Override
                 public List<Skin> getSkins() {
-                    return null;
-                }
-
-
-                @Override
-                public void deleteSkin(Skin skin) {
-
+                    return this.skins;
                 }
 
                 @Override
                 public Language getDefaultLanguage() {
-                    return null;
+                    return language;
                 }
 
                 @Override
                 public void setDefaultLanguage(Language language) {
-
+                    this.language = language;
                 }
 
                 @Override
                 public List<Language> getLanguages() {
-                    return null;
-                }
-
-
-                @Override
-                public void deleteLanguage(Language language) {
-
+                    return languages;
                 }
 
                 @Override
                 public WalletNavigationStructure getNavigationStructure() {
-                    return null;
+                    return navigationStructure;
                 }
 
                 @Override
                 public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
-
+                    this.navigationStructure = navigationStructure;
                 }
+
 
                 @Override
                 public void setSkins(List<Skin> skins) {
-
+                    this.skins = skins;
                 }
 
                 @Override
                 public void setLanguages(List<Language> languages) {
-
+                    this.languages = languages;
                 }
 
                 @Override
                 public int getSize() {
-                    return 0;
+                    return size;
                 }
 
                 @Override
                 public void setSize(int size) {
+                    this.size = size;
+                }
+
+                @Override
+                public WalletCategory getWalletCategory() {
+                    return walletCategory;
+                }
+
+                @Override
+                public void setWalletCategory(WalletCategory walletCategory) {
+                    this.walletCategory = walletCategory;
+                }
+
+                @Override
+                public FactoryProjectType getFactoryProjectType() {
+                    return factoryProjectType;
+                }
+
+                @Override
+                public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
+                    this.factoryProjectType = factoryProjectType;
+
                 }
             };
-            saveWalletFactoryProject(walletFactoryProject);
+
 
             return walletFactoryProject;
         } catch (Exception exception){
@@ -352,7 +385,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     public void uploadWalletFactoryProjectToRepository(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
         try{
             //once I have every saved locally (both in db and XML files) I will upload them to github
-            GithubManager githubManager = new GithubManager("acostarodrigo/testFermat", "acostarodrigo", "");
+            GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "");
             githubManager.saveWalletFactoryProject(walletFactoryProject);
         } catch (Exception e){
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, "error trying to upload project to repository", null);
@@ -370,28 +403,29 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     }
 
     private Skin loadSkinFromXML(String projectPublicKey, UUID id) throws FileNotFoundException, CantCreateFileException {
-        Skin skin;
+        Skin skin = new Skin();
 
         PluginTextFile skinFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, id.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        skin = (Skin) XMLParser.parseXML(skinFile.getContent(), Skin.class);
+        String skinXMLContent = skinFile.getContent();
+        skin = (Skin) XMLParser.parseXML(skinXMLContent, skin);
         return skin;
 
     }
 
     private WalletNavigationStructure loadNavigationStructureFromXML(String projectPublicKey, String publicKey) throws FileNotFoundException, CantCreateFileException {
-        WalletNavigationStructure navigationStructure;
+        WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
 
         PluginTextFile navigationStructureFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, publicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        navigationStructure = (WalletNavigationStructure) XMLParser.parseXML(navigationStructureFile.getContent(), WalletNavigationStructure.class);
+        navigationStructure = (WalletNavigationStructure) XMLParser.parseXML(navigationStructureFile.getContent(), navigationStructure);
         return navigationStructure;
 
     }
 
     private Language loadLanguageFromXML(String projectPublicKey, UUID id) throws FileNotFoundException, CantCreateFileException {
-        Language language;
+        Language language = new Language();
 
         PluginTextFile languageFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, id.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        language = (Language) XMLParser.parseXML(languageFile.getContent(), Language.class);
+        language = (Language) XMLParser.parseXML(languageFile.getContent(), language);
         return language;
     }
 
@@ -476,11 +510,12 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             if (walletFactoryProjects.size() > 1)
                 throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, null, "PublicKey: " + publicKey, "Unexpected value returned. Duplicated projects in database.");
 
-            if (walletFactoryProjects.size() == 1)
+            if (walletFactoryProjects.size() == 1) {
                 return walletFactoryProjects.get(0);
-            else
+            }else {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
-
+            }
         } catch (DatabaseOperationException | CantLoadTableToMemoryException e) {
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, "PublicKey: " + publicKey, "database error");
         } catch (FileNotFoundException | CantCreateFileException e) {
@@ -551,37 +586,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
      */
     public List<WalletFactoryProject> getAllFactoryProjects() throws CantGetWalletFactoryProjectException {
         // I define a blank filter
-        DatabaseTableFilter filter = new DatabaseTableFilter() {
-            @Override
-            public void setColumn(String column) {
-
-            }
-
-            @Override
-            public void setType(DatabaseFilterType type) {
-
-            }
-
-            @Override
-            public void setValue(String value) {
-
-            }
-
-            @Override
-            public String getColumn() {
-                return null;
-            }
-
-            @Override
-            public String getValue() {
-                return null;
-            }
-
-            @Override
-            public DatabaseFilterType getType() {
-                return null;
-            }
-        };
+        DatabaseTableFilter filter = null;
         List<WalletFactoryProject> walletFactoryProjects;
         try {
             walletFactoryProjects = getWalletFactoryProjects(filter);

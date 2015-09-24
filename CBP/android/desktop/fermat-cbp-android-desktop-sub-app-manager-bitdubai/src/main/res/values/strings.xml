@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Sub App Manager</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">HELLO FRAGMENT!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_test">TestActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+</resources>

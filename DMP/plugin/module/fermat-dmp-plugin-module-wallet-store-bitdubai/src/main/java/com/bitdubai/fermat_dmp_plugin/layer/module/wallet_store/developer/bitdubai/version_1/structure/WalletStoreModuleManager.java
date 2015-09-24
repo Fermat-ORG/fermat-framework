@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
@@ -46,12 +47,9 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Developer;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Translator;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalog;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -67,6 +65,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by rodrigo on 7/29/15.
@@ -86,6 +85,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager = deviceUserManager;
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("MAP_SETDUM:"+this.deviceUserManager);
     }
 
     /**
@@ -107,6 +108,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
     @Override
     public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
         this.walletManagerManager = walletManagerManager;
+        Logger LOG = Logger.getGlobal();
+        LOG.info("MAP_SETWMM:"+this.walletManagerManager);
     }
 
     /**
@@ -184,6 +187,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
             @Override
             public WalletStoreDetailedCatalogItem getWalletDetailedCatalogItem() throws DatailedInformationNotFoundException {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
             }
 
@@ -231,7 +235,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         return walletStoreCatalogueItem;
     }
 
-    private com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+    private com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner(UUID designerId) throws CantGetDesignerException {
         return walletStoreManagerNetworkService.getDesigner(designerId);
     }
 
@@ -298,7 +302,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner() {
+            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner() {
                 return skin.getDesigner();
             }
 
@@ -366,7 +370,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator() {
+            public TranslatorIdentity getTranslator() {
                 return language.getTranslator();
             }
 
@@ -422,7 +426,7 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
             }
 
             @Override
-            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner() {
+            public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner() {
                 return detailedCatalogItem.getDesigner();
             }
         };
@@ -494,6 +498,8 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
         try {
 
             DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
+            Logger LOG = Logger.getGlobal();
+            LOG.info("MAP_detailedCatalogItem:" + detailedCatalogItem);
             return detailedCatalogItem.getDefaultLanguage();
 
         } catch (CantGetCatalogItemException exception) {
@@ -514,46 +520,85 @@ public class WalletStoreModuleManager implements DealsWithErrors, DealsWithDevic
 
     }
 
+    private String checkDeveloperAlias(DetailedCatalogItem detailedCatalogItem){
+        String developerAlias="DefaultDeveloperAlias";
+        if(detailedCatalogItem.getDeveloper()!=null){
+            developerAlias=detailedCatalogItem.getDeveloper().getAlias();
+        }
+        return developerAlias;
+    }
+
+    private Languages checkLanguages(Languages languages){
+        Languages checkingLanguages=languages;
+        if(languages==null){
+            checkingLanguages=Languages.AMERICAN_ENGLISH;
+        }
+        return checkingLanguages;
+    }
+
     /**
      * start the installation of the passed wallet.
      *
      * @param walletCategory
-     * @param nicheWallet
      * @param skinId
      * @param languageId
      * @param walletCatalogueId
      * @param version
      * @throws CantStartInstallationException
      */
-    public void installWallet(WalletCategory walletCategory, NicheWallet nicheWallet, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
+    public void installWallet(WalletCategory walletCategory, UUID skinId, UUID languageId, UUID walletCatalogueId, Version version) throws CantStartInstallationException {
         try {
+            Logger LOG = Logger.getGlobal();
+
+            LOG.info("MAP_CATALOGUE:"+walletCatalogueId);
+            LOG.info("MAP_WMNS:"+walletStoreManagerNetworkService);
             walletStoreManagerMiddleware.setInstallationStatus(CatalogItems.WALLET, walletCatalogueId, InstallationStatus.INSTALLING);
             CatalogItem catalogItem = walletStoreManagerNetworkService.getCatalogItem(walletCatalogueId);
             DetailedCatalogItem detailedCatalogItem = walletStoreManagerNetworkService.getDetailedCatalogItem(walletCatalogueId);
+            LOG.info("MAP_WMM:"+walletManagerManager);
             WalletInstallationProcess walletInstallationProcess = walletManagerManager.installWallet(walletCategory, walletCatalogueId.toString());
-            DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
+            LOG.info("MAP_DUM:"+deviceUserManager);
+            //DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
             Skin skin = getWalletSkinFromWalletCatalogueId(walletCatalogueId);
             Language language = getWalletLanguageFromWalletCatalogueId(walletCatalogueId);
+            //TODO: when we fix the publisher, delete this, please.
+            Languages languageName=checkLanguages(language.getLanguageName());
+            String developerAlias=checkDeveloperAlias(detailedCatalogItem);
 
             /*
             For now, we'll pass null to the  walletPrivateKey, walletIconName, skinPreview method arguments
             TODO: Get the real values for this null objects.
             */
+
+            LOG.info("MAP_STORE_MODULE:"+walletInstallationProcess);
+            LOG.info("MAP_NAME:"+catalogItem.getName());
+            LOG.info("MAP_ID:"+catalogItem.getId());
+            LOG.info("MAP_VERSION:"+detailedCatalogItem.getVersion());
+            LOG.info("MAP_SCREENS:"+skin.getScreenSize().getCode());
+            LOG.info("MAP_SKIN_VERSION:"+skin.getVersion());
+            LOG.info("MAP_SKIN_NAME:"+skin.getSkinName());
+            LOG.info("MAP_LANGUAGE_VERSION:"+language.getVersion());
+            LOG.info("MAP_LANGUAGE_NAME:"+language.getLanguageName());
+            LOG.info("MAP_FIX_LANGUAGE_NAME:"+languageName);
+            LOG.info("MAP_LANGUAGE_LABEL:"+language.getLanguageLabel());
+            LOG.info("MAP_DEVELOPER_ALIAS:"+developerAlias);
+
+            LOG.info("MAP_VERSION:"+version);
             walletInstallationProcess.startInstallation(WalletType.NICHE, catalogItem.getName(),
-                    catalogItem.getId().toString(), null, deviceUser.getPublicKey(), null,
+                    catalogItem.getId().toString(), null, /*deviceUser.getPublicKey()*/"testPublicKey", null,
                     walletCatalogueId, detailedCatalogItem.getVersion(), skin.getScreenSize().getCode(),
                     skinId, skin.getVersion(), skin.getSkinName(), null, languageId,
-                    language.getVersion(), language.getLanguageName(), language.getLanguageLabel(),
-                    detailedCatalogItem.getDeveloper().getAlias(), version.toString());
+                    language.getVersion(), /*language.getLanguageName()*/languageName, language.getLanguageLabel(),
+                    /*detailedCatalogItem.getDeveloper().getAlias()*/developerAlias, version.toString()/*"1.0.0"*/);
         } catch (CantSetInstallationStatusException exception) {
             throw new CantStartInstallationException(CantSetInstallationStatusException.DEFAULT_MESSAGE, exception, "Cannot set the instalation status", "Please, check the cause");
         } catch (CantGetCatalogItemException exception) {
             throw new CantStartInstallationException(CantGetCatalogItemException.DEFAULT_MESSAGE, exception, "Cannot get the catalog items", "Please, check the cause");
         } catch (CantFindProcessException exception) {
             throw new CantStartInstallationException(CantFindProcessException.DEFAULT_MESSAGE, exception, "Cannot get the WalletInstallationProcess", "Please, check the cause");
-        } catch (CantGetLoggedInDeviceUserException exception) {
+        } /*catch (CantGetLoggedInDeviceUserException exception) {
             throw new CantStartInstallationException(CantGetLoggedInDeviceUserException.DEFAULT_MESSAGE, exception, "Cannot get the Device user", "Please, check the cause");
-        } catch (CantGetSkinException exception) {
+        }*/ catch (CantGetSkinException exception) {
             throw new CantStartInstallationException(CantGetSkinException.DEFAULT_MESSAGE, exception, "Cannot get the wallet Skin", "Please, check the cause");
         } catch (CantGetLanguageException exception) {
             throw new CantStartInstallationException(CantGetLanguageException.DEFAULT_MESSAGE, exception, "Cannot get the wallet language", "Please, check the cause");

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,27 +19,27 @@ import java.util.UUID;
  */
 public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWalletContact {
 
-    private UUID contactId;
+    private final UUID contactId;
 
-    private String walletPublicKey;
+    private final String walletPublicKey;
 
-    private Actors actorType;
+    private final Actors actorType;
 
-    private CryptoAddress receivedCryptoAddress;
+    private final List<CryptoAddress> receivedCryptoAddress;
 
-    private UUID actorId;
+    private final String actorPublicKey;
 
-    private String actorName;
+    private final String actorName;
 
-    private byte[] profilePicture;
+    private final byte[] profilePicture;
 
-    public CryptoWalletWalletModuleWalletContact(WalletContactRecord walletContactRecord, byte[] profilePicture) {
+    public CryptoWalletWalletModuleWalletContact(final WalletContactRecord walletContactRecord, final byte[] profilePicture) {
         this.contactId = walletContactRecord.getContactId();
         this.walletPublicKey = walletContactRecord.getWalletPublicKey();
         this.actorType = walletContactRecord.getActorType();
-        this.receivedCryptoAddress = walletContactRecord.getReceivedCryptoAddress();
-        this.actorId = walletContactRecord.getActorId();
-        this.actorName = walletContactRecord.getActorName();
+        this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses();
+        this.actorPublicKey = walletContactRecord.getActorPublicKey();
+        this.actorName = walletContactRecord.getActorAlias();
         this.profilePicture = profilePicture != null ? profilePicture.clone() : null;
     }
 
@@ -62,13 +63,13 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     }
 
     @Override
-    public CryptoAddress getReceivedCryptoAddress() {
+    public List<CryptoAddress> getReceivedCryptoAddress() {
         return receivedCryptoAddress;
     }
 
     @Override
-    public UUID getActorId() {
-        return actorId;
+    public String getActorPublicKey() {
+        return actorPublicKey;
     }
 
     @Override

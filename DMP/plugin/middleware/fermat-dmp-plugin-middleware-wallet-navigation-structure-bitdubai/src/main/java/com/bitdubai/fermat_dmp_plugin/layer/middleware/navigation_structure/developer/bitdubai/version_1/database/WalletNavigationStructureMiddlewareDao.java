@@ -50,6 +50,7 @@ public class WalletNavigationStructureMiddlewareDao {
 
     /**
      * Constructor
+     *
      * @param pluginDatabaseSystem
      */
     public WalletNavigationStructureMiddlewareDao(PluginDatabaseSystem pluginDatabaseSystem) {
@@ -60,14 +61,12 @@ public class WalletNavigationStructureMiddlewareDao {
     }
 
     public void createNavigationStructure(WalletNavigationStructure walletNavigationStructure) throws CantCreateEmptyWalletNavigationStructureException {
-
-        try{
-
+        try {
             this.database.openDatabase();
-            DatabaseTable projectNavigationStructureTable=this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
-            DatabaseTableRecord databaseTableRecord=projectNavigationStructureTable.getEmptyRecord();
+            DatabaseTable projectNavigationStructureTable = this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
+            DatabaseTableRecord databaseTableRecord = projectNavigationStructureTable.getEmptyRecord();
 
-            databaseTableRecord.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY,walletNavigationStructure.getPublicKey());
+            databaseTableRecord.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY, walletNavigationStructure.getPublicKey());
             databaseTableRecord.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY, walletNavigationStructure.getActivity().toString());
             databaseTableRecord.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY, walletNavigationStructure.getStartActivity().toString());
             databaseTableRecord.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY, walletNavigationStructure.getLastActivity().toString());
@@ -76,52 +75,47 @@ public class WalletNavigationStructureMiddlewareDao {
             this.database.closeDatabase();
 
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw new CantCreateEmptyWalletNavigationStructureException(CantCreateEmptyWalletNavigationStructureException.DEFAULT_MESSAGE,exception, "Trying to open the database","Check the cause");
+            throw new CantCreateEmptyWalletNavigationStructureException(CantCreateEmptyWalletNavigationStructureException.DEFAULT_MESSAGE, exception, "Trying to open the database", "Check the cause");
         } catch (CantInsertRecordException exception) {
             this.database.closeDatabase();
-            throw new CantCreateEmptyWalletNavigationStructureException(CantInsertRecordException.DEFAULT_MESSAGE,exception,"Trying to insert the record in the table","Check the cause");
-        } catch (Exception exception){
+            throw new CantCreateEmptyWalletNavigationStructureException(CantInsertRecordException.DEFAULT_MESSAGE, exception, "Trying to insert the record in the table", "Check the cause");
+        } catch (Exception exception) {
             this.database.closeDatabase();
-            throw new CantCreateEmptyWalletNavigationStructureException(CantCreateEmptyWalletNavigationStructureException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Unexpected failure", "Please, check the cause");
+            throw new CantCreateEmptyWalletNavigationStructureException(CantCreateEmptyWalletNavigationStructureException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Unexpected failure", "Please, check the cause");
         }
 
     }
 
     public void deleteNavigationStructure(String publicKey) throws CantDeleteNavigationStructureException, NavigationStructureNotFoundException {
-
-        try{
-
+        try {
             this.database.openDatabase();
-            DatabaseTable projectNavigationStructureTable=this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
+            DatabaseTable projectNavigationStructureTable = this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
             projectNavigationStructureTable.setStringFilter(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY, publicKey, DatabaseFilterType.EQUAL);
             projectNavigationStructureTable.loadToMemory();
 
-            List<DatabaseTableRecord> records =projectNavigationStructureTable.getRecords();
+            List<DatabaseTableRecord> records = projectNavigationStructureTable.getRecords();
 
-            if(!records.isEmpty()){
+            if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
 
                 projectNavigationStructureTable.deleteRecord(record);
                 this.database.closeDatabase();
 
-            }else{
+            } else {
                 this.database.closeDatabase();
-                throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot find this WalletNavigationStructure with "+publicKey+" id","Please, check the cause");
+                throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot find this WalletNavigationStructure with " + publicKey + " id", "Please, check the cause");
             }
-
-        }catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-
-            throw new CantDeleteNavigationStructureException(CantDeleteNavigationStructureException.DEFAULT_MESSAGE,exception,"Trying to open the database","Please, check the cause");
-        }catch (CantLoadTableToMemoryException exception) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantDeleteNavigationStructureException(CantDeleteNavigationStructureException.DEFAULT_MESSAGE, exception, "Trying to open the database", "Please, check the cause");
+        } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantDeleteNavigationStructureException(CantLoadTableToMemoryException.DEFAULT_MESSAGE,exception,"Trying to load the database to memory","Please, check the cause");
+            throw new CantDeleteNavigationStructureException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to load the database to memory", "Please, check the cause");
         } catch (CantDeleteRecordException exception) {
             this.database.closeDatabase();
             throw new CantDeleteNavigationStructureException(CantDeleteRecordException.DEFAULT_MESSAGE, exception, "Cannot delete the WalletNavigationStructure", "Please, check the cause");
-        } catch(Exception exception){
-            throw new CantDeleteNavigationStructureException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Unexpected failure", "Please, check the cause");
+        } catch (Exception exception) {
+            throw new CantDeleteNavigationStructureException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Unexpected failure", "Please, check the cause");
         }
-
     }
 
     /**
@@ -131,241 +125,196 @@ public class WalletNavigationStructureMiddlewareDao {
      * @param databaseName database name
      * @throws CantInitializeWalletNavigationStructureMiddlewareDatabaseException
      */
-    public void initializeDatabase(UUID ownerId, String databaseName) throws CantInitializeWalletNavigationStructureMiddlewareDatabaseException{
-
-        try{
+    public void initializeDatabase(UUID ownerId, String databaseName) throws CantInitializeWalletNavigationStructureMiddlewareDatabaseException {
+        try {
             database = this.pluginDatabaseSystem.openDatabase(ownerId, databaseName);
             database.closeDatabase();
-        }catch(CantOpenDatabaseException exception){
-            throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,exception, "Trying to open the database","Check the cause");
-        }catch(DatabaseNotFoundException exception){
+        } catch (CantOpenDatabaseException exception) {
+            throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, exception, "Trying to open the database", "Check the cause");
+        } catch (DatabaseNotFoundException exception) {
 
-            WalletNavigationStructureMiddlewareDatabaseFactory walletNavigationStructureMiddlewareDatabaseFactory=new WalletNavigationStructureMiddlewareDatabaseFactory(pluginDatabaseSystem);
-            try{
-
-                this.database=walletNavigationStructureMiddlewareDatabaseFactory.createDatabase(ownerId,databaseName);
+            WalletNavigationStructureMiddlewareDatabaseFactory walletNavigationStructureMiddlewareDatabaseFactory = new WalletNavigationStructureMiddlewareDatabaseFactory(pluginDatabaseSystem);
+            try {
+                this.database = walletNavigationStructureMiddlewareDatabaseFactory.createDatabase(ownerId, databaseName);
                 this.database.closeDatabase();
-
-            }catch(CantCreateDatabaseException cantCreateDatabaseException){
-
-                throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(cantCreateDatabaseException.DEFAULT_MESSAGE,cantCreateDatabaseException,"Trying to create the tadabase","Check the cause");
-
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                throw new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(cantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "Trying to create the tadabase", "Check the cause");
             }
-
         }
-
     }
 
-    public List<WalletNavigationStructure> findAllNavigationStructuresByActivity(String activity) throws CantListNavigationStructuresException{
-
-        List<WalletNavigationStructure> walletNavigationStructures =new ArrayList<>();
-        try{
-
+    public List<WalletNavigationStructure> findAllNavigationStructuresByActivity(String activity) throws CantListNavigationStructuresException {
+        List<WalletNavigationStructure> walletNavigationStructures = new ArrayList<>();
+        try {
             this.database.openDatabase();
-            DatabaseTable projectNavigationStructureTable=this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
+            DatabaseTable projectNavigationStructureTable = this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
             projectNavigationStructureTable.setStringFilter(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY, activity, DatabaseFilterType.EQUAL);
             projectNavigationStructureTable.setFilterOrder(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY, DatabaseFilterOrder.ASCENDING);
             projectNavigationStructureTable.loadToMemory();
-            List<DatabaseTableRecord> records =projectNavigationStructureTable.getRecords();
-            for (DatabaseTableRecord record : records){
+            List<DatabaseTableRecord> records = projectNavigationStructureTable.getRecords();
+            for (DatabaseTableRecord record : records) {
 
                 String id = record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY);
-                Activities navigationStructureMiddlewareActivity=Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY));
-                Activities startActivity= Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY));
-                Activities lastActivity=Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY));
+                Activities navigationStructureMiddlewareActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY));
+                Activities startActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY));
+                Activities lastActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY));
 
-                WalletNavigationStructureMiddleware walletNavigationStructureMiddleware=new WalletNavigationStructureMiddleware(id);
-                Activity walletNavigationStructureMiddlewareActivity=new Activity();
-                Activity walletNavigationStructureMiddlewareStartActivity=new Activity();
-                Activity walletNavigationStructureMiddlewareLastActivity=new Activity();
+                WalletNavigationStructureMiddleware walletNavigationStructureMiddleware = new WalletNavigationStructureMiddleware(id);
+                Activity walletNavigationStructureMiddlewareActivity = new Activity();
+                Activity walletNavigationStructureMiddlewareStartActivity = new Activity();
+                Activity walletNavigationStructureMiddlewareLastActivity = new Activity();
                 walletNavigationStructureMiddleware.setActivity(walletNavigationStructureMiddlewareActivity, navigationStructureMiddlewareActivity);
                 walletNavigationStructureMiddleware.setLastActivity(walletNavigationStructureMiddlewareLastActivity, lastActivity);
                 walletNavigationStructureMiddleware.setStartActivity(walletNavigationStructureMiddlewareStartActivity, startActivity);
 
                 walletNavigationStructures.add(walletNavigationStructureMiddleware);
-
             }
 
             this.database.closeDatabase();
             return walletNavigationStructures;
-
-        }catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
-
-            throw new CantListNavigationStructuresException(CantListNavigationStructuresException.DEFAULT_MESSAGE,exception,"Trying to open the database","Please, check the cause");
-
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantListNavigationStructuresException(CantListNavigationStructuresException.DEFAULT_MESSAGE, exception, "Trying to open the database", "Please, check the cause");
         } catch (CantLoadTableToMemoryException exception) {
-
             this.database.closeDatabase();
-            throw new CantListNavigationStructuresException(CantLoadTableToMemoryException.DEFAULT_MESSAGE,exception,"Trying to load the database to memory","Please, check the cause");
-
-        } catch(Exception exception){
-
+            throw new CantListNavigationStructuresException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to load the database to memory", "Please, check the cause");
+        } catch (Exception exception) {
             this.database.closeDatabase();
-            throw new CantListNavigationStructuresException(CantListNavigationStructuresException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Unexpected failure", "Please, check the cause");
-
+            throw new CantListNavigationStructuresException(CantListNavigationStructuresException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Unexpected failure", "Please, check the cause");
         }
-
     }
 
     public WalletNavigationStructure findWalletNavigationStructureById(String id) throws CantGetWalletNavigationStructureException, NavigationStructureNotFoundException {
 
-        try{
+        try {
 
             database.openDatabase();
-            DatabaseTable projectNavigationStructureTable=this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
+            DatabaseTable projectNavigationStructureTable = this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
             projectNavigationStructureTable.setStringFilter(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
             projectNavigationStructureTable.loadToMemory();
-            List<DatabaseTableRecord> records =projectNavigationStructureTable.getRecords();
+            List<DatabaseTableRecord> records = projectNavigationStructureTable.getRecords();
             if (!records.isEmpty()) {
 
                 DatabaseTableRecord record = records.get(0);
 
                 String navigationStructureId = record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY);
-                Activities navigationStructureMiddlewareActivity=Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY));
-                Activities startActivity= Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY));
-                Activities lastActivity=Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY));
+                Activities navigationStructureMiddlewareActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY));
+                Activities startActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY));
+                Activities lastActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY));
 
-                WalletNavigationStructureMiddleware walletNavigationStructureMiddleware=new WalletNavigationStructureMiddleware(navigationStructureId);
-                Activity walletNavigationStructureMiddlewareActivity=new Activity();
-                Activity walletNavigationStructureMiddlewareStartActivity=new Activity();
-                Activity walletNavigationStructureMiddlewareLastActivity=new Activity();
+                WalletNavigationStructureMiddleware walletNavigationStructureMiddleware = new WalletNavigationStructureMiddleware(navigationStructureId);
+                Activity walletNavigationStructureMiddlewareActivity = new Activity();
+                Activity walletNavigationStructureMiddlewareStartActivity = new Activity();
+                Activity walletNavigationStructureMiddlewareLastActivity = new Activity();
                 walletNavigationStructureMiddleware.setActivity(walletNavigationStructureMiddlewareActivity, navigationStructureMiddlewareActivity);
                 walletNavigationStructureMiddleware.setLastActivity(walletNavigationStructureMiddlewareLastActivity, lastActivity);
                 walletNavigationStructureMiddleware.setStartActivity(walletNavigationStructureMiddlewareStartActivity, startActivity);
 
                 this.database.closeDatabase();
                 return walletNavigationStructureMiddleware;
-
-            }else{
-
+            } else {
                 this.database.closeDatabase();
-                throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot find this WalletNavigationStructure with "+id+" id","Please, check the cause");
-
+                throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot find this WalletNavigationStructure with " + id + " id", "Please, check the cause");
             }
-
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw new CantGetWalletNavigationStructureException(CantGetWalletNavigationStructureException.DEFAULT_MESSAGE, exception, "Trying to open the database","Please, check the cause");
+            throw new CantGetWalletNavigationStructureException(CantGetWalletNavigationStructureException.DEFAULT_MESSAGE, exception, "Trying to open the database", "Please, check the cause");
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantGetWalletNavigationStructureException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to load the database into the memory","Please, check the cause");
-        }catch(Exception exception){
-
+            throw new CantGetWalletNavigationStructureException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to load the database into the memory", "Please, check the cause");
+        } catch (Exception exception) {
             this.database.closeDatabase();
-            throw new CantGetWalletNavigationStructureException(CantGetWalletNavigationStructureException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Unexpected failure", "Please, check the cause");
-
+            throw new CantGetWalletNavigationStructureException(CantGetWalletNavigationStructureException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Unexpected failure", "Please, check the cause");
         }
-
     }
 
-    public List<WalletNavigationStructure> findAllNavigationStructuresById(String id) throws CantListNavigationStructuresException{
-
-        List<WalletNavigationStructure> walletNavigationStructures =new ArrayList<>();
-        try{
-
+    public List<WalletNavigationStructure> findAllNavigationStructuresById(String id) throws CantListNavigationStructuresException {
+        List<WalletNavigationStructure> walletNavigationStructures = new ArrayList<>();
+        try {
             this.database.openDatabase();
-            DatabaseTable projectNavigationStructureTable=this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
+            DatabaseTable projectNavigationStructureTable = this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
             projectNavigationStructureTable.setStringFilter(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY, id, DatabaseFilterType.EQUAL);
             projectNavigationStructureTable.setFilterOrder(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY, DatabaseFilterOrder.ASCENDING);
             projectNavigationStructureTable.loadToMemory();
-            List<DatabaseTableRecord> records =projectNavigationStructureTable.getRecords();
-            for (DatabaseTableRecord record : records){
+            List<DatabaseTableRecord> records = projectNavigationStructureTable.getRecords();
+            for (DatabaseTableRecord record : records) {
 
                 String walletNavigationStructureId = record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY);
-                Activities navigationStructureMiddlewareActivity=Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY));
-                Activities startActivity= Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY));
-                Activities lastActivity=Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY));
+                Activities navigationStructureMiddlewareActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY));
+                Activities startActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY));
+                Activities lastActivity = Activities.getValueFromString(record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY));
 
-                WalletNavigationStructureMiddleware walletNavigationStructureMiddleware=new WalletNavigationStructureMiddleware(walletNavigationStructureId);
-                Activity walletNavigationStructureMiddlewareActivity=new Activity();
-                Activity walletNavigationStructureMiddlewareStartActivity=new Activity();
-                Activity walletNavigationStructureMiddlewareLastActivity=new Activity();
+                WalletNavigationStructureMiddleware walletNavigationStructureMiddleware = new WalletNavigationStructureMiddleware(walletNavigationStructureId);
+                Activity walletNavigationStructureMiddlewareActivity = new Activity();
+                Activity walletNavigationStructureMiddlewareStartActivity = new Activity();
+                Activity walletNavigationStructureMiddlewareLastActivity = new Activity();
                 walletNavigationStructureMiddleware.setActivity(walletNavigationStructureMiddlewareActivity, navigationStructureMiddlewareActivity);
                 walletNavigationStructureMiddleware.setLastActivity(walletNavigationStructureMiddlewareLastActivity, lastActivity);
                 walletNavigationStructureMiddleware.setStartActivity(walletNavigationStructureMiddlewareStartActivity, startActivity);
 
                 walletNavigationStructures.add(walletNavigationStructureMiddleware);
-
             }
-
             this.database.closeDatabase();
             return walletNavigationStructures;
-
-        }catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
-
-            throw new CantListNavigationStructuresException(CantListNavigationStructuresException.DEFAULT_MESSAGE,exception,"Trying to open the database","Please, check the cause");
-
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantListNavigationStructuresException(CantListNavigationStructuresException.DEFAULT_MESSAGE, exception, "Trying to open the database", "Please, check the cause");
         } catch (CantLoadTableToMemoryException exception) {
-
             this.database.closeDatabase();
-            throw new CantListNavigationStructuresException(CantLoadTableToMemoryException.DEFAULT_MESSAGE,exception,"Trying to load the database to memory","Please, check the cause");
-
-        } catch(Exception exception){
-
+            throw new CantListNavigationStructuresException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to load the database to memory", "Please, check the cause");
+        } catch (Exception exception) {
             this.database.closeDatabase();
-            throw new CantListNavigationStructuresException(CantListNavigationStructuresException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Unexpected failure", "Please, check the cause");
-
+            throw new CantListNavigationStructuresException(CantListNavigationStructuresException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Unexpected failure", "Please, check the cause");
         }
-
     }
 
     public void updateWalletNavigationStructure(WalletNavigationStructure walletNavigationStructure) throws NavigationStructureNotFoundException, CantUpdateNavigationStructureException {
-
-        try{
-
-            String navigationStructurePublicKey=walletNavigationStructure.getPublicKey();
+        try {
+            String navigationStructurePublicKey = walletNavigationStructure.getPublicKey();
             this.database.openDatabase();
-            DatabaseTable projectNavigationStructureTable=this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
+            DatabaseTable projectNavigationStructureTable = this.database.getTable(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_TABLE_NAME);
             projectNavigationStructureTable.setStringFilter(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY, navigationStructurePublicKey, DatabaseFilterType.EQUAL);
             projectNavigationStructureTable.loadToMemory();
 
-            List<DatabaseTableRecord> records =projectNavigationStructureTable.getRecords();
+            List<DatabaseTableRecord> records = projectNavigationStructureTable.getRecords();
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
 
-                String recordPublicKey=record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY);
-                if(recordPublicKey.equals(navigationStructurePublicKey)){
-                    record.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY,navigationStructurePublicKey);
+                String recordPublicKey = record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY);
+                if (recordPublicKey.equals(navigationStructurePublicKey)) {
+                    record.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_PUBLIC_KEY, navigationStructurePublicKey);
                 }
 
-                String activity=record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY);
-                if(!activity.equals(walletNavigationStructure.getActivity().toString())){
+                String activity = record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY);
+                if (!activity.equals(walletNavigationStructure.getActivity().toString())) {
                     record.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_ACTIVITY, walletNavigationStructure.getActivity().toString());
                 }
 
-                String lastActivity=record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY);
-                if(!lastActivity.equals(walletNavigationStructure.getLastActivity().toString())){
+                String lastActivity = record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY);
+                if (!lastActivity.equals(walletNavigationStructure.getLastActivity().toString())) {
                     record.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_LAST_ACTIVITY, walletNavigationStructure.getLastActivity().toString());
                 }
 
-                String startActivity=record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY);
-                if(!startActivity.equals(walletNavigationStructure.getActivity().toString())){
+                String startActivity = record.getStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY);
+                if (!startActivity.equals(walletNavigationStructure.getActivity().toString())) {
                     record.setStringValue(WalletNavigationStructureMiddlewareDatabaseConstants.WALLET_NAVIGATION_STRUCTURE_START_ACTIVITY, walletNavigationStructure.getStartActivity().toString());
                 }
 
                 projectNavigationStructureTable.updateRecord(record);
-
-            }else {
+            } else {
                 database.closeDatabase();
-                throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot find this WalletNavigationStructure with "+navigationStructurePublicKey+" id","Please, check the cause");
+                throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot find this WalletNavigationStructure with " + navigationStructurePublicKey + " id", "Please, check the cause");
             }
-
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception){
-
-            throw new CantUpdateNavigationStructureException(CantUpdateNavigationStructureException.DEFAULT_MESSAGE,exception,"Trying to open the database","Please, check the cause");
-
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
+            throw new CantUpdateNavigationStructureException(CantUpdateNavigationStructureException.DEFAULT_MESSAGE, exception, "Trying to open the database", "Please, check the cause");
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantUpdateNavigationStructureException(CantLoadTableToMemoryException.DEFAULT_MESSAGE,exception,"Trying to load the database to memory","Please, check the cause");
+            throw new CantUpdateNavigationStructureException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to load the database to memory", "Please, check the cause");
         } catch (CantUpdateRecordException e) {
             this.database.closeDatabase();
-            throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot update the WalletNavigationStructure","Please, check the cause");
-        } catch(Exception exception){
+            throw new NavigationStructureNotFoundException(NavigationStructureNotFoundException.DEFAULT_MESSAGE, null, "Cannot update the WalletNavigationStructure", "Please, check the cause");
+        } catch (Exception exception) {
             this.database.closeDatabase();
-            throw new CantUpdateNavigationStructureException(CantUpdateNavigationStructureException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Unexpected failure", "Please, check the cause");
+            throw new CantUpdateNavigationStructureException(CantUpdateNavigationStructureException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Unexpected failure", "Please, check the cause");
         }
-
     }
-
 
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
@@ -374,14 +323,14 @@ public class WalletNavigationStructureMiddlewareDao {
         // } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
         //    throw  new CantExecuteDatabaseOperationException("",exception, "", "Error in database plugin.");
         //}
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
-    private DatabaseTable getDatabaseTable(String tableName){
+    private DatabaseTable getDatabaseTable(String tableName) {
         DatabaseTable table = database.getTable(tableName);
         return table;
     }
-
 
 
 }

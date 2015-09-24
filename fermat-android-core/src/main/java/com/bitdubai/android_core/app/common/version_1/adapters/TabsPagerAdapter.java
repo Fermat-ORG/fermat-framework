@@ -4,9 +4,17 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 
+import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
+import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip.IconTabProvider;
+import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
@@ -63,6 +71,8 @@ import java.util.List;
 
         private SubAppsSession subAppsSession;
 
+        private Resources resources;
+
 
     public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,SubAppsSession subAppSession,ErrorManager errorManager,SubAppFragmentFactory subAppFragmentFactory,SubAppSettings subAppSettings,SubAppResourcesProviderManager subAppResourcesProviderManager) {
             super(fm);
@@ -90,7 +100,7 @@ import java.util.List;
 
         }
 
-        public TabsPagerAdapter(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+        public TabsPagerAdapter(FragmentManager fm,Context context,WalletFragmentFactory walletFragmentFactory,TabStrip tabStrip,WalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager,Resources resources) {
             super(fm);
             this.context=context;
 
@@ -99,6 +109,7 @@ import java.util.List;
             this.walletFragmentFactory = walletFragmentFactory;
             this.tabStrip=tabStrip;
             this.walletResourcesProviderManager =walletResourcesProviderManager;
+            this.resources = resources;
 
             if(tabStrip != null){
                 List<Tab> titleTabs = tabStrip.getTabs();
@@ -128,9 +139,13 @@ import java.util.List;
 
         @Override
         public CharSequence getPageTitle(int position) {
+            String title = titles[position];
+            return title;
 
-            return titles[position];
         }
+
+
+
 
         @Override
         public int getCount() {
@@ -164,7 +179,7 @@ import java.util.List;
 
             try {
                 if(walletFragmentFactory !=null){
-                    currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletResourcesProviderManager);
+                    currentFragment= walletFragmentFactory.getFragment(fragmentType.getKey(), walletSession,walletSettings,walletResourcesProviderManager);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -184,4 +199,5 @@ import java.util.List;
         }
 
 
-    }
+
+}

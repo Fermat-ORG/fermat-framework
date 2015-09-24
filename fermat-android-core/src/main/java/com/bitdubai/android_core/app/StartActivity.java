@@ -88,10 +88,11 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
             if(applicationState==ApplicationSession.STATE_NOT_CREATED) {
                 mDialog = new ProgressDialog(this);
                 mDialog.setMessage("Please wait...");
-                mDialog.show();
+                mDialog.setCancelable(false);
+                    mDialog.show();
                 GetTask getTask = new GetTask(this,this);
                 getTask.setCallBack(this);
-                Executors.newSingleThreadExecutor().execute(getTask);
+                getTask.execute();
             }else if (applicationState == ApplicationSession.STATE_STARTED ){
                 fermatInit();
             }
@@ -118,6 +119,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
      */
     @Override
     public void onPostExecute(Object... result) {
+        PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
+        setPlatformDeviceInfo(platformInfoManager);
         mDialog.dismiss();
 
         // Indicate that app was loaded.
@@ -132,7 +135,10 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
      */
     @Override
     public void onErrorOccurred(Exception ex) {
+        mDialog.dismiss();
         ex.printStackTrace();
+        Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
+                Toast.LENGTH_LONG).show();
     }
 
     class GetTask extends FermatWorker{
@@ -166,9 +172,10 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 databaseSystemOs.setContext(context);
                 platform.setDataBaseSystemOs(databaseSystemOs);
 
-                //    locationSystemOs = new AndroidOsLocationSystem();
-                //    locationSystemOs.setContext(context);
-                //    platform.setLocationSystemOs(locationSystemOs);
+           locationSystemOs = new AndroidOsLocationSystem();
+                   locationSystemOs.setContext(context);
+                    platform.setLocationSystemOs(locationSystemOs);
+
 
                 loggerSystemOs = new LoggerAddonRoot();
                 try {
@@ -197,8 +204,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 platformContext = platform.getCorePlatformContext();
 
 
-                PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
-                setPlatformDeviceInfo(platformInfoManager);
+
 
                 return true;
         }

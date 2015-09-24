@@ -27,12 +27,10 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantSendCryptoException;
@@ -69,8 +67,8 @@ public class SendFragment extends Fragment {
      */
     ReferenceWalletSession walletSession;
     View rootView;
-    String walletPublicKey = "25428311-deb3-4064-93b2-69093e859871";
-    UUID user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059");
+    String walletPublicKey = "reference_wallet";
+    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
     Typeface tf;
     CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
@@ -173,6 +171,9 @@ public class SendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_send_new, container, false);
         try {
+
+            contact = walletSession.getLastContactSelected();
+
             editAddress = (EditText) rootView.findViewById(R.id.address);
             editAddress.setTypeface(tf);
             editAmount = (EditText) rootView.findViewById(R.id.amount);
@@ -208,7 +209,7 @@ public class SendFragment extends Fragment {
             });
 
             try {
-                long availableBalance = cryptoWallet.getAvailableBalance(walletPublicKey);
+                long availableBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
                 editAmount.setHint("available funds: " + availableBalance + " bits");
             } catch (Exception ex) {
 
@@ -282,7 +283,7 @@ public class SendFragment extends Fragment {
                         }
                     } catch (Exception e) {
                         try {
-                            long actualBalance = cryptoWallet.getAvailableBalance(walletPublicKey);
+                            long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
                             editAmount.setHint("Available amount: " + actualBalance + " bits");
                         } catch (Exception ex) {
 
@@ -345,7 +346,7 @@ public class SendFragment extends Fragment {
         try {
             List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
-                contacts.add(new WalletContact(wcr.getActorName(), wcr.getReceivedCryptoAddress().getAddress(), wcr.getContactId()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress()));
             }
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -365,21 +366,32 @@ public class SendFragment extends Fragment {
             if(!amount.getText().toString().equals("") && amount.getText()!=null) {
                 try {
                     //TODO que pasa si no puedo crear el user?
-                    CryptoWalletWalletContact walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
-
+                    //CryptoWalletWalletContact walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
+                    //CryptoWalletWalletContact walletContactRecord = cryptoWallet.
                     // TODO harcoded deliveredbyactorid
-                    cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), walletPublicKey, user_id, Actors.INTRA_USER, walletContactRecord.getActorId(), walletContactRecord.getActorType());
+                    String notes=null;
+                    if(editNotes.getText().toString().length()!=0){
+                        notes = editNotes.getText().toString();
+                    }
+
+
+                    cryptoWallet.send(
+                            Long.parseLong(amount.getText().toString()),
+                            validAddress,
+                            notes,
+                            walletPublicKey,
+                            user_id,
+                            Actors.INTRA_USER,
+                            contact.actorPublicKey,
+                            Actors.EXTRA_USER
+                    );
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {
                     Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
-
                 } catch (CantSendCryptoException e) {
                     errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "Error send satoshis - " + e.getMessage());
-                } catch (CantCreateWalletContactException e) {
-                    // TODO que hacer si no puedo crear el contacto? igual envio el dinero?
-                    //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
                 }
             }
         } else {
@@ -467,6 +479,7 @@ public class SendFragment extends Fragment {
                 }
             }
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 

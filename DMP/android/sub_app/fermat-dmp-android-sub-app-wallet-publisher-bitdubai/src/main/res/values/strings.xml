@@ -90,6 +90,10 @@
     <string name="title_activity_blank_activity_with_fragment">BlankActivityWithFragment</string>
     <string name="title_activity_balance_available">BalanceAvailableActivity</string>
     <string name="title_activity_wallet">Wallet Activity</string>
+    <string name="main_factory_project_type_wallet">Wallet</string>
+    <string name="main_factory_project_type_language">Language</string>
+    <string name="main_factory_project_type_skin">Skin</string>
+    <string name="main_menu_factory_publish">Publish</string>
 
     <string-array name="account_name">
         <item>Saving account: My savings</item>
@@ -99,5 +103,7 @@
 
     <string name="title_activity_requests_received">Requests Received</string>
     <string name="title_activity_activity_main">Main Activity</string>
+
+    <string name="wizard_step_1_current_platform">Current Platform: v%1$s</string>
 
 </resources>

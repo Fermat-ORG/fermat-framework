@@ -2,8 +2,8 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetContactProfileImageException;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,7 +18,7 @@ import java.util.UUID;
 public interface WalletContactRecord {
 
     /**
-     * Return the contactId
+     * Return the contact id
      *
      * @return UUID
      */
@@ -31,6 +31,12 @@ public interface WalletContactRecord {
      */
     String getWalletPublicKey();
 
+    /**
+     * Return the actor public key
+     *
+     * @return String
+     */
+    String getActorPublicKey();
 
     /**
      * Return the actorType
@@ -40,24 +46,31 @@ public interface WalletContactRecord {
     Actors getActorType();
 
     /**
-     * Return the deliveredCryptoAddress
-     *
-     * @return CryptoAddress
-     */
-    CryptoAddress getReceivedCryptoAddress();
-
-    /**
-     * Return the actorId
-     *
-     * @return UUID
-     */
-    UUID getActorId();
-
-    /**
-     * Return the actorName
+     * Return the actor alias
      *
      * @return String
      */
-    String getActorName();
+    String getActorAlias();
+
+    /**
+     * Return the actor first name
+     *
+     * @return String
+     */
+    String getActorFirstName();
+
+    /**
+     * Return the actor last name
+     *
+     * @return String
+     */
+    String getActorLastName();
+
+    /**
+     * Return the crypto addresses
+     *
+     * @return list of CryptoAddresses of the wallet contact
+     */
+    List<CryptoAddress> getCryptoAddresses();
 
 }

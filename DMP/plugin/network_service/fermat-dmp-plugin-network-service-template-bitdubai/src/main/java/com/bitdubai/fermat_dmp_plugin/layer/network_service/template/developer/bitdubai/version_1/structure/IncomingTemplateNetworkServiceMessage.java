@@ -6,6 +6,9 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
+
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.IncomingTemplateNetworkServiceMessage</code>
  * represent a Incoming Message
@@ -15,5 +18,5 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IncomingTemplateNetworkServiceMessage extends TemplateNetworkServiceMessage {
+public class IncomingTemplateNetworkServiceMessage extends FermatMessageCommunication {
 }

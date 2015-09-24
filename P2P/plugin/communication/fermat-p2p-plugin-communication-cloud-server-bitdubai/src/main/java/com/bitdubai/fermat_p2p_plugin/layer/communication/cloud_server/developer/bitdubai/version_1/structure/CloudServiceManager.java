@@ -47,7 +47,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	/**
 	 * Represent the networkServicesRegistryByTypeCache
 	 */
-	private final Map<NetworkServices, Map<String, CloudNetworkServiceManager>> networkServicesRegistryByTypeCache;
+	private final Map<NetworkServices, CloudNetworkServiceManager> networkServicesRegistryByTypeCache;
 
 	/**
 	 * Constructor whit parameters
@@ -58,7 +58,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	 * @throws IllegalArgumentException
 	 */
 	public CloudServiceManager(final CommunicationChannelAddress address, final ExecutorService executor, final com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair keyPair) throws IllegalArgumentException{
-		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
+		super(address, executor, keyPair, CloudFMPConnectionManagerMode.FMP_SERVER);
 		networkServicesRegistryByTypeCache = new ConcurrentHashMap<>();
 		networkServicesRegistryByTypeCache.clear();
 	}
@@ -126,8 +126,8 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 
             String message = CloudCommunicationException.DEFAULT_MESSAGE;
             FermatException cause = fMPException;
-            String context = "Packet Data: " + dataPacket.toString();
-            String possibleReason = "Something failed in the processing of one of the different PacketType, you should check the FMPException that is linked below";
+            String context = "FermatPacketCommunication Data: " + dataPacket.toString();
+            String possibleReason = "Something failed in the processing of one of the different FermatPacketType, you should check the FMPException that is linked below";
             throw new CloudCommunicationException(message, cause, context, possibleReason);
 
         }catch(NoSuchElementException ex){
@@ -258,7 +258,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
             /*
              * Obtain the list of  identities by the network service type
              */
-            List<String> identities = new ArrayList<>(networkServicesRegistryByTypeCache.get(dataPacketReceived.getNetworkServices()).keySet());
+            List<String> identities = networkServicesRegistryByTypeCache.get(dataPacketReceived.getNetworkServices()).getNetworkServicesConnectedList();
 
             /*
              * Construct the message content in json format
@@ -317,28 +317,10 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
         }
 
         /*
-         * Validate if exist a list registered
+         * Add the new cloud network service manager supported
          */
-        if (networkServicesRegistryByTypeCache.containsKey(networkServiceManager.getNetworkService())){
+        networkServicesRegistryByTypeCache.put(networkServiceManager.getNetworkService(), networkServiceManager);
 
-            /*
-             * If exist add the new network services to the map
-             */
-            networkServicesRegistryByTypeCache.get(networkServiceManager.getNetworkService()).put(networkServiceManager.getIdentityPublicKey(), networkServiceManager);
-
-        }else{
-
-            /*
-             * If no exist create a new map and add the network services
-             */
-            Map<String, CloudNetworkServiceManager> newMap = new ConcurrentHashMap<>();
-            newMap.put(networkServiceManager.getIdentityPublicKey(), networkServiceManager);
-
-            /*
-             * Add the mat to the registry map
-             */
-            networkServicesRegistryByTypeCache.put(networkServiceManager.getNetworkService(), newMap);
-        }
 
     }
 
@@ -430,9 +412,9 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
              * Construct the message structure info
              */
 			JsonObject messageRespond = new JsonObject();
-            messageRespond.addProperty("host", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getHost());
-            messageRespond.addProperty("port", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getCommunicationChannelAddress().getPort());
-            messageRespond.addProperty("identityCloudNetworkServiceManager", networkServicesRegistryByTypeCache.get(networkService).get(fMPPacketReceive.getMessage()).getIdentityPublicKey());
+            messageRespond.addProperty("host", networkServicesRegistryByTypeCache.get(networkService).getCommunicationChannelAddress().getHost());
+            messageRespond.addProperty("port", networkServicesRegistryByTypeCache.get(networkService).getCommunicationChannelAddress().getPort());
+            messageRespond.addProperty("identityCloudNetworkServiceManager", networkServicesRegistryByTypeCache.get(networkService).getIdentityPublicKey());
             messageRespond.addProperty("identityNetworkServiceRegistered", messageReceived.get("identityNetworkServicePublicKey").toString());
             String jsonMessageRespond = gson.toJson(messageRespond);
 
@@ -532,7 +514,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		String message = IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE;
 		FermatException cause = null;
 		String context = "Supposed Destination: " + supposedDestination;
-		context += "Packet Info: " + packet.toString();
+		context += "FermatPacketCommunication Info: " + packet.toString();
 		String possibleReason = "This is a very weird error, we should check the sender to see if it's registered, we should be aware of this";
 		return new IncorrectFMPPacketDestinationException(message, cause, context, possibleReason);
 	}

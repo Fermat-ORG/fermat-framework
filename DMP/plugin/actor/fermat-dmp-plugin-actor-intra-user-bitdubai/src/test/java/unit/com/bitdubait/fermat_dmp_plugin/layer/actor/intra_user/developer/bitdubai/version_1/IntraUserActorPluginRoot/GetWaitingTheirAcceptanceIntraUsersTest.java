@@ -2,7 +2,7 @@ package unit.com.bitdubait.fermat_dmp_plugin.layer.actor.intra_user.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -18,7 +18,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.database.IntraUserActorDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import junit.framework.TestCase;
@@ -89,7 +89,7 @@ public class GetWaitingTheirAcceptanceIntraUsersTest extends TestCase
     DatabaseTable mockDatabaseTable= Mockito.mock(DatabaseTable.class);
     DatabaseTableRecord mockDatabaseTableRecord=Mockito.mock(DatabaseTableRecord.class);
     Database mockDatabase= Mockito.mock(Database.class);
-    EventListener mockEventListener = Mockito.mock(EventListener.class);
+    FermatEventListener mockFermatEventListener = Mockito.mock(FermatEventListener.class);
     private IntraUserActorPluginRoot testIntraUserActorPluginRoot;
 
     private String intraUserPublicKey ;
@@ -136,16 +136,16 @@ public class GetWaitingTheirAcceptanceIntraUsersTest extends TestCase
 
         when(mockPluginFileSystem.createBinaryFile(pluginId, DeviceDirectory.LOCAL_USERS.getName(), "intraUserActorProfileImage" + "_" +  intraUserPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockFile);
 
-        when(mockEventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED)).thenReturn(mockEventListener);
-        when(mockEventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED)).thenReturn(mockEventListener);
-        when(mockEventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION)).thenReturn(mockEventListener);
-        when(mockEventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED)).thenReturn(mockEventListener);
+        when(mockEventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED)).thenReturn(mockFermatEventListener);
+        when(mockEventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED)).thenReturn(mockFermatEventListener);
+        when(mockEventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION)).thenReturn(mockFermatEventListener);
+        when(mockEventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED)).thenReturn(mockFermatEventListener);
     }
 
     @Test
     public void getWaitingTheirAcceptanceIntraUsersTest_GetListOk_ThrowsCantGetIntraUSersException() throws Exception {
 
-        actorIntraUserList = testIntraUserActorPluginRoot.getWaitingTheirAcceptanceIntraUsers(intraUserLoggedPublicKey);
+        actorIntraUserList = testIntraUserActorPluginRoot.getWaitingTheirAcceptanceIntraUsers(intraUserLoggedPublicKey,0,50);
         Assertions.assertThat(actorIntraUserList)
                 .isNotNull();
     }
@@ -156,11 +156,11 @@ public class GetWaitingTheirAcceptanceIntraUsersTest extends TestCase
 
         when(mockDatabase.getTable(IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME)).thenReturn(null);
 
-        catchException(testIntraUserActorPluginRoot).getWaitingTheirAcceptanceIntraUsers(intraUserLoggedPublicKey);
+        catchException(testIntraUserActorPluginRoot).getWaitingTheirAcceptanceIntraUsers(intraUserLoggedPublicKey,0,50);
 
         assertThat(caughtException())
                 .isNotNull()
-                .isInstanceOf(CantGetIntraUSersException.class);
+                .isInstanceOf(CantGetIntraUsersException.class);
 
     }
 }

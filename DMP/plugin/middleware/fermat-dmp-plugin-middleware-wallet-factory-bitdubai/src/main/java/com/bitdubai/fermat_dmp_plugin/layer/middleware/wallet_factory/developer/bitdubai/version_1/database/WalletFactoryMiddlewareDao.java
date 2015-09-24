@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectSkinException;
@@ -18,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -56,12 +59,19 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
     }
 
     private DatabaseTable getDatabaseTable(String tableName) {
-        DatabaseTable databaseTable = database.getTable(tableName);
-        return databaseTable;
+        return database.getTable(tableName);
     }
 
-    private Database openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
-        database = pluginDatabaseSystem.openDatabase(this.pluginId, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME);
+    private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
+        try {
+            database = pluginDatabaseSystem.openDatabase(this.pluginId, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME);
+        } catch (DatabaseNotFoundException e) {
+            /**
+             * if the database is not found, then I will create it
+             */
+            WalletFactoryMiddlewareDatabaseFactory databaseFactory = new WalletFactoryMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
+            database = databaseFactory.createDatabase(this.pluginId, WalletFactoryMiddlewareDatabaseConstants.DATABASE_NAME);
+        }
         return database;
     }
 
@@ -71,10 +81,20 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME, walletFactoryProject.getProjectPublicKey());
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_NAME_COLUMN_NAME, walletFactoryProject.getName());
         record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME, walletFactoryProject.getDescription());
-        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME, walletFactoryProject.getProjectState().value());
-        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME, walletFactoryProject.getWalletType().getCode());
-        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getCreationTimestamp().toString());
-        record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getLastModificationTimestamp().toString());
+        if (walletFactoryProject.getProjectState() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME, walletFactoryProject.getProjectState().value());
+        if (walletFactoryProject.getWalletCategory() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME, walletFactoryProject.getWalletCategory().name());
+        if (walletFactoryProject.getFactoryProjectType() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME, walletFactoryProject.getFactoryProjectType().getCode());
+        if (walletFactoryProject.getWalletType() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME, walletFactoryProject.getWalletType().getCode());
+        if (walletFactoryProject.getCreationTimestamp() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getCreationTimestamp().toString());
+        if (walletFactoryProject.getLastModificationTimestamp() != null)
+            record.setStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME, walletFactoryProject.getLastModificationTimestamp().toString());
+
+        record.setIntegerValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME, walletFactoryProject.getSize());
 
         return record;
     }
@@ -125,7 +145,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
 
             // I will add all the skins defined, if there are more than one.
-            if (!walletFactoryProject.getSkins().isEmpty()){
+            if (walletFactoryProject.getSkins() != null){
                 for (Skin skin : walletFactoryProject.getSkins()){
                     DatabaseTableRecord skinRecord = getSkinDataRecord(walletFactoryProject.getProjectPublicKey(), skin.getId(), false);
                     filter.setValue(skin.getId().toString());
@@ -170,7 +190,7 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
             }
 
             //I will add any other language defined
-            if (!walletFactoryProject.getLanguages().isEmpty()){
+            if (walletFactoryProject.getLanguages() != null){
                 for (Language language : walletFactoryProject.getLanguages()){
                     DatabaseTableRecord record = getLanguageDataRecord(walletFactoryProject.getProjectPublicKey(), language.getId(), false);
                     filter.setValue(language.getId().toString());
@@ -244,7 +264,6 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      * @throws MissingProjectDataException
      */
     public void saveWalletFactoryProjectData(WalletFactoryProject walletFactoryProject) throws DatabaseOperationException, MissingProjectDataException{
-        Database database=null;
         try {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
@@ -309,15 +328,19 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
         if (table.getRecords().size() > 1)
             throw new DatabaseOperationException("Multiples navigation structure for single project found in database." , null, "Project key: " + walletFactoryPublicKey, null);
 
-        if (table.getRecords().size() == 1)
+        if (table.getRecords().size() == 1) {
             return table.getRecords().get(0);
-        else
+        }else {
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
+        }
     }
 
     private List<DatabaseTableRecord> getWalletFactoryProjectsData (DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(WalletFactoryMiddlewareDatabaseConstants.PROJECT_TABLE_NAME);
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        if (filter != null)
+            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
         table.loadToMemory();
 
         return table.getRecords();
@@ -325,164 +348,215 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
 
     private WalletFactoryProject getEmptyWalletFactoryProject(){
         WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
+            String publicKey;
+            String name;
+            String description;
+            WalletType walletType;
+            WalletFactoryProjectState walletFactoryProjectState;
+            Timestamp creationTimestamp;
+            Timestamp lastModificationTimestamp;
+            Skin skin;
+            List<Skin> skins;
+            Language language;
+            List<Language> languages;
+            WalletNavigationStructure navigationStructure;
+            int size;
+            WalletCategory walletCategory;
+            FactoryProjectType factoryProjectType;
+
+
             @Override
             public String getProjectPublicKey() {
-                return null;
+                return publicKey;
             }
 
             @Override
             public void setProjectPublickKey(String publickKey) {
-
+                this.publicKey = publickKey;
             }
 
             @Override
             public String getName() {
-                return null;
+                return this.name;
             }
 
             @Override
             public void setName(String name) {
-
+                this.name = name;
             }
 
             @Override
             public String getDescription() {
-                return null;
+                return this.description;
             }
 
             @Override
             public void setDescription(String description) {
-
+                this.description = description;
             }
 
             @Override
             public WalletType getWalletType() {
-                return null;
+                return walletType;
             }
 
             @Override
             public void setWalletType(WalletType walletType) {
-
+                this.walletType = walletType;
             }
 
             @Override
             public WalletFactoryProjectState getProjectState() {
-                return null;
+                return walletFactoryProjectState;
             }
 
             @Override
             public void setProjectState(WalletFactoryProjectState projectState) {
-
+                this.walletFactoryProjectState = projectState;
             }
 
             @Override
             public Timestamp getCreationTimestamp() {
-                return null;
+                return creationTimestamp;
             }
 
             @Override
             public void setCreationTimestamp(Timestamp timestamp) {
-
+                this.creationTimestamp = timestamp;
             }
 
             @Override
             public Timestamp getLastModificationTimestamp() {
-                return null;
+                return lastModificationTimestamp;
             }
 
             @Override
             public void setLastModificationTimeststamp(Timestamp timestamp) {
-
+                lastModificationTimestamp = timestamp;
             }
 
             @Override
             public Skin getDefaultSkin() {
-                return null;
+                return skin;
             }
 
             @Override
             public void setDefaultSkin(Skin skin) {
-
+                this.skin = skin;
             }
 
             @Override
             public List<Skin> getSkins() {
-                return null;
-            }
-
-
-            @Override
-            public void deleteSkin(Skin skin) {
-
+                return this.skins;
             }
 
             @Override
             public Language getDefaultLanguage() {
-                return null;
+                return language;
             }
 
             @Override
             public void setDefaultLanguage(Language language) {
-
+                this.language = language;
             }
 
             @Override
             public List<Language> getLanguages() {
-                return null;
-            }
-
-
-            @Override
-            public void deleteLanguage(Language language) {
-
+                return languages;
             }
 
             @Override
             public WalletNavigationStructure getNavigationStructure() {
-                return null;
+                return navigationStructure;
             }
 
             @Override
             public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
-
+                this.navigationStructure = navigationStructure;
             }
+
 
             @Override
             public void setSkins(List<Skin> skins) {
-
+                this.skins = skins;
             }
 
             @Override
             public void setLanguages(List<Language> languages) {
-
+                this.languages = languages;
             }
 
             @Override
             public int getSize() {
-                return 0;
+                return size;
             }
 
             @Override
             public void setSize(int size) {
+                this.size = size;
+            }
+
+            @Override
+            public WalletCategory getWalletCategory() {
+                return walletCategory;
+            }
+
+            @Override
+            public void setWalletCategory(WalletCategory walletCategory) {
+                this.walletCategory = walletCategory;
+            }
+
+            @Override
+            public FactoryProjectType getFactoryProjectType() {
+                return factoryProjectType;
+            }
+
+            @Override
+            public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
+                this.factoryProjectType = factoryProjectType;
 
             }
         };
         return walletFactoryProject;
     }
 
-    private WalletFactoryProject getWalletFactoryProjectHeader(DatabaseTableRecord projectsRecord) throws CantLoadTableToMemoryException, DatabaseOperationException {
+    private WalletFactoryProject getWalletFactoryProjectHeader(DatabaseTableRecord projectsRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         WalletFactoryProject walletFactoryProject = getEmptyWalletFactoryProject();
         walletFactoryProject.setProjectPublickKey(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME));
         walletFactoryProject.setName(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_PUBLICKEY_COLUMN_NAME));
-        walletFactoryProject.setDescription(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME));
-        walletFactoryProject.setProjectState(WalletFactoryProjectState.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME)));
-        try {
-            walletFactoryProject.setWalletType(WalletType.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME)));
-        } catch (InvalidParameterException e) {
-            throw new DatabaseOperationException("Can't get Wallet Type value from database. Incorrect code.", e, "saved value: " + projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME), null );
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME) != null)
+            walletFactoryProject.setDescription(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_DESCRIPTION_COLUMN_NAME));
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME) != null)
+            walletFactoryProject.setProjectState(WalletFactoryProjectState.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_STATE_COLUMN_NAME)));
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME) != null){
+            try {
+                walletFactoryProject.setWalletType(WalletType.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETTYPE_COLUMN_NAME)));
+            } catch (InvalidParameterException e) {
+                // If I couldn't get the walletType I will define it Reference and continue
+                walletFactoryProject.setWalletType(WalletType.REFERENCE);
+            }
         }
-        walletFactoryProject.setCreationTimestamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME)));
-        walletFactoryProject.setLastModificationTimeststamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME)));
+
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME) != null){
+            try {
+                walletFactoryProject.setWalletCategory(WalletCategory.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_WALLETCATEGORY_COLUMN_NAME)));
+            } catch (InvalidParameterException e) {
+                walletFactoryProject.setWalletCategory(WalletCategory.REFERENCE_WALLET);
+            }
+        }
+
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME) != null)
+            try {
+                walletFactoryProject.setFactoryProjectType(FactoryProjectType.getByCode(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_FACTORYPROJECTTYPE_COLUMN_NAME)));
+            } catch (InvalidParameterException e) {
+                walletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
+            }
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME) != null)
+            walletFactoryProject.setCreationTimestamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_CREATION_TIMESTAMP_COLUMN_NAME)));
+        if (projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME) != null)
+            walletFactoryProject.setLastModificationTimeststamp(Timestamp.valueOf(projectsRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_MODIFICATION_TIMESTAMP_COLUMN_NAME)));
+        if (projectsRecord.getIntegerValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME) != null)
+            walletFactoryProject.setSize(projectsRecord.getIntegerValue(WalletFactoryMiddlewareDatabaseConstants.PROJECT_SIZE_COLUMN_NAME));
 
         return walletFactoryProject;
     }
@@ -493,54 +567,60 @@ public class WalletFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem
      * @throws CantLoadTableToMemoryException
      * @throws DatabaseOperationException
      */
-    public List<WalletFactoryProject> getWalletFactoryProjects (DatabaseTableFilter filter) throws CantLoadTableToMemoryException, DatabaseOperationException {
-        List<WalletFactoryProject> walletFactoryProjects = new ArrayList<>();
+    public List<WalletFactoryProject> getWalletFactoryProjects (DatabaseTableFilter filter) throws DatabaseOperationException {
+        Database database= null;
+        try{
+            database = openDatabase();
 
-        // I will add the WalletFactoryProject header information from the database
-        for (DatabaseTableRecord projectsRecord : getWalletFactoryProjectsData(filter)){
-            WalletFactoryProject walletFactoryProject = getWalletFactoryProjectHeader (projectsRecord);
+            List<WalletFactoryProject> walletFactoryProjects = new ArrayList<>();
 
-            // I will add the Skin information from database
-            List<Skin> skins = new ArrayList<>();
-            for (DatabaseTableRecord skinRecords : getSkinsData (walletFactoryProject.getProjectPublicKey())){
-                Skin skin = new Skin();
-                skin.setId(skinRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME));
-                boolean isDefaultSkin = Boolean.valueOf(skinRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_DEFAULT_COLUMN_NAME));
-                if (isDefaultSkin)
-                    walletFactoryProject.setDefaultSkin(skin);
-                else
-                    skins.add(skin);
+            // I will add the WalletFactoryProject header information from the database
+            for (DatabaseTableRecord projectsRecord : getWalletFactoryProjectsData(filter)){
+                WalletFactoryProject walletFactoryProject = getWalletFactoryProjectHeader (projectsRecord);
+
+                // I will add the Skin information from database
+                List<Skin> skins = new ArrayList<>();
+                for (DatabaseTableRecord skinRecords : getSkinsData (walletFactoryProject.getProjectPublicKey())){
+                    Skin skin = new Skin();
+                    skin.setId(skinRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_SKIN_ID_COLUMN_NAME));
+                    boolean isDefaultSkin = Boolean.valueOf(skinRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.SKIN_DEFAULT_COLUMN_NAME));
+                    if (isDefaultSkin)
+                        walletFactoryProject.setDefaultSkin(skin);
+                    else
+                        skins.add(skin);
+                }
+                walletFactoryProject.setSkins(skins);
+
+                // I will add the language information from database
+                List<Language> languages = new ArrayList<>();
+                for (DatabaseTableRecord languageRecords : getLanguagesData(walletFactoryProject.getProjectPublicKey())){
+                    Language language = new Language();
+                    language.setId(languageRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME));
+                    boolean isDefaultLanguage = Boolean.valueOf(languageRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_DEFAULT_COLUMN_NAME));
+                    if (isDefaultLanguage)
+                        walletFactoryProject.setDefaultLanguage(language);
+                    else
+                        languages.add(language);
+                }
+                walletFactoryProject.setLanguages(languages);
+
+                // I will add the navigation structure information from the database
+                DatabaseTableRecord navigationStructureRecord = getNavigationStructureData(walletFactoryProject.getProjectPublicKey());
+                if (navigationStructureRecord != null){
+                    WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
+                    navigationStructure.setPublicKey(navigationStructureRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME));
+                    walletFactoryProject.setNavigationStructure(navigationStructure);
+                }
+
+                // At this point I have all the info from the database, I will add it to the list I will be returning.
+                walletFactoryProjects.add(walletFactoryProject);
             }
-            walletFactoryProject.setSkins(skins);
-
-            // I will add the language information from database
-            List<Language> languages = new ArrayList<>();
-            for (DatabaseTableRecord languageRecords : getLanguagesData(walletFactoryProject.getProjectPublicKey())){
-                Language language = new Language();
-                language.setId(languageRecords.getUUIDValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_LANGUAGE_ID_COLUMN_NAME));
-                boolean isDefaultLanguage = Boolean.valueOf(languageRecords.getStringValue(WalletFactoryMiddlewareDatabaseConstants.LANGUAGE_DEFAULT_COLUMN_NAME));
-                if (isDefaultLanguage)
-                    walletFactoryProject.setDefaultLanguage(language);
-                else
-                    languages.add(language);
-            }
-            walletFactoryProject.setLanguages(languages);
-
-            // I will add the navigation structure information from the database
-            DatabaseTableRecord navigationStructureRecord = getNavigationStructureData(walletFactoryProject.getProjectPublicKey());
-            if (navigationStructureRecord != null){
-                WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
-                navigationStructure.setPublicKey(navigationStructureRecord.getStringValue(WalletFactoryMiddlewareDatabaseConstants.NAVIGATION_STRUCTURE_PUBLICKEY_COLUMN_NAME));
-                walletFactoryProject.setNavigationStructure(navigationStructure);
-            }
-
-            // At this point I have all the info from the database, I will add it to the list I will be returning.
-            walletFactoryProjects.add(walletFactoryProject);
+            database.closeDatabase();
+            return walletFactoryProjects;
+        } catch (Exception e){
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get projects from the database with filter: " + filter.toString(), null);
         }
-
-        return walletFactoryProjects;
     }
-
-
-
 }

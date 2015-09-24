@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
@@ -48,12 +48,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseFactory;
@@ -66,14 +71,14 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.DealsWithPlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,7 +134,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -274,12 +279,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
     @Override
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer getDesigner(UUID designerId) throws CantGetDesignerException {
+    public DesignerIdentity getDesigner(UUID designerId) throws CantGetDesignerException {
         return getWalletStoreManager().getDesigner(designerId);
     }
 
     @Override
-    public com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator getTranslator(UUID translatorId) throws CantGetTranslatorException {
+    public TranslatorIdentity getTranslator(UUID translatorId) throws CantGetTranslatorException {
         return getWalletStoreManager().getTranslator(translatorId);
     }
 
@@ -333,27 +338,12 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         /**
          * I will initialize the handling of platform events.
          */
-/*        EventListener eventListener;
-        EventHandler eventHandler;
-*/
-        try {
-            TestPublishWallet();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (CantPublishWalletInCatalogException e) {
-            e.printStackTrace();
-        }
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     /**
-<<<<<<< HEAD
      * Creates the database with the Database Factory
-     *
-=======
-     * Creates the database with the Database Factory                                                                                                                                                                                                                                                                                                                                                                   
->>>>>>> d68ac24c2a7845bb590065fab0cc874c5ba4c227
+     * Creates the database with the Database Factory
      * @throws CantCreateDatabaseException
      */
     private void createWalletStoreNetworkServiceDatabase() throws CantCreateDatabaseException {
@@ -390,8 +380,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
@@ -566,13 +556,13 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             catalogItemImpl.setDescription("Prueba de insert");
             catalogItemImpl.setpublisherWebsiteUrl(new URL("http://examples.com/pages"));
 
-            byte[] myIcon = new byte[]{114, 22};
+            byte[] myIcon = new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
             catalogItemImpl.setIcon(myIcon);
             catalogItemImpl.setWalletCatalogId(walletId);
 
             com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skin;
             skin = new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin();
-            byte[] presentationImage = new byte[]{114, 22};
+            byte[] presentationImage = new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff};
             skin.setPresentationImage(presentationImage);
             skin.setSkinSizeInBytes(100);
             skin.setFinalWalletVersion(new Version(1, 0, 0));
@@ -580,6 +570,11 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             skin.setInitialWalletVersion(new Version("1.0.0"));
             skin.setVersion(new Version(1, 0, 0));
             skin.setWalletId(walletId);
+            List<byte[]> imagelists = new ArrayList<>();
+            imagelists.add(presentationImage);
+            imagelists.add(presentationImage);
+            imagelists.add(presentationImage);
+            skin.setPreviewImageList(imagelists);
             skin.setId(UUID.randomUUID());
             skin.setName("Mi skin");
             skin.setIsDefault(true);
@@ -588,7 +583,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             skin.setScreenSize(ScreenSize.MEDIUM);
 
             final String designerId = UUID.randomUUID().toString();
-            com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer = new com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer() {
+            DesignerIdentity designer = new DesignerIdentity() {
                 @Override
                 public String getAlias() {
                     return "Diseñador";
@@ -601,6 +596,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
             };
@@ -610,6 +606,9 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             DetailedCatalogItemImpl detailedCatalogItemImpl;
             detailedCatalogItemImpl = new DetailedCatalogItemImpl();
             detailedCatalogItemImpl.setDefaultSkin(skin);
+            List<Skin> skins = new ArrayList<>();
+            skins.add(skin);
+            detailedCatalogItemImpl.setSkins(skins);
             detailedCatalogItemImpl.setVersion(new Version("1.0.0"));
             detailedCatalogItemImpl.setPlatformInitialVersion(new Version("1.0.0"));
             detailedCatalogItemImpl.setPlatformFinalVersion(new Version("1.0.0"));
@@ -627,7 +626,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
 
             final String traductorId = UUID.randomUUID().toString();
-            com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator = new com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator() {
+            TranslatorIdentity translator = new TranslatorIdentity() {
                 @Override
                 public String getAlias() {
                     return "Traductor";
@@ -640,6 +639,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
             };
@@ -662,6 +662,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
                 @Override
                 public String createMessageSignature(String mensage) throws CantSingMessageException {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
             };
@@ -669,6 +670,19 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
             detailedCatalogItemImpl.setDeveloper(developerIdentity);
 
             catalogItemImpl.setDetailedCatalogItemImpl(detailedCatalogItemImpl);
+
+
+            //create an example icon file
+            PluginTextFile file = pluginFileSystem.createTextFile(this.pluginId, "rodrigo", "archivo", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            file.setContent(myIcon.toString());
+            file.persistToMedia();
+
+
+            //retrieve it
+            PluginTextFile loadedFile = pluginFileSystem.getTextFile(this.pluginId, "rodrigo", "archivo", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            loadedFile.loadFromMedia();
+            byte[] loadedIcon = loadedFile.getContent().getBytes(Charset.forName("UTF-8"));
+
 
 
             this.publishWallet(catalogItemImpl);
@@ -700,7 +714,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                                       Version finalWalletVersion,
                                       List<URL> videoPreviews,
                                       long languageSizeInBytes,
-                                      com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator translator,
+                                      TranslatorIdentity translator,
                                       boolean isDefault)
     {
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language languageImpl;
@@ -732,7 +746,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
                               boolean hasVideoPreview,
                               List<URL> videoPreviews,
                               long skinSizeInBytes,
-                              com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer designer,
+                              DesignerIdentity designer,
                               boolean isDefault )
     {
         com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin skinImpl;

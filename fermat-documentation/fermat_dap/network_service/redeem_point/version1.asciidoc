@@ -1,0 +1,24 @@
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+.Relacionado al Asset Issuer
+El DAP Manager, al detectar que se ha instalado la RedeemPoint wallet, habilitará los componentes de este networkservice, que al iniciarse
+se registrará con el communication server.
+
+En un determinado momento, llegará una petición de comunicación a través del ActorNetworkService Issuer enviando una extended public Key para ser guardada
+en la Redeem Point Address Book. De esta extended Public Key, el Redeem Point generará todas las claves públicas y activará a la CRypto Network para que escuche transacciones
+de estas direcciones.
+
+Llegada una transacción enviada a una de estas direcciones, se disparará un evento que generará el débito en la Asset User Wallet.
+
+.Relacionado al Asset User
+Al iniciarse debe conectarse con el communication Server y notificar su posición.
+Si algún usuario está "cerca", recibirá la solicitud de brindar información del Redeem Point a través del communication server. Entre la información que estará pasando
+al Asset User se encuentra la dirección de bitcoin generada a través de la clave pública.
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

@@ -1,0 +1,16 @@
+[[ch01_intro_Beyond Bitcoin: FERMAT DMP]]
+== Introduction
+
+=== Beyond Bitcoin: FERMAT DMP
+
+((("bitcoin", id="ix_ch01-asciidoc0", range="startofrange")))((("bitcoin","defined")))FERMAT DMP (Decentralized Money Platform) is an Open Source P2P (Peer-to-Peer) System with a Plug-in Architecture running on end-user's devices that features a new ground shaking concept: the development of the cryptocurrency value transport techology to a world-wide adopted system relying on the global intelligence already existent. Instead of begginning a new project in this industry completley from zero point, finding and implementing a new conceptual and technological standard based on solid mathemathical logic that lyes a common based for future developments BASED AND REUSING most of the global intelligence already present and available in the cryptoworld, giving by this mean a collective group coherence to grow safely in a collaborative way, yet respecting and giving credit ( recognition) to each and every one who makes an effort to develop and offer a valuable component to the whole.
+
+
+.Development of the cryptoworld before FERMAT
+****
+
+((("bitcoin","precursors to"))) ( -- to be completed -- )ction script)
+
+****
+
+

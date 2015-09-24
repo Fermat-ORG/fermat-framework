@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService.database.OutgoingMessageDAO;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
@@ -44,13 +44,13 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
      * Constructor with parameters
      *
      * @param remoteNetworkServicePublicKey
-     * @param errorManager instance
-     * @param outgoingMessageDao instance
+     * @param errorManager                  instance
+     * @param outgoingMessageDao            instance
      */
     public WalletStoreNetworkServiceLocalAgent(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDAO outgoingMessageDao) {
-        this.remoteNetworkServicePublicKey   = remoteNetworkServicePublicKey;
-        this.errorManager                    = errorManager;
-        this.eventManager                    = eventManager;
+        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
     }
 
@@ -61,7 +61,7 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
      *
      * @param message the message to send
      */
-    public void sendMessage(Message message){
+    public void sendMessage(Message message) {
 
         try {
 
@@ -87,22 +87,21 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
     }
 
 
-
     /**
      * Notify the client when a incoming message is receive by the incomingTemplateNetworkServiceMessage
      * ant fire a new event
      *
      * @param incomingTemplateNetworkServiceMessage received
      */
-    private void onMessageReceived(WalletStoreNetworkServiceMessage incomingTemplateNetworkServiceMessage){
+    private void onMessageReceived(WalletStoreNetworkServiceMessage incomingTemplateNetworkServiceMessage) {
 
         /**
          * Put the message on a event and fire new event
          */
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
-        platformEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
-        ((NewNetworkServiceMessageReceivedEvent) platformEvent).setData(incomingTemplateNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
-        eventManager.raiseEvent(platformEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
+        fermatEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
+        ((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
+        eventManager.raiseEvent(fermatEvent);
 
     }
 
@@ -111,7 +110,7 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
      * when new message is received
      *
      * @param observable the observable object
-     * @param data the data update
+     * @param data       the data update
      */
     @Override
     public void update(Observable observable, Object data) {
@@ -123,6 +122,7 @@ public class WalletStoreNetworkServiceLocalAgent implements Observer {
 
     /**
      * Return the public key of the remote network service
+     *
      * @return
      */
     public String getRemoteNetworkServicePublicKey() {
