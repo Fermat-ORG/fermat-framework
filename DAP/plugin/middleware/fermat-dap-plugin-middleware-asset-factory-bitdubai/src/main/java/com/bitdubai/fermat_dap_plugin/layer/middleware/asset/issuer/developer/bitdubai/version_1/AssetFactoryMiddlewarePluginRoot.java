@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -28,11 +29,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
@@ -57,7 +53,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
-import java.io.Console;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -172,9 +167,9 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     public void start() throws CantStartPluginException {
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
         try {
-            //System.out.println("******* Asset Factory Init, Open Database. ******");
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            //testAssetFactory();
+            //testSaveAssetFactory();
+            //testPublishAsset();
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -245,13 +240,13 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
         }
     }
 
-    public AssetFactory testAssetFactory()
+    public void testSaveAssetFactory()
     {
         try {
             java.util.Date date= new java.util.Date();
             System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
-/*            assetFactory.setPublicKey("ASD-125412541-BS-854");
+            assetFactory.setPublicKey("ASD-125412541-BS-854");
             assetFactory.setDescription("Asset de Prueba");
             assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
             assetFactory.setAmount(1);
@@ -264,18 +259,13 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             assetFactory.setQuantity(100);
             assetFactory.setState(State.DRAFT);
             Resource resource = new Resource();
+            List<Resource> resources = new ArrayList<>();
             resource.setId(UUID.randomUUID());
             resource.setName("Foto 1");
-            resource.setFileName("imagen.png");
-            resource.setResourceType(ResourceType.IMAGE);
-            resource.setResourceDensity(ResourceDensity.HDPI);
-            List<Resource> resources = new ArrayList<>();
-            resources.add(resource);
-            resource.setId(UUID.randomUUID());
-            resource.setName("Foto 2");
             resource.setFileName("imagen2.png");
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
+            resource.setResourceBinayData(new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff});
             resources.add(resource);
             assetFactory.setResources(resources);
             IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
@@ -294,37 +284,48 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
                     return "signature";
                 }
             };
-            assetFactory.setIdentityAssetIssuer(identityAssetIssuer);*/
-            //assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
-            assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
-            //publishAsset(assetFactory);
-            System.out.println("******* Metodo testAssetFactory. Franklin ******" + assetFactory + assetFactory.getName());
-            return assetFactory;
+            assetFactory.setIdentityAssetIssuer(identityAssetIssuer);
+            assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
         }catch (Exception e){
             System.out.println("******* Metodo testAssetFactory, Error. Franklin ******" );
             e.printStackTrace();
-            return  null;
+        }
+    }
+
+    public AssetFactory testPublishAsset(){
+        try{
+            java.util.Date date= new java.util.Date();
+            System.out.println(new Timestamp(date.getTime()));
+            AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
+            assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
+            publishAsset(assetFactory, BlockchainNetworkType.DEFAULT);
+            return assetFactory;
+        }
+        catch (Exception e){
+            System.out.println("******* Metodo testAssetFactory, Error. Franklin ******" );
+            e.printStackTrace();
+            return null;
         }
     }
 
     @Override
-    public AssetFactory getAssetFactoryByPublicKey(String assetPublicKey) throws CantGetAssetFactoryException {
+    public AssetFactory getAssetFactoryByPublicKey(String assetPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryMiddlewareManager.getAssetFactory(assetPublicKey);
     }
 
     @Override
-    public List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         //TODO:Modifcar este metodo ya que tenemos que buscar en la tabla del Identity, leer todo los registros asociados a el buscarlo en la tabla asset factory y devolver un objeto lleno del asset factory con todas sus propiedades
         return assetFactoryMiddlewareManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
     }
 
     @Override
-    public List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryMiddlewareManager.getAssetFactoryByState(state);
     }
 
     @Override
-    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryMiddlewareManager.getAssetFactoryAll();
     }
 
@@ -350,6 +351,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
 
     @Override
     public long getAvailableBalance(long amount) {
+        //TODO:Implementar de la Crypto Vault
         return 0;
     }
 

@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -25,20 +28,21 @@ import java.util.UUID;
 
 public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, Serializable {
 
+    private String         publicKey;
+    private UUID           walletCatalogId;
     private WalletCategory walletCategory;
-    private List<InstalledSkin> skinsId;
+    private WalletType     walletType;
+    private String         walletName;
+    private String         walletIcon;
+    private String         walletPlatformIdentifier;
+    private Version        version;
+    private String         screenSize;
+    private String         navigationStructureVersion;
+    private String         walletDeveloper;
+    private String         deviceUserPublicKey;
+
+    private List<InstalledSkin>     skinsId;
     private List<InstalledLanguage> languagesId;
-    private String walletIcon;
-    private String walletName;
-    private String publicKey;
-    private String walletPlatformIdentifier;
-    private Version version;
-    private WalletType walletType;
-    private String screenSize;
-    private String navigationStructureVersion;
-    private UUID walletCatalogId;
-    private String walletDeveloper;
-    private String deviceUserPublicKey;
 
     public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
                                                   List<InstalledSkin> skinsId,
@@ -194,4 +198,21 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
         return this.deviceUserPublicKey;
     }
 
+    @Override
+    public Platforms getPlatform() {
+        // TODO NOW IS BY DEFECT
+        return Platforms.CRYPTO_CURRENCY_PLATFORM;
+    }
+
+    @Override
+    public Actors getActorType() {
+        // TODO NOW IS BY DEFECT
+        return Actors.INTRA_USER;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        // TODO NOW IS BY DEFECT
+        return CryptoCurrency.BITCOIN;
+    }
 }
