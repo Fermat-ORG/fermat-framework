@@ -31,7 +31,7 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
         this.assetFactoryManager = assetFactoryManager;
     }
 
-    public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException {
+    public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByPublicKey(assetPublicKey);
     }
 
@@ -47,15 +47,15 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
         assetFactoryManager.publishAsset(assetFactory, blockchainNetworkType);
     }
 
-    public List<AssetFactory> getAssetsFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
     }
 
-    public List<AssetFactory> getAssetsFactoryByState(State state) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByState(state);
     }
 
-    public List<AssetFactory> getAssetsFactoryAll() throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryAll();
     }
 

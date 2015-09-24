@@ -20,22 +20,22 @@ public interface AssetFactoryManager {
     /**
      * This method returns the information stored about the Asset Factory
      */
-    AssetFactory getAssetFactoryByPublicKey(String assetPublicKey) throws CantGetAssetFactoryException;
+    AssetFactory getAssetFactoryByPublicKey(String assetPublicKey) throws CantGetAssetFactoryException, CantCreateFileException;
 
     /**
      * This method returns the information stored about the all Asset Factory by issuerIdentityKey.
      */
-    List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException;
+    List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException;
 
     /**
      * This method returns the information stored about the all Asset Factory by state
      */
-    List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException;
+    List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException;
 
     /**
      * This method returns the information stored about the all Asset Factory
      */
-    List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException;
+    List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException;
 
     //CRUD
     /**

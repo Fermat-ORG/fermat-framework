@@ -13,4 +13,8 @@ public class CantIssueDigitalAssetException extends DAPException {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
 
+    public CantIssueDigitalAssetException(final String message) {
+        this(null, DEFAULT_MESSAGE, message);
+    }
+
 }

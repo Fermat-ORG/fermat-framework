@@ -183,6 +183,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     userPublicKey);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.assetIssuingTransactionMonitorAgent.start();*/
+            //testIssueSingleAsset();
         }
         catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "Cannot set an object, probably is null");
@@ -194,7 +195,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Starting Asset Issuing plugin", "Unexpected exception");
         }
         this.serviceStatus = ServiceStatus.STARTED;
-        //testIssueSingleAsset();
+
     }
 
     @Override
@@ -313,7 +314,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }
     }
 
-    private void testIssueSingleAsset(){
+    private void testIssueSingleAsset() throws CantIssueDigitalAssetsException{
         Logger LOG = Logger.getGlobal();
         LOG.info("MAP_TEST_SINGLE");
         DigitalAsset digitalAsset=new DigitalAsset();
@@ -329,11 +330,9 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         DigitalAssetContract digitalAssetContract=new DigitalAssetContract();
         digitalAsset.setContract(digitalAssetContract);
         LOG.info("MAP_DigitalAsset2:"+digitalAsset);
-        try {
-            this.assetIssuingTransactionManager.issueAssets(digitalAsset,1,BlockchainNetworkType.REG_TEST);
-        } catch (CantIssueDigitalAssetsException e) {
-            LOG.info("MAP test exception:"+e);
-        }
+
+            this.assetIssuingTransactionManager.issueAssets(digitalAsset,2,BlockchainNetworkType.REG_TEST);
+
     }
 
     @Override
