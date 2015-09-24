@@ -108,7 +108,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN, resource.getResourceType().value());
         //record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, resource.getResourceFile().getPath());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN, "aca va el path del archivo");
-        //TODO: Analizar crear una constante para que guarde los bytes del archivo asociado
 
         return record;
     }
@@ -280,7 +279,9 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
     {
         DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
 
-        table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+        if (filter != null)
+            table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+
         table.loadToMemory();
 
         return table.getRecords();
@@ -565,6 +566,13 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                     contractProperty.setName(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN));
                     contractProperty.setValue(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN));
 
+                    if (contractProperty.getName() == "redeemable"){
+                        assetFactory.setIsRedeemable(Boolean.valueOf(contractProperty.getValue().toString()));
+                    }
+
+                    if (contractProperty.getName() == "expiration_date"){
+                        assetFactory.setExpirationDate(Timestamp.valueOf(contractProperty.getValue().toString()));
+                    }
                     contractProperties.add(contractProperty);
                 }
 
@@ -616,8 +624,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
                     {
                         resource.setResourceType(ResourceType.IMAGE);
                     }
-                    //TODO: Revisar que hacer con resource.setResourceFile() ya que es el archivo como tal, de donde lo saco, desde un binario o el path donde se guardo el archivo.
-                    //resource.setResourceFile();
 
                     resources.add(resource);
                 }
@@ -633,7 +639,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem 
         }catch (Exception e){
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get projects from the database with filter: " + filter.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get assets factory from the database with filter: " + filter.toString(), null);
         }
 
     }
