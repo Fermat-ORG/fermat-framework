@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -9,8 +10,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsRegistry;
@@ -19,12 +23,21 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDeveloperDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressReceivedEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,12 +53,32 @@ import java.util.regex.Pattern;
  *
  * Created by Leon Acosta (laion.cj91@gmail.com) on 10/09/2015.
  */
-public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletContactsManager {
+public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDevelopers ,
+                                                           DealsWithCryptoAddressesNetworkService,
+                                                           DealsWithErrors              ,
+                                                           DealsWithEvents              ,
+                                                           DealsWithPluginDatabaseSystem,
+                                                           DealsWithLogger              ,
+                                                           LogManagerForDevelopers      ,
+                                                           Plugin                       ,
+                                                           Service                      ,
+                                                           WalletContactsManager        {
+
+    /**
+     * DealsWithCryptoAddressesNetworkService Interface member variables.
+     */
+    private CryptoAddressesManager cryptoAddressesManager;
 
     /**
      * DealWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -68,21 +101,26 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+    public static final Actors actorType = Actors.INTRA_USER;
+
 
     /**
      * WalletContactsManager Interface implementation.
      */
     public WalletContactsRegistry getWalletContactsRegistry() throws CantGetWalletContactRegistryException {
+
         try {
-            WalletContactsMiddlewareRegistry walletContactsRegistry = new WalletContactsMiddlewareRegistry(errorManager, logManager, pluginDatabaseSystem, pluginId);
+            WalletContactsMiddlewareRegistry walletContactsRegistry = new WalletContactsMiddlewareRegistry(null, errorManager, logManager, pluginDatabaseSystem, pluginId);
 
             walletContactsRegistry.initialize();
 
             return walletContactsRegistry;
         } catch (CantInitializeWalletContactsMiddlewareDatabaseException exception) {
+
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantGetWalletContactRegistryException(CantGetWalletContactRegistryException.DEFAULT_MESSAGE, exception);
         } catch (Exception exception){
+
             throw new CantGetWalletContactRegistryException(CantGetWalletContactRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception));
         }
     }
@@ -93,8 +131,55 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
      */
 
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
+
+        WalletContactsMiddlewareRegistry walletContactsRegistry = new WalletContactsMiddlewareRegistry(
+                cryptoAddressesManager,
+                errorManager          ,
+                logManager            ,
+                pluginDatabaseSystem  ,
+                pluginId
+        );
+
+        try {
+
+            walletContactsRegistry.initialize();
+        } catch (CantInitializeWalletContactsMiddlewareDatabaseException e) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e);
+        }
+        // execute pending address exchange requests
+        executePendingAddressExchangeRequests(walletContactsRegistry);
+
+        FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_RECEIVED);
+        cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressReceivedEventHandler(walletContactsRegistry, this));
+        eventManager.addListener(cryptoAddressReceivedEventListener);
+        listenersAdded.add(cryptoAddressReceivedEventListener);
+
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    private void executePendingAddressExchangeRequests(WalletContactsMiddlewareRegistry walletContactsRegistry) {
+        try {
+            List<PendingAddressExchangeRequest> addressExchangeRequestRespondedList = cryptoAddressesManager.listPendingRequests(
+                    actorType,
+                    null // to return all pending requests
+            );
+
+            for (PendingAddressExchangeRequest request : addressExchangeRequestRespondedList) {
+
+                if (request.getState() == AddressExchangeRequestState.DENIED_FOR_INCOMPATIBILITY ||
+                    request.getState() == AddressExchangeRequestState.RESPONDED                 ) {
+
+                    walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
+                }
+            }
+
+        } catch (CantListPendingAddressExchangeRequestsException | CantHandleCryptoAddressReceivedEventException e) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override
@@ -109,6 +194,12 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
 
     @Override
     public void stop() {
+
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
+        }
+        listenersAdded.clear();
+
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -155,11 +246,6 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         }
     }
 
-    /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
     public static LogLevel getLogLevelByClass(String className){
         try{
             String[] correctedClass = className.split(Pattern.quote("$"));
@@ -169,10 +255,6 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         }
     }
 
-    /**
-     * DatabaseManagerForDevelopers interface implementation
-     * Returns the list of databases implemented on this plug in.
-     */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabase> developerDatabaseList = null;
@@ -185,13 +267,6 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         return developerDatabaseList;
     }
 
-    /**
-     * returns the list of tables for the given database
-     *
-     * @param developerObjectFactory
-     * @param developerDatabase
-     * @return
-     */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         List<DeveloperDatabaseTable> developerDatabaseTableList = null;
@@ -204,17 +279,9 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
         return developerDatabaseTableList;
     }
 
-    /**
-     * returns the list of records for the passed table
-     *
-     * @param developerObjectFactory
-     * @param developerDatabase
-     * @param developerDatabaseTable
-     * @return
-     */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = new ArrayList<>();
         try {
             WalletContactsMiddlewareDeveloperDatabaseFactory dbFactory = new WalletContactsMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             dbFactory.initializeDatabase();
@@ -228,11 +295,27 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
     }
 
     /**
+     * DealWithCryptoAddressesNetworkService Interface implementation.
+     */
+    @Override
+    public void setCryptoAddressesManager(CryptoAddressesManager cryptoAddressesManager) {
+        this.cryptoAddressesManager = cryptoAddressesManager;
+    }
+
+    /**
      * DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
+    }
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     /**
