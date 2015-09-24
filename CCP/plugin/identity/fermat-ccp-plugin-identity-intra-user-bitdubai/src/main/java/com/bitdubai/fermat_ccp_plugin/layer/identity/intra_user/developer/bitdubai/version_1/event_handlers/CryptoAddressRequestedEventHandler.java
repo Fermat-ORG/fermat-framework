@@ -21,10 +21,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdub
 public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
 
     private final IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService;
+    private final IntraUserIdentityPluginRoot                     intraUserIdentityPluginRoot;
 
-    private final IntraUserIdentityPluginRoot intraUserIdentityPluginRoot;
-
-    public CryptoAddressRequestedEventHandler(final IntraUserIdentityPluginRoot    intraUserIdentityPluginRoot,
+    public CryptoAddressRequestedEventHandler(final IntraUserIdentityPluginRoot                     intraUserIdentityPluginRoot,
                                               final IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
         this.cryptoAddressGenerationService = cryptoAddressGenerationService;
         this.intraUserIdentityPluginRoot    = intraUserIdentityPluginRoot;
@@ -45,9 +44,8 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
             if (fermatEvent instanceof CryptoAddressRequestedEvent) {
                 CryptoAddressRequestedEvent cryptoAddressRequestedEvent = (CryptoAddressRequestedEvent) fermatEvent;
 
-                if (cryptoAddressRequestedEvent.getActorType().equals(Actors.INTRA_USER)) {
+                if (cryptoAddressRequestedEvent.getActorType().equals(Actors.INTRA_USER))
                     cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(cryptoAddressRequestedEvent.getRequestId());
-                }
 
             } else {
                 EventType eventExpected = EventType.CRYPTO_ADDRESS_REQUESTED;

@@ -29,9 +29,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantHandleCryptoAddressRequestEventException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.VaultAdministrator;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
@@ -237,8 +240,18 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_IDENTITY);
         }
 
-        VaultAdministrator vaultAdministrator = new IntraUserIdentityVaultAdministrator(cryptoVaultManager);
-        IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService = new IntraUserIdentityCryptoAddressGenerationService(cryptoAddressesManager, cryptoAddressBookManager, vaultAdministrator, walletManagerManager);
+        IntraUserIdentityVaultAdministrator intraUserIdentityVaultAdministrator = new IntraUserIdentityVaultAdministrator(
+                cryptoVaultManager
+        );
+
+        IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService = new IntraUserIdentityCryptoAddressGenerationService(
+                cryptoAddressesManager,
+                cryptoAddressBookManager,
+                intraUserIdentityVaultAdministrator,
+                walletManagerManager
+        );
+
+        executePendingAddressExchangeRequests(cryptoAddressGenerationService);
 
         FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_REQUESTED);
         cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressGenerationService));
@@ -246,6 +259,22 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
         listenersAdded.add(cryptoAddressReceivedEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    private void executePendingAddressExchangeRequests(IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
+        try {
+            List<PendingAddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
+                    IntraUserIdentityCryptoAddressGenerationService.actorType,
+                    AddressExchangeRequestState.PENDING_LOCAL_RESPONSE
+            );
+
+            for (PendingAddressExchangeRequest request : addressExchangeRequestList) {
+                cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(request);
+            }
+
+        } catch (CantListPendingAddressExchangeRequestsException | CantHandleCryptoAddressRequestEventException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
 

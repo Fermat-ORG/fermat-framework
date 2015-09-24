@@ -20,7 +20,9 @@ public interface PendingAddressExchangeRequest {
 
     String getWalletPublicKey();
 
-    Actors getActorType();
+    Actors getRequesterActorType();
+
+    Actors getActorToType();
 
     String getRequesterActorPublicKey();
 

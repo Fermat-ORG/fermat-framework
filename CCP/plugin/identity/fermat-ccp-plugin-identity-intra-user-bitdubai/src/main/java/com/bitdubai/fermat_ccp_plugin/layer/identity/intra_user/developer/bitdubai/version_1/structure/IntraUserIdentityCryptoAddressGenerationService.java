@@ -1,25 +1,22 @@
 package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOnNONEException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantHandleCryptoAddressRequestEventException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantIdentifyVaultException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressGenerationService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.VaultAdministrator;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -35,68 +32,88 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserIdentityCryptoAddressGenerationService implements CryptoAddressGenerationService {
+public class IntraUserIdentityCryptoAddressGenerationService {
 
-    private final CryptoAddressesManager cryptoAddressesManager;
+    public static final Actors actorType = Actors.INTRA_USER;
 
-    private final CryptoAddressBookManager cryptoAddressBookManager;
+    private final CryptoAddressesManager                cryptoAddressesManager;
+    private final CryptoAddressBookManager              cryptoAddressBookManager;
+    private final IntraUserIdentityVaultAdministrator   vaultAdministrator;
+    private final WalletManagerManager                  walletManagerManager;
 
-    private final VaultAdministrator vaultAdministrator;
+    public IntraUserIdentityCryptoAddressGenerationService(final CryptoAddressesManager                cryptoAddressesManager,
+                                                           final CryptoAddressBookManager              cryptoAddressBookManager,
+                                                           final IntraUserIdentityVaultAdministrator   vaultAdministrator,
+                                                           final WalletManagerManager                  walletManagerManager) {
 
-    private final WalletManagerManager walletManagerManager;
-
-    public IntraUserIdentityCryptoAddressGenerationService(CryptoAddressesManager cryptoAddressesManager, CryptoAddressBookManager cryptoAddressBookManager, VaultAdministrator vaultAdministrator, WalletManagerManager walletManagerManager) {
-        this.cryptoAddressesManager = cryptoAddressesManager;
+        this.cryptoAddressesManager   = cryptoAddressesManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
-        this.vaultAdministrator = vaultAdministrator;
-        this.walletManagerManager = walletManagerManager;
+        this.vaultAdministrator       = vaultAdministrator;
+        this.walletManagerManager     = walletManagerManager;
     }
 
-    @Override
+    // TODO what happens if i don't recognize the actor? if the request arrives to me must belongs.. but...
+
+
     public void handleCryptoAddressRequestedEvent(UUID requestId) throws CantHandleCryptoAddressRequestEventException {
 
         try {
-            PendingAddressExchangeRequest pendingAddressExchangeRequest = cryptoAddressesManager.getPendingRequest(requestId);
-            CryptoCurrency cryptoCurrencyInvolved = pendingAddressExchangeRequest.getCryptoCurrency();
-            BlockchainNetworkType blockchainNetworkTypeInvolved = pendingAddressExchangeRequest.getBlockchainNetworkType();
-
-            InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
-                    cryptoCurrencyInvolved,
-                    Actors.INTRA_USER,
-                    blockchainNetworkTypeInvolved
-            );
-
-            CryptoVaultManager cryptoVaultManager = vaultAdministrator.getVaultByCryptoCurrency(cryptoCurrencyInvolved);
-
-            //CryptoAddress cryptoAddress = cryptoVaultManager.getAddress(installedWallet.getWalletPublicKey(), blockchainNetworkTypeInvolved);
-
-            CryptoAddress cryptoAddress = cryptoVaultManager.getAddress();
-
-            ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(
-                    installedWallet.getWalletCategory(),
-                    installedWallet.getWalletPlatformIdentifier()
-            );
-
-            cryptoAddressBookManager.registerCryptoAddress(
-                    cryptoAddress,
-                    pendingAddressExchangeRequest.getRequesterActorPublicKey(),
-                    pendingAddressExchangeRequest.getActorType(), // TODO CHANGE
-                    pendingAddressExchangeRequest.getActorToRequestPublicKey(),
-                    pendingAddressExchangeRequest.getActorType(), // TODO CHANGE
-                    installedWallet.getPlatform(),
-                    VaultType.CRYPTO_CURRENCY_VAULT,
-                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                    installedWallet.getWalletPublicKey(),
-                    referenceWallet
-
-            );
-
-        } catch (CantRegisterCryptoAddressBookRecordException | CallToGetByCodeOnNONEException | InvalidParameterException e) {
-
-            throw new CantHandleCryptoAddressRequestEventException(e);
+            PendingAddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
+            handleCryptoAddressRequestedEvent(request);
         } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
 
             throw new CantHandleCryptoAddressRequestEventException(e, "RequestId: "+requestId);
+        }
+    }
+
+    public void handleCryptoAddressRequestedEvent(PendingAddressExchangeRequest request) throws CantHandleCryptoAddressRequestEventException {
+
+        try {
+
+            InstalledWallet wallet = walletManagerManager.getDefaultWallet(
+                    request.getCryptoCurrency(),
+                    actorType,
+                    request.getBlockchainNetworkType()
+            );
+
+            if (wallet != null) {
+
+                CryptoCurrencyVault cryptoCurrencyVault = CryptoCurrencyVault.getByCryptoCurrency(request.getCryptoCurrency());
+
+                CryptoVaultManager vault = vaultAdministrator.getVault(cryptoCurrencyVault);
+
+                CryptoAddress cryptoAddress = vault.getAddress();
+
+                ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(wallet.getWalletCategory(), wallet.getWalletPlatformIdentifier());
+
+                cryptoAddressBookManager.registerCryptoAddress(
+                        cryptoAddress,
+                        request.getActorToRequestPublicKey(),
+                        request.getActorToType(),
+                        request.getRequesterActorPublicKey(),
+                        request.getRequesterActorType(),
+                        wallet.getPlatform(),
+                        cryptoCurrencyVault.getVaultType(),
+                        cryptoCurrencyVault.getCode(),
+                        wallet.getWalletPublicKey(),
+                        referenceWallet
+                );
+
+                cryptoAddressesManager.acceptAddressExchangeRequest(
+                        request.getRequestId(),
+                        cryptoAddress
+                );
+            } else {
+                cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
+            }
+
+        } catch (CantDenyAddressExchangeRequestException      |
+                 CantAcceptAddressExchangeRequestException    |
+                 CantRegisterCryptoAddressBookRecordException |
+                 CallToGetByCodeOnNONEException               |
+                 InvalidParameterException e) {
+
+            throw new CantHandleCryptoAddressRequestEventException(e);
         } catch (CantIdentifyVaultException e) {
 
             throw new CantHandleCryptoAddressRequestEventException(e, "Can't identify a vault to work with.");
@@ -104,6 +121,5 @@ public class IntraUserIdentityCryptoAddressGenerationService implements CryptoAd
 
             throw new CantHandleCryptoAddressRequestEventException(e, "Can't get an Installed Wallet to work with.");
         }
-
     }
 }
