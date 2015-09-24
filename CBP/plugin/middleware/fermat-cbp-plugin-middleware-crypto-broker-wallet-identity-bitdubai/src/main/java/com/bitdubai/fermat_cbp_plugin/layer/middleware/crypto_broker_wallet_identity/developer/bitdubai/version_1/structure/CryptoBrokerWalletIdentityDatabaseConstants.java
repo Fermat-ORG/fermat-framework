@@ -6,6 +6,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.crypto_broker_wallet_ide
 
 public class CryptoBrokerWalletIdentityDatabaseConstants {
 
+    public static final String WALLET_IDENTITY_DATABASE_NAME = "WalletIdentity";
+
     /**
      *  walletidentity database table definition.
      */
