@@ -14,35 +14,37 @@ import java.util.UUID;
  */
 public interface CryptoDesktopInstalledSubApp {
 
-        /**
-         * This method gives us the list of all the languages installed for this wallet
-         *
-         * @return the list of languages
-         */
-        public List<CryptoDesktopWalletInstalledLanguage> getLanguagesId();
+    /**
+     * This method gives us the list of all the languages installed for this wallet
+     *
+     * @return the list of languages
+     */
+    public List<CryptoDesktopWalletInstalledLanguage> getLanguagesId();
 
-        /**
-         * This method gives us the list of all the skins installed for this wallet
-         *
-         * @return the saud list of skins
-         */
-        public List<CryptoDesktopInstalledSkin> getSkinsId();
+    /**
+     * This method gives us the list of all the skins installed for this wallet
+     *
+     * @return the saud list of skins
+     */
+    public List<CryptoDesktopInstalledSkin> getSkinsId();
 
-        /**
-         * This method tell us the category of the wallet
-         *
-         * @return the category of the wallet
-         */
+    /**
+     * This method tell us the category of the wallet
+     *
+     * @return the category of the wallet
+     */
     public WalletCategory getWalletCategory();
 
     /**
      * This method tell us the type of the wallet
+     *
      * @return WalletType enum
      */
     public WalletType getWalletType();
 
     /**
      * This method tell us the Screen Size of the wallet
+     *
      * @return String ScreenSize
      */
     public String getWalletScreenSize();
@@ -50,6 +52,7 @@ public interface CryptoDesktopInstalledSubApp {
 
     /**
      * This method tell us the Navigation Structure Version of the wallet
+     *
      * @return String NavigationStructureVersion
      */
     public String getWalletNavigationStructureVersion();
@@ -59,7 +62,7 @@ public interface CryptoDesktopInstalledSubApp {
      * registers the wallet)
      *
      * @return an string that is result of the method getCode of an enum that can be inferred by the
-     *         WalletCategory of the wallet.
+     * WalletCategory of the wallet.
      */
     public String getWalletPlatformIdentifier();
 
@@ -107,7 +110,6 @@ public interface CryptoDesktopInstalledSubApp {
     public String getWalletDeveloperName();
 
     /**
-     *
      * @return
      */
     public String getWalletDeviceUserPublicKey();
