@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/myrect3"
+    android:orientation="horizontal"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/myrect2"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/txtLastTransactions"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:paddingLeft="10dp"
+                android:textColor="#727272"
+                android:text="Last transactions"
+                android:textSize="15dp"
+                android:gravity="center"
+                android:layout_weight="0.7"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="|"
+                android:textSize="15dp"
+                android:textColor="#727272"/>
+
+            <TextView
+                android:id="@+id/txtSeeAlltransactions"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="#727272"
+                android:text="See all"
+                android:textSize="17dp"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:layout_weight="0.7"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp">
+
+            <ImageView
+                android:id="@+id/imageView_action_prev"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_action_previous_item_grey"
+                />
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout_container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8">
+
+
+                    <ImageView
+                        android:id="@+id/imageView_transaction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="7dip"
+                        android:layout_weight="0"
+                        android:background="@drawable/rounded_button_green_selector"
+                        android:src="@drawable/ic_camera_green"
+                        android:elevation="2dip"
+                        android:layout_marginTop="5dp"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="0.7">
+
+                        <TextView
+                            android:id="@+id/txtViewTitleTransaction"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:paddingTop="10sp"
+                            android:paddingLeft="5sp"
+                            android:layout_marginTop="3dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:textColor="#727272"
+                            android:text="Transaccion hacia Starbuck 480 btc"
+                            android:textSize="12dp"
+                            android:gravity="left"
+                            android:layout_weight="0.7"/>
+
+                        <TextView
+                            android:id="@+id/txtViewDetailTransaction"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:paddingTop="10sp"
+                            android:paddingLeft="5sp"
+                            android:layout_marginTop="3dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:textColor="#727272"
+                            android:text="Taza de café"
+                            android:textSize="11dp"
+                            android:gravity="left"
+                            android:layout_weight="0.7"/>
+
+                    </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView_action_next"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_action_next_item_grey"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
