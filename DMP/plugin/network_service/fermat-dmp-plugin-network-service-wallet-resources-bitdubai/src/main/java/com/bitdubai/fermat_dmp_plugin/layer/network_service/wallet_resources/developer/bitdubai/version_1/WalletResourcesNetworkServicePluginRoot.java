@@ -1332,12 +1332,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
     @Override
-    public Language getLanguage(UUID languageId) throws CantGetLanguageFileException {
+    public Language getLanguage(UUID languageId, String walletPublicKey) throws CantGetLanguageFileException {
         return null;
     }
 
     @Override
-    public WalletNavigationStructure getNavigationStructure(UUID navigationStructure) throws CantGetWalletNavigationStructureException {
+    public WalletNavigationStructure getNavigationStructure(String publicKey, UUID skinId) throws CantGetWalletNavigationStructureException {
         return null;
     }
 }
