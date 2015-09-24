@@ -231,18 +231,18 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
             walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(actorIntraUser.getPublicKey(), walletPublicKey);
 
             return new CryptoWalletWalletModuleIntraUserActor(
-                    actorIntraUser.getPublicKey(),
                     actorIntraUser.getName(),
+                    true,
                     actorIntraUser.getProfileImage(),
-                    true
+                    actorIntraUser.getPublicKey()
             );
         } catch (com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
             return new CryptoWalletWalletModuleIntraUserActor(
-                    actorIntraUser.getPublicKey(),
                     actorIntraUser.getName(),
+                    false,
                     actorIntraUser.getProfileImage(),
-                    false
-            );
+                    actorIntraUser.getPublicKey()
+                    );
         } catch (CantGetWalletContactException e) {
             throw new CantEnrichIntraUserException(CantEnrichIntraUserException.DEFAULT_MESSAGE, e, "", "There was a problem trying to enrich the intra user record.");
         }
@@ -747,7 +747,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
                     }
                     break;
             }
-            return new CryptoWalletWalletModuleTransaction(bitcoinWalletTransaction, involvedActor, contactId);
+            return new CryptoWalletWalletModuleTransaction(bitcoinWalletTransaction, contactId, involvedActor);
         } catch (Exception e) {
             throw new CantEnrichTransactionException(CantEnrichTransactionException.DEFAULT_MESSAGE, e, "", "");
         }
