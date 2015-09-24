@@ -62,11 +62,9 @@ public class HomeFragment extends FermatWalletFragment {
 
     private int position;
 
-    public static HomeFragment newInstance(int position, ReferenceWalletSession walletSession) {
+    public static HomeFragment newInstance() {
         HomeFragment f = new HomeFragment();
-        f.setWalletSession(walletSession);
         Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
         f.setArguments(b);
         return f;
     }

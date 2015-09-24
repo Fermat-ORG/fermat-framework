@@ -6,11 +6,15 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.NetworkService;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
@@ -69,12 +73,12 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
 
 
     @Override
-    public void sendAddressExchangeRequest(String walletPublicKey, CryptoAddress cryptoAddressToSend, Actors actorType, String requesterActorPublicKey, String actorToRequestPublicKey) throws CantSendAddressExchangeRequestException {
+    public void sendAddressExchangeRequest(String walletPublicKey, CryptoAddress cryptoAddressToSend, Actors actorTypeBy, Actors actorTypeTo, String requesterActorPublicKey, String actorToRequestPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantSendAddressExchangeRequestException {
 
     }
 
     @Override
-    public void acceptAddressExchangeRequest(UUID requestId, CryptoAddress cryptoAddressReceived, String result) throws CantConfirmAddressExchangeRequestException {
+    public void acceptAddressExchangeRequest(UUID requestId, CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException {
 
     }
 
@@ -84,15 +88,19 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
     }
 
     @Override
-    public PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException {
+    public PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException {
         return null;
     }
 
     @Override
-    public void confirmExchangeAddressRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
+    public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
 
     }
 
+    @Override
+    public void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException {
+
+    }
 
     /**
      * Service Interface implementation.

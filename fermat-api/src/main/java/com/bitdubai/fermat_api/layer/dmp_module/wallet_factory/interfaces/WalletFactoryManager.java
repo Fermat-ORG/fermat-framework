@@ -13,8 +13,11 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableDevelopersException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableProjectsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetInstalledWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
 
 
@@ -46,5 +49,9 @@ public interface WalletFactoryManager {
     public List<WalletFactoryProject> getClosedProjects() throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
     public void closeProject(WalletFactoryProject walletFactoryProject)throws CantGetWalletFactoryProjectException;
+
+    public List<InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException;
+
+    public void cloneInstalledWallets (InstalledWallet walletToClone, String newName) throws CantCloneInstalledWalletException;
 
 }

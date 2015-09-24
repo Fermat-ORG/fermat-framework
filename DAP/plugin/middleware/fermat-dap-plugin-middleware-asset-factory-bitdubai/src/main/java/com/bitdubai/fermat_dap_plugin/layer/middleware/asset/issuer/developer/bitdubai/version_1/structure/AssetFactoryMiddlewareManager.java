@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -29,8 +29,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
-import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.*;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -38,8 +38,6 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-
-import org.bouncycastle.asn1.dvcs.Data;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -118,9 +116,11 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             assetFactory.setContractProperties(contractProperties);
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
             for (Resource resource : assetFactory.getResources()) {
-                PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-                imageFile.setContent(resource.getResourceBinayData());
-                imageFile.persistToMedia();
+                //if (resource.getResourceBinayData() != null) {
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    imageFile.setContent(resource.getResourceBinayData());
+                    imageFile.persistToMedia();
+                //}
             }
         }catch (CantCreateFileException cantCreateFileException)
         {
@@ -133,7 +133,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     }
 
-    private List<AssetFactory> getAssetFactories(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException
+    private List<AssetFactory> getAssetFactories(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException, CantCreateFileException
     {
         List<AssetFactory> assetFactories = new ArrayList<>();
 
@@ -181,7 +181,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public AssetFactory getAssetFactory(final String publicKey) throws CantGetAssetFactoryException
+    public AssetFactory getAssetFactory(final String publicKey) throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to search for the public Key
         DatabaseTableFilter filter = new DatabaseTableFilter() {
@@ -236,7 +236,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public List<AssetFactory> getAssetFactoryByIssuer(final String issuerIdentityPublicKey) throws CantGetAssetFactoryException
+    public List<AssetFactory> getAssetFactoryByIssuer(final String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to search for the issuer identity public Key
         DatabaseTableFilter filter = new DatabaseTableFilter() {
@@ -282,7 +282,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public List<AssetFactory> getAssetFactoryByState(final State state) throws CantGetAssetFactoryException
+    public List<AssetFactory> getAssetFactoryByState(final State state) throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to search for the state
         DatabaseTableFilter filter = new DatabaseTableFilter() {
@@ -328,7 +328,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException
+    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to null for all
         DatabaseTableFilter filter = null;
@@ -350,11 +350,11 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             DigitalAsset digitalAsset = new DigitalAsset();
             DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
 
-            for(ContractProperty property : assetFactory.getContractProperties())
-            {
-                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
-                digitalAssetContract.setContractProperty(contractProperty);
-            }
+//            for(ContractProperty property : assetFactory.getContractProperties())
+//            {
+//                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
+//                digitalAssetContract.setContractProperty(contractProperty);
+//            }
             ContractProperty redeemable;
             ContractProperty expirationDate;
             redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
@@ -363,8 +363,13 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
             redeemable1.setValue(assetFactory.getIsRedeemable());
             expirationDate1.setValue(assetFactory.getExpirationDate());
-            digitalAssetContract.setContractProperty(redeemable1);
-            digitalAssetContract.setContractProperty(expirationDate1);
+            try {
+
+                digitalAssetContract.setContractProperty(redeemable1);
+            }
+            catch (Exception e){
+                digitalAssetContract.setContractProperty(expirationDate1);
+            }
             digitalAsset.setContract(digitalAssetContract);
             digitalAsset.setName(assetFactory.getName());
             digitalAsset.setDescription(assetFactory.getDescription());
@@ -379,12 +384,16 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             //Llama al metodo AssetIssuer de la transaction
             //TODO: Revisar porque la asignacion del value al property no la asigna
             assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
+        }catch (CantIssueDigitalAssetsException e){
+            e.printStackTrace();
+            throw new CantSaveAssetFactoryException(e, "Exception General", "Method: issueAssets");
         }
         catch (CantSaveAssetFactoryException exception)
         {
             throw new CantSaveAssetFactoryException(exception, "Cant Save Asset Factory", "Method: publishAsset");
         }
         catch (Exception e){
+            e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: publishAsset");
         }
     }

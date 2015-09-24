@@ -162,7 +162,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
 
             // Esto podria ser un enum de item menu que correspondan a otro menu
             if(itemTitle.equals("New Identity")){
-                ((FermatScreenSwapper)getActivity()).changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(),null);
+                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode());
 
             }
 //            if(id == R.id.action_connection_request){
@@ -475,7 +475,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                changeActivity(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY);
+                changeActivity(Activities.CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY.getCode());
             }
         }); // the callback for when a list item is selected
         popupWindow.show();

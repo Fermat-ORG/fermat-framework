@@ -19,7 +19,7 @@ public interface CryptoBrokerWalletIdentityManager {
 
     List<CryptoBrokerWalletIdentity> getAllCryptoBrokerWalletIdentityAssociatedWithAWallet(UUID Wallet);
 
-    CryptoBrokerWalletIdentity getCryptoBrokerWalletIdentityByIdentity(CryptoCustomerIdentity identity);
+    CryptoBrokerWalletIdentity getCryptoBrokerWalletIdentityByIdentity(CryptoBrokerIdentity identity);
 
     CryptoBrokerWalletIdentity getCryptoBrokerWalletIdentityByWallet(UUID Wallet);
 
