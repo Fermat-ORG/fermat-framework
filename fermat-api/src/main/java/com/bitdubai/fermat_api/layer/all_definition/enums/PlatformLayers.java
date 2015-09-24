@@ -58,6 +58,7 @@ public enum PlatformLayers {
 
     // CCP Layers
     BITDUBAI_CCP_IDENTITY_LAYER("BCCPIDL", Developers.BITDUBAI),
+    BITDUBAI_CCP_MIDDLEWARE_LAYER("BCCPMIL", Developers.BITDUBAI),
     BITDUBAI_CCP_NETWORK_SERVICE_LAYER("BCCPNSL", Developers.BITDUBAI)
 
     ;
@@ -181,6 +182,8 @@ public enum PlatformLayers {
                 return BITDUBAI_CCP_IDENTITY_LAYER;
             case "BCCPNSL":
                 return BITDUBAI_CCP_NETWORK_SERVICE_LAYER;
+            case "BCCPMIL":
+                return BITDUBAI_CCP_MIDDLEWARE_LAYER;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");
 
