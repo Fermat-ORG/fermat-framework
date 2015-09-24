@@ -4,11 +4,13 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.CantGetOutgoingIntraUserTransactionManagerException;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserCantGetCryptoStatusException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.OutgoingIntraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.IntraUserCryptoTransactionManager;
@@ -38,7 +40,7 @@ import java.util.UUID;
 /**
  * Created by loui on 20/02/15.
  */
-public class OutgoingIntraUserTransactionPluginRoot implements DealsWithBitcoinWallet, DealsWithCryptoTransmissionNetworkService, DealsWithCryptoVault, DealsWithErrors, DealsWithPluginDatabaseSystem, OutgoingIntraUserManager, Plugin, Service{
+public class OutgoingIntraUserTransactionPluginRoot implements DealsWithBitcoinWallet, DealsWithCryptoTransmissionNetworkService, DealsWithCryptoVault, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, OutgoingIntraUserManager, Plugin, Service{
 
     /*
      * DealsWithBitcoinWallet Interface member variables.
@@ -60,6 +62,10 @@ public class OutgoingIntraUserTransactionPluginRoot implements DealsWithBitcoinW
      */
     private ErrorManager errorManager;
 
+    /*
+     * DealsWithEvents Interface member variables
+     */
+    private EventManager eventManager;
     /*
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -122,6 +128,14 @@ public class OutgoingIntraUserTransactionPluginRoot implements DealsWithBitcoinW
     }
 
     /*
+     * DealsWithEvents Interface implementation
+     */
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /*
      * DealsWithPluginDatabaseSystem Interface implementation
      */
     @Override
@@ -129,13 +143,17 @@ public class OutgoingIntraUserTransactionPluginRoot implements DealsWithBitcoinW
         this.pluginDatabaseSystem = pluginDatabaseSystemManager;
     }
 
-
     /*
      * OutgoingIntraUserManager Interface implementation
      */
     @Override
     public IntraUserCryptoTransactionManager getTransactionManager() throws CantGetOutgoingIntraUserTransactionManagerException {
         return new OutgoingIntraUserTransactionManager(this.pluginId,this.errorManager,this.bitcoinWalletManager,this.pluginDatabaseSystem);
+    }
+
+    @Override
+    public CryptoStatus getTransactionStatus(String transactionHash) throws OutgoingIntraUserCantGetCryptoStatusException {
+        return this.outgoingIntraUserDao.getCryptoStatus(transactionHash);
     }
 
     /**
@@ -154,7 +172,7 @@ public class OutgoingIntraUserTransactionPluginRoot implements DealsWithBitcoinW
         try {
             this.outgoingIntraUserDao = new OutgoingIntraUserDao(this.errorManager, this.pluginDatabaseSystem);
             this.outgoingIntraUserDao.initialize(this.pluginId);
-            this.transactionHandlerFactory = new OutgoingIntraUserTransactionHandlerFactory(this.bitcoinWalletManager, this.outgoingIntraUserDao);
+            this.transactionHandlerFactory = new OutgoingIntraUserTransactionHandlerFactory(this.eventManager,this.bitcoinWalletManager, this.outgoingIntraUserDao);
             this.transactionProcessorAgent = new OutgoingIntraUserTransactionProcessorAgent(this.errorManager,
                                                                                             this.cryptoVaultManager,
                                                                                             this.bitcoinWalletManager,
@@ -195,5 +213,4 @@ public class OutgoingIntraUserTransactionPluginRoot implements DealsWithBitcoinW
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
-
 }

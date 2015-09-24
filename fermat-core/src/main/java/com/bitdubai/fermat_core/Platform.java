@@ -1432,7 +1432,7 @@ public class Platform implements Serializable {
             } */
 
             if(plugin instanceof DealsWithCryptoAddressesNetworkService)
-                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesNetworkServiceManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
+                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
 
 
 

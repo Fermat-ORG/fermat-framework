@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_network.enums;
+package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 /**
  * Created by rodrigo on 9/21/15.
