@@ -615,7 +615,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     window.setStatusBarColor(Color.TRANSPARENT);
 
                     gc();
-                    InputStream inputStream = getAssets().open("drawables/home3.png");
+                    InputStream inputStream = getAssets().open("drawables/fondo.jpg");
 
 
                     window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
@@ -638,7 +638,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                     // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
-                    window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/home3.png"), null));
+                    window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -862,7 +862,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             pager.setAdapter(this.screenPagerAdapter);
 
             if (pager.getBackground() == null) {
-                Drawable d = Drawable.createFromStream(getAssets().open("drawables/home3.png"), null);
+                Drawable d = Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null);
                 pager.setBackground(d);
             }
 
