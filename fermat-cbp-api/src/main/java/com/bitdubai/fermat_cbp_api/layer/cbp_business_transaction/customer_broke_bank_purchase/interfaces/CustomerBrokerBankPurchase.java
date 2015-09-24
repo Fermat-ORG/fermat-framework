@@ -10,8 +10,6 @@ public interface CustomerBrokerBankPurchase  extends BusinessTransaction {
 
     String getPublicKeyCustomer();
 
-    String getPublicKeyBroker();
-
     String getBank();
 
     String getBankReference();
