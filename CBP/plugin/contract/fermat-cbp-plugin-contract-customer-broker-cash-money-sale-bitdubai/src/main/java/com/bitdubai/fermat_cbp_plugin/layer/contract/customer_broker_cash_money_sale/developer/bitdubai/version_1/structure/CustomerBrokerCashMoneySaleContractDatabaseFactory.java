@@ -96,7 +96,6 @@ public class CustomerBrokerCashMoneySaleContractDatabaseFactory implements Deals
 
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CustomerBrokerCashMoneySaleContractDatabaseConstants.CASH_MONEY_SALE_EVENTS_RECORDED_TABLE_NAME);
 
-        // ID del Contrato
         table.addColumn(CustomerBrokerCashMoneySaleContractDatabaseConstants.CASH_MONEY_SALE_EVENTS_RECORDED_TABLE_ID_COLUMN, DatabaseDataType.STRING, 36, true);
         table.addColumn(CustomerBrokerCashMoneySaleContractDatabaseConstants.CASH_MONEY_SALE_EVENTS_RECORDED_TABLE_EVENT_COLUMN, DatabaseDataType.STRING, 10, false);
         table.addColumn(CustomerBrokerCashMoneySaleContractDatabaseConstants.CASH_MONEY_SALE_EVENTS_RECORDED_TABLE_SOURCE_COLUMN, DatabaseDataType.STRING, 10, false);

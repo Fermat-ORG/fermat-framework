@@ -96,7 +96,6 @@ public class CustomerBrokerCryptoMoneyPurchaseContractDatabaseFactory implements
 
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CustomerBrokerCryptoMoneyPurchaseContractDatabaseConstants.CRYPTO_MONEY_PURCHASE_EVENTS_RECORDED_TABLE_NAME);
 
-        // ID del Contrato
         table.addColumn(CustomerBrokerCryptoMoneyPurchaseContractDatabaseConstants.CRYPTO_MONEY_PURCHASE_EVENTS_RECORDED_TABLE_ID_COLUMN, DatabaseDataType.STRING, 36, true);
         table.addColumn(CustomerBrokerCryptoMoneyPurchaseContractDatabaseConstants.CRYPTO_MONEY_PURCHASE_EVENTS_RECORDED_TABLE_EVENT_COLUMN, DatabaseDataType.STRING, 10, false);
         table.addColumn(CustomerBrokerCryptoMoneyPurchaseContractDatabaseConstants.CRYPTO_MONEY_PURCHASE_EVENTS_RECORDED_TABLE_SOURCE_COLUMN, DatabaseDataType.STRING, 10, false);

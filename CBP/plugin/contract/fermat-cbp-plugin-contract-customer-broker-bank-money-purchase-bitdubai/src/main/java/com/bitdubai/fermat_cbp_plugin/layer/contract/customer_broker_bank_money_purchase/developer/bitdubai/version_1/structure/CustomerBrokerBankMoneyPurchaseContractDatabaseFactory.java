@@ -96,7 +96,6 @@ public class CustomerBrokerBankMoneyPurchaseContractDatabaseFactory implements D
 
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.BANK_MONEY_PURCHASE_EVENTS_RECORDED_TABLE_NAME);
 
-        // ID del Contrato
         table.addColumn(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.BANK_MONEY_PURCHASE_EVENTS_RECORDED_TABLE_ID_COLUMN, DatabaseDataType.STRING, 36, true);
         table.addColumn(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.BANK_MONEY_PURCHASE_EVENTS_RECORDED_TABLE_EVENT_COLUMN, DatabaseDataType.STRING, 10, false);
         table.addColumn(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.BANK_MONEY_PURCHASE_EVENTS_RECORDED_TABLE_SOURCE_COLUMN, DatabaseDataType.STRING, 10, false);
