@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface CryptoBrokerSearch {
 
-    public void setNameToSearch(String nameToSearch);
+    void setNameToSearch(String nameToSearch);
 
     List<CryptoBrokerInformation> getResult() throws CantGetCryptoBrokerSearchResult;
 }
