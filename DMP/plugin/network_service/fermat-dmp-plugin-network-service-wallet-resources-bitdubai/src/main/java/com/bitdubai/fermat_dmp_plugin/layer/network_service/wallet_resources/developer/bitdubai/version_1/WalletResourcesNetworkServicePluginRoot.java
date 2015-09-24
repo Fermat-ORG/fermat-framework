@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.NavigationStructure;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 
@@ -65,7 +66,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.dev
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkServicesWalletResourcesDAO;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -234,13 +234,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
     }
 
-    private void setUp() {
-       // repositoriesName = new HashMap<UUID, Repository>();
 
-        //for testing purpose
-       // imagenes = new HashMap<String, byte[]>();
-        //layouts = new HashMap<String,String>();
-    }
 
     @Override
     public void pause() {
@@ -338,19 +332,22 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
 
             String linkToNavigationStructure = linkToRepo + "navigation_structure/" + skin.getNavigationStructureCompatibility() + "/";
-            downloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath,walletPublicKey);
+            downloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath, walletPublicKey);
 
             /**
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize,walletPublicKey);
+            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize, walletPublicKey);
 
             /**
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
+
             downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath, screenSize,walletPublicKey);
+
+
 
         } catch (CantDonwloadNavigationStructure e) {
             throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",e,"Error download navigation structure","");
@@ -445,7 +442,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
-            downloadLanguageFromRepo(linkToLanguage, skinId, languageName, LOCAL_STORAGE_PATH, screenSize,walletPublicKey);
+            downloadLanguageFromRepo(linkToLanguage, skinId, languageName, LOCAL_STORAGE_PATH, screenSize, walletPublicKey);
 
             /**
              *  Fire event Wallet language installed
@@ -613,8 +610,42 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
+    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException {
+        String content = "";
+        try {
+            //get repo from table
+            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+            //get image from disk
+            PluginTextFile layoutFile;
+
+
+            String reponame = repository.getPath() + walletPublicKey + "languages/";
+
+            fileName = skinId.toString() + "_" + fileName;
+
+
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            return layoutFile.getContent();
+        } catch (FileNotFoundException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error write language file resource  ", "");
+
+        } catch (CantGetRepositoryPathRecordException e) {
+
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error get repository from database ", "");
+
+        } catch (CantCreateFileException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error created language file resource ", "");
+
+        }
+
+
     }
 
 
@@ -683,7 +714,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String walletPublicKey) throws CantGetResourcesException {
 
-        String content = "";
+
        try {
            //get repo name
            //get repo from table
@@ -699,7 +730,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             PluginTextFile layoutFile;
             layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
-            content = layoutFile.getContent();
+            return layoutFile.getContent();
+
         } catch (FileNotFoundException e) {
            /**
              * I cant continue if this happens.
@@ -716,8 +748,83 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         }
 
-        return content;
+
     }
+
+
+    @Override
+    public Language getLanguage(UUID skinId, String walletPublicKey,String languageName) throws CantGetLanguageFileException {
+        String content = "";
+        try {
+
+            //get repo from table
+            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+
+            String reponame = repository.getPath() + walletPublicKey + "languages/"; //+"skins/"+repository.getSkinName()+"/";
+
+            String filename = skinId.toString() + "_" + languageName;
+
+            //get Xml from disk
+            PluginTextFile layoutFile;
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+            content = layoutFile.getContent();
+
+            return null; //(Language) XMLParser.parseXML(content, new Language());
+
+        } catch (FileNotFoundException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error write layout file resource  ", "");
+        }  catch (CantGetRepositoryPathRecordException e) {
+            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error get repository from database ", "");
+
+        } catch (CantCreateFileException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error created image file resource ", "");
+
+        }
+    }
+
+    @Override
+    public WalletNavigationStructure getNavigationStructure(UUID skinId, String walletPublicKey) throws CantGetWalletNavigationStructureException {
+            String content = "";
+            try {
+
+                //get repo from table
+                Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+
+                String reponame = repository.getPath() + walletPublicKey +"/"; //+"skins/"+repository.getSkinName()+"/";
+
+                String filename = skinId.toString() + "_navigation_structure.xml";;
+
+                //get Xml from disk
+                PluginTextFile layoutFile;
+                layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+                content = layoutFile.getContent();
+
+               return (WalletNavigationStructure) XMLParser.parseXML(content, new WalletNavigationStructure());
+
+            } catch (FileNotFoundException e) {
+                /**
+                 * I cant continue if this happens.
+                 */
+                throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error write layout file resource  ", "");
+            }  catch (CantGetRepositoryPathRecordException e) {
+                throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error get repository from database ", "");
+
+            } catch (CantCreateFileException e) {
+                /**
+                 * I cant continue if this happens.
+                 */
+                throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error created image file resource ", "");
+
+            }
+        }
 
 
     /**
@@ -1353,13 +1460,5 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    @Override
-    public Language getLanguage(UUID languageId) throws CantGetLanguageFileException {
-        return null;
-    }
 
-    @Override
-    public WalletNavigationStructure getNavigationStructure(UUID navigationStructure) throws CantGetWalletNavigationStructureException {
-        return null;
-    }
 }

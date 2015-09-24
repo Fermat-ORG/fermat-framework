@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 
@@ -52,13 +53,13 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return The content of the file
      * @throws CantGetLanguageFileException
      */
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException;
+    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException;
 
-    //todo implementar
-    public Language getLanguage(UUID languageId) throws CantGetLanguageFileException;
 
-    //todo implementar
-    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure getNavigationStructure(UUID navigationStructure) throws CantGetWalletNavigationStructureException;
+     Language getLanguage(UUID skinId, String walletPublicKey,String languageName) throws CantGetLanguageFileException;
+
+
+    WalletNavigationStructure getNavigationStructure(UUID skinId, String walletPublicKey) throws CantGetWalletNavigationStructureException;
 
 
     /**
