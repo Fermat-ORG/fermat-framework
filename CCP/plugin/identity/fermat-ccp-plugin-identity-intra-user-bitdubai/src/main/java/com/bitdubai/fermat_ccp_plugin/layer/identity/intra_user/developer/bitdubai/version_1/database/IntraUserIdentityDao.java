@@ -211,7 +211,6 @@ public class IntraUserIdentityDao implements DealsWithPluginDatabaseSystem {
             throw new CantGetIntraUserIdentitiesException (e.getMessage(), FermatException.wrapException(e), "Intra User Identity", "Cant get Intra User identity list, unknown failure.");
         }
 
-
         // Return the list values.
         return list;
     }

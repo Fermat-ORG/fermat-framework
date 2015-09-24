@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVaultEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Enums the crypto currency vaults in Fermat.
  * Created by Leon Acosta (laion.cj91@gmail.com) on 02/09/2015.
  */
-public enum CryptoCurrencyVault {
+public enum CryptoCurrencyVault implements FermatVaultEnum {
 
     BITCOIN_VAULT("BITV", CryptoCurrency.BITCOIN);
 
@@ -19,9 +20,7 @@ public enum CryptoCurrencyVault {
         this.cryptoCurrency = cryptoCurrency;
     }
 
-    public String getCode() {
-        return this.code;
-    }
+
 
     public CryptoCurrency getCryptoCurrency() {
         return this.cryptoCurrency;
@@ -43,5 +42,17 @@ public enum CryptoCurrencyVault {
                 return vault;
         }
         throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "CryptoCurrency Received: " + cryptoCurrency, "This CryptoCurrency is not valid for the CryptoCurrencyVault enum.");
+    }
+
+
+
+    @Override
+    public String getCode() {
+        return this.code;
+    }
+
+    @Override
+    public VaultType getVaultType() {
+        return VaultType.CRYPTO_CURRENCY_VAULT;
     }
 }

@@ -24,8 +24,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_core.layer.ccp.identity.CCPIdentityLayer;
@@ -1421,7 +1419,7 @@ public class Platform implements Serializable {
             } */
 
             if(plugin instanceof DealsWithCryptoAddressesNetworkService)
-                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesNetworkServiceManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
+                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
 
 
 
