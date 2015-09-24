@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
 /**
  * Created by Matias Furszyfer on 2015.09.17..
  */
-public class CryptoWalletPaymentRequest implements PaymentRequest{
+public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
 
     private String date;
 
@@ -18,7 +18,7 @@ public class CryptoWalletPaymentRequest implements PaymentRequest{
 
     private int type;
 
-    public CryptoWalletPaymentRequest(String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact,int type) {
+    public CryptoWalletWalletModulePaymentRequest(String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact, int type) {
         this.date = date;
         this.reason = reason;
         this.amount = amount;

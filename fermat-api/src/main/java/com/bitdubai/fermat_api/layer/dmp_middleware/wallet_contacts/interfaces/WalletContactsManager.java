@@ -17,6 +17,7 @@ public interface WalletContactsManager {
      * Throw the method <code>getWalletContactsRegistry</code> you can get an instance of Wallet Contacts Registry.
      *
      * @return an instance of WalletContactsRegistry.
+     *
      * @throws CantGetWalletContactRegistryException is thrown if something goes wrong.
      */
     WalletContactsRegistry getWalletContactsRegistry() throws CantGetWalletContactRegistryException;

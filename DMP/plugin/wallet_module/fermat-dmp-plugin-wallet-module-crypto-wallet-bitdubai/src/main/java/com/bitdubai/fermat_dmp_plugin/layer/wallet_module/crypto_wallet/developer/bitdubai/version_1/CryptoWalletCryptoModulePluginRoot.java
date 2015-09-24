@@ -122,13 +122,14 @@ public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager, 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation started...", null, null);
 
             CryptoWalletWalletModuleManager walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
-            walletModuleCryptoWallet.setBitcoinWalletManager(bitcoinWalletManager);
-            walletModuleCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
-            walletModuleCryptoWallet.setExtraUserManager(extraUserManager);
-            walletModuleCryptoWallet.setErrorManager(errorManager);
+
+            walletModuleCryptoWallet.setBitcoinWalletManager    (bitcoinWalletManager);
+            walletModuleCryptoWallet.setCryptoVaultManager      (cryptoVaultManager);
+            walletModuleCryptoWallet.setExtraUserManager        (extraUserManager);
+            walletModuleCryptoWallet.setErrorManager            (errorManager);
             walletModuleCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
             walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
-            walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
+            walletModuleCryptoWallet.setWalletContactsManager   (walletContactsManager);
             walletModuleCryptoWallet.initialize();
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);

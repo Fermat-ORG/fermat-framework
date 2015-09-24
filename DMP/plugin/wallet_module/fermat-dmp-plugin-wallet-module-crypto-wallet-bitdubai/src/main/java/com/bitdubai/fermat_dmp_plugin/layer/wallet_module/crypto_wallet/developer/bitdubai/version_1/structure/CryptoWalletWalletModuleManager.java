@@ -625,9 +625,9 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     @Override
     public List<PaymentRequest> listSentPaymentRequest() {
         List<PaymentRequest> lst =  new ArrayList<PaymentRequest>();
-        CryptoWalletPaymentRequest cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT);
+        CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT);
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
 
         return lst;
@@ -636,9 +636,9 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     @Override
     public List<PaymentRequest> listReceivedPaymentRequest() {
         List<PaymentRequest> lst =  new ArrayList<>();
-        CryptoWalletPaymentRequest cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT);
+        CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT);
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
 
         return lst;
@@ -647,25 +647,25 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     @Override
     public List<PaymentRequest> listPaymentRequestDatOrder() {
         List<PaymentRequest> lst =  new ArrayList<>();
-        CryptoWalletPaymentRequest cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT);
+        CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT);
-        lst.add(cryptoWalletPaymentRequest);
-
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT);
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT);
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
 
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT);
+        lst.add(cryptoWalletPaymentRequest);
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT);
+        lst.add(cryptoWalletPaymentRequest);
 
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT);
+
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("3 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT);
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("3 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
 
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("3 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT);
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("3 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("4 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT);
+        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("4 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
 
 
