@@ -342,7 +342,7 @@ public  class SendFragment extends FermatWalletFragment {
 //            }
 //        }.execute();
         try {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts("reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress()));
             }

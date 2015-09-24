@@ -45,7 +45,7 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
 
     @Override
     protected String getCardViewResourceName() {
-        return "pending_request_row";//R.layout.wallet_store_catalog_item;
+        return "pending_request_row2";//R.layout.wallet_store_catalog_item;
     }
 
     @Override

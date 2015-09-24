@@ -5,6 +5,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestPaymentFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.HomeFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 /**
@@ -25,8 +26,9 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                  */
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
                     // currentFragment = /*BlankFragment.newInstance(null,null);*/BalanceFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
-                    //currentFragment = HomeFragment.newInstance(0,refereceWalletSession);
-                    currentFragment = RequestPaymentFragment.newInstance();
+                   // currentFragment = HomeFragment.newInstance();
+                    currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);
+                   // currentFragment = RequestPaymentFragment.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                     currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);
