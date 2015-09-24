@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_network;
 
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.MainNetParams;

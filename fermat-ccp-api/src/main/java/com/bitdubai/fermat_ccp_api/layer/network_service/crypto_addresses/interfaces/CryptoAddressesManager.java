@@ -2,11 +2,13 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.inter
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,17 +26,21 @@ public interface CryptoAddressesManager {
      *
      * @param walletPublicKey         wallet which is sending the request
      * @param cryptoAddressToSend     a crypto address generated that will be sent to the actor
-     * @param actorType               actor type who wants to exchange addresses
+     * @param actorTypeBy             actor type who wants to exchange addresses
+     * @param actorTypeTo             actor type with whom wants to exchange addresses
      * @param requesterActorPublicKey the actor public key that is sending the request
      * @param actorToRequestPublicKey the actor with whom we want to exchange addresses
+     * @param blockchainNetworkType   network type in which we're working
      *
      * @throws CantSendAddressExchangeRequestException if something goes wrong.
      */
-    void sendAddressExchangeRequest(String          walletPublicKey,
-                                    CryptoAddress   cryptoAddressToSend,
-                                    Actors          actorType,
-                                    String          requesterActorPublicKey,
-                                    String          actorToRequestPublicKey) throws CantSendAddressExchangeRequestException;
+    void sendAddressExchangeRequest(String                walletPublicKey,
+                                    CryptoAddress         cryptoAddressToSend,
+                                    Actors                actorTypeBy,
+                                    Actors                actorTypeTo,
+                                    String                requesterActorPublicKey,
+                                    String                actorToRequestPublicKey,
+                                    BlockchainNetworkType blockchainNetworkType) throws CantSendAddressExchangeRequestException;
 
     /**
      * The method <code>acceptAddressExchangeRequest</code> is used to accept an address exchange request-
@@ -71,7 +77,7 @@ public interface CryptoAddressesManager {
      * @return an instance of a PendingAddressExchangeRequest
      * @throws CantGetPendingAddressExchangeRequestException
      */
-    PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException;
+    PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException;
 
     /**
      * The method <code>confirmExchangeAddressRequest</code> deletes the finalized requests.
