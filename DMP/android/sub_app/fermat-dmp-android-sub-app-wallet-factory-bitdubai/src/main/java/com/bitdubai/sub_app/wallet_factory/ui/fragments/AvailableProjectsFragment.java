@@ -87,7 +87,7 @@ public class AvailableProjectsFragment extends FermatFragment {
                  * y los fragmentos nuevos que acabas de poner
                  */
 
-                Object[] o = new Object[1];
+                Object[] o = new Object[2];
                 o[0] = (Object) startWalletNavigationStructure();
                 o[1] = (Object) wallets.get(i);
                 changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(),o);

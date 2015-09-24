@@ -39,7 +39,7 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private ScreenSize screenSize;
 
-    private DesignerIdentity designer;
+    private DesignerIdentity designeDesignerIdentity;
 
     private int size;
 
@@ -122,11 +122,11 @@ public class Skin implements Serializable {//implements FermatSkin {
     }
 
     public DesignerIdentity getDesigner() {
-        return designer;
+        return designeDesignerIdentity;
     }
 
     public void setDesigner(DesignerIdentity designer) {
-        this.designer = designer;
+        this.designeDesignerIdentity = designer;
     }
 
     public int getSize() {
