@@ -23,7 +23,7 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
         this.reason = reason;
         this.amount = amount;
         this.cryptoWalletWalletContact = cryptoWalletWalletContact;
-	this.type = type;
+        this.type=type;
     }
 
     @Override
@@ -45,4 +45,11 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
     public CryptoWalletWalletContact getContact() {
         return cryptoWalletWalletContact;
     }
+
+    @Override
+    public int getType() {
+        return type;
+    }
+
+
 }
