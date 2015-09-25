@@ -348,17 +348,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath+ "languages/", screenSize,walletPublicKey);
 
 
-            try
-            {
-                uninstallSkinForWallet(skin.getId(), walletPublicKey);
-
-
-            }
-            catch(Exception e)
-            {
-
-            }
-
         } catch (CantDonwloadNavigationStructure e) {
             throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",e,"Error download navigation structure","");
         } catch (CantDownloadResourceFromRepo e) {
