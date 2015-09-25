@@ -6,10 +6,10 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Yordin Alayn on 24.09.15.
  */
 
-public class CantupdateStatusCustomerBrokerCashPurchaseException extends FermatException {
+public class CantUpdateStatusCustomerBrokerCashPurchaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "Falled To Update the Status the Business Transaction Customer Broker Cash Purchase.";
-    public CantupdateStatusCustomerBrokerCashPurchaseException(String message, Exception cause, String context, String possibleReason) {
+    public CantUpdateStatusCustomerBrokerCashPurchaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

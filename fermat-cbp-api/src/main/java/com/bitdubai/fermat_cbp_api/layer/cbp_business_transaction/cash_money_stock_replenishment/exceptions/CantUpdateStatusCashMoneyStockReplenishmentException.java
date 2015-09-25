@@ -6,10 +6,10 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Yordin Alayn on 24.09.15.
  */
 
-public class CantupdateStatusCashMoneyStockReplenishmentException extends FermatException {
+public class CantUpdateStatusCashMoneyStockReplenishmentException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "Falled To Update the Status the Business Transaction Cash Money Stock Replenishment.";
-    public CantupdateStatusCashMoneyStockReplenishmentException(String message, Exception cause, String context, String possibleReason) {
+    public CantUpdateStatusCashMoneyStockReplenishmentException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

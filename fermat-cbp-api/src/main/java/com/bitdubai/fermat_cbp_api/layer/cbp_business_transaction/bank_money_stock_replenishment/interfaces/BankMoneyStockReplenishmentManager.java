@@ -23,6 +23,10 @@ public interface BankMoneyStockReplenishmentManager {
         ,final float merchandiseAmount
         ,final String referenceCurrency
         ,final float referenceCurrencyPrice
+        ,final String bankName
+        ,final String bankAccountNumber
+        ,final String bankAccountType
+        ,final String bankDocumentReference
     ) throws CantCreateBankMoneyStockReplenishmentException;
 
     void updateStatusBankMoneyStockReplenishment(final UUID transactionId) throws CantupdateStatusBankMoneyStockReplenishmentException;
