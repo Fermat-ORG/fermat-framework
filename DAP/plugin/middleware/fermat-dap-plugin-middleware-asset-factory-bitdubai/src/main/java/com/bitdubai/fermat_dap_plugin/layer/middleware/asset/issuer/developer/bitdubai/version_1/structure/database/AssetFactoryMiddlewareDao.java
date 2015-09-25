@@ -110,6 +110,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, assetFactory.getCreationTimestamp().toString());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, assetFactory.getLastModificationTimestamp().toString());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, assetFactory.getAssetBehavior().getCode());
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, assetFactory.getWalletPublicKey());
 
         return record;
     }
@@ -309,6 +310,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
     private AssetFactory getEmptyAssetFactory()
     {
         AssetFactory assetFactory = new AssetFactory() {
+            String walletPublicKey;
             String publicKey;
             String name;
             String description;
@@ -325,6 +327,16 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
             Timestamp expirationDate;
             AssetBehavior assetBehavior;
             IdentityAssetIssuer identityAssetIssuer;
+
+            @Override
+            public String getWalletPublicKey() {
+                return walletPublicKey;
+            }
+
+            @Override
+            public void setWalletPublicKey(String walletPublicKey) {
+                this.walletPublicKey = walletPublicKey;
+            }
 
             @Override
             public String getPublicKey() {

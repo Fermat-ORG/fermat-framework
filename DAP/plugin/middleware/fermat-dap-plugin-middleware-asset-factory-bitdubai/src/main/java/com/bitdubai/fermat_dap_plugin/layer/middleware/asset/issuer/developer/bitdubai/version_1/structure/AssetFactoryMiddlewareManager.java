@@ -382,7 +382,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
                 assetFactory.setState(State.PENDING_FINAL);
                 saveAssetFactory(assetFactory);
                 //Llama al metodo AssetIssuer de la transaction
-                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(),"walletPublicKey", blockchainNetworkType);
+                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(),assetFactory.getWalletPublicKey(), blockchainNetworkType);
             }
             else
             {
@@ -412,6 +412,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
     public AssetFactory getNewAssetFactory() throws  CantCreateAssetFactoryException, CantCreateEmptyAssetFactoryException
     {
             AssetFactory assetFactory = new AssetFactory() {
+                String walletPublicKey;
                 String publicKey;
                 String name;
                 String description;
@@ -437,6 +438,16 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
                 @Override
                 public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
                     this.identityAssetIssuer = identityAssetIssuer;
+                }
+
+                @Override
+                public String getWalletPublicKey() {
+                    return walletPublicKey;
+                }
+
+                @Override
+                public void setWalletPublicKey(String walletPublicKey) {
+                    this.walletPublicKey = walletPublicKey;
                 }
 
                 @Override
