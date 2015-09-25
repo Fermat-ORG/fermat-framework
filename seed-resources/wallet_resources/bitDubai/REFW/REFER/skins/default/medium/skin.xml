@@ -1,5 +1,5 @@
 <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Skin>
-  <id>e54e44b8-7222-4d69-989b-6f65d78aae1a</id>
+  <id>6a01565e-7d6e-4520-b7d6-d4dcec7e36b0</id>
   <name>default</name>
   <version>
     <major>1</major>
@@ -31,9 +31,11 @@
     <entry>
       <string>person1</string>
       <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Resource>
-        <id>e491c387-6d35-40b7-a659-f7ca6a3cb2e0</id>
+        <id>6e272e7d-d24e-4844-a3d3-ac675fc86a7a</id>
         <name>person1</name>
         <fileName>person1.png</fileName>
+        <resourceType>IMAGE</resourceType>
+        <resourceDensity>MDPI</resourceDensity>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Resource>
     </entry>
   </resources>
@@ -41,7 +43,7 @@
     <entry>
       <string>pending_request_row</string>
       <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
-        <id>235938f1-f101-449a-b6e1-79c0f1cf9868</id>
+        <id>4086fabb-4f08-4bc6-94c8-1151ce631d1e</id>
         <filename>pending_request_row.xml</filename>
         <name>pending_request_row</name>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
@@ -49,7 +51,7 @@
     <entry>
       <string>pending_request_row2</string>
       <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
-        <id>691cfa9a-e01b-4938-9b0a-2d4ebd2a6dce</id>
+        <id>26aeb491-64c1-4f79-9c20-93768eb97995</id>
         <filename>pending_request_row2.xml</filename>
         <name>pending_request_row2</name>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
@@ -57,7 +59,7 @@
     <entry>
       <string>payment_request_base</string>
       <com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>
-        <id>c8bac2ee-338d-4adf-8c65-b607ba881dab</id>
+        <id>21a4a0f9-99a6-4bc1-a922-7f76a2e2e828</id>
         <filename>payment_request_base.xml</filename>
         <name>payment_request_base</name>
       </com.bitdubai.fermat__api.layer.all__definition.resources__structure.Layout>

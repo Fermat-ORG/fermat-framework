@@ -92,6 +92,7 @@ public class AvailableProjectsFragment extends FermatFragment {
                 o[1] = (Object) wallets.get(i);
 
                 //TODO: Como tercer parametro me tenes que pasar el Skin de la wallet que vas a cambiar así lo pinto por pantalla y se va cambiando
+
                 //o[2] = (Object)
                 changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(),o);
             }

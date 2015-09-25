@@ -563,7 +563,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             /**
              * Call Wallet Resource to uninstall Skin
              */
-           walletResources.uninstallLanguageForWallet(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletName(), true, installedWallet.getWalletPublicKey());
+           walletResources.uninstallLanguageForWallet(installedWallet.getSkinsId().get(0).getId(), installedWallet.getWalletPublicKey(),installedLanguage.getLanguage().name());
 
             walletMangerDao.deleteWalletLanguage(walletCatalogueId, languageId);
 
@@ -605,7 +605,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             InstalledSkin installedSkin =  walletMangerDao.getInstalledSkin(skinId.toString());
 
             /**
-             * Conected with Wallet Resource to unistalld resources
+             * Conected with Wallet Resource to uninstall resources
              */
            walletResources.uninstallSkinForWallet( skinId,installedWallet.getWalletPublicKey());
             /**

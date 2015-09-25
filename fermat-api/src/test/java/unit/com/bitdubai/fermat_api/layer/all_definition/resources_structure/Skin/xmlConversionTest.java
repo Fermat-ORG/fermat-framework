@@ -218,6 +218,8 @@ public class xmlConversionTest extends TestCase {
         resource.setId(UUID.randomUUID());
         resource.setName("person1");
         resource.setFileName("person1.png");
+        resource.setResourceDensity(ResourceDensity.MDPI);
+        resource.setResourceType(ResourceType.IMAGE);
 
         resourceHashMap.put("person1", resource);
 
