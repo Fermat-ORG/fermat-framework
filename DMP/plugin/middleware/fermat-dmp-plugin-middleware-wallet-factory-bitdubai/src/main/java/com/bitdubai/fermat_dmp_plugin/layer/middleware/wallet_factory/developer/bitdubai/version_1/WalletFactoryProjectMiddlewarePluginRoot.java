@@ -134,6 +134,10 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             }
         }
 
+        //create initial data in the database
+        test(WalletFactoryProjectState.CLOSED);
+        test(WalletFactoryProjectState.IN_PROGRESS);
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
     @Override
@@ -297,7 +301,6 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
     @Override
     public List<WalletFactoryProject> getWalletFactoryProjectByState(WalletFactoryProjectState walletFactoryProjectState) throws CantGetWalletFactoryProjectException {
-        test();
         List<WalletFactoryProject> projects = walletFactoryProjectMiddlewareManager.getWalletFactoryProjectsByState(walletFactoryProjectState);
         return projects;
     }
@@ -360,13 +363,13 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
         }
     }
 
-    private void test(){
+    private void test(WalletFactoryProjectState state){
         try {
             WalletFactoryProject walletFactoryProject = createEmptyWalletFactoryProject();
             walletFactoryProject.setName("ProyectoPrueba");
             walletFactoryProject.setWalletCategory(WalletCategory.BRANDED_REFERENCE_WALLET);
             walletFactoryProject.setDescription("WFP de prueba");
-            walletFactoryProject.setProjectState(WalletFactoryProjectState.CLOSED);
+            walletFactoryProject.setProjectState(state);
             walletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
             walletFactoryProject.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
             walletFactoryProject.setSize(300);
@@ -412,12 +415,17 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
 
             walletFactoryProject.setNavigationStructure(navigationStructure);
 
+
+
             this.saveWalletFactoryProjectChanges(walletFactoryProject);
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
 
     @Override
     public void cloneInstalledWallet(InstalledWallet wallet, String newName) throws CantCloneInstalledWalletException {

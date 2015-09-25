@@ -120,7 +120,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
         //setRetainInstance(true);
 
-
+        referenceWalletSession = (ReferenceWalletSession) walletSession;
         /**
          *
          */
