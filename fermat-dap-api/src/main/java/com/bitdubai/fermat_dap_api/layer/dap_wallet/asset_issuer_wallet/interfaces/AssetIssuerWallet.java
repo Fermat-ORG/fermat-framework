@@ -18,16 +18,16 @@ public interface AssetIssuerWallet {
 
     AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
 
-    List<AssetWalletIssuerTransaction> getTransactions(BalanceType balanceType,
+    List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType,
                                                         int max,
                                                         int offset) throws CantGetTransactionsException;
 
-    List<AssetWalletIssuerTransaction> getTransactionsByActor(String actorPublicKey,
+    List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                               BalanceType balanceType,
                                                               int max,
                                                               int offset) throws CantGetTransactionsException;
 
-    List<AssetWalletIssuerTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType,
+    List<AssetIssuerWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                   TransactionType transactionType,
                                                                                   int max,
                                                                                   int offset) throws CantGetTransactionsException;

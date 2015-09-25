@@ -18,6 +18,8 @@ import java.util.UUID;
  * Created by franklin on 07/09/15.
  */
 public interface AssetFactory {
+    String getWalletPublicKey();
+    void setWalletPublicKey(String walletPublicKey);
 
     String getPublicKey();
     void setPublicKey(String publicKey);

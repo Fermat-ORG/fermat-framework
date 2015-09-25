@@ -28,7 +28,7 @@ public class AssertFactoryMiddlewareDatabaseConstant {
     static final String ASSET_FACTORY_CREATION_TIME_COLUMN = "creation_time";
     static final String ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN = "last_update_time";
     static final String ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN = "asset_behavior";
-
+    static final String ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY = "wallet_public_key";
     static final String ASSET_FACTORY_FIRST_KEY_COLUMN = "asset_public_key";
 
     /**
