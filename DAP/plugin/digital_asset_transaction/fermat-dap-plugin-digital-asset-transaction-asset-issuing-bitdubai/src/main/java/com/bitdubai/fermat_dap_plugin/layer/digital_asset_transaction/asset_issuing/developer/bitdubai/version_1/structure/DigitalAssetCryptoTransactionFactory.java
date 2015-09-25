@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -208,10 +209,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         String digitalAssetPublicKey=this.digitalAsset.getPublicKey();
         long digitalAssetGenesisAmount=this.digitalAsset.getGenesisAmount();
-        //TODO: buscar una nueva forma de hacer esto
-        //long cryptoWalletBalance=this.cryptoWallet.getAvailableBalance(digitalAssetPublicKey);
-
-        long cryptoWalletBalance=digitalAssetGenesisAmount;
+        long cryptoWalletBalance=this.cryptoWallet.getBalance(BalanceType.AVAILABLE, digitalAssetPublicKey);
+        //long cryptoWalletBalance=digitalAssetGenesisAmount;
         if(digitalAssetGenesisAmount>cryptoWalletBalance){
             throw new CryptoWalletBalanceInsufficientException("The current balance in Wallet "+digitalAssetPublicKey+" is "+cryptoWalletBalance+" the amount needed is "+digitalAssetGenesisAmount);
         }
@@ -328,6 +327,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
              * */
 
             while(counter<assetsAmount){
+                LOG.info("Asset número "+counter);
                 createDigitalAssetCryptoTransaction();
                 counter++;
             }
@@ -462,6 +462,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         try {
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_BITCOINS);
             //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
+            //TODO: Send btc through outgoing intra user
             genesisTransaction.setOp_Return(digitalAssetHash);
             this.cryptoVaultManager.sendBitcoins(genesisTransaction);
         } catch (InsufficientMoneyException exception) {
@@ -505,7 +506,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             setDigitalAssetGenesisTransaction(transactionId, genesisTransaction);
             //Obtengo el hash del digital Asset
             String digitalAssetHash=getDigitalAssetHash(digitalAssetMetadata, transactionId);
-            LOG.info("MAP_DIGITAL ASSET FULL: "+this.digitalAsset);
+            //LOG.info("MAP_DIGITAL ASSET FULL: "+this.digitalAsset);
             LOG.info("MAP_HASH DEL ASSET: "+digitalAssetHash);
 
         } catch (CantPersistsGenesisAddressException exception) {

@@ -355,7 +355,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setContract(digitalAssetContract);
         LOG.info("MAP_DigitalAsset2:"+digitalAsset);
 
-            this.assetIssuingTransactionManager.issueAssets(digitalAsset,2,BlockchainNetworkType.REG_TEST);
+            this.assetIssuingTransactionManager.issueAssets(digitalAsset,10,BlockchainNetworkType.REG_TEST);
 
     }
 
