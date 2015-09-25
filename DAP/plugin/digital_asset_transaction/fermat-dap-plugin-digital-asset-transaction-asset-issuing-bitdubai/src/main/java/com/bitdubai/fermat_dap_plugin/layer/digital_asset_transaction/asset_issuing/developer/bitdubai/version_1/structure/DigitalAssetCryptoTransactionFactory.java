@@ -200,7 +200,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
             return genesisAddress;
         } catch (GetNewCryptoAddressException exception) {
-            throw new CantGetGenesisAddressException(exception, "Requesting a genesis addres","Cannot get a new crypto address from asset vault");
+            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address","Cannot get a new crypto address from asset vault");
         }
     }
 
