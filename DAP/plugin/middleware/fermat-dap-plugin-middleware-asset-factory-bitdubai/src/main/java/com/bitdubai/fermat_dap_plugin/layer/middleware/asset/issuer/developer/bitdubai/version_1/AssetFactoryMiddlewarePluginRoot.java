@@ -177,7 +177,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             //Para probar primero descomente el metodo testSaveAssetFactory para que sea guardado el Asset en Factory
             //Luego comente de nuevo el metodo testSaveAssetFactory
             //Luego Descomente el bloque de codigo de metodo testPublishAsset, para que proceda con la publicacion del Asset
-            testSaveAssetFactory();
+            //testSaveAssetFactory();
             //try
             //{
             //    testPublishAsset();
