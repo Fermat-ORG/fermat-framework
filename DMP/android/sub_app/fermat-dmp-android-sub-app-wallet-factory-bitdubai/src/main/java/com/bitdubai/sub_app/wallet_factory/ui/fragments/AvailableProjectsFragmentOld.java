@@ -72,7 +72,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.factory_available_projects_fragment, container, false);
 
-        listView = (ListView) rootView.findViewById(R.id.projects);
+        //listView = (ListView) rootView.findViewById(R.id.projects);
         ArrayAdapter<InstalledWallet> adapter = new ArrayAdapter<InstalledWallet>(getActivity(), android.R.layout.simple_list_item_1, wallets);
         listView.setAdapter(adapter);
 
@@ -92,7 +92,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
 
                 //TODO: Como tercer parametro me tenes que pasar el Skin de la wallet que vas a cambiar así lo pinto por pantalla y se va cambiando
                 //o[2] = (Object)
-                changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(),o);
+                changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(), o);
             }
         });
 
@@ -100,12 +100,12 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
     }
 
     /**
-     *  Meanwhile
+     * Meanwhile
      *
      * @return
      */
 
-    private WalletNavigationStructure startWalletNavigationStructure(){
+    private WalletNavigationStructure startWalletNavigationStructure() {
 
         Activity runtimeActivity;
         Fragment runtimeFragment;
@@ -124,11 +124,11 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        publicKey="reference_wallet";
+        publicKey = "reference_wallet";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
 
-        runtimeActivity= new Activity();
+        runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#8bba9e");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
@@ -156,7 +156,6 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
         runtimeTabStrip.setTabsIndicateColor("#72af9c");
-
 
 
         runtimeTab = new Tab();
@@ -194,9 +193,6 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeTabStrip.addTab(runtimeTab);
 
 
-
-
-
         runtimeTabStrip.setDividerColor(0x72af9c);
         //runtimeTabStrip.setBackgroundColor("#72af9c");
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -209,12 +205,12 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey());
         runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey(),runtimeFragment);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey(), runtimeFragment);
 
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey(),runtimeFragment);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey(), runtimeFragment);
 
 //        runtimeFragment = new Fragment();
 //        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
@@ -225,7 +221,6 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST.getKey());
         runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST.getKey(), runtimeFragment);
-
 
 
         runtimeFragment = new Fragment();
@@ -270,7 +265,6 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
-
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Exit");
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -300,7 +294,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
          * Transaction Activity
          */
 
-        runtimeActivity= new Activity();
+        runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeActivity.setColor("#8bba9e");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
@@ -367,9 +361,6 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         //fin navigation
-
-
-
 
 
         return runtimeWalletNavigationStructure;
