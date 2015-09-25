@@ -15,9 +15,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
@@ -86,20 +89,87 @@ public class CryptoAddressesNetworkServiceDao {
     }
 
 
-    public void sendAddressExchangeRequest(String walletPublicKey, CryptoAddress cryptoAddressToSend, Actors actorTypeBy, Actors actorTypeTo, String requesterActorPublicKey, String actorToRequestPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantSendAddressExchangeRequestException {
+    public void sendAddressExchangeRequest(String                walletPublicKey        ,
+                                           CryptoAddress         cryptoAddressToSend    ,
+                                           Actors                actorTypeBy            ,
+                                           Actors                actorTypeTo            ,
+                                           String                requesterActorPublicKey,
+                                           String                actorToRequestPublicKey,
+                                           BlockchainNetworkType blockchainNetworkType  ) throws CantSendAddressExchangeRequestException {
 
     }
 
-    public void acceptAddressExchangeRequest(UUID requestId, CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException {
+    public void acceptAddressExchangeRequest(UUID          requestId            ,
+                                             CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException {
 
     }
 
-    public List<AddressExchangeRequest> listPendingRequests(Actors actorType, AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException {
-        return new ArrayList<>();
+    public List<AddressExchangeRequest> listPendingRequests(Actors                      actorType                  ,
+                                                            AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException {
+
+        if (actorType == null)
+            throw new CantListPendingAddressExchangeRequestsException(null, "", "actorType, can not be null");
+
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_TYPE_REQUESTING_COLUMN_NAME, actorType.getCode(), DatabaseFilterType.EQUAL);
+
+            if (addressExchangeRequestState != null)
+                addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME, addressExchangeRequestState.getCode(), DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+            List<AddressExchangeRequest> addressExchangeRequests = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                addressExchangeRequests.add(buildAddressExchangeRequestRecord(record));
+            }
+
+            return addressExchangeRequests;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantListPendingAddressExchangeRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+
+            throw new CantListPendingAddressExchangeRequestsException(exception, "", "Check the cause."                                                                                );
+        }
     }
 
-    public AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException {
-        return null;
+    public AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
+                                                                           PendingRequestNotFoundException {
+
+        if (requestId == null)
+            throw new CantGetPendingAddressExchangeRequestException(null, "", "requestId, can not be null");
+
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.setUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return buildAddressExchangeRequestRecord(records.get(0));
+            else
+                throw new PendingRequestNotFoundException(null, "RequestID: "+requestId, "Can not find an address exchange request with the given request id.");
+
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetPendingAddressExchangeRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+
+            throw new CantGetPendingAddressExchangeRequestException(exception, "", "Check the cause."                                                                                );
+        }
     }
 
     public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
