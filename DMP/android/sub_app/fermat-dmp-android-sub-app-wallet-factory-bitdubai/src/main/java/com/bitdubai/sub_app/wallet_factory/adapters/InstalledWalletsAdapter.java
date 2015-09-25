@@ -18,11 +18,11 @@ import java.util.ArrayList;
  */
 public class InstalledWalletsAdapter extends FermatAdapter<Wallet, InstalledWalletViewHolder> {
 
-    protected InstalledWalletsAdapter(Context context) {
+    public InstalledWalletsAdapter(Context context) {
         super(context);
     }
 
-    protected InstalledWalletsAdapter(Context context, ArrayList<Wallet> dataSet) {
+    public InstalledWalletsAdapter(Context context, ArrayList<Wallet> dataSet) {
         super(context, dataSet);
     }
 

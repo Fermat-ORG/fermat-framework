@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_factory.ui.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,13 +23,19 @@ import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
  * @author Matias Furszy
  * @version 1.0
  */
-public class AvailableProjectsFragmentTemp extends FermatFragment {
+public class AvailableProjectsFragmentTemp extends FermatFragment
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     private final String TAG = "FactoryProjects";
     /**
      * Manager
      */
     private WalletFactoryManager manager;
+
+    /**
+     * flags
+     */
+    private boolean isRefreshing;
 
     /**
      * View references
@@ -44,6 +51,17 @@ public class AvailableProjectsFragmentTemp extends FermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.factory_available_projects_fragment, container, false);
+
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+        swipeRefresh.setOnRefreshListener(this);
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new InstalledWalletsAdapter(getActivity());
 
         return rootView;
     }
@@ -65,5 +83,12 @@ public class AvailableProjectsFragmentTemp extends FermatFragment {
 
     public WalletFactoryManager getManager() {
         return manager;
+    }
+
+    @Override
+    public void onRefresh() {
+        if (!isRefreshing) {
+            //// TODO: 24/09/15 reload data
+        }
     }
 }
