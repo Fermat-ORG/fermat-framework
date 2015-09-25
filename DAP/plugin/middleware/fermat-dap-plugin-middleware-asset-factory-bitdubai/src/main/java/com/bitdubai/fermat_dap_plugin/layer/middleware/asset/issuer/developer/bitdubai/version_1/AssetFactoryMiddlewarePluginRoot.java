@@ -173,14 +173,18 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetIssuingManager) ;
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
+            //TODO: Boorar luego solo es para Test
+            //Para probar primero descomente el metodo testSaveAssetFactory para que sea guardado el Asset en Factory
+            //Luego comente de nuevo el metodo testSaveAssetFactory
+            //Luego Descomente el bloque de codigo de metodo testPublishAsset, para que proceda con la publicacion del Asset
             //testSaveAssetFactory();
-//            try
-//            {
-//                testPublishAsset();
-//            }catch(CantIssueDigitalAssetsException e){
-//                System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
-//                e.printStackTrace();
-//            }
+            //try
+            //{
+            //    testPublishAsset();
+            //}catch(CantIssueDigitalAssetsException e){
+            //    System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
+            //    e.printStackTrace();
+            //}
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -267,8 +271,9 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
             assetFactory.setExpirationDate(new Timestamp(date.getTime()));
             assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
-            assetFactory.setQuantity(100);
+            assetFactory.setQuantity(2);
             assetFactory.setState(State.DRAFT);
+            assetFactory.setWalletPublicKey("walletpublickey");
             Resource resource = new Resource();
             List<Resource> resources = new ArrayList<>();
             resource.setId(UUID.randomUUID());
@@ -341,7 +346,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
             digitalAsset.setResources(assetFactory.getResources());
             //Actualiza el State a Pending_Final del objeto assetFactory
-            assetFactory.setState(State.PENDING_FINAL);
+            assetFactory.setState(State.DRAFT);
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
 

@@ -86,17 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
 
-            <Button
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:text="Refuse"
-                android:textSize="10sp"
-                android:id="@+id/btn_refuse_request"
-                android:layout_toLeftOf="@id/btn_accept_request"
-                android:layout_marginRight="5dp"
-                android:layout_alignParentBottom="true"
-                android:background="@null"
-                android:padding="2dp"/>
 
 
             <Button
@@ -108,6 +97,19 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:background="@null"/>
+
+
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:text="Refuse"
+                android:textSize="10sp"
+                android:id="@+id/btn_refuse_request"
+                android:layout_toLeftOf="@id/btn_accept_request"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@null"
+                android:padding="2dp"/>
 
 
         </LinearLayout>
