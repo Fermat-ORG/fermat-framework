@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database;
 
 /**
- * The interface <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao</code>
+ * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao</code>
  * haves all the methods that interact with the database.
- * Manages the relationship of the crypto addresses by storing them on a Database Table.
+ * Manages the addresses exchange requests by storing them on a Database Table.
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/09/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/09/2015.
  *
  * @version 1.0
  */
