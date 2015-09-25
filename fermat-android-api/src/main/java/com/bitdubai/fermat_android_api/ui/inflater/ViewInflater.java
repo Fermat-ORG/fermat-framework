@@ -47,6 +47,7 @@ import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Stack;
 
 
@@ -714,17 +715,22 @@ public class ViewInflater {
      * @return
      */
         private int convertInIntegerValue(String value){
-            int indexValue = value.indexOf("px");
-            if (indexValue != -1) return Integer.parseInt(value.substring(0, indexValue));
-            else{
-                indexValue = value.indexOf("dp");
-                if (indexValue != -1) return Integer.parseInt(value.substring(0, indexValue));
-                else{
+            int converterer = 0;
+            int indexValue = value.indexOf("dp");
+            if (indexValue != -1){
+                converterer = Integer.parseInt(value.substring(0, indexValue));
+            } else{
+                indexValue = value.indexOf("px");
+                if (indexValue != -1){
+                    converterer =  Integer.parseInt(value.substring(0, indexValue));
+                }else{
                     indexValue = value.indexOf("sp");
-                    if (indexValue != -1) return Integer.parseInt(value.substring(0, indexValue));
-                    else return 0;
+                    if (indexValue != -1) {
+                        converterer = Integer.parseInt(value.substring(0, indexValue));
+                    }else converterer = 0;
                 }
             }
+            return converterer;
         }
 
         boolean maybeSetBoolean(View view, String method, String value) {
@@ -796,5 +802,9 @@ public class ViewInflater {
 
         public int getIdFromName(String id){
                 return ids.get(id);
+        }
+
+        public Map<String,Integer> getIdsFromLayout(){
+            return ids;
         }
 }
