@@ -1,6 +1,6 @@
-package unit.com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.version_1.providers.BtceServiceAPI;
+package unit.com.bitdubai.fermat_ccp_plugin.layer.world.crypto_index.version_1.providers.BtceServiceAPI;
 
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BtceServiceAPI;
+import com.bitdubai.fermat_ccp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.providers.BtceServiceAPI;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Test;

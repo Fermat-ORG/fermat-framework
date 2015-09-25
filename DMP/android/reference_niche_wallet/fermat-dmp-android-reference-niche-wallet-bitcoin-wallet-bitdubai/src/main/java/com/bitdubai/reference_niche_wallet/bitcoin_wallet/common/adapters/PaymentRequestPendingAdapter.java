@@ -4,12 +4,12 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_api.layer.ccp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentRequestItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;

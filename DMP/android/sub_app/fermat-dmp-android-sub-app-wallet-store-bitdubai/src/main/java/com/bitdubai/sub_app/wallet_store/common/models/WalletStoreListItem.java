@@ -8,8 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.wallet_store.bitdubai.R;
 
 import java.io.ByteArrayInputStream;

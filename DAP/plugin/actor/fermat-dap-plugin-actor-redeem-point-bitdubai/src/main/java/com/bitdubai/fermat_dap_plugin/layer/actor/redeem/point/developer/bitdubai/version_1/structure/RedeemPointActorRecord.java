@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 
 /**

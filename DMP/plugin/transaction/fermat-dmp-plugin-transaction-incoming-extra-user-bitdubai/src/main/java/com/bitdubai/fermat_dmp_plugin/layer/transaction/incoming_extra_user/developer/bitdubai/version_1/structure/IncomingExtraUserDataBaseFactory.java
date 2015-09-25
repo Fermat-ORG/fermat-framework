@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.FermatException;

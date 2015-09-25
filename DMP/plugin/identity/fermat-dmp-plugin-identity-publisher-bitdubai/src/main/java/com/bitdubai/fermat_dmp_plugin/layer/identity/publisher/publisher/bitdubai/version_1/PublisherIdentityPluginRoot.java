@@ -4,7 +4,7 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1;
 
 
 // Packages and classes to import of jdk 1.7
@@ -38,22 +38,22 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentityManager;
+import com.bitdubai.fermat_api.layer.ccp_identity.publisher.interfaces.PublisherIdentity;
+import com.bitdubai.fermat_api.layer.ccp_identity.publisher.interfaces.PublisherIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantCreateNewPublisherException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.developerUtils.PublisherIdentityDeveloperDataBaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.exceptions.CantInitializePublisherIdentityDatabaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure.PublisherIdentityDao;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
+import com.bitdubai.fermat_api.layer.ccp_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
+import com.bitdubai.fermat_api.layer.ccp_identity.publisher.exceptions.CantCreateNewPublisherException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.developerUtils.PublisherIdentityDeveloperDataBaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.exceptions.CantInitializePublisherIdentityDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure.PublisherIdentityDao;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
 
 
 /**
@@ -367,10 +367,10 @@ public class PublisherIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure.PublisherIdentityDao");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure.PublisherIdentityDao");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory");
         /**
          * I return the values.
          */

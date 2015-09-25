@@ -4,13 +4,13 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions;
 
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInitializeNetworkTemplateDataBaseException</code> is
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInitializeNetworkTemplateDataBaseException</code> is
  * throw when error occurred initialize the data base
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.

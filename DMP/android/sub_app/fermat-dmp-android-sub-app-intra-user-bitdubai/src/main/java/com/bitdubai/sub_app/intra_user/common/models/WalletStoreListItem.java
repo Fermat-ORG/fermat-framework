@@ -3,8 +3,8 @@ package com.bitdubai.sub_app.intra_user.common.models;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.intra_user.bitdubai.R;
 
 import java.io.ByteArrayInputStream;

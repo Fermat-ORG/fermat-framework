@@ -4,20 +4,20 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto;
 
 
 // Packages and classes to import of jdk 1.7
 import java.util.Map;
 
 // Packages and classes to import of Middleware Bank Notes API.
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.commons.Features;
-import static com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.commons.Default._STRING;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.commons.Features;
+import static com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.commons.Default._STRING;
 
 
 /**
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.beans.dto.AbstractItem</code> is a POJOs object for
+ *  <p>The abstract class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.beans.dto.AbstractItem</code> is a POJOs object for
  *     management the commons item information.
  *
  *

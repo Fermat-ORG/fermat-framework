@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CryptoWalletException;
+import com.bitdubai.fermat_api.layer.ccp_wallet_module.crypto_wallet.exceptions.CryptoWalletException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException</code>
  * is thrown when i cant enrich a crypto wallet intra user actor.
  * <p/>
  *

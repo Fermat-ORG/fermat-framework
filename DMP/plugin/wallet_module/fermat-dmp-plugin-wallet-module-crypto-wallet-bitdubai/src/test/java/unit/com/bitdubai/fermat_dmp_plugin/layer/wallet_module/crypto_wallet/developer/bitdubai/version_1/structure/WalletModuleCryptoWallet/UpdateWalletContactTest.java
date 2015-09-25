@@ -1,12 +1,12 @@
-package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+package unit.com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
+import com.bitdubai.fermat_api.layer.ccp_wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
+import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import junit.framework.TestCase;
@@ -75,7 +75,7 @@ public class UpdateWalletContactTest extends TestCase {
 
     @Test(expected=CantUpdateWalletContactException.class)
     public void testUpdateWalletContact_CantUpdateWalletContactException() throws Exception {
-        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException())
+        doThrow(new com.bitdubai.fermat_api.layer.ccp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException())
         .when(walletContactsRegistry).updateWalletContact(any(UUID.class), any(CryptoAddress.class), anyString());
 
         walletModuleCryptoWallet.updateWalletContact(contactId, receivedCryptoAddress, actorName);

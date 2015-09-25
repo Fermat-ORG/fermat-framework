@@ -1,8 +1,8 @@
-package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.DeveloperBitDubai;
+package unit.com.bitdubait.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.DeveloperBitDubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.DeveloperBitDubai;
 
 import org.junit.Assert;
 import org.junit.Test;

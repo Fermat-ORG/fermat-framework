@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.structure;
 
 /**
  * Created by natalia on 22/07/15.

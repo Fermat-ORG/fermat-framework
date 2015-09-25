@@ -3,7 +3,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.developerUtils;
+package com.bitdubai.fermat_ccp_plugin.layer.identity.translator.developer.bitdubai.version_1.developerUtils;
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.database.IdentityTranslatorDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.translator.developer.bitdubai.version_1.database.IdentityTranslatorDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.developer.bitdubai;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_community.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
 
 /**
  * Created by loui on 17/02/15.

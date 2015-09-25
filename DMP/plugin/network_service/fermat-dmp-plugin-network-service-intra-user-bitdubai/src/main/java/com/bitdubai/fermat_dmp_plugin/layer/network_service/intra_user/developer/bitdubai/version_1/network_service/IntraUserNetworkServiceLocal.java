@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -14,7 +14,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedEvent;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 
@@ -22,7 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceRemoteAgent</code> represent
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceRemoteAgent</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
@@ -63,7 +63,7 @@ public class IntraUserNetworkServiceLocal implements Observer {
      * @param errorManager                    instance
      * @param outgoingMessageDataAccessObject instance
      */
-    public IntraUserNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
+    public IntraUserNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
         this.remoteNetworkServicePublicKey   = remoteNetworkServicePublicKey;
         this.errorManager                    = errorManager;
         this.eventManager                    = eventManager;
@@ -84,7 +84,7 @@ public class IntraUserNetworkServiceLocal implements Observer {
             /*
              * Cast the message to OutgoingIntraUserNetworkServiceMessage
              */
-                OutgoingIntraUserNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.OutgoingIntraUserNetworkServiceMessage) message;
+                OutgoingIntraUserNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.OutgoingIntraUserNetworkServiceMessage) message;
 
             /*
              * Configure the correct status
@@ -109,7 +109,7 @@ public class IntraUserNetworkServiceLocal implements Observer {
      *
      * @param incomingIntraUserNetworkServiceMessage received
      */
-    private void onMessageReceived(com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage){
+    private void onMessageReceived(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage){
         /**
          * Put the message on a event and fire new event
          */
@@ -131,8 +131,8 @@ public class IntraUserNetworkServiceLocal implements Observer {
     public void update(Observable observable, Object data) {
 
         //Validate and process
-        if (data instanceof com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IncomingIntraUserNetworkServiceMessage)
-            onMessageReceived((com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IncomingIntraUserNetworkServiceMessage) data);
+        if (data instanceof com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IncomingIntraUserNetworkServiceMessage)
+            onMessageReceived((com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service.IncomingIntraUserNetworkServiceMessage) data);
     }
 
     /**

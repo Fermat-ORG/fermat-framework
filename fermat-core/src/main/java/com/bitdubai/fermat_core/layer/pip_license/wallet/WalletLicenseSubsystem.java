@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.pip_license.wallet;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.all_definition.license.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.license.LicenseSubsystem;
-import com.bitdubai.fermat_dmp_plugin.layer.license.wallet.developer.DeveloperBitDubai;
+import com.bitdubai.fermat_ccp_plugin.layer.license.wallet.developer.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 21.01.15.

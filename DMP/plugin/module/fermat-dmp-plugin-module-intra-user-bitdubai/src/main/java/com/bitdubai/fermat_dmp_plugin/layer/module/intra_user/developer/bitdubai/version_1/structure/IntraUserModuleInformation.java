@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserInformation;
 
 /**
- * The class <code>com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation</code>
+ * The class <code>com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation</code>
  * is the implementation of IntraUserInformation interface.
  * And provides the method to extract information about an intra user.
  *

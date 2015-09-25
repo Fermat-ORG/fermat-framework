@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.network_service;
 
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
@@ -18,7 +18,7 @@ import java.util.UUID;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
  * is the implementation of the message<p/>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 09/06/15.

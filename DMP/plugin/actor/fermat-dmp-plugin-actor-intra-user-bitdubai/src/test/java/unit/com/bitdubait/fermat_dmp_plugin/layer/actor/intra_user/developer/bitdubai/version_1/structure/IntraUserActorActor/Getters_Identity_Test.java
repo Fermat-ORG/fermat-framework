@@ -1,9 +1,9 @@
-package unit.com.bitdubait.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorActor;
+package unit.com.bitdubait.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorActor;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
+import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.ccp_identity.intra_user.exceptions.CantShowProfileImageException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorActor;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorActor;
 
 import org.junit.Before;
 import org.junit.Test;

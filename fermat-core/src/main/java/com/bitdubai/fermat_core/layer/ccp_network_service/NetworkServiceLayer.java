@@ -9,10 +9,6 @@ import com.bitdubai.fermat_core.layer.ccp_network_service.bank_notes.BankNotesSu
 import com.bitdubai.fermat_core.layer.ccp_network_service.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.ccp_network_service.money.MoneySubsystem;
 import com.bitdubai.fermat_core.layer.ccp_network_service.template.TemplateSubsystem;
-import com.bitdubai.fermat_core.layer.ccp_network_service.wallet_community.WalletCommunitySubsystem;
-import com.bitdubai.fermat_core.layer.ccp_network_service.wallet_resources.WalletResourcesSubsystem;
-import com.bitdubai.fermat_core.layer.ccp_network_service.wallet_statistics.WalletStatisticsSubsystem;
-import com.bitdubai.fermat_core.layer.ccp_network_service.wallet_store.WalletStoreSubsystem;
 import com.bitdubai.fermat_core.layer.ccp_network_service.crypto_transmission.CryptoTransmissionSubsystem;
 
 /**
@@ -26,14 +22,6 @@ public class NetworkServiceLayer implements PlatformLayer {
 
     private Plugin mUserPlugin;
 
-    private Plugin mWalletCommunity;
-
-    private Plugin mWalletResources;
-
-    private Plugin mWalletStatistics;
-
-    private Plugin mWalletStore;
-
     private Plugin mTemplate;
 
     private Plugin mCryptoTransmission;
@@ -46,27 +34,10 @@ public class NetworkServiceLayer implements PlatformLayer {
 
     public Plugin getMoney() {
         return mMoney;
-
     }
 
     public Plugin getUserPlugin() {
         return mUserPlugin;
-    }
-
-    public Plugin getWalletCommunity() {
-        return mWalletCommunity;
-    }
-
-    public Plugin getWalletResources() {
-        return mWalletResources;
-    }
-
-    public Plugin getWalletStatistics() {
-        return mWalletStatistics;
-    }
-
-    public Plugin getWalletStore() {
-        return mWalletStore;
     }
 
     public Plugin getTemplate(){
@@ -140,84 +111,6 @@ public class NetworkServiceLayer implements PlatformLayer {
 
             throw new CantStartLayerException();
         }
-
-        /**
-         * Let's try to start the Wallet Store subsystem.
-         */
-
-        NetworkSubsystem walletCommunitySubsystem = new WalletCommunitySubsystem();
-
-        try {
-            walletCommunitySubsystem.start();
-            mWalletCommunity = (walletCommunitySubsystem).getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-
-            throw new CantStartLayerException();
-
-        }
-
-        /**
-         * Let's try to start the Wallet Resources subsystem.
-         */
-
-        NetworkSubsystem walletResourcesSubsystem = new WalletResourcesSubsystem();
-
-        try {
-            walletResourcesSubsystem.start();
-            mWalletResources = (walletResourcesSubsystem).getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-
-            throw new CantStartLayerException();
-
-        }
-
-
-        /**
-         * Let's try to start the Wallet Statistics subsystem.
-         */
-
-        NetworkSubsystem walletStatisticsSubsystem = new WalletStatisticsSubsystem();
-
-        try {
-            walletStatisticsSubsystem.start();
-            mWalletStatistics = (walletStatisticsSubsystem).getPlugin();
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
-
-            throw new CantStartLayerException();
-        }
-
-        /**
-         * Let's try to start the Wallet Store subsystem.
-         */
-
-        NetworkSubsystem walletStoreSubsystem = new WalletStoreSubsystem();
-
-        try {
-            walletStoreSubsystem.start();
-            mWalletStore = (walletStoreSubsystem).getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-            throw new CantStartLayerException();
-        }
-
 
         /**
          * Let's try to start the template subsystem.

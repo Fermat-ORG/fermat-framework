@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.estructure;
+package com.bitdubai.fermat_ccp_plugin.layer.identity.translator.developer.bitdubai.version_1.estructure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_api.layer.ccp_identity.translator.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.ccp_identity.translator.interfaces.TranslatorIdentity;
 
 /**
  * Created by natalia on 31/07/15.

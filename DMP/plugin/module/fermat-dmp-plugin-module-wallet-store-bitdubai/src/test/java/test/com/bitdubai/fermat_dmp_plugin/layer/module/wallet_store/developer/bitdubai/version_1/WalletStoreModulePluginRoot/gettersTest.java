@@ -1,16 +1,16 @@
-package test.com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
+package test.com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
 
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletCatalog;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.WalletCatalog;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager;
+import com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import junit.framework.TestCase;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 public class gettersTest extends TestCase {
 
     @Mock
-    com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager walletStoreManagerNetworkService;
+    com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.WalletStoreManager walletStoreManagerNetworkService;
     @Mock
     WalletStoreCatalogue walletStoreCatalogue;
     @Mock
@@ -50,7 +50,7 @@ public class gettersTest extends TestCase {
     @Mock
     LogManager logManager;
     @Mock
-    com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
+    com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
     @Mock

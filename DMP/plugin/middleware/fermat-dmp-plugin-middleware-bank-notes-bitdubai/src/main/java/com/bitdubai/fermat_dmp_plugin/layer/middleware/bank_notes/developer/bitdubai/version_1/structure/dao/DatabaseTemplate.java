@@ -4,7 +4,7 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.structure.dao;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.structure.dao;
 
 
 // Packages and classes to import of jdk 1.7
@@ -22,14 +22,14 @@ import static com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manag
 import static com.bitdubai.fermat_api.layer.all_definition.enums.Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE;
 
 // Packages and classes to import of Middleware Bank Notes API.
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.DatabaseCallback;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions.FailCreateObjectException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions.FailUpdateObjectException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.DatabaseCallback;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions.FailCreateObjectException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions.FailUpdateObjectException;
 
 
 /**
  *
- *  <p>The class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.structure.dao.DatabaseTemplate</code> is a template object
+ *  <p>The class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.structure.dao.DatabaseTemplate</code> is a template object
  *     for management the database operations.
  *
  *

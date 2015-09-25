@@ -4,10 +4,10 @@
   * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.template.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer._11_network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.

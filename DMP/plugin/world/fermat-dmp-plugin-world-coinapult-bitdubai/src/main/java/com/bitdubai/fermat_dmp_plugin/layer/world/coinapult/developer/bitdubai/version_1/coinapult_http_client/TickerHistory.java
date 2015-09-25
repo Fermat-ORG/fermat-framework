@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client;
+package com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Ticker.BidAsk;
+import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Ticker.BidAsk;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.util.Key;

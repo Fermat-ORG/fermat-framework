@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantGetSkinVideoPreviewException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetWalletIconException;
 
 import java.net.URL;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/22/15.
  */
-public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin {
+public class Skin implements com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin {
 
     UUID id;
     String name;
@@ -127,7 +127,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
     }
 
     @Override
-    public com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity getDesigner() {
+    public com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity getDesigner() {
         return designer;
     }
 
@@ -184,7 +184,7 @@ public class Skin implements com.bitdubai.fermat_api.layer.dmp_network_service.w
         this.skinSizeInBytes = skinSizeInBytes;
     }
 
-    public void setDesigner(com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer) {
+    public void setDesigner(com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity designer) {
         this.designer = designer;
     }
 

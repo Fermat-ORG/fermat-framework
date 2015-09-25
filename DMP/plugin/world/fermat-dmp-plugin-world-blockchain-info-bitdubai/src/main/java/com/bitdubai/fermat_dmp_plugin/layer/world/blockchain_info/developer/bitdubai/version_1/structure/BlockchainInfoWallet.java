@@ -1,18 +1,18 @@
-package com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_world.DealsWithWalletIdentity;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartWallet;
-import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.interfaces.DealsWithBlockchainInfoApi;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantGetAddressBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantGetAddressesException;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantGetNewAddressException;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantGetWalletBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantSendCryptoException;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.ccp_world.Agent;
+import com.bitdubai.fermat_api.layer.ccp_world.CryptoWallet;
+import com.bitdubai.fermat_api.layer.ccp_world.DealsWithWalletIdentity;
+import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantStartWallet;
+import com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.interfaces.DealsWithBlockchainInfoApi;
+import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantGetAddressBalanceException;
+import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantGetAddressesException;
+import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantGetNewAddressException;
+import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantGetWalletBalanceException;
+import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantSendCryptoException;
+import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantStartAgentException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
@@ -33,9 +33,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
-import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.wallet.Address;
-import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.wallet.Wallet;
+import com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
+import com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.wallet.Address;
+import com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.wallet.Wallet;
 
 import java.io.IOException;
 import java.util.ArrayList;

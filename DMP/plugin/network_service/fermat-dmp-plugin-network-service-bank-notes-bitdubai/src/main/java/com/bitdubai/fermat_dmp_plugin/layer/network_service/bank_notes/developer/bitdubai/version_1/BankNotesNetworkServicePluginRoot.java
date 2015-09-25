@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.bank_notes.developer.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.bank_notes.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.layer.ccp_network_service.NetworkService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,7 +4,7 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao;
 
 
 // Packages and classes to import of jdk 1.7
@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.Dao</code> is a interface
+ *  <p>The abstract class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.Dao</code> is a interface
  *     that define the methods for management the CRUD operations.
  *
  *

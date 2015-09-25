@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.network_service.database;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.network_service.database;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/09/15.

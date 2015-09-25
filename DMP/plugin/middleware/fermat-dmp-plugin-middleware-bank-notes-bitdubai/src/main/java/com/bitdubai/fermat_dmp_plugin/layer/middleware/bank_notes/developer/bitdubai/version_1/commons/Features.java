@@ -4,12 +4,12 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.commons;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.commons;
 
 
 /**
  *
- *  <p>The class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.commons.Features</code> is an enum object
+ *  <p>The class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.commons.Features</code> is an enum object
  *     that define the item's features.
  *
  *

@@ -5,12 +5,12 @@
  * */
 
 
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions;
 
 
 /**
  *
- *  <p>The class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.exceptions.FailCreateObjectException</code> is a exception
+ *  <p>The class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.exceptions.FailCreateObjectException</code> is a exception
  *     for failures in crete database process.
  *
  *
@@ -18,7 +18,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bit
  *  @version 1.0.0
  *  @since   jdk 1.7
  *  @since   05/16/2015
- *  @see     {@link com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions.BankNotesBaseException}
+ *  @see     {@link com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions.BankNotesBaseException}
  * */
 public class FailCreateObjectException extends BankNotesBaseException {
 }

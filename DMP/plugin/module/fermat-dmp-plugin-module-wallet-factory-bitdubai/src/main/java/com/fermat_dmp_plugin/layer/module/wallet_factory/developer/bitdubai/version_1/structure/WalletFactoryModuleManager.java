@@ -1,12 +1,12 @@
-package com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.structure;
+package com.fermat_ccp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
 
 import java.util.List;
 

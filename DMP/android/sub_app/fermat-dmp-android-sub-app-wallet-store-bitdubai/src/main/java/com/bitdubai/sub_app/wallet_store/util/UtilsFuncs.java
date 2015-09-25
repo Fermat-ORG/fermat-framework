@@ -3,15 +3,15 @@ package com.bitdubai.sub_app.wallet_store.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
-import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.NOT_UNINSTALLED;
-import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.UPGRADE_AVAILABLE;
+import static com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
+import static com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus.NOT_UNINSTALLED;
+import static com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus.UPGRADE_AVAILABLE;
 
 /**
  * Created by nelson on 28/08/15.

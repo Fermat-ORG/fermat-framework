@@ -1,6 +1,6 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_ccp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.exceptions.AppRuntimeExceptions;
+import com.bitdubai.fermat_api.layer.ccp_engine.sub_app_runtime.exceptions.AppRuntimeExceptions;
 
 
 /**

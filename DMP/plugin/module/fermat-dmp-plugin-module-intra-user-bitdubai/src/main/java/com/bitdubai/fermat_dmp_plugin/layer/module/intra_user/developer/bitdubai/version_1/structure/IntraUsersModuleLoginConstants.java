@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
 
 /**
  * Created by natalia on 14/08/15.

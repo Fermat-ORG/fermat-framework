@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.transaction.inter_wallet.developer.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.transaction.inter_wallet.developer.bitdubai.version_1;
 
 /**
  * Created by ciencias on 2/16/15.
@@ -6,7 +6,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.inter_wallet.developer.
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.dmp_transaction.interwallet.InterWalletManager;
+import com.bitdubai.fermat_api.layer.ccp_transaction.interwallet.InterWalletManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;

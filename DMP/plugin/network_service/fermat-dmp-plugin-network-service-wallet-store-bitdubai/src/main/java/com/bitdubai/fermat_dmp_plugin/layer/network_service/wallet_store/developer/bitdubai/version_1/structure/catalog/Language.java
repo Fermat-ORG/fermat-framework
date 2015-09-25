@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_api.layer.ccp_identity.translator.interfaces.TranslatorIdentity;
 
 import java.net.URL;
 import java.util.UUID;
@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/22/15.
  */
-public class Language implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language {
+public class Language implements com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Language {
 
     UUID id;
     UUID walletId; //Todo: Refactor a String para que acepte PublicKey

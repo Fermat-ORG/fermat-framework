@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client;
+package com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -25,8 +25,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 
-import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.CoinapultError.CoinapultException;
-import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.CoinapultError.CoinapultExceptionECC;
+import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.CoinapultError.CoinapultException;
+import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.CoinapultError.CoinapultExceptionECC;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpHeaders;

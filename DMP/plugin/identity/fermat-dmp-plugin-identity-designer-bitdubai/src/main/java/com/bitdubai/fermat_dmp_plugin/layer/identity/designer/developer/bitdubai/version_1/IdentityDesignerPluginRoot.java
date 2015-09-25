@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1;
 
 
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -25,14 +25,14 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantCreateNewDesignerException;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantGetUserDesignerIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentityManager;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.exceptions.CantCreateNewDesignerException;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.exceptions.CantGetUserDesignerIdentitiesException;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentityManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDao;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantInitializeDesignerIdentityDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDao;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantInitializeDesignerIdentityDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -41,10 +41,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.developerUtils.IdentityDesignerDeveloperDataBaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDesigner;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1.developerUtils.IdentityDesignerDeveloperDataBaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDesigner;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -209,11 +209,11 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity_designer.developer.bitdubai.version_1.IdentityDesignerPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity_designer.developer.bitdubai.version_1.estructure.IdentityDesignerDesigner");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity_designer.developer.bitdubai.version_1.estructure.IdentityDesignerDao");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity_designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity_designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity_designer.developer.bitdubai.version_1.IdentityDesignerPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity_designer.developer.bitdubai.version_1.estructure.IdentityDesignerDesigner");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity_designer.developer.bitdubai.version_1.estructure.IdentityDesignerDao");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity_designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity_designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants");
 
 
         /**

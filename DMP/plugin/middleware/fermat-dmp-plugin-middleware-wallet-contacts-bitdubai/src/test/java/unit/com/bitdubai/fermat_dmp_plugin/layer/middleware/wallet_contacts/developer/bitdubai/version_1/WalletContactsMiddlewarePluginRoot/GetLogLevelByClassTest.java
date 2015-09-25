@@ -1,7 +1,7 @@
-package unit.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
+package unit.com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class GetLogLevelByClassTest {
 
         pluginRoot = new WalletContactsMiddlewarePluginRoot();
 
-        assertThat(pluginRoot.getLogLevelByClass("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot")).isNull();
+        assertThat(pluginRoot.getLogLevelByClass("com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot")).isNull();
     }
 }
 

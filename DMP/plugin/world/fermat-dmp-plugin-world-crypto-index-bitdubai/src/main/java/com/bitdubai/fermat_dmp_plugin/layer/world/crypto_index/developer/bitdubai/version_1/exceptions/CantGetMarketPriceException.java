@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_ccp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetMarketPriceException</code>
+ * The exception <code>com.bitdubai.fermat_ccp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetMarketPriceException</code>
  * is thrown when i cant get the market price from a provider.<p/>
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.

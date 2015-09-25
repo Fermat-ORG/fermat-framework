@@ -2,7 +2,7 @@ package com.bitdubai.sub_app.intra_user.adapters;
 
 import android.graphics.drawable.Drawable;
 
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserLoginIdentity;
 
 /**
  * Created by Matias Furszyfer on 2015.09.01..

@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.ccp_middleware.wallet_manager;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.ccp_middleware.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.ccp_middleware.MiddlewareSubsystem;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_manager.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.

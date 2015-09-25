@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1;
 
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartWallet;
+import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantStartWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -29,14 +29,14 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.dmp_world.CantCreateCryptoWalletException;
+import com.bitdubai.fermat_api.layer.ccp_world.CantCreateCryptoWalletException;
 
-import com.bitdubai.fermat_api.layer.dmp_world.World;
-import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
-import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWallet;
-import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWalletResponse;
-import com.bitdubai.fermat_api.layer.dmp_world.CryptoWalletManager;
-import  com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.BlockchainInfoWallet;
+import com.bitdubai.fermat_api.layer.ccp_world.World;
+import com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
+import com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWallet;
+import com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWalletResponse;
+import com.bitdubai.fermat_api.layer.ccp_world.CryptoWalletManager;
+import  com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure.BlockchainInfoWallet;
 
 
 import java.io.IOException;

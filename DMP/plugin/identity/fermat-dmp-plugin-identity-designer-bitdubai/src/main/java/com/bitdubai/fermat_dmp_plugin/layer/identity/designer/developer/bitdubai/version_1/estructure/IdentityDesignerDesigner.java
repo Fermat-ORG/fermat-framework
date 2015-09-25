@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure;
+package com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.exceptions.CantSingMessageException;
 /**
  * The class <code>com.bitdubai.fermat_pip_plugin.layer.identity_designer.developer.bitdubai.version_1.estructure.IdentityDesignerDesigner</code>
  * represents a designer identity record.

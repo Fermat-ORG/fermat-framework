@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai;
+package com.bitdubai.fermat_ccp_plugin.layer.engine.app_runtime.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.SubAppRuntimeMiddlewarePluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.SubAppRuntimeMiddlewarePluginRoot;
 
 /**
  * Created by loui on 14/02/15.

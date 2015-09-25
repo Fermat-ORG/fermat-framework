@@ -15,11 +15,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 ;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.ccp_engine.sub_app_runtime.enums.SubApps;
 
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -511,9 +511,9 @@ public class SubAppResourcesInstalationNetworkServicePluginRoot implements Servi
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstalationNetworkServicePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.SubAppResourcesNetworkService");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.SubAppNavigationStructureNetworkService");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstalationNetworkServicePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.SubAppResourcesNetworkService");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.SubAppNavigationStructureNetworkService");
 
 
         /**

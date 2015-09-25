@@ -4,21 +4,21 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao;
 
 
 // Packages and classes to import of bitDubai API.
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 
 // Packages and classes to import of Middleware Bank Notes API.
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Record;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Record;
 
 
 /**
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.DatabaseCallback</code> is a
+ *  <p>The abstract class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.DatabaseCallback</code> is a
  *     Callback interface for Database code.
- *     To be used with {@link com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.structure.dao.DatabaseTemplate}'s execution methods,
+ *     To be used with {@link com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.structure.dao.DatabaseTemplate}'s execution methods,
  *     often as anonymous classes within a method implementation.
  *
  *

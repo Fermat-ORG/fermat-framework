@@ -2,9 +2,9 @@ package com.bitdubai.fermat_api.layer.pip_engine.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 
 import java.util.UUID;
 

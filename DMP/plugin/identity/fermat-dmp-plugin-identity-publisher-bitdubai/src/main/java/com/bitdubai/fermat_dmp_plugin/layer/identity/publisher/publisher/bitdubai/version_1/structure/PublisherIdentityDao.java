@@ -4,7 +4,7 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure;
 
 
 // Packages and classes to import of jdk 1.7
@@ -35,19 +35,19 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantCreateNewPublisherException;
+import com.bitdubai.fermat_api.layer.ccp_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
+import com.bitdubai.fermat_api.layer.ccp_identity.publisher.interfaces.PublisherIdentity;
+import com.bitdubai.fermat_api.layer.ccp_identity.publisher.exceptions.CantCreateNewPublisherException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.exceptions.CantInitializePublisherIdentityDatabaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.exceptions.*;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.PublisherIdentityPluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.exceptions.CantInitializePublisherIdentityDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.exceptions.*;
 // Packages and classes to import of apache commons.
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 

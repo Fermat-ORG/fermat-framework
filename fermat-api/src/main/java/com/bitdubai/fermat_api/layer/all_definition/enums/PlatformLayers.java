@@ -54,7 +54,9 @@ public enum PlatformLayers {
     BITDUBAI_DAP_IDENTITY_LAYER("BDAPIL", Developers.BITDUBAI),
     BITDUBAI_DAP_MODULE_LAYER("BDAPML", Developers.BITDUBAI),
     BITDUBAI_DIGITAL_ASSET_FACTORY("BDAF", Developers.BITDUBAI),
-    BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI)
+    BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI),
+    BITDUBAI_WPD_NETWORK_SERVICE_LAYER("BWPDNSL", Developers.BITDUBAI),
+
     ;
 
     /**
@@ -170,6 +172,8 @@ public enum PlatformLayers {
                 return PlatformLayers.BITDUBAI_DAP_MODULE_LAYER;
             case "BEL":
                 return BITDUBAI_ENGINE_LAYER;
+            case "BWPDNSL":
+                return BITDUBAI_WPD_NETWORK_SERVICE_LAYER;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");
 

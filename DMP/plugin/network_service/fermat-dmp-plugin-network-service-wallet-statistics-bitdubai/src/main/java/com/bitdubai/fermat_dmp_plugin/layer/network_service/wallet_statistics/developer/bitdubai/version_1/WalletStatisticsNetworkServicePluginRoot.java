@@ -1,18 +1,18 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.exceptions.CantGetWalletStatisticsException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.WalletStatistics;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_statistics.exceptions.CantGetWalletStatisticsException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_statistics.interfaces.WalletStatistics;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.layer.ccp_network_service.NetworkService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,7 +135,7 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1.WalletStatisticsNetworkServicePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1.WalletStatisticsNetworkServicePluginRoot");
             /**
          * I return the values.
          */

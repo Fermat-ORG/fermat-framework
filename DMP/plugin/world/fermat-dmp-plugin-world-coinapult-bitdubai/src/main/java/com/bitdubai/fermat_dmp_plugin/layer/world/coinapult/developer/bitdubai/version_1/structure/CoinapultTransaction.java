@@ -4,18 +4,18 @@
   * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletTransaction;
-import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Transaction;
-import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums.Types;
+import com.bitdubai.fermat_api.layer.ccp_world.coinapult.wallet.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Transaction;
+import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums.Types;
 
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.structure.CoinapultTransaction</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.structure.CoinapultTransaction</code>
  * <p/>
  * Created by Roberto Requena - (rrequena) on 02/05/15.
  *

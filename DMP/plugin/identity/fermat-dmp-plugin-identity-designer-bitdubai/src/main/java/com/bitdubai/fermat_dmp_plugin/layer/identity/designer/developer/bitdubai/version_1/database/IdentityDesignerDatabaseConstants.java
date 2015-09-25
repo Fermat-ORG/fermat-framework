@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.version_1.database;
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.identity_designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants</code>

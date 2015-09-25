@@ -1,9 +1,9 @@
-package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+package unit.com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantDeleteWalletContactException;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
+import com.bitdubai.fermat_api.layer.ccp_wallet_module.crypto_wallet.exceptions.CantDeleteWalletContactException;
+import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 
@@ -70,7 +70,7 @@ public class DeleteWalletContactTest extends TestCase {
 
     @Test(expected=CantDeleteWalletContactException.class)
     public void testDeleteWalletContact_CantUpdateWalletContactException() throws Exception {
-        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException())
+        doThrow(new com.bitdubai.fermat_api.layer.ccp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException())
         .when(walletContactsRegistry).deleteWalletContact(any(UUID.class));
 
         walletModuleCryptoWallet.deleteWalletContact(contactId);

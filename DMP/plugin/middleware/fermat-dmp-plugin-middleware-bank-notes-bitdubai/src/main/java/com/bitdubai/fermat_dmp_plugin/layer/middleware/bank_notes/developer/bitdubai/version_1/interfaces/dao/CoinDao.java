@@ -4,16 +4,16 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao;
 
 
 // Packages and classes to import of Middleware Bank Notes API.
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Coin;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Coin;
 
 
 /**
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.CoinDao</code> is a interface
+ *  <p>The abstract class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.CoinDao</code> is a interface
  *     that define the methods for management the CRUD operations for the Coin DTO.
  *
  *
@@ -21,8 +21,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitd
  *  @version 1.0.0
  *  @since   jdk 1.7
  *  @since   05/10/2015
- *  @see     {@link com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.Dao}
- *  @see     {@link com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Coin}
+ *  @see     {@link com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.interfaces.dao.Dao}
+ *  @see     {@link com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Coin}
  * */
 public interface CoinDao<I, O> extends Dao<Long, Coin> {
 

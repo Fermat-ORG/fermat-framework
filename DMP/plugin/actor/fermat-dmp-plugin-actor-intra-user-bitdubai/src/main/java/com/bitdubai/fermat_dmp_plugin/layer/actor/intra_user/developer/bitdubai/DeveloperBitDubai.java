@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai;
+package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot;
 
 /**
  * Created by loui on 22/02/15.

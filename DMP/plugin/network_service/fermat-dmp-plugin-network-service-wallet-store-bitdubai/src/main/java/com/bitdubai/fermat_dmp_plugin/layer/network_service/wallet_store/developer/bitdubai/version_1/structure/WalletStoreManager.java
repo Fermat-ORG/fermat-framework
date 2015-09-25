@@ -1,21 +1,21 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDesignerException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetDeveloperException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetSkinException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetTranslatorException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishDeveloperInCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.ccp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetCatalogItemException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetDesignerException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetDeveloperException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetSkinException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetTranslatorException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetWalletIconException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantPublishDesignerInCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantPublishDeveloperInCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantPublishLanguageInCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantPublishSkinInCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantPublishTranslatorInCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantPublishWalletInCatalogException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -30,19 +30,19 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantPublishItemInCatalogException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.WalletCatalog;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantPublishItemInCatalogException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.CatalogItemImpl;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Designer;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.DetailedCatalogItemImpl;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Developer;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Language;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Translator;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.WalletCatalog;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.common.DatabaseOperations;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreCatalogDatabaseDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -136,7 +136,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         return dbDAO;
     }
 
-    private void publishItemInDB(CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, TranslatorIdentity translator, com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin, DesignerIdentity designer) throws CantPublishItemInCatalogException {
+    private void publishItemInDB(CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, TranslatorIdentity translator, com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin skin, DesignerIdentity designer) throws CantPublishItemInCatalogException {
 
         try {
             getDatabaseDAO().catalogDatabaseOperation(DatabaseOperations.INSERT, catalogItemImpl, developer, language, translator, skin, designer);
@@ -190,7 +190,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
         }
     }
 
-    private void saveSkinImageFiles(com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin) throws CantGetWalletIconException, CantPublishItemInCatalogException {
+    private void saveSkinImageFiles(com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin skin) throws CantGetWalletIconException, CantPublishItemInCatalogException {
         saveImageIntoFile(skin.getSkinId().toString(), skin.getSkinName(), skin.getPresentationImage());
         int i = 0;
         for (byte[] images : skin.getPreviewImageList()){
@@ -207,7 +207,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      * @throws CantPublishSkinInCatalogException
      */
 
-    public void publishSkin (com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin) throws CantPublishSkinInCatalogException{
+    public void publishSkin (com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin skin) throws CantPublishSkinInCatalogException{
         try {
             publishItemInDB(null, null, null, null, skin, null);
             saveSkinImageFiles(skin);
@@ -412,7 +412,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      * @return
      * @throws CantGetWalletLanguageException
      */
-    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language getLanguage(UUID walletId) throws CantGetWalletLanguageException {
+    public com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Language getLanguage(UUID walletId) throws CantGetWalletLanguageException {
         try {
             return getDatabaseDAO().getLanguageFromDatabase(walletId);
         } catch (Exception exception) {
@@ -427,7 +427,7 @@ public class WalletStoreManager implements DealsWithErrors, DealsWithLogger, Dea
      * @return
      * @throws CantGetSkinException
      */
-    public com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin getSkin(UUID walletId) throws CantGetSkinException {
+    public com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin getSkin(UUID walletId) throws CantGetSkinException {
         try {
             return getDatabaseDAO().getSkinFromDatabase(walletId);
         } catch (Exception exception) {

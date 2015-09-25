@@ -5,12 +5,12 @@
  * */
 
 
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions;
 
 
 /**
  *
- *  <p>The class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.exceptions.FailUpdateObjectException</code> is a exception
+ *  <p>The class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.exceptions.FailUpdateObjectException</code> is a exception
  *     for failures in update database process.
  *
  *

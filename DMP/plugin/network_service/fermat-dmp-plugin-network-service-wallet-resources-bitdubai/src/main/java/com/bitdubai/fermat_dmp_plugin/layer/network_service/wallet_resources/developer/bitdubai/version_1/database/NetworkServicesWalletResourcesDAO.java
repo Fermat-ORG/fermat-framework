@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.exceptions.ProjectNotFoundException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -14,8 +14,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.*;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.*;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.*;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -49,7 +49,7 @@ public class NetworkServicesWalletResourcesDAO {
      * @param databaseName database name
      * @throws
      */
-    public void initializeDatabase(UUID ownerId, String databaseName) throws com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException {
+    public void initializeDatabase(UUID ownerId, String databaseName) throws com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException {
         try {
              /*
               * Open new database connection
@@ -57,7 +57,7 @@ public class NetworkServicesWalletResourcesDAO {
             database = this.pluginDatabaseSystem.openDatabase(ownerId, databaseName);
             database.closeDatabase();
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (DatabaseNotFoundException e) {
              /*
               * The database no exist may be the first time the plugin is running on this device,
@@ -74,7 +74,7 @@ public class NetworkServicesWalletResourcesDAO {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
+                throw new com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
             }
         }
     }
@@ -101,11 +101,11 @@ public class NetworkServicesWalletResourcesDAO {
             DatabaseTable RepositoryTable = getRepositoriesTable();
             DatabaseTableRecord entityRecord = RepositoryTable.getEmptyRecord();
 
-            entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME, UUID.randomUUID().toString());
-            entityRecord.setUUIDValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME, skinId);
-            entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repository.getSkinName());
-            entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME, repository.getNavigationStructureVersion());
-            entityRecord.setStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME, repository.getPath());
+            entityRecord.setStringValue(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME, UUID.randomUUID().toString());
+            entityRecord.setUUIDValue(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME, skinId);
+            entityRecord.setStringValue(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repository.getSkinName());
+            entityRecord.setStringValue(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME, repository.getNavigationStructureVersion());
+            entityRecord.setStringValue(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME, repository.getPath());
 
 
             DatabaseTransaction transaction = database.newTransaction();
@@ -132,10 +132,10 @@ public class NetworkServicesWalletResourcesDAO {
      *  @param repositoryName String repository name
      * */
 
-    public void delete(UUID skinId,String repositoryName) throws com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException, ProjectNotFoundException, com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
+    public void delete(UUID skinId,String repositoryName) throws com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException, ProjectNotFoundException, com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
 
         if (skinId == null || repositoryName==null){
-            throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, null, "", "The id amd the name is required, can not be null");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, null, "", "The id amd the name is required, can not be null");
         }
 
         try {
@@ -146,14 +146,14 @@ public class NetworkServicesWalletResourcesDAO {
         } catch (CantDeleteRecordException e) {
             // Register the failure.
             database.closeDatabase();
-            throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
 
         } catch (CantLoadTableToMemoryException e) {
             // Register the failure.
             database.closeDatabase();
-            throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }catch(CantOpenDatabaseException | DatabaseNotFoundException exception){
-            throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
         }
     }
 
@@ -165,11 +165,11 @@ public class NetworkServicesWalletResourcesDAO {
      * @param repositoryName
      * @return
      * @throws CantLoadTableToMemoryException
-     * @throws com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException
+     * @throws com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException
      */
-    private DatabaseTableRecord getRepositoryDatabaseTableRecord(DatabaseTable repositoryTable,UUID skinId,String repositoryName) throws CantLoadTableToMemoryException, com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
-        repositoryTable.setUUIDFilter(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
-        repositoryTable.setStringFilter(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
+    private DatabaseTableRecord getRepositoryDatabaseTableRecord(DatabaseTable repositoryTable,UUID skinId,String repositoryName) throws CantLoadTableToMemoryException, com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
+        repositoryTable.setUUIDFilter(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+        repositoryTable.setStringFilter(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, repositoryName, DatabaseFilterType.EQUAL);
         repositoryTable.loadToMemory();
         List<DatabaseTableRecord> databaseTableRecordList = repositoryTable.getRecords();
 
@@ -179,22 +179,22 @@ public class NetworkServicesWalletResourcesDAO {
 
         } else {
             database.closeDatabase();
-            throw new com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException(ProjectNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a repository with that id and name");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException(ProjectNotFoundException.DEFAULT_MESSAGE, null, "", "Cannot find a repository with that id and name");
         }
     }
 
 
-    private Repository getRepository(String repositoryName,UUID skinId) throws CantGetRepositoryPathRecordException, com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
+    private Repository getRepository(String repositoryName,UUID skinId) throws CantGetRepositoryPathRecordException, com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException {
 
         DatabaseTableRecord databaseTableRecord= getRepositoryDatabaseTableRecord(repositoryName,skinId);
-        String pathToRepo = databaseTableRecord.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME);
-        String navigationStructureVersion = databaseTableRecord.getStringValue(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
+        String pathToRepo = databaseTableRecord.getStringValue(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME);
+        String navigationStructureVersion = databaseTableRecord.getStringValue(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME);
 
         return new Repository(repositoryName,navigationStructureVersion,pathToRepo);
     }
 
 
-    private DatabaseTableRecord getRepositoryDatabaseTableRecord(String repositoryName,UUID skinId) throws com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException, CantGetRepositoryPathRecordException {
+    private DatabaseTableRecord getRepositoryDatabaseTableRecord(String repositoryName,UUID skinId) throws com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException, CantGetRepositoryPathRecordException {
         try {
             database.openDatabase();
             DatabaseTable repositoryTable = getRepositoriesTable();
@@ -210,7 +210,7 @@ public class NetworkServicesWalletResourcesDAO {
     }
 
     private DatabaseTable getRepositoriesTable(){
-        return database.getTable(com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME);
+        return database.getTable(com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME);
     }
 
 }

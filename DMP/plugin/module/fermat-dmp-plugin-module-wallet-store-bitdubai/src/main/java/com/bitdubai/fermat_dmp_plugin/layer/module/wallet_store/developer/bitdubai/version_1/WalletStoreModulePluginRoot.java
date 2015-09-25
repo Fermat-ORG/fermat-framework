@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1;
+package com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -9,22 +9,22 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartInstallationException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartLanguageInstallationException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartSkinInstallationException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallSkinException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallWalletException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.interfaces.DealsWithWalletStoreMiddleware;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantGetRefinedCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantStartInstallationException;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantStartLanguageInstallationException;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantStartSkinInstallationException;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantStartUninstallLanguageException;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantStartUninstallSkinException;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.exceptions.CantStartUninstallWalletException;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_api.layer.ccp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.DetailedCatalogItem;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -60,7 +60,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
     /**
      * WalletStoreModulePluginRoot member variables
      */
-    com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager walletStoreModuleManager;
+    com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager walletStoreModuleManager;
 
     /**
      * DealsWithErrors interface member variables
@@ -93,7 +93,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
     /**
      * DealsWithWEalletStoreMiddleware interface member variable
      */
-    com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
+    com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
 
     /**
      * Plugin Interface member variables.
@@ -174,8 +174,8 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.WalletStoreModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager");
         /**
          * I return the values.
          */
@@ -226,7 +226,7 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
      * @param walletStoreManager
      */
     @Override
-    public void setWalletStoreManager(com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManager) {
+    public void setWalletStoreManager(com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManager) {
         this.walletStoreManagerMiddleware = walletStoreManager;
     }
 
@@ -244,9 +244,9 @@ public class WalletStoreModulePluginRoot implements DealsWithErrors, DealsWithWa
      * WalletStoreModule manager interface implementation
      */
 
-    public com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager getWalletStoreModuleManager() {
+    public com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager getWalletStoreModuleManager() {
         if (walletStoreModuleManager == null)
-            walletStoreModuleManager = new com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
+            walletStoreModuleManager = new com.bitdubai.fermat_ccp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure.WalletStoreModuleManager(errorManager, logManager, walletStoreManagerMiddleware, walletStoreManagerNetworkService);
 
         //TEST
         walletStoreModuleManager.setWalletManagerManager(walletManagerManager);
