@@ -14,7 +14,9 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
@@ -22,6 +24,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.Instal
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResourcesProvider;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -630,34 +633,80 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             /**
              * I will create a new WFP and fill in basic information
              */
-            WalletFactoryProject clonedWalletFactoryProject = this.getNewWalletFactoryProject();
-            clonedWalletFactoryProject.setName(newName);
-            clonedWalletFactoryProject.setWalletType(wallet.getWalletType());
-            clonedWalletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
-            java.util.Date date= new java.util.Date();
-            clonedWalletFactoryProject.setCreationTimestamp(new Timestamp(date.getTime()));
-            clonedWalletFactoryProject.setProjectPublickKey(new ECCKeyPair().getPublicKey());
-            clonedWalletFactoryProject.setDescription("Clone from wallet " + wallet.getWalletName());
-            clonedWalletFactoryProject.setProjectState(WalletFactoryProjectState.IN_PROGRESS);
-            clonedWalletFactoryProject.setWalletCategory(wallet.getWalletCategory());
+            WalletFactoryProject clonedWalletFactoryProject = fillInBasicProjectInformation(wallet, newName);
 
             /**
-             * Then I will get the Navigation Structure from the Wallet Resources plugin and save it.
+             * Then I will get the Skins from the installed wallet.
              */
+        List<Skin> skins = new ArrayList<>();
             for (InstalledSkin installedSkin : wallet.getSkinsId()){
-                walletResourcesProviderManager.getSkinFile(null, installedSkin.getId(), wallet.getWalletPublicKey());
+                Skin skin = walletResourcesProviderManager.getSkinFile( installedSkin.getId(), wallet.getWalletPublicKey());
+
+                /**
+                 * I¡m getting the first skin and assigning it as the default. This can be changed later in the factory sub app
+                 */
+
+                if (clonedWalletFactoryProject.getDefaultSkin() == null)
+                    clonedWalletFactoryProject.setDefaultSkin(skin);
+
+                skins.add(skin);
             }
+        clonedWalletFactoryProject.setSkins(skins);
+
+            /**
+             * Then I will get the languages from the installed walett.
+             */
+            List<Language> languages = new ArrayList<>();
+            for (InstalledLanguage installedLanguage : wallet.getLanguagesId()){
+                Language language= (Language) walletResourcesProviderManager.getLanguage(installedLanguage.getId(), wallet.getWalletPublicKey());
+
+                /**
+                 * I¡m getting the first language and assigning it as the default. This can be changed later in the factory sub app
+                 */
+
+                if (clonedWalletFactoryProject.getDefaultLanguage() == null)
+                    clonedWalletFactoryProject.setDefaultLanguage(language);
+
+                languages.add(language);
+            }
+            clonedWalletFactoryProject.setLanguages(languages);
 
 
+            /**
+             * Lastly, I'm assigning the navigation structure
+             */
+        WalletNavigationStructure navigationStructure = walletResourcesProviderManager.getNavigationStructure(wallet.getWalletPublicKey(), clonedWalletFactoryProject.getDefaultSkin().getId());
+            clonedWalletFactoryProject.setNavigationStructure(navigationStructure);
 
+            /**
+             * After I have the project completed, I'm saving it and uploading it to gitHub
+             */
+        this.saveWalletFactoryProject(clonedWalletFactoryProject);
 
-        } catch (CantCreateWalletFactoryProjectException e) {
-            e.printStackTrace();
-        } catch (CantGetResourcesException e) {
-            e.printStackTrace();
-        } catch (CantGetSkinFileException e) {
-            e.printStackTrace();
+        } catch (CantCreateWalletFactoryProjectException |
+                CantGetResourcesException |
+                CantGetSkinFileException |
+                CantGetLanguageFileException |
+                CantGetWalletNavigationStructureException e) {
+           throw new CantCloneInstalledWalletException (CantCloneInstalledWalletException.DEFAULT_MESSAGE, e, "There was a problem getting the installed wallet resources.", "error in the WalletResourcesProvider");
+        } catch (CantSaveWalletFactoryProyect cantSaveWalletFactoryProyect) {
+            throw new CantCloneInstalledWalletException (CantCloneInstalledWalletException.DEFAULT_MESSAGE, cantSaveWalletFactoryProyect, "There was an error saving the project created after cloning an installed wallet.", null);
         }
+    }
+
+    private WalletFactoryProject fillInBasicProjectInformation(InstalledWallet wallet, String newProjectName) throws CantCreateWalletFactoryProjectException {
+        WalletFactoryProject clonedWalletFactoryProject =  this.getNewWalletFactoryProject();
+        clonedWalletFactoryProject.setName(newProjectName);
+        clonedWalletFactoryProject.setWalletType(wallet.getWalletType());
+        clonedWalletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
+        java.util.Date date= new java.util.Date();
+        clonedWalletFactoryProject.setCreationTimestamp(new Timestamp(date.getTime()));
+        clonedWalletFactoryProject.setProjectPublickKey(new ECCKeyPair().getPublicKey());
+        clonedWalletFactoryProject.setDescription("Clone from wallet " + wallet.getWalletName());
+        clonedWalletFactoryProject.setProjectState(WalletFactoryProjectState.IN_PROGRESS);
+        clonedWalletFactoryProject.setWalletCategory(wallet.getWalletCategory());
+
+        return clonedWalletFactoryProject;
     }
 
 }

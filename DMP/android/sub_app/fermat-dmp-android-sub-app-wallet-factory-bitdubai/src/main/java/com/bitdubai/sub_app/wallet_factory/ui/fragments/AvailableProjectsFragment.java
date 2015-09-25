@@ -1,33 +1,25 @@
 package com.bitdubai.sub_app.wallet_factory.ui.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.animation.AnimationUtils;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
+import com.bitdubai.sub_app.wallet_factory.adapters.InstalledWalletsAdapter;
 import com.bitdubai.sub_app.wallet_factory.models.Wallet;
+import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
+import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
 
 import java.util.ArrayList;
 
@@ -38,342 +30,131 @@ import java.util.ArrayList;
  * @author Matias Furszy
  * @version 1.0
  */
-public class AvailableProjectsFragment extends FermatFragment {
+public class AvailableProjectsFragment extends FermatFragment
+        implements SwipeRefreshLayout.OnRefreshListener {
+
+    private final String TAG = "FactoryProjects";
 
     /**
-     * Views
+     * Manager
+     */
+    private WalletFactoryManager manager;
+
+    /**
+     * flags
+     */
+    private boolean isRefreshing;
+
+    /**
+     * View references
      */
     private View rootView;
-    private ListView listView;
+    private SwipeRefreshLayout swipeRefresh;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private InstalledWalletsAdapter adapter;
 
-    private ArrayList<InstalledWallet> wallets;
+    private ArrayList<Wallet> dataSet;
 
     public static FermatFragment newInstance() {
         return new AvailableProjectsFragment();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        wallets = new ArrayList<>();
-        Wallet wallet = new Wallet();
-        wallet.setNavigation(startWalletNavigationStructure());
-        wallets.add(wallet);
-        wallets.add(wallet);
-        wallets.add(wallet);
-        wallets.add(wallet);
-        wallets.add(wallet);
-        wallets.add(wallet);
-        wallets.add(wallet);
-        wallets.add(wallet);
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.factory_available_projects_fragment, container, false);
 
-        listView = (ListView) rootView.findViewById(R.id.projects);
-        ArrayAdapter<InstalledWallet> adapter = new ArrayAdapter<InstalledWallet>(getActivity(), android.R.layout.simple_list_item_1, wallets);
-        listView.setAdapter(adapter);
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+        swipeRefresh.setOnRefreshListener(this);
+        swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                /**
-                 * Francisco por ahora pasale de primer parametro la estructura de navegación y de segundo la InstalledWallet,
-                 *
-                 * Usá el metodo ese de changeActivity, y pasale esos parametros, despues lo que va a hacer esto es pintarte en la pantalla toda la wallet con tu estructura de navegación
-                 * y los fragmentos nuevos que acabas de poner
-                 */
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
 
-                Object[] o = new Object[2];
-                o[0] = (Object) startWalletNavigationStructure();
-                o[1] = (Object) wallets.get(i);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
 
-                //TODO: Como tercer parametro me tenes que pasar el Skin de la wallet que vas a cambiar así lo pinto por pantalla y se va cambiando
-
-                //o[2] = (Object)
-                changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(),o);
-            }
-        });
+        adapter = new InstalledWalletsAdapter(getActivity());
+        recyclerView.setAdapter(adapter);
 
         return rootView;
     }
 
-    /**
-     *  Meanwhile
-     *
-     * @return
-     */
-
-    private WalletNavigationStructure startWalletNavigationStructure(){
-
-        Activity runtimeActivity;
-        Fragment runtimeFragment;
-        WalletNavigationStructure runtimeWalletNavigationStructure;
-        TitleBar runtimeTitleBar;
-        SideMenu runtimeSideMenu;
-        MainMenu runtimeMainMenu;
-        MenuItem runtimeMenuItem;
-        TabStrip runtimeTabStrip;
-        StatusBar runtimeStatusBar;
-
-        Tab runtimeTab;
-
-        String publicKey;
-
-        runtimeWalletNavigationStructure = new WalletNavigationStructure();
-        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
-        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        publicKey="reference_wallet";
-        runtimeWalletNavigationStructure.setPublicKey(publicKey);
-        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
-
-        runtimeActivity= new Activity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeActivity.setColor("#8bba9e");
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");
-        runtimeTitleBar.setLabelSize(16);
-
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
-        //runtimeActivity.setColor("#d07b62");
-
-
-        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        runtimeStatusBar.setColor("#72af9c");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-
-        runtimeTabStrip = new TabStrip();
-
-        runtimeTabStrip.setTabsColor("#8bba9e");
-
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-
-        runtimeTabStrip.setTabsIndicateColor("#72af9c");
-
-
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Send");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Balance");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeTabStrip.setStartItem(1);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Receive");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
-        runtimeTabStrip.addTab(runtimeTab);
-        /*
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Transactions");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
-        runtimeTabStrip.addTab(runtimeTab);
-
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Money request");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        */
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Contacts");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
-        runtimeTabStrip.addTab(runtimeTab);
-
-
-
-
-
-        runtimeTabStrip.setDividerColor(0x72af9c);
-        //runtimeTabStrip.setBackgroundColor("#72af9c");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);
-
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey(),runtimeFragment);
-
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey(),runtimeFragment);
-
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
-//        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
-
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST.getKey(), runtimeFragment);
-
-
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey(), runtimeFragment);
-
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS.getKey(), runtimeFragment);
-
-        //Navigation
-
-        runtimeSideMenu = new SideMenu();
-
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Contacts");
-        runtimeMenuItem.setIcon("contacts");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Transactions");
-        runtimeMenuItem.setIcon("transactions");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setIcon("Settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-
-        //fin navigation
-
-
-        /**
-         * Menu
-         */
-
-        runtimeMainMenu = new MainMenu();
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
-
-
-        runtimeActivity.setMainMenu(runtimeMainMenu);
-
-        /**
-         *  Fin de menu
-         */
-
-        /**
-         * Transaction Activity
-         */
-
-        runtimeActivity= new Activity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
-        runtimeActivity.setColor("#8bba9e");
-        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("bitdubai bitcoin Wallet");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
-        //runtimeActivity.setColor("#d07b62");
-        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-
-
-        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        runtimeStatusBar.setColor("#72af9c");
-
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey());
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey(), runtimeFragment);
-
-
-        //Navigation
-
-        runtimeSideMenu = new SideMenu();
-
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Personal Wallets");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Shops");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Commercial wallets");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Factory Projects");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Published Wallets");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Wallet Store");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-
-        //fin navigation
-
-
-
-
-
-        return runtimeWalletNavigationStructure;
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (!isRefreshing) {
+            onRefresh();
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            // setting up wallet manager
+            setManager(((WalletFactorySubAppSession) subAppsSession).getWalletFactoryManager());
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
+
+    public void setManager(WalletFactoryManager manager) {
+        this.manager = manager;
+    }
+
+    public WalletFactoryManager getManager() {
+        return manager;
+    }
+
+    @Override
+    public void onRefresh() {
+        if (!isRefreshing) {
+            isRefreshing = true;
+            swipeRefresh.setRefreshing(true);
+            new FermatWorker(getActivity(), new FermatWorkerCallBack() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void onPostExecute(Object... result) {
+                    isRefreshing = false;
+                    if (isAttached) {
+                        swipeRefresh.setRefreshing(false);
+                        if (result != null && result.length > 0) {
+                            dataSet = (ArrayList<Wallet>) result[0];
+                            adapter.changeDataSet(dataSet);
+                            showEmpty();
+                        }
+                    }
+                }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    isRefreshing = false;
+                    if (isAttached) {
+                        swipeRefresh.setRefreshing(false);
+                        showEmpty();
+                    }
+                }
+            }) {
+
+                @Override
+                protected Object doInBackground() throws Exception {
+                    return manager.getInstalledWallets();
+                }
+
+            }.execute();
+        }
+    }
+
+    private void showEmpty() {
+        if (dataSet == null || dataSet.isEmpty()) {
+            rootView.findViewById(R.id.empty).setAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+            rootView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+        } else if (dataSet.size() > 0) {
+            rootView.findViewById(R.id.empty).setAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+            rootView.findViewById(R.id.empty).setVisibility(View.GONE);
+        }
     }
 }

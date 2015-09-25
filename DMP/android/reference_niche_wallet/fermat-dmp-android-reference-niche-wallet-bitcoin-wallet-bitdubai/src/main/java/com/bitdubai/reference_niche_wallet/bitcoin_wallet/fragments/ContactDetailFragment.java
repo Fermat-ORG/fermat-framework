@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
@@ -41,7 +42,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class ContactDetailFragment extends Fragment implements View.OnClickListener {
+public class ContactDetailFragment extends FermatWalletFragment implements View.OnClickListener {
 
     /**
      * Root fragment view reference
@@ -66,7 +67,6 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
     private CryptoWalletManager cryptoWalletManager;
-    private ReferenceWalletSession walletSession;
     private WalletSettingsManager walletSettingsManager;
 
     /**
@@ -79,16 +79,13 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
      *  Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
+    private ReferenceWalletSession referenceWalletSession
+            ;
 
 
-    public static ContactDetailFragment newInstance(ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
-        if (walletSession == null) {
-            return null;
-        }
+    public static ContactDetailFragment newInstance() {
         ContactDetailFragment f = new ContactDetailFragment();
-        f.setWalletSession(walletSession);
-        f.setAccountName(walletSession.getAccountName());
-        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
+
         return f;
     }
 
@@ -114,8 +111,11 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        referenceWalletSession = (ReferenceWalletSession) walletSession;
+
         typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-        cryptoWalletManager = walletSession.getCryptoWalletManager();
+        cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
         errorManager = walletSession.getErrorManager();
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -166,7 +166,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 //                    .attach(fragment)
 //                    .show(fragment)
 //                    .commit();
-            walletSession.setLastContactSelected(walletContact);
+            referenceWalletSession.setLastContactSelected(walletContact);
             com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet installedWallet = walletSession.getWalletSessionType();
             ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey());
 
@@ -196,7 +196,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 //                    .show(fragment)
 //                    .commit();
 
-            walletSession.setLastContactSelected(walletContact);
+            referenceWalletSession.setLastContactSelected(walletContact);
             com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet installedWallet = walletSession.getWalletSessionType();
             ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST.getKey());
         }
