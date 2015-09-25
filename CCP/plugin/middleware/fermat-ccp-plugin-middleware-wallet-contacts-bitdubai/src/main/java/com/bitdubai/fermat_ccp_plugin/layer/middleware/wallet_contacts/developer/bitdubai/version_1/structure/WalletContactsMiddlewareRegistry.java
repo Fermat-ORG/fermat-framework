@@ -381,6 +381,9 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
                 throw new CantHandleCryptoAddressReceivedEventException(e, "Can't get wallet contact.");
             }
+        } catch (PendingRequestNotFoundException e) {
+            // TODO what to do here?
+            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't find the pending request when confirming.");
         } catch (CantConfirmAddressExchangeRequestException e) {
 
             throw new CantHandleCryptoAddressReceivedEventException(e, "Can't confirm address exchange request.");
