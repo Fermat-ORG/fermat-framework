@@ -22,7 +22,7 @@ public enum AddressExchangeRequestState implements FermatEnum {
         this.code = code;
     }
 
-    public static FermatEnum getByCode(String code) throws InvalidParameterException {
+    public static AddressExchangeRequestState getByCode(String code) throws InvalidParameterException {
 
         switch (code){
             case "DFI": return DENIED_FOR_INCOMPATIBILITY;
