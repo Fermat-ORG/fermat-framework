@@ -23,6 +23,9 @@ project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectD
 include ':fermat-ccp-plugin-identity-intra-user-bitdubai'
 project(':fermat-ccp-plugin-identity-intra-user-bitdubai').projectDir = new File('CCP/plugin/identity/fermat-ccp-plugin-identity-intra-user-bitdubai')
 
+include ':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai'
+project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai').projectDir = new File('CCP/plugin/middleware/fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
+
 // CRY Projects
 
 // Milestone 1 project:
@@ -214,9 +217,6 @@ project(':fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai').projectDir = 
 include ':fermat-dmp-plugin-wallet-module-discount-wallet-bitdubai'
 project(':fermat-dmp-plugin-wallet-module-discount-wallet-bitdubai').projectDir = new File('DMP/plugin/wallet_module/fermat-dmp-plugin-wallet-module-discount-wallet-bitdubai')
 
-include ':fermat-dmp-plugin-wallet-module-fiat-over-crypto-bitdubai'
-project(':fermat-dmp-plugin-wallet-module-fiat-over-crypto-bitdubai').projectDir = new File('DMP/plugin/wallet_module/fermat-dmp-plugin-wallet-module-fiat-over-crypto-bitdubai')
-
 include ':fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai'
 project(':fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai').projectDir = new File('DMP/plugin/wallet_module/fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai')
 
@@ -287,8 +287,6 @@ include ':fermat-dmp-plugin-middleware-money-request-bitdubai'
 project(':fermat-dmp-plugin-middleware-money-request-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-money-request-bitdubai')
 
 // Milestone 1 project:
-include ':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai'
-project(':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai')
 
 
 include ':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai'
