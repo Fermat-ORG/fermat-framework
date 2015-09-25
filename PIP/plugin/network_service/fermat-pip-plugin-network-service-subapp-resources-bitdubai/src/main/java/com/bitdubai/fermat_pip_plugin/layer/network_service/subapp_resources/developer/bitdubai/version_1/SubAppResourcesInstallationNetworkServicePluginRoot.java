@@ -7,8 +7,6 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -18,7 +16,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHu
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetImageResourceException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -33,6 +30,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.ex
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantInstallSubAppLanguageException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantInstallSubAppSkinException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallCompleteSubAppException;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallSubAppLanguageException;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallSubAppSkinException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 
@@ -40,7 +39,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 ;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
@@ -55,7 +53,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.Su
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletUninstalledEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -69,6 +66,7 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.dev
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.Repository;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.event_handlers.BegunSubAppInstallationEventHandler;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDeleteLayouts;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDeleteRepositoryException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDeleteResource;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDeleteResourcesFromDisk;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDeleteXml;
@@ -80,7 +78,7 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.dev
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantDownloadResourceFromRepo;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantGetRepositoryPathRecordException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesSubAppResourcesDatabaseException;
-import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantUninstallWallet;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantUninstallSubApp;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -334,7 +332,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
-            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath, screenSize,subAppPublickey);
+            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath + "languages/", screenSize,subAppPublickey);
 
         } catch (CantDonwloadNavigationStructure e) {
             throw new CantInstallCompleteSubAppResourcesException("CAN'T INSTALL SUBAPP RESOURCES",e,"Error download navigation structure","");
@@ -422,11 +420,14 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
     public void installLanguageForSubApp(String subAppType, String developer, String screenSize, UUID skinId, String languageName, String subAppPublicKey) throws CantInstallSubAppLanguageException {
         try {
             String linkToRepo = "seed-resources/wallet_resources/" + developer + "/" + subAppType + "/";
+
+            Repository repository = subAppResourcesDAO.getRepository(skinId);
+
             /**
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
-            downloadLanguageFromRepo(linkToLanguage, skinId, languageName, LOCAL_STORAGE_PATH, screenSize,subAppPublicKey);
+            downloadLanguageFromRepo(linkToLanguage, skinId, languageName, repository.getPath() + "languages/", screenSize,subAppPublicKey);
 
             /**
              *  Fire event Wallet language installed
@@ -476,7 +477,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
             walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
             eventManager.raiseEvent(fermatEvent);*/
         }
-        catch(CantUninstallWallet e) {
+        catch(CantUninstallSubApp e) {
             throw new CantUninstallCompleteSubAppException("CAN'T UNINSTALL COMPLETE WALLET:", e, "Error delete subApp resource ", "");
         }
         catch(Exception e)
@@ -486,31 +487,91 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
     }
 
     /**
-     * @param subAppType
-     * @param developer
-     * @param subAppName
+     *
      * @param skinId
-     * @param screenSize
-     * @param navigationStructureVersion
-     * @param isLastWallet
      * @param subAppPublicKey
+     * @param skinFilename
+     * @throws CantUninstallSubAppSkinException
      */
     @Override
-    public void uninstallSkinForSubApp(String subAppType, String developer, String subAppName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet, String subAppPublicKey) {
+    public void uninstallSkinForSubApp(UUID skinId,String subAppPublicKey) throws CantUninstallSubAppSkinException {
+        try {
 
+
+            Repository repository = subAppResourcesDAO.getRepository(skinId);
+            String linkToRepo = "seed-resources/";
+
+            String repoManifest = githubConnection.getFile(linkToRepo + repository.getPath() + "skin.xml");
+            Skin skin = new Skin();
+            skin = (Skin) XMLParser.parseXML(repoManifest, skin);
+
+
+            /**
+             *  delete skin resources
+             */
+
+            subAppResourcesDAO.delete(skinId, repository.getSkinName());
+
+            deleteResources(repository.getPath(),skin.getResources(),skinId);
+
+        } catch (CantGetRepositoryPathRecordException e) {
+            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN",e,"Error get skin on data base","");
+
+        }catch (CantDeleteRepositoryException cantCheckResourcesException){
+            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN",cantCheckResourcesException,"Error delete repository exception","");
+
+        }  catch (CantDeleteResourcesFromDisk cantDownloadResourceFromRepo) {
+            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", cantDownloadResourceFromRepo, "Error delete resources", "");
+        } catch (IOException e) {
+            throw new CantUninstallSubAppSkinException("CAN'T UNINSTALL SUBAPP SKIN", e, "Skin file not found on github", "");
+
+        }
     }
 
     /**
-     * @param subAppType
-     * @param languageId
-     * @param developer
-     * @param subAppName
-     * @param isLastWallet
+     *
+     * @param skinId
+     * @param languageName
      * @param subAppPublicKey
      */
     @Override
-    public void uninstallLanguageForSubApp(String subAppType, String languageId, String developer, String subAppName, boolean isLastWallet, String subAppPublicKey) {
+    public void uninstallLanguageForSubApp(UUID skinId, String languageName,  String subAppPublicKey) throws CantUninstallSubAppLanguageException {
+        try {
 
+            //get repo from table
+            Repository repository = subAppResourcesDAO.getRepository(skinId);
+            //get image from disk
+            PluginTextFile layoutFile;
+
+
+            String reponame = repository.getPath() + subAppPublicKey + "/languages/";
+
+            languageName = skinId.toString() + "_" + languageName;
+
+
+            pluginFileSystem.deleteTextFile(pluginId, reponame, languageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            /**
+             *  Fire event Wallet language installed
+             */
+
+        /*FermatEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_UNINSTALLED);
+        WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) platformEvent;
+        walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+        eventManager.raiseEvent(platformEvent);*/
+        }
+        catch(CantGetRepositoryPathRecordException e) {
+            throw new CantUninstallSubAppLanguageException("CAN'T UNINSTALL SUBAPP LANGUAGE:", e, "Error get repository on database ", "");
+        }
+        catch(CantCreateFileException e) {
+            throw new CantUninstallSubAppLanguageException("CAN'T UNINSTALL SUBAPP LANGUAGE:", e, "Error delete language file ", "");
+        }
+        catch(FileNotFoundException e) {
+            throw new CantUninstallSubAppLanguageException("CAN'T UNINSTALL SUBAPP LANGUAGE:", e, "Error language file not found ", "");
+        }
+        catch(Exception e)
+        {
+            throw new CantUninstallSubAppLanguageException("CAN'T UNINSTALL SUBAPP LANGUAGE:", e, "unknown Error ", "");
+        }
     }
 
     /**
@@ -592,8 +653,39 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
      * @throws CantGetLanguageFileException
      */
     @Override
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
+    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException {
+        try {
+            //get repo from table
+            Repository repository = subAppResourcesDAO.getRepository(skinId);
+            //get image from disk
+            PluginTextFile layoutFile;
+
+
+            String reponame = repository.getPath() + walletPublicKey + "languages/";
+
+            fileName = skinId.toString() + "_" + fileName;
+
+
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            return layoutFile.getContent();
+        } catch (FileNotFoundException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error write language file resource  ", "");
+
+        } catch (CantGetRepositoryPathRecordException e) {
+
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error get repository from database ", "");
+
+        } catch (CantCreateFileException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error created language file resource ", "");
+
+        }
     }
 
     /**
@@ -729,8 +821,9 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
      */
 
 
-    private void UninstallSubApp(String subAppType,String developer,String skinName,UUID skinId, String screenSize,String navigationStructureVersion,boolean isLastSubApp) throws CantUninstallWallet {
-        String linkToRepo = REPOSITORY_LINK +   subAppType + "/" + developer + "/";
+    private void UninstallSubApp(String subAppType,String developer,String skinName,UUID skinId, String screenSize,String navigationStructureVersion,boolean isLastSubApp) throws CantUninstallSubApp {
+
+        String linkToRepo = REPOSITORY_LINK +  subAppType + "/" + developer + "/";
 
 
         String linkToResources = linkToRepo + "skins/" + skinName + "/" + screenSize + "/";
@@ -743,16 +836,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
             //skin = checkAndInstallSkinResources(linkToResources, LOCAL_STORAGE_PATH,walletPublicKey);
 
 
-            /**
-             *  Save repository in memory for use
-             */
-           // repositoriesName.remove(skin.getId());
-
-
-            //SubAppResourcesInstallationNetworkServiceDAO networkServicesWalletResourcesDAO = new SubAppResourcesInstallationNetworkServiceDAO(pluginDatabaseSystem);
-
-
-            //networkServicesWalletResourcesDAO.delete(skin.getId(), linkToRepo);
+            subAppResourcesDAO.delete(skin.getId(), linkToRepo);
 
 
 
@@ -785,12 +869,15 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
             deleteLayouts(linkToPortraitLayouts, skin.getPortraitLayouts(), skin.getId());
 
 
+        } catch (CantDeleteRepositoryException e) {
+            throw new CantUninstallSubApp("CAN'T UNINSTALL WALLET:", e, "Error Delete repository ", "");
+
         } catch (CantDeleteLayouts e) {
-            throw new CantUninstallWallet("CAN'T UNINSTALL WALLET:", e, "Error Delete layouts ", "");
+            throw new CantUninstallSubApp("CAN'T UNINSTALL WALLET:", e, "Error Delete layouts ", "");
         } catch (CantDeleteResourcesFromDisk e) {
-            throw new CantUninstallWallet("CAN'T UNINSTALL WALLET:", e, "Error Delete resources from disk ", "");
+            throw new CantUninstallSubApp("CAN'T UNINSTALL WALLET:", e, "Error Delete resources from disk ", "");
         } catch (CantDeleteXml e) {
-            throw new CantUninstallWallet("CAN'T UNINSTALL WALLET:", e, "Error Delete xml ", "");
+            throw new CantUninstallSubApp("CAN'T UNINSTALL WALLET:", e, "Error Delete xml ", "");
 
         }
     }

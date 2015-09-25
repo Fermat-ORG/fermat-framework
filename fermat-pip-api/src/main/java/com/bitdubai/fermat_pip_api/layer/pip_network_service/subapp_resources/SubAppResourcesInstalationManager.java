@@ -43,15 +43,18 @@ public interface SubAppResourcesInstalationManager {
 
 
 
-    public void uninstallSkinForSubApp(String subAppType,String developer, String subAppName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String subAppPublicKey) throws CantUninstallSubAppSkinException;
+    public void uninstallSkinForSubApp(UUID skinId,String subAppPublicKey) throws CantUninstallSubAppSkinException;
 
 
     /**
-     * @param developer
-     * @param isLastWallet
+     *
+     * @param skinId
+     * @param languageName
+     * @param subAppPublicKey
+     * @throws CantUninstallSubAppLanguageException
      */
 
-    public void uninstallLanguageForSubApp(String subAppType,String languageId, String developer,String subAppName, boolean isLastWallet,String subAppPublicKey) throws CantUninstallSubAppLanguageException;
+    public void uninstallLanguageForSubApp(UUID skinId, String languageName,  String subAppPublicKey) throws CantUninstallSubAppLanguageException;
 
 
 
