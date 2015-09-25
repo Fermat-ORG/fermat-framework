@@ -43,6 +43,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interf
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.DealsWithAssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.DealsWithModuleAseetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.DealsWithAssetDistribution;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -1144,6 +1146,13 @@ public class Platform implements Serializable {
             Plugin assetIssuingTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION)).getAssetIssuingPlugin();
             injectPluginReferencesAndStart(assetIssuingTransaction, Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
 
+            /*
+             * Plugin Asset Distribution Transaction
+             * -----------------------------
+             */
+            Plugin assetDistributionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DIGITAL_ASSET_TRANSACTION)).getAssetDistributionPlugin();
+            injectPluginReferencesAndStart(assetDistributionTransaction, Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
+
            /*
             * Plugin Asset Issuer Actor Layer
             * -------------------------
@@ -1375,6 +1384,10 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithAssetIssuing) {
                 ((DealsWithAssetIssuing) plugin).setAssetIssuingManager((AssetIssuingManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION));
+            }
+
+            if (plugin instanceof DealsWithAssetDistribution) {
+                ((DealsWithAssetDistribution) plugin).setAssetDistributionManager((AssetDistributionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION));
             }
 
             if (plugin instanceof DealsWithActorAssetIssuer) {
