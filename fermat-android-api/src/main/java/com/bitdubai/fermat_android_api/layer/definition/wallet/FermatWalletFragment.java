@@ -7,7 +7,11 @@ import android.os.Bundle;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
+import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.PreferenceWalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
@@ -30,6 +34,12 @@ public class FermatWalletFragment extends Fragment {
     protected WalletSettings walletSettings;
     protected WalletResourcesProviderManager walletResourcesProviderManager;
 
+
+    /**
+     * Inflater
+     */
+    protected ViewInflater viewInflater;
+
     /**
      * REFERENCES
      */
@@ -40,6 +50,7 @@ public class FermatWalletFragment extends Fragment {
         super.onCreate(savedInstanceState);
         try {
             context = (WizardConfiguration) getActivity();
+            viewInflater = new ViewInflater(getActivity(),walletResourcesProviderManager);
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to FermatActivity");
         }
@@ -67,6 +78,20 @@ public class FermatWalletFragment extends Fragment {
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
         this.walletResourcesProviderManager = walletResourcesProviderManager;
+    }
+
+    /**
+     * Change activity
+     */
+    protected final void changeActivity(Activities activity) {
+        ((FermatScreenSwapper) getActivity()).changeActivity(activity.getCode());
+    }
+
+    /**
+     * Change activity
+     */
+    protected final void changeFragment(String fragment) {
+        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, null);
     }
 }
 

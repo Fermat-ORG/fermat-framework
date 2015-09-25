@@ -5,12 +5,16 @@ package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces
  */
 public interface PaymentRequest {
 
-    public String getDate();
+    int SEND_PAYMENT=0;
+    int RECEIVE_PAYMENT=1;
 
-    public String getReason();
+    String getDate();
 
-    public long getAmount();
+    String getReason();
 
-    public CryptoWalletWalletContact getContact();
+    long getAmount();
 
+    CryptoWalletWalletContact getContact();
+
+    int getType();
 }

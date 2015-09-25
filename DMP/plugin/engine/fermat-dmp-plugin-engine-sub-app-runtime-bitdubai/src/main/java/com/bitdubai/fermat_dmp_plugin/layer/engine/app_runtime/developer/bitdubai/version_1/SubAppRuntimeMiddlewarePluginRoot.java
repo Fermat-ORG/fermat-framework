@@ -10,40 +10,40 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.RuntimeFernatComboBox;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.RuntimeFernatComboBox;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -479,12 +479,23 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeTabStrip.addTab(runtimeTab);
 
+            runtimeTab = new Tab();
+            runtimeTab.setLabel("Edit Mode");
+            runtimeTab.setFragment(Fragments.CWP_WALLET_FACTORY_AVAILABLE_PROJECTS);
+
+            runtimeTabStrip.addTab(runtimeTab);
+
+
             runtimeActivity.setTabStrip(runtimeTabStrip);
             runtimeSubApp.addActivity(runtimeActivity);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_DEVELOPER_PROJECTS.getKey(), runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_AVAILABLE_PROJECTS.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_FACTORY_AVAILABLE_PROJECTS.getKey(), runtimeFragment);
 
             /* Adding WizardTypes */
             Wizard runtimeWizard = new Wizard();

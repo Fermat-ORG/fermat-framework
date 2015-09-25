@@ -10,7 +10,6 @@ import com.bitdubai.fermat_core.layer.dmp_wallet_module.crypto_loss_protected_wa
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.crypto_wallet.CryptoWalletWalletModuleSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.discount_wallet.DiscountWalletWalletModuleSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.fiat_over_crypto_loss_protected_wallet.FiatOverCryptoLossProtectedWalletWalletModuleSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_wallet_module.fiat_over_crypto_wallet.FiatOverCryptoWalletWalletModuleSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_wallet_module.multi_account_wallet.MultiAccountWalletWalletModuleSubsystem;
 
 /**
@@ -23,7 +22,6 @@ public class WalletModuleLayer implements PlatformLayer {
     private Plugin mCryptoWallet;
     private Plugin mDiscountWallet;
     private Plugin mFiatOverCryptoLossProtectedWallet;
-    private Plugin mFiatOverCryptoWallet;
     private Plugin mMultiAccountWallet;
 
 
@@ -45,10 +43,6 @@ public class WalletModuleLayer implements PlatformLayer {
 
     public Plugin getmFiatOverCryptoLossProtectedWallet() {
         return mFiatOverCryptoLossProtectedWallet;
-    }
-
-    public Plugin getmFiatOverCryptoWallet() {
-        return mFiatOverCryptoWallet;
     }
 
     public Plugin getmMultiAccountWallet() {
@@ -132,23 +126,6 @@ public class WalletModuleLayer implements PlatformLayer {
         try {
             fiatOverCryptoLossProtectedWalletWalletModuleSubsystem.start();
             mFiatOverCryptoLossProtectedWallet = (fiatOverCryptoLossProtectedWalletWalletModuleSubsystem).getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-
-            throw new CantStartLayerException();
-
-        }
-
-        WalletModuleSubsystem fiatOverCryptoWalletWalletModuleSubsystem = new FiatOverCryptoWalletWalletModuleSubsystem();
-
-        try {
-            fiatOverCryptoWalletWalletModuleSubsystem.start();
-            mFiatOverCryptoWallet = (fiatOverCryptoWalletWalletModuleSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());

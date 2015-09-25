@@ -69,14 +69,14 @@ dependencies {
 
     compile project(':fermat-osa-addon-android-database-system-bitdubai')
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
-      compile project(':fermat-osa-addon-android-device-location-bitdubai')
+    compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
 
     // DMP Projects (Wallets)
 
     compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
 
-
+    compile project(':fermat-dmp-android-clone-reference-nich-wallet')
 
     /*
     Wallets on the pipeline:

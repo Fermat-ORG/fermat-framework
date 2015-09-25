@@ -523,6 +523,16 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    OUTGOING_INTRA_ACTOR_TRANSACTION_SENT("OMRA") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new OutgoingIntraActorTransactionSentEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new OutgoingIntraActorTransactionSentEvent();
+        }
+    },
+
     OUTGOING_MONEY_REQUEST_APPROVED("OMRA") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new OutgoingMoneyRequestApprovedEventListener(this, fermatEventMonitor);
@@ -640,35 +650,6 @@ public enum EventType implements FermatEventEnum {
 
         public FermatEvent getNewEvent() {
             return new IncomingMoneyNotificationEvent(this);
-        }
-    },
-    /**
-     * Declaration of the Web Socket Communication Layer Events
-     */
-    COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION("CL_CRCN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new CompleteComponentRegistrationNotificationEventListener(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
-            return new CompleteComponentRegistrationNotificationEvent(this);
-        }
-    },
-
-    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_CRLCRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new CompleteComponentRegistrationNotificationEventListener(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
-            return new CompleteComponentRegistrationNotificationEvent(this);
-        }
-    },
-
-    COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("CL_CCCRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new CompleteComponentRegistrationNotificationEventListener(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
-            return new CompleteComponentRegistrationNotificationEvent(this);
         }
     };
 

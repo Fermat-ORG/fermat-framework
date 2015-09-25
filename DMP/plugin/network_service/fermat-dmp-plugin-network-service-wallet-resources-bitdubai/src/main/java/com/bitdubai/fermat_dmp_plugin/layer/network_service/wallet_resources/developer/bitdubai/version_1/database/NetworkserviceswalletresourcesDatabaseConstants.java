@@ -20,8 +20,8 @@ public class NetworkserviceswalletresourcesDatabaseConstants {
     public static final String REPOSITORIES_TABLE_NAME = "repositories";
 
     public static final String REPOSITORIES_ID_COLUMN_NAME = "id";
-    public static final String REPOSITORIES_SKINID_COLUMN_NAME = "skinid";
-    public static final String REPOSITORIES_PATHTOREPO_COLUMN_NAME = "pathtorepo";
+    public static final String REPOSITORIES_SKIN_ID_COLUMN_NAME = "skinid";
+    public static final String REPOSITORIES_PATH_TO_REPO_COLUMN_NAME = "pathtorepo";
     public static final String REPOSITORIES_NAME_COLUMN_NAME = "name";
     public static final String REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME = "navigationStructureVersion";
 

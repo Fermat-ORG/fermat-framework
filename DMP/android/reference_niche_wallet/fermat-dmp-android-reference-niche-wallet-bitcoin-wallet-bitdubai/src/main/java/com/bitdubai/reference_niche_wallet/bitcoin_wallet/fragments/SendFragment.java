@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -55,17 +56,14 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by natalia on 19/06/15.
  */
-public class SendFragment extends Fragment {
+public class SendFragment extends FermatWalletFragment {
 
     private static final String ARG_POSITION = "position";
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
     private static CryptoWalletManager cryptoWalletManager;
-    /**
-     * Wallet session
-     */
-    ReferenceWalletSession walletSession;
+
     View rootView;
     String walletPublicKey = "reference_wallet";
     String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
@@ -94,35 +92,16 @@ public class SendFragment extends Fragment {
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
+    private ReferenceWalletSession referenceWalletSession;
 
     /**
      * Create a new instance of SendFragment and set walletSession and platforms plugin inside
      *
-     * @param position      An object that contains all session data
-     * @param walletSession SendFragment with Session and platform plugins inside
      * @return
      */
-    public static SendFragment newInstance(int position, ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static SendFragment newInstance() {
         SendFragment f = new SendFragment();
-        f.setWalletSession(walletSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
-        return f;
-    }
 
-    /**
-     * Create a new instance of SendFragment and set walletSession and platforms plugin inside
-     *
-     * @param contact       Wallet contact to pre-load ui controls
-     * @param walletSession SendFragment with Session and platform plugins inside
-     * @return
-     */
-    public static SendFragment newInstance(ReferenceWalletSession walletSession, WalletContact contact) {
-        SendFragment f = new SendFragment();
-        f.setWalletSession(walletSession);
-        f.setContact(contact);
         return f;
     }
 
@@ -144,10 +123,13 @@ public class SendFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        referenceWalletSession = (ReferenceWalletSession) walletSession;
+
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
 
-        cryptoWalletManager = walletSession.getCryptoWalletManager();
+        cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
         errorManager = walletSession.getErrorManager();
 
         try {
@@ -172,7 +154,7 @@ public class SendFragment extends Fragment {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_send_new, container, false);
         try {
 
-            contact = walletSession.getLastContactSelected();
+            contact = referenceWalletSession.getLastContactSelected();
 
             editAddress = (EditText) rootView.findViewById(R.id.address);
             editAddress.setTypeface(tf);
@@ -234,7 +216,7 @@ public class SendFragment extends Fragment {
                                 .beginTransaction()
                                         // TODO commented due to error
                                 //.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
-                                .replace(R.id.fragment_container2, ContactsFragment.newInstance(0, walletSession))
+                                .replace(R.id.fragment_container2, ContactsFragment.newInstance())
                                 .commit();
                     }
                 });

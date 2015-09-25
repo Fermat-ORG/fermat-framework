@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
@@ -112,4 +115,24 @@ public interface InstalledWallet extends Serializable {
      * @return
      */
     public String getWalletDeviceUserPublicKey();
+
+    /**
+     * @return an element of the Platforms enum indicating to which platform belongs.
+     */
+    Platforms getPlatform();
+
+    /**
+     * @return an element of the Actors enum indicating which type of actors uses it.
+     */
+    Actors getActorType();
+
+    /**
+     * @return an element of the CryptoCurrency enum indicating to which crypto currency manages.
+     */
+    CryptoCurrency getCryptoCurrency();
+
+    /**
+     *  return an element of the BlockchainNetworkType enum indicating to which network is connected.
+     */
+   // BlockchainNetworkType getBlockchainNetworkType();
 }
