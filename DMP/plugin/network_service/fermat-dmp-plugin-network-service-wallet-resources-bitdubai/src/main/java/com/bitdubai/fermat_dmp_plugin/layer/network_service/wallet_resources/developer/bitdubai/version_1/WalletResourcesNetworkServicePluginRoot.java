@@ -2,13 +2,20 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.de
 
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.NetworkService;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.NavigationStructure;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
+
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
+
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDeleteLayouts;
@@ -23,6 +30,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.dev
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantDownloadResourceFromRepo;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantGetRepositoryPathRecordException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantUninstallWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -58,7 +66,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.dev
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkServicesWalletResourcesDAO;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.structure.Repository;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.RepositoryNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -205,20 +212,29 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             githubConnection = new GithubConnection();
 
 
-
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+            catch(CantInitializeNetworkServicesWalletResourcesDatabaseException e)
+            {
+                throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error init plugin data base");
+
+            }
+        catch( GitHubNotAuthorizedException e)
+        {
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error in github authentication");
+        }
+        catch(GitHubRepositoryNotFoundException  e)
+        {
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"Error init github repository not found");
+        }
+        catch(Exception  e)
+        {
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null,"");
+
         }
     }
 
-    private void setUp() {
-       // repositoriesName = new HashMap<UUID, Repository>();
 
-        //for testing purpose
-       // imagenes = new HashMap<String, byte[]>();
-        //layouts = new HashMap<String,String>();
-    }
 
     @Override
     public void pause() {
@@ -284,7 +300,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         // this will be use when the repository be open source
         //String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
-        String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
+         String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
 
         String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
@@ -316,19 +332,21 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
 
             String linkToNavigationStructure = linkToRepo + "navigation_structure/" + skin.getNavigationStructureCompatibility() + "/";
-            downloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath,walletPublicKey);
+            downloadNavigationStructure(linkToNavigationStructure, skin.getId(), localStoragePath, walletPublicKey);
 
             /**
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize,walletPublicKey);
+            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize, walletPublicKey);
 
             /**
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
-            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath, screenSize,walletPublicKey);
+
+            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath+ "languages/", screenSize,walletPublicKey);
+
 
         } catch (CantDonwloadNavigationStructure e) {
             throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",e,"Error download navigation structure","");
@@ -380,8 +398,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
 
-            NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
-
 
             networkServicesWalletResourcesDAO.createRepository(repository, skin.getId());
 
@@ -418,12 +434,20 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, UUID skinId, String languageName,String walletPublicKey) throws WalletResourcesInstalationException {
 
         try {
+
+            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+
+
+            /**
+             *  download language
+             */
             String linkToRepo = "seed-resources/wallet_resources/" + developer + "/" + walletCategory + "/" + walletType + "/";
             /**
              *  download language
              */
             String linkToLanguage = linkToRepo + "languages/";
-            downloadLanguageFromRepo(linkToLanguage, skinId, languageName, LOCAL_STORAGE_PATH, screenSize,walletPublicKey);
+
+            downloadLanguageFromRepo(linkToLanguage, skinId, languageName, repository.getPath() + walletPublicKey +"languages/", screenSize, walletPublicKey);
 
             /**
              *  Fire event Wallet language installed
@@ -481,53 +505,81 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     public void uninstallSkinForWallet( UUID skinId,String walletPublicKey) throws WalletResourcesUnninstallException {
 
         try {
-            //String linkToRepo = "seed-resources/wallet_resources/"+developer+"/"+walletCategory+"/"+walletType+"/";
-
-           // String linkToResources = linkToRepo + "skins/skin.xml/";
-
-
-            //String localStoragePath=this.LOCAL_STORAGE_PATH +developer+"/"+walletCategory + "/" + walletType + "/"+ "skins/" + skinName + "/" + screenSize + "/";
-
-            Skin skin;
-
-          //  String linkToSkinFile = linkToResources + screenSize + "/";
-           // skin = checkAndInstallSkinResources(linkToSkinFile, localStoragePath,walletPublicKey);
-
-
             Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+            String linkToRepo = "seed-resources/";
+
+            String repoManifest = githubConnection.getFile(linkToRepo + repository.getPath() + "skin.xml");
+            Skin skin = new Skin();
+            skin = (Skin) XMLParser.parseXML(repoManifest, skin);
 
             /**
              *  delete skin resources
              */
 
-           // downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize, walletPublicKey);
+            networkServicesWalletResourcesDAO.delete(skinId, repository.getSkinName());
 
-            networkServicesWalletResourcesDAO.delete(skinId,repository.getSkinName());
+            deleteResources(repository.getPath(),skin.getResources(),skinId);
 
         } catch (CantGetRepositoryPathRecordException e) {
-            throw new WalletResourcesUnninstallException("CAN'T INSTALL WALLET RESOURCES",e,"Error save skin on data base","");
+            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET SKIN",e,"Error get repository","");
 
-      //  }catch (CantCheckResourcesException cantCheckResourcesException){
-       //     throw new WalletResourcesUnninstallException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error check exception","");
-        }catch (CantDeleteRepositoryException cantCheckResourcesException){
-            throw new WalletResourcesUnninstallException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error check exception","");
+          }catch (CantDeleteRepositoryException cantCheckResourcesException){
+            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET SKIN",cantCheckResourcesException,"Error check exception","");
 
-     //   }  catch (CantDownloadResourceFromRepo cantDownloadResourceFromRepo) {
-          //  throw new WalletResourcesUnninstallException("CAN'T INSTALL WALLET RESOURCES", cantDownloadResourceFromRepo, "Error download resources", "");
+       }  catch (CantDeleteResourcesFromDisk cantDownloadResourceFromRepo) {
+           throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET SKIN", cantDownloadResourceFromRepo, "Error download resources", "");
+        } catch (IOException e) {
+            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET SKIN",e,"Error get skin file from repository","");
+
         }
 
     }
 
     /**
-     * @param walletCategory
-     * @param walletType
-     * @param developer
-     * @param walletName
-     * @param isLastWallet
+     *
+     * @param skinId
+     * @param walletPublicKey
+     * @param languageName
+     * @throws WalletResourcesUnninstallException
      */
     @Override
-    public void uninstallLanguageForWallet(String walletCategory, String walletType, String developer, String walletName, boolean isLastWallet,String walletPublicKey) throws WalletResourcesUnninstallException {
+    public void uninstallLanguageForWallet(UUID skinId,String walletPublicKey, String languageName) throws WalletResourcesUnninstallException {
+        try {
 
+            //get repo from table
+            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+            //get image from disk
+            PluginTextFile layoutFile;
+
+
+            String reponame = repository.getPath() + walletPublicKey + "/languages/";
+
+            languageName = skinId.toString() + "_" + languageName;
+
+
+            pluginFileSystem.deleteTextFile(pluginId, reponame, languageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            /**
+             *  Fire event Wallet language installed
+             */
+
+        /*FermatEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_UNINSTALLED);
+        WalletUninstalledEvent walletUninstalledEvent=  (WalletUninstalledEvent) platformEvent;
+        walletUninstalledEvent.setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+        eventManager.raiseEvent(platformEvent);*/
+        }
+        catch(CantGetRepositoryPathRecordException e) {
+            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET LANGUAGE:", e, "Error get repository on database ", "");
+        }
+        catch(CantCreateFileException e) {
+            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET LANGUAGE:", e, "Error delete language file ", "");
+        }
+        catch(FileNotFoundException e) {
+            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET LANGUAGE:", e, "Error language file not found ", "");
+        }
+        catch(Exception e)
+        {
+            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET LANGUAGE:", e, "unknown Error ", "");
+        }
     }
 
 
@@ -591,8 +643,42 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException {
-        return "Method: getLanguageFile - NO TIENE valor ASIGNADO para RETURN";
+    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException {
+
+        try {
+            //get repo from table
+            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+            //get image from disk
+            PluginTextFile layoutFile;
+
+
+            String reponame = repository.getPath() + walletPublicKey + "/languages/";
+
+            fileName = skinId.toString() + "_" + fileName;
+
+
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            return layoutFile.getContent();
+        } catch (FileNotFoundException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error write language file resource  ", "");
+
+        } catch (CantGetRepositoryPathRecordException e) {
+
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error get repository from database ", "");
+
+        } catch (CantCreateFileException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error created language file resource ", "");
+
+        }
+
+
     }
 
 
@@ -661,7 +747,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String walletPublicKey) throws CantGetResourcesException {
 
-        String content = "";
+
        try {
            //get repo name
            //get repo from table
@@ -677,7 +763,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             PluginTextFile layoutFile;
             layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
-            content = layoutFile.getContent();
+            return layoutFile.getContent();
+
         } catch (FileNotFoundException e) {
            /**
              * I cant continue if this happens.
@@ -694,8 +781,83 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         }
 
-        return content;
+
     }
+
+
+    @Override
+    public Language getLanguage(UUID skinId, String walletPublicKey,String languageName) throws CantGetLanguageFileException {
+        String content = "";
+        try {
+
+            //get repo from table
+            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+
+            String reponame = repository.getPath() +  "languages/" + walletPublicKey ; //+"skins/"+repository.getSkinName()+"/";
+
+            String filename = skinId.toString() + "_" + languageName;
+
+            //get Xml from disk
+            PluginTextFile layoutFile;
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+            content = layoutFile.getContent();
+
+            return null; //(Language) XMLParser.parseXML(content, new Language());
+
+        } catch (FileNotFoundException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error write layout file resource  ", "");
+        }  catch (CantGetRepositoryPathRecordException e) {
+            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error get repository from database ", "");
+
+        } catch (CantCreateFileException e) {
+            /**
+             * I cant continue if this happens.
+             */
+            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error created image file resource ", "");
+
+        }
+    }
+
+    @Override
+    public WalletNavigationStructure getNavigationStructure(UUID skinId, String walletPublicKey) throws CantGetWalletNavigationStructureException {
+            String content = "";
+            try {
+
+                //get repo from table
+                Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+
+                String reponame = repository.getPath() + walletPublicKey +"/"; //+"skins/"+repository.getSkinName()+"/";
+
+                String filename = skinId.toString() + "_navigation_structure.xml";;
+
+                //get Xml from disk
+                PluginTextFile layoutFile;
+                layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+                content = layoutFile.getContent();
+
+               return (WalletNavigationStructure) XMLParser.parseXML(content, new WalletNavigationStructure());
+
+            } catch (FileNotFoundException e) {
+                /**
+                 * I cant continue if this happens.
+                 */
+                throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error write layout file resource  ", "");
+            }  catch (CantGetRepositoryPathRecordException e) {
+                throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error get repository from database ", "");
+
+            } catch (CantCreateFileException e) {
+                /**
+                 * I cant continue if this happens.
+                 */
+                throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error created image file resource ", "");
+
+            }
+        }
 
 
     /**
@@ -716,9 +878,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
             //skin = checkAndInstallSkinResources(linkToResources, LOCAL_STORAGE_PATH,walletPublicKey);
-
-
-            NetworkServicesWalletResourcesDAO networkServicesWalletResourcesDAO = new NetworkServicesWalletResourcesDAO(pluginDatabaseSystem);
 
 
             networkServicesWalletResourcesDAO.delete(skin.getId(), linkToRepo);
@@ -1331,13 +1490,5 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    @Override
-    public Language getLanguage(UUID languageId) throws CantGetLanguageFileException {
-        return null;
-    }
 
-    @Override
-    public WalletNavigationStructure getNavigationStructure(UUID navigationStructure) throws CantGetWalletNavigationStructureException {
-        return null;
-    }
 }

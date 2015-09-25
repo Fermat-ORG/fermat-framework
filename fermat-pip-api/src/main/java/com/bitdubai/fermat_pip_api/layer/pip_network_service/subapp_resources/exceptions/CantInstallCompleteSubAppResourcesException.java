@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by natalia on 22/09/15.
+ * Created by natalia on 24/09/15.
  */
-public class CantUninstallWallet extends FermatException {
+public class CantInstallCompleteSubAppResourcesException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantUninstallWallet extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantUninstallWallet(String message, Exception cause, String context, String possibleReason) {
+    public CantInstallCompleteSubAppResourcesException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
