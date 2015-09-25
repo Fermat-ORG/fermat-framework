@@ -56,6 +56,10 @@ public class AvailableProjectsFragment extends FermatFragment
 
     private ArrayList<Wallet> dataSet;
 
+    public static FermatFragment newInstance() {
+        return new AvailableProjectsFragmentOld();
+    }
+
 
     @Nullable
     @Override
