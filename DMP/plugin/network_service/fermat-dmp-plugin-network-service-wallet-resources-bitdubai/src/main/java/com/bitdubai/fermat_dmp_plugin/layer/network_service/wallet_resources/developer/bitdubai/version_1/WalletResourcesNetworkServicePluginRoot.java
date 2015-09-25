@@ -603,43 +603,61 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         return null;
     }
 
+    /**
+     * This method let us get an skin file referenced by its name
+     *
+     * @param fileName        the name of the Skin file (without the path structure).
+     * @param skinId
+     * @param walletPublicKey @return The content of the file
+     * @throws CantGetSkinFileException
+     */
     @Override
     public Skin getSkinFile(String fileName, UUID skinId, String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
-        String content = "";
-        try {
-            //get repo from table
-            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+        return null;
+    }
+
+
+    //TODO: Falta implementar este metodo
+
+    @Override
+    public Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
+//        String content = "";
+//        try {
+//            //get repo from table
+//            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
             //get image from disk
             PluginTextFile layoutFile;
 
 
-            String reponame = repository.getPath() + walletPublicKey +"/"; //+"skins/"+repository.getSkinName()+"/";
+           // String reponame = repository.getPath() + walletPublicKey +"/";
 
-            fileName = skinId.toString() + "_" + fileName;
+            //fileName = skinId.toString() + "_" + fileName;
 
 
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            //layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
-            content = layoutFile.getContent();
-        } catch (FileNotFoundException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error write layout file resource  ", "");
+            //content = layoutFile.getContent();
+//        } catch (FileNotFoundException e) {
+//            /**
+//             * I cant continue if this happens.
+//             */
+//            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error write layout file resource  ", "");
+//
+//        } catch (CantGetRepositoryPathRecordException e) {
+//
+//            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error get repository from database ", "");
+//
+//        } catch (CantCreateFileException e) {
+//            /**
+//             * I cant continue if this happens.
+//             */
+//            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error created image file resource ", "");
+//
+//        }
 
-        } catch (CantGetRepositoryPathRecordException e) {
+        //return (Skin) XMLParser.parseXML(content, new Skin());
 
-            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error get repository from database ", "");
-
-        } catch (CantCreateFileException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error created image file resource ", "");
-
-        }
-
-        return (Skin) XMLParser.parseXML(content, new Skin());
+        return null;
     }
 
     @Override

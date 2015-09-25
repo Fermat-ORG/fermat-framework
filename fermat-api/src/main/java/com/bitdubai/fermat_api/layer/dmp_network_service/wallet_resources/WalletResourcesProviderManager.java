@@ -40,11 +40,10 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
     /**
      * This method let us get an skin file referenced by its name
      *
-     * @param fileName the name of the Skin file (without the path structure).
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    public Skin getSkinFile(String fileName,UUID skinId,String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
+    public Skin getSkinFile(UUID skinId,String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
