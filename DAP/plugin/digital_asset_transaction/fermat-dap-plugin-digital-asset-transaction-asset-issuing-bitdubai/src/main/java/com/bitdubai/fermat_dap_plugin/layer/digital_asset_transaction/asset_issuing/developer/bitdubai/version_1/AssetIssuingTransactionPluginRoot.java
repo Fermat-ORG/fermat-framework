@@ -19,6 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.DealsWithOutgoingIntraUSer;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.OutgoingIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -68,7 +70,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, TransactionProtocolManager {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraUSer, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, TransactionProtocolManager {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     //CryptoAddressBookManager cryptoAddressBookManager;
@@ -88,6 +90,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     DeviceUserManager deviceUserManager;
     AssetVaultManager assetVaultManager;
     CryptoAddressBookManager cryptoAddressBookManager;
+    OutgoingIntraUserManager outgoingIntraUserManager;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -172,7 +175,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.pluginFileSystem,
                     this.errorManager,
                     this.assetVaultManager,
-                    this.cryptoAddressBookManager);
+                    this.cryptoAddressBookManager,
+                    this.outgoingIntraUserManager);
             //Start the plugin monitor agent
             //I will comment tha MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
             /*String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
@@ -372,5 +376,10 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
         this.cryptoAddressBookManager=cryptoAddressBookManager;
+    }
+
+    @Override
+    public void setOutgoingIntraUserManager(OutgoingIntraUserManager outgoingIntraUserManager) {
+        this.outgoingIntraUserManager=outgoingIntraUserManager;
     }
 }
