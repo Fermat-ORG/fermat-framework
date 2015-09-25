@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_android_api.ui.inflater;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -89,6 +90,10 @@ public class ViewInflater {
         public View inflate(XmlPullParser parse) 
                         throws XmlPullParserException, IOException
                         {
+
+                                try{
+
+
                 layoutStack.clear();
                 ids.clear();
 
@@ -127,6 +132,10 @@ public class ViewInflater {
                         evt = parse.next();
                 }
                 return root;
+                                }catch (IOException e){
+                                        e.printStackTrace();
+                                }
+                                return null;
                         }
         
         protected View createView(XmlPullParser parse) {
@@ -134,82 +143,59 @@ public class ViewInflater {
                 View result = null;
                 AttributeSet atts = Xml.asAttributeSet(parse);
                 if (name.equals("LinearLayout")) {
-                        result = new LinearLayout(context );
-                }
-                else if (name.equals("RadioGroup")) {
-                        result = new RadioGroup(context );
-                }
-                else if (name.equals("TableRow")) {
-                        result = new TableRow(context );
-                }
-                else if (name.equals("TableLayout")) {
-                        result = new TableLayout(context );
-                }
-                else if (name.equals("AbsoluteLayout")) {
-                        result = new AbsoluteLayout(context );
-                }
-                else if (name.equals("RelativeLayout")) {
-                        result = new RelativeLayout(context );
-                }
-                else if (name.equals("android.support.v4.widget.SwipeRefreshLayout")) {
-                        result = new SwipeRefreshLayout(context );
-                }
-                else if (name.equals("android.support.v7.widget.RecyclerView")) {
-                        result = new RecyclerView(context );
-                }
-                else if (name.equals("ScrollView")) {
-                        result = new ScrollView(context );
-                }
-                else if (name.equals("FrameLayout")) {
-                        result = new FrameLayout(context );
-                }
-                else if (name.equals("ExpandableListView")) {
+                        result = new LinearLayout(context);
+                } else if (name.equals("RadioGroup")) {
+                        result = new RadioGroup(context);
+                } else if (name.equals("TableRow")) {
+                        result = new TableRow(context);
+                } else if (name.equals("TableLayout")) {
+                        result = new TableLayout(context);
+                } else if (name.equals("AbsoluteLayout")) {
+                        result = new AbsoluteLayout(context);
+                } else if (name.equals("RelativeLayout")) {
+                        result = new RelativeLayout(context);
+                } else if (name.equals("android.support.v4.widget.SwipeRefreshLayout")) {
+                        result = new SwipeRefreshLayout(context);
+                } else if (name.equals("android.support.v7.widget.RecyclerView")) {
+                        result = new RecyclerView(context);
+                } else if (name.equals("ScrollView")) {
+                        result = new ScrollView(context);
+                } else if (name.equals("FrameLayout")) {
+                        result = new FrameLayout(context);
+                } else if (name.equals("ExpandableListView")) {
                         result = new ExpandableListView(context);
-                }
-                else if (name.equals("TextView")) {
-                        result = new TextView(context );
-                }
-                else if (name.equals("com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView")) {
+                } else if (name.equals("TextView")) {
+                        result = new TextView(context);
+                } else if (name.equals("com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView")) {
                         result = new FermatTextView(context);
+                } else if (name.equals("AutoCompleteTextView")) {
+                        result = new AutoCompleteTextView(context);
+                } else if (name.equals("AnalogClock")) {
+                        result = new AnalogClock(context);
+                } else if (name.equals("Button")) {
+                        result = new Button(context);
+                } else if (name.equals("CheckBox")) {
+                        result = new CheckBox(context);
+                } else if (name.equals("DatePicker")) {
+                        result = new DatePicker(context);
+                } else if (name.equals("DigitalClock")) {
+                        result = new DigitalClock(context);
+                } else if (name.equals("EditText")) {
+                        result = new EditText(context);
+                } else if (name.equals("ProgressBar")) {
+                        result = new ProgressBar(context);
+                } else if (name.equals("RadioButton")) {
+                        result = new RadioButton(context);
+                } else if (name.equals("ImageView")) {
+                        result = new ImageView(context);
+                } else {
+                        Toast.makeText(context, "Unhandled tag:" + name,
+                                Toast.LENGTH_SHORT).show();
                 }
-                else if (name.equals("AutoCompleteTextView")) {
-                        result = new AutoCompleteTextView(context );
-                }
-                else if (name.equals("AnalogClock")) {
-                        result = new AnalogClock(context );
-                }
-                else if (name.equals("Button")) {
-                        result = new Button(context );
-                }
-                else if (name.equals("CheckBox")) {
-                        result = new CheckBox(context );
-                }
-                else if (name.equals("DatePicker")) {
-                        result = new DatePicker(context );
-                }
-                else if (name.equals("DigitalClock")) {
-                        result = new DigitalClock(context );
-                }
-                else if (name.equals("EditText")) {
-                        result = new EditText(context );
-                }
-                else if (name.equals("ProgressBar")) {
-                        result = new ProgressBar(context );
-                }
-                else if (name.equals("RadioButton")) {
-                        result = new RadioButton(context );
-                }
-                else if (name.equals("ImageView")) {
-                        result = new ImageView(context );
-                }
-                else {
-                        Toast.makeText(context , "Unhandled tag:"+name,
-                                        Toast.LENGTH_SHORT).show();     
-                }
-                
+
                 if (result == null)
                         return null;
-                
+
                 String id = findAttribute(atts, "android:id");
 
                 if (id != null) {
@@ -218,9 +204,9 @@ public class ViewInflater {
                                 result.setId(idNumber);
                         }
                 }
-                
+
                 if (result instanceof TextView) {
-                        TextView tv = (TextView)result;
+                        TextView tv = (TextView) result;
                         String text = findAttribute(atts, "android:text");
                         if (text != null) {
                                 text = text.replace("\\n", "\n");
@@ -229,21 +215,21 @@ public class ViewInflater {
                 }
                 if (result instanceof ImageView) {
                         ImageView imageView = (ImageView) result;
-                        String src = findAttribute(atts,"android:src");
-                        if(src != null){
+                        String src = findAttribute(atts, "android:src");
+                        if (src != null) {
                                 //Picasso.with(context).load(R.drawable.person1).into(imageView);
                                 //imageView.setImageResource(R.drawable.person1);
                         }
                 }
-                
+
                 if (result instanceof CompoundButton) {
-                        CompoundButton cb = (CompoundButton)result;
+                        CompoundButton cb = (CompoundButton) result;
                         String checked = findAttribute(atts, "android:checked");
                         cb.setChecked("true".equals(checked));
                 }
-                
+
                 if (result instanceof ProgressBar) {
-                        ProgressBar pb = (ProgressBar)result;
+                        ProgressBar pb = (ProgressBar) result;
                         String indet = findAttribute(atts, "android:indeterminate");
                         if (indet != null) {
                                 pb.setIndeterminate("true".equals(indet));
@@ -262,9 +248,9 @@ public class ViewInflater {
                                 pb.setMax(Integer.parseInt(max));
                         }
                 }
-                
+
                 if (result instanceof LinearLayout) {
-                        LinearLayout ll = (LinearLayout)result;
+                        LinearLayout ll = (LinearLayout) result;
                         String orient = findAttribute(atts, "android:orientation");
                         if (orient != null) {
                                 if (orient.equals("horizontal"))
@@ -273,48 +259,50 @@ public class ViewInflater {
                                         ll.setOrientation(LinearLayout.VERTICAL);
                         }
                 }
-                
+
                 if (result instanceof RadioGroup) {
-                        RadioGroup rg = (RadioGroup)result;
+                        RadioGroup rg = (RadioGroup) result;
                         String cid = findAttribute(atts, "android:checkedButton");
                         if (cid != null) {
                                 rg.check(Integer.parseInt(cid));
                         }
                 }
-                
+
                 if (result instanceof View) {
-                View v = (View)result;
+                        View v = (View) result;
                 /* API 11
                  String alpha = findAttribute(atts, "android:alpha");
                  if (alpha != null) {
                         v.setAlpha(Float.parseFloat(alpha));
                  }
                 */
-                maybeSetBoolean(v, "setClickable", atts, "android:clickable");
-                maybeSetBoolean(v, "setFocusable", atts, "android:focusable");
-                maybeSetBoolean(v, "setHapticFeedbackEnabled", atts, "android:hapticFeedbackEnabled");
+                        maybeSetBoolean(v, "setClickable", atts, "android:clickable");
+                        maybeSetBoolean(v, "setFocusable", atts, "android:focusable");
+                        maybeSetBoolean(v, "setHapticFeedbackEnabled", atts, "android:hapticFeedbackEnabled");
 
-                String visibility = findAttribute(atts, "android:visibility");
-                    if (visibility != null){
-                        int code = -1;
-                        if ("visible".equals(visibility)) {
-                                code = View.VISIBLE;
-                        } else if ("invisible".equals(visibility)) {
-                                code = View.INVISIBLE;
-                        } else if ("gone".equals(visibility)) {
-                                code = View.GONE;
+                        String visibility = findAttribute(atts, "android:visibility");
+                        if (visibility != null) {
+                                int code = -1;
+                                if ("visible".equals(visibility)) {
+                                        code = View.VISIBLE;
+                                } else if ("invisible".equals(visibility)) {
+                                        code = View.INVISIBLE;
+                                } else if ("gone".equals(visibility)) {
+                                        code = View.GONE;
+                                }
+                                if (code != -1) {
+                                        v.setVisibility(code);
+                                }
                         }
-                        if (code != -1) {
-                                v.setVisibility(code);
-                        }
-                    }
-                loadBasics(v,atts);
+                        loadBasics(v, atts);
                 }
-                
+
                 if (layoutStack.size() > 0) {
                         result.setLayoutParams(loadLayoutParams(atts, layoutStack.peek()));
                 }
+
                 return result;
+
         }
 
         private void loadBasics(View view,AttributeSet atts){
@@ -326,6 +314,7 @@ public class ViewInflater {
                 if(value!=null){
                         if(value.indexOf("@")==-1){
                                 //view.setBackground();
+                                view.setBackgroundColor(Color.parseColor(value));
                         }else{
                                // view.setBackgroundColor(Color.parseColor(value));
                         }
@@ -461,8 +450,6 @@ public class ViewInflater {
                                         l.addRule(relative_verbs[i], idN);
                                 }
                         }
-                        // Margin handling
-                        // Contributed by Vishal Choudhary - Thanks!
                         String bottom = findAttribute(atts, "android:layout_marginBottom");
                 String left = findAttribute(atts, "android:layout_marginLeft");
                 String right = findAttribute(atts, "android:layout_marginRight");

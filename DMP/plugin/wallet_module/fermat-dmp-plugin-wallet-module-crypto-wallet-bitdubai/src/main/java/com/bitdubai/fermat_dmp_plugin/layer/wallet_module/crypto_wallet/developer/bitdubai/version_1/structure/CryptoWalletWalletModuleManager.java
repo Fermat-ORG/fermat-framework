@@ -652,23 +652,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
         cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT);
         lst.add(cryptoWalletPaymentRequest);
 
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT);
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT);
-        lst.add(cryptoWalletPaymentRequest);
-
-
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("2 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT);
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("3 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT);
-        lst.add(cryptoWalletPaymentRequest);
-
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("3 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT);
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletPaymentRequest("4 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT);
-        lst.add(cryptoWalletPaymentRequest);
-
-
         return lst;
     }
 
