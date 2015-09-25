@@ -95,7 +95,7 @@ public class CryptoAddressesNetworkServiceDao {
         return record;
     }
 
-    private AddressExchangeRequest buildCryptoAddressBookRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private AddressExchangeRequest buildAddressExchangeRequestRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   requestId                       = record.getUUIDValue  (CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME                    );
         String walletPublicKey                 = record.getStringValue(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME             );

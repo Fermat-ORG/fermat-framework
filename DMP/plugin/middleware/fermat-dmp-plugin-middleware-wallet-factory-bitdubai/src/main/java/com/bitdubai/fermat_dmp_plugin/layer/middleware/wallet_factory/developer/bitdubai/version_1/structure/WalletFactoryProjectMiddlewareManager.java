@@ -640,7 +640,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
              */
         List<Skin> skins = new ArrayList<>();
             for (InstalledSkin installedSkin : wallet.getSkinsId()){
-                Skin skin = walletResourcesProviderManager.getSkinFile(null, installedSkin.getId(), wallet.getWalletPublicKey());
+                Skin skin = walletResourcesProviderManager.getSkinFile( installedSkin.getId(), wallet.getWalletPublicKey());
 
                 /**
                  * I¡m getting the first skin and assigning it as the default. This can be changed later in the factory sub app

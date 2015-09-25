@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -53,16 +54,10 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by natalia on 19/06/15.
  * Modifed by Ronner Velazquez on 07/08/2015
  */
-public class CreateContactFragment extends Fragment {
+public class CreateContactFragment extends FermatWalletFragment {
     private static final String ARG_POSITION = "position";
 
-    String walletPublicKey = "reference_wallet";
 
-    /**
-     * Wallet session
-     */
-
-    ReferenceWalletSession walletSession;
     /**
      * Members
      */
@@ -116,23 +111,17 @@ public class CreateContactFragment extends Fragment {
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
+    private ReferenceWalletSession referenceWalletSession;
 
 
     /**
      *
-     * @param position
-     * @param walletSession
      * @return
      */
 
-    public static CreateContactFragment newInstance(int position, ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static CreateContactFragment newInstance() {
         CreateContactFragment f = new CreateContactFragment();
-        f.setWalletSession(walletSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        f.setContactName(walletSession.getAccountName());
-        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
+
         return f;
     }
 
@@ -141,11 +130,13 @@ public class CreateContactFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        referenceWalletSession = (ReferenceWalletSession) walletSession;
+
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         errorManager = walletSession.getErrorManager();
         try {
-            cryptoWalletManager = walletSession.getCryptoWalletManager();
+            cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
 
         } catch (CantGetCryptoWalletException e) {
@@ -289,7 +280,7 @@ public class CreateContactFragment extends Fragment {
                         null,
                         null,
                         Actors.EXTRA_USER,
-                        walletPublicKey
+                        walletSession.getWalletSessionType().getWalletPublicKey()
                 );
 
                 Toast.makeText(getActivity().getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();

@@ -490,7 +490,6 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
      *
      * @param skinId
      * @param subAppPublicKey
-     * @param skinFilename
      * @throws CantUninstallSubAppSkinException
      */
     @Override
@@ -602,15 +601,15 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
     }
 
     /**
-     * This method let us get an skin file referenced by its name
-     *
-     * @param fileName the name of the Skin file (without the path structure).
+     * This method let us get an skin file referenced by its id
      * @param skinId
-     * @return The content of the file
+     * @param walletPublicKey
+     * @return
      * @throws CantGetSkinFileException
+     * @throws CantGetResourcesException
      */
     @Override
-    public Skin getSkinFile(String fileName, UUID skinId,String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
+    public Skin getSkinFile( UUID skinId,String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
         String content = "";
         try {
             //get repo from table
@@ -618,9 +617,9 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
             //get image from disk
             PluginTextFile layoutFile;
 
-            String path = repository.getPath() + "/skins/" + repository.getSkinName() + "/";
+            String reponame = repository.getPath() + walletPublicKey +"/";
 
-            layoutFile = pluginFileSystem.getTextFile(pluginId, path, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, skinId.toString() + "_" + repository.getSkinName() , FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
 
@@ -666,7 +665,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
             fileName = skinId.toString() + "_" + fileName;
 
 
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             return layoutFile.getContent();
         } catch (FileNotFoundException e) {
@@ -790,7 +789,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
             //reponame+="_"+orientation+"_"
             //get image from disk
             PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
 
