@@ -155,19 +155,13 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
 
     @Override
     public void acceptAddressExchangeRequest(UUID          requestId            ,
-                                             CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException {
+                                             CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException,
+                                                                                         PendingRequestNotFoundException          {
 
         try {
 
-            cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(
-                    requestId            ,
-                    cryptoAddressReceived
-            );
+            // TODO send to the other part the acceptance with the crypto address
 
-        } catch (CantAcceptAddressExchangeRequestException e){
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
         } catch (Exception e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -219,14 +213,15 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
     }
 
     @Override
-    public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
+    public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException,
+                                                                     PendingRequestNotFoundException           {
 
         try {
 
             cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
 
-        } catch (CantConfirmAddressExchangeRequestException e){
-
+        } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e){
@@ -237,16 +232,22 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
     }
 
     @Override
-    public void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException {
+    public void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException,
+                                                                  PendingRequestNotFoundException        {
 
         try {
 
-            cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(requestId);
+            // TODO send to the other part the denial
+            cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
 
-        } catch (CantDenyAddressExchangeRequestException e){
-
+        } catch (PendingRequestNotFoundException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (CantConfirmAddressExchangeRequestException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDenyAddressExchangeRequestException(FermatException.wrapException(e), null, "Can' confirm the request.");
         } catch (Exception e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
