@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -172,8 +173,35 @@ public class CryptoAddressesNetworkServiceDao {
         }
     }
 
-    public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
+    public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException,
+                                                                     PendingRequestNotFoundException {
 
+        if (requestId == null) {
+            throw new CantConfirmAddressExchangeRequestException(null, "", "The requestId is required, can not be null");
+        }
+
+        try {
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.setUUIDFilter(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                addressExchangeRequestTable.deleteRecord(records.get(0));
+             else
+                throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
+
+        } catch (CantDeleteRecordException e) {
+
+            throw new CantConfirmAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantConfirmAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
     }
 
     public void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException {
