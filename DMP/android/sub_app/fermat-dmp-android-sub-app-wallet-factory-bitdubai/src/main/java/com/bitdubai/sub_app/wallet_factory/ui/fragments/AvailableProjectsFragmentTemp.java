@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
+import com.bitdubai.sub_app.wallet_factory.adapters.InstalledWalletsAdapter;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
 
@@ -36,6 +37,7 @@ public class AvailableProjectsFragmentTemp extends FermatFragment {
     private SwipeRefreshLayout swipeRefresh;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private InstalledWalletsAdapter adapter;
 
 
     @Nullable
