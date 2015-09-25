@@ -27,7 +27,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressReceivedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedEventException;
@@ -162,12 +162,12 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
 
     private void executePendingAddressExchangeRequests(WalletContactsMiddlewareRegistry walletContactsRegistry) {
         try {
-            List<PendingAddressExchangeRequest> addressExchangeRequestRespondedList = cryptoAddressesManager.listPendingRequests(
+            List<AddressExchangeRequest> addressExchangeRequestRespondedList = cryptoAddressesManager.listPendingRequests(
                     actorType,
                     null // to return all pending requests
             );
 
-            for (PendingAddressExchangeRequest request : addressExchangeRequestRespondedList) {
+            for (AddressExchangeRequest request : addressExchangeRequestRespondedList) {
 
                 if (request.getState() == AddressExchangeRequestState.DENIED_FOR_INCOMPATIBILITY ||
                     request.getState() == AddressExchangeRequestState.RESPONDED                 ) {
