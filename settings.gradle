@@ -15,7 +15,7 @@ include ':fermat-p2p-api'
 include ':fermat-wpd-api'
 include ':fermat-bch-api'
 
-// CCP Projects
+// Init CCP Projects
 
 include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
@@ -25,6 +25,11 @@ project(':fermat-ccp-plugin-identity-intra-user-bitdubai').projectDir = new File
 
 include ':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai'
 project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai').projectDir = new File('CCP/plugin/middleware/fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
+
+include ':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai'
+project(':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai').projectDir = new File('CCP/plugin/transaction/fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai')
+
+// End  CCP Projects
 
 // CRY Projects
 
@@ -199,9 +204,6 @@ project(':fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai').projectD
 // Milestone 1 project:
 include ':fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
 project(':fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai')
-
-include ':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
-project(':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai')
 
 
 include ':fermat-dmp-plugin-wallet-module-bank-notes-wallet-bitdubai'
