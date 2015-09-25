@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_st
 
 
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantCreateBankMoneyStockReplenishmentException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantupdateStatusBankMoneyStockReplenishmentException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantUpdateStatusBankMoneyStockReplenishmentException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantGetBankMoneyStockReplenishmentException;
 
 import java.util.List;
@@ -29,6 +29,6 @@ public interface BankMoneyStockReplenishmentManager {
         ,final String bankDocumentReference
     ) throws CantCreateBankMoneyStockReplenishmentException;
 
-    void updateStatusBankMoneyStockReplenishment(final UUID transactionId) throws CantupdateStatusBankMoneyStockReplenishmentException;
+    void updateStatusBankMoneyStockReplenishment(final UUID transactionId) throws CantUpdateStatusBankMoneyStockReplenishmentException;
 
 }

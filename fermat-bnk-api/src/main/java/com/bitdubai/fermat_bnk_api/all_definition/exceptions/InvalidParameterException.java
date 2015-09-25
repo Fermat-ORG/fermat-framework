@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_csh_api.all_definition.exceptions;
+package com.bitdubai.fermat_bnk_api.all_definition.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Yordin Alayn on 24.09.15.
+ * Created by Yordin Alayn on 25.09.15.
  */
 public class InvalidParameterException extends FermatException {
     private static String defaultMsg = "Wrong Parameter Found: ";

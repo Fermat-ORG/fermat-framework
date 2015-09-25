@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 
 /**
  * Created by Yordin Alayn on 18.09.2015
