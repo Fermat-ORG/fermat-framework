@@ -125,171 +125,171 @@ public enum Plugins {
     public static Plugins getByKey(String code) throws InvalidParameterException {
         switch (code) {
             case "BLICM":
-                return BITDUBAI_LICENSE_MANAGER;
+                return Plugins.BITDUBAI_LICENSE_MANAGER;
             case "BBLOCKIW":
-                return BITDUBAI_BLOCKCHAIN_INFO_WORLD;
+                return Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD;
             case "BSHAPESW":
-                return BITDUBAI_SHAPE_SHIFT_WORLD;
+                return Plugins.BITDUBAI_SHAPE_SHIFT_WORLD;
             case "BCOINAW":
-                return BITDUBAI_COINAPULT_WORLD;
+                return Plugins.BITDUBAI_COINAPULT_WORLD;
             case "BCRYPTOINW":
-                return BITDUBAI_CRYPTO_INDEX;
+                return Plugins.BITDUBAI_CRYPTO_INDEX;
             case "BBTCCNET":
-                return BITDUBAI_BITCOIN_CRYPTO_NETWORK;
+                return Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK;
             case "BCLOUDC":
-                return BITDUBAI_CLOUD_CHANNEL;
+                return Plugins.BITDUBAI_CLOUD_CHANNEL;
             case "BWSCCLSERVER":
-                return BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER;
+                return Plugins.BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER;
             case "BWSCCLIENTCH":
-                return BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL;
+                return Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL;
             case "BCLOUSC":
-                return BITDUBAI_CLOUD_SERVER_COMMUNICATION;
+                return Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION;
             case "BUSERNETS":
-                return BITDUBAI_USER_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_USER_NETWORK_SERVICE;
             case "BAPPRUNM":
-                return BITDUBAI_APP_RUNTIME_MIDDLEWARE;
+                return Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE;
             case "BDWALLBW":
-                return BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET;
+                return Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET;
             case "BWALLRUNM":
-                return BITDUBAI_WALLET_RUNTIME_MODULE;
+                return Plugins.BITDUBAI_WALLET_RUNTIME_MODULE;
             case "BWALLMANM":
-                return BITDUBAI_WALLET_MANAGER_MODULE;
+                return Plugins.BITDUBAI_WALLET_MANAGER_MODULE;
             case "BWALLFACM":
-                return BITDUBAI_WALLET_FACTORY_MODULE;
+                return Plugins.BITDUBAI_WALLET_FACTORY_MODULE;
             case "BBTCCRYV":
-                return BITDUBAI_BITCOIN_CRYPTO_VAULT;
+                return Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT;
             case "BASSTCRYV":
-                return BITDUBAI_ASSETS_CRYPTO_VAULT;
+                return Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT;
             case "BBNWWM":
-                return BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE;
+                return Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE;
             case "BCLPWWM":
-                return BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE;
+                return Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE;
             case "BCWWM":
-                return BITDUBAI_CRYPTO_WALLET_WALLET_MODULE;
+                return Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE;
             case "BDWWM":
-                return BITDUBAI_DISCOUNT_WALLET_WALLET_MODULE;
+                return Plugins.BITDUBAI_DISCOUNT_WALLET_WALLET_MODULE;
             case "BFOCLPWWM":
-                return BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE;
+                return Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE;
             case "BFOCWWM":
-                return BITDUBAI_FIAT_OVER_CRYPTO_WALLET_WALLET_MODULE;
+                return Plugins.BITDUBAI_FIAT_OVER_CRYPTO_WALLET_WALLET_MODULE;
             case "BMAWWM":
-                return BITDUBAI_MULTI_ACCOUNT_WALLET_WALLET_MODULE;
+                return Plugins.BITDUBAI_MULTI_ACCOUNT_WALLET_WALLET_MODULE;
             case "BININUST":
-                return BITDUBAI_INCOMING_INTRA_USER_TRANSACTION;
+                return Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION;
             case "BOUINUST":
-                return BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION;
+                return Plugins.BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION;
             case "BINDEVUT":
-                return BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION;
+                return Plugins.BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION;
             case "BODEVUST":
-                return BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION;
+                return Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION;
             case "BINWALLT":
-                return BITDUBAI_INTER_WALLET_TRANSACTION;
+                return Plugins.BITDUBAI_INTER_WALLET_TRANSACTION;
             case "BBNMIDD":
-                return BITDUBAI_BANK_NOTES_MIDDLEWARE;
+                return Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE;
             case "BBNNETSER":
-                return BITDUBAI_BANK_NOTES_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_BANK_NOTES_NETWORK_SERVICE;
             case "BWRNETSER":
-                return BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE;
             case "BWSTONETSER":
-                return BITDUBAI_WALLET_STORE_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE;
             case "BWSMIDD":
-                return BITDUBAI_WALLET_STORE_MIDDLEWARE;
+                return Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE;
             case "BWSM":
-                return BITDUBAI_WALLET_STORE_MODULE;
+                return Plugins.BITDUBAI_WALLET_STORE_MODULE;
             case "BWFMIDD":
-                return BITDUBAI_WALLET_FACTORY_MIDDLEWARE;
+                return Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE;
             case "BWLMIDD":
-                return BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE;
+                return Plugins.BITDUBAI_WALLET_LANGUAGE_MIDDLEWARE;
             case "BWSTMIDD":
-                return BITDUBAI_WALLET_SKIN_MIDDLEWARE;
+                return Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE;
             case "BWMMIDD":
-                return BITDUBAI_WALLET_MANAGER_MIDDLEWARE;
+                return Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE;
             case "BWPMIDD":
-                return BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE;
+                return Plugins.BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE;
             case "BWPMOD":
                 return BITDUBAI_WALLET_PUBLISHER_MODULE;
             case "BWCNETSER":
-                return BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE;
             case "BCADDB":
                 return BITDUBAI_CRYPTO_ADDRESS_BOOK;
             case "BOUEXUT":
-                return BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION;
+                return Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION;
             case "BINEXUT":
-                return BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION;
+                return Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION;
             case "BINCRYT":
-                return BITDUBAI_INCOMING_CRYPTO_TRANSACTION;
+                return Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION;
             case "BUDEVU":
-                return BITDUBAI_USER_DEVICE_USER;
+                return Plugins.BITDUBAI_USER_DEVICE_USER;
             case "BAEXU":
-                return BITDUBAI_ACTOR_EXTRA_USER;
+                return Plugins.BITDUBAI_ACTOR_EXTRA_USER;
             case "BUINU":
-                return BITDUBAI_USER_INTRA_USER;
+                return Plugins.BITDUBAI_USER_INTRA_USER;
             case "BCOINW":
-                return BITDUBAI_COINBASE_WORLD;
+                return Plugins.BITDUBAI_COINBASE_WORLD;
             case "BBTCWBW":
-                return BITDUBAI_BITCOIN_WALLET_BASIC_WALLET;
+                return Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET;
             case "BBTCDEVC":
-                return BITDUBAI_DEVICE_CONNECTIVITY;
+                return Plugins.BITDUBAI_DEVICE_CONNECTIVITY;
             case "BLOCW":
-                return BITDUBAI_LOCATION_WORLD;
+                return Plugins.BITDUBAI_LOCATION_WORLD;
             case "BACTORD":
-                return BITDUBAI_ACTOR_DEVELOPER;
+                return Plugins.BITDUBAI_ACTOR_DEVELOPER;
             case "BIDMAN":
-                return BITDUBAI_IDENTITY_MANAGER;
+                return Plugins.BITDUBAI_IDENTITY_MANAGER;
             case "BDEVID":
-                return BITDUBAI_DEVELOPER_IDENTITY;
+                return Plugins.BITDUBAI_DEVELOPER_IDENTITY;
             case "BPUBID":
-                return BITDUBAI_PUBLISHER_IDENTITY;
+                return Plugins.BITDUBAI_PUBLISHER_IDENTITY;
             case "BDTRAID":
-                return BITDUBAI_TRANSLATOR_IDENTITY;
+                return Plugins.BITDUBAI_TRANSLATOR_IDENTITY;
             case "BTEMNETS":
-                return BITDUBAI_TEMPLATE_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE;
             case "BINUSERNS":
-                return BITDUBAI_INTRAUSER_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE;
             case "BINUSFACM":
-                return BITDUBAI_INTRA_USER_FACTORY_MODULE;
+                return Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE;
             case "BINUSERA":
                 return BITDUBAI_INTRA_USER_ACTOR;
             case "BWNSMIDD":
-                return BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE;
+                return Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE;
             case "BWSEMIDD":
-                return BITDUBAI_WALLET_SETTINGS_MIDDLEWARE;
+                return Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE;
             case "BSASEMIDD":
                 return BITDUBAI_SUB_APP_SETTINGS_MIDDLEWARE;
             case "BWSTANETSER":
-                return BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE;
             case "BSRNETSER":
-                return BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE;
             case "BCTNSER":
-                return BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE;
+                return Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE;
             case "BRMR":
-                return BITDUBAI_REQUEST_MONEY_REQUEST;
+                return Plugins.BITDUBAI_REQUEST_MONEY_REQUEST;
             case "BDDESID":
-                return BITDUBAI_DESIGNER_IDENTITY;
+                return Plugins.BITDUBAI_DESIGNER_IDENTITY;
             case "BDEVMOD":
-                return BITDUBAI_DEVELOPER_MODULE;
+                return Plugins.BITDUBAI_DEVELOPER_MODULE;
             case "BDNOTMID":
-                return BITDUBAI_MIDDLEWARE_NOTIFICATION;
+                return Plugins.BITDUBAI_MIDDLEWARE_NOTIFICATION;
             case "BAIT":
                 return BITDUBAI_ASSET_ISSUING_TRANSACTION;
             case "BAID":
                 return BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION;
             case "BDAPIAL":
-                return BITDUBAI_DAP_ISSUER_ACTOR_LAYER;
+                return Plugins.BITDUBAI_DAP_ISSUER_ACTOR_LAYER;
             case "BDAPUAL":
-                return BITDUBAI_DAP_USER_ACTOR_LAYER;
+                return Plugins.BITDUBAI_DAP_USER_ACTOR_LAYER;
             case "BDAPRPAL":
-                return BITDUBAI_DAP_REDEEM_POINT_ACTOR_LAYER;
+                return Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR_LAYER;
             case "BDAPIIL":
-                return BITDUBAI_DAP_ISSUER_IDENTITY_LAYER;
+                return Plugins.BITDUBAI_DAP_ISSUER_IDENTITY_LAYER;
             case "BDAPUIL":
-                return BITDUBAI_DAP_USER_IDENTITY_LAYER;
+                return Plugins.BITDUBAI_DAP_USER_IDENTITY_LAYER;
             case "BDAPRPIL":
-                return BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER;
+                return Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY_LAYER;
             case "BASF":
-                return BITDUBAI_ASSET_FACTORY;
+                return Plugins.BITDUBAI_ASSET_FACTORY;
             case "BASFM":
-                return BITDUBAI_ASSET_FACTORY_MODULE;
+                return Plugins.BITDUBAI_ASSET_FACTORY_MODULE;
             case "BDR":
                 return BITDUBAI_DESKTOP_RUNTIME;
 
