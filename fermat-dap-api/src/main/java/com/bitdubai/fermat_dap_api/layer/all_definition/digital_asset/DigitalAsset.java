@@ -130,14 +130,6 @@ public class DigitalAsset  implements Serializable{
      */
     @Override
     public String toString() {
-        StringBuffer contextBuffer = new StringBuffer();
-        contextBuffer.append(publicKey);
-        contextBuffer.append(name);
-        contextBuffer.append(description);
-        contextBuffer.append(genesisAmount);
-        contextBuffer.append(genesisTransaction);
-        contextBuffer.append(genesisAddress);
-        System.out.println("Digital Asset" + XMLParser.parseObject(contextBuffer));
-        return XMLParser.parseObject(contextBuffer);
+        return XMLParser.parseObject(this);
     }
 }
