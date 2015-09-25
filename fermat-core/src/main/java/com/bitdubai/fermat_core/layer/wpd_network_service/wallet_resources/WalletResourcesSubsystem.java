@@ -1,17 +1,14 @@
-package com.bitdubai.fermat_core.layer.wpd_network_service.wallet_statistics;
+package com.bitdubai.fermat_core.layer.wpd_network_service.wallet_resources;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.ccp_network_service.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.ccp_network_service.NetworkSubsystem;
-import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_statistics.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/07/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * Created by loui on 17/02/15.
  */
-public class WalletStatisticsSubsystem implements NetworkSubsystem {
+public class WalletResourcesSubsystem implements NetworkSubsystem {
 
     Plugin plugin;
 
@@ -30,7 +27,9 @@ public class WalletStatisticsSubsystem implements NetworkSubsystem {
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();
         }
