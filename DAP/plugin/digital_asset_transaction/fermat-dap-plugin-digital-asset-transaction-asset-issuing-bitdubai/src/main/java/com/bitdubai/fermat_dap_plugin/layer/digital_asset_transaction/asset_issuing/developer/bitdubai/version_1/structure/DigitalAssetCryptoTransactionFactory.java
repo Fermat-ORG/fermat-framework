@@ -82,11 +82,18 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     String digitalAssetLocalFilePath;
     int assetsAmount;
     BlockchainNetworkType blockchainNetworkType;
+    String walletPublicKey;
     private final int MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT=1;
 
     Logger LOG = Logger.getGlobal();
 
-    public DigitalAssetCryptoTransactionFactory(UUID pluginId, CryptoVaultManager cryptoVaultManager, CryptoWallet cryptoWallet, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, AssetVaultManager assetVaultManager, CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+    public DigitalAssetCryptoTransactionFactory(UUID pluginId,
+                                                CryptoVaultManager cryptoVaultManager,
+                                                CryptoWallet cryptoWallet,
+                                                PluginDatabaseSystem pluginDatabaseSystem,
+                                                PluginFileSystem pluginFileSystem,
+                                                AssetVaultManager assetVaultManager,
+                                                CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         this.cryptoVaultManager=cryptoVaultManager;
         this.cryptoWallet=cryptoWallet;
@@ -129,6 +136,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new ObjectNotSetException("Transaction Status is null");
         }
         this.transactionStatus=transactionStatus;
+    }
+
+    public void setWalletPublicKey(String walletPublicKey)throws ObjectNotSetException{
+        if(walletPublicKey==null){
+            throw new ObjectNotSetException("walletPublicKey is null");
+        }
+        this.walletPublicKey=walletPublicKey;
     }
 
     private void areObjectsSettled() throws ObjectNotSetException, CantIssueDigitalAssetException {
@@ -299,7 +313,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     }*/
 
-    public void issueDigitalAssets(DigitalAsset digitalAsset, int assetsAmount, BlockchainNetworkType blockchainNetworkType)throws CantIssueDigitalAssetsException{
+    public void issueDigitalAssets(DigitalAsset digitalAsset, int assetsAmount, String walletPublicKey, BlockchainNetworkType blockchainNetworkType)throws CantIssueDigitalAssetsException{
 
         this.digitalAsset=digitalAsset;
         this.assetsAmount=assetsAmount;
@@ -307,6 +321,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         //Primero chequeamos si el asset está completo
         try {
             setBlockchainNetworkType(blockchainNetworkType);
+            setWalletPublicKey(walletPublicKey);
             if(assetsAmount<MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT){
                 throw new ObjectNotSetException("The assetsAmount "+assetsAmount+" is lower that "+MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT);
             }
@@ -448,7 +463,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 VaultType.ASSET_VAULT,
                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                "testWalletPublicKey",
+                this.walletPublicKey,
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
     }
 
