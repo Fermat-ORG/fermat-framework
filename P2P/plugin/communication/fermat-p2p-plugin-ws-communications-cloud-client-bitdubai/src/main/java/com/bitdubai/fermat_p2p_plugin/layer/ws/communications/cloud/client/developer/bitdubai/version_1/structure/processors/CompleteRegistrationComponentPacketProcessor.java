@@ -99,10 +99,8 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
         /*
          * Raise the event
          */
+        System.out.println("CompleteRegistrationComponentPacketProcessor - Raised a event = EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
-
-        System.out.println("CompleteRegistrationComponentPacketProcessor - Fire a event = EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION");
-
 
     }
 

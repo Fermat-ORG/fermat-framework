@@ -211,16 +211,28 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + fermatPacketReceive);
 
 
-        /*
-         * Call the processors for this packet
-         */
-        for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
+        //verify is packet supported
+        if (packetProcessorsRegister.containsKey(fermatPacketReceive.getFermatPacketType())){
 
-        /*
-         * Processor make his job
-         */
-            fermatPacketProcessor.processingPackage(fermatPacketReceive);
+             /*
+             * Call the processors for this packet
+             */
+            for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
+
+                /*
+                 * Processor make his job
+                 */
+                fermatPacketProcessor.processingPackage(fermatPacketReceive);
+            }
+
+        }else {
+
+            System.out.println(" WsCommunicationsCloudClientChannel - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+
         }
+
+
+
 
     }
 

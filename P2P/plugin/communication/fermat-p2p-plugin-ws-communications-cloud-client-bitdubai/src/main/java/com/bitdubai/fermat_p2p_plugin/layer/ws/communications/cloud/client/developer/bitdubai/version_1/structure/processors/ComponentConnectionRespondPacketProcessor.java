@@ -39,15 +39,15 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
 
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
+        System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
 
         /*
          * Get the filters from the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getServerIdentity());
+        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+        System.out.println("ComponentConnectionRespondPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
         /*
          * Construct the json object

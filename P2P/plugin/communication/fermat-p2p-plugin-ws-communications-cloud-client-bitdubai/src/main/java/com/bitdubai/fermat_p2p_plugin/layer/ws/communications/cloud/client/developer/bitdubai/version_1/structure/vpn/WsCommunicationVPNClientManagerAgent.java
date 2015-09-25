@@ -126,6 +126,8 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
             //While is running
             while (isRunning){
 
+                System.out.println(" WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.size() "+vpnClientActiveCache.size());
+
                 //If empty
                 if (vpnClientActiveCache.isEmpty()){
                     //Auto stop
@@ -136,15 +138,17 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
                     for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
 
-                        WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
+                        System.out.println(" WsCommunicationVPNClientManagerAgent - networkServiceType.size() "+vpnClientActiveCache.get(networkServiceType).size());
 
-                        //Verified is this vpn is register
+                       /* WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
+
+                        //Verified is this vpn is active
                         if (!wsCommunicationVPNServer.isActive()){
 
                             wsCommunicationVPNServer.getConnection().close();
                             vpnClientActiveCache.remove(wsCommunicationVPNServer);
 
-                        }
+                        } */
 
                     }
 

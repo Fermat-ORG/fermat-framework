@@ -114,24 +114,30 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
          */
         validateFermatPacketSignature(fermatPacketReceive);
 
-        /*
-         * Get the platformComponentProfile from the message content and decrypt
-         */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
+        if (fermatPacketReceive.getFermatPacketType() == FermatPacketType.MESSAGE_TRANSMIT){
 
-        System.out.println("MessageTransmitPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+            /*
+             * Get the platformComponentProfile from the message content and decrypt
+             */
+            String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
 
-        /*
-         * Get the message object
-         */
-        FermatMessage fermatMessage = new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
+            System.out.println("MessageTransmitPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
-        System.out.println("MessageTransmitPacketProcessor - fermatMessage = "+fermatMessage);
+            /*
+             * Get the message object
+             */
+            FermatMessage fermatMessage = new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
-        /*
-         * Add to the list
-         */
-        pendingIncomingMessages.add(fermatMessage);
+            System.out.println("MessageTransmitPacketProcessor - fermatMessage = "+fermatMessage);
+
+            /*
+             * Add to the list
+             */
+            pendingIncomingMessages.add(fermatMessage);
+
+        }else {
+            System.out.println("MessageTransmitPacketProcessor - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+        }
 
     }
 

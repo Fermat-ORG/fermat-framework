@@ -16,10 +16,12 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.WebSocket;
@@ -106,17 +108,25 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Convert to json representation
          */
-        String jsonListRepresentation = gson.toJson(filteredLis, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
+        String jsonListRepresentation = gson.toJson(filteredLis, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+        }.getType());
 
         System.out.println("RequestListComponentRegisterPacketProcessor - gson.toJson(list)    = "+jsonListRepresentation);
 
+        /*
+         * Create the respond
+         */
+        JsonObject jsonObjectRespond = new JsonObject();
+        jsonObjectRespond.addProperty(AttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE,       platformComponentType.toString());
+        jsonObjectRespond.addProperty(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE, networkServiceType.toString());
+        jsonObjectRespond.addProperty(AttNamesConstants.JSON_ATT_NAME_RESULT_LIST,          jsonListRepresentation);
 
          /*
          * Construct a fermat packet whit the list
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
                                                                                                                     serverIdentity.getPublicKey(),                      //Sender
-                                                                                                                    jsonListRepresentation,                             //Message Content
+                                                                                                                    gson.toJson(jsonObjectRespond),                     //Message Content
                                                                                                                     FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
                                                                                                                     serverIdentity.getPrivateKey());                    //Sender private key
 
@@ -139,6 +149,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         int totalFilterToApply = countFilers(discoveryQueryParameters);
         int filterMatched = 0;
         List<PlatformComponentProfile>  filteredLis = new ArrayList<>();
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - totalFilterToApply    = "+totalFilterToApply);
 
 
         if (totalFilterToApply > 0){

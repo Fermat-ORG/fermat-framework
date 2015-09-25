@@ -135,7 +135,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
-        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
     }
 
 
@@ -389,8 +389,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     }
 
     /**
-     * Get the disable server flag
-     *
+     * Get the DisableClientFlag
      * @return Boolean
      */
     public Boolean getDisableClientFlag() {
@@ -424,5 +423,15 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     @Override
     public void setLocationManager(LocationManager locationManager) {
         this.locationManager = locationManager;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see WsCommunicationsCloudClientManager#isDisable()
+     */
+    @Override
+    public Boolean isDisable() {
+        return getDisableClientFlag();
     }
 }

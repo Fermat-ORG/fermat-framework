@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -32,20 +33,19 @@ public class FermatMessageCommunicationFactory {
      * Construct a FermatMessage encrypted with the destination identity public key and signed
      * whit the private key passed as an argument
      *
-     * @param sender
+     * @param senderIdentity
      * @param receiver
      * @param content
      * @param fermatMessageContentType
-     * @param privateKey
-     * @return
+     * @return FermatMessage
      * @throws FMPException
      */
-    public static FermatMessage constructFermatMessageEncryptedAndSinged(final PlatformComponentProfile sender, final PlatformComponentProfile receiver, final String content, final FermatMessageContentType fermatMessageContentType, String privateKey) throws FMPException{
+    public static FermatMessage constructFermatMessageEncryptedAndSinged(final ECCKeyPair senderIdentity, final PlatformComponentProfile receiver, final String content, final FermatMessageContentType fermatMessageContentType) throws FMPException{
 
         String messageHash = AsymmectricCryptography.encryptMessagePublicKey(content, receiver.getIdentityPublicKey());
-        String signature   = AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
+        String signature   = AsymmectricCryptography.createMessageSignature(messageHash, senderIdentity.getPrivateKey());
 
-        return new FermatMessageCommunication(messageHash, null, fermatMessageContentType, FermatMessagesStatus.PENDING_TO_SEND, receiver.getIdentityPublicKey(), sender.getIdentityPublicKey(), new Timestamp(System.currentTimeMillis()), signature, receiver.getCommunicationCloudClientIdentity());
+        return new FermatMessageCommunication(messageHash, null, fermatMessageContentType, FermatMessagesStatus.PENDING_TO_SEND, receiver.getIdentityPublicKey(), senderIdentity.getPublicKey(), new Timestamp(System.currentTimeMillis()), signature, receiver.getCommunicationCloudClientIdentity());
     }
 
 

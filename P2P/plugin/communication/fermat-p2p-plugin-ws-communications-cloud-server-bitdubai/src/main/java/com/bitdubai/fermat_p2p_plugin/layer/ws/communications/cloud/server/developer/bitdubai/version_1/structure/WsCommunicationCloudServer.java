@@ -122,7 +122,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onOpen");
-        System.out.println(" WsCommunicationCloudServer - New Client: "+clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
+        System.out.println(" WsCommunicationCloudServer - New Client: " + clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
         System.out.println(" WsCommunicationCloudServer - Handshake Resource Descriptor = " + handshake.getResourceDescriptor());
         System.out.println(" WsCommunicationCloudServer - temp-i = " + handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI));
 
@@ -222,20 +222,32 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         /*
          * Decode the fermatPacketEncode into a fermatPacket
          */
-        FermatPacket fermatPacket = FermatPacketDecoder.decode(fermatPacketEncode, serverIdentity.getPrivateKey());
+        FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, serverIdentity.getPrivateKey());
 
-        System.out.println(" WsCommunicationCloudServer - decode fermatPacket = "+fermatPacket);
-        System.out.println(" WsCommunicationCloudServer - fermatPacket.getFermatPacketType() = " + fermatPacket.getFermatPacketType());
+        System.out.println(" WsCommunicationCloudServer - decode fermatPacket = "+fermatPacketReceive);
+        System.out.println(" WsCommunicationCloudServer - fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
 
-        /*
-         * Call the processors for this packet
-         */
-        for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacket.getFermatPacketType())) {
+
+        //verify is packet supported
+        if (packetProcessorsRegister.containsKey(fermatPacketReceive.getFermatPacketType())){
+
 
             /*
-             * Processor make his job
+             * Call the processors for this packet
              */
-            fermatPacketProcessor.processingPackage(clientConnection, fermatPacket, serverIdentity);
+            for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
+
+                /*
+                 * Processor make his job
+                 */
+                fermatPacketProcessor.processingPackage(clientConnection, fermatPacketReceive, serverIdentity);
+            }
+
+
+        }else {
+
+            System.out.println(" WsCommunicationCloudServer - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+
         }
 
     }
@@ -339,22 +351,16 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         for (PlatformComponentType platformComponentType : registeredPlatformComponentProfileCache.keySet()) {
 
-            System.out.println(" WsCommunicationCloudServer - platformComponentType = "+platformComponentType);
-
             for (NetworkServiceType networkServiceType : registeredPlatformComponentProfileCache.get(platformComponentType).keySet()) {
 
-                System.out.println(" WsCommunicationCloudServer - networkServiceType = "+networkServiceType);
-
                 for (PlatformComponentProfile platformComponentProfile : registeredPlatformComponentProfileCache.get(platformComponentType).get(networkServiceType)) {
-
-                    System.out.println(" WsCommunicationCloudServer - platformComponentProfile = "+platformComponentProfile.getCommunicationCloudClientIdentity());
-                    System.out.println(" WsCommunicationCloudServer - platformComponentProfile = "+clientIdentity);
 
                     if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
 
                         System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
-
                         registeredPlatformComponentProfileCache.get(platformComponentType).get(networkServiceType).remove(platformComponentProfile);
+                        break;
+
                     }
                 }
 

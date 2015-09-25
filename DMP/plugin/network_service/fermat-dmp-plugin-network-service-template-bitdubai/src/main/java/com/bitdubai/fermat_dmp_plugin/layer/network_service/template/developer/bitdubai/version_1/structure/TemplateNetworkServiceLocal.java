@@ -6,19 +6,21 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.OutgoingMessageDao;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedEvent;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -39,9 +41,9 @@ import java.util.Observer;
 public class TemplateNetworkServiceLocal implements Observer {
 
     /**
-     * Represent the public key of the remote network service
+     * Represent the profile of the remote network service
      */
-    private String remoteNetworkServicePublicKey;
+    private PlatformComponentProfile remoteNetworkServiceProfile;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -61,12 +63,12 @@ public class TemplateNetworkServiceLocal implements Observer {
     /**
      * Constructor with parameters
      *
-     * @param remoteNetworkServicePublicKey
+     * @param remoteNetworkServiceProfile
      * @param errorManager                  instance
      * @param outgoingMessageDao            instance
      */
-    public TemplateNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
-        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
+    public TemplateNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
+        this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
@@ -77,16 +79,21 @@ public class TemplateNetworkServiceLocal implements Observer {
      * This method prepare the message to send and save on the
      * data base in the table <code>outgoing_messages</code>
      *
-     * @param message the message to send
+     * @param messageContent the message to send
      */
-    public void sendMessage(Message message) {
+    public void sendMessage(final String messageContent, final ECCKeyPair senderIdentity) {
 
         try {
+
+            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessageEncryptedAndSinged(senderIdentity, //Sender
+                                                                                                                      remoteNetworkServiceProfile,   //Receiver
+                                                                                                                      messageContent,                //Message Content
+                                                                                                                      FermatMessageContentType.TEXT); //Type
 
             /*
              * Cast the message to OutgoingTemplateNetworkServiceMessage
              */
-            OutgoingTemplateNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (OutgoingTemplateNetworkServiceMessage) message;
+            OutgoingTemplateNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (OutgoingTemplateNetworkServiceMessage) fermatMessage;
 
             /*
              * Configure the correct status
@@ -98,7 +105,7 @@ public class TemplateNetworkServiceLocal implements Observer {
              */
             outgoingMessageDao.create(outgoingIntraUserNetworkServiceMessage);
 
-        } catch (CantInsertRecordDataBaseException e) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
         }
 
@@ -118,7 +125,7 @@ public class TemplateNetworkServiceLocal implements Observer {
          */
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
         fermatEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
-        ((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
+        ((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage);
         eventManager.raiseEvent(fermatEvent);
 
     }
@@ -136,14 +143,5 @@ public class TemplateNetworkServiceLocal implements Observer {
         //Validate and process
         if (data instanceof IncomingTemplateNetworkServiceMessage)
             onMessageReceived((IncomingTemplateNetworkServiceMessage) data);
-    }
-
-    /**
-     * Return the public key of the remote network service
-     *
-     * @return
-     */
-    public String getRemoteNetworkServicePublicKey() {
-        return remoteNetworkServicePublicKey;
     }
 }

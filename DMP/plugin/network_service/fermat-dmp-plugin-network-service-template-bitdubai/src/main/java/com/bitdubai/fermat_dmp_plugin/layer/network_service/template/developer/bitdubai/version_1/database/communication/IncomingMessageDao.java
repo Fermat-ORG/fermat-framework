@@ -1,10 +1,10 @@
 /*
- * @#OutgoingMessageDataAccessObject.java - 2015
+ * @#IncomingMessageDataAccessObject.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communication;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -16,11 +16,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.OutgoingTemplateNetworkServiceMessage;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.IncomingTemplateNetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -33,7 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.OutgoingMessageDao</code> have
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communication.IncomingMessageDao</code> have
  * all methods implementation to access the data base (CRUD)
  * <p/>
  * <p/>
@@ -42,7 +43,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class OutgoingMessageDao {
+public class IncomingMessageDao {
 
     /**
      * Represent the dataBase
@@ -54,7 +55,7 @@ public class OutgoingMessageDao {
      *
      * @param dataBase
      */
-    public OutgoingMessageDao(Database dataBase) {
+    public IncomingMessageDao(Database dataBase) {
         super();
         this.dataBase = dataBase;
     }
@@ -74,23 +75,23 @@ public class OutgoingMessageDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+        return getDataBase().getTable(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
     }
 
     /**
-     * Method that find an OutgoingTemplateNetworkServiceMessage by id in the data base.
+     * Method that find an IncomingTemplateNetworkServiceMessage by id in the data base.
      *
      * @param id Long id.
-     * @return OutgoingTemplateNetworkServiceMessage found.
+     * @return IncomingTemplateNetworkServiceMessage found.
      * @throws CantReadRecordDataBaseException
      */
-    public OutgoingTemplateNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException {
+    public IncomingTemplateNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        OutgoingTemplateNetworkServiceMessage outgoingTemplateNetworkServiceMessage = null;
+        IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = null;
 
         try {
 
@@ -108,28 +109,29 @@ public class OutgoingMessageDao {
 
 
             /*
-             * 3 - Convert into OutgoingTemplateNetworkServiceMessage objects
+             * 3 - Convert into IncomingTemplateNetworkServiceMessage objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 3.1 - Create and configure a  OutgoingTemplateNetworkServiceMessage
+                 * 3.1 - Create and configure a  IncomingTemplateNetworkServiceMessage
                  */
-                outgoingTemplateNetworkServiceMessage = constructFrom(record);
+                incomingTemplateNetworkServiceMessage = constructFrom(record);
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
-        return outgoingTemplateNetworkServiceMessage;
+        return incomingTemplateNetworkServiceMessage;
     }
 
     ;
@@ -137,58 +139,48 @@ public class OutgoingMessageDao {
     /**
      * Method that list the all entities on the data base.
      *
-     * @return All OutgoingTemplateNetworkServiceMessage.
+     * @return All IncomingTemplateNetworkServiceMessage.
      * @throws CantReadRecordDataBaseException
      */
-    public List<OutgoingTemplateNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException {
+    public List<IncomingTemplateNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException {
 
-
-        List<OutgoingTemplateNetworkServiceMessage> list = null;
-
+        List<IncomingTemplateNetworkServiceMessage> list = null;
         try {
-
             /*
              * 1 - load the data base to memory
              */
             DatabaseTable networkIntraUserTable = getDatabaseTable();
             networkIntraUserTable.loadToMemory();
-
             /*
              * 2 - read all records
              */
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
-
             /*
-             * 3 - Create a list of OutgoingTemplateNetworkServiceMessage objects
+             * 3 - Create a list of IncomingTemplateNetworkServiceMessage objects
              */
             list = new ArrayList<>();
             list.clear();
-
             /*
-             * 4 - Convert into OutgoingTemplateNetworkServiceMessage objects
+             * 4 - Convert into IncomingTemplateNetworkServiceMessage objects
              */
             for (DatabaseTableRecord record : records) {
-
                 /*
-                 * 4.1 - Create and configure a  OutgoingTemplateNetworkServiceMessage
+                 * 4.1 - Create and configure a  IncomingTemplateNetworkServiceMessage
                  */
-                OutgoingTemplateNetworkServiceMessage outgoingTemplateNetworkServiceMessage = constructFrom(record);
-
+                IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(outgoingTemplateNetworkServiceMessage);
-
+                list.add(incomingTemplateNetworkServiceMessage);
             }
-
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
+            // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -205,11 +197,11 @@ public class OutgoingMessageDao {
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
      *
-     * @return All OutgoingTemplateNetworkServiceMessage.
+     * @return All IncomingTemplateNetworkServiceMessage.
      * @throws CantReadRecordDataBaseException
      * @see TemplateNetworkServiceDatabaseConstants
      */
-    public List<OutgoingTemplateNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<IncomingTemplateNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -220,53 +212,54 @@ public class OutgoingMessageDao {
         }
 
 
-        List<OutgoingTemplateNetworkServiceMessage> list = null;
+        List<IncomingTemplateNetworkServiceMessage> list = null;
 
         try {
 
             /*
              * 1 - load the data base to memory with filters
              */
-            DatabaseTable templateTable = getDatabaseTable();
-            templateTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
-            templateTable.loadToMemory();
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
+            networkIntraUserTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            networkIntraUserTable.loadToMemory();
 
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = templateTable.getRecords();
+            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 3 - Create a list of OutgoingTemplateNetworkServiceMessage objects
+             * 3 - Create a list of IncomingTemplateNetworkServiceMessage objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into OutgoingTemplateNetworkServiceMessage objects
+             * 4 - Convert into IncomingTemplateNetworkServiceMessage objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  OutgoingTemplateNetworkServiceMessage
+                 * 4.1 - Create and configure a  IncomingTemplateNetworkServiceMessage
                  */
-                OutgoingTemplateNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
+                IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
                  */
-                list.add(incomingIntraUserNetworkServiceMessage);
+                list.add(incomingTemplateNetworkServiceMessage);
 
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
+            // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -283,11 +276,11 @@ public class OutgoingMessageDao {
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
      *
-     * @param filters
-     * @return List<OutgoingTemplateNetworkServiceMessage>
+     * @return All IncomingTemplateNetworkServiceMessage.
      * @throws CantReadRecordDataBaseException
+     * @see TemplateNetworkServiceDatabaseConstants
      */
-    public List<OutgoingTemplateNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<IncomingTemplateNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -295,7 +288,8 @@ public class OutgoingMessageDao {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-        List<OutgoingTemplateNetworkServiceMessage> list = null;
+
+        List<IncomingTemplateNetworkServiceMessage> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -304,11 +298,11 @@ public class OutgoingMessageDao {
             /*
              * 1- Prepare the filters
              */
-            DatabaseTable templateTable = getDatabaseTable();
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
 
             for (String key : filters.keySet()) {
 
-                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                DatabaseTableFilter newFilter = networkIntraUserTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
                 newFilter.setColumn(key);
                 newFilter.setValue((String) filters.get(key));
@@ -316,48 +310,50 @@ public class OutgoingMessageDao {
                 filtersTable.add(newFilter);
             }
 
+
             /*
              * 2 - load the data base to memory with filters
              */
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
-            templateTable.loadToMemory();
+            networkIntraUserTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            networkIntraUserTable.loadToMemory();
 
             /*
              * 3 - read all records
              */
-            List<DatabaseTableRecord> records = templateTable.getRecords();
+            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 4 - Create a list of OutgoingTemplateNetworkServiceMessage objects
+             * 4 - Create a list of IncomingTemplateNetworkServiceMessage objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into OutgoingTemplateNetworkServiceMessage objects
+             * 5 - Convert into IncomingTemplateNetworkServiceMessage objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 5.1 - Create and configure a  OutgoingTemplateNetworkServiceMessage
+                 * 5.1 - Create and configure a  IncomingTemplateNetworkServiceMessage
                  */
-                OutgoingTemplateNetworkServiceMessage outgoingTemplateNetworkServiceMessage = constructFrom(record);
+                IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
                  */
-                list.add(outgoingTemplateNetworkServiceMessage);
+                list.add(incomingTemplateNetworkServiceMessage);
 
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
+            // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -372,10 +368,10 @@ public class OutgoingMessageDao {
     /**
      * Method that create a new entity in the data base.
      *
-     * @param entity OutgoingTemplateNetworkServiceMessage to create.
+     * @param entity IncomingTemplateNetworkServiceMessage to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(OutgoingTemplateNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
+    public void create(IncomingTemplateNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -388,7 +384,7 @@ public class OutgoingMessageDao {
              */
             DatabaseTableRecord entityRecord = constructFrom(entity);
 
-            /*
+            /**
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
@@ -397,7 +393,7 @@ public class OutgoingMessageDao {
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
-
+            // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
@@ -405,7 +401,6 @@ public class OutgoingMessageDao {
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
-
         }
 
     }
@@ -413,10 +408,10 @@ public class OutgoingMessageDao {
     /**
      * Method that update an entity in the data base.
      *
-     * @param entity OutgoingTemplateNetworkServiceMessage to update.
+     * @param entity IncomingTemplateNetworkServiceMessage to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(OutgoingTemplateNetworkServiceMessage entity) throws CantUpdateRecordDataBaseException {
+    public void update(IncomingTemplateNetworkServiceMessage entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -429,7 +424,7 @@ public class OutgoingMessageDao {
              */
             DatabaseTableRecord entityRecord = constructFrom(entity);
 
-            /*
+            /**
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
@@ -437,7 +432,7 @@ public class OutgoingMessageDao {
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
+            // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
@@ -445,9 +440,7 @@ public class OutgoingMessageDao {
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
-
         }
-
     }
 
     /**
@@ -475,6 +468,7 @@ public class OutgoingMessageDao {
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
+            // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
@@ -482,7 +476,6 @@ public class OutgoingMessageDao {
             String possibleCause = "The record do not exist";
             CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantDeleteRecordDataBaseException;
-
         }
 
     }
@@ -490,24 +483,24 @@ public class OutgoingMessageDao {
 
     /**
      * @param record with values from the table
-     * @return OutgoingTemplateNetworkServiceMessage setters the values from table
+     * @return IncomingTemplateNetworkServiceMessage setters the values from table
      */
-    private OutgoingTemplateNetworkServiceMessage constructFrom(DatabaseTableRecord record) {
+    private IncomingTemplateNetworkServiceMessage constructFrom(DatabaseTableRecord record) {
 
-        OutgoingTemplateNetworkServiceMessage outgoingTemplateNetworkServiceMessage = new OutgoingTemplateNetworkServiceMessage();
+        IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = new IncomingTemplateNetworkServiceMessage();
 
         try {
 
-            outgoingTemplateNetworkServiceMessage.setId(UUID.fromString(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setSender(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME));
-            outgoingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME));
+            incomingTemplateNetworkServiceMessage.setId(UUID.fromString(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setSender(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME));
+            incomingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME));
             ;
-            outgoingTemplateNetworkServiceMessage.setContent(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
-            outgoingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setContent(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
+            incomingTemplateNetworkServiceMessage.setFermatMessageContentType((FermatMessageContentType.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME))));
+            incomingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
             ;
-            outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
@@ -515,17 +508,17 @@ public class OutgoingMessageDao {
             return null;
         }
 
-        return outgoingTemplateNetworkServiceMessage;
+        return incomingTemplateNetworkServiceMessage;
     }
 
     /**
-     * Construct a DatabaseTableRecord whit the values of the a OutgoingTemplateNetworkServiceMessage pass
+     * Construct a DatabaseTableRecord whit the values of the a IncomingTemplateNetworkServiceMessage pass
      * by parameter
      *
-     * @param incomingIntraUserNetworkServiceMessage the contains the values
+     * @param incomingTemplateNetworkServiceMessage the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(OutgoingTemplateNetworkServiceMessage incomingIntraUserNetworkServiceMessage) {
+    private DatabaseTableRecord constructFrom(IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage) {
 
         /*
          * Create the record to the entity
@@ -535,14 +528,14 @@ public class OutgoingMessageDao {
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getId().toString());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getSender().toString());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getContent());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getFermatMessageContentType().getCode());
-        entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getShippingTimestamp().getTime());
-        entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME, incomingIntraUserNetworkServiceMessage.getFermatMessagesStatus().getCode());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getId().toString());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getSender().toString());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getReceiver().toString());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getContent());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
+        entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
+        entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
 
         /*
          * return the new table record

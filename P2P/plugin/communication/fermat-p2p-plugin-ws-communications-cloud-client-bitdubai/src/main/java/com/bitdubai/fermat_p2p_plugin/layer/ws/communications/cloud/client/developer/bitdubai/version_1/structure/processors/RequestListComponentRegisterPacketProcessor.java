@@ -12,10 +12,15 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 
@@ -53,54 +58,20 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Construct the json object
          */
         Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
+
+        NetworkServiceType networkServiceType       = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE), NetworkServiceType.class);
+        PlatformComponentType platformComponentType = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE), PlatformComponentType.class);
 
          /*
          * Get the list
          */
-        List<PlatformComponentProfile> list = gson.fromJson(messageContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+        List<PlatformComponentProfile> list = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
 
-        System.out.println("WsCommunicationsCloudClientPluginRoot - list = "+list);
-
-
-        /*
-         * ONLY FOR TEST SEND MESSAGE TO ALL COMPONENT REGISTER IN THE SERVER
-
-
-            String messageContent = "***********************************************************************************************\n " +
-                                    "* HELLO THUNDER COINS TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
-                                    "*********************************************************************************************** ";
-
-            for (PlatformComponentProfile platformComponentProfileDestination:list) {
-
-                FermatMessage fermatMessage = null;
-                try {
-
-                    fermatMessage = FermatMessageCommunicationFactory.constructFermatMessageEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getPlatformComponentProfile(), //Sender
-                                                                                                                platformComponentProfileDestination,                                  //Receiver
-                                                                                                                messageContent,                                                      //Message Content
-                                                                                                                FermatMessageContentType.TEXT,                                       //Type
-                                                                                                                getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey()); //Sender private key
-
-
-                    FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getServerIdentity(),                  //Destination
-                                                                                                                                getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                                fermatMessage.toJson(),                                                  //packet Content
-                                                                                                                                FermatPacketType.MESSAGE_TRANSMIT,                                       //Packet type
-                                                                                                                                getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey()); //Sender private key
-
-                    getWsCommunicationsCloudClientChannel().send(FermatPacketEncoder.encode(fermatPacketRequest));
-
-
-
-                } catch (FMPException e) {
-                    e.printStackTrace();
-                }
-
-            }
-           */
-
+        System.out.println("WsCommunicationsCloudClientPluginRoot - list = " + list);
 
          /*
          * Create a new event whit the list
@@ -109,17 +80,17 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
 
         /*
-         * Set the list
+         * configure the event
          */
         ((CompleteRequestListComponentRegisteredNotificationEvent)event).setRegisteredComponentList(list);
+        ((CompleteRequestListComponentRegisteredNotificationEvent)event).setNetworkServiceType(networkServiceType);
+        ((CompleteRequestListComponentRegisteredNotificationEvent)event).setPlatformComponentType(platformComponentType);
 
         /*
          * Raise the event
          */
+        System.out.println("RequestListComponentRegisterPacketProcessor - Raised a event = EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - Fire a event = EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION");
-
 
     }
 
