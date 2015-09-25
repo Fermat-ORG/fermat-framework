@@ -4,6 +4,8 @@ import com.bitdubai.fermat_android_api.engine.FermatWalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestPaymentFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.HomeFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -28,7 +30,8 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                     // currentFragment = /*BlankFragment.newInstance(null,null);*/BalanceFragment.newInstance(0, refereceWalletSession, walletResourcesProviderManager);
                    // currentFragment = HomeFragment.newInstance();
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);
-                   currentFragment = RequestPaymentFragment.newInstance();
+                   //currentFragment = RequestPaymentFragment.newInstance();
+                    currentFragment = BalanceFragment.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                     currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);
@@ -41,8 +44,8 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                     //currentFragment = TransactionsFragment.newInstance(0, refereceWalletSession);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
-                    //currentFragment = ContactsFragment.newInstance(refereceWalletSession, walletResourcesProviderManager);
-                    currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ContactsFragment.newInstance();
+                    currentFragment = ContactsFragment.newInstance();
+                    //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ContactsFragment.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS:
                     //currentFragment = CreateContactFragment.newInstance(0, refereceWalletSession);

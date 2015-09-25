@@ -28,16 +28,19 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentsObjects;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.ListComponent;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings.ReferenceWalletPreferenceSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 
@@ -100,15 +103,12 @@ public class BalanceFragment extends FermatWalletFragment {
     /**
      * Create a new instance of BalanceFragment and set referenceWalletSession and platforms plugin inside
      *
-     * @param position
-     * @param walletSession An object that contains all session data
+
      * @return BalanceFragment with Session and platform plugins inside
      */
 
-    public static BalanceFragment newInstance(int position, ReferenceWalletSession walletSession, WalletResourcesProviderManager walletResourcesProviderManager) {
+    public static BalanceFragment newInstance() {
         BalanceFragment balanceFragment = new BalanceFragment();
-        balanceFragment.setReferenceWalletSession(walletSession);
-        balanceFragment.setWalletResourcesProviderManager(walletResourcesProviderManager);
         return balanceFragment;
     }
 
@@ -120,14 +120,6 @@ public class BalanceFragment extends FermatWalletFragment {
 
         //setRetainInstance(true);
 
-
-        try {
-
-           String layout = referenceWalletSession.getWalletResourcesProviderManager().getLayoutResource("balance_fragment", ScreenOrientation.PORTRAIT,referenceWalletSession.getWalletSessionType().getSkinsId().get(0).getId(),referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-
-        } catch (CantGetResourcesException e) {
-            e.printStackTrace();
-        }
 
         /**
          *
