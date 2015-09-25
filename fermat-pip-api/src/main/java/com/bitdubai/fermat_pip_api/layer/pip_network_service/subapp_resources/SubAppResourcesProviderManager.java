@@ -47,7 +47,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @return The content of the file
      * @throws CantGetLanguageFileException
      */
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException;
+    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException;
 
 
     /**

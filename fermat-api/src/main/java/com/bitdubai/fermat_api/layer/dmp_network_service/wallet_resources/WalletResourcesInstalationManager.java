@@ -81,20 +81,17 @@ public interface WalletResourcesInstalationManager {
      * @param walletPublicKey
      * @throws WalletResourcesUnninstallException
      */
-    public void uninstallSkinForWallet(UUID skinId,String walletPublicKey)throws WalletResourcesUnninstallException;
+    public void uninstallSkinForWallet( UUID skinId,String walletPublicKey) throws WalletResourcesUnninstallException;
 
 
     /**
      *
-     * @param walletCategory
-     * @param walletType
-     * @param developer
-     * @param isLastWallet
+     * @param skinId
+     * @param walletPublicKey
+     * @param languageName
+     * @throws WalletResourcesUnninstallException
      */
-
-//TODO: No deberia recibir el id del lenguage que va a desinstalar?
-
-    public void uninstallLanguageForWallet(String walletCategory, String walletType, String developer,String walletName, boolean isLastWallet,String walletPublicKey) throws WalletResourcesUnninstallException;
+    public void uninstallLanguageForWallet(UUID skinId,String walletPublicKey, String languageName) throws WalletResourcesUnninstallException;
 
 
 

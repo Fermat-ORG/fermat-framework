@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import java.util.List;
@@ -72,5 +73,7 @@ public interface WalletContactRecord {
      * @return list of CryptoAddresses of the wallet contact
      */
     List<CryptoAddress> getCryptoAddresses();
+
+    Compatibility getCompatibility();
 
 }

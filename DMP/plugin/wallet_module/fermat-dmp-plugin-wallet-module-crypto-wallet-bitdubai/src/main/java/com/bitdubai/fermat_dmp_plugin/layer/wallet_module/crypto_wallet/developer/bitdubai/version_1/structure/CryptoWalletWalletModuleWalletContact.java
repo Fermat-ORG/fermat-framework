@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
@@ -19,24 +20,26 @@ import java.util.UUID;
  */
 public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWalletContact {
 
-    private final String              actorName;
-    private final String              actorPublicKey;
-    private final Actors              actorType;
-    private final UUID                contactId;
+    private final String              actorName            ;
+    private final String              actorPublicKey       ;
+    private final Actors              actorType            ;
+    private final Compatibility       compatibility        ;
+    private final UUID                contactId            ;
     private final List<CryptoAddress> receivedCryptoAddress;
-    private final byte[]              profilePicture;
-    private final String              walletPublicKey;
+    private final byte[]              profilePicture       ;
+    private final String              walletPublicKey      ;
 
     public CryptoWalletWalletModuleWalletContact(final WalletContactRecord walletContactRecord,
-                                                 final byte[]              profilePicture) {
+                                                 final byte[]              profilePicture     ) {
 
-        this.contactId             = walletContactRecord.getContactId();
-        this.walletPublicKey       = walletContactRecord.getWalletPublicKey();
-        this.actorType             = walletContactRecord.getActorType();
-        this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses();
-        this.actorPublicKey        = walletContactRecord.getActorPublicKey();
-        this.actorName             = walletContactRecord.getActorAlias();
+        this.contactId             = walletContactRecord.getContactId()                    ;
+        this.walletPublicKey       = walletContactRecord.getWalletPublicKey()              ;
+        this.actorType             = walletContactRecord.getActorType()                    ;
+        this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses()              ;
+        this.actorPublicKey        = walletContactRecord.getActorPublicKey()               ;
+        this.actorName             = walletContactRecord.getActorAlias()                   ;
         this.profilePicture        = profilePicture != null ? profilePicture.clone() : null;
+        this.compatibility         = walletContactRecord.getCompatibility()                ;
     }
 
     public CryptoWalletWalletModuleWalletContact(WalletContactRecord walletContactRecord) {
@@ -76,5 +79,10 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     @Override
     public String getWalletPublicKey() {
         return walletPublicKey;
+    }
+
+    @Override
+    public Compatibility getCompatibility() {
+        return compatibility;
     }
 }

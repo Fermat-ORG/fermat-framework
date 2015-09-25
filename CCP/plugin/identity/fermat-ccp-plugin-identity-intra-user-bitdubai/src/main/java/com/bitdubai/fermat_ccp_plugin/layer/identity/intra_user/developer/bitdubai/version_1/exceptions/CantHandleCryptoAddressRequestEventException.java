@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions;
+package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantHandleCryptoAddressRequestEventException</code>
+ * The exception <code>com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException</code>
  * is thrown when there is an error trying to handle a crypto address request event.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/09/2015.

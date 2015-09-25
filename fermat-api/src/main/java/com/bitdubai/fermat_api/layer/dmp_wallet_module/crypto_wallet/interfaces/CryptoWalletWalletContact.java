@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import java.util.List;
@@ -35,6 +36,12 @@ public interface CryptoWalletWalletContact {
      * @return Actors
      */
     Actors getActorType();
+
+    /**
+     * Return the Compatibility
+     * @return Compatibility
+     */
+    Compatibility getCompatibility();
 
     /**
      * Return the deliveredCryptoAddress

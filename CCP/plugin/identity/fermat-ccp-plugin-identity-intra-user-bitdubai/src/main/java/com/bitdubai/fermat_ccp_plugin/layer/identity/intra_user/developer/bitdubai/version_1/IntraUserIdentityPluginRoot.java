@@ -30,11 +30,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantHandleCryptoAddressRequestEventException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
@@ -263,12 +263,12 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
     private void executePendingAddressExchangeRequests(IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
         try {
-            List<PendingAddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
+            List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
                     IntraUserIdentityCryptoAddressGenerationService.actorType,
                     AddressExchangeRequestState.PENDING_LOCAL_RESPONSE
             );
 
-            for (PendingAddressExchangeRequest request : addressExchangeRequestList) {
+            for (AddressExchangeRequest request : addressExchangeRequestList) {
                 cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(request);
             }
 
