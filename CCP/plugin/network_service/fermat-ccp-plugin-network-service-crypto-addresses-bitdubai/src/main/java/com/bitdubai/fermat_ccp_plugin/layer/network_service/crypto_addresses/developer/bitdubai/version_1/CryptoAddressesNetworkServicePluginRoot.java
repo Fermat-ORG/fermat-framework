@@ -15,9 +15,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -38,13 +38,12 @@ import java.util.UUID;
  *
  * Created by Leon Acosta (laion.cj91@gmail.com) on 22/09/2015.
  */
-public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesManager, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, NetworkService, Plugin, Service {
+public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesManager, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, NetworkService, Plugin, Service {
 
     /**
      * Service Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -60,11 +59,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
-    private PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
@@ -83,12 +77,12 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
     }
 
     @Override
-    public List<PendingAddressExchangeRequest> listPendingRequests(Actors actorType, AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException {
+    public List<AddressExchangeRequest> listPendingRequests(Actors actorType, AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException {
         return null;
     }
 
     @Override
-    public PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException {
+    public AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException {
         return null;
     }
 
@@ -108,11 +102,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
 
     @Override
     public void start() throws CantStartPluginException {
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-        FermatEventListener fermatEventListener;
-        FermatEventHandler fermatEventHandler;
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -128,19 +117,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
 
     @Override
     public void stop() {
-
-
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-
-        for (FermatEventListener fermatEventListener : listenersAdded) {
-            eventManager.removeListener(fermatEventListener);
-        }
-
-        listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -156,8 +133,13 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
         return pluginId;
     }
 
-
-
+    /**
+     * DealWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(final ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
 
     /**
      * DealWithEvents Interface implementation.
@@ -168,27 +150,11 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
     }
 
     /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(final ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
     @Override
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(final PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

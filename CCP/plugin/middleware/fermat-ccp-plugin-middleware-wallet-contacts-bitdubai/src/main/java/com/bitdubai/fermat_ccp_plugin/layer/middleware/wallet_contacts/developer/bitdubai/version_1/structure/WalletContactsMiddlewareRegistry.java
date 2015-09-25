@@ -22,7 +22,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedEventException;
@@ -324,7 +324,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     public void handleCryptoAddressReceivedEvent(UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
 
         try {
-            PendingAddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
+            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
             handleCryptoAddressReceivedEvent(request);
         } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
 
@@ -332,7 +332,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressReceivedEvent(PendingAddressExchangeRequest request) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressReceivedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressReceivedEventException {
 
         try {
             try {
@@ -340,7 +340,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                 // if i can't find it (WalletContactNotFound) i confirm the request ....
                 // else i add the crypto address received.
                 WalletContactRecord walletContactRecord = this.getWalletContactByActorAndWalletPublicKey(
-                        request.getRequesterActorPublicKey(),
+                        request.getIdentityPublicKeyRequesting(),
                         request.getWalletPublicKey()
                 );
 
@@ -359,7 +359,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
                     this.addCryptoAddressToWalletContact(
                         walletContactRecord.getContactId(),
-                        request.getCryptoAddressReceived()
+                        request.getCryptoAddressFromResponse()
                     );
 
                     walletContactsMiddlewareDao.updateCompatibility(
