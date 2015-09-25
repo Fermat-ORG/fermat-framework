@@ -59,7 +59,24 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      Language getLanguage(UUID skinId, String walletPublicKey,String languageName) throws CantGetLanguageFileException;
 
 
-    WalletNavigationStructure getNavigationStructure(UUID skinId, String walletPublicKey) throws CantGetWalletNavigationStructureException;
+    /**
+     * Returns the language specified by Id.
+     * @param languageId
+     * @param walletPublicKey
+     * @return
+     * @throws CantGetLanguageFileException
+     */
+    public Language getLanguage(UUID languageId, String walletPublicKey) throws CantGetLanguageFileException;
+
+
+    /**
+     * returns the associated navigation structure of the wallet
+     * @param publicKey
+     * @param skinId
+     * @return
+     * @throws CantGetWalletNavigationStructureException
+     */
+    public com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure getNavigationStructure(String publicKey, UUID skinId) throws CantGetWalletNavigationStructureException;
 
 
     /**

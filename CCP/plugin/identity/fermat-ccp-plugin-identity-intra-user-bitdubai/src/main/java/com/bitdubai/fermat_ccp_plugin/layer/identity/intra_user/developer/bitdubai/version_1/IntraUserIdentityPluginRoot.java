@@ -30,11 +30,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantHandleCryptoAddressRequestEventException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
@@ -236,8 +236,8 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
             this.intraUserIdentityDao.initializeDatabase();
 
         } catch (CantInitializeIntraUserIdentityDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_IDENTITY);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY);
         }
 
         IntraUserIdentityVaultAdministrator intraUserIdentityVaultAdministrator = new IntraUserIdentityVaultAdministrator(
@@ -263,17 +263,17 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
     private void executePendingAddressExchangeRequests(IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
         try {
-            List<PendingAddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
+            List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
                     IntraUserIdentityCryptoAddressGenerationService.actorType,
                     AddressExchangeRequestState.PENDING_LOCAL_RESPONSE
             );
 
-            for (PendingAddressExchangeRequest request : addressExchangeRequestList) {
+            for (AddressExchangeRequest request : addressExchangeRequestList) {
                 cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(request);
             }
 
         } catch (CantListPendingAddressExchangeRequestsException | CantHandleCryptoAddressRequestEventException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -328,7 +328,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeIntraUserIdentityDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();

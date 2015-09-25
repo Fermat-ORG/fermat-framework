@@ -406,7 +406,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              *  download resources
              */
 
-            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize,walletPublicKey);
+            downloadResourcesFromRepo(linkToResources, skin, localStoragePath, screenSize, walletPublicKey);
 
      } catch (CantCreateRepositoryException e) {
             throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",e,"Error save skin on data base","");
@@ -447,7 +447,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
             String linkToLanguage = linkToRepo + "languages/";
 
-            downloadLanguageFromRepo(linkToLanguage, skinId, languageName, repository.getPath() + walletPublicKey +"languages/", screenSize, walletPublicKey);
+            downloadLanguageFromRepo(linkToLanguage, skinId, languageName, repository.getPath() + walletPublicKey + "languages/", screenSize, walletPublicKey);
 
             /**
              *  Fire event Wallet language installed
@@ -518,7 +518,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             networkServicesWalletResourcesDAO.delete(skinId, repository.getSkinName());
 
-            deleteResources(repository.getPath(),skin.getResources(),skinId);
+            deleteResources(repository.getPath(), skin.getResources(), skinId);
 
         } catch (CantGetRepositoryPathRecordException e) {
             throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET SKIN",e,"Error get repository","");
@@ -822,8 +822,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
     }
 
+
     @Override
-    public WalletNavigationStructure getNavigationStructure(UUID skinId, String walletPublicKey) throws CantGetWalletNavigationStructureException {
+    public WalletNavigationStructure getNavigationStructure(String walletPublicKey, UUID skinId) throws CantGetWalletNavigationStructureException {
             String content = "";
             try {
 
@@ -1489,6 +1490,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         this.instalationProgress = instalationProgress;
     }
 
+    @Override
+    public Language getLanguage(UUID languageId, String walletPublicKey) throws CantGetLanguageFileException {
+        return null;
+    }
 
 
 }

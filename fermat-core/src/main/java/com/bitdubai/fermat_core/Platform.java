@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDevice
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_core.layer.ccp.identity.CCPIdentityLayer;
+import com.bitdubai.fermat_core.layer.ccp.middleware.CCPMiddlewareLayer;
 import com.bitdubai.fermat_core.layer.ccp.network_service.CCPNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
 import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
@@ -65,8 +66,8 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.DealsWithIdentityIntraUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentityManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -428,10 +429,13 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new DAPModuleLayer(), PlatformLayers.BITDUBAI_DAP_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new EngineLayer(),PlatformLayers.BITDUBAI_ENGINE_LAYER);
 
-            // CCP Layers
-            corePlatformContext.registerPlatformLayer(new CCPIdentityLayer(), PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER);
+            // Init CCP Layers
+
+            corePlatformContext.registerPlatformLayer(new CCPIdentityLayer()      , PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPMiddlewareLayer()    , PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new CCPNetworkServiceLayer(), PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER);
 
+            // End  CCP Layers
 
             /*
              * Start all other platform layers
@@ -788,7 +792,7 @@ public class Platform implements Serializable {
              * -----------------------------
              */
             Plugin cryptoAddressesNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoAddressesPlugin();
-            injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE);
+            injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
 
              /*
@@ -831,8 +835,8 @@ public class Platform implements Serializable {
              * Plugin Wallet Contacts Middleware
              * ----------------------------------
              */
-            Plugin walletContactsMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getWalletContactsPlugin();
-            injectPluginReferencesAndStart(walletContactsMiddleware, Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
+            Plugin walletContactsMiddleware = ((CCPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER)).getWalletContactsPlugin();
+            injectPluginReferencesAndStart(walletContactsMiddleware, Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE);
 
             /*
              * Plugin Wallet Factory Middleware
@@ -1008,14 +1012,6 @@ public class Platform implements Serializable {
             //Plugin fiatOverCryptoLossProtectedWalletWalletModule = ((WalletModuleLayer) mWalletModuleLayer).getmFiatOverCryptoLossProtectedWallet();
             //injectPluginReferencesAndStart(fiatOverCryptoLossProtectedWalletWalletModule, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE);
 
-
-            /*
-             * Plugin Fiat Over Crypto Wallet Niche Type Wallet
-             * ----------------------------------
-             */
-            Plugin fiatOverCryptoWalletWalletModule = ((WalletModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER)).getmFiatOverCryptoWallet();
-            injectPluginReferencesAndStart(fiatOverCryptoWalletWalletModule, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_WALLET_WALLET_MODULE);
-
             /*
              * Plugin Multi account Wallet Niche Type Wallet
              * ----------------------------------
@@ -1123,8 +1119,8 @@ public class Platform implements Serializable {
              * Plugin Intra User Identity
              * -----------------------------
              */
-            Plugin intraUserIdentity = ((CCPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER)).getIntraUser();
-            injectPluginReferencesAndStart(intraUserIdentity, Plugins.BITDUBAI_INTRA_USER_IDENTITY);
+            Plugin intraUserIdentity = ((CCPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER)).getIntraUserPlugin();
+            injectPluginReferencesAndStart(intraUserIdentity, Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY);
 
 
             /*
@@ -1292,7 +1288,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithWalletContacts) {
-                ((DealsWithWalletContacts) plugin).setWalletContactsManager((WalletContactsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE));
+                ((DealsWithWalletContacts) plugin).setWalletContactsManager((WalletContactsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE));
             }
 
             if (plugin instanceof DealsWithWalletFactory) {
@@ -1354,7 +1350,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithIdentityIntraUser) {
-                ((DealsWithIdentityIntraUser) plugin).setIntraUserManager((IntraUserIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INTRA_USER_IDENTITY));
+                ((DealsWithIdentityIntraUser) plugin).setIntraUserManager((IntraUserIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY));
             }
 
             if (plugin instanceof DealsWithDeveloperIdentity) {
@@ -1419,7 +1415,7 @@ public class Platform implements Serializable {
             } */
 
             if(plugin instanceof DealsWithCryptoAddressesNetworkService)
-                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
+                ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE));
 
 
 

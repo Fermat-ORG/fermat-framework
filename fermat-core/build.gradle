@@ -72,7 +72,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-wallet-module-discount-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-wallet-module-multi-account-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-wallet-module-fiat-over-crypto-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-money-transmission-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-money-request-bitdubai')
@@ -91,7 +90,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-money-request-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-factory-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-language-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
@@ -106,8 +104,10 @@ dependencies {
     compile project(':fermat-pip-plugin-module-notification-bitdubai')
 
     // CCP Projects (Plugins)
-    compile project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
+
     compile project(':fermat-ccp-plugin-identity-intra-user-bitdubai')
+    compile project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
+    compile project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
 
     // DMP Projects (Addons)
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
