@@ -109,6 +109,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory {
         walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME );
         walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME  );
         walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_COMPATIBILITY_COLUMN_NAME    );
         /**
          * Table Wallet Contacts addition.
          */
@@ -136,30 +137,33 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory {
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,
+                                                                      DeveloperDatabaseTable developerDatabaseTable) {
 
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
-
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
 
+            DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+
             selectedTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+
+            List<String> developerRow = new ArrayList<>();
+
+            List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
+
+            for (DatabaseTableRecord row : records) {
+
+                for (DatabaseRecord field : row.getValues())
+                    developerRow.add(field.getValue());
+
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+            return returnedRecords;
+
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
-            return returnedRecords;
+            return new ArrayList<>();
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-
-        List<String> developerRow = new ArrayList<>();
-
-        for (DatabaseTableRecord row : records) {
-
-            for (DatabaseRecord field : row.getValues())
-                developerRow.add(field.getValue());
-
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-        return returnedRecords;
     }
 }

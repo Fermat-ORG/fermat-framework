@@ -53,6 +53,7 @@ public class WalletContactsMiddlewareDatabaseFactory {
             table.addColumn(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME , DatabaseDataType.STRING,  50, Boolean.FALSE);
             table.addColumn(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME  , DatabaseDataType.STRING,  50, Boolean.FALSE);
             table.addColumn(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, Boolean.FALSE);
+            table.addColumn(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_COMPATIBILITY_COLUMN_NAME    , DatabaseDataType.STRING,  10, Boolean.FALSE);
 
             table.addIndex(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_FIRST_KEY_COLUMN);
 
