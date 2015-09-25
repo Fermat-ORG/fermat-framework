@@ -21,9 +21,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.IncomingTemplateNetworkServiceMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
@@ -79,19 +78,19 @@ public class IncomingMessageDao {
     }
 
     /**
-     * Method that find an IncomingTemplateNetworkServiceMessage by id in the data base.
+     * Method that find an FermatMessage by id in the data base.
      *
      * @param id Long id.
-     * @return IncomingTemplateNetworkServiceMessage found.
+     * @return FermatMessage found.
      * @throws CantReadRecordDataBaseException
      */
-    public IncomingTemplateNetworkServiceMessage findById(String id) throws CantReadRecordDataBaseException {
+    public FermatMessage findById(String id) throws CantReadRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = null;
+        FermatMessage incomingTemplateNetworkServiceMessage = null;
 
         try {
 
@@ -99,7 +98,7 @@ public class IncomingMessageDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.setStringFilter(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -109,12 +108,12 @@ public class IncomingMessageDao {
 
 
             /*
-             * 3 - Convert into IncomingTemplateNetworkServiceMessage objects
+             * 3 - Convert into FermatMessage objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 3.1 - Create and configure a  IncomingTemplateNetworkServiceMessage
+                 * 3.1 - Create and configure a  FermatMessage
                  */
                 incomingTemplateNetworkServiceMessage = constructFrom(record);
             }
@@ -139,12 +138,12 @@ public class IncomingMessageDao {
     /**
      * Method that list the all entities on the data base.
      *
-     * @return All IncomingTemplateNetworkServiceMessage.
+     * @return All FermatMessage.
      * @throws CantReadRecordDataBaseException
      */
-    public List<IncomingTemplateNetworkServiceMessage> findAll() throws CantReadRecordDataBaseException {
+    public List<FermatMessage> findAll() throws CantReadRecordDataBaseException {
 
-        List<IncomingTemplateNetworkServiceMessage> list = null;
+        List<FermatMessage> list = null;
         try {
             /*
              * 1 - load the data base to memory
@@ -156,18 +155,18 @@ public class IncomingMessageDao {
              */
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
             /*
-             * 3 - Create a list of IncomingTemplateNetworkServiceMessage objects
+             * 3 - Create a list of FermatMessage objects
              */
             list = new ArrayList<>();
             list.clear();
             /*
-             * 4 - Convert into IncomingTemplateNetworkServiceMessage objects
+             * 4 - Convert into FermatMessage objects
              */
             for (DatabaseTableRecord record : records) {
                 /*
-                 * 4.1 - Create and configure a  IncomingTemplateNetworkServiceMessage
+                 * 4.1 - Create and configure a  FermatMessage
                  */
-                IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
+                FermatMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
                 /*
                  * 4.2 - Add to the list
                  */
@@ -197,11 +196,11 @@ public class IncomingMessageDao {
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
      *
-     * @return All IncomingTemplateNetworkServiceMessage.
+     * @return All FermatMessage.
      * @throws CantReadRecordDataBaseException
      * @see TemplateNetworkServiceDatabaseConstants
      */
-    public List<IncomingTemplateNetworkServiceMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<FermatMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -212,7 +211,7 @@ public class IncomingMessageDao {
         }
 
 
-        List<IncomingTemplateNetworkServiceMessage> list = null;
+        List<FermatMessage> list = null;
 
         try {
 
@@ -229,20 +228,20 @@ public class IncomingMessageDao {
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 3 - Create a list of IncomingTemplateNetworkServiceMessage objects
+             * 3 - Create a list of FermatMessage objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into IncomingTemplateNetworkServiceMessage objects
+             * 4 - Convert into FermatMessage objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 4.1 - Create and configure a  IncomingTemplateNetworkServiceMessage
+                 * 4.1 - Create and configure a  FermatMessage
                  */
-                IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
+                FermatMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -276,11 +275,11 @@ public class IncomingMessageDao {
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
      *
-     * @return All IncomingTemplateNetworkServiceMessage.
+     * @return All FermatMessage.
      * @throws CantReadRecordDataBaseException
      * @see TemplateNetworkServiceDatabaseConstants
      */
-    public List<IncomingTemplateNetworkServiceMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<FermatMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()) {
@@ -289,7 +288,7 @@ public class IncomingMessageDao {
         }
 
 
-        List<IncomingTemplateNetworkServiceMessage> list = null;
+        List<FermatMessage> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -323,20 +322,20 @@ public class IncomingMessageDao {
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 4 - Create a list of IncomingTemplateNetworkServiceMessage objects
+             * 4 - Create a list of FermatMessage objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into IncomingTemplateNetworkServiceMessage objects
+             * 5 - Convert into FermatMessage objects
              */
             for (DatabaseTableRecord record : records) {
 
                 /*
-                 * 5.1 - Create and configure a  IncomingTemplateNetworkServiceMessage
+                 * 5.1 - Create and configure a  FermatMessage
                  */
-                IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
+                FermatMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -368,10 +367,10 @@ public class IncomingMessageDao {
     /**
      * Method that create a new entity in the data base.
      *
-     * @param entity IncomingTemplateNetworkServiceMessage to create.
+     * @param entity FermatMessage to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(IncomingTemplateNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
+    public void create(FermatMessage entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -408,10 +407,10 @@ public class IncomingMessageDao {
     /**
      * Method that update an entity in the data base.
      *
-     * @param entity IncomingTemplateNetworkServiceMessage to update.
+     * @param entity FermatMessage to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(IncomingTemplateNetworkServiceMessage entity) throws CantUpdateRecordDataBaseException {
+    public void update(FermatMessage entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -483,24 +482,24 @@ public class IncomingMessageDao {
 
     /**
      * @param record with values from the table
-     * @return IncomingTemplateNetworkServiceMessage setters the values from table
+     * @return FermatMessage setters the values from table
      */
-    private IncomingTemplateNetworkServiceMessage constructFrom(DatabaseTableRecord record) {
+    private FermatMessage constructFrom(DatabaseTableRecord record) {
 
-        IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = new IncomingTemplateNetworkServiceMessage();
+        FermatMessageCommunication incomingTemplateNetworkServiceMessage = new FermatMessageCommunication();
 
         try {
 
-            incomingTemplateNetworkServiceMessage.setId(UUID.fromString(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME)));
-            incomingTemplateNetworkServiceMessage.setSender(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME));
-            ;
-            incomingTemplateNetworkServiceMessage.setContent(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setFermatMessageContentType((FermatMessageContentType.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME))));
-            incomingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-            incomingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
-            ;
-            incomingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setId(UUID.fromString(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setSender(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME));
+            incomingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
+
+            incomingTemplateNetworkServiceMessage.setContent(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
+            incomingTemplateNetworkServiceMessage.setFermatMessageContentType((FermatMessageContentType.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME))));
+            incomingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
+
+            incomingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
@@ -512,13 +511,13 @@ public class IncomingMessageDao {
     }
 
     /**
-     * Construct a DatabaseTableRecord whit the values of the a IncomingTemplateNetworkServiceMessage pass
+     * Construct a DatabaseTableRecord whit the values of the a FermatMessage pass
      * by parameter
      *
      * @param incomingTemplateNetworkServiceMessage the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage) {
+    private DatabaseTableRecord constructFrom(FermatMessage incomingTemplateNetworkServiceMessage) {
 
         /*
          * Create the record to the entity
@@ -528,14 +527,25 @@ public class IncomingMessageDao {
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getId().toString());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getSender().toString());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getContent());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
-        entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
-        entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getId().toString());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getSender().toString());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getReceiver().toString());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getContent());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
+
+        if (incomingTemplateNetworkServiceMessage.getShippingTimestamp() != null){
+            entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
+        }else {
+            entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, new Long(0));
+        }
+
+        if (incomingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null){
+            entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
+        }else {
+            entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, new Long(0));
+        }
+
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
 
         /*
          * return the new table record

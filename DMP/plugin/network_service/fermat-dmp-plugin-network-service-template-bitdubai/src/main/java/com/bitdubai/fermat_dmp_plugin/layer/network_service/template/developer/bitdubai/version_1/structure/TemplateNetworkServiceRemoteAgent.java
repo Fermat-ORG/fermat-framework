@@ -16,6 +16,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -200,30 +201,26 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
 
-                    /*
-                     *  Cast the message to IncomingTemplateNetworkServiceMessage
-                     */
-                    IncomingTemplateNetworkServiceMessage incomingTemplateNetworkServiceMessage = (IncomingTemplateNetworkServiceMessage) message;
 
                     /*
                      * Validate the message signature
                      */
-                    AsymmectricCryptography.verifyMessageSignature(incomingTemplateNetworkServiceMessage.getSignature(), incomingTemplateNetworkServiceMessage.getContent(), remoteNetworkServicePublicKey);
+                    AsymmectricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), remoteNetworkServicePublicKey);
 
                     /*
                      * Decrypt the message content
                      */
-                    incomingTemplateNetworkServiceMessage.setContent(AsymmectricCryptography.decryptMessagePrivateKey(incomingTemplateNetworkServiceMessage.getContent(), eccKeyPair.getPrivateKey()));
+                    ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
 
                     /*
                      * Change to the new status
                      */
-                    incomingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.NEW_RECEIVED);
+                    ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.NEW_RECEIVED);
 
                     /*
                      * Save to the data base table
                      */
-                    incomingMessageDao.create(incomingTemplateNetworkServiceMessage);
+                    incomingMessageDao.create(message);
 
                     /*
                      * Remove the message from the queue
@@ -262,17 +259,17 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                 try {
 
                     Map<String, Object> filters = new HashMap<>();
-                    filters.put(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-                    filters.put(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
+                    filters.put(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+                    filters.put(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
 
                     /*
                      * Read all pending message from database
                      */
-                    List<OutgoingTemplateNetworkServiceMessage> messages = outgoingMessageDao.findAll(filters);
+                    List<FermatMessage> messages = outgoingMessageDao.findAll();
                     /*
                      * For each message
                      */
-                    for (OutgoingTemplateNetworkServiceMessage message: messages){
+                    for (FermatMessage message: messages){
 
 
                         if (communicationsVPNConnection.isActive()) {
@@ -280,7 +277,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Encrypt the content of the message whit the remote public key
                              */
-                            message.setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), remoteNetworkServicePublicKey));
+                            ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), remoteNetworkServicePublicKey));
 
                             /*
                              * Sing the message
@@ -295,7 +292,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Change the message and update in the data base
                              */
-                            message.setFermatMessagesStatus(FermatMessagesStatus.SENT);
+                            ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                             outgoingMessageDao.update(message);
                         }
                     }

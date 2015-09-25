@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInitializeNetworkTemplateDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,23 +67,22 @@ public class TemplateNetworkServiceDeveloperDatabaseFactory implements DealsWith
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeNetworkTemplateDataBaseException
+     * @throws CantInitializeTemplateNetworkServiceDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeNetworkTemplateDataBaseException {
+    public void initializeDatabase() throws CantInitializeTemplateNetworkServiceDatabaseException {
         try {
 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-            database.closeDatabase();
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeNetworkTemplateDataBaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -97,13 +96,12 @@ public class TemplateNetworkServiceDeveloperDatabaseFactory implements DealsWith
                   /*
                    * We create the new database
                    */
-                database = templateNetworkServiceDatabaseFactory.createDatabase(pluginId);
-                database.closeDatabase();
+                database = templateNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeNetworkTemplateDataBaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -114,7 +112,7 @@ public class TemplateNetworkServiceDeveloperDatabaseFactory implements DealsWith
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Template", this.pluginId.toString()));
         return databases;
     }
 
@@ -123,46 +121,45 @@ public class TemplateNetworkServiceDeveloperDatabaseFactory implements DealsWith
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table incoming_messages columns.
+         * Table incoming messages columns.
          */
-        List<String> incoming_messages_columns = new ArrayList<String>();
+        List<String> incomingmessagesColumns = new ArrayList<String>();
 
-        incoming_messages_columns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME);
-        incoming_messages_columns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME);
-        incoming_messages_columns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME);
-        incoming_messages_columns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME);
-        incoming_messages_columns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME);
-        incoming_messages_columns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME);
-        incoming_messages_columns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME);
-        incoming_messages_columns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME);
-
-        
+        incomingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME);
+        incomingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        incomingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
+        incomingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
+        incomingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME);
+        incomingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+        incomingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+        incomingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME);
         /**
-         * Table incoming_messages addition.
+         * Table incoming messages addition.
          */
-        DeveloperDatabaseTable incoming_messages_table = developerObjectFactory.getNewDeveloperDatabaseTable(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incoming_messages_columns);
-        tables.add(incoming_messages_table);
+        DeveloperDatabaseTable incomingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incomingmessagesColumns);
+        tables.add(incomingmessagesTable);
 
         /**
-         * Table outgoing_messages columns.
+         * Table outgoing messages columns.
          */
-        List<String> outgoing_messages_columns = new ArrayList<String>();
+        List<String> outgoingmessagesColumns = new ArrayList<String>();
 
-        outgoing_messages_columns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_ID_COLUMN_NAME);
-        outgoing_messages_columns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME);
-        outgoing_messages_columns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME);
-        outgoing_messages_columns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME);
-        outgoing_messages_columns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_TYPE_COLUMN_NAME);
-        outgoing_messages_columns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME);
-        outgoing_messages_columns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME);
-        outgoing_messages_columns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME);
-        
+        outgoingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME);
+        outgoingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        outgoingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
+        outgoingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
+        outgoingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME);
+        outgoingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+        outgoingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+        outgoingmessagesColumns.add(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
         /**
-         * Table outgoing_messages addition.
+         * Table outgoing messages addition.
          */
-        DeveloperDatabaseTable outgoing_messages_table = developerObjectFactory.getNewDeveloperDatabaseTable(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoing_messages_columns);
-        tables.add(outgoing_messages_table);
-        
+        DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingmessagesColumns);
+        tables.add(outgoingmessagesTable);
+
+
+
         return tables;
     }
 
@@ -180,13 +177,10 @@ public class TemplateNetworkServiceDeveloperDatabaseFactory implements DealsWith
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
-            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
             /**
              * if there was an error, I will returned an empty list.
              */
-            database.closeDatabase();
             return returnedRecords;
         }
 
@@ -200,7 +194,7 @@ public class TemplateNetworkServiceDeveloperDatabaseFactory implements DealsWith
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue());
+                developerRow.add(field.getValue().toString());
             }
             /**
              * I create the Developer Database record
