@@ -345,7 +345,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
             digitalAsset.setResources(assetFactory.getResources());
             //Actualiza el State a Pending_Final del objeto assetFactory
-            assetFactory.setState(State.PENDING_FINAL);
+            assetFactory.setState(State.DRAFT);
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
 

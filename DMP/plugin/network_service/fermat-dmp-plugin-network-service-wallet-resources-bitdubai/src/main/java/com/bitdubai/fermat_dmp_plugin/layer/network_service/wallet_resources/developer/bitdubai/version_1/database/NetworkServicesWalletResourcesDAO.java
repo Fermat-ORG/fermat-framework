@@ -49,7 +49,7 @@ public class NetworkServicesWalletResourcesDAO {
      * @param databaseName database name
      * @throws
      */
-    public void initializeDatabase(UUID ownerId, String databaseName) throws com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException {
+    public void initializeDatabase(UUID ownerId, String databaseName) throws CantInitializeNetworkServicesWalletResourcesDatabaseException {
         try {
              /*
               * Open new database connection

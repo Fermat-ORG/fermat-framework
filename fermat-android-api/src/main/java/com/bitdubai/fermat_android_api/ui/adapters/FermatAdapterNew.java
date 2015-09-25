@@ -50,12 +50,140 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
     @Override
     public H onCreateViewHolder(ViewGroup viewGroup, int type) {
         //pensar como sería sin esto
+        String layout = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                "<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
+                "    android:orientation=\"horizontal\" android:layout_width=\"match_parent\"\n" +
+                "    android:layout_height=\"wrap_content\"\n" +
+                "    android:background=\"#aafbca\"\n" +
+                "    >\n" +
+                "\n" +
+                "    <TextView\n" +
+                "        android:layout_width=\"7dp\"\n" +
+                "        android:layout_height=\"match_parent\"\n" +
+                "        android:background=\"#ab31a4\"\n" +
+                "        />\n" +
+                "\n" +
+                "    <ImageView\n" +
+                "        android:layout_width=\"100dp\"\n" +
+                "        android:layout_height=\"100dp\"\n" +
+                "        android:src=\"@drawable/mati_profile\"\n" +
+                "        android:layout_marginLeft=\"20dp\"\n" +
+                "        android:layout_marginTop=\"30dp\"\n" +
+                "        android:layout_marginBottom=\"30dp\"\n" +
+                "        android:id=\"@+id/imageView_contact\"\n" +
+                "        android:background=\"#122222\"\n" +
+                "\n" +
+                "        />\n" +
+                "\n" +
+                "    <LinearLayout\n" +
+                "        android:layout_width=\"wrap_content\"\n" +
+                "        android:layout_height=\"match_parent\"\n" +
+                "        android:orientation=\"vertical\"\n" +
+                "        android:layout_marginLeft=\"7dp\"\n" +
+                "        android:paddingLeft=\"20dp\"\n" +
+                "        android:paddingTop=\"20dp\"\n" +
+                "        android:background=\"#1222a2\">\n" +
+                "\n" +
+                "        <TextView\n" +
+                "            android:layout_width=\"wrap_content\"\n" +
+                "            android:layout_height=\"wrap_content\"\n" +
+                "            android:text=\"25 btc\"\n" +
+                "            android:id=\"@+id/txt_amount\"\n" +
+                "            android:background=\"#12a222\"\n" +
+                "            />\n" +
+                "\n" +
+                "        <TextView\n" +
+                "            android:layout_width=\"wrap_content\"\n" +
+                "            android:layout_height=\"wrap_content\"\n" +
+                "            android:text=\"Matias Furszyfer\"\n" +
+                "            android:id=\"@+id/txt_contact_name\"\n" +
+                "            android:background=\"#12a222\"\n" +
+                "            />\n" +
+                "\n" +
+                "    </LinearLayout>\n" +
+                "\n" +
+                "    <LinearLayout\n" +
+                "        android:layout_width=\"match_parent\"\n" +
+                "        android:layout_height=\"match_parent\"\n" +
+                "        android:orientation=\"vertical\"\n" +
+                "        android:paddingTop=\"20dp\"\n" +
+                "        android:paddingRight=\"5dp\"\n" +
+                "        android:background=\"#aa2222\"\n" +
+                "        >\n" +
+                "        <LinearLayout\n" +
+                "            android:layout_width=\"match_parent\"\n" +
+                "            android:layout_height=\"wrap_content\"\n" +
+                "            android:orientation=\"vertical\"\n" +
+                "            android:gravity=\"right\"\n" +
+                "            android:background=\"#aaaaaa\">\n" +
+                "\n" +
+                "            <TextView\n" +
+                "                android:layout_width=\"wrap_content\"\n" +
+                "                android:layout_height=\"wrap_content\"\n" +
+                "                android:text=\"Conference ticket\"\n" +
+                "                android:id=\"@+id/txt_notes\"\n" +
+                "                />\n" +
+                "\n" +
+                "            <TextView\n" +
+                "                android:layout_width=\"wrap_content\"\n" +
+                "                android:layout_height=\"wrap_content\"\n" +
+                "                android:text=\"09 ago 2015\"\n" +
+                "                android:id=\"@+id/txt_time\"\n" +
+                "                />\n" +
+                "\n" +
+                "        </LinearLayout>\n" +
+                "\n" +
+                "\n" +
+                "        <LinearLayout\n" +
+                "            android:layout_width=\"match_parent\"\n" +
+                "            android:layout_height=\"wrap_content\"\n" +
+                "            android:layout_marginTop=\"20dp\"\n" +
+                "            android:background=\"#acacee\">\n" +
+                "\n" +
+                "            <Button\n" +
+                "                android:layout_width=\"wrap_content\"\n" +
+                "                android:layout_height=\"wrap_content\"\n" +
+                "                android:text=\"Refuse\"\n" +
+                "                android:textSize=\"10dp\"\n" +
+                "                android:id=\"@+id/btn_refuse_request\"\n" +
+                "                android:layout_marginRight=\"5dp\"\n" +
+                "                android:background=\"@null\"\n" +
+                "                android:padding=\"2dp\"/>\n" +
+                "\n" +
+                "\n" +
+                "            <Button\n" +
+                "                android:layout_width=\"wrap_content\"\n" +
+                "                android:layout_height=\"wrap_content\"\n" +
+                "                android:text=\"Accept\"\n" +
+                "                android:textSize=\"10dp\"\n" +
+                "                android:id=\"@+id/btn_accept_request\"\n" +
+                "                android:background=\"@null\"/>\n" +
+                "\n" +
+                "\n" +
+                "        </LinearLayout>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "    </LinearLayout>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "</LinearLayout>";
         try{
-            return createHolder(viewInflater.inflate(resourceProviderManager.getLayoutResource(getCardViewResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"), "reference_wallet")),type);
+
+
+            //return createHolder(viewInflater.inflate(resourceProviderManager.getLayoutResource(getCardViewResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"), "reference_wallet")),type);
+
+           return createHolder(viewInflater.inflate(layout),type);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return createHolder(viewInflater.inflate(layout),type);
         //return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(), viewGroup, false), type);
     }
 

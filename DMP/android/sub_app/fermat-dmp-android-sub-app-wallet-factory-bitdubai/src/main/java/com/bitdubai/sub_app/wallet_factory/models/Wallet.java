@@ -16,10 +16,7 @@ import java.util.List;
 public class Wallet implements InstalledWallet {
 
 
-
     private WalletNavigationStructure walletNavigationStructure;
-
-
 
     @Override
     public List<InstalledLanguage> getLanguagesId() {

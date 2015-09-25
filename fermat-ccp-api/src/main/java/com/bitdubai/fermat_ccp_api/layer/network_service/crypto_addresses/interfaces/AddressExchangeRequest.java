@@ -9,35 +9,31 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.
 import java.util.UUID;
 
 /**
- * The interface <code>PendingAddressExchangeRequest</code>
+ * The interface <code>AddressExchangeRequest</code>
  * provides al the methods to get the information of a pending address exchange request.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/2015.
  */
-public interface PendingAddressExchangeRequest {
+public interface AddressExchangeRequest {
 
     UUID getRequestId();
 
     String getWalletPublicKey();
 
-    Actors getRequesterActorType();
+    Actors getIdentityTypeRequesting();
 
-    Actors getActorToType();
+    Actors getIdentityTypeAccepting();
 
-    String getRequesterActorPublicKey();
+    String getIdentityPublicKeyRequesting();
 
-    String getActorToRequestPublicKey();
+    String getIdentityPublicKeyAccepting();
 
-    CryptoAddress getCryptoAddressToSend();
+    CryptoAddress getCryptoAddressFromRequest();
 
-    CryptoAddress getCryptoAddressReceived();
-
-    CryptoCurrency getCryptoCurrency();
+    CryptoAddress getCryptoAddressFromResponse();
 
     BlockchainNetworkType getBlockchainNetworkType();
 
     AddressExchangeRequestState getState();
-
-    String getResult();
 
 }

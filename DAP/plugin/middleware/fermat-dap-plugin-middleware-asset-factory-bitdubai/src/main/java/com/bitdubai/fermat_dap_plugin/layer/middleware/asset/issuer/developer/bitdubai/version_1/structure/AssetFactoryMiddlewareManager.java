@@ -382,12 +382,13 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
                 assetFactory.setState(State.PENDING_FINAL);
                 saveAssetFactory(assetFactory);
                 //Llama al metodo AssetIssuer de la transaction
-                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
+                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(),"walletPublicKey", blockchainNetworkType);
             }
             else
             {
                 throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }
+
         }catch (CantIssueDigitalAssetsException e){
             e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: issueAssets");
