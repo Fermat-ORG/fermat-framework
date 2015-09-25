@@ -93,4 +93,10 @@ public class OutgoingIntraUserTransactionManager implements IntraUserCryptoTrans
             throw new OutgoingIntraUserCantSendFundsExceptions("An unexpected exception happened", FermatException.wrapException(e),"","");
         }
     }
+
+    @Override
+    public String sendCrypto(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String op_Return, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType, ReferenceWallet referenceWallet) throws OutgoingIntraUserCantSendFundsExceptions, OutgoingIntraUserInsufficientFundsException {
+        //todo Rodrigo will implement this in the future
+        return null;
+    }
 }
