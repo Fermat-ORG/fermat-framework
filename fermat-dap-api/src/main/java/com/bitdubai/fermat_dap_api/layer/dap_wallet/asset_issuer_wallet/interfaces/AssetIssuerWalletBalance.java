@@ -9,11 +9,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptio
  */
 public interface AssetIssuerWalletBalance {
 
-    //TODO: Documentar y excepciones
-    String getWalletPublicKey(); //TODO: Revisar esto
-
-    String getDigitalAssetPublicKey(); //TODO: Revisar esto
-
+    //TODO: Documentar
     long getBalance()  throws CantCalculateBalanceException;
 
     void debit(AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord) throws CantRegisterDebitException; //TODO: Debemos de definir la estructura de la transaccion

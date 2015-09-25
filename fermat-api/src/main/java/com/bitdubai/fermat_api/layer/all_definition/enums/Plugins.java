@@ -86,6 +86,7 @@ public enum Plugins {
     BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI),
 
     BITDUBAI_ASSET_ISSUING_TRANSACTION("BAIT", Developers.BITDUBAI),
+    BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION("BAID", Developers.BITDUBAI),
 
     BITDUBAI_DAP_ISSUER_ACTOR_LAYER("BDAPIAL",Developers.BITDUBAI),
     BITDUBAI_DAP_USER_ACTOR_LAYER("BDAPUAL",Developers.BITDUBAI),
@@ -271,6 +272,8 @@ public enum Plugins {
                 return BITDUBAI_MIDDLEWARE_NOTIFICATION;
             case "BAIT":
                 return BITDUBAI_ASSET_ISSUING_TRANSACTION;
+            case "BAID":
+                return BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION;
             case "BDAPIAL":
                 return BITDUBAI_DAP_ISSUER_ACTOR_LAYER;
             case "BDAPUAL":

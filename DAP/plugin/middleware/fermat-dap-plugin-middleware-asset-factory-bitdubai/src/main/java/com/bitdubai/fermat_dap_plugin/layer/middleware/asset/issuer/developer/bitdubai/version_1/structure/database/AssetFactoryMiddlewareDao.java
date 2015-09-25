@@ -579,7 +579,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                 List<ContractProperty> contractProperties =  new ArrayList<>();
                 // I will add the contract properties information from database
                 for (DatabaseTableRecord contractpropertyRecords : getContractsData(assetFactory.getPublicKey())) {
-                    //TODO: Revisar este objeto contractProperty
+
                     ContractProperty contractProperty = new ContractProperty(null, null);
 
                     contractProperty.setName(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN));
