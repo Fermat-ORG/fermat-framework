@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
+
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 
@@ -39,11 +40,10 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
     /**
      * This method let us get an skin file referenced by its name
      *
-     * @param fileName the name of the Skin file (without the path structure).
      * @return The content of the file
      * @throws CantGetSkinFileException
      */
-    public Skin getSkinFile(String fileName,UUID skinId,String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
+    public Skin getSkinFile(UUID skinId,String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -52,7 +52,10 @@ public interface WalletResourcesProviderManager extends ResourceProviderManager{
      * @return The content of the file
      * @throws CantGetLanguageFileException
      */
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException;
+    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException;
+
+
+     Language getLanguage(UUID skinId, String walletPublicKey,String languageName) throws CantGetLanguageFileException;
 
 
     /**

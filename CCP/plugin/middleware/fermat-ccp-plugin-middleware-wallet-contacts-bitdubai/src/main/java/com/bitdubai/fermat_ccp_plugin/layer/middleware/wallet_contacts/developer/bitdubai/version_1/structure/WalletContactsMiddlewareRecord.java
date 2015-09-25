@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
@@ -19,42 +20,16 @@ import java.util.UUID;
  */
 public class WalletContactsMiddlewareRecord implements WalletContactRecord {
 
-    /**
-     * Represent the contact id
-     */
-    private UUID contactId;
-
-    /**
-     * Represent the id of the wallet
-     */
-    private String walletPublicKey;
-
-    /**
-     * Represent the actor public key
-     */
-    private String actorPublicKey;
-
-    /**
-     * Represent the actorFirstName
-     */
-    private String actorFirstName;
-
-    /**
-     * Represent the actorFirstName
-     */
-    private String actorLastName;
-
-    /**
-     * Represent the actorFirstName
-     */
-    private String actorAlias;
-
-    /**
-     * Represent the actorType
-     */
-    private Actors actorType;
-
+    private String              actorAlias     ;
+    private String              actorFirstName ;
+    private String              actorLastName  ;
+    private String              actorPublicKey ;
+    private Actors              actorType      ;
+    private Compatibility       compatibility  ;
     private List<CryptoAddress> cryptoAddresses;
+    private UUID                contactId      ;
+
+    private String        walletPublicKey;
 
     /**
      * Constructor with parameters
@@ -76,34 +51,25 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
         this.cryptoAddresses = cryptoAddresses;
     }
 
-    /**
-     * Constructor with parameters
-     *
-     * @param contactId first key
-     * @param actorPublicKey actor's public key
-     * @param actorAlias alias of the actor
-     * @param actorFirstName first name of the actor
-     * @param actorLastName last name of the actor
-     * @param actorType actor's type
-     * @param cryptoAddresses contact's cryptoAddresses (address + cryptoCurrency)
-     * @param walletPublicKey wallet's public Key
-     */
-    public WalletContactsMiddlewareRecord(UUID contactId,
-                                          String actorPublicKey,
-                                          String actorAlias,
-                                          String actorFirstName,
-                                          String actorLastName,
-                                          Actors actorType,
+    public WalletContactsMiddlewareRecord(UUID                contactId      ,
+                                          String              actorPublicKey ,
+                                          String              actorAlias     ,
+                                          String              actorFirstName ,
+                                          String              actorLastName  ,
+                                          Actors              actorType      ,
                                           List<CryptoAddress> cryptoAddresses,
-                                          String walletPublicKey) {
-        this.contactId = contactId;
-        this.actorPublicKey = actorPublicKey;
-        this.actorAlias = actorAlias;
-        this.actorFirstName = actorFirstName;
-        this.actorLastName = actorLastName;
-        this.actorType = actorType;
+                                          String              walletPublicKey,
+                                          Compatibility       compatibility  ) {
+
+        this.contactId       = contactId      ;
+        this.actorPublicKey  = actorPublicKey ;
+        this.actorAlias      = actorAlias     ;
+        this.actorFirstName  = actorFirstName ;
+        this.actorLastName   = actorLastName  ;
+        this.actorType       = actorType      ;
         this.cryptoAddresses = cryptoAddresses;
         this.walletPublicKey = walletPublicKey;
+        this.compatibility   = compatibility  ;
     }
 
     @Override
@@ -144,5 +110,10 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     @Override
     public UUID getContactId() {
         return contactId;
+    }
+
+    @Override
+    public Compatibility getCompatibility() {
+        return compatibility;
     }
 }

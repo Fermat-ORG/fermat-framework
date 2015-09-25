@@ -12,11 +12,11 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.Wa
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantHandleCryptoAddressRequestEventException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantIdentifyVaultException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -58,7 +58,7 @@ public class IntraUserIdentityCryptoAddressGenerationService {
     public void handleCryptoAddressRequestedEvent(UUID requestId) throws CantHandleCryptoAddressRequestEventException {
 
         try {
-            PendingAddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
+            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
             handleCryptoAddressRequestedEvent(request);
         } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
 
@@ -66,19 +66,19 @@ public class IntraUserIdentityCryptoAddressGenerationService {
         }
     }
 
-    public void handleCryptoAddressRequestedEvent(PendingAddressExchangeRequest request) throws CantHandleCryptoAddressRequestEventException {
+    public void handleCryptoAddressRequestedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressRequestEventException {
 
         try {
 
             InstalledWallet wallet = walletManagerManager.getDefaultWallet(
-                    request.getCryptoCurrency(),
+                    request.getCryptoAddressFromRequest().getCryptoCurrency(),
                     actorType,
                     request.getBlockchainNetworkType()
             );
 
             if (wallet != null) {
 
-                CryptoCurrencyVault cryptoCurrencyVault = CryptoCurrencyVault.getByCryptoCurrency(request.getCryptoCurrency());
+                CryptoCurrencyVault cryptoCurrencyVault = CryptoCurrencyVault.getByCryptoCurrency(request.getCryptoAddressFromRequest().getCryptoCurrency());
 
                 CryptoVaultManager vault = vaultAdministrator.getVault(cryptoCurrencyVault);
 
@@ -88,10 +88,10 @@ public class IntraUserIdentityCryptoAddressGenerationService {
 
                 cryptoAddressBookManager.registerCryptoAddress(
                         cryptoAddress,
-                        request.getActorToRequestPublicKey(),
-                        request.getActorToType(),
-                        request.getRequesterActorPublicKey(),
-                        request.getRequesterActorType(),
+                        request.getIdentityPublicKeyAccepting(),
+                        request.getIdentityTypeAccepting(),
+                        request.getIdentityPublicKeyRequesting(),
+                        request.getIdentityTypeRequesting(),
                         wallet.getPlatform(),
                         cryptoCurrencyVault.getVaultType(),
                         cryptoCurrencyVault.getCode(),
@@ -111,7 +111,7 @@ public class IntraUserIdentityCryptoAddressGenerationService {
                  CantAcceptAddressExchangeRequestException    |
                  CantRegisterCryptoAddressBookRecordException |
                  CallToGetByCodeOnNONEException               |
-                 InvalidParameterException e) {
+                 InvalidParameterException e                  ) {
 
             throw new CantHandleCryptoAddressRequestEventException(e);
         } catch (CantIdentifyVaultException e) {
