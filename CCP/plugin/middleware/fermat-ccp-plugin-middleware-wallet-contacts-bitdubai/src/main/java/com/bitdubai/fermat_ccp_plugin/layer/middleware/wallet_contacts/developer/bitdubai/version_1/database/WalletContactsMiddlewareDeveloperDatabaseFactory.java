@@ -32,105 +32,82 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class WalletContactsMiddlewareDeveloperDatabaseFactory {
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID                 pluginId            ;
 
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    UUID pluginId;
+    private Database database;
 
+    public WalletContactsMiddlewareDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
+                                                            final UUID                 pluginId            ) {
 
-    Database database;
-
-    /**
-     * Constructor
-     *
-     * @param pluginDatabaseSystem
-     * @param pluginId
-     */
-    public WalletContactsMiddlewareDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+        this.pluginId             = pluginId            ;
     }
 
-    /**
-     * This method open or creates the database i'll be working with
-     *
-     * @throws CantInitializeWalletContactsMiddlewareDatabaseException
-     */
     public void initializeDatabase() throws CantInitializeWalletContactsMiddlewareDatabaseException {
         try {
 
-             /*
-              * Open new database connection
-              */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(
+                pluginId,
+                pluginId.toString()
+            );
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-             /*
-              * The database exists but cannot be open. I can not handle this situation.
-              */
             throw new CantInitializeWalletContactsMiddlewareDatabaseException(cantOpenDatabaseException.getMessage());
-
         } catch (DatabaseNotFoundException e) {
 
-             /*
-              * The database no exist may be the first time the plugin is running on this device,
-              * We need to create the new database
-              */
             WalletContactsMiddlewareDatabaseFactory walletContactsMiddlewareDatabaseFactory = new WalletContactsMiddlewareDatabaseFactory(pluginDatabaseSystem);
 
             try {
-                  /*
-                   * We create the new database
-                   */
-                database = walletContactsMiddlewareDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+
+                database = walletContactsMiddlewareDatabaseFactory.createDatabase(
+                        pluginId,
+                        pluginId.toString()
+                );
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                  /*
-                   * The database cannot be created. I can not handle this situation.
-                   */
+
                 throw new CantInitializeWalletContactsMiddlewareDatabaseException(cantCreateDatabaseException.getMessage());
             }
-
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
             throw new CantInitializeWalletContactsMiddlewareDatabaseException(e.getMessage());
-
         }
     }
 
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        /**
-         * I only have one database on my plugin. I will return its name.
-         */
-        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Wallet Contacts", this.pluginId.toString()));
+
+        List<DeveloperDatabase> databases = new ArrayList<>();
+
+        databases.add(
+            developerObjectFactory.getNewDeveloperDatabase(
+                "Wallet Contacts",
+                this.pluginId.toString()
+            )
+        );
+
         return databases;
     }
 
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
-        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
+
+        List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
         /**
          * Table Wallet Contacts columns.
          */
-        List<String> walletContactsColumns = new ArrayList<String>();
+        List<String> walletContactsColumns = new ArrayList<>();
 
-        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME);
-        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
-        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_TYPE_COLUMN_NAME);
-        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME);
-        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME);
-        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME);
+        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_CONTACT_ID_COLUMN_NAME       );
+        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_PUBLIC_KEY_COLUMN_NAME );
+        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_TYPE_COLUMN_NAME       );
+        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_ALIAS_COLUMN_NAME      );
+        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_FIRST_NAME_COLUMN_NAME );
+        walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_ACTOR_LAST_NAME_COLUMN_NAME  );
         walletContactsColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACTS_WALLET_PUBLIC_KEY_COLUMN_NAME);
         /**
          * Table Wallet Contacts addition.
@@ -141,11 +118,12 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
         /**
          * Table Wallet Contact Addresses columns.
          */
-        List<String> walletContactAddressesColumns = new ArrayList<String>();
+        List<String> walletContactAddressesColumns = new ArrayList<>();
 
-        walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME);
-        walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME);
+        walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME     );
+        walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME );
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME);
+
         /**
          * Table Wallet Contact Addresses addition.
          */
@@ -159,57 +137,29 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
 
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
-        /**
-         * Will get the records for the given table
-         */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
 
+        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
 
-        /**
-         * I load the passed table name from the SQLite database.
-         */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
+
             selectedTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * if there was an error, I will returned an empty list.
-             */
+
             return returnedRecords;
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
+
+        List<String> developerRow = new ArrayList<>();
+
         for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
+
+            for (DatabaseRecord field : row.getValues())
+                developerRow.add(field.getValue());
+
             returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
         }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
         return returnedRecords;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 }
