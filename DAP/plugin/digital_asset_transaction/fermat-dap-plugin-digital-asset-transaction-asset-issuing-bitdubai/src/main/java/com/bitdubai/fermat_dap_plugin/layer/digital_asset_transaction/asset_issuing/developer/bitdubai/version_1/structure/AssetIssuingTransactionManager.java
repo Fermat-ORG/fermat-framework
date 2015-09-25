@@ -43,13 +43,16 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     PluginFileSystem pluginFileSystem;
     AssetVaultManager assetVaultManager;
+    String walletPublicKey;
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
                                           CryptoWallet cryptoWallet,
                                           PluginDatabaseSystem pluginDatabaseSystem,
                                           PluginFileSystem pluginFileSystem,
-                                          ErrorManager errorManager, AssetVaultManager assetVaultManager, CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                          ErrorManager errorManager,
+                                          AssetVaultManager assetVaultManager,
+                                          CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(cryptoWallet);
@@ -70,10 +73,10 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     }
 
     @Override
-    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
+    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String walletPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
         try {
             //TODO: check this method
-            this.digitalAssetCryptoTransactionFactory.issueDigitalAssets(digitalAssetToIssue, assetsAmount, blockchainNetworkType);
+            this.digitalAssetCryptoTransactionFactory.issueDigitalAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, blockchainNetworkType);
         } catch (CantIssueDigitalAssetsException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Creating a Digital Asset Transaction", "Check the cause");
         } catch(Exception exception){
