@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.wallet_factory.ui.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,13 +9,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.adapters.InstalledWalletsAdapter;
+import com.bitdubai.sub_app.wallet_factory.models.Wallet;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
+
+import java.util.ArrayList;
 
 /**
  * Available projects fragment to clone
@@ -27,6 +34,7 @@ public class AvailableProjectsFragmentTemp extends FermatFragment
         implements SwipeRefreshLayout.OnRefreshListener {
 
     private final String TAG = "FactoryProjects";
+
     /**
      * Manager
      */
@@ -46,6 +54,8 @@ public class AvailableProjectsFragmentTemp extends FermatFragment
     private RecyclerView.LayoutManager layoutManager;
     private InstalledWalletsAdapter adapter;
 
+    private ArrayList<Wallet> dataSet;
+
 
     @Nullable
     @Override
@@ -54,6 +64,7 @@ public class AvailableProjectsFragmentTemp extends FermatFragment
 
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipeRefresh.setOnRefreshListener(this);
+        swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
@@ -62,8 +73,17 @@ public class AvailableProjectsFragmentTemp extends FermatFragment
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new InstalledWalletsAdapter(getActivity());
+        recyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (!isRefreshing) {
+            onRefresh();
+        }
     }
 
     @Override
@@ -88,7 +108,49 @@ public class AvailableProjectsFragmentTemp extends FermatFragment
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
-            //// TODO: 24/09/15 reload data
+            isRefreshing = true;
+            swipeRefresh.setRefreshing(true);
+            new FermatWorker(getActivity(), new FermatWorkerCallBack() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void onPostExecute(Object... result) {
+                    isRefreshing = false;
+                    if (isAttached) {
+                        swipeRefresh.setRefreshing(false);
+                        if (result != null && result.length > 0) {
+                            dataSet = (ArrayList<Wallet>) result[0];
+                            adapter.changeDataSet(dataSet);
+                            showEmpty();
+                        }
+                    }
+                }
+
+                @Override
+                public void onErrorOccurred(Exception ex) {
+                    isRefreshing = false;
+                    if (isAttached) {
+                        swipeRefresh.setRefreshing(false);
+                        showEmpty();
+                    }
+                }
+            }) {
+
+                @Override
+                protected Object doInBackground() throws Exception {
+                    return null;
+                }
+
+            }.execute();
+        }
+    }
+
+    private void showEmpty() {
+        if (dataSet == null || dataSet.isEmpty()) {
+            rootView.findViewById(R.id.empty).setAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
+            rootView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+        } else if (dataSet.size() > 0) {
+            rootView.findViewById(R.id.empty).setAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+            rootView.findViewById(R.id.empty).setVisibility(View.GONE);
         }
     }
 }
