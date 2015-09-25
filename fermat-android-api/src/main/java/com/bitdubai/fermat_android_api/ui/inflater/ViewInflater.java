@@ -34,6 +34,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.android_api.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
@@ -65,17 +66,25 @@ public class ViewInflater {
         int idg;
 
         ResourceProviderManager resourceProviderManager;
-        
-        public ViewInflater(Context context, ResourceProviderManager resourceProviderManager) {
+
+
+        public ViewInflater(Context context) {
+                this.layoutStack = new Stack<ViewGroup>();
+                this.ids = new Hashtable<String, Integer>();
+                this.context = context;
+                this.idg = 0;
+        }
+
+        public ViewInflater(Context context,ResourceProviderManager resourceProviderManager) {
                 this.layoutStack = new Stack<ViewGroup>();
                 this.ids = new Hashtable<String, Integer>();
                 this.context = context;
                 this.idg = 0;
                 this.resourceProviderManager = resourceProviderManager;
         }
-        
+
         public View inflate(String text) {
-                XmlPullParser parse;            
+                XmlPullParser parse;
                 try {
                         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                         parse = factory.newPullParser();
@@ -84,60 +93,60 @@ public class ViewInflater {
                 }
                 catch (XmlPullParserException ex) { return null; }
                 catch (IOException ex) { ex.printStackTrace();
-                return null;}
+                        return null;}
         }
-        
-        public View inflate(XmlPullParser parse) 
-                        throws XmlPullParserException, IOException
-                        {
 
-                                try{
+        public View inflate(XmlPullParser parse)
+                throws XmlPullParserException, IOException
+        {
+
+                try{
 
 
-                layoutStack.clear();
-                ids.clear();
+                        layoutStack.clear();
+                        ids.clear();
 
-                Stack<StringBuffer> data = new Stack<StringBuffer>();
-                int evt = parse.getEventType();
-                View root = null;
-                while (evt != XmlPullParser.END_DOCUMENT) {
-                        switch (evt) {
-                        case XmlPullParser.START_DOCUMENT:
-                                data.clear();
-                                break;
-                        case XmlPullParser.START_TAG:
-                                data.push(new StringBuffer());
-                                View v = createView(parse);
-                                if (v == null)
-                                        continue;
-                                if (root == null) {
-                                        root = v;
+                        Stack<StringBuffer> data = new Stack<StringBuffer>();
+                        int evt = parse.getEventType();
+                        View root = null;
+                        while (evt != XmlPullParser.END_DOCUMENT) {
+                                switch (evt) {
+                                        case XmlPullParser.START_DOCUMENT:
+                                                data.clear();
+                                                break;
+                                        case XmlPullParser.START_TAG:
+                                                data.push(new StringBuffer());
+                                                View v = createView(parse);
+                                                if (v == null)
+                                                        continue;
+                                                if (root == null) {
+                                                        root = v;
+                                                }
+                                                else {
+                                                        layoutStack.peek().addView(v);
+                                                }
+                                                if (v instanceof ViewGroup) {
+                                                        layoutStack.push((ViewGroup)v);
+                                                }
+                                                break;
+                                        case XmlPullParser.TEXT:
+                                                data.peek().append(parse.getText());
+                                                break;
+                                        case XmlPullParser.END_TAG:
+                                                data.pop();
+                                                if (isLayout(parse.getName()))
+                                                        layoutStack.pop();
+
                                 }
-                                else {
-                                        layoutStack.peek().addView(v);
-                                }
-                                if (v instanceof ViewGroup) {
-                                        layoutStack.push((ViewGroup)v);
-                                }
-                                break;
-                        case XmlPullParser.TEXT:
-                                data.peek().append(parse.getText());
-                                break;
-                        case XmlPullParser.END_TAG:
-                                data.pop();
-                                if (isLayout(parse.getName()))
-                                        layoutStack.pop();
-
+                                evt = parse.next();
                         }
-                        evt = parse.next();
+                        return root;
+                }catch (IOException e){
+                        e.printStackTrace();
                 }
-                return root;
-                                }catch (IOException e){
-                                        e.printStackTrace();
-                                }
-                                return null;
-                        }
-        
+                return null;
+        }
+
         protected View createView(XmlPullParser parse) {
                 String name = parse.getName();
                 View result = null;
@@ -218,7 +227,9 @@ public class ViewInflater {
                         String src = findAttribute(atts, "android:src");
                         if (src != null) {
                                 //Picasso.with(context).load(R.drawable.person1).into(imageView);
-                                //imageView.setImageResource(R.drawable.person1);
+                                //resourceProviderManager.getImageResource("person1",null,null);
+                                //Bitmap bitmap = BitmapFactory.decodeByteArray()
+                                imageView.setImageResource(R.drawable.mati_profile);
                         }
                 }
 
@@ -305,7 +316,68 @@ public class ViewInflater {
 
         }
 
+        private void setPadding(View view,AttributeSet atts){
+            String padding = findAttribute(atts, "android:padding");
+            String paddingBottom = findAttribute(atts,"android:paddingBottom");
+            String paddingTop = findAttribute(atts, "android:paddingTop");
+            String paddingLeft = findAttribute(atts,"android:paddingLeft");
+            String paddingRight = findAttribute(atts, "android:paddingRight");
+
+            int paddingValue = 0;
+            int paddingLeftValue = 0;
+            int paddingTopValue = 0;
+            int paddingRightValue = 0;
+            int paddingBottomValue = 0;
+
+            if(padding!=null){
+                paddingValue = convertInIntegerValue(padding);
+            }
+            if(paddingBottom!=null){
+                paddingBottomValue = convertInIntegerValue(paddingBottom);
+            }
+            if(paddingTop!=null){
+                paddingTopValue = convertInIntegerValue(paddingTop);
+            }
+            if(paddingLeft!=null){
+                paddingLeftValue = convertInIntegerValue(paddingLeft);
+            }
+            if(paddingRight!=null){
+                paddingRightValue = convertInIntegerValue(paddingRight);
+            }
+
+
+            boolean[] deco = new boolean[4];
+
+            deco[0] = paddingLeftValue == 0;;
+            deco[1] = paddingTopValue == 0;
+            deco[2] = paddingRightValue == 0;
+            deco[3] = paddingBottomValue == 0;
+
+            if(deco[0]){
+                paddingLeftValue = paddingValue;
+            }
+            if(deco[1]){
+                paddingTopValue = paddingValue;
+            }
+            if(deco[2]){
+                paddingRightValue = paddingValue;
+            }
+            if(deco[3]){
+                paddingBottomValue = paddingValue;
+            }
+            view.setPadding(paddingLeftValue,paddingTopValue,paddingRightValue,paddingBottomValue);
+
+
+
+
+        }
+
+
+
         private void loadBasics(View view,AttributeSet atts){
+
+
+                setPadding(view,atts);
                 String value;
 
                 // background
@@ -316,18 +388,91 @@ public class ViewInflater {
                                 //view.setBackground();
                                 view.setBackgroundColor(Color.parseColor(value));
                         }else{
-                               // view.setBackgroundColor(Color.parseColor(value));
+                                // view.setBackgroundColor(Color.parseColor(value));
                         }
                 }
                 // elevation
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                         //value = findAttribute(atts,"android:elevation");
                         //if(value!=null){
-                                //view.setElevation(Float.parseFloat(value));
+                        //view.setElevation(Float.parseFloat(value));
                         //}
                 }
 
-                if(view instanceof TextView){
+
+                // Gravity
+                String gravity = findAttribute(atts,"android:gravity");
+
+                //l.gravity = Integer.parseInt(gravity);
+                if(view instanceof LinearLayout){
+                        if (gravity != null) {
+
+                                switch (gravity) {
+                                        case "center":
+                                                ((LinearLayout) view).setGravity(Gravity.CENTER);
+                                                break;
+                                        case "right":
+                                                ((LinearLayout) view).setGravity(Gravity.RIGHT);
+                                                break;
+                                        case "left":
+                                                ((LinearLayout) view).setGravity(Gravity.LEFT);
+                                                break;
+                                        case "bottom":
+                                                ((LinearLayout) view).setGravity(Gravity.BOTTOM);
+                                                break;
+                                }
+                        }
+
+                }
+                else if (view instanceof RadioGroup){
+
+                }
+                else if (view instanceof TableLayout){
+
+                }
+                else if (view instanceof TableRow){
+
+                }
+                else if (view instanceof AbsoluteLayout){
+
+                }
+                else if (view instanceof RelativeLayout){
+
+                }
+                else if (view instanceof SwipeRefreshLayout){
+
+                }
+                else if (view instanceof RecyclerView){
+
+                }
+                else if (view instanceof ScrollView){
+
+                }
+                else if (view instanceof FrameLayout){
+
+                }
+                else if (view instanceof ExpandableListView){
+
+                }
+                else if (view instanceof TextView){
+                        if (gravity != null) {
+
+                                switch (gravity) {
+                                        case "center":
+                                                ((TextView) view).setGravity(Gravity.CENTER);
+                                                break;
+                                        case "right":
+                                                ((TextView) view).setGravity(Gravity.RIGHT);
+                                                break;
+                                        case "left":
+                                                ((TextView) view).setGravity(Gravity.LEFT);
+                                                break;
+                                        case "bottom":
+                                                ((TextView) view).setGravity(Gravity.BOTTOM);
+                                                break;
+                                }
+                        }
+
                         value = findAttribute(atts,"android:textSize");
                         if(value!=null){
                                 //((TextView) view).setTextSize(Float.parseFloat(value));
@@ -337,22 +482,83 @@ public class ViewInflater {
                                 //((TextView) view).setTextColor(Color.parseColor(value));
                         }
                 }
+                else if (view instanceof AutoCompleteTextView){
+
+                }
+                else if (view instanceof AnalogClock){
+
+                }else if (view instanceof Button){
+                        if (gravity != null) {
+
+                                switch (gravity) {
+                                        case "center":
+                                                ((Button) view).setGravity(Gravity.CENTER);
+                                                break;
+                                        case "right":
+                                                ((Button) view).setGravity(Gravity.RIGHT);
+                                                break;
+                                        case "left":
+                                                ((Button) view).setGravity(Gravity.LEFT);
+                                                break;
+                                        case "bottom":
+                                                ((Button) view).setGravity(Gravity.BOTTOM);
+                                                break;
+                                }
+                        }
+                }
+
+                else if (view instanceof CheckBox){
+
+                }
+                else if (view instanceof DatePicker){
+
+                }
+                else if (view instanceof DigitalClock){
+
+                }
+                else if (view instanceof EditText){
+                        if (gravity != null) {
+
+                                switch (gravity) {
+                                        case "center":
+                                                ((EditText) view).setGravity(Gravity.CENTER);
+                                                break;
+                                        case "right":
+                                                ((EditText) view).setGravity(Gravity.RIGHT);
+                                                break;
+                                        case "left":
+                                                ((EditText) view).setGravity(Gravity.LEFT);
+                                                break;
+                                        case "bottom":
+                                                ((EditText) view).setGravity(Gravity.BOTTOM);
+                                                break;
+                                }
+                        }
+                }
+                else if (view instanceof ProgressBar){
+
+                }
+                else if (view instanceof ImageView){
+
+                }
+
 
 
 
         }
-        
+
+
         private boolean maybeSetBoolean(View v, String method, AttributeSet atts, String arg) {
                 return maybeSetBoolean(v, method, findAttribute(atts, arg));
         }
 
         protected static boolean isLayout(String name) {
                 return name.endsWith("Layout") ||
-                                name.equals("RadioGroup") ||
-                                name.equals("TableRow") ||
-                                name.equals("ScrollView");
+                        name.equals("RadioGroup") ||
+                        name.equals("TableRow") ||
+                        name.equals("ScrollView");
         }
-        
+
         protected int lookupId(String id) {
                 int ix = id.indexOf("/");
                 if (ix != -1) {
@@ -367,7 +573,7 @@ public class ViewInflater {
                 }
                 return -1;
         }
-        
+
         protected String findAttribute(AttributeSet atts, String id) {
                 for (int i=0;i<atts.getAttributeCount();i++) {
                         if (atts.getAttributeName(i).equals(id)) {
@@ -383,16 +589,16 @@ public class ViewInflater {
                         return null;
                 }
         }
-        
+
         protected ViewGroup.LayoutParams loadLayoutParams(AttributeSet atts, ViewGroup vg) {
                 ViewGroup.LayoutParams lps = null;
-                
+
                 String width = findAttribute(atts, "android:layout_width");
                 String height = findAttribute(atts, "android:layout_height");
                 int w, h;
                 w = readSize(width);
                 h = readSize(height);
-                
+
                 if (vg instanceof RadioGroup) {
                         lps = new RadioGroup.LayoutParams(w, h);
                 }
@@ -411,7 +617,7 @@ public class ViewInflater {
                 else if (vg instanceof AbsoluteLayout) {
                         String x = findAttribute(atts, "android:layout_x");
                         String y = findAttribute(atts, "android:layout_y");
-                        
+
                         lps = new AbsoluteLayout.LayoutParams(w, h, readSize(x), readSize(y));
                 }
                 else if (vg instanceof RelativeLayout) {
@@ -423,24 +629,36 @@ public class ViewInflater {
                 else if (vg instanceof FrameLayout) {
                         lps = new FrameLayout.LayoutParams(w,h);
                 }
-                
+
                 if (lps instanceof LinearLayout.LayoutParams) {
                         LinearLayout.LayoutParams l = (LinearLayout.LayoutParams)lps;
                         String gravity = findAttribute(atts, "android:layout_gravity");
                         if (gravity != null) {
-                                if(gravity.equals("center")){
-                                        l.gravity = Gravity.CENTER;
+                                switch (gravity){
+                                        case "center":
+                                                l.gravity = Gravity.CENTER;
+                                                break;
+                                        case "right":
+                                                l.gravity = Gravity.RIGHT;
+                                                break;
+                                        case "left":
+                                                l.gravity = Gravity.LEFT;
+                                                break;
+                                        case "bottom":
+                                                l.gravity = Gravity.BOTTOM;
+                                                break;
+
                                 }
                                 //l.gravity = Integer.parseInt(gravity);
                         }
-                        
+
                         String weight = findAttribute(atts, "android:layout_weight");
                         if (weight != null) {
                                 l.weight = Float.parseFloat(weight);
                         }
                         lps = l;
                 }
-                
+
                 if (lps instanceof RelativeLayout.LayoutParams) {
                         RelativeLayout.LayoutParams l = (RelativeLayout.LayoutParams)lps;
                         for (int i=0;i<relative_strings.length;i++) {
@@ -451,25 +669,25 @@ public class ViewInflater {
                                 }
                         }
                         String bottom = findAttribute(atts, "android:layout_marginBottom");
-                String left = findAttribute(atts, "android:layout_marginLeft");
-                String right = findAttribute(atts, "android:layout_marginRight");
-                String top = findAttribute(atts, "android:layout_marginTop");
-                int bottomInt=0, leftInt=0, rightInt=0, topInt=0;
-                if (bottom != null)
-                    bottomInt = readSize(bottom);
-                if (left != null)
-                    leftInt = readSize(left);
-                if (right != null)
-                    rightInt = readSize(right);
-                if (top != null)
-                    topInt = readSize(top);
-                    
-                    l.setMargins(leftInt, topInt, rightInt, bottomInt);
+                        String left = findAttribute(atts, "android:layout_marginLeft");
+                        String right = findAttribute(atts, "android:layout_marginRight");
+                        String top = findAttribute(atts, "android:layout_marginTop");
+                        int bottomInt=0, leftInt=0, rightInt=0, topInt=0;
+                        if (bottom != null)
+                                bottomInt = readSize(bottom);
+                        if (left != null)
+                                leftInt = readSize(left);
+                        if (right != null)
+                                rightInt = readSize(right);
+                        if (top != null)
+                                topInt = readSize(top);
+
+                        l.setMargins(leftInt, topInt, rightInt, bottomInt);
                 }
-                
+
                 return lps;
         }
-        
+
         protected int readSize(String val) {
                 if ("wrap_content".equals(val)) {
                         return ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -481,17 +699,34 @@ public class ViewInflater {
                         return ViewGroup.LayoutParams.MATCH_PARENT;
                 }
                 else if (val != null) {
-                        int ix = val.indexOf("px");
-                        if (ix != -1)
-                                return Integer.parseInt(val.substring(0, ix));
-                        else
-                                return 0;
+                        return convertInIntegerValue(val);
+
                 }
                 else {
                         return ViewGroup.LayoutParams.WRAP_CONTENT;
                 }
         }
-        
+
+    /**
+     *  Example convert 16dp in 16
+     *
+     * @param value
+     * @return
+     */
+        private int convertInIntegerValue(String value){
+            int indexValue = value.indexOf("px");
+            if (indexValue != -1) return Integer.parseInt(value.substring(0, indexValue));
+            else{
+                indexValue = value.indexOf("dp");
+                if (indexValue != -1) return Integer.parseInt(value.substring(0, indexValue));
+                else{
+                    indexValue = value.indexOf("sp");
+                    if (indexValue != -1) return Integer.parseInt(value.substring(0, indexValue));
+                    else return 0;
+                }
+            }
+        }
+
         boolean maybeSetBoolean(View view, String method, String value) {
                 if (value == null) {
                         return false;
@@ -520,46 +755,46 @@ public class ViewInflater {
                 }
                 return false;
         }
-        
+
         String[] relative_strings = new String[]
-                                               {"android:layout_above", 
-                                                        "android:layout_alignBaseline", 
-                                                        "android:layout_alignBottom", 
-                                                        "android:layout_alignLeft",
-                                                        "android:layout_alignParentBottom",
-                                                        "android:layout_alignParentLeft",
-                                                        "android:layout_alignParentRight",
-                                                        "android:layout_alignParentTop",
-                                                        "android:layout_alignRight", 
-                                                        "android:layout_alignTop", 
-                                                        "android:layout_below",
-                                                        "android:layout_centerHorizontal",
-                                                        "android:layout_centerInParent",
-                                                        "android:layout_centerVertical",
-                                                        "android:layout_toLeft",
-                                                        "android:layout_toRight"};
-                                        
-                                        int[] relative_verbs = new int[]
-                                               {RelativeLayout.ABOVE,
-                                                        RelativeLayout.ALIGN_BASELINE,
-                                                        RelativeLayout.ALIGN_BOTTOM,
-                                                        RelativeLayout.ALIGN_LEFT,
-                                                        RelativeLayout.ALIGN_PARENT_BOTTOM,
-                                                        RelativeLayout.ALIGN_PARENT_LEFT,
-                                                        RelativeLayout.ALIGN_PARENT_RIGHT,
-                                                        RelativeLayout.ALIGN_PARENT_TOP,
-                                                        RelativeLayout.ALIGN_RIGHT,
-                                                        RelativeLayout.ALIGN_TOP,
-                                                        RelativeLayout.BELOW,
-                                                        RelativeLayout.CENTER_HORIZONTAL,
-                                                        RelativeLayout.CENTER_IN_PARENT,
-                                                        RelativeLayout.CENTER_VERTICAL,
-                                                        RelativeLayout.LEFT_OF,
-                                                        RelativeLayout.RIGHT_OF,
-                                              };
+                {"android:layout_above",
+                        "android:layout_alignBaseline",
+                        "android:layout_alignBottom",
+                        "android:layout_alignLeft",
+                        "android:layout_alignParentBottom",
+                        "android:layout_alignParentLeft",
+                        "android:layout_alignParentRight",
+                        "android:layout_alignParentTop",
+                        "android:layout_alignRight",
+                        "android:layout_alignTop",
+                        "android:layout_below",
+                        "android:layout_centerHorizontal",
+                        "android:layout_centerInParent",
+                        "android:layout_centerVertical",
+                        "android:layout_toLeft",
+                        "android:layout_toRight"};
+
+        int[] relative_verbs = new int[]
+                {RelativeLayout.ABOVE,
+                        RelativeLayout.ALIGN_BASELINE,
+                        RelativeLayout.ALIGN_BOTTOM,
+                        RelativeLayout.ALIGN_LEFT,
+                        RelativeLayout.ALIGN_PARENT_BOTTOM,
+                        RelativeLayout.ALIGN_PARENT_LEFT,
+                        RelativeLayout.ALIGN_PARENT_RIGHT,
+                        RelativeLayout.ALIGN_PARENT_TOP,
+                        RelativeLayout.ALIGN_RIGHT,
+                        RelativeLayout.ALIGN_TOP,
+                        RelativeLayout.BELOW,
+                        RelativeLayout.CENTER_HORIZONTAL,
+                        RelativeLayout.CENTER_IN_PARENT,
+                        RelativeLayout.CENTER_VERTICAL,
+                        RelativeLayout.LEFT_OF,
+                        RelativeLayout.RIGHT_OF,
+                };
 
 
         public int getIdFromName(String id){
-         return ids.get(id);
+                return ids.get(id);
         }
 }

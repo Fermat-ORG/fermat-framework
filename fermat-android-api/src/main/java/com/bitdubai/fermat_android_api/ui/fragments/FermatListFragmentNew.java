@@ -83,11 +83,38 @@ public abstract class FermatListFragmentNew<M> extends FermatWalletFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         WalletResourcesProviderManager walletResourcesProviderManager = walletSession.getWalletResourcesProviderManager();
         String layout = null;
-        try {
-           layout = walletResourcesProviderManager.getLayoutResource(getLayoutResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"),walletSession.getWalletSessionType().getWalletPublicKey());
-        } catch (CantGetResourcesException e) {
-            e.printStackTrace();
-        }
+
+        layout = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                "<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n" +
+                "    android:id=\"@+id/activity_container\"\n" +
+                "    android:layout_width=\"match_parent\"\n" +
+                "    android:layout_height=\"match_parent\"\n" +
+                "    >\n" +
+                "\n" +
+                "    <android.support.v4.widget.SwipeRefreshLayout\n" +
+                "        android:id=\"@+id/swipe_refresh\"\n" +
+                "        android:layout_width=\"match_parent\"\n" +
+                "        android:layout_height=\"match_parent\">\n" +
+                "\n" +
+                "        <android.support.v7.widget.RecyclerView\n" +
+                "            android:id=\"@+id/payment_request_recycler_view\"\n" +
+                "            android:layout_width=\"match_parent\"\n" +
+                "            android:layout_height=\"match_parent\"\n" +
+                "            android:layout_marginEnd=\"16dp\"\n" +
+                "            android:layout_marginLeft=\"16dp\"\n" +
+                "            android:layout_marginRight=\"16dp\"\n" +
+                "            android:layout_marginStart=\"16dp\"\n" +
+                "            android:layout_marginTop=\"8dp\" />\n" +
+                "\n" +
+                "    </android.support.v4.widget.SwipeRefreshLayout>\n" +
+                "\n" +
+                "\n" +
+                "</FrameLayout>";
+//        try {
+//           layout = walletResourcesProviderManager.getLayoutResource(getLayoutResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"),walletSession.getWalletSessionType().getWalletPublicKey());
+//        } catch (CantGetResourcesException e) {
+//            e.printStackTrace();
+//        }
         View rootView = viewInflater.inflate(layout);  //inflater.inflate(getLayoutResource(), container, false);
         initViews(rootView);
         return rootView;

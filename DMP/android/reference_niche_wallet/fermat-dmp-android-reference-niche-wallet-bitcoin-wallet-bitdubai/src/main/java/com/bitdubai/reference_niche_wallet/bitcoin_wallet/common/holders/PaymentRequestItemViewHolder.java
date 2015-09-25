@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -15,10 +16,10 @@ import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 
 public class PaymentRequestItemViewHolder extends FermatViewHolder {
     private ImageView contactIcon;
-    private FermatTextView txt_contactName;
-    private FermatTextView txt_amount;
-    private FermatTextView txt_notes;
-    private FermatTextView txt_time;
+    private TextView txt_contactName;
+    private TextView txt_amount;
+    private TextView txt_notes;
+    private TextView txt_time;
 
     ViewInflater viewInflater;
 
@@ -27,10 +28,10 @@ public class PaymentRequestItemViewHolder extends FermatViewHolder {
         super(itemView);
 
         contactIcon = (ImageView) itemView.findViewById(viewInflater.getIdFromName("imageView_contact"));
-        txt_contactName = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_contact_name"));
-        txt_amount = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_amount"));
-        txt_notes = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_notes"));
-        txt_time = (FermatTextView) itemView.findViewById(viewInflater.getIdFromName("txt_time"));
+        txt_contactName = (TextView) itemView.findViewById(viewInflater.getIdFromName("txt_contact_name"));
+        txt_amount = (TextView) itemView.findViewById(viewInflater.getIdFromName("txt_amount"));
+        txt_notes = (TextView) itemView.findViewById(viewInflater.getIdFromName("txt_notes"));
+        txt_time = (TextView) itemView.findViewById(viewInflater.getIdFromName("txt_time"));
 
     }
 
@@ -38,20 +39,20 @@ public class PaymentRequestItemViewHolder extends FermatViewHolder {
         return contactIcon;
     }
 
-    public FermatTextView getTxt_contactName() {
+    public TextView getTxt_contactName() {
         return txt_contactName;
     }
 
-    public FermatTextView getTxt_amount() {
+    public TextView getTxt_amount() {
         return txt_amount;
     }
 
-    public FermatTextView getTxt_notes() {
+    public TextView getTxt_notes() {
         return txt_notes;
     }
 
 
-    public FermatTextView getTxt_time() {
+    public TextView getTxt_time() {
         return txt_time;
     }
 }
