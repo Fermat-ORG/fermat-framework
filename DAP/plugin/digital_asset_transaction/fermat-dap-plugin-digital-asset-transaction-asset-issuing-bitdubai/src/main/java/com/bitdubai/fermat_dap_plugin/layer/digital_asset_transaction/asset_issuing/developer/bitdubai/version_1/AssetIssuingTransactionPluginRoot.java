@@ -230,8 +230,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
-        this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount, blockchainNetworkType);
+    public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String walletPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
+        this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, blockchainNetworkType);
     }
 
     @Override
@@ -355,7 +355,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setContract(digitalAssetContract);
         LOG.info("MAP_DigitalAsset2:"+digitalAsset);
 
-            this.assetIssuingTransactionManager.issueAssets(digitalAsset,10,BlockchainNetworkType.REG_TEST);
+            this.assetIssuingTransactionManager.issueAssets(digitalAsset,10,"TESTING PUBLICKEY",BlockchainNetworkType.REG_TEST);
 
     }
 
