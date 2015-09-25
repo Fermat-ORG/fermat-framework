@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interf
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantPublishAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
@@ -344,43 +346,48 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
     public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException
     {
         try {
-            DigitalAsset digitalAsset = new DigitalAsset();
-            DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
+            if(assetFactory.getState() == State.DRAFT) {
+                DigitalAsset digitalAsset = new DigitalAsset();
+                DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
 
 //            for(ContractProperty property : assetFactory.getContractProperties())
 //            {
 //                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
 //                digitalAssetContract.setContractProperty(contractProperty);
 //            }
-            ContractProperty redeemable;
-            ContractProperty expirationDate;
-            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
-            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
-            redeemable1.setValue(assetFactory.getIsRedeemable());
-            expirationDate1.setValue(assetFactory.getExpirationDate());
-            //TODO: Revisar porque la asignacion del value al property no la asigna
-            try {
+                ContractProperty redeemable;
+                ContractProperty expirationDate;
+                redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+                expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+                ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+                ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+                redeemable1.setValue(assetFactory.getIsRedeemable());
+                expirationDate1.setValue(assetFactory.getExpirationDate());
+                //TODO: Revisar porque la asignacion del value al property no la asigna
+                try {
 
-                digitalAssetContract.setContractProperty(redeemable1);
+                    digitalAssetContract.setContractProperty(redeemable1);
+                } catch (Exception e) {
+                    digitalAssetContract.setContractProperty(expirationDate1);
+                }
+                digitalAsset.setContract(digitalAssetContract);
+                digitalAsset.setName(assetFactory.getName());
+                digitalAsset.setDescription(assetFactory.getDescription());
+                digitalAsset.setPublicKey(assetFactory.getPublicKey());
+                digitalAsset.setGenesisAmount(assetFactory.getAmount());
+                digitalAsset.setState(assetFactory.getState());
+                digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
+                digitalAsset.setResources(assetFactory.getResources());
+                //Actualiza el State a Pending_Final del objeto assetFactory
+                assetFactory.setState(State.PENDING_FINAL);
+                saveAssetFactory(assetFactory);
+                //Llama al metodo AssetIssuer de la transaction
+                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
             }
-            catch (Exception e){
-                digitalAssetContract.setContractProperty(expirationDate1);
+            else
+            {
+                throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }
-            digitalAsset.setContract(digitalAssetContract);
-            digitalAsset.setName(assetFactory.getName());
-            digitalAsset.setDescription(assetFactory.getDescription());
-            digitalAsset.setPublicKey(assetFactory.getPublicKey());
-            digitalAsset.setGenesisAmount(assetFactory.getAmount());
-            digitalAsset.setState(assetFactory.getState());
-            digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
-            digitalAsset.setResources(assetFactory.getResources());
-            //Actualiza el State a Pending_Final del objeto assetFactory
-            assetFactory.setState(State.PENDING_FINAL);
-            saveAssetFactory(assetFactory);
-            //Llama al metodo AssetIssuer de la transaction
-            assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
         }catch (CantIssueDigitalAssetsException e){
             e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: issueAssets");
