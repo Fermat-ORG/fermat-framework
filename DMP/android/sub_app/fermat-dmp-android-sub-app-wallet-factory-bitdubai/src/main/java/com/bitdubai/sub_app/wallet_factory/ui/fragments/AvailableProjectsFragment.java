@@ -137,7 +137,7 @@ public class AvailableProjectsFragment extends FermatFragment
 
                 @Override
                 protected Object doInBackground() throws Exception {
-                    return null;
+                    return manager.getInstalledWallets();
                 }
 
             }.execute();
