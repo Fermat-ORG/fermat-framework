@@ -36,12 +36,6 @@ public interface WalletSession {
      *
      * @return
      */
-    public CryptoWalletManager getCryptoWalletManager();
-
-    /**
-     *
-     * @return
-     */
     public ErrorManager getErrorManager();
 
     /**
@@ -54,5 +48,6 @@ public interface WalletSession {
      *
      */
     public WalletSettings getWalletSettings();
+
 
 }

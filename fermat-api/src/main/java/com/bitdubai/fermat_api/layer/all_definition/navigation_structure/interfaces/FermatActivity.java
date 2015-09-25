@@ -10,12 +10,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Created by rodrigo on 2015.07.20..
+ * Created by Matias Furszyfer on 2015.07.20..
  */
-public interface FermatActivity {
+public interface FermatActivity extends Serializable{
     public void setColor(String color);
 
     public String getColor();

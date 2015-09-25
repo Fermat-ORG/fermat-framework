@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -24,7 +25,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -56,7 +63,13 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.Wallet;
 import org.bitcoinj.params.RegTestParams;
 
 import java.util.ArrayList;
@@ -297,7 +310,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     //TODO Franklin, aqui falta la gestion de excepciones genericas
     @Override
     public void start() throws CantStartPluginException {
-        //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault Starting...", null, null);
 
         /**
          * I get the userPublicKey from the deviceUserManager
@@ -411,6 +423,25 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              */
             this.serviceStatus = ServiceStatus.STARTED;
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
+
+        //Test
+        CryptoAddress cryptoAddress = new CryptoAddress("mo5mFxL9VW7kS1UaauCig9TMeFUS1yC4F5", CryptoCurrency.BITCOIN);
+        try {
+            CryptoTransaction cryptoTransaction = this.generateDraftCryptoTransaction(cryptoAddress, 10000);
+            this.sendBitcoins(cryptoTransaction);
+        } catch (CoultNotCreateCryptoTransaction coultNotCreateCryptoTransaction) {
+            coultNotCreateCryptoTransaction.printStackTrace();
+        } catch (InsufficientMoneyException e) {
+            e.printStackTrace();
+        } catch (InvalidSendToAddressException e) {
+            e.printStackTrace();
+        } catch (CouldNotSendMoneyException e) {
+            e.printStackTrace();
+        } catch (CryptoTransactionAlreadySentException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**
@@ -535,7 +566,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         }
     }
 
-    //TODO Franklin, aqui falta la gestion de excepciones genericas
+
     @Override
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException {
         try {
@@ -557,12 +588,48 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
 
         Transaction transaction = new Transaction(RegTestParams.get());
-        cryptoTransaction.setTransactionHash(transaction.getHash().toString());
+        System.out.println("Hash transaccion recien creada: " + transaction.getHashAsString());
+        transaction.setPurpose(Transaction.Purpose.USER_PAYMENT);
+        byte[] scryptbytes = new byte[1];
+        TransactionInput input = new TransactionInput(RegTestParams.get(), transaction, scryptbytes);
+        Address address= null;
+        try {
+            address = new Address(RegTestParams.get(), addressTo.getAddress());
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+        }
+        TransactionOutput output = new TransactionOutput(RegTestParams.get(), transaction, Coin.valueOf(1000), address);
+        transaction.addInput(input);
+        System.out.println("Hash transaccion luego de meter el input: " + transaction.getHashAsString());
+        transaction.addOutput(output);
+        System.out.println("Hash transaccion luego de meter el output: " + transaction.getHashAsString());
+
+        try {
+            PluginTextFile transactionFile = pluginFileSystem.createTextFile(this.pluginId, "cryptovault", "transactionFile", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            transactionFile.setContent(XMLParser.parseObject(transaction));
+            transactionFile.persistToMedia();
+
+
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (CantPersistFileException e) {
+            e.printStackTrace();
+        }
         return cryptoTransaction;
     }
 
     @Override
     public void sendBitcoins(CryptoTransaction cryptoTransaction) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+        try {
+            PluginTextFile transactionFile = pluginFileSystem.getTextFile(this.pluginId, "cryptovault", "transactionFile", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            Transaction transaction = new Transaction(RegTestParams.get());
+            transaction = (Transaction) XMLParser.parseXML(transactionFile.getContent(), transaction);
 
+            System.out.println("Transacción cargada " + transaction.getHash().toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,12 +1,17 @@
 package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
@@ -67,10 +72,19 @@ public class InstallCompleteWalletTest extends TestCase {
     private Database mockDatabase;
 
     @Mock
+    private DatabaseTable mockTable;
+
+    @Mock
+    private DatabaseTableRecord mockTableRecord;
+
+    @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
 
     @Mock
     private PluginTextFile mockPluginTextFile;
+
+    @Mock
+    private PluginBinaryFile mockPluginBinaryFile;
 
     @Mock
     private Repository repository;
@@ -97,21 +111,25 @@ public class InstallCompleteWalletTest extends TestCase {
         walletResourcePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
+        when(mockDatabase.getTable(anyString())).thenReturn(mockTable);
+        when(mockTable.getEmptyRecord()).thenReturn(mockTableRecord);
         when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
 
         when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockFermatEventListener);
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
-
+        when(pluginFileSystem.createBinaryFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginBinaryFile);
+        when(pluginFileSystem.createTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
 
     }
 
 
     @Test
-    public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
-//TODO error parseando el skin, al parecer la estructura subida al repo no es correcta - se debe actualizar
+    public void testInstallCompleteWallet_ThrowsWalletResourcesInstallationException() throws Exception {
+
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installCompleteWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde", "languageName", "navigationStructureVersion", "walletPublicKey");
-                assertThat(caughtException()).isNotNull();
+
+        catchException(walletResourcePluginRoot).installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(), WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0", "walletPublicKey");
+                assertThat(caughtException()).isNull();
 
     }
 

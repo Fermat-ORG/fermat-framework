@@ -69,6 +69,18 @@ public interface IntraUserCryptoTransactionManager {
                            ReferenceWallet referenceWallet) throws OutgoingIntraUserCantSendFundsExceptions,
                                                                    OutgoingIntraUserInsufficientFundsException;
 
+    public String sendCrypto(String walletPublicKey,
+                           CryptoAddress destinationAddress,
+                           long cryptoAmount,
+                             String op_Return,
+                           String description,
+                           String senderPublicKey,
+                           String receptorPublicKey,
+                           Actors senderActorType,
+                           Actors receptorActorType,
+                           ReferenceWallet referenceWallet) throws OutgoingIntraUserCantSendFundsExceptions,
+            OutgoingIntraUserInsufficientFundsException;
+
 
     /**
      * TODO: THIS METHOD WILL BE MOVED TO A NEW TRANSACTIONAL PLUGIN SPECIALIZED IN FIAT TRANSACTIONS

@@ -66,17 +66,17 @@ public interface CryptoAddressesManager {
      *
      * @throws CantListPendingAddressExchangeRequestsException if something goes wrong.
      */
-    List<PendingAddressExchangeRequest> listPendingRequests(Actors                      actorType,
+    List<AddressExchangeRequest> listPendingRequests(Actors                      actorType,
                                                             AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException;
 
     /**
      * Throw the method <code>getPendingRequest</code>
      *
      * @param requestId identifier of the request.
-     * @return an instance of a PendingAddressExchangeRequest
+     * @return an instance of a AddressExchangeRequest
      * @throws CantGetPendingAddressExchangeRequestException
      */
-    PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException;
+    AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException;
 
     /**
      * The method <code>confirmAddressExchangeRequest</code> deletes the finalized requests.

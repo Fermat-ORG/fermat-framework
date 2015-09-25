@@ -97,9 +97,32 @@ public class GetLayoutResourceTest extends TestCase {
 
 
     @Test
-    public void testgetImageResource_ReturnOk_ThrowsCantGetResourcesException() throws Exception {
+    public void testGetImageResource_ReturnOk_ThrowsCantGetResourcesException() throws Exception {
+
+/*  UUID skinId =  UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e");//referenceWalletSession.getWalletSessionType().getSkinsId().get(0).getId();
+    String walletKey = referenceWalletSession.getWalletSessionType().getWalletPublicKey();
 
 
+    try {
+        String layout = providerManager.getLayoutResource("payment_request_base", ScreenOrientation.PORTRAIT, skinId,walletKey);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    try {
+        Skin skin = providerManager.getSkinFile("skin", skinId, walletKey);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    try {
+        byte[] image = providerManager.getImageResource("personIcon", skinId,walletKey);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }*/
         //catchException(walletResourcePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt", ScreenOrientation.LANDSCAPE, UUID.randomUUID());
         //assertThat(caughtException()).isNull();
 
@@ -108,7 +131,7 @@ public class GetLayoutResourceTest extends TestCase {
 
     @Ignore
     @Test
-    public void testcheckResources_TheResourcesRepositoryNotExist_ThrowsCantGetResourcesException() throws Exception {
+    public void testCheckResources_TheResourcesRepositoryNotExist_ThrowsCantGetResourcesException() throws Exception {
 
 
         //catchException(walletResourcePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt");
@@ -118,7 +141,7 @@ public class GetLayoutResourceTest extends TestCase {
 
     @Ignore
     @Test
-    public void testcheckResources_fileNotFound_ThrowsCantGetResourcesException() throws Exception {
+    public void testCheckResources_fileNotFound_ThrowsCantGetResourcesException() throws Exception {
 
         //catchException(walletResourcePluginRoot).getLayoutResource("layout1.xml");
         //assertThat(caughtException()).isInstanceOf(CantGetResourcesException.class);
