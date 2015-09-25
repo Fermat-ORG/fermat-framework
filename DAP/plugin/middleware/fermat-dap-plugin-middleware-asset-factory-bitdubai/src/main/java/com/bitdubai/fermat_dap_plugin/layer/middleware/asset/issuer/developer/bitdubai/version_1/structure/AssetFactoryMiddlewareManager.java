@@ -47,7 +47,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 07/09/15.
  */
-public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
     public static final String PATH_DIRECTORY = "assetFactory/resources";
     /**
      * AssetFactoryMiddlewareManager member variables
@@ -87,12 +87,13 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager) {
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.assetIssuingManager = assetIssuingManager;
     }
 
     private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao()
@@ -145,10 +146,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         return assetFactories;
     }
 
-    @Override
-    public void setAssetIssuingManager(AssetIssuingManager assetIssuingManager) throws CantSetObjectException {
-        this.assetIssuingManager = assetIssuingManager;
-    }
 
     @Override
     public void setErrorManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager) {
@@ -363,6 +360,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
             redeemable1.setValue(assetFactory.getIsRedeemable());
             expirationDate1.setValue(assetFactory.getExpirationDate());
+            //TODO: Revisar porque la asignacion del value al property no la asigna
             try {
 
                 digitalAssetContract.setContractProperty(redeemable1);
@@ -382,7 +380,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             assetFactory.setState(State.PENDING_FINAL);
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
-            //TODO: Revisar porque la asignacion del value al property no la asigna
             assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
         }catch (CantIssueDigitalAssetsException e){
             e.printStackTrace();
@@ -406,186 +403,185 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     public AssetFactory getNewAssetFactory() throws  CantCreateAssetFactoryException, CantCreateEmptyAssetFactoryException
     {
-        AssetFactory assetFactory = new AssetFactory() {
-            String publicKey;
-            String name;
-            String description;
-            List<Resource> resources;
-            DigitalAssetContract digitalAssetContract;
-            State state;
-            List<ContractProperty> contractProperties;
-            int quantity;
-            long amount;
-            long fee;
-            Timestamp creationTimestamp;
-            Timestamp lastModificationTimestamp;
-            boolean isRedeemable;
-            Timestamp expirationDate;
-            AssetBehavior assetBehavior;
-            IdentityAssetIssuer identityAssetIssuer;
-            @Override
-            public IdentityAssetIssuer getIdentyAssetIssuer() {
-                return identityAssetIssuer;
-            }
+            AssetFactory assetFactory = new AssetFactory() {
+                String publicKey;
+                String name;
+                String description;
+                List<Resource> resources;
+                DigitalAssetContract digitalAssetContract;
+                State state;
+                List<ContractProperty> contractProperties;
+                int quantity;
+                long amount;
+                long fee;
+                Timestamp creationTimestamp;
+                Timestamp lastModificationTimestamp;
+                boolean isRedeemable;
+                Timestamp expirationDate;
+                AssetBehavior assetBehavior;
+                IdentityAssetIssuer identityAssetIssuer;
 
-            @Override
-            public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
-                this.identityAssetIssuer = identityAssetIssuer;
-            }
+                @Override
+                public IdentityAssetIssuer getIdentyAssetIssuer() {
+                    return identityAssetIssuer;
+                }
 
-            @Override
-            public String getPublicKey() {
-                return publicKey;
-            }
+                @Override
+                public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
+                    this.identityAssetIssuer = identityAssetIssuer;
+                }
 
-            @Override
-            public void setPublicKey(String publicKey) {
-                this.publicKey = publicKey;
-            }
+                @Override
+                public String getPublicKey() {
+                    return publicKey;
+                }
 
-            @Override
-            public String getName() {
-                return name;
-            }
+                @Override
+                public void setPublicKey(String publicKey) {
+                    this.publicKey = publicKey;
+                }
 
-            @Override
-            public void setName(String name) {
-                this.name = name;
-            }
+                @Override
+                public String getName() {
+                    return name;
+                }
 
-            @Override
-            public String getDescription() {
-                return description;
-            }
+                @Override
+                public void setName(String name) {
+                    this.name = name;
+                }
 
-            @Override
-            public void setDescription(String description) {
-                this.description = description;
-            }
+                @Override
+                public String getDescription() {
+                    return description;
+                }
 
-            @Override
-            public List<Resource> getResources() {
-                return resources;
-            }
+                @Override
+                public void setDescription(String description) {
+                    this.description = description;
+                }
 
-            @Override
-            public void setResources(List<Resource> resources) {
-                this.resources = resources;
-            }
+                @Override
+                public List<Resource> getResources() {
+                    return resources;
+                }
 
-            @Override
-            public DigitalAssetContract getContract() {
-                return digitalAssetContract;
-            }
+                @Override
+                public void setResources(List<Resource> resources) {
+                    this.resources = resources;
+                }
 
-            @Override
-            public void setContract(DigitalAssetContract contract) {
-                this.digitalAssetContract = contract;
-            }
+                @Override
+                public DigitalAssetContract getContract() {
+                    return digitalAssetContract;
+                }
 
-            @Override
-            public List<ContractProperty> getContractProperties() {
-                return contractProperties;
-            }
+                @Override
+                public void setContract(DigitalAssetContract contract) {
+                    this.digitalAssetContract = contract;
+                }
 
-            @Override
-            public void setContractProperties(List<ContractProperty> contractProperties) {
-                this.contractProperties = contractProperties;
-            }
+                @Override
+                public List<ContractProperty> getContractProperties() {
+                    return contractProperties;
+                }
 
-            @Override
-            public State getState() {
-                return state;
-            }
+                @Override
+                public void setContractProperties(List<ContractProperty> contractProperties) {
+                    this.contractProperties = contractProperties;
+                }
 
-            @Override
-            public void setState(State state) {
-                this.state = state;
-            }
+                @Override
+                public State getState() {
+                    return state;
+                }
 
-            @Override
-            public int getQuantity() {
-                return quantity;
-            }
+                @Override
+                public void setState(State state) {
+                    this.state = state;
+                }
 
-            @Override
-            public void setQuantity(int quantity) {
-                this.quantity = quantity;
-            }
+                @Override
+                public int getQuantity() {
+                    return quantity;
+                }
 
-            @Override
-            public long getAmount() {
-                return amount;
-            }
+                @Override
+                public void setQuantity(int quantity) {
+                    this.quantity = quantity;
+                }
 
-            @Override
-            public void setAmount(long amount) {
-                this.amount = amount;
-            }
+                @Override
+                public long getAmount() {
+                    return amount;
+                }
 
-            @Override
-            public long getFee() {
-                return fee;
-            }
+                @Override
+                public void setAmount(long amount) {
+                    this.amount = amount;
+                }
 
-            @Override
-            public void setFee(long fee) {
-                this.fee = fee;
-            }
+                @Override
+                public long getFee() {
+                    return fee;
+                }
 
-            @Override
-            public boolean getIsRedeemable() {
-                return isRedeemable;
-            }
+                @Override
+                public void setFee(long fee) {
+                    this.fee = fee;
+                }
 
-            @Override
-            public void setIsRedeemable(boolean isRedeemable) {
-                this.isRedeemable = isRedeemable;
-            }
+                @Override
+                public boolean getIsRedeemable() {
+                    return isRedeemable;
+                }
 
-            @Override
-            public Timestamp getExpirationDate() {
-                return expirationDate;
-            }
+                @Override
+                public void setIsRedeemable(boolean isRedeemable) {
+                    this.isRedeemable = isRedeemable;
+                }
 
-            @Override
-            public void setExpirationDate(Timestamp expirationDate) {
-                this.expirationDate = expirationDate;
-            }
+                @Override
+                public Timestamp getExpirationDate() {
+                    return expirationDate;
+                }
 
-            @Override
-            public AssetBehavior getAssetBehavior() {
-                return assetBehavior;
-            }
+                @Override
+                public void setExpirationDate(Timestamp expirationDate) {
+                    this.expirationDate = expirationDate;
+                }
 
-            @Override
-            public void setAssetBehavior(AssetBehavior assetBehavior) {
-                this.assetBehavior = assetBehavior;
-            }
+                @Override
+                public AssetBehavior getAssetBehavior() {
+                    return assetBehavior;
+                }
 
-            @Override
-            public Timestamp getCreationTimestamp() {
-                return creationTimestamp;
-            }
+                @Override
+                public void setAssetBehavior(AssetBehavior assetBehavior) {
+                    this.assetBehavior = assetBehavior;
+                }
 
-            @Override
-            public void setCreationTimestamp(Timestamp timestamp) {
-                this.creationTimestamp = timestamp;
-            }
+                @Override
+                public Timestamp getCreationTimestamp() {
+                    return creationTimestamp;
+                }
 
-            @Override
-            public Timestamp getLastModificationTimestamp() {
-                return lastModificationTimestamp;
-            }
+                @Override
+                public void setCreationTimestamp(Timestamp timestamp) {
+                    this.creationTimestamp = timestamp;
+                }
 
-            @Override
-            public void setLastModificationTimeststamp(Timestamp timestamp) {
-                this.lastModificationTimestamp = timestamp;
-            }
-        };
+                @Override
+                public Timestamp getLastModificationTimestamp() {
+                    return lastModificationTimestamp;
+                }
 
-        return assetFactory;
+                @Override
+                public void setLastModificationTimeststamp(Timestamp timestamp) {
+                    this.lastModificationTimestamp = timestamp;
+                }
+            };
+
+            return assetFactory;
     }
-
-
 }

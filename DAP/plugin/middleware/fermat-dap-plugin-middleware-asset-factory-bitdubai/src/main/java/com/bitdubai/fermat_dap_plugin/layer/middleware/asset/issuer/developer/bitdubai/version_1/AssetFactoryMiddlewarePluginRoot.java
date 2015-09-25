@@ -29,6 +29,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
@@ -41,6 +45,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
@@ -165,11 +170,17 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
 
     @Override
     public void start() throws CantStartPluginException {
-        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetIssuingManager) ;
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             //testSaveAssetFactory();
-            //testPublishAsset();
+//            try
+//            {
+//                testPublishAsset();
+//            }catch(CantIssueDigitalAssetsException e){
+//                System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
+//                e.printStackTrace();
+//            }
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -292,15 +303,55 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
         }
     }
 
-    public AssetFactory testPublishAsset(){
+    public AssetFactory testPublishAsset() throws CantIssueDigitalAssetsException {
         try{
             java.util.Date date= new java.util.Date();
             System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
             assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
+            DigitalAsset digitalAsset = new DigitalAsset();
+            DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
+
+//            for(ContractProperty property : assetFactory.getContractProperties())
+//            {
+//                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
+//                digitalAssetContract.setContractProperty(contractProperty);
+//            }
+            ContractProperty redeemable;
+            ContractProperty expirationDate;
+            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+            redeemable1.setValue(assetFactory.getIsRedeemable());
+            expirationDate1.setValue(assetFactory.getExpirationDate());
+            try {
+
+                digitalAssetContract.setContractProperty(redeemable1);
+            }
+            catch (Exception e){
+                digitalAssetContract.setContractProperty(expirationDate1);
+            }
+            digitalAsset.setContract(digitalAssetContract);
+            digitalAsset.setName(assetFactory.getName());
+            digitalAsset.setDescription(assetFactory.getDescription());
+            digitalAsset.setPublicKey(assetFactory.getPublicKey());
+            digitalAsset.setGenesisAmount(assetFactory.getAmount());
+            digitalAsset.setState(assetFactory.getState());
+            digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
+            digitalAsset.setResources(assetFactory.getResources());
+            //Actualiza el State a Pending_Final del objeto assetFactory
+            assetFactory.setState(State.PENDING_FINAL);
+            saveAssetFactory(assetFactory);
+            //Llama al metodo AssetIssuer de la transaction
+
             publishAsset(assetFactory, BlockchainNetworkType.DEFAULT);
+            //assetIssuingManager.issueAssets(digitalAsset, 1, BlockchainNetworkType.DEFAULT);
             return assetFactory;
         }
+        //catch(CantIssueDigitalAssetsException e){
+        //    throw new CantIssueDigitalAssetsException(e, "Metodo testAssetFactory", "issueAssets");
+        //}
         catch (Exception e){
             System.out.println("******* Metodo testAssetFactory, Error. Franklin ******" );
             e.printStackTrace();
