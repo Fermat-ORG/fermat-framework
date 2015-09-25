@@ -11,7 +11,10 @@ import com.bitdubai.sub_app.wallet_factory.models.Wallet;
 import java.util.ArrayList;
 
 /**
- * Created by francisco on 24/09/15.
+ * InstalledWalletsAdapter
+ *
+ * @author Francisco Vasquez
+ * @version 1.0
  */
 public class InstalledWalletsAdapter extends FermatAdapter<Wallet, InstalledWalletViewHolder> {
 
