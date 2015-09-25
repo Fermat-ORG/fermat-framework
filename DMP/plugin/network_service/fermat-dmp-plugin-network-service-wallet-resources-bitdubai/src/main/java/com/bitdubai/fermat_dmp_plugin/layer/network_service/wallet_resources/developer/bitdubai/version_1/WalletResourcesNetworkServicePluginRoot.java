@@ -345,7 +345,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
              */
             String linkToLanguage = linkToRepo + "languages/";
 
-            downloadLanguageFromRepo(linkToLanguage, skin.getId(),languageName, localStoragePath+ "languages/", screenSize,walletPublicKey);
+            downloadLanguageFromRepo(linkToLanguage, skin.getId(), languageName, localStoragePath + "languages/", screenSize, walletPublicKey);
+
+
+            getSkinFile(skin.getId(), walletPublicKey);
 
 
         } catch (CantDonwloadNavigationStructure e) {
@@ -360,7 +363,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         } catch (CantCheckResourcesException cantCheckResourcesException) {
             throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",cantCheckResourcesException,"Error in skin.mxl file","");
-          }
+
+        } catch (Exception e) {
+            throw new WalletResourcesInstalationException("CAN'T INSTALL WALLET RESOURCES",e,"unknown error","");
+        }
 
         //installSkinResource("null");
     }
@@ -505,12 +511,18 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     public void uninstallSkinForWallet( UUID skinId,String walletPublicKey) throws WalletResourcesUnninstallException {
 
         try {
+            //get repo from table
             Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
-            String linkToRepo = "seed-resources/";
+            //get image from disk
+            PluginTextFile layoutFile;
 
-            String repoManifest = githubConnection.getFile(linkToRepo + repository.getPath() + "skin.xml");
-            Skin skin = new Skin();
-            skin = (Skin) XMLParser.parseXML(repoManifest, skin);
+
+            String reponame = repository.getPath() + walletPublicKey +"/";
+
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, skinId.toString() + "_" + repository.getSkinName(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+
+            Skin skin = (Skin) XMLParser.parseXML(layoutFile.getContent(), new Skin());
 
             /**
              *  delete skin resources
@@ -528,9 +540,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
        }  catch (CantDeleteResourcesFromDisk cantDownloadResourceFromRepo) {
            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET SKIN", cantDownloadResourceFromRepo, "Error download resources", "");
-        } catch (IOException e) {
-            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET SKIN",e,"Error get skin file from repository","");
 
+        } catch (FileNotFoundException e) {
+            throw new WalletResourcesUnninstallException("CAN'T UNINSTALL WALLET SKIN",e,"Error get skin file not found","");
+
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
         }
 
     }
@@ -557,7 +572,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             languageName = skinId.toString() + "_" + languageName;
 
 
-            pluginFileSystem.deleteTextFile(pluginId, reponame, languageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginFileSystem.deleteTextFile(pluginId, reponame, languageName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             /**
              *  Fire event Wallet language installed
              */
@@ -603,61 +618,45 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         return null;
     }
 
-    /**
-     * This method let us get an skin file referenced by its name
-     *
-     * @param fileName        the name of the Skin file (without the path structure).
-     * @param skinId
-     * @param walletPublicKey @return The content of the file
-     * @throws CantGetSkinFileException
-     */
-    @Override
-    public Skin getSkinFile(String fileName, UUID skinId, String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
-        return null;
-    }
 
-
-    //TODO: Falta implementar este metodo
 
     @Override
     public Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException, CantGetResourcesException {
-//        String content = "";
-//        try {
-//            //get repo from table
-//            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
+
+        try {
+            //get repo from table
+            Repository repository = networkServicesWalletResourcesDAO.getRepository(skinId);
             //get image from disk
             PluginTextFile layoutFile;
 
 
-           // String reponame = repository.getPath() + walletPublicKey +"/";
+            String reponame = repository.getPath() + walletPublicKey +"/";
 
-            //fileName = skinId.toString() + "_" + fileName;
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame,  skinId.toString() + "_" + repository.getSkinName() , FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+
+            return (Skin) XMLParser.parseXML(layoutFile.getContent(), new Skin());
+
+       } catch (FileNotFoundException e) {
+           /**
+            * I cant continue if this happens.
+            */
+           throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error write layout file resource  ", "");
+
+       } catch (CantGetRepositoryPathRecordException e) {
+
+           throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error get repository from database ", "");
+
+       } catch (CantCreateFileException e) {
+           /**
+            * I cant continue if this happens.
+            */
+           throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error created image file resource ", "");
+
+        }
 
 
-            //layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
-            //content = layoutFile.getContent();
-//        } catch (FileNotFoundException e) {
-//            /**
-//             * I cant continue if this happens.
-//             */
-//            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error write layout file resource  ", "");
-//
-//        } catch (CantGetRepositoryPathRecordException e) {
-//
-//            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error get repository from database ", "");
-//
-//        } catch (CantCreateFileException e) {
-//            /**
-//             * I cant continue if this happens.
-//             */
-//            throw new CantGetResourcesException("CAN'T GET SKIN RESOURCES:", e, "Error created image file resource ", "");
-//
-//        }
 
-        //return (Skin) XMLParser.parseXML(content, new Skin());
-
-        return null;
     }
 
     @Override
@@ -675,7 +674,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             fileName = skinId.toString() + "_" + fileName;
 
 
-            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, fileName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             return layoutFile.getContent();
         } catch (FileNotFoundException e) {

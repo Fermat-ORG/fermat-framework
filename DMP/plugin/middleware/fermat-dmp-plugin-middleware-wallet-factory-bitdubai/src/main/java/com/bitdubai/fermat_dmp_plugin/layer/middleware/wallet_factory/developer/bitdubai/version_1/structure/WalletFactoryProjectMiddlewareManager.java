@@ -645,7 +645,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
              * Then I will get the Navigation Structure from the Wallet Resources plugin and save it.
              */
             for (InstalledSkin installedSkin : wallet.getSkinsId()){
-                walletResourcesProviderManager.getSkinFile(null, installedSkin.getId(), wallet.getWalletPublicKey());
+                walletResourcesProviderManager.getSkinFile(installedSkin.getId(), wallet.getWalletPublicKey());
             }
 
 
