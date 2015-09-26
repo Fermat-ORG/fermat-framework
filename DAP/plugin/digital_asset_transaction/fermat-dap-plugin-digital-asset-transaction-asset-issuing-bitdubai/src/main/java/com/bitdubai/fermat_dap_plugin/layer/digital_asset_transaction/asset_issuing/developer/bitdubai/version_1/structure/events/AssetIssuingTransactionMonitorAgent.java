@@ -169,7 +169,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     doTheMainTask();
                 } catch (CantCheckAssetIssuingProgressException | AssetIssuingTransactionMonitorAgentMaxIterationsReachedException | CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                } 
+                }
 
             }
 
