@@ -54,17 +54,17 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     private ECCKeyPair vpnServerIdentity;
 
     /**
-     * Represent the registered participants to this vpn
+     * Represent the registered participantsConnections to this vpn
      */
     private List<PlatformComponentProfile> registeredParticipants;
 
     /**
      * Holds all the participants connections
      */
-    private Map<String, WebSocket> participants;
+    private Map<String, WebSocket> participantsConnections;
 
     /**
-     * Holds all the participants connections
+     * Holds all the vpnClientIdentity By Participants
      */
     private Map<String, String> vpnClientIdentityByParticipants;
 
@@ -83,9 +83,14 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         super(address);
         this.vpnServerIdentity               = new ECCKeyPair();
         this.registeredParticipants          = registeredParticipants;
-        this.participants                    = new ConcurrentHashMap<>();
+        this.participantsConnections = new ConcurrentHashMap<>();
         this.vpnClientIdentityByParticipants = new ConcurrentHashMap<>();
         this.wsCommunicationCloudServer      = wsCommunicationCloudServer;
+
+
+        participantsConnections.clear();
+        vpnClientIdentityByParticipants.clear();
+        vpnClientIdentityByParticipants.clear();
     }
 
     /**
@@ -134,20 +139,19 @@ public class WsCommunicationVPNServer extends WebSocketServer{
             if (!isRegistered){
                 clientConnection.closeConnection(404, "NOT A PARTICIPANT REGISTER FOR THIS VPN");
             }else {
-                participants.put(participantIdentity, clientConnection);
+                participantsConnections.put(participantIdentity, clientConnection);
                 vpnClientIdentityByParticipants.put(participantIdentity, vpnClientIdentity);
             }
 
 
             System.out.println(" WsCommunicationVPNServer - registeredParticipants.size() = " + registeredParticipants.size());
-            System.out.println(" WsCommunicationVPNServer - participants.size() = " + registeredParticipants.size());
-            System.out.println(" WsCommunicationVPNServer - registeredParticipants.size() == participants.size() = " + (registeredParticipants.size() == participants.size()));
-            System.out.println(" WsCommunicationVPNServer - Integer.compare(registeredParticipants.size(), registeredParticipants.size()) == 0 = " + (Integer.compare(registeredParticipants.size(), registeredParticipants.size()) == 0));
+            System.out.println(" WsCommunicationVPNServer - participantsConnections.size() = " + participantsConnections.size());
+            System.out.println(" WsCommunicationVPNServer - Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0 = " + (Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0));
 
-            //Validate if all participants register are connect
-            if(Integer.compare(registeredParticipants.size(), registeredParticipants.size()) == 0){
+            //Validate if all participantsConnections register are connect
+            if(Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0){
 
-                PlatformComponentProfile peer1 =  registeredParticipants.get(0);
+                PlatformComponentProfile peer1 = registeredParticipants.get(0);
                 PlatformComponentProfile peer2 = registeredParticipants.get((registeredParticipants.size()-1));
 
                 sendNotificationPacketConnectionComplete(peer1, peer2.getIdentityPublicKey());
@@ -214,13 +218,13 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         System.out.println(" WsCommunicationVPNServer - Starting method onClose");
         System.out.println(" WsCommunicationVPNServer - " + clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
 
-        if (participants.size() <= 1){
+        if (participantsConnections.size() <= 1){
 
             /*
              * Close all the connection
              */
             for (WebSocket conn: connections()) {
-                conn.closeConnection(505, " All participants close her connections ");
+                conn.closeConnection(505, " All participantsConnections close her connections ");
             }
         }
 
@@ -232,6 +236,8 @@ public class WsCommunicationVPNServer extends WebSocketServer{
      */
     @Override
     public void onMessage(WebSocket clientConnection, String fermatPacketEncode) {
+
+        System.out.println("WsCommunicationVPNServer - onMessage ");
 
         /*
          * Decode the fermatPacketEncode into a fermatPacket
@@ -251,18 +257,21 @@ public class WsCommunicationVPNServer extends WebSocketServer{
              */
             FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
+
+            System.out.println("WsCommunicationVPNServer - fermatMessage = "+fermatMessage);
+
             /*
-             * Send the message to the other participants
+             * Send the message to the other participantsConnections
              */
-            for (String participantIdentity : participants.keySet()) {
+           // for (String participantIdentity : participantsConnections.keySet()) {
 
                 //If participantIdentity is different from the sender, send the message
-                if (participantIdentity != receiveFermatPacket.getSender()){
+             //  if (participantIdentity != receiveFermatPacket.getSender()){
 
                     /*
                     * Construct a new fermat packet whit the same message and different destination
                     */
-                    FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientIdentityByParticipants.get(participantIdentity), //Destination
+                    FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientIdentityByParticipants.get(fermatMessage.getReceiver()), //Destination
                                                                                                                                 vpnServerIdentity.getPublicKey(),                         //Sender
                                                                                                                                 fermatMessage.toJson(),                                   //Message Content
                                                                                                                                 FermatPacketType.MESSAGE_TRANSMIT,                        //Packet type
@@ -271,9 +280,9 @@ public class WsCommunicationVPNServer extends WebSocketServer{
                     /*
                      * Get the connection of the destination
                      */
-                    WebSocket clientConnectionDestination = participants.get(participantIdentity);
+                    WebSocket clientConnectionDestination = participantsConnections.get(fermatMessage.getReceiver());
 
-                    System.out.println("WsCommunicationVPNServer - clientConnectionDestination "+clientConnectionDestination);
+
 
                     /*
                      * If the connection to client destination available
@@ -289,12 +298,12 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
                     }
 
-                }
+           //    }
 
-            }
+         //   }
 
         }else {
-            System.out.println("MessageTransmitPacketProcessor - Packet type " + receiveFermatPacket.getFermatPacketType() + "is not supported");
+            System.out.println("WsCommunicationVPNServer - Packet type " + receiveFermatPacket.getFermatPacketType() + "is not supported");
         }
 
     }

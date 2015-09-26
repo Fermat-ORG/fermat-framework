@@ -227,7 +227,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                      */
                     communicationsVPNConnection.removeMessageRead(message);
 
-                    /**
+                    /*
                      * Notify all observer of this agent that Received a new message
                      */
                     notifyObservers(message);
@@ -272,7 +272,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                     for (FermatMessage message: messages){
 
 
-                        if (communicationsVPNConnection.isActive()) {
+                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
 
                             /*
                              * Encrypt the content of the message whit the remote public key
@@ -282,7 +282,8 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Sing the message
                              */
-                            AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+                            String signature = AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+                            ((FermatMessageCommunication) message).setSignature(signature);
 
                             /*
                              * Send the message

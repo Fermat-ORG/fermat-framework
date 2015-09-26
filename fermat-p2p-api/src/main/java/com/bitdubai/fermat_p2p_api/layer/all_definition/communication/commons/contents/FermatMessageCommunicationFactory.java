@@ -50,6 +50,22 @@ public class FermatMessageCommunicationFactory {
 
 
     /**
+     * Construct a FermatMessage with parameters
+     *
+     * @param senderIdentity
+     * @param receiver
+     * @param content
+     * @param fermatMessageContentType
+     * @return FermatMessage
+     * @throws FMPException
+     */
+    public static FermatMessage constructFermatMessage(final ECCKeyPair senderIdentity, final PlatformComponentProfile receiver, final String content, final FermatMessageContentType fermatMessageContentType) throws FMPException{
+
+        return new FermatMessageCommunication(content, null, fermatMessageContentType, FermatMessagesStatus.PENDING_TO_SEND, receiver.getIdentityPublicKey(), senderIdentity.getPublicKey(), new Timestamp(System.currentTimeMillis()), null, receiver.getCommunicationCloudClientIdentity());
+    }
+
+
+    /**
      * Construct a FermatMessageCommunication from a json string
      *
      * @param jsonMessageData

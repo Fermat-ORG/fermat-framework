@@ -86,10 +86,10 @@ public class TemplateNetworkServiceLocal implements Observer {
 
         try {
 
-            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessageEncryptedAndSinged(senderIdentity, //Sender
-                                                                                                                      remoteNetworkServiceProfile,   //Receiver
-                                                                                                                      messageContent,                //Message Content
-                                                                                                                      FermatMessageContentType.TEXT); //Type
+            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentity,                //Sender
+                                                                                                    remoteNetworkServiceProfile,   //Receiver
+                                                                                                    messageContent,                //Message Content
+                                                                                                    FermatMessageContentType.TEXT);//Type
 
             /*
              * Configure the correct status
@@ -102,6 +102,7 @@ public class TemplateNetworkServiceLocal implements Observer {
             outgoingMessageDao.create(fermatMessage);
 
         } catch (Exception e) {
+            e.printStackTrace();
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
         }
 
@@ -115,6 +116,10 @@ public class TemplateNetworkServiceLocal implements Observer {
      * @param incomingTemplateNetworkServiceMessage received
      */
     private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
+
+
+        System.out.println("TemplateNetworkServiceLocal - onMessageReceived = ");
+        System.out.println(incomingTemplateNetworkServiceMessage);
 
         /**
          * Put the message on a event and fire new event

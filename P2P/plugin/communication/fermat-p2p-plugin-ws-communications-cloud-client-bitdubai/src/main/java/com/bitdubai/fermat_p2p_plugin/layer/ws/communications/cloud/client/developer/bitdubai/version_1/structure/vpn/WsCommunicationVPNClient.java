@@ -24,6 +24,8 @@ import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -61,7 +63,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     /**
      * Represent the pending incoming messages cache
      */
-    private Set<FermatMessage> pendingIncomingMessages;
+    private List<FermatMessage> pendingIncomingMessages;
 
     /**
      * Represent the isActive
@@ -77,7 +79,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
         this.vpnClientIdentity = vpnClientIdentity;
         this.participant       = participant;
         this.vpnServerIdentity = vpnServerIdentity;
-        this.pendingIncomingMessages = new ConcurrentSkipListSet<>();
+        this.pendingIncomingMessages = new ArrayList<>();
     }
 
     /**
@@ -94,7 +96,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
 
     /**
      * (non-javadoc)
-     * @see WebSocketClient#onClose(int, String, boolean)
+     * @see WebSocketClient#onMessage(String)
      */
     @Override
     public void onMessage(String fermatPacketEncode) {
@@ -121,14 +123,14 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
              */
             String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
 
-            System.out.println("MessageTransmitPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
+            System.out.println("WsCommunicationVPNClient - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
             /*
              * Get the message object
              */
             FermatMessage fermatMessage = new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
-            System.out.println("MessageTransmitPacketProcessor - fermatMessage = "+fermatMessage);
+            System.out.println("WsCommunicationVPNClient - fermatMessage = "+fermatMessage);
 
             /*
              * Add to the list
@@ -136,7 +138,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
             pendingIncomingMessages.add(fermatMessage);
 
         }else {
-            System.out.println("MessageTransmitPacketProcessor - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+            System.out.println("WsCommunicationVPNClient - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
         }
 
     }
@@ -174,14 +176,14 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      */
     private void validateFermatPacketSignature(FermatPacket fermatPacketReceive){
 
-        System.out.println(" WsCommunicationsCloudClientChannel - validateFermatPacketSignature");
+        System.out.println(" WsCommunicationVPNClient - validateFermatPacketSignature");
 
          /*
          * Validate the signature
          */
         boolean isValid = AsymmectricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), vpnServerIdentity);
 
-        System.out.println(" WsCommunicationsCloudClientChannel - isValid = " + isValid);
+        System.out.println(" WsCommunicationVPNClient - isValid = " + isValid);
 
         /*
          * if not valid signature
@@ -199,7 +201,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     @Override
     public void sendMessage(FermatMessage fermatMessage){
 
-        System.out.println("WsCommunicationsCloudClientChannel - sendMessage");
+        System.out.println("WsCommunicationVPNClient - sendMessage");
 
         /*
          * Validate parameter

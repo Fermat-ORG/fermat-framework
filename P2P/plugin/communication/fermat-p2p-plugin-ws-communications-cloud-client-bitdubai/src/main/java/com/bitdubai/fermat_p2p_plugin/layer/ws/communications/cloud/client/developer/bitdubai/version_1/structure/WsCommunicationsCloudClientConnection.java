@@ -152,34 +152,15 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
             }
 
-            Location pointOne = new Location() {
-                @Override
-                public Double getLatitude() {
-                    return 32.9697;
-                }
+            Location location = null;
 
-                @Override
-                public Double getLongitude() {
-                    return -96.80322;
-                }
+            try {
 
-                @Override
-                public Double getAltitude() {
-                    return 0.0;
-                }
+                location = locationManager.getLocation();
 
-                @Override
-                public Long getTime() {
-                    return new Long(0);
-                }
-
-                @Override
-                public LocationProvider getProvider() {
-                    return null;
-                }
-            };
-
-
+            }catch (CantGetDeviceLocationException e){
+                e.printStackTrace();
+            }
 
             /*
              * Construct a PlatformComponentProfile instance
@@ -187,15 +168,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
             return new PlatformComponentProfileCommunication(alias,
                                                              wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
                                                              identityPublicKey,
-                                                             //pointOne,
-                                                             locationManager.getLocation(),
+                                                             location,
                                                              name,
                                                              networkServiceType,
                                                              platformComponentType,
                                                              extraData);
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new IllegalArgumentException(e);
         }
 

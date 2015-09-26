@@ -55,9 +55,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          */
         String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
 
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
-
         /*
          * Construct the json object
          */
@@ -69,9 +66,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          */
         PlatformComponentType platformComponentType = discoveryQueryParameters.getPlatformComponentType();
         NetworkServiceType networkServiceType       = discoveryQueryParameters.getNetworkServiceType();
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - platformComponentType = "+platformComponentType);
-        System.out.println("RequestListComponentRegisterPacketProcessor - networkServiceType    = "+networkServiceType);
 
         /*
          * Get the list
@@ -100,18 +94,23 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         }
 
+        /*
+         * Remove the requester from the list
+         */
+        for (PlatformComponentProfile platformComponentProfileRegistered: list) {
+            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
+                list.remove(platformComponentProfileRegistered);
+                break;
+            }
+        }
 
         List<PlatformComponentProfile>  filteredLis = applyDiscoveryQueryParams(list, discoveryQueryParameters);
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size()    = "+filteredLis.size());
 
         /*
          * Convert to json representation
          */
         String jsonListRepresentation = gson.toJson(filteredLis, new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - gson.toJson(list)    = "+jsonListRepresentation);
 
         /*
          * Create the respond

@@ -61,6 +61,11 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
          */
         List<PlatformComponentProfile> participantsList = gson.fromJson(packetContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>(){}.getType());
 
+        for (PlatformComponentProfile participant: participantsList) {
+            System.out.println("ComponentConnectionRequestPacketProcessor - participant = "+participant.getIdentityPublicKey());
+        }
+
+
         //Create a new vpn
         WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
 
