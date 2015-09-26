@@ -382,6 +382,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
                 assetFactory.setState(State.PENDING_FINAL);
                 saveAssetFactory(assetFactory);
                 //Llama al metodo AssetIssuer de la transaction
+                System.out.println(digitalAsset.toString());
                 assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(),assetFactory.getWalletPublicKey(), blockchainNetworkType);
             }
             else

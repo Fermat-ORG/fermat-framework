@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -178,13 +179,13 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             //Luego comente de nuevo el metodo testSaveAssetFactory
             //Luego Descomente el bloque de codigo de metodo testPublishAsset, para que proceda con la publicacion del Asset
             //testSaveAssetFactory();
-            //try
-            //{
-            //    testPublishAsset();
-            //}catch(CantIssueDigitalAssetsException e){
-            //    System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
-            //    e.printStackTrace();
-            //}
+            try
+            {
+                testPublishAsset();
+            }catch(CantIssueDigitalAssetsException e){
+                System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
+                e.printStackTrace();
+            }
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -273,7 +274,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
             assetFactory.setQuantity(2);
             assetFactory.setState(State.DRAFT);
-            assetFactory.setWalletPublicKey("walletpublickey");
+            assetFactory.setWalletPublicKey(new ECCKeyPair().getPublicKey());
             Resource resource = new Resource();
             List<Resource> resources = new ArrayList<>();
             resource.setId(UUID.randomUUID());
@@ -314,39 +315,40 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
             assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
-            DigitalAsset digitalAsset = new DigitalAsset();
-            DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
+//            DigitalAsset digitalAsset = new DigitalAsset();
+//            DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
 
 //            for(ContractProperty property : assetFactory.getContractProperties())
 //            {
 //                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
 //                digitalAssetContract.setContractProperty(contractProperty);
 //            }
-            ContractProperty redeemable;
-            ContractProperty expirationDate;
-            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
-            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
-            redeemable1.setValue(assetFactory.getIsRedeemable());
-            expirationDate1.setValue(assetFactory.getExpirationDate());
-            try {
-
-                digitalAssetContract.setContractProperty(redeemable1);
-            }
-            catch (Exception e){
-                digitalAssetContract.setContractProperty(expirationDate1);
-            }
-            digitalAsset.setContract(digitalAssetContract);
-            digitalAsset.setName(assetFactory.getName());
-            digitalAsset.setDescription(assetFactory.getDescription());
-            digitalAsset.setPublicKey(assetFactory.getPublicKey());
-            digitalAsset.setGenesisAmount(assetFactory.getAmount());
-            digitalAsset.setState(assetFactory.getState());
-            digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
-            digitalAsset.setResources(assetFactory.getResources());
+//            ContractProperty redeemable;
+//            ContractProperty expirationDate;
+//            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+//            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+//            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+//            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+//            redeemable1.setValue(assetFactory.getIsRedeemable());
+//            expirationDate1.setValue(assetFactory.getExpirationDate());
+//            try {
+//
+//                digitalAssetContract.setContractProperty(redeemable1);
+//            }
+//            catch (Exception e){
+//                digitalAssetContract.setContractProperty(expirationDate1);
+//            }
+//            digitalAsset.setContract(digitalAssetContract);
+//            digitalAsset.setName(assetFactory.getName());
+//            digitalAsset.setDescription(assetFactory.getDescription());
+//            digitalAsset.setPublicKey(assetFactory.getPublicKey());
+//            digitalAsset.setGenesisAmount(assetFactory.getAmount());
+//            digitalAsset.setState(assetFactory.getState());
+//            digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
+//            digitalAsset.setResources(assetFactory.getResources());
             //Actualiza el State a Pending_Final del objeto assetFactory
             assetFactory.setState(State.DRAFT);
+            assetFactory.setWalletPublicKey(new ECCKeyPair().getPublicKey());
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
 
