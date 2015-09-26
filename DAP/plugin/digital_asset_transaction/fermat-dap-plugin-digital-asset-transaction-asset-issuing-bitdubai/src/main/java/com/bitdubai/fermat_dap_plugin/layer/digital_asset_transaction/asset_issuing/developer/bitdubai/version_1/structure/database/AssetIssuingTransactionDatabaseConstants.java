@@ -47,6 +47,7 @@ public class AssetIssuingTransactionDatabaseConstants {
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME = "digital_asset_genesis_transaction";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME = "digital_asset_genesis_address";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME = "digital_asset_transaction_state";
+    public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME = "digital_asset_crypto_status";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME = "digital_asset_protocol_status";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME = "digital_asset_hash";
     public static final String DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME ="public_key";
