@@ -30,14 +30,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
@@ -49,6 +43,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interf
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerIdentity;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
@@ -179,13 +174,13 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             //Luego comente de nuevo el metodo testSaveAssetFactory
             //Luego Descomente el bloque de codigo de metodo testPublishAsset, para que proceda con la publicacion del Asset
             //testSaveAssetFactory();
-            try
+/*            try
             {
                 testPublishAsset();
             }catch(CantIssueDigitalAssetsException e){
                 System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
                 e.printStackTrace();
-            }
+            }*/
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -282,26 +277,13 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
             resource.setFileName("imagen2.png");
             resource.setResourceType(ResourceType.IMAGE);
             resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(new byte[]{0xa,0x2,0xf,(byte)0xff,(byte)0xff,(byte)0xff});
+            resource.setResourceBinayData(new byte[]{0xa, 0x2, 0xf, (byte) 0xff, (byte) 0xff, (byte) 0xff});
             resources.add(resource);
             assetFactory.setResources(resources);
-            IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
-                @Override
-                public String getAlias() {
-                    return "Franklin Marcano";
-                }
-
-                @Override
-                public String getPublicKey() {
-                    return "ASDS-10087982";
-                }
-
-                @Override
-                public String createMessageSignature(String mensage) throws CantSingMessageException {
-                    return "signature";
-                }
-            };
-            assetFactory.setIdentityAssetIssuer(identityAssetIssuer);
+            AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
+            assetIssuerIdentity.setAlias("Franklin Marcano");
+            assetIssuerIdentity.setPublicKey("ASDS-10087982");
+            assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
             assetFactoryMiddlewareManager.saveAssetFactory(assetFactory);
         }catch (Exception e){
             System.out.println("******* Metodo testAssetFactory, Error. Franklin ******" );
