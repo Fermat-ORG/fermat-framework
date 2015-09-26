@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
@@ -71,7 +72,7 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
 
     private int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
 
-    private WalletContact lastContactSelected;
+    private CryptoWalletWalletContact lastContactSelected;
 
 
 
@@ -92,7 +93,7 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
     public void setAccountName(String accountName){
         this.accountName=accountName;
     }
-    public void setLastContactSelected(WalletContact walletContact){
+    public void setLastContactSelected(CryptoWalletWalletContact walletContact){
         this.lastContactSelected=walletContact;
     }
 
@@ -164,7 +165,7 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
     }
 
 
-    public WalletContact getLastContactSelected() {
+    public CryptoWalletWalletContact getLastContactSelected() {
         return lastContactSelected;
     }
 

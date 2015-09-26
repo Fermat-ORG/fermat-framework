@@ -30,6 +30,7 @@ public class OutgoingIntraActorTransactionDatabaseConstants {
     public static final String OUTGOING_INTRA_ACTOR_ADDRESS_TO_COLUMN_NAME = "address_to";
     public static final String OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
     public static final String OUTGOING_INTRA_ACTOR_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
+    public static final String OUTGOING_INTRA_ACTOR_OP_RETURN_COLUMN_NAME = "op_return";
     public static final String OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME = "transaction_status";
     public static final String OUTGOING_INTRA_ACTOR_DESCRIPTION_COLUMN_NAME = "description";
     public static final String OUTGOING_INTRA_ACTOR_TIMESTAMP_COLUMN_NAME = "timestamp";

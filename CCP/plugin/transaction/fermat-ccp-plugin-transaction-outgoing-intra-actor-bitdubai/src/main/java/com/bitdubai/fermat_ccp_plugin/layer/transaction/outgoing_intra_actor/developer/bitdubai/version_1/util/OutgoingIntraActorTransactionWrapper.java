@@ -26,6 +26,7 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
     private CryptoAddress addressFrom;
     private CryptoAddress addressTo;
     private long          amount;
+    private String        op_Return;
     private long          timestamp;
     private String        memo;
 
@@ -121,7 +122,13 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
         this.transactionHash = tramsactionHash;
     }
 
+    public String getOp_Return() {
+        return op_Return;
+    }
 
+    public void setOp_Return(String op_Return) {
+        this.op_Return = op_Return;
+    }
 
     private String           walletPublicKey;
     private TransactionState state;

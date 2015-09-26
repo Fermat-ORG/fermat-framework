@@ -68,6 +68,18 @@ public interface IntraActorCryptoTransactionManager {
                            ReferenceWallet referenceWallet) throws OutgoingIntraActorCantSendFundsExceptions,
             OutgoingIntraActorInsufficientFundsException;
 
+    public void sendCrypto(String walletPublicKey,
+                           CryptoAddress destinationAddress,
+                           long cryptoAmount,
+                           String op_Return,
+                           String description,
+                           String senderPublicKey,
+                           String receptorPublicKey,
+                           Actors senderActorType,
+                           Actors receptorActorType,
+                           ReferenceWallet referenceWallet) throws OutgoingIntraActorCantSendFundsExceptions,
+            OutgoingIntraActorInsufficientFundsException;
+
 
     /**
      * TODO: THIS METHOD WILL BE MOVED TO A NEW TRANSACTIONAL PLUGIN SPECIALIZED IN FIAT TRANSACTIONS

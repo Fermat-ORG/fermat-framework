@@ -35,6 +35,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatLis
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.IndexBarView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.SortIgnoreCase;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceFragmentsEnumType;
@@ -97,7 +98,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
 
-
+    List<CryptoWalletWalletContact> walletContactRecords;
 
     public static ContactsFragment newInstance() {
 
@@ -139,8 +140,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         setupViews(rootView);
 
 
-        //get contacts list
-        List<CryptoWalletWalletContact> walletContactRecords = new ArrayList<>();
+         walletContactRecords = new ArrayList<>();
         try {
             walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
         } catch (CantGetAllWalletContactsException e) {
@@ -328,6 +328,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 //                            .show(fragment)
 //                            .commit();
                     referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
+                    CryptoWalletWalletContact cryptoWalletWalletContact;
+                    referenceWalletSession.setLastContactSelected(walletContactRecords.get(position-1));
                     com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet installedWallet = walletSession.getWalletSessionType();
                     ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
 

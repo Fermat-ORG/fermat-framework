@@ -78,6 +78,7 @@ public class OutgoingIntraActorDao {
     public void registerNewTransaction(String          walletPublicKey,
                                        CryptoAddress   destinationAddress,
                                        long            cryptoAmount,
+                                       String          op_Return,
                                        String          notes,
                                        String          deliveredByActorPublicKey,
                                        Actors          deliveredByActorType,
@@ -87,7 +88,7 @@ public class OutgoingIntraActorDao {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet);
+            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
@@ -194,6 +195,7 @@ public class OutgoingIntraActorDao {
                                  String              walletPublicKey,
                                  CryptoAddress       destinationAddress,
                                  long                cryptoAmount,
+                                 String              op_Return,
                                  String              notes,
                                  String              deliveredByActorPublicKey,
                                  Actors              deliveredByActorType,
@@ -214,6 +216,8 @@ public class OutgoingIntraActorDao {
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ADDRESS_TO_COLUMN_NAME, destinationAddress.getAddress());
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_COLUMN_NAME, destinationAddress.getCryptoCurrency().getCode());
         databaseTableRecord.setLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
+        if (op_Return != null)
+            databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_OP_RETURN_COLUMN_NAME, op_Return);
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.NEW.getCode());
 
         // TODO: This have to be changed for the tinestamp when the network recognize the transaction
