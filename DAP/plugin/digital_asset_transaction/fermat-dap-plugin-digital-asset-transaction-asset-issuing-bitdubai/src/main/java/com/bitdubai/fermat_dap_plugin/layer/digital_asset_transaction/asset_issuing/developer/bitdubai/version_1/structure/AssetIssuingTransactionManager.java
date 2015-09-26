@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -43,7 +44,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     PluginFileSystem pluginFileSystem;
     AssetVaultManager assetVaultManager;
-    String walletPublicKey;
+    OutgoingIntraActorManager outgoingIntraActorManager;
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
@@ -52,7 +53,8 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                                           PluginFileSystem pluginFileSystem,
                                           ErrorManager errorManager,
                                           AssetVaultManager assetVaultManager,
-                                          CryptoAddressBookManager cryptoAddressBookManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                          CryptoAddressBookManager cryptoAddressBookManager,
+                                          OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(cryptoWallet);
@@ -62,13 +64,16 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         setPluginDatabaseSystem(pluginDatabaseSystem);
         setAssetVaultManager(assetVaultManager);
         setCryptoAddressBookManager(cryptoAddressBookManager);
+        //TODO: when the OutgoingIntraUser is working, please, uncomment the following line
+        //setOutgoingIntraActorManager(outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId,
                 this.cryptoVaultManager,
                 this.cryptoWallet,
                 this.pluginDatabaseSystem,
                 this.pluginFileSystem,
                 this.assetVaultManager,
-                this.cryptoAddressBookManager);
+                this.cryptoAddressBookManager,
+                this.outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory.setErrorManager(errorManager);
     }
 
@@ -109,6 +114,13 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
             throw new CantSetObjectException("PluginId is null");
         }
         this.pluginId=pluginId;
+    }
+
+    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException{
+        if(outgoingIntraActorManager ==null){
+            throw new CantSetObjectException("outgoingIntraActorManager is null");
+        }
+        this.outgoingIntraActorManager = outgoingIntraActorManager;
     }
 
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem)throws CantSetObjectException{
