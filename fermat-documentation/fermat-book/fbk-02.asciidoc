@@ -1,12 +1,11 @@
-[[fbk-02 FERMAT'S MASTER PLAN]]
 == FERMAT'S Master Plan
 
 === Core concepts 
-====OPEN SOURCE
-====PUBLIC
-====OPEN
-====INCLUSIVE
-====OPEN STANDARD
+==== OPEN SOURCE
+==== PUBLIC
+==== OPEN
+==== INCLUSIVE
+==== OPEN STANDARD
 
 === Segmentation and different levels of abstraction
 === Specific architecture 
