@@ -200,13 +200,13 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             saveWalletFactoryProjectNavigationStructureXML(walletFactoryProject);
 
             //once I have every saved locally (both in db and XML files) I will upload them to github
-            GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "");
-            githubManager.saveWalletFactoryProject(walletFactoryProject);
+            //GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "");
+            //githubManager.saveWalletFactoryProject(walletFactoryProject);
 
         } catch (DatabaseOperationException | MissingProjectDataException | CantPersistFileException | CantCreateFileException e) {
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, walletFactoryProject.getName(), null);
-        } catch (GitHubRepositoryNotFoundException | GitHubNotAuthorizedException e) {
-            e.printStackTrace();
+//        } catch (GitHubRepositoryNotFoundException | GitHubNotAuthorizedException e) {
+//            e.printStackTrace();
         } catch (Exception exception){
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, exception, walletFactoryProject.getName(), null);
         }
