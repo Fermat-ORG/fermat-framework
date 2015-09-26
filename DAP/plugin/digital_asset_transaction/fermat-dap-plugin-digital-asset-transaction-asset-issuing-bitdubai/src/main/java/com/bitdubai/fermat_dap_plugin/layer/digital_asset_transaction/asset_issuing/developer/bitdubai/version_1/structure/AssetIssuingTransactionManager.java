@@ -8,12 +8,12 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.OutgoingIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -44,7 +44,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     PluginFileSystem pluginFileSystem;
     AssetVaultManager assetVaultManager;
-    OutgoingIntraUserManager outgoingIntraUserManager;
+    OutgoingIntraActorManager outgoingIntraActorManager;
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
@@ -54,7 +54,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                                           ErrorManager errorManager,
                                           AssetVaultManager assetVaultManager,
                                           CryptoAddressBookManager cryptoAddressBookManager,
-                                          OutgoingIntraUserManager outgoingIntraUserManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                          OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(cryptoWallet);
@@ -64,7 +64,8 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         setPluginDatabaseSystem(pluginDatabaseSystem);
         setAssetVaultManager(assetVaultManager);
         setCryptoAddressBookManager(cryptoAddressBookManager);
-        setOutgoingIntraUserManager(outgoingIntraUserManager);
+        //TODO: when the OutgoingIntraUser is working, please, uncomment the following line
+        //setOutgoingIntraActorManager(outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId,
                 this.cryptoVaultManager,
                 this.cryptoWallet,
@@ -72,7 +73,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                 this.pluginFileSystem,
                 this.assetVaultManager,
                 this.cryptoAddressBookManager,
-                this.outgoingIntraUserManager);
+                this.outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory.setErrorManager(errorManager);
     }
 
@@ -115,11 +116,11 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.pluginId=pluginId;
     }
 
-    public void setOutgoingIntraUserManager(OutgoingIntraUserManager outgoingIntraUserManager) throws CantSetObjectException{
-        if(outgoingIntraUserManager==null){
-            throw new CantSetObjectException("outgoingIntraUserManager is null");
+    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException{
+        if(outgoingIntraActorManager ==null){
+            throw new CantSetObjectException("outgoingIntraActorManager is null");
         }
-        this.outgoingIntraUserManager=outgoingIntraUserManager;
+        this.outgoingIntraActorManager = outgoingIntraActorManager;
     }
 
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem)throws CantSetObjectException{
