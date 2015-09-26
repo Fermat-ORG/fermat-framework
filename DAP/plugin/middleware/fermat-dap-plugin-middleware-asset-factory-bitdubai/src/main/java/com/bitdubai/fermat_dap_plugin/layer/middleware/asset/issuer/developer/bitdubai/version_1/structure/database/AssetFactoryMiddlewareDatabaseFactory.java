@@ -79,6 +79,7 @@ public class AssetFactoryMiddlewareDatabaseFactory implements DealsWithPluginDat
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, DatabaseDataType.STRING, 30, Boolean.FALSE);
+            table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
             table.addIndex(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FIRST_KEY_COLUMN);
 

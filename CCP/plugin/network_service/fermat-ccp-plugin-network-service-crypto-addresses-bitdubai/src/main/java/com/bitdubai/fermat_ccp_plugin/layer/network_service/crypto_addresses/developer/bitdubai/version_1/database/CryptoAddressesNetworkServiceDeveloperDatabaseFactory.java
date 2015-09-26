@@ -24,7 +24,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -65,6 +65,7 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
 
 
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+
         List<DeveloperDatabase> databases = new ArrayList<>();
 
         databases.add(developerObjectFactory.getNewDeveloperDatabase("Crypto Addresses", this.pluginId.toString()));
@@ -80,7 +81,7 @@ public class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
         /**
          * Table Crypto Address Request columns.
          */
-        List<String> cryptoAddressRequestColumns = new ArrayList<>();
+        List<String> cryptoAddressRequestColumns = new ArrayList<String>();
 
         cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME                    );
         cryptoAddressRequestColumns.add(CryptoAddressesNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME             );

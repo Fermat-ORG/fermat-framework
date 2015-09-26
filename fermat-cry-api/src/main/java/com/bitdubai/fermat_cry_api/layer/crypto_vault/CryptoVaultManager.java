@@ -38,17 +38,23 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      */
     public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
 
-
     /**
-     * Send bitcoins using a user defined transaction.
-     * If the passed Transaction is not complete, I will add the missing values.
-     * @param cryptoTransaction
+     * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
+     * and we must have enought funds to send this money. It allows including an Op_return output value.
+     * @param walletPublicKey
+     * @param FermatTrId
+     * @param addressTo
+     * @param satoshis
+     * @param op_Return
+     * @return
      * @throws InsufficientMoneyException
      * @throws InvalidSendToAddressException
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public void sendBitcoins (CryptoTransaction cryptoTransaction) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+
+
 
 
     /**
@@ -66,13 +72,4 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      * @throws CouldNotGetCryptoStatusException
      */
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException;
-
-    /**
-     * Generates a CryptoTransaction that is not yet commited or send. It allows edition before sending.
-     * @param addressTo the destination CryptoAddress
-     * @param cryptoAmount the amount of bitcoins in Satoshis.
-     * @return the CryptoTransaction object with some information, that includes the transaction hash.
-     * @throws CoultNotCreateCryptoTransaction
-     */
-    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress addressTo, long cryptoAmount) throws CoultNotCreateCryptoTransaction;
 }

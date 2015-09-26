@@ -29,6 +29,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_core.layer.ccp.identity.CCPIdentityLayer;
 import com.bitdubai.fermat_core.layer.ccp.middleware.CCPMiddlewareLayer;
 import com.bitdubai.fermat_core.layer.ccp.network_service.CCPNetworkServiceLayer;
+import com.bitdubai.fermat_core.layer.ccp.transaction.CCPTransactionLayer;
 import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
 import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
 import com.bitdubai.fermat_core.layer.dap_middleware.DAPMiddlewareLayer;
@@ -431,9 +432,10 @@ public class Platform implements Serializable {
 
             // Init CCP Layers
 
-            corePlatformContext.registerPlatformLayer(new CCPIdentityLayer()      , PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER);
-            corePlatformContext.registerPlatformLayer(new CCPMiddlewareLayer()    , PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPIdentityLayer()      , PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER       );
+            corePlatformContext.registerPlatformLayer(new CCPMiddlewareLayer()    , PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER     );
             corePlatformContext.registerPlatformLayer(new CCPNetworkServiceLayer(), PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPTransactionLayer()   , PlatformLayers.BITDUBAI_CCP_TRANSACTION_LAYER    );
 
             // End  CCP Layers
 
@@ -969,11 +971,11 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(outgoingDeviceUserTransaction, Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION);
 
             /*
-             * Plugin Incoming Device user Transaction
+             * Plugin CCP Outgoing Intra Actor Transaction
              * ----------------------------------
              */
-            Plugin outgoingIntraUserTransaction = ((TransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_TRANSACTION_LAYER)).getOutgoingIntraUserPlugin();
-            injectPluginReferencesAndStart(outgoingIntraUserTransaction, Plugins.BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION);
+            Plugin outgoingIntraActorPlugin = ((CCPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_TRANSACTION_LAYER)).getOutgoingIntraActorPlugin();
+            injectPluginReferencesAndStart(outgoingIntraActorPlugin, Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION);
 
             /*
              * Plugin Incoming Device user Transaction

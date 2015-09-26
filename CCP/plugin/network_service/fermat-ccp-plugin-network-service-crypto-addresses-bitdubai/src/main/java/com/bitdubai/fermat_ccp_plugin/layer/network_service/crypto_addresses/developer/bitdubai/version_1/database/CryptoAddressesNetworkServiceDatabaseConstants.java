@@ -5,7 +5,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -15,6 +15,7 @@ public class CryptoAddressesNetworkServiceDatabaseConstants {
     /**
      * Crypto Address Request database table definition.
      */
+
     public static final String CRYPTO_ADDRESS_REQUEST_TABLE_NAME                                 = "crypto_address_request"        ;
 
     public static final String CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME                     = "request_id"                    ;
