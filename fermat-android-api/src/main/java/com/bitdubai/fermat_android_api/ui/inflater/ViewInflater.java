@@ -6,7 +6,9 @@ import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.util.Xml;
 import android.view.Gravity;
 import android.view.View;
@@ -68,6 +70,8 @@ public class ViewInflater {
 
         ResourceProviderManager resourceProviderManager;
 
+        private ViewGroup parent;
+
 
         public ViewInflater(Context context) {
                 this.layoutStack = new Stack<ViewGroup>();
@@ -84,32 +88,38 @@ public class ViewInflater {
                 this.resourceProviderManager = resourceProviderManager;
         }
 
-        public View inflate(String text) {
+        public View inflate(String text,ViewGroup parent) {
                 XmlPullParser parse;
                 try {
                         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                         parse = factory.newPullParser();
                         parse.setInput(new StringReader(text));
-                        return inflate(parse);
+                        return inflate(parse,parent);
                 }
                 catch (XmlPullParserException ex) { return null; }
                 catch (IOException ex) { ex.printStackTrace();
                         return null;}
         }
 
-        public View inflate(XmlPullParser parse)
-                throws XmlPullParserException, IOException
-        {
+        public View inflate(XmlPullParser parse,ViewGroup parent) throws XmlPullParserException, IOException {
 
                 try{
 
 
                         layoutStack.clear();
                         ids.clear();
+                        parent = null;
 
                         Stack<StringBuffer> data = new Stack<StringBuffer>();
                         int evt = parse.getEventType();
                         View root = null;
+
+                        if(parent != null){
+                                this.parent = parent;
+                                root = parent;
+                                layoutStack.push((ViewGroup)parent);
+                        }
+
                         while (evt != XmlPullParser.END_DOCUMENT) {
                                 switch (evt) {
                                         case XmlPullParser.START_DOCUMENT:
@@ -331,19 +341,19 @@ public class ViewInflater {
             int paddingBottomValue = 0;
 
             if(padding!=null){
-                paddingValue = convertInIntegerValue(padding);
+                paddingValue = (int)convertInFloatValue(padding);
             }
             if(paddingBottom!=null){
-                paddingBottomValue = convertInIntegerValue(paddingBottom);
+                paddingBottomValue = (int)convertInFloatValue(paddingBottom);
             }
             if(paddingTop!=null){
-                paddingTopValue = convertInIntegerValue(paddingTop);
+                paddingTopValue = (int)convertInFloatValue(paddingTop);
             }
             if(paddingLeft!=null){
-                paddingLeftValue = convertInIntegerValue(paddingLeft);
+                paddingLeftValue = (int)convertInFloatValue(paddingLeft);
             }
             if(paddingRight!=null){
-                paddingRightValue = convertInIntegerValue(paddingRight);
+                paddingRightValue = (int)convertInFloatValue(paddingRight);
             }
 
 
@@ -476,7 +486,7 @@ public class ViewInflater {
 
                         value = findAttribute(atts,"android:textSize");
                         if(value!=null){
-                                //((TextView) view).setTextSize(Float.parseFloat(value));
+                                ((TextView) view).setTextSize(readSize(value));
                         }
                         value = findAttribute(atts,"android:textColor");
                         if(value!=null){
@@ -597,8 +607,8 @@ public class ViewInflater {
                 String width = findAttribute(atts, "android:layout_width");
                 String height = findAttribute(atts, "android:layout_height");
                 int w, h;
-                w = readSize(width);
-                h = readSize(height);
+                w = (int)readSize(width);
+                h = (int)readSize(height);
 
                 if (vg instanceof RadioGroup) {
                         lps = new RadioGroup.LayoutParams(w, h);
@@ -619,7 +629,7 @@ public class ViewInflater {
                         String x = findAttribute(atts, "android:layout_x");
                         String y = findAttribute(atts, "android:layout_y");
 
-                        lps = new AbsoluteLayout.LayoutParams(w, h, readSize(x), readSize(y));
+                        lps = new AbsoluteLayout.LayoutParams(w, h,(int) readSize(x),(int) readSize(y));
                 }
                 else if (vg instanceof RelativeLayout) {
                         lps = new RelativeLayout.LayoutParams(w,h);
@@ -664,13 +674,13 @@ public class ViewInflater {
                         String top = findAttribute(atts, "android:layout_marginTop");
                         int bottomInt=0, leftInt=0, rightInt=0, topInt=0;
                         if (bottom != null)
-                                bottomInt = readSize(bottom);
+                                bottomInt =(int) readSize(bottom);
                         if (left != null)
-                                leftInt = readSize(left);
+                                leftInt =(int) readSize(left);
                         if (right != null)
-                                rightInt = readSize(right);
+                                rightInt =(int) readSize(right);
                         if (top != null)
-                                topInt = readSize(top);
+                                topInt =(int) readSize(top);
 
                         l.setMargins(leftInt, topInt, rightInt, bottomInt);
 
@@ -694,13 +704,13 @@ public class ViewInflater {
                         String top = findAttribute(atts, "android:layout_marginTop");
                         int bottomInt=0, leftInt=0, rightInt=0, topInt=0;
                         if (bottom != null)
-                                bottomInt = readSize(bottom);
+                                bottomInt =(int) readSize(bottom);
                         if (left != null)
-                                leftInt = readSize(left);
+                                leftInt =(int) readSize(left);
                         if (right != null)
-                                rightInt = readSize(right);
+                                rightInt =(int) readSize(right);
                         if (top != null)
-                                topInt = readSize(top);
+                                topInt =(int) readSize(top);
 
                         l.setMargins(leftInt, topInt, rightInt, bottomInt);
                 }
@@ -708,7 +718,7 @@ public class ViewInflater {
                 return lps;
         }
 
-        protected int readSize(String val) {
+        protected float readSize(String val) {
                 if ("wrap_content".equals(val)) {
                         return ViewGroup.LayoutParams.WRAP_CONTENT;
                 }
@@ -719,7 +729,7 @@ public class ViewInflater {
                         return ViewGroup.LayoutParams.MATCH_PARENT;
                 }
                 else if (val != null) {
-                        return convertInIntegerValue(val);
+                        return convertInFloatValue(val);
 
                 }
                 else {
@@ -727,30 +737,52 @@ public class ViewInflater {
                 }
         }
 
-    /**
-     *  Example convert 16dp in 16
-     *
-     * @param value
-     * @return
-     */
-        private int convertInIntegerValue(String value){
-            int converterer = 0;
-            int indexValue = value.indexOf("dp");
-            if (indexValue != -1){
-                converterer = Integer.parseInt(value.substring(0, indexValue));
-            } else{
-                indexValue = value.indexOf("px");
+        /**
+         *  Example convert 16dp in 16
+         *
+         * @param value
+         * @return
+         */
+        private float convertInFloatValue(String value){
+                float converterer = 0;
+                int indexValue = value.indexOf("dp");
                 if (indexValue != -1){
-                    converterer =  Integer.parseInt(value.substring(0, indexValue));
-                }else{
-                    indexValue = value.indexOf("sp");
-                    if (indexValue != -1) {
-                        converterer = Integer.parseInt(value.substring(0, indexValue));
-                    }else converterer = 0;
+                        //converterer =Math.round( convertPixelsToDp(Float.parseFloat(value.substring(0, indexValue))));
+                        converterer = convertToDp(Float.parseFloat(value.substring(0, indexValue)));
+                } else{
+                        indexValue = value.indexOf("px");
+                        if (indexValue != -1){
+                                converterer = Float.parseFloat(value.substring(0, indexValue));
+                        }else{
+                                indexValue = value.indexOf("sp");
+                                if (indexValue != -1) {
+                                        converterer = Float.parseFloat(value.substring(0, indexValue));
+                                }else converterer = 0;
+                        }
                 }
-            }
-            return converterer;
+                return converterer;
         }
+
+
+        /**
+         * This method converts device specific pixels to density independent pixels.
+         *
+         * @param px A value in px (pixels) unit. Which we need to convert into db
+         * @return A float value to represent dp equivalent to px value
+         */
+        public float convertToDp(float px){
+                return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, context.getResources().getDisplayMetrics());
+        }
+
+        // Está redondeado
+
+        public int pixelsToSp(float px) {
+                DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+                float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+                return Math.round(px/scaledDensity);
+        }
+
+
 
         boolean maybeSetBoolean(View view, String method, String value) {
                 if (value == null) {
@@ -796,8 +828,8 @@ public class ViewInflater {
                         "android:layout_centerHorizontal",
                         "android:layout_centerInParent",
                         "android:layout_centerVertical",
-                        "android:layout_toLeft",
-                        "android:layout_toRight"};
+                        "android:layout_toLeftOf",
+                        "android:layout_toRightOf"};
 
         int[] relative_verbs = new int[]
                 {RelativeLayout.ABOVE,
