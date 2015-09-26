@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai;
 
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.AddonDeveloper;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
