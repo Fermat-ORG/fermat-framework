@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer.ccp_composite_wallet;
+package com.bitdubai.fermat_core.layer.dmp_composite_wallet;
 
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
