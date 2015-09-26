@@ -4,13 +4,13 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.enums.InformationPublishedComponentType;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.ComponentVersionDetail;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.Image;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.InformationPublishedComponent;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.enums.InformationPublishedComponentType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentMiddlewareImpl</code> is the
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.InformationPublishedComponentMiddlewareImpl</code> is the
  * representation of the Information Published Component
  * <p/>
  * 

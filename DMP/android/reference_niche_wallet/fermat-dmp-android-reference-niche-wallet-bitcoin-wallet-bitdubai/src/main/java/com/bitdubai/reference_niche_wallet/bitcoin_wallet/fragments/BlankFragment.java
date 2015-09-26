@@ -29,7 +29,7 @@ import android.widget.Space;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 //import com.google.common.io.Files;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ViewInflater;

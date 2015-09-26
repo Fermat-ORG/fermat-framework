@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.discount_wallet.exceptions.*;
-import com.bitdubai.fermat_api.layer.ccp_world.crypto_index.CryptoIndexManager;
-import com.bitdubai.fermat_api.layer.ccp_world.crypto_index.DealsWithCryptoIndex;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions.*;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.DealsWithCryptoIndex;
 
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.discount_wallet.interfaces.DiscountWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.interfaces.DiscountWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
@@ -19,9 +19,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartWalletServiceException;
-import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.interfaces.WalletService;
-import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.exceptions.CantInitializeWalletException;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartWalletServiceException;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.interfaces.WalletService;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.exceptions.CantInitializeWalletException;
 
 import java.util.UUID;
 

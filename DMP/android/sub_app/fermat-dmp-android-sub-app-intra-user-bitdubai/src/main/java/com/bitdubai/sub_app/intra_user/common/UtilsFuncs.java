@@ -5,11 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
 
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 
-import static com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
-import static com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus.NOT_UNINSTALLED;
-import static com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.enums.InstallationStatus.UPGRADE_AVAILABLE;
+import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
+import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.NOT_UNINSTALLED;
+import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.UPGRADE_AVAILABLE;
 import com.intra_user.bitdubai.R;
 /**
  * Created by Matias Furszyfer on 28/08/15.

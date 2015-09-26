@@ -4,7 +4,7 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.structure;
 
 
 // Packages and classes to import of jdk 1.7
@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 
 
 /**
- * <p>The class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.structure.BankNotesDatabaseFactory</code> is a object
+ * <p>The class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.structure.BankNotesDatabaseFactory</code> is a object
  * for management the database resources.
  * <p/>
  * <p>This class is private for don't extends new classes.

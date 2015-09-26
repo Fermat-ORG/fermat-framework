@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 /**
- * The Class <code>package com.bitdubai.fermat_ccp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException</code>
+ * The Class <code>package com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesWalletResourcesDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
  *

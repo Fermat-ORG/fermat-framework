@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_ccp_plugin.layer.composite_wallet.multi_account_wallet.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.composite_wallet.multi_account_wallet.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.ccp_world.crypto_index.CryptoIndexManager;
-import com.bitdubai.fermat_api.layer.ccp_world.crypto_index.DealsWithCryptoIndex;
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.discount_wallet.interfaces.DiscountWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.DealsWithCryptoIndex;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.interfaces.DiscountWallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;

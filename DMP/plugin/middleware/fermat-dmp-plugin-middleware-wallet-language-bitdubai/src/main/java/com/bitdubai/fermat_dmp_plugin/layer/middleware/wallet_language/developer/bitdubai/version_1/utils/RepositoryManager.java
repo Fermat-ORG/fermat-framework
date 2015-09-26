@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.utils;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.utils;
 
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_language.exceptions.GitHubCredentialsExpectedException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_language.exceptions.GitHubNotAuthorizedException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_language.exceptions.GitHubRepositoryNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.GitHubCredentialsExpectedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

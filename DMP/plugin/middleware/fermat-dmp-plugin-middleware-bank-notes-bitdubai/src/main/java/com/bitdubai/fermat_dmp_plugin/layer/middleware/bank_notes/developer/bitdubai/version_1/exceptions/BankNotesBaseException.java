@@ -5,12 +5,12 @@
  * */
 
 
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.exceptions;
 
 
 /**
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.exceptions.BankNotesBaseException</code> is a exception
+ *  <p>The abstract class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.exceptions.BankNotesBaseException</code> is a exception
  *     base for failures in bank notes process.
  *
  *  <p>Thso class is final.

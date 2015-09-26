@@ -2,7 +2,7 @@ package com.bitdubai.fermat_core.layer.ccp_agent;
 
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer.ccp_agent.AIAgent;
+import com.bitdubai.fermat_api.layer.dmp_agent.AIAgent;
 // import com.bitdubai.wallet_platform_core.layer._12_agent.licesnse.LicenseSubsystem;
 
 

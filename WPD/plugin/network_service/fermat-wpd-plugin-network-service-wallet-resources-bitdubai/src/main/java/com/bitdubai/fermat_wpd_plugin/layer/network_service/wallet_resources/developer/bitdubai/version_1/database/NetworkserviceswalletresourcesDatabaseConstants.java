@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.NetworkserviceswalletresourcesDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *

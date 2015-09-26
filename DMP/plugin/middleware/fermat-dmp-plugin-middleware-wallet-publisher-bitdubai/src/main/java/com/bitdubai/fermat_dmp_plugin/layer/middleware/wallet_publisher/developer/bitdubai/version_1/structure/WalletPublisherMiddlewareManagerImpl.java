@@ -4,36 +4,36 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.enums.FactoryProjectType;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationMiddlewareException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_publisher.exceptions.CantPublishComponentMiddlewareException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.enums.ComponentPublishedInformationStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantGetPublishedComponentInformationMiddlewareException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.exceptions.CantPublishComponentMiddlewareException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.enums.InformationPublishedComponentType;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.ComponentVersionDetail;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.Image;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.InformationPublishedComponent;
-import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.exceptions.CantGetWalletIconException;
-import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.CatalogItem;
-import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.enums.InformationPublishedComponentType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.ComponentVersionDetail;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletIconException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.CatalogItem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ComponentVersionDetailDao;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ScreensShotsComponentsDao;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ComponentVersionDetailDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.InformationPublishedComponentDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.ScreensShotsComponentsDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.database.WalletPublisherMiddlewareDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.util.ImageManager;
 
 import java.net.URL;
 import java.sql.Timestamp;
@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublisherMiddlewareManagerImpl</code> have
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.WalletPublisherMiddlewareManagerImpl</code> have
  * all the implementation of the business logic
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/08/15.
@@ -487,7 +487,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
          * Construct the default skin
          */
         Skin skin = walletFactoryProject.getDefaultSkin();
-        com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin defaultSkin = constructSkinObject(catalogId,
+        com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin defaultSkin = constructSkinObject(catalogId,
                                                                                                                         skin,
                                                                                                                         version,
                                                                                                                         mainScreenShot,
@@ -501,13 +501,13 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * Create other supported skins list
          */
-        List<com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin> otherSkinSupportedList = new ArrayList<>();
+        List<com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin> otherSkinSupportedList = new ArrayList<>();
         for (Skin skinItem : walletFactoryProject.getSkins()) {
 
             /*
              * Construct
              */
-            com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin skinCatalogItem = constructSkinObject(catalogId,
+            com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skinCatalogItem = constructSkinObject(catalogId,
                                                                                                                                 skinItem,
                                                                                                                                 version,
                                                                                                                                 mainScreenShot,
@@ -528,7 +528,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
          * Construct the default language
          */
         Language language = walletFactoryProject.getDefaultLanguage();
-        com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Language defaultLanguage = constructLanguageObject(catalogId,
+        com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language defaultLanguage = constructLanguageObject(catalogId,
                                                                                                                                     language,
                                                                                                                                     version,
                                                                                                                                     videoPreviews,
@@ -537,13 +537,13 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
         /*
          * Create other supported languages list
          */
-        List<com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Language> otherLanguageSupportedList = new ArrayList<>();
+        List<com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language> otherLanguageSupportedList = new ArrayList<>();
         for (Language languageItem : walletFactoryProject.getLanguages()) {
 
             /*
             * Construct
             */
-            com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Language languageCatalogItem = constructLanguageObject(catalogId,
+            com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language languageCatalogItem = constructLanguageObject(catalogId,
                                                                                                                                             languageItem,
                                                                                                                                             version,
                                                                                                                                             videoPreviews,
@@ -588,7 +588,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @param finalWalletVersion
      * @return Skin
      */
-    private com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Skin constructSkinObject(UUID catalogId, Skin skin, Version version, byte[] mainScreenShot, List<byte[]> screenShotDetails, boolean hasVideoPreview, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion) {
+    private com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin constructSkinObject(UUID catalogId, Skin skin, Version version, byte[] mainScreenShot, List<byte[]> screenShotDetails, boolean hasVideoPreview, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion) {
 
        /*
         * Construct the new instance
@@ -620,7 +620,7 @@ public class WalletPublisherMiddlewareManagerImpl implements WalletPublisherMidd
      * @param finalWalletVersion
      * @return Language
      */
-    private com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Language constructLanguageObject(UUID catalogId, Language language, Version version, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion) {
+    private com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language constructLanguageObject(UUID catalogId, Language language, Version version, List<URL> videoPreviews, Version initialWalletVersion, Version finalWalletVersion) {
 
         /*
         * Construct the new instance

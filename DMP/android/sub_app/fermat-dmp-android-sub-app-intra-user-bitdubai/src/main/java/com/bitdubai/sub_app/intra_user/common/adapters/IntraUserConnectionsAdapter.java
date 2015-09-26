@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user.common.UtilsFuncs;
 import com.bitdubai.sub_app.intra_user.common.models.IntraUserConnectionListItem;
 import com.intra_user.bitdubai.R;

@@ -4,17 +4,17 @@
   * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantGetAddressesException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantGetWalletBalanceException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantInitializeDbWalletException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantInitializeFileWalletException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.wallet.CryptoWallet;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.wallet.CryptoWalletAddress;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.wallet.CryptoWalletBalance;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.wallet.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantGetAddressesException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantGetWalletBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantInitializeDbWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantInitializeFileWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletAddress;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletBalance;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -31,12 +31,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums.States;
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.AccountInfo;
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Address;
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.CoinapultClient;
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.ECC;
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Transaction;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums.States;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.AccountInfo;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Address;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.CoinapultClient;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.ECC;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Transaction;
 
 import java.math.BigDecimal;
 import java.security.KeyPair;
@@ -47,7 +47,7 @@ import java.util.UUID;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.structure.CoinapultWallet</code> represents
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.structure.CoinapultWallet</code> represents
  * a coinapult wallet
  *
  * Created by Roberto Requena - (rrequena) on 30/04/15.

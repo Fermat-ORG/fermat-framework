@@ -1,12 +1,12 @@
-package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.ccp_wallet_module.WalletModule;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.WalletModule;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.ccp_wallet_module.fiat_over_crypto_wallet.exceptions.CantGetFiatOverCryptoWalletModule;
-import com.bitdubai.fermat_api.layer.ccp_wallet_module.fiat_over_crypto_wallet.interfaces.FiatOverCryptoWalletManager;
-import com.bitdubai.fermat_api.layer.ccp_wallet_module.fiat_over_crypto_wallet.interfaces.FiatOverCryptoWalletModule;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.fiat_over_crypto_wallet.exceptions.CantGetFiatOverCryptoWalletModule;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.fiat_over_crypto_wallet.interfaces.FiatOverCryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.fiat_over_crypto_wallet.interfaces.FiatOverCryptoWalletModule;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;

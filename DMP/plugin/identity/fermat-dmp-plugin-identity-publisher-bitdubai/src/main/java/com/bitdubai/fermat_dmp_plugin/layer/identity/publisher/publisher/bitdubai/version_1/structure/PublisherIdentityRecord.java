@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.ccp_identity.publisher.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_api.layer.ccp_identity.publisher.interfaces.PublisherIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
 
 /**
  * The class <code>com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.PublisherIdentityRecord</code>

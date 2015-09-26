@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database.WalletManagerMiddlewareDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database.WalletManagerMiddlewareDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *

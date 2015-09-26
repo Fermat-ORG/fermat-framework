@@ -4,16 +4,16 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.Image;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.Image;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageMiddlewareImpl</code> is the
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.structure.ImageMiddlewareImpl</code> is the
  * representation of the ImageMiddleware
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/08/15.

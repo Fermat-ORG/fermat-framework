@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_core.layer.ccp_wallet_module.fiat_over_crypto_wallet;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.ccp_wallet_module.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.ccp_wallet_module.WalletModuleSubsystem;
-import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.WalletModuleSubsystem;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 27/05/15.

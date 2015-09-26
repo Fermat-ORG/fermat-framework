@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.utils;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.utils;
 
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

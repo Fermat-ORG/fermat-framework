@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Languag
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wallet;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.ccp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.ccp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 
 import java.util.HashMap;

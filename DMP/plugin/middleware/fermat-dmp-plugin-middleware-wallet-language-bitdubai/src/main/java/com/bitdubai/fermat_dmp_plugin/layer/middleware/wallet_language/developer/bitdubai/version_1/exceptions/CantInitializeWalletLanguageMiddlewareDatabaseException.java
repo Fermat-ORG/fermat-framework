@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 /**
- * The Class <code>package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.exceptions.CantInitializeWalletLanguageMiddlewareDatabaseException</code>
+ * The Class <code>package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.exceptions.CantInitializeWalletLanguageMiddlewareDatabaseException</code>
  * is thrown when an error occurs initializing database
  * <p/>
  *

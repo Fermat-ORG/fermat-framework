@@ -3,8 +3,8 @@ package com.bitdubai.fermat_core.layer.ccp_request;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer.ccp_network_service.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.ccp_network_service.NetworkSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkSubsystem;
 import com.bitdubai.fermat_core.layer.ccp_network_service.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.ccp_request.money.MoneySubsystem;
 

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- * The Class  <code>com.bitdubai.fermat_ccp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.Network services wallet resourcesNetworkServicesDatabaseFactory</code>
+ * The Class  <code>com.bitdubai.fermat_dmp_plugin.layer.network_services.network_services_wallet_resources.developer.bitdubai.version_1.database.Network services wallet resourcesNetworkServicesDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  * <p/>

@@ -1,16 +1,16 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database;
 
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_navigation_structure.exceptions.CantCreateEmptyWalletNavigationStructureException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_navigation_structure.exceptions.CantDeleteNavigationStructureException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_navigation_structure.exceptions.CantListNavigationStructuresException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_navigation_structure.exceptions.CantUpdateNavigationStructureException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_navigation_structure.exceptions.NavigationStructureNotFoundException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructure;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantCreateEmptyWalletNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantDeleteNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantListNavigationStructuresException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantUpdateNavigationStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.NavigationStructureNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructure;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -24,9 +24,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantInitializeWalletNavigationStructureMiddlewareDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.WalletNavigationStructureMiddleware;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantInitializeWalletNavigationStructureMiddlewareDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.WalletNavigationStructureMiddleware;
 
 import java.util.ArrayList;
 import java.util.List;

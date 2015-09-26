@@ -2,8 +2,8 @@ package com.bitdubai.fermat_core.layer.ccp_module.wallet_runtime;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
-import com.bitdubai.fermat_api.layer.ccp_module.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.ccp_module.ModuleSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.DeveloperBitDubai;
 
 /**

@@ -4,17 +4,17 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.WalletManager;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantCreateWalletException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantInitializeDbWalletException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantInitializeFileWalletException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.exceptions.CantValidateAddressException;
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.wallet.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.WalletManager;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantInitializeDbWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantInitializeFileWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantValidateAddressException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -34,11 +34,11 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.ccp_world.World;
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums.States;
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.AddressInfo;
+import com.bitdubai.fermat_api.layer.dmp_world.World;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums.States;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.AddressInfo;
 
-import com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure.CoinapultWallet;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure.CoinapultWallet;
 
 
 import java.security.Security;
@@ -51,7 +51,7 @@ import java.util.UUID;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.CoinapultWorldPluginRoot</code> represents
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.CoinapultWorldPluginRoot</code> represents
  * a coinapult wallet plugin root and wallets manager
  *
  * Created by loui on 12/03/15.

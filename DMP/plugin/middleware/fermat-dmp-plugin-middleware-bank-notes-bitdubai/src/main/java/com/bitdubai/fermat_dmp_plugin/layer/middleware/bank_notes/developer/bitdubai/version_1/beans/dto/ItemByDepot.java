@@ -4,12 +4,12 @@
  * BITDUBAI/CONFIDENTIAL
  * */
 
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto;
 
 
 /**
  *
- *  <p>The class <code>com.bitdubai.fermat_ccp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.beans.dto.ItemByDepot</code> is a POJOs object for
+ *  <p>The class <code>com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.beans.dto.ItemByDepot</code> is a POJOs object for
  *     management the ItemByDepot DTO component.
  *
  *
@@ -18,7 +18,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bit
  *  @since   jdk 1.7
  *  @since   05/14/2015
  *  @see     {@link AbstractItem}
- *  @see     {@link com.bitdubai.fermat_ccp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Depot}
+ *  @see     {@link com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Depot}
  * */
 public final class ItemByDepot extends AbstractItem<Long> {
 

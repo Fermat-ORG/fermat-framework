@@ -2,8 +2,8 @@ package com.bitdubai.fermat_core.layer.ccp_world;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer.ccp_module.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.ccp_world.WorldSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_world.WorldSubsystem;
 import com.bitdubai.fermat_core.layer.ccp_world.coinapult.CoinapultWorldSubsystem;
 import com.bitdubai.fermat_core.layer.ccp_world.blockchain_info.BlockchainInfoWorldSubsystem;
 import com.bitdubai.fermat_core.layer.ccp_world.coinbase.CoinbaseWorldSubsystem;

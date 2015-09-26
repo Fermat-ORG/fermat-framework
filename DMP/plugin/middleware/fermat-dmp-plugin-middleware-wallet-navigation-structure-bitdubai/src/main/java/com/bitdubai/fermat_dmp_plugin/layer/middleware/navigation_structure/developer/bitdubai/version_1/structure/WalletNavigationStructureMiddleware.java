@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructure;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDatabaseConstants;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructure;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDatabaseConstants;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.WalletNavigationStructureMiddleware</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.WalletNavigationStructureMiddleware</code>
  * is the implementation of WalletNavigationStructure.
  * <p/>
  * <p/>

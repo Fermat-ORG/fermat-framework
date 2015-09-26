@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
-import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 
 import java.io.Serializable;
 import java.util.Map;

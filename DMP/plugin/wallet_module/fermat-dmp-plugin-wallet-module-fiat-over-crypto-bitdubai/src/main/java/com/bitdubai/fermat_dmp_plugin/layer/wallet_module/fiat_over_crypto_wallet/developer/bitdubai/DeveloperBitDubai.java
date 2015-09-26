@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai;
+package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai.version_1.FiatOverCryptoWalletWalletModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.fiat_over_crypto_wallet.developer.bitdubai.version_1.FiatOverCryptoWalletWalletModulePluginRoot;
 
 /**
  * Created by loui on 27/05/15.

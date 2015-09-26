@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_core.layer.ccp_middleware.app_runtime;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.ccp_middleware.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.MiddlewareSubsystem;
-import com.bitdubai.fermat_ccp_plugin.layer.engine.app_runtime.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer.dmp_middleware.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.MiddlewareSubsystem;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 14/02/15.

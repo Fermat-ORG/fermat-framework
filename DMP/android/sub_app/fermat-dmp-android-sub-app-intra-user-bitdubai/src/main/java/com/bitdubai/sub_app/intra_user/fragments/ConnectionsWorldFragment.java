@@ -19,10 +19,10 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.interfaces.ActorIntraUser;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserSearch;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import com.bitdubai.sub_app.intra_user.common.models.IntraUserConnectionListItem;

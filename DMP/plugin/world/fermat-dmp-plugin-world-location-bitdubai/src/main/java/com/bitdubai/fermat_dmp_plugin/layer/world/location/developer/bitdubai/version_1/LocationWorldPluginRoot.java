@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.world.location.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.world.location.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;

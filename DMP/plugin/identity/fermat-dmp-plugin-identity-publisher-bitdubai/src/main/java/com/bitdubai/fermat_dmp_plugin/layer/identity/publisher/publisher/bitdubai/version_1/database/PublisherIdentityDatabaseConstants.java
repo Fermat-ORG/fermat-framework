@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database;
+package com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.version_1.database;
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.PublisherIdentityDatabaseConstants</code>

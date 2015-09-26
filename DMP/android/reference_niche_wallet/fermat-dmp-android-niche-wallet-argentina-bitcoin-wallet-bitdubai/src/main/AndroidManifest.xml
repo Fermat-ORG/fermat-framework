@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bitdubai.android_fermat_ccp_subapp" >
+    package="com.bitdubai.android_fermat_dmp_subapp" >
 
     <application
         android:allowBackup="true"

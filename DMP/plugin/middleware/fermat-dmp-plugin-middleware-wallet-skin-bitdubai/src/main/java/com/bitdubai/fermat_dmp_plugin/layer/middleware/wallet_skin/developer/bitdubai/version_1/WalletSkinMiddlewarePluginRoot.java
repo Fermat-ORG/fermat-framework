@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -21,23 +21,23 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.enums.SkinState;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantAddResourceException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantCloseWalletSkinException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantCopyWalletSkinException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantCreateEmptyWalletSkinException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantDeleteResourceException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantDeleteWalletSkinException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantGetWalletSkinException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantGetWalletSkinStructureException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantListWalletSkinsException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantSaveWalletSkinStructureException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.CantUpdateResourceException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.ResourceAlreadyExistsException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.ResourceNotFoundException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.SkinNotFoundException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.interfaces.WalletSkin;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.interfaces.WalletSkinManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.enums.SkinState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantAddResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCloseWalletSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCopyWalletSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantCreateEmptyWalletSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantDeleteResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantDeleteWalletSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantGetWalletSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantGetWalletSkinStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantListWalletSkinsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantSaveWalletSkinStructureException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.CantUpdateResourceException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.ResourceAlreadyExistsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.ResourceNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.SkinNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -53,10 +53,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database.WalletSkinMiddlewareDao;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database.WalletSkinMiddlewareDeveloperDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.exceptions.CantInitializeWalletSkinMiddlewareDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.structure.WalletSkinMiddlewareWalletSkin;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database.WalletSkinMiddlewareDao;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database.WalletSkinMiddlewareDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.exceptions.CantInitializeWalletSkinMiddlewareDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.structure.WalletSkinMiddlewareWalletSkin;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -453,7 +453,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<>();
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.WalletSkinMiddlewarePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.WalletSkinMiddlewarePluginRoot");
         /**
          * I return the values.
          */

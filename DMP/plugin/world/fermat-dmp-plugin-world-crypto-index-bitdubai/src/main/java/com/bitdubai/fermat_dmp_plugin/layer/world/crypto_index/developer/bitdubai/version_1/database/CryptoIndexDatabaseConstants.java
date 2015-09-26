@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.Money;
 

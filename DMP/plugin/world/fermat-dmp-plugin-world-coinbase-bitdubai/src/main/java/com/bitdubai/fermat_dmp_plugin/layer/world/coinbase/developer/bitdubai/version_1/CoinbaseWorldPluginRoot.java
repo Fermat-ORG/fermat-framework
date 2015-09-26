@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_ccp_plugin.layer.world.coinbase.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.world.coinbase.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.ccp_world.World;
+import com.bitdubai.fermat_api.layer.dmp_world.World;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;

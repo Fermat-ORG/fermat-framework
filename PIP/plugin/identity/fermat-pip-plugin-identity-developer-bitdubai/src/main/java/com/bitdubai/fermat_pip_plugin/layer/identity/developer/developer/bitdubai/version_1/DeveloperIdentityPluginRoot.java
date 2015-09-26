@@ -372,10 +372,10 @@ public class DeveloperIdentityPluginRoot implements DealsWithDeviceUser, DealsWi
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDao");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.developer.developer.bitdubai.version_1.database.DeveloperIdentityDatabaseConstants");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.developer.developer.bitdubai.version_1.database.DeveloperIdentityDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.developer.developer.bitdubai.version_1.DeveloperIdentityPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.developer.developer.bitdubai.version_1.structure.DeveloperIdentityDao");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.developer.developer.bitdubai.version_1.database.DeveloperIdentityDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.developer.developer.bitdubai.version_1.database.DeveloperIdentityDatabaseFactory");
         /**
          * I return the values.
          */

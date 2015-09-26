@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.structure;
 
 
-import com.bitdubai.fermat_api.layer.ccp_world.crypto_index.CryptoIndexManager;
-import com.bitdubai.fermat_api.layer.ccp_world.crypto_index.DealsWithCryptoIndex;
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.discount_wallet.enums.CryptoValueChunkStatus;
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.discount_wallet.enums.DebitFailedReasons;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.DealsWithCryptoIndex;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.enums.CryptoValueChunkStatus;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.enums.DebitFailedReasons;
 //import com.bitdubai.fermat_api.layer.basic_wallet.discount_wallet.exceptions.AvailableFailedException;
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.discount_wallet.exceptions.CantCalculateAvailableAmountException;
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.discount_wallet.exceptions.DebitFailedException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions.CantCalculateAvailableAmountException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions.DebitFailedException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.util.Converter;

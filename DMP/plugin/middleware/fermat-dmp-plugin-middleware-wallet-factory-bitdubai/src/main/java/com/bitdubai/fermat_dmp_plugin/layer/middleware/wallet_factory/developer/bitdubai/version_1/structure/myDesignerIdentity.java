@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_identity.designer.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 
 /**
  * Created by rodrigo on 9/10/15.

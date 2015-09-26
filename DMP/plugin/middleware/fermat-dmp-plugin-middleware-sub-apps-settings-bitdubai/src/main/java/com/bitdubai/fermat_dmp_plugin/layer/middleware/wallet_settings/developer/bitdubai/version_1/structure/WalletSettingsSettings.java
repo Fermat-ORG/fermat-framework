@@ -1,16 +1,16 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.structure;
 
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSaveWalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.exceptions.CantLoadSettingsFileException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.exceptions.InvalidWalletIdException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.exceptions.CantLoadSettingsFileException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.exceptions.InvalidWalletIdException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.interfaces;
+package com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.interfaces;
 
 /**
  * Created by ciencias on 3/19/15.

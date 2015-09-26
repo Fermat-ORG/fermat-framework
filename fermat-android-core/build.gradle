@@ -72,32 +72,33 @@ dependencies {
     compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
 
-    // CCP Projects (Wallets)
+    // DMP Projects (Wallets)
 
-    compile project(':fermat-ccp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
+    compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
 
 
 
     /*
     Wallets on the pipeline:
-        compile project(':CCP/android/niche_wallet/fermat-ccp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
-        compile project(':CCP/android/niche_wallet/fermat-ccp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
-        compile project(':CCP/android/niche_wallet/fermat-ccp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
-        compile project(':CCP/android/niche_wallet/fermat-ccp-android-niche-wallet-argentina-discount-wallet-bitdubai')
-        compile project(':CCP/android/niche_wallet/fermat-ccp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
-        compile project(':CCP/android/niche_wallet/fermat-ccp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
+        compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
+        compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
+        compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
+        compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
+        compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
+        compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
     */
-    // CCP Projects (Sub APPs)
+    // DMP Projects (Sub APPs)
+    compile project(':fermat-dmp-android-sub-app-intra-user-bitdubai')
 
-    compile project(':fermat-ccp-android-sub-app-wallet-factory-bitdubai')
-    compile project(':fermat-ccp-android-sub-app-wallet-publisher-bitdubai')
-    compile project(':fermat-ccp-android-sub-app-wallet-store-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
 
     /*
     Sub APPs on the pipeline
     */
 
-    compile project(':fermat-ccp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
 
 
@@ -105,7 +106,6 @@ dependencies {
     // PIP Projects (Sub APPs)
 
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
-    compile project(':fermat-ccp-android-sub-app-intra-user-bitdubai')
 
     compile project(':fermat-dap-android-desktop-sub-app-manager-bitdubai')
     compile project(':fermat-dap-android-desktop-wallet-manager-bitdubai')

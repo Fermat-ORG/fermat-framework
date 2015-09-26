@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client;
+package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.enums.SkinState;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.interfaces.WalletSkin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.enums.SkinState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkin;
 
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.structure.WalletSkinMiddlewareWalletSkin</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.structure.WalletSkinMiddlewareWalletSkin</code>
  * implements the functionality of a WalletSKin<p/>
  * <p/>
  *

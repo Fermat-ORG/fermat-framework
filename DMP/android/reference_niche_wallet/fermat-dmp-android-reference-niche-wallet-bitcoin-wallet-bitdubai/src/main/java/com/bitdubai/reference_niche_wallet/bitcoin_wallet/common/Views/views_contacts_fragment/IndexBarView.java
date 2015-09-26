@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.ContactIndexStrucs;
 
 import java.util.ArrayList;

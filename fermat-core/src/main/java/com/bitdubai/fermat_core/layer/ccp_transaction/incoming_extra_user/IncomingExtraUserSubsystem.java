@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_core.layer.ccp_transaction.incoming_extra_user;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.ccp_transaction.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.ccp_transaction.TransactionSubsystem;
-import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer.dmp_transaction.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionSubsystem;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 16/02/15.

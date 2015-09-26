@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_core.layer.ccp_identity.designer;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.ccp_identity.IdentitySubsystem;
-import com.bitdubai.fermat_api.layer.ccp_identity.CantStartSubsystemException;
-import com.bitdubai.fermat_ccp_plugin.layer.identity.designer.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer.dmp_identity.IdentitySubsystem;
+import com.bitdubai.fermat_api.layer.dmp_identity.CantStartSubsystemException;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by natalia on 04/08/15.

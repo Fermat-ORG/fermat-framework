@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources;
 
-import com.bitdubai.fermat_api.layer.ccp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetManifestException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetSkinFileException;

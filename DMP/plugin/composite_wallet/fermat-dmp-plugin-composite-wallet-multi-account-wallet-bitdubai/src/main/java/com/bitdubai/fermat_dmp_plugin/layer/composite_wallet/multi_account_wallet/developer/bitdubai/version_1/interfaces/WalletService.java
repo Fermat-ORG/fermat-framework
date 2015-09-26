@@ -1,6 +1,6 @@
-package com.bitdubai.fermat_ccp_plugin.layer.composite_wallet.multi_account_wallet.developer.bitdubai.version_1.interfaces;
+package com.bitdubai.fermat_dmp_plugin.layer.composite_wallet.multi_account_wallet.developer.bitdubai.version_1.interfaces;
 
-import  com.bitdubai.fermat_ccp_plugin.layer.composite_wallet.multi_account_wallet.developer.bitdubai.version_1.exceptions.CantStartWalletServiceException;
+import  com.bitdubai.fermat_dmp_plugin.layer.composite_wallet.multi_account_wallet.developer.bitdubai.version_1.exceptions.CantStartWalletServiceException;
 
 /**
  * Created by ciencias on 3/26/15.

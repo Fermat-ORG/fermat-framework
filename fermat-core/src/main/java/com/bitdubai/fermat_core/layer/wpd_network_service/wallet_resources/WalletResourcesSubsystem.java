@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer.wpd_network_service.wallet_resources;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.ccp_network_service.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.ccp_network_service.NetworkSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkSubsystem;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_resources.developer.bitdubai.DeveloperBitDubai;
 
 /**

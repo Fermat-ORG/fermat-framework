@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.structure;
 
 /**
  * Created by loui on 23/02/15.

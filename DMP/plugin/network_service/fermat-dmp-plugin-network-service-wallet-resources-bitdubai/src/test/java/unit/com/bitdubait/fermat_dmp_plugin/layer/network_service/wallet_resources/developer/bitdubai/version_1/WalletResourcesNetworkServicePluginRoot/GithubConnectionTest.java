@@ -1,9 +1,9 @@
-package unit.com.bitdubait.fermat_ccp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubCredentialsExpectedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;

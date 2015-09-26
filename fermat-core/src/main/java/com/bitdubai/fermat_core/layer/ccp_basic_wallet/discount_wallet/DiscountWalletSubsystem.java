@@ -2,9 +2,9 @@ package com.bitdubai.fermat_core.layer.ccp_basic_wallet.discount_wallet;
 
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.BasicWalletSubsystem;
-import com.bitdubai.fermat_api.layer.ccp_basic_wallet.CantStartSubsystemException;
-import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.BasicWalletSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.CantStartSubsystemException;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 20.01.15.

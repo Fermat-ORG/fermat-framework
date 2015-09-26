@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -10,40 +10,40 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.exceptions.CantAcceptIntraUserException;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.exceptions.CantCancelIntraUserException;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.exceptions.CantDenyConnectionException;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.exceptions.CantGetIntraUsersException;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.interfaces.ActorIntraUser;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.interfaces.ActorIntraUserManager;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
-import com.bitdubai.fermat_api.layer.ccp_identity.intra_user.exceptions.CantCreateNewIntraUserException;
-import com.bitdubai.fermat_api.layer.ccp_identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
-import com.bitdubai.fermat_api.layer.ccp_identity.intra_user.exceptions.CantSetNewProfileImageException;
-import com.bitdubai.fermat_api.layer.ccp_identity.intra_user.interfaces.DealsWithIdentityIntraUser;
-import com.bitdubai.fermat_api.layer.ccp_identity.intra_user.interfaces.IntraUserIdentity;
-import com.bitdubai.fermat_api.layer.ccp_identity.intra_user.interfaces.IntraUserIdentityManager;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.CantAcceptRequestException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.CantGetIntraUsersListException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.CantLoginIntraUserException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.CantSaveProfileImageException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.CantStartRequestException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.IntraUserCancellingFailedException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.exceptions.IntraUserDisconnectingFailedException;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_api.layer.ccp_module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_api.layer.ccp_network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
-import com.bitdubai.fermat_api.layer.ccp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
-import com.bitdubai.fermat_api.layer.ccp_network_service.intra_user.interfaces.IntraUser;
-import com.bitdubai.fermat_api.layer.ccp_network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantCreateNewIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantSetNewProfileImageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.DealsWithIdentityIntraUser;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSaveProfileImageException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserCancellingFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserDisconnectingFailedException;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -55,10 +55,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 
-import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.exceptions.CantLoadLoginsFileException;
-import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation;
-import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity;
-import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.exceptions.CantLoadLoginsFileException;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -689,10 +689,10 @@ public class IntraUserModulePluginRoot implements  DealsWithErrors,DealsWithIntr
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity");
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch");
 
         /**
          * I return the values.

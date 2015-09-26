@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.world.shape_shift.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.world.shape_shift.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -11,7 +11,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.ccp_world.World;
+import com.bitdubai.fermat_api.layer.dmp_world.World;
 
 import java.util.ArrayList;
 import java.util.List;

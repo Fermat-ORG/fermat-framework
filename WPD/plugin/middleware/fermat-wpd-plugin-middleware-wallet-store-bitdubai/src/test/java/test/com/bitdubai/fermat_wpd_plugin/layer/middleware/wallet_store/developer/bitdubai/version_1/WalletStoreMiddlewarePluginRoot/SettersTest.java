@@ -1,6 +1,6 @@
 package test.com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.WalletStoreMiddlewarePluginRoot;
 
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_store.interfaces.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -33,7 +33,7 @@ public class SettersTest extends TestCase {
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
     @Mock
-    com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.WalletStoreManager walletStoreNetworkManager;
+    com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.WalletStoreManager walletStoreNetworkManager;
 
     private UUID testPluginId;
     private WalletStoreMiddlewarePluginRoot walletStoreMiddlewarePluginRoot;

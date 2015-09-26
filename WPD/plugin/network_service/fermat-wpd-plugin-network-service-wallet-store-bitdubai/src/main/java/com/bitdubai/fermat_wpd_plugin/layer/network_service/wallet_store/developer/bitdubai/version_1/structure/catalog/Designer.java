@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog;
 
-import com.bitdubai.fermat_api.layer.ccp_identity.designer.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import java.util.UUID;
 
 /**

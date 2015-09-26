@@ -4,16 +4,16 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.ccp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
 
 import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.07.31..
  */
-public class WalletResources implements com.bitdubai.fermat_api.layer.ccp_network_service.wallet_resources.WalletResources {
+public class WalletResources implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResources {
 
     private UUID id;
 

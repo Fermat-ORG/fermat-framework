@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_world.Agent;
-import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantInitializeMonitorAgentException;
-import com.bitdubai.fermat_api.layer.ccp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.dmp_world.Agent;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -21,7 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_ccp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.exceptions.CantReadAnnouncedTransactionException;
+import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.exceptions.CantReadAnnouncedTransactionException;
 
 import java.util.List;
 import java.util.UUID;

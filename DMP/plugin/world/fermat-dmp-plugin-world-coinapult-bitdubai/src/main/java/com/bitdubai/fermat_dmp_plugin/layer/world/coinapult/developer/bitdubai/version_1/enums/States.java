@@ -4,7 +4,7 @@
   * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums;
+package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums;
 
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.definition.enums.States</code> holds the different states

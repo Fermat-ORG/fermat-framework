@@ -1,7 +1,7 @@
-package unit.com.bitdubait.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.DeveloperBitDubai;
+package unit.com.bitdubait.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.DeveloperBitDubai;
 
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.DeveloperBitDubai;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.IntraUserActorPluginRoot;
 
 import junit.framework.TestCase;
 

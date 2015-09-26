@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_language.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_language.enums.LanguageState;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_language.interfaces.WalletLanguage;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.enums.LanguageState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguage;
 
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletLanguageMiddlewareWalletLanguage</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure.WalletLanguageMiddlewareWalletLanguage</code>
  * implementation of WalletLanguageMiddlewareWalletLanguage.
  * <p/>
  *

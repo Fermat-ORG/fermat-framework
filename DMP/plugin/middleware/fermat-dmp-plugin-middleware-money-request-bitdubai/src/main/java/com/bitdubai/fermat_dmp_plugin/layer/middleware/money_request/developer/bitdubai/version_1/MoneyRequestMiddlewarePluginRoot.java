@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_ccp_plugin.layer.middleware.money_request.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_api.layer.ccp_middleware.money_request.MoneyRequestManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.money_request.MoneyRequestManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -19,11 +19,11 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.IncomingMoneyRequestReceivedEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.IncomingMoneyRequestRejectedEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.OutgoingMoneyRequestApprovedEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.OutgoingMoneyRequestDeliveredEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.OutgoingMoneyRequestRejectedEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.IncomingMoneyRequestReceivedEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.IncomingMoneyRequestRejectedEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.OutgoingMoneyRequestApprovedEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.OutgoingMoneyRequestDeliveredEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.OutgoingMoneyRequestRejectedEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -15,19 +15,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.ccp_identity.publisher.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_api.layer.ccp_identity.publisher.interfaces.PublisherIdentity;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.enums.WalletFactoryProjectState;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisherMiddlewarePlugin;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.exceptions.CantPublishComponentException;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.InformationPublishedComponent;
-import com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_identity.publisher.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.DealsWithWalletPublisherMiddlewarePlugin;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantPublishComponentException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -48,7 +48,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot</code> is
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_publisher.developer.bitdubai.version_1.WalletPublisherMiddlewarePluginRoot</code> is
  * the responsible to communicate the user interface whit the middleware layer.
  * <p/>
  * <p/>
@@ -289,7 +289,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1.WalletPublisherModuleModulePluginRootPlugin");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.version_1.WalletPublisherModuleModulePluginRootPlugin");
 
         /**
          * I return the values.
@@ -538,7 +538,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
      *
      * @see @see WalletPublisherModuleManager#getPlatformVersions()
      */
-    public List<Version> getPlatformVersions() throws com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException {
+    public List<Version> getPlatformVersions() throws com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException {
 
         List<Version> versions = new ArrayList<>();
         try {
@@ -548,7 +548,7 @@ public class WalletPublisherModuleModulePluginRootPlugin implements Service, Dea
         } catch (CantLoadPlatformInformationException e) {
             e.printStackTrace();
 
-            new com.bitdubai.fermat_api.layer.ccp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException(e.getLocalizedMessage(), e, "Wallet Publisher", "");
+            new com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantLoadPlatformInformationException(e.getLocalizedMessage(), e, "Wallet Publisher", "");
         }
 
         return versions;

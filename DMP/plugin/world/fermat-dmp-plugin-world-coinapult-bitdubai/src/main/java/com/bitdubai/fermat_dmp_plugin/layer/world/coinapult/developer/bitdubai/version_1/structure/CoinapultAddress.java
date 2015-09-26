@@ -4,14 +4,14 @@
   * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_world.coinapult.wallet.CryptoWalletAddress;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletAddress;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.structure.</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.structure.</code>
  * <p/>
  * Created by Roberto Requena - (rrequena) on 30/04/15.
  *

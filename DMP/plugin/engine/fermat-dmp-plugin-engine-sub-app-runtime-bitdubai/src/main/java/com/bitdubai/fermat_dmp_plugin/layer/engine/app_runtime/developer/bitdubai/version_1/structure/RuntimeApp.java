@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_ccp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_engine.sub_app_runtime.App;
-import com.bitdubai.fermat_api.layer.ccp_engine.sub_app_runtime.enums.Apps;
-import com.bitdubai.fermat_api.layer.ccp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.ccp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.App;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 import java.util.HashMap;
 import java.util.Map;

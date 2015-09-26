@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.enums.ContactState;
-import com.bitdubai.fermat_api.layer.ccp_actor.intra_user.interfaces.ActorIntraUser;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorActor</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorActor</code>
  * is the implementation of ActorIntraUser interface to provides the methods to consult the information of an Intra User <p/>
  *
  * Created by Created by natalia on 11/08/15.

@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_statistics.developer.bitdubai;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1.WalletStatisticsNetworkServicePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_statistics.developer.bitdubai.version_1.WalletStatisticsNetworkServicePluginRoot;
 
 /**
  * I will choose from the different versions of my implementations which one to start. Now there is only one, so
