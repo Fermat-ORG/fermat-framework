@@ -423,25 +423,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              */
             this.serviceStatus = ServiceStatus.STARTED;
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
-
-        //Test
-        CryptoAddress cryptoAddress = new CryptoAddress("mo5mFxL9VW7kS1UaauCig9TMeFUS1yC4F5", CryptoCurrency.BITCOIN);
-        try {
-            CryptoTransaction cryptoTransaction = this.generateDraftCryptoTransaction(cryptoAddress, 10000);
-            this.sendBitcoins(cryptoTransaction);
-        } catch (CoultNotCreateCryptoTransaction coultNotCreateCryptoTransaction) {
-            coultNotCreateCryptoTransaction.printStackTrace();
-        } catch (InsufficientMoneyException e) {
-            e.printStackTrace();
-        } catch (InvalidSendToAddressException e) {
-            e.printStackTrace();
-        } catch (CouldNotSendMoneyException e) {
-            e.printStackTrace();
-        } catch (CryptoTransactionAlreadySentException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
     /**
@@ -540,6 +521,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     }
 
     @Override
+    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+        return vault.sendBitcoins(FermatTrId, addressTo, satoshis);
+    }
+
+    @Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
         return vault;
     }
@@ -575,61 +561,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + transactionId.toString(), "An error in the database plugin.");
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + transactionId.toString(), "Duplicated transaction Id in the database.");
-        }
-    }
-
-    @Override
-    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress addressTo, long cryptoAmount) throws CoultNotCreateCryptoTransaction {
-        CryptoTransaction cryptoTransaction = new CryptoTransaction();
-        cryptoTransaction.setAddressTo(addressTo);
-        cryptoTransaction.setCryptoAmount(cryptoAmount);
-        cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
-        cryptoTransaction.setCryptoStatus(CryptoStatus.PENDING_SUBMIT);
-
-
-        Transaction transaction = new Transaction(RegTestParams.get());
-        System.out.println("Hash transaccion recien creada: " + transaction.getHashAsString());
-        transaction.setPurpose(Transaction.Purpose.USER_PAYMENT);
-        byte[] scryptbytes = new byte[1];
-        TransactionInput input = new TransactionInput(RegTestParams.get(), transaction, scryptbytes);
-        Address address= null;
-        try {
-            address = new Address(RegTestParams.get(), addressTo.getAddress());
-        } catch (AddressFormatException e) {
-            e.printStackTrace();
-        }
-        TransactionOutput output = new TransactionOutput(RegTestParams.get(), transaction, Coin.valueOf(1000), address);
-        transaction.addInput(input);
-        System.out.println("Hash transaccion luego de meter el input: " + transaction.getHashAsString());
-        transaction.addOutput(output);
-        System.out.println("Hash transaccion luego de meter el output: " + transaction.getHashAsString());
-
-        try {
-            PluginTextFile transactionFile = pluginFileSystem.createTextFile(this.pluginId, "cryptovault", "transactionFile", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            transactionFile.setContent(XMLParser.parseObject(transaction));
-            transactionFile.persistToMedia();
-
-
-        } catch (CantCreateFileException e) {
-            e.printStackTrace();
-        } catch (CantPersistFileException e) {
-            e.printStackTrace();
-        }
-        return cryptoTransaction;
-    }
-
-    @Override
-    public void sendBitcoins(CryptoTransaction cryptoTransaction) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        try {
-            PluginTextFile transactionFile = pluginFileSystem.getTextFile(this.pluginId, "cryptovault", "transactionFile", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            Transaction transaction = new Transaction(RegTestParams.get());
-            transaction = (Transaction) XMLParser.parseXML(transactionFile.getContent(), transaction);
-
-            System.out.println("Transacción cargada " + transaction.getHash().toString());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (CantCreateFileException e) {
-            e.printStackTrace();
         }
     }
 }
