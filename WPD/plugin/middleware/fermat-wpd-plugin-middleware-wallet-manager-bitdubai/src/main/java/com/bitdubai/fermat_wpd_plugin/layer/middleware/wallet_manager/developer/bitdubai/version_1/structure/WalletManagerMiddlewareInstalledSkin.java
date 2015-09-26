@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.In
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledSkin</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstalledSkin</code>
  * is the implementation of InstalledSkin.
  * <p/>
  *

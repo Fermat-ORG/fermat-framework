@@ -76,8 +76,8 @@ public class NetworkserviceswalletresourcesDatabaseFactory implements DealsWithP
             table = databaseFactory.newTableFactory(ownerId, NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_TABLE_NAME);
 
             table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKINID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATHTOREPO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_PATH_TO_REPO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(NetworkserviceswalletresourcesDatabaseConstants.REPOSITORIES_NAVIGATION_STRUCTURE_VERSION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
  */
 public class WalletInstalledEventHandler implements FermatEventHandler {
     WalletRuntimeManager walletRuntimeManager;
-    
+
     public void setWalletRuntimeManager(WalletRuntimeManager walletRuntimeManager) {
         this.walletRuntimeManager = walletRuntimeManager;
     }
@@ -22,12 +22,12 @@ public class WalletInstalledEventHandler implements FermatEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         String publicKey = ((WalletInstalledEvent) fermatEvent).getPublicKey();
-        
-        
+
+
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
 
             //TODO: Hablar con luis que más quiere que haga cuando se instala la wallet
-            
+
 //            try {
 //                this.walletRuntimeManager.recordNavigationStructure(publicKey);
 //            }
@@ -41,7 +41,7 @@ public class WalletInstalledEventHandler implements FermatEventHandler {
 //                throw cantRecordInstalledWalletNavigationStructureException;
 //
 //            }
-            
-        } 
+
+        }
     }
 }

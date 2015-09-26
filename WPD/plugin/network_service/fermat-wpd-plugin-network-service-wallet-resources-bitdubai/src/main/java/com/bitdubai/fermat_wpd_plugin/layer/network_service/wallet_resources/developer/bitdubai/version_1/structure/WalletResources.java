@@ -39,7 +39,7 @@ public class WalletResources implements com.bitdubai.fermat_api.layer.dmp_networ
     }
 
     @Override
-    public byte[] getImageResource(String imageName,ScreenOrientation orientation) {//throws CantGetResourcesException {
+    public byte[] getImageResource(String imageName,ScreenOrientation orientation) throws CantGetResourcesException {
         switch (orientation){
             case PORTRAIT:
                 //Resource resource= skin.getLstPortraitResources().get(imageName);
@@ -52,12 +52,12 @@ public class WalletResources implements com.bitdubai.fermat_api.layer.dmp_networ
     }
 
     @Override
-    public byte[] getVideoResource(String videoName) {//throws CantGetResourcesException {
+    public byte[] getVideoResource(String videoName) throws CantGetResourcesException {
         return new byte[0];
     }
 
     @Override
-    public byte[] getSoundResource(String soundName) {//throws CantGetResourcesException {
+    public byte[] getSoundResource(String soundName) throws CantGetResourcesException {
         return new byte[0];
     }
 

@@ -163,6 +163,7 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
         return this.walletSettings;
     }
 
+
     public WalletContact getLastContactSelected() {
         return lastContactSelected;
     }

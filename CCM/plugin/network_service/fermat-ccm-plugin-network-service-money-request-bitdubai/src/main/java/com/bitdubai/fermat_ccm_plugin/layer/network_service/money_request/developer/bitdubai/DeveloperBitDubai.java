@@ -11,14 +11,14 @@ import com.bitdubai.fermat_ccm_plugin.layer.network_service.money_request.develo
  * Created by loui on 23/02/15.
  */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-    
+
     Plugin plugin;
-    
+
     @Override
     public Plugin getPlugin(){
-        return plugin;        
+        return plugin;
     }
-    
+
     public DeveloperBitDubai(){
         plugin = new MoneyRequestNetworkServicePluginRoot();
     }

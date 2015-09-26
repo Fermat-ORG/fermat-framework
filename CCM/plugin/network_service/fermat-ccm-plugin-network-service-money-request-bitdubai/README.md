@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-network-service-money-request-bitdubai
+# fermat-ccm-plugin-network-service-money-request-bitdubai

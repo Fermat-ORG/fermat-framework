@@ -32,8 +32,8 @@ public class WalletNavigationStructureDownloadedHandler implements FermatEventHa
 
         //if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
 
-            System.out.println("JORGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HOla111");
-                this.walletRuntimeManager.recordNavigationStructure(xmlText,link,filename,skinId,walletPubicKey);
+        System.out.println("JORGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HOla111");
+        this.walletRuntimeManager.recordNavigationStructure(xmlText,link,filename,skinId,walletPubicKey);
 
 
         //}

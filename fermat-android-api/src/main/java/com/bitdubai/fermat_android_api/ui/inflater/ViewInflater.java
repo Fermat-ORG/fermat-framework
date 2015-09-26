@@ -64,7 +64,7 @@ public class ViewInflater {
         int idg;
 
         ResourceProviderManager resourceProviderManager;
-        
+
         public ViewInflater(Context context, ResourceProviderManager resourceProviderManager) {
                 this.layoutStack = new Stack<ViewGroup>();
                 this.ids = new Hashtable<String, Integer>();
@@ -72,9 +72,9 @@ public class ViewInflater {
                 this.idg = 0;
                 this.resourceProviderManager = resourceProviderManager;
         }
-        
+
         public View inflate(String text) {
-                XmlPullParser parse;            
+                XmlPullParser parse;
                 try {
                         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                         parse = factory.newPullParser();
@@ -84,10 +84,10 @@ public class ViewInflater {
                 catch (XmlPullParserException ex) { return null; }
                 catch (IOException ex) { return null; }
         }
-        
-        public View inflate(XmlPullParser parse) 
-                        throws XmlPullParserException, IOException
-                        {
+
+        public View inflate(XmlPullParser parse)
+                throws XmlPullParserException, IOException
+        {
                 layoutStack.clear();
                 ids.clear();
 
@@ -96,38 +96,38 @@ public class ViewInflater {
                 View root = null;
                 while (evt != XmlPullParser.END_DOCUMENT) {
                         switch (evt) {
-                        case XmlPullParser.START_DOCUMENT:
-                                data.clear();
-                                break;
-                        case XmlPullParser.START_TAG:
-                                data.push(new StringBuffer());
-                                View v = createView(parse);
-                                if (v == null)
-                                        continue;
-                                if (root == null) {
-                                        root = v;
-                                }
-                                else {
-                                        layoutStack.peek().addView(v);
-                                }
-                                if (v instanceof ViewGroup) {
-                                        layoutStack.push((ViewGroup)v);
-                                }
-                                break;
-                        case XmlPullParser.TEXT:
-                                data.peek().append(parse.getText());
-                                break;
-                        case XmlPullParser.END_TAG:
-                                data.pop();
-                                if (isLayout(parse.getName()))
-                                        layoutStack.pop();
+                                case XmlPullParser.START_DOCUMENT:
+                                        data.clear();
+                                        break;
+                                case XmlPullParser.START_TAG:
+                                        data.push(new StringBuffer());
+                                        View v = createView(parse);
+                                        if (v == null)
+                                                continue;
+                                        if (root == null) {
+                                                root = v;
+                                        }
+                                        else {
+                                                layoutStack.peek().addView(v);
+                                        }
+                                        if (v instanceof ViewGroup) {
+                                                layoutStack.push((ViewGroup)v);
+                                        }
+                                        break;
+                                case XmlPullParser.TEXT:
+                                        data.peek().append(parse.getText());
+                                        break;
+                                case XmlPullParser.END_TAG:
+                                        data.pop();
+                                        if (isLayout(parse.getName()))
+                                                layoutStack.pop();
 
                         }
                         evt = parse.next();
                 }
                 return root;
-                        }
-        
+        }
+
         protected View createView(XmlPullParser parse) {
                 String name = parse.getName();
                 View result = null;
@@ -203,12 +203,12 @@ public class ViewInflater {
                 }
                 else {
                         Toast.makeText(context , "Unhandled tag:"+name,
-                                        Toast.LENGTH_SHORT).show();     
+                                Toast.LENGTH_SHORT).show();
                 }
-                
+
                 if (result == null)
                         return null;
-                
+
                 String id = findAttribute(atts, "android:id");
 
                 if (id != null) {
@@ -217,7 +217,7 @@ public class ViewInflater {
                                 result.setId(idNumber);
                         }
                 }
-                
+
                 if (result instanceof TextView) {
                         TextView tv = (TextView)result;
                         String text = findAttribute(atts, "android:text");
@@ -234,13 +234,13 @@ public class ViewInflater {
                                 //imageView.setImageResource(R.drawable.person1);
                         }
                 }
-                
+
                 if (result instanceof CompoundButton) {
                         CompoundButton cb = (CompoundButton)result;
                         String checked = findAttribute(atts, "android:checked");
                         cb.setChecked("true".equals(checked));
                 }
-                
+
                 if (result instanceof ProgressBar) {
                         ProgressBar pb = (ProgressBar)result;
                         String indet = findAttribute(atts, "android:indeterminate");
@@ -261,7 +261,7 @@ public class ViewInflater {
                                 pb.setMax(Integer.parseInt(max));
                         }
                 }
-                
+
                 if (result instanceof LinearLayout) {
                         LinearLayout ll = (LinearLayout)result;
                         String orient = findAttribute(atts, "android:orientation");
@@ -272,7 +272,7 @@ public class ViewInflater {
                                         ll.setOrientation(LinearLayout.VERTICAL);
                         }
                 }
-                
+
                 if (result instanceof RadioGroup) {
                         RadioGroup rg = (RadioGroup)result;
                         String cid = findAttribute(atts, "android:checkedButton");
@@ -280,36 +280,36 @@ public class ViewInflater {
                                 rg.check(Integer.parseInt(cid));
                         }
                 }
-                
+
                 if (result instanceof View) {
-                View v = (View)result;
+                        View v = (View)result;
                 /* API 11
                  String alpha = findAttribute(atts, "android:alpha");
                  if (alpha != null) {
                         v.setAlpha(Float.parseFloat(alpha));
                  }
                 */
-                maybeSetBoolean(v, "setClickable", atts, "android:clickable");
-                maybeSetBoolean(v, "setFocusable", atts, "android:focusable");
-                maybeSetBoolean(v, "setHapticFeedbackEnabled", atts, "android:hapticFeedbackEnabled");
+                        maybeSetBoolean(v, "setClickable", atts, "android:clickable");
+                        maybeSetBoolean(v, "setFocusable", atts, "android:focusable");
+                        maybeSetBoolean(v, "setHapticFeedbackEnabled", atts, "android:hapticFeedbackEnabled");
 
-                String visibility = findAttribute(atts, "android:visibility");
-                    if (visibility != null){
-                        int code = -1;
-                        if ("visible".equals(visibility)) {
-                                code = View.VISIBLE;
-                        } else if ("invisible".equals(visibility)) {
-                                code = View.INVISIBLE;
-                        } else if ("gone".equals(visibility)) {
-                                code = View.GONE;
+                        String visibility = findAttribute(atts, "android:visibility");
+                        if (visibility != null){
+                                int code = -1;
+                                if ("visible".equals(visibility)) {
+                                        code = View.VISIBLE;
+                                } else if ("invisible".equals(visibility)) {
+                                        code = View.INVISIBLE;
+                                } else if ("gone".equals(visibility)) {
+                                        code = View.GONE;
+                                }
+                                if (code != -1) {
+                                        v.setVisibility(code);
+                                }
                         }
-                        if (code != -1) {
-                                v.setVisibility(code);
-                        }
-                    }
-                loadBasics(v,atts);
+                        loadBasics(v,atts);
                 }
-                
+
                 if (layoutStack.size() > 0) {
                         result.setLayoutParams(loadLayoutParams(atts, layoutStack.peek()));
                 }
@@ -326,14 +326,14 @@ public class ViewInflater {
                         if(value.indexOf("@")==-1){
                                 //view.setBackground();
                         }else{
-                               // view.setBackgroundColor(Color.parseColor(value));
+                                // view.setBackgroundColor(Color.parseColor(value));
                         }
                 }
                 // elevation
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                         //value = findAttribute(atts,"android:elevation");
                         //if(value!=null){
-                                //view.setElevation(Float.parseFloat(value));
+                        //view.setElevation(Float.parseFloat(value));
                         //}
                 }
 
@@ -351,18 +351,18 @@ public class ViewInflater {
 
 
         }
-        
+
         private boolean maybeSetBoolean(View v, String method, AttributeSet atts, String arg) {
                 return maybeSetBoolean(v, method, findAttribute(atts, arg));
         }
 
         protected static boolean isLayout(String name) {
                 return name.endsWith("Layout") ||
-                                name.equals("RadioGroup") ||
-                                name.equals("TableRow") ||
-                                name.equals("ScrollView");
+                        name.equals("RadioGroup") ||
+                        name.equals("TableRow") ||
+                        name.equals("ScrollView");
         }
-        
+
         protected int lookupId(String id) {
                 int ix = id.indexOf("/");
                 if (ix != -1) {
@@ -377,7 +377,7 @@ public class ViewInflater {
                 }
                 return -1;
         }
-        
+
         protected String findAttribute(AttributeSet atts, String id) {
                 for (int i=0;i<atts.getAttributeCount();i++) {
                         if (atts.getAttributeName(i).equals(id)) {
@@ -393,16 +393,16 @@ public class ViewInflater {
                         return null;
                 }
         }
-        
+
         protected ViewGroup.LayoutParams loadLayoutParams(AttributeSet atts, ViewGroup vg) {
                 ViewGroup.LayoutParams lps = null;
-                
+
                 String width = findAttribute(atts, "android:layout_width");
                 String height = findAttribute(atts, "android:layout_height");
                 int w, h;
                 w = readSize(width);
                 h = readSize(height);
-                
+
                 if (vg instanceof RadioGroup) {
                         lps = new RadioGroup.LayoutParams(w, h);
                 }
@@ -421,7 +421,7 @@ public class ViewInflater {
                 else if (vg instanceof AbsoluteLayout) {
                         String x = findAttribute(atts, "android:layout_x");
                         String y = findAttribute(atts, "android:layout_y");
-                        
+
                         lps = new AbsoluteLayout.LayoutParams(w, h, readSize(x), readSize(y));
                 }
                 else if (vg instanceof RelativeLayout) {
@@ -433,7 +433,7 @@ public class ViewInflater {
                 else if (vg instanceof FrameLayout) {
                         lps = new FrameLayout.LayoutParams(w,h);
                 }
-                
+
                 if (lps instanceof LinearLayout.LayoutParams) {
                         LinearLayout.LayoutParams l = (LinearLayout.LayoutParams)lps;
                         String gravity = findAttribute(atts, "android:layout_gravity");
@@ -443,14 +443,14 @@ public class ViewInflater {
                                 }
                                 //l.gravity = Integer.parseInt(gravity);
                         }
-                        
+
                         String weight = findAttribute(atts, "android:layout_weight");
                         if (weight != null) {
                                 l.weight = Float.parseFloat(weight);
                         }
                         lps = l;
                 }
-                
+
                 if (lps instanceof RelativeLayout.LayoutParams) {
                         RelativeLayout.LayoutParams l = (RelativeLayout.LayoutParams)lps;
                         for (int i=0;i<relative_strings.length;i++) {
@@ -463,25 +463,25 @@ public class ViewInflater {
                         // Margin handling
                         // Contributed by Vishal Choudhary - Thanks!
                         String bottom = findAttribute(atts, "android:layout_marginBottom");
-                String left = findAttribute(atts, "android:layout_marginLeft");
-                String right = findAttribute(atts, "android:layout_marginRight");
-                String top = findAttribute(atts, "android:layout_marginTop");
-                int bottomInt=0, leftInt=0, rightInt=0, topInt=0;
-                if (bottom != null)
-                    bottomInt = readSize(bottom);
-                if (left != null)
-                    leftInt = readSize(left);
-                if (right != null)
-                    rightInt = readSize(right);
-                if (top != null)
-                    topInt = readSize(top);
-                    
-                    l.setMargins(leftInt, topInt, rightInt, bottomInt);
+                        String left = findAttribute(atts, "android:layout_marginLeft");
+                        String right = findAttribute(atts, "android:layout_marginRight");
+                        String top = findAttribute(atts, "android:layout_marginTop");
+                        int bottomInt=0, leftInt=0, rightInt=0, topInt=0;
+                        if (bottom != null)
+                                bottomInt = readSize(bottom);
+                        if (left != null)
+                                leftInt = readSize(left);
+                        if (right != null)
+                                rightInt = readSize(right);
+                        if (top != null)
+                                topInt = readSize(top);
+
+                        l.setMargins(leftInt, topInt, rightInt, bottomInt);
                 }
-                
+
                 return lps;
         }
-        
+
         protected int readSize(String val) {
                 if ("wrap_content".equals(val)) {
                         return ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -503,7 +503,7 @@ public class ViewInflater {
                         return ViewGroup.LayoutParams.WRAP_CONTENT;
                 }
         }
-        
+
         boolean maybeSetBoolean(View view, String method, String value) {
                 if (value == null) {
                         return false;
@@ -532,46 +532,46 @@ public class ViewInflater {
                 }
                 return false;
         }
-        
+
         String[] relative_strings = new String[]
-                                               {"android:layout_above", 
-                                                        "android:layout_alignBaseline", 
-                                                        "android:layout_alignBottom", 
-                                                        "android:layout_alignLeft",
-                                                        "android:layout_alignParentBottom",
-                                                        "android:layout_alignParentLeft",
-                                                        "android:layout_alignParentRight",
-                                                        "android:layout_alignParentTop",
-                                                        "android:layout_alignRight", 
-                                                        "android:layout_alignTop", 
-                                                        "android:layout_below",
-                                                        "android:layout_centerHorizontal",
-                                                        "android:layout_centerInParent",
-                                                        "android:layout_centerVertical",
-                                                        "android:layout_toLeft",
-                                                        "android:layout_toRight"};
-                                        
-                                        int[] relative_verbs = new int[]
-                                               {RelativeLayout.ABOVE,
-                                                        RelativeLayout.ALIGN_BASELINE,
-                                                        RelativeLayout.ALIGN_BOTTOM,
-                                                        RelativeLayout.ALIGN_LEFT,
-                                                        RelativeLayout.ALIGN_PARENT_BOTTOM,
-                                                        RelativeLayout.ALIGN_PARENT_LEFT,
-                                                        RelativeLayout.ALIGN_PARENT_RIGHT,
-                                                        RelativeLayout.ALIGN_PARENT_TOP,
-                                                        RelativeLayout.ALIGN_RIGHT,
-                                                        RelativeLayout.ALIGN_TOP,
-                                                        RelativeLayout.BELOW,
-                                                        RelativeLayout.CENTER_HORIZONTAL,
-                                                        RelativeLayout.CENTER_IN_PARENT,
-                                                        RelativeLayout.CENTER_VERTICAL,
-                                                        RelativeLayout.LEFT_OF,
-                                                        RelativeLayout.RIGHT_OF,
-                                              };
+                {"android:layout_above",
+                        "android:layout_alignBaseline",
+                        "android:layout_alignBottom",
+                        "android:layout_alignLeft",
+                        "android:layout_alignParentBottom",
+                        "android:layout_alignParentLeft",
+                        "android:layout_alignParentRight",
+                        "android:layout_alignParentTop",
+                        "android:layout_alignRight",
+                        "android:layout_alignTop",
+                        "android:layout_below",
+                        "android:layout_centerHorizontal",
+                        "android:layout_centerInParent",
+                        "android:layout_centerVertical",
+                        "android:layout_toLeft",
+                        "android:layout_toRight"};
+
+        int[] relative_verbs = new int[]
+                {RelativeLayout.ABOVE,
+                        RelativeLayout.ALIGN_BASELINE,
+                        RelativeLayout.ALIGN_BOTTOM,
+                        RelativeLayout.ALIGN_LEFT,
+                        RelativeLayout.ALIGN_PARENT_BOTTOM,
+                        RelativeLayout.ALIGN_PARENT_LEFT,
+                        RelativeLayout.ALIGN_PARENT_RIGHT,
+                        RelativeLayout.ALIGN_PARENT_TOP,
+                        RelativeLayout.ALIGN_RIGHT,
+                        RelativeLayout.ALIGN_TOP,
+                        RelativeLayout.BELOW,
+                        RelativeLayout.CENTER_HORIZONTAL,
+                        RelativeLayout.CENTER_IN_PARENT,
+                        RelativeLayout.CENTER_VERTICAL,
+                        RelativeLayout.LEFT_OF,
+                        RelativeLayout.RIGHT_OF,
+                };
 
 
         public int getIdFromName(String id){
-         return ids.get(id);
+                return ids.get(id);
         }
 }

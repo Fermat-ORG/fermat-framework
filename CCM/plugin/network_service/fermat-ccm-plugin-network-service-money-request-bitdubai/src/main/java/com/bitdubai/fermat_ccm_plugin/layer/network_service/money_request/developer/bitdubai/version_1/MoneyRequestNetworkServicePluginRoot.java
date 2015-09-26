@@ -7,7 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+//import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.enums.CryptoRequestState;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantDeleteFromPendingCryptoRequestsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantGetPendingCryptoRequestsException;
@@ -70,12 +71,12 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     /**
      *  MoneyRequestNetworkServicePluginRoot methods implementation.
      */
-    
+
     public void sendMoneyRequest(){
         //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
-    
-    
+
+
     public void events(){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_REQUEST_RECEIVED);
         ((IncomingMoneyRequestReceivedEvent) fermatEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
@@ -92,43 +93,43 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
         FermatEvent fermatEvent_3 = eventManager.getNewEvent(EventType.OUTGOING_MONEY_REQUEST_REJECTED);
         ((OutgoingMoneyRequestRejectedEvent) fermatEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_REQUEST_PLUGIN);
         eventManager.raiseEvent(fermatEvent);
-        
+
     }
 
     /**
      * Service Interface implementation. 
      */
-    
+
     @Override
     public void start() throws CantStartPluginException {
         FermatEventListener fermatEventListener;
         FermatEventHandler fermatEventHandler;
         this.serviceStatus = ServiceStatus.STARTED;
     }
-    
+
     @Override
     public void pause(){
         this.serviceStatus = ServiceStatus.PAUSED;
     }
-    
+
     @Override
     public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
-    
+
     @Override
     public void stop(){
         /**
          * I will remove the evnt listeners registered with the event manager. 
          */
-        
+
         for (FermatEventListener fermatEventListener : listenersAdded){
             eventManager.removeListener(fermatEventListener);
         }
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
-    
+
     @Override
     public ServiceStatus getStatus(){
         return this.serviceStatus;

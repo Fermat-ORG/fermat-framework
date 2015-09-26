@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-network-service-wallet-community-bitdubai
+# fermat-wpd-plugin-network-service-wallet-community-bitdubai

@@ -38,6 +38,24 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      */
     public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
 
+    /**
+     * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
+     * and we must have enought funds to send this money. It allows including an Op_return output value.
+     * @param walletPublicKey
+     * @param FermatTrId
+     * @param addressTo
+     * @param satoshis
+     * @param op_Return
+     * @return
+     * @throws InsufficientMoneyException
+     * @throws InvalidSendToAddressException
+     * @throws CouldNotSendMoneyException
+     * @throws CryptoTransactionAlreadySentException
+     */
+    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
+
+
+
 
     /**
      * Validates if the passes CryptoAddress is valid in the current network or not.
@@ -54,13 +72,4 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      * @throws CouldNotGetCryptoStatusException
      */
     public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException;
-
-    /**
-     * Generates a CryptoTransaction that is not yet commited or send. It allows edition before sending.
-     * @param addressTo the destination CryptoAddress
-     * @param cryptoAmount the amount of bitcoins in Satoshis.
-     * @return the CryptoTransaction object with some information, that includes the transaction hash.
-     * @throws CoultNotCreateCryptoTransaction
-     */
-    public CryptoTransaction generateDraftCryptoTransaction(CryptoAddress addressTo, long cryptoAmount) throws CoultNotCreateCryptoTransaction;
 }

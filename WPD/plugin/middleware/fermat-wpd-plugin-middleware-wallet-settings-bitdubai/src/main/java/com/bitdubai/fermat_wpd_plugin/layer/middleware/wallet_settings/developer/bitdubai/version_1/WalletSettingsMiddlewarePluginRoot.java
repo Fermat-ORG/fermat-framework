@@ -157,7 +157,7 @@ public class WalletSettingsMiddlewarePluginRoot implements DealsWithErrors,Deals
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.WalletSettingsMiddlewarePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_settings.developer.bitdubai.version_1.WalletSettingsMiddlewarePluginRoot");
          /**
          * I return the values.
          */

@@ -89,7 +89,7 @@ public class GithubManager {
         String savingPath = walletPath + "navigation_structure/navigation_structure.xml";
         String content = XMLParser.parseObject(navigationStructure);
 
-       githubConnection.createGitHubTextFile(savingPath, content, "new navigation structure");
+        githubConnection.createGitHubTextFile(savingPath, content, "new navigation structure");
     }
 
     private void saveSkin(Skin skin, boolean isDefault) throws IOException {

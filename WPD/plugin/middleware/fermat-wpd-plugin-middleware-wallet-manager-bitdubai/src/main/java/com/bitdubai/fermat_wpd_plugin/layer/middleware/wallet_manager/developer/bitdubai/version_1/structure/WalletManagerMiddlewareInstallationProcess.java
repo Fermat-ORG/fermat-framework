@@ -25,7 +25,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
- * The Class <code>com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationProcess</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationProcess</code>
  * is the implementation of WalletInstallationProcess.
  * <p/>
  * <p/>

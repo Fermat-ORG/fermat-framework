@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-network-service-bank-notes-bitdubai
+# fermat-bnp-plugin-network-service-bank-notes-bitdubai

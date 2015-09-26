@@ -14,7 +14,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
  */
 public class WalletOpenedEventHandler implements FermatEventHandler {
     WalletRuntimeManager walletRuntimeManager;
-    
+
     public void setWalletRuntimeManager(WalletRuntimeManager walletRuntimeManager) {
         this.walletRuntimeManager = walletRuntimeManager;
     }
@@ -23,10 +23,10 @@ public class WalletOpenedEventHandler implements FermatEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         String walletId = ((WalletOpenedEvent) fermatEvent).getWalletPublicKey();
-        
-        
+
+
         if (((Service) this.walletRuntimeManager).getStatus() == ServiceStatus.STARTED) {
-            
+
 //            try
 //            {
 //                this.walletRuntimeManager.recordNavigationStructure(walletId);
@@ -38,7 +38,7 @@ public class WalletOpenedEventHandler implements FermatEventHandler {
 //                throw cantRecordOpenedWalletException;
 //
 //            }
-            
-        } 
+
+        }
     }
 }

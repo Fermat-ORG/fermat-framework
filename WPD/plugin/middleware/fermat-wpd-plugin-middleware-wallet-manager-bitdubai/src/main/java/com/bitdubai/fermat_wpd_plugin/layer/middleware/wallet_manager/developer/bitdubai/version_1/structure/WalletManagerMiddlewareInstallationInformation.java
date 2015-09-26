@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.Wa
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationInformation</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerMiddlewareInstallationInformation</code>
  * is the implementation of WalletInstallationInformation.
  * <p/>
  *

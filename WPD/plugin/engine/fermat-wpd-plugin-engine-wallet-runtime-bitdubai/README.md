@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-module-wallet-runtime-bitdubai 
+# fermat-wpd-plugin-module-wallet-runtime-bitdubai

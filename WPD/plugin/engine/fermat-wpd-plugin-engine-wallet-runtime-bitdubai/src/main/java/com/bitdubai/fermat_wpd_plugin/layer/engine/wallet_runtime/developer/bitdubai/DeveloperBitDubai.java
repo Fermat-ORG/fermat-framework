@@ -27,7 +27,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          */
 
         plugin = new WalletRuntimeModulePluginRoot();
-        
+
     }
 
     @Override

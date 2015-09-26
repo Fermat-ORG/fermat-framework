@@ -4,7 +4,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.b
  * Created by rodrigo on 7/24/15.
  */
 /**
- * The Class <code>com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure.database.WalletStoreMiddlewareDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *

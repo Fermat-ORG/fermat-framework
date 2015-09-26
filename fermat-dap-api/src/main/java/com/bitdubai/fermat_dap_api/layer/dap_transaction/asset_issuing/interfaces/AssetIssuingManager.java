@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 
@@ -15,8 +15,8 @@ public interface AssetIssuingManager /*extends TransactionProtocolManager<Crypto
                             List<Resource> resources,
                             DigitalAssetContract contract,
                             long genesisAmount) throws CantCreateDigitalAssetTransactionException;*/
-    void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException;
-    void issuePendingDigitalAssets(String publicKey);
+    void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String walletPublickey ,BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException;
+    void issuePendingDigitalAssets(String assetPublicKey);
     void setCryptoWallet(CryptoWallet cryptoWallet);
     /*void setActors(String deliveredByActorPublicKey,
                         Actors deliveredByType,
