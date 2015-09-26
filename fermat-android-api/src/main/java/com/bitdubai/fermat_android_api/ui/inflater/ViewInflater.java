@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_android_api.ui.inflater;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +33,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_api.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
@@ -47,7 +45,6 @@ import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Stack;
 
 
@@ -68,15 +65,7 @@ public class ViewInflater {
 
         ResourceProviderManager resourceProviderManager;
 
-
-        public ViewInflater(Context context) {
-                this.layoutStack = new Stack<ViewGroup>();
-                this.ids = new Hashtable<String, Integer>();
-                this.context = context;
-                this.idg = 0;
-        }
-
-        public ViewInflater(Context context,ResourceProviderManager resourceProviderManager) {
+        public ViewInflater(Context context, ResourceProviderManager resourceProviderManager) {
                 this.layoutStack = new Stack<ViewGroup>();
                 this.ids = new Hashtable<String, Integer>();
                 this.context = context;
@@ -93,59 +82,50 @@ public class ViewInflater {
                         return inflate(parse);
                 }
                 catch (XmlPullParserException ex) { return null; }
-                catch (IOException ex) { ex.printStackTrace();
-                        return null;}
+                catch (IOException ex) { return null; }
         }
 
         public View inflate(XmlPullParser parse)
                 throws XmlPullParserException, IOException
         {
+                layoutStack.clear();
+                ids.clear();
 
-                try{
+                Stack<StringBuffer> data = new Stack<StringBuffer>();
+                int evt = parse.getEventType();
+                View root = null;
+                while (evt != XmlPullParser.END_DOCUMENT) {
+                        switch (evt) {
+                                case XmlPullParser.START_DOCUMENT:
+                                        data.clear();
+                                        break;
+                                case XmlPullParser.START_TAG:
+                                        data.push(new StringBuffer());
+                                        View v = createView(parse);
+                                        if (v == null)
+                                                continue;
+                                        if (root == null) {
+                                                root = v;
+                                        }
+                                        else {
+                                                layoutStack.peek().addView(v);
+                                        }
+                                        if (v instanceof ViewGroup) {
+                                                layoutStack.push((ViewGroup)v);
+                                        }
+                                        break;
+                                case XmlPullParser.TEXT:
+                                        data.peek().append(parse.getText());
+                                        break;
+                                case XmlPullParser.END_TAG:
+                                        data.pop();
+                                        if (isLayout(parse.getName()))
+                                                layoutStack.pop();
 
-
-                        layoutStack.clear();
-                        ids.clear();
-
-                        Stack<StringBuffer> data = new Stack<StringBuffer>();
-                        int evt = parse.getEventType();
-                        View root = null;
-                        while (evt != XmlPullParser.END_DOCUMENT) {
-                                switch (evt) {
-                                        case XmlPullParser.START_DOCUMENT:
-                                                data.clear();
-                                                break;
-                                        case XmlPullParser.START_TAG:
-                                                data.push(new StringBuffer());
-                                                View v = createView(parse);
-                                                if (v == null)
-                                                        continue;
-                                                if (root == null) {
-                                                        root = v;
-                                                }
-                                                else {
-                                                        layoutStack.peek().addView(v);
-                                                }
-                                                if (v instanceof ViewGroup) {
-                                                        layoutStack.push((ViewGroup)v);
-                                                }
-                                                break;
-                                        case XmlPullParser.TEXT:
-                                                data.peek().append(parse.getText());
-                                                break;
-                                        case XmlPullParser.END_TAG:
-                                                data.pop();
-                                                if (isLayout(parse.getName()))
-                                                        layoutStack.pop();
-
-                                }
-                                evt = parse.next();
                         }
-                        return root;
-                }catch (IOException e){
-                        e.printStackTrace();
+                        evt = parse.next();
                 }
-                return null;
+                return root;
         }
 
         protected View createView(XmlPullParser parse) {
@@ -153,53 +133,76 @@ public class ViewInflater {
                 View result = null;
                 AttributeSet atts = Xml.asAttributeSet(parse);
                 if (name.equals("LinearLayout")) {
-                        result = new LinearLayout(context);
-                } else if (name.equals("RadioGroup")) {
-                        result = new RadioGroup(context);
-                } else if (name.equals("TableRow")) {
-                        result = new TableRow(context);
-                } else if (name.equals("TableLayout")) {
-                        result = new TableLayout(context);
-                } else if (name.equals("AbsoluteLayout")) {
-                        result = new AbsoluteLayout(context);
-                } else if (name.equals("RelativeLayout")) {
-                        result = new RelativeLayout(context);
-                } else if (name.equals("android.support.v4.widget.SwipeRefreshLayout")) {
-                        result = new SwipeRefreshLayout(context);
-                } else if (name.equals("android.support.v7.widget.RecyclerView")) {
-                        result = new RecyclerView(context);
-                } else if (name.equals("ScrollView")) {
-                        result = new ScrollView(context);
-                } else if (name.equals("FrameLayout")) {
-                        result = new FrameLayout(context);
-                } else if (name.equals("ExpandableListView")) {
+                        result = new LinearLayout(context );
+                }
+                else if (name.equals("RadioGroup")) {
+                        result = new RadioGroup(context );
+                }
+                else if (name.equals("TableRow")) {
+                        result = new TableRow(context );
+                }
+                else if (name.equals("TableLayout")) {
+                        result = new TableLayout(context );
+                }
+                else if (name.equals("AbsoluteLayout")) {
+                        result = new AbsoluteLayout(context );
+                }
+                else if (name.equals("RelativeLayout")) {
+                        result = new RelativeLayout(context );
+                }
+                else if (name.equals("android.support.v4.widget.SwipeRefreshLayout")) {
+                        result = new SwipeRefreshLayout(context );
+                }
+                else if (name.equals("android.support.v7.widget.RecyclerView")) {
+                        result = new RecyclerView(context );
+                }
+                else if (name.equals("ScrollView")) {
+                        result = new ScrollView(context );
+                }
+                else if (name.equals("FrameLayout")) {
+                        result = new FrameLayout(context );
+                }
+                else if (name.equals("ExpandableListView")) {
                         result = new ExpandableListView(context);
-                } else if (name.equals("TextView")) {
-                        result = new TextView(context);
-                } else if (name.equals("com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView")) {
+                }
+                else if (name.equals("TextView")) {
+                        result = new TextView(context );
+                }
+                else if (name.equals("com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView")) {
                         result = new FermatTextView(context);
-                } else if (name.equals("AutoCompleteTextView")) {
-                        result = new AutoCompleteTextView(context);
-                } else if (name.equals("AnalogClock")) {
-                        result = new AnalogClock(context);
-                } else if (name.equals("Button")) {
-                        result = new Button(context);
-                } else if (name.equals("CheckBox")) {
-                        result = new CheckBox(context);
-                } else if (name.equals("DatePicker")) {
-                        result = new DatePicker(context);
-                } else if (name.equals("DigitalClock")) {
-                        result = new DigitalClock(context);
-                } else if (name.equals("EditText")) {
-                        result = new EditText(context);
-                } else if (name.equals("ProgressBar")) {
-                        result = new ProgressBar(context);
-                } else if (name.equals("RadioButton")) {
-                        result = new RadioButton(context);
-                } else if (name.equals("ImageView")) {
-                        result = new ImageView(context);
-                } else {
-                        Toast.makeText(context, "Unhandled tag:" + name,
+                }
+                else if (name.equals("AutoCompleteTextView")) {
+                        result = new AutoCompleteTextView(context );
+                }
+                else if (name.equals("AnalogClock")) {
+                        result = new AnalogClock(context );
+                }
+                else if (name.equals("Button")) {
+                        result = new Button(context );
+                }
+                else if (name.equals("CheckBox")) {
+                        result = new CheckBox(context );
+                }
+                else if (name.equals("DatePicker")) {
+                        result = new DatePicker(context );
+                }
+                else if (name.equals("DigitalClock")) {
+                        result = new DigitalClock(context );
+                }
+                else if (name.equals("EditText")) {
+                        result = new EditText(context );
+                }
+                else if (name.equals("ProgressBar")) {
+                        result = new ProgressBar(context );
+                }
+                else if (name.equals("RadioButton")) {
+                        result = new RadioButton(context );
+                }
+                else if (name.equals("ImageView")) {
+                        result = new ImageView(context );
+                }
+                else {
+                        Toast.makeText(context , "Unhandled tag:"+name,
                                 Toast.LENGTH_SHORT).show();
                 }
 
@@ -216,7 +219,7 @@ public class ViewInflater {
                 }
 
                 if (result instanceof TextView) {
-                        TextView tv = (TextView) result;
+                        TextView tv = (TextView)result;
                         String text = findAttribute(atts, "android:text");
                         if (text != null) {
                                 text = text.replace("\\n", "\n");
@@ -225,23 +228,21 @@ public class ViewInflater {
                 }
                 if (result instanceof ImageView) {
                         ImageView imageView = (ImageView) result;
-                        String src = findAttribute(atts, "android:src");
-                        if (src != null) {
+                        String src = findAttribute(atts,"android:src");
+                        if(src != null){
                                 //Picasso.with(context).load(R.drawable.person1).into(imageView);
-                                //resourceProviderManager.getImageResource("person1",null,null);
-                                //Bitmap bitmap = BitmapFactory.decodeByteArray()
-                                imageView.setImageResource(R.drawable.mati_profile);
+                                //imageView.setImageResource(R.drawable.person1);
                         }
                 }
 
                 if (result instanceof CompoundButton) {
-                        CompoundButton cb = (CompoundButton) result;
+                        CompoundButton cb = (CompoundButton)result;
                         String checked = findAttribute(atts, "android:checked");
                         cb.setChecked("true".equals(checked));
                 }
 
                 if (result instanceof ProgressBar) {
-                        ProgressBar pb = (ProgressBar) result;
+                        ProgressBar pb = (ProgressBar)result;
                         String indet = findAttribute(atts, "android:indeterminate");
                         if (indet != null) {
                                 pb.setIndeterminate("true".equals(indet));
@@ -262,7 +263,7 @@ public class ViewInflater {
                 }
 
                 if (result instanceof LinearLayout) {
-                        LinearLayout ll = (LinearLayout) result;
+                        LinearLayout ll = (LinearLayout)result;
                         String orient = findAttribute(atts, "android:orientation");
                         if (orient != null) {
                                 if (orient.equals("horizontal"))
@@ -273,7 +274,7 @@ public class ViewInflater {
                 }
 
                 if (result instanceof RadioGroup) {
-                        RadioGroup rg = (RadioGroup) result;
+                        RadioGroup rg = (RadioGroup)result;
                         String cid = findAttribute(atts, "android:checkedButton");
                         if (cid != null) {
                                 rg.check(Integer.parseInt(cid));
@@ -281,7 +282,7 @@ public class ViewInflater {
                 }
 
                 if (result instanceof View) {
-                        View v = (View) result;
+                        View v = (View)result;
                 /* API 11
                  String alpha = findAttribute(atts, "android:alpha");
                  if (alpha != null) {
@@ -293,7 +294,7 @@ public class ViewInflater {
                         maybeSetBoolean(v, "setHapticFeedbackEnabled", atts, "android:hapticFeedbackEnabled");
 
                         String visibility = findAttribute(atts, "android:visibility");
-                        if (visibility != null) {
+                        if (visibility != null){
                                 int code = -1;
                                 if ("visible".equals(visibility)) {
                                         code = View.VISIBLE;
@@ -306,79 +307,16 @@ public class ViewInflater {
                                         v.setVisibility(code);
                                 }
                         }
-                        loadBasics(v, atts);
+                        loadBasics(v,atts);
                 }
 
                 if (layoutStack.size() > 0) {
                         result.setLayoutParams(loadLayoutParams(atts, layoutStack.peek()));
                 }
-
                 return result;
-
         }
-
-        private void setPadding(View view,AttributeSet atts){
-            String padding = findAttribute(atts, "android:padding");
-            String paddingBottom = findAttribute(atts,"android:paddingBottom");
-            String paddingTop = findAttribute(atts, "android:paddingTop");
-            String paddingLeft = findAttribute(atts,"android:paddingLeft");
-            String paddingRight = findAttribute(atts, "android:paddingRight");
-
-            int paddingValue = 0;
-            int paddingLeftValue = 0;
-            int paddingTopValue = 0;
-            int paddingRightValue = 0;
-            int paddingBottomValue = 0;
-
-            if(padding!=null){
-                paddingValue = convertInIntegerValue(padding);
-            }
-            if(paddingBottom!=null){
-                paddingBottomValue = convertInIntegerValue(paddingBottom);
-            }
-            if(paddingTop!=null){
-                paddingTopValue = convertInIntegerValue(paddingTop);
-            }
-            if(paddingLeft!=null){
-                paddingLeftValue = convertInIntegerValue(paddingLeft);
-            }
-            if(paddingRight!=null){
-                paddingRightValue = convertInIntegerValue(paddingRight);
-            }
-
-
-            boolean[] deco = new boolean[4];
-
-            deco[0] = paddingLeftValue == 0;;
-            deco[1] = paddingTopValue == 0;
-            deco[2] = paddingRightValue == 0;
-            deco[3] = paddingBottomValue == 0;
-
-            if(deco[0]){
-                paddingLeftValue = paddingValue;
-            }
-            if(deco[1]){
-                paddingTopValue = paddingValue;
-            }
-            if(deco[2]){
-                paddingRightValue = paddingValue;
-            }
-            if(deco[3]){
-                paddingBottomValue = paddingValue;
-            }
-            view.setPadding(paddingLeftValue,paddingTopValue,paddingRightValue,paddingBottomValue);
-
-
-
-
-        }
-
-
 
         private void loadBasics(View view,AttributeSet atts){
-
-
-                setPadding(view,atts);
                 String value;
 
                 // background
@@ -387,7 +325,6 @@ public class ViewInflater {
                 if(value!=null){
                         if(value.indexOf("@")==-1){
                                 //view.setBackground();
-                                view.setBackgroundColor(Color.parseColor(value));
                         }else{
                                 // view.setBackgroundColor(Color.parseColor(value));
                         }
@@ -400,80 +337,7 @@ public class ViewInflater {
                         //}
                 }
 
-
-                // Gravity
-                String gravity = findAttribute(atts,"android:gravity");
-
-                //l.gravity = Integer.parseInt(gravity);
-                if(view instanceof LinearLayout){
-                        if (gravity != null) {
-
-                                switch (gravity) {
-                                        case "center":
-                                                ((LinearLayout) view).setGravity(Gravity.CENTER);
-                                                break;
-                                        case "right":
-                                                ((LinearLayout) view).setGravity(Gravity.RIGHT);
-                                                break;
-                                        case "left":
-                                                ((LinearLayout) view).setGravity(Gravity.LEFT);
-                                                break;
-                                        case "bottom":
-                                                ((LinearLayout) view).setGravity(Gravity.BOTTOM);
-                                                break;
-                                }
-                        }
-
-                }
-                else if (view instanceof RadioGroup){
-
-                }
-                else if (view instanceof TableLayout){
-
-                }
-                else if (view instanceof TableRow){
-
-                }
-                else if (view instanceof AbsoluteLayout){
-
-                }
-                else if (view instanceof RelativeLayout){
-
-                }
-                else if (view instanceof SwipeRefreshLayout){
-
-                }
-                else if (view instanceof RecyclerView){
-
-                }
-                else if (view instanceof ScrollView){
-
-                }
-                else if (view instanceof FrameLayout){
-
-                }
-                else if (view instanceof ExpandableListView){
-
-                }
-                else if (view instanceof TextView){
-                        if (gravity != null) {
-
-                                switch (gravity) {
-                                        case "center":
-                                                ((TextView) view).setGravity(Gravity.CENTER);
-                                                break;
-                                        case "right":
-                                                ((TextView) view).setGravity(Gravity.RIGHT);
-                                                break;
-                                        case "left":
-                                                ((TextView) view).setGravity(Gravity.LEFT);
-                                                break;
-                                        case "bottom":
-                                                ((TextView) view).setGravity(Gravity.BOTTOM);
-                                                break;
-                                }
-                        }
-
+                if(view instanceof TextView){
                         value = findAttribute(atts,"android:textSize");
                         if(value!=null){
                                 //((TextView) view).setTextSize(Float.parseFloat(value));
@@ -483,71 +347,10 @@ public class ViewInflater {
                                 //((TextView) view).setTextColor(Color.parseColor(value));
                         }
                 }
-                else if (view instanceof AutoCompleteTextView){
-
-                }
-                else if (view instanceof AnalogClock){
-
-                }else if (view instanceof Button){
-                        if (gravity != null) {
-
-                                switch (gravity) {
-                                        case "center":
-                                                ((Button) view).setGravity(Gravity.CENTER);
-                                                break;
-                                        case "right":
-                                                ((Button) view).setGravity(Gravity.RIGHT);
-                                                break;
-                                        case "left":
-                                                ((Button) view).setGravity(Gravity.LEFT);
-                                                break;
-                                        case "bottom":
-                                                ((Button) view).setGravity(Gravity.BOTTOM);
-                                                break;
-                                }
-                        }
-                }
-
-                else if (view instanceof CheckBox){
-
-                }
-                else if (view instanceof DatePicker){
-
-                }
-                else if (view instanceof DigitalClock){
-
-                }
-                else if (view instanceof EditText){
-                        if (gravity != null) {
-
-                                switch (gravity) {
-                                        case "center":
-                                                ((EditText) view).setGravity(Gravity.CENTER);
-                                                break;
-                                        case "right":
-                                                ((EditText) view).setGravity(Gravity.RIGHT);
-                                                break;
-                                        case "left":
-                                                ((EditText) view).setGravity(Gravity.LEFT);
-                                                break;
-                                        case "bottom":
-                                                ((EditText) view).setGravity(Gravity.BOTTOM);
-                                                break;
-                                }
-                        }
-                }
-                else if (view instanceof ProgressBar){
-
-                }
-                else if (view instanceof ImageView){
-
-                }
-
 
 
 
         }
-
 
         private boolean maybeSetBoolean(View v, String method, AttributeSet atts, String arg) {
                 return maybeSetBoolean(v, method, findAttribute(atts, arg));
@@ -635,20 +438,8 @@ public class ViewInflater {
                         LinearLayout.LayoutParams l = (LinearLayout.LayoutParams)lps;
                         String gravity = findAttribute(atts, "android:layout_gravity");
                         if (gravity != null) {
-                                switch (gravity){
-                                        case "center":
-                                                l.gravity = Gravity.CENTER;
-                                                break;
-                                        case "right":
-                                                l.gravity = Gravity.RIGHT;
-                                                break;
-                                        case "left":
-                                                l.gravity = Gravity.LEFT;
-                                                break;
-                                        case "bottom":
-                                                l.gravity = Gravity.BOTTOM;
-                                                break;
-
+                                if(gravity.equals("center")){
+                                        l.gravity = Gravity.CENTER;
                                 }
                                 //l.gravity = Integer.parseInt(gravity);
                         }
@@ -669,6 +460,8 @@ public class ViewInflater {
                                         l.addRule(relative_verbs[i], idN);
                                 }
                         }
+                        // Margin handling
+                        // Contributed by Vishal Choudhary - Thanks!
                         String bottom = findAttribute(atts, "android:layout_marginBottom");
                         String left = findAttribute(atts, "android:layout_marginLeft");
                         String right = findAttribute(atts, "android:layout_marginRight");
@@ -700,37 +493,15 @@ public class ViewInflater {
                         return ViewGroup.LayoutParams.MATCH_PARENT;
                 }
                 else if (val != null) {
-                        return convertInIntegerValue(val);
-
+                        int ix = val.indexOf("px");
+                        if (ix != -1)
+                                return Integer.parseInt(val.substring(0, ix));
+                        else
+                                return 0;
                 }
                 else {
                         return ViewGroup.LayoutParams.WRAP_CONTENT;
                 }
-        }
-
-    /**
-     *  Example convert 16dp in 16
-     *
-     * @param value
-     * @return
-     */
-        private int convertInIntegerValue(String value){
-            int converterer = 0;
-            int indexValue = value.indexOf("dp");
-            if (indexValue != -1){
-                converterer = Integer.parseInt(value.substring(0, indexValue));
-            } else{
-                indexValue = value.indexOf("px");
-                if (indexValue != -1){
-                    converterer =  Integer.parseInt(value.substring(0, indexValue));
-                }else{
-                    indexValue = value.indexOf("sp");
-                    if (indexValue != -1) {
-                        converterer = Integer.parseInt(value.substring(0, indexValue));
-                    }else converterer = 0;
-                }
-            }
-            return converterer;
         }
 
         boolean maybeSetBoolean(View view, String method, String value) {
@@ -802,9 +573,5 @@ public class ViewInflater {
 
         public int getIdFromName(String id){
                 return ids.get(id);
-        }
-
-        public Map<String,Integer> getIdsFromLayout(){
-            return ids;
         }
 }

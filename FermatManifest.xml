@@ -2739,12 +2739,11 @@
 						name="Brand"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2840,12 +2839,12 @@
 						name="Brand"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nindriago" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2881,7 +2880,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Rart3001" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -2892,7 +2891,7 @@
 						name="Brand"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3027,12 +3026,12 @@
 						name="Brand"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Nindriago" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3858,12 +3857,12 @@
 						name="Wallet Branding"
 						description=""
 						difficulty="10"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3874,12 +3873,12 @@
 						name="Marketer"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3895,12 +3894,12 @@
 						name="Voucher Wallet"
 						description=""
 						difficulty="8"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="fvasquezjatar" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -3946,7 +3945,7 @@
 						name="Wallet Branding"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3961,7 +3960,7 @@
 						name="Marketer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -3981,7 +3980,7 @@
 						name="Marketer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4001,12 +4000,12 @@
 						name="Voucher Wallet"
 						description=""
 						difficulty="3"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4052,12 +4051,12 @@
 						name="Incoming Voucher"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4068,12 +4067,12 @@
 						name="Outgoing Voucher"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="darkestpriest" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4149,12 +4148,12 @@
 						name="Voucher"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Franklinmarcano1970" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -4200,12 +4199,12 @@
 						name="Marketer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="concept"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Nindriago" scope="implementation" percentage="100"></author>
+						
 						</authors>
 						<mantainers>
 						</mantainers>

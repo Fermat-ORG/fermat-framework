@@ -47,22 +47,27 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * This plugin manages the list of contacts of each wallet.
+ * Created by loui on 17/02/15.
+ * Modified by Leon Acosta (laion.cj91@gmail.com) on 10/09/2015.
+ * <p/>
+ * This plugin manages list of contacts.
+ * <p/>
  * A contact list is associated with one or more wallets. This is useful if a user want to share contacts between
- * wallets. A single wallet can be part of more than one list also.
- *
- * Created by Leon Acosta (laion.cj91@gmail.com) on 10/09/2015.
+ * wallets. A single wallet can be part of more tha one list also.
+ * <p/>
+ * * * * * *
  */
-public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDevelopers ,
+
+public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDevelopers          ,
                                                            DealsWithCryptoAddressesNetworkService,
-                                                           DealsWithErrors              ,
-                                                           DealsWithEvents              ,
-                                                           DealsWithPluginDatabaseSystem,
-                                                           DealsWithLogger              ,
-                                                           LogManagerForDevelopers      ,
-                                                           Plugin                       ,
-                                                           Service                      ,
-                                                           WalletContactsManager        {
+                                                           DealsWithErrors                       ,
+                                                           DealsWithEvents                       ,
+                                                           DealsWithPluginDatabaseSystem         ,
+                                                           DealsWithLogger                       ,
+                                                           LogManagerForDevelopers               ,
+                                                           Plugin                                ,
+                                                           Service                               ,
+                                                           WalletContactsManager                 {
 
     /**
      * DealsWithCryptoAddressesNetworkService Interface member variables.
