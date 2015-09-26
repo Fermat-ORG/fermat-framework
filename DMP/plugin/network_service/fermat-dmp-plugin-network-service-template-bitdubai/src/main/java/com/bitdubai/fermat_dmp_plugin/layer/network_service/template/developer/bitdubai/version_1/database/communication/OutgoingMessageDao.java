@@ -316,6 +316,7 @@ public class OutgoingMessageDao {
                 filtersTable.add(newFilter);
             }
 
+
             /*
              * 2 - load the data base to memory with filters
              */

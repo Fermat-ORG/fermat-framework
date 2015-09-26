@@ -71,7 +71,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         }.getType());
 
 
-        System.out.println("WsCommunicationsCloudClientPluginRoot - list = " + list);
+        System.out.println("RequestListComponentRegisterPacketProcessor - list = " + list);
 
          /*
          * Create a new event whit the list

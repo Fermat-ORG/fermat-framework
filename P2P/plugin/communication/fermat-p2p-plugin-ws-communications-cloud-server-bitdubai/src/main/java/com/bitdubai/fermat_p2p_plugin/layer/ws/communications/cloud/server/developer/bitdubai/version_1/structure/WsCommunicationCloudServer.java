@@ -92,9 +92,14 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     private Map<Integer, PlatformComponentProfile> registeredCommunicationsCloudClientCache;
 
     /**
+     * Holds all the registered network services by his network service type
+     */
+    private Map<NetworkServiceType, List<PlatformComponentProfile>> registeredNetworkServicesCache;
+
+    /**
      * Holds all the Platform Component Profile register by type
      */
-    private Map<PlatformComponentType, Map<NetworkServiceType, List<PlatformComponentProfile>>> registeredPlatformComponentProfileCache;
+    private Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfileCache;
 
     /**
      * Constructor with parameter
@@ -110,6 +115,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         this.packetProcessorsRegister                 = new ConcurrentHashMap<>();
         this.registeredCommunicationsCloudServerCache = new ConcurrentHashMap<>();
         this.registeredCommunicationsCloudClientCache = new ConcurrentHashMap<>();
+        this.registeredNetworkServicesCache           = new ConcurrentHashMap<>();
         this.registeredPlatformComponentProfileCache  = new ConcurrentHashMap<>();
     }
 
@@ -333,13 +339,42 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
         registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
 
-        System.out.println(" WsCommunicationCloudServer - pendingRegisterClientConnectionsCache.size() = " + pendingRegisterClientConnectionsCache.size());
-        System.out.println(" WsCommunicationCloudServer - registeredClientConnectionsCache.size() = "+registeredClientConnectionsCache.size());
-        System.out.println(" WsCommunicationCloudServer - serverIdentityByClientCache.size() = "+serverIdentityByClientCache.size());
-        System.out.println(" WsCommunicationCloudServer - clientIdentityByClientConnectionCache.size() = " + clientIdentityByClientConnectionCache.size());
-        System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudServerCache.size() = "+registeredCommunicationsCloudServerCache.size());
-        System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudClientCache.size() = "+registeredCommunicationsCloudClientCache.size());
+        System.out.println(" WsCommunicationCloudServer - pendingRegisterClientConnectionsCache.size()    = " + pendingRegisterClientConnectionsCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredClientConnectionsCache.size()         = " + registeredClientConnectionsCache.size());
+        System.out.println(" WsCommunicationCloudServer - serverIdentityByClientCache.size()              = " + serverIdentityByClientCache.size());
+        System.out.println(" WsCommunicationCloudServer - clientIdentityByClientConnectionCache.size()    = " + clientIdentityByClientConnectionCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudServerCache.size() = " + registeredCommunicationsCloudServerCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudClientCache.size() = " + registeredCommunicationsCloudClientCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredNetworkServicesCache.size()           = " + registeredNetworkServicesCache.size());
+        System.out.println(" WsCommunicationCloudServer - registeredPlatformComponentProfileCache.size()  = " + registeredPlatformComponentProfileCache.size());
     }
+
+
+    /**
+     * This method unregister network service component profile
+     * register
+     */
+    private void removeNetworkServiceRegisteredByClientIdentity(String clientIdentity){
+
+        System.out.println(" WsCommunicationCloudServer - removeNetworkServiceRegisteredByClientIdentity ");
+
+        for (NetworkServiceType networkServiceType : registeredNetworkServicesCache.keySet()) {
+
+            for (PlatformComponentProfile platformComponentProfile : registeredNetworkServicesCache.get(networkServiceType)) {
+
+                if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
+
+                    System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
+                    registeredNetworkServicesCache.get(networkServiceType).remove(platformComponentProfile);
+                    break;
+
+                }
+            }
+
+        }
+
+    }
+
 
     /**
      * This method unregister all platform component profile
@@ -351,19 +386,15 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         for (PlatformComponentType platformComponentType : registeredPlatformComponentProfileCache.keySet()) {
 
-            for (NetworkServiceType networkServiceType : registeredPlatformComponentProfileCache.get(platformComponentType).keySet()) {
+            for (PlatformComponentProfile platformComponentProfile : registeredPlatformComponentProfileCache.get(platformComponentType)) {
 
-                for (PlatformComponentProfile platformComponentProfile : registeredPlatformComponentProfileCache.get(platformComponentType).get(networkServiceType)) {
+                if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
 
-                    if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
+                    System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
+                    registeredPlatformComponentProfileCache.get(platformComponentType).remove(platformComponentProfile);
+                    break;
 
-                        System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
-                        registeredPlatformComponentProfileCache.get(platformComponentType).get(networkServiceType).remove(platformComponentProfile);
-                        break;
-
-                    }
                 }
-
             }
 
         }
@@ -415,9 +446,9 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
     /**
      * Get the RegisteredPlatformComponentProfileCache
-     * @return Map<PlatformComponentType, Map<NetworkServiceType, List<PlatformComponentProfile>>>
+     * @return Map<PlatformComponentType, List<PlatformComponentProfile>>
      */
-    public Map<PlatformComponentType, Map<NetworkServiceType, List<PlatformComponentProfile>>> getRegisteredPlatformComponentProfileCache() {
+    public Map<PlatformComponentType, List<PlatformComponentProfile>> getRegisteredPlatformComponentProfileCache() {
         return registeredPlatformComponentProfileCache;
     }
 
@@ -437,4 +468,11 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         return registeredCommunicationsCloudClientCache;
     }
 
+    /**
+     * Get the RegisteredNetworkServicesCache
+     * @return Map<NetworkServiceType, List<PlatformComponentProfile>>
+     */
+    public Map<NetworkServiceType, List<PlatformComponentProfile>> getRegisteredNetworkServicesCache() {
+        return registeredNetworkServicesCache;
+    }
 }

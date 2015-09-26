@@ -87,9 +87,14 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
                 list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
                 break;
 
+            //NETWORK_SERVICE_COMPONENT
+            case "NS_COMP" :
+                list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                break;
+
             //Others
             default :
-                list = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType).get(networkServiceType);
+                list = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
@@ -105,6 +110,9 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         }
 
         List<PlatformComponentProfile>  filteredLis = applyDiscoveryQueryParams(list, discoveryQueryParameters);
+
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size() ="+filteredLis.size());
 
         /*
          * Convert to json representation

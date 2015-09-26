@@ -65,12 +65,6 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     private Map<String, TemplateNetworkServiceRemoteAgent> templateNetworkServiceRemoteAgentsCache;
 
     /**
-     * Holds all references to PlatformComponentProfile requested connection
-     */
-    private Map<String, PlatformComponentProfile> requestedConnectionProfile;
-
-
-    /**
      * Represent the incomingMessageDao
      */
     private IncomingMessageDao incomingMessageDao;
@@ -103,7 +97,6 @@ public class TemplateNetworkServiceManager implements TemplateManager {
         this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
         this.templateNetworkServiceLocalsCache = new HashMap<>();
         this.templateNetworkServiceRemoteAgentsCache = new HashMap<>();
-        this.requestedConnectionProfile = new HashMap<>();
     }
 
 
@@ -116,11 +109,6 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     public void connectTo(PlatformComponentProfile remotePlatformComponentProfile) {
 
         try {
-
-            /*
-             * Add to the cache
-             */
-            requestedConnectionProfile.put(remotePlatformComponentProfile.getIdentityPublicKey(), remotePlatformComponentProfile);
 
             /*
              * ask to the communicationLayerManager to connect to other network service
@@ -162,15 +150,17 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     /**
      * Handles events that indicate a connection to been established between two intra user
      * network services and prepares all objects to work with this new connection
+     *
+     * @param remoteComponentProfile
      */
-    public void handleEstablishedRequestedNetworkServiceConnection(String remoteNetworkServicePublicKey) {
+    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile remoteComponentProfile) {
 
         try {
 
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsCloudClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteNetworkServicePublicKey);
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsCloudClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
 
             //Validate the connection
             if (communicationsVPNConnection != null &&
@@ -179,12 +169,12 @@ public class TemplateNetworkServiceManager implements TemplateManager {
                  /*
                  * Instantiate the local reference
                  */
-                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(requestedConnectionProfile.get(remoteNetworkServicePublicKey), errorManager, eventManager, outgoingMessageDao);
+                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteNetworkServicePublicKey, errorManager, incomingMessageDao, outgoingMessageDao);
+                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -199,8 +189,8 @@ public class TemplateNetworkServiceManager implements TemplateManager {
                 /*
                  * Add to the cache
                  */
-                templateNetworkServiceLocalsCache.put(remoteNetworkServicePublicKey, templateNetworkServiceLocal);
-                templateNetworkServiceRemoteAgentsCache.put(remoteNetworkServicePublicKey, templateNetworkServiceRemoteAgent);
+                templateNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), templateNetworkServiceLocal);
+                templateNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), templateNetworkServiceRemoteAgent);
 
             }
 

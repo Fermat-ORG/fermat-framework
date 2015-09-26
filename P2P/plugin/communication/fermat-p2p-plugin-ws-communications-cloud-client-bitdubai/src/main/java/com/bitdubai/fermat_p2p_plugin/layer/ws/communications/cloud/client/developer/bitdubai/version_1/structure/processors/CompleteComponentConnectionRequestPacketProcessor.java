@@ -9,10 +9,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
@@ -52,13 +52,7 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
-        PlatformComponentType platformComponentType = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE), PlatformComponentType.class);
-        NetworkServiceType networkServiceType       = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE), NetworkServiceType.class);
-        String remoteIdentity                       = respond.get(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
-
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - platformComponentType = "+platformComponentType);
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - networkServiceType = "+networkServiceType);
-        System.out.println("CompleteComponentConnectionRequestPacketProcessor - remoteIdentity = " + remoteIdentity);
+        PlatformComponentProfile remoteComponent = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfile.class);
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
@@ -69,16 +63,12 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         /*
          * Configure the values
          */
-        ((CompleteComponentConnectionRequestNotificationEvent)event).setPlatformComponentType(platformComponentType);
-        ((CompleteComponentConnectionRequestNotificationEvent)event).setNetworkServiceType(networkServiceType);
-        ((CompleteComponentConnectionRequestNotificationEvent)event).setRemoteIdentity(remoteIdentity);
-
+        ((CompleteComponentConnectionRequestNotificationEvent)event).setRemoteComponent(remoteComponent);
         /*
          * Raise the event
          */
         System.out.println("CompleteComponentConnectionRequestPacketProcessor - Raised a event = EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
-
 
     }
 

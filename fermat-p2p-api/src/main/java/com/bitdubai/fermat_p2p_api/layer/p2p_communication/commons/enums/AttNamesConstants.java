@@ -61,9 +61,9 @@ public class AttNamesConstants {
     public static final String JSON_ATT_NAME_VPN_SERVER_IDENTITY = "v-s-i";
 
     /**
-     * Represent the value of JSON_ATT_NAME_REMOTE_PARTICIPANT_IDENTITY_VPN
+     * Represent the value of JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN
      */
-    public static final String JSON_ATT_NAME_REMOTE_PARTICIPANT_IDENTITY_VPN = "r-p-iv";
+    public static final String JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN = "r-p-v";
 
     /**
      * Represent the value of JSON_ATT_NAME_RESULT_LIST

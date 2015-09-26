@@ -142,8 +142,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
                 participantsConnections.put(participantIdentity, clientConnection);
                 vpnClientIdentityByParticipants.put(participantIdentity, vpnClientIdentity);
             }
-
-
+            
             System.out.println(" WsCommunicationVPNServer - registeredParticipants.size() = " + registeredParticipants.size());
             System.out.println(" WsCommunicationVPNServer - participantsConnections.size() = " + participantsConnections.size());
             System.out.println(" WsCommunicationVPNServer - Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0 = " + (Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0));
@@ -154,8 +153,8 @@ public class WsCommunicationVPNServer extends WebSocketServer{
                 PlatformComponentProfile peer1 = registeredParticipants.get(0);
                 PlatformComponentProfile peer2 = registeredParticipants.get((registeredParticipants.size()-1));
 
-                sendNotificationPacketConnectionComplete(peer1, peer2.getIdentityPublicKey());
-                sendNotificationPacketConnectionComplete(peer2, peer1.getIdentityPublicKey());
+                sendNotificationPacketConnectionComplete(peer1, peer2);
+                sendNotificationPacketConnectionComplete(peer2, peer1);
 
             }
 
@@ -166,11 +165,12 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     }
 
     /**
+     * Construct a packet whit the information that a vpn is ready
      *
      * @param destinationPlatformComponentProfile
-     * @param remotePlatformComponentProfileIdentity
+     * @param remotePlatformComponentProfile
      */
-    private void sendNotificationPacketConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, String remotePlatformComponentProfileIdentity){
+    private void sendNotificationPacketConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, PlatformComponentProfile remotePlatformComponentProfile){
 
         System.out.println(" WsCommunicationVPNServer - sendNotificationPacketConnectionComplete = " + destinationPlatformComponentProfile.getIdentityPublicKey());
 
@@ -179,9 +179,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
          */
         Gson gson = new Gson();
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE,  destinationPlatformComponentProfile.getPlatformComponentType().toString());
-        packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE,  destinationPlatformComponentProfile.getNetworkServiceType().toString());
-        packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN,  remotePlatformComponentProfileIdentity);
+        packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
 
 
         /*

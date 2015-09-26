@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 
@@ -20,20 +21,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.Platfor
  */
 public class CompleteComponentConnectionRequestNotificationEvent extends AbstractP2PFermatEvent {
 
-    /**
-     * Represent the platformComponentType
-     */
-    private PlatformComponentType platformComponentType;
 
     /**
-     * Represent the networkServiceType
+     * Represent the remoteComponent
      */
-    private NetworkServiceType networkServiceType;
-
-    /**
-     * Represent the remoteIdentity
-     */
-    private String remoteIdentity;
+    private PlatformComponentProfile remoteComponent;
 
 
     /**
@@ -45,50 +37,18 @@ public class CompleteComponentConnectionRequestNotificationEvent extends Abstrac
     }
 
     /**
-     * Get the PlatformComponentType
-     * @return PlatformComponentType
+     * Get the RemoteComponent
+     * @return PlatformComponentProfile
      */
-    public PlatformComponentType getPlatformComponentType() {
-        return platformComponentType;
+    public PlatformComponentProfile getRemoteComponent() {
+        return remoteComponent;
     }
 
     /**
-     * Set the PlatformComponentType
-     * @param platformComponentType
+     * Set the RemoteComponent
+     * @param remoteComponent
      */
-    public void setPlatformComponentType(PlatformComponentType platformComponentType) {
-        this.platformComponentType = platformComponentType;
-    }
-
-    /**
-     * Get the NetworkServiceType
-     * @return NetworkServiceType
-     */
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
-
-    /**
-     * Set the NetworkServiceType
-     * @param networkServiceType
-     */
-    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
-        this.networkServiceType = networkServiceType;
-    }
-
-    /**
-     * Get the RemoteIdentity
-     * @return String
-     */
-    public String getRemoteIdentity() {
-        return remoteIdentity;
-    }
-
-    /**
-     * Set the RemoteIdentity
-     * @param remoteIdentity
-     */
-    public void setRemoteIdentity(String remoteIdentity) {
-        this.remoteIdentity = remoteIdentity;
+    public void setRemoteComponent(PlatformComponentProfile remoteComponent) {
+        this.remoteComponent = remoteComponent;
     }
 }

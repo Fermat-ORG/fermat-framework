@@ -59,6 +59,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         PlatformComponentProfile platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(messageContentJsonStringRepresentation);
 
         System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getPlatformComponentType() = "+platformComponentProfileToRegister.getPlatformComponentType() );
+        System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getNetworkServiceType() = "+platformComponentProfileToRegister.getNetworkServiceType() );
 
 
         /*
@@ -74,6 +75,11 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
             //COMMUNICATION_CLOUD_CLIENT_COMPONENT
             case "COM_CLD_CLI_COMP" :
                     registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
+                break;
+
+            //NETWORK_SERVICE_COMPONENT
+            case "NS_COMP" :
+                registerNetworServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
                 break;
 
             //Others
@@ -111,6 +117,8 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
          * Send the encode packet to the server
          */
          clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+        System.out.println("ComponentRegistrationRequestPacketProcessor - Total Communications Cloud Server Component Registered = "+getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().size());
 
     }
 
@@ -170,6 +178,9 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
              */
             clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
+            System.out.println("ComponentRegistrationRequestPacketProcessor - Total Communications Cloud Client Component Registered = " + getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().size());
+
+
 
         }else {
             throw new RuntimeException("Forbidden connection this if NOT in the PendingRegisterClientConnectionsCache");
@@ -177,85 +188,38 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
 
     }
 
+
+
     /**
-     * Method that process the registration of the others components
+     * Method that process the registration of the Network Service Component
      */
-    private void registerOtherComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity){
+    private void registerNetworServiceComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity){
 
-        System.out.println("ComponentRegistrationRequestPacketProcessor - registerOtherComponent");
+        System.out.println("ComponentRegistrationRequestPacketProcessor - registerNetworkServiceComponent");
 
-        //TODO: Do it all this in data base is better
-
-        System.out.println("ComponentRegistrationRequestPacketProcessor - getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().containsKey(platformComponentProfileToRegister.getPlatformComponentType()) = "+getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().containsKey(platformComponentProfileToRegister.getPlatformComponentType()));
+        Map<NetworkServiceType, List<PlatformComponentProfile>> networkServiceRegistered = getWsCommunicationCloudServer().getRegisteredNetworkServicesCache();
 
         /*
-         * Validate if contain the PlatformComponentType
+         * Validate if contain a list for the NetworkServiceType
          */
-        if (getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().containsKey(platformComponentProfileToRegister.getPlatformComponentType())) {
-
-
-            System.out.println("ComponentRegistrationRequestPacketProcessor - getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentProfileToRegister.getPlatformComponentType()).containsKey(platformComponentProfileToRegister.getNetworkServiceType()) = "+getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentProfileToRegister.getPlatformComponentType()).containsKey(platformComponentProfileToRegister.getNetworkServiceType()));
+        if (networkServiceRegistered.containsKey(platformComponentProfileToRegister.getNetworkServiceType())){
 
             /*
-             * Validate if contain the NetworkServiceType
+             * Add to the list
              */
-            if (getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentProfileToRegister.getPlatformComponentType()).containsKey(platformComponentProfileToRegister.getNetworkServiceType())){
-
-
-                System.out.println("ComponentRegistrationRequestPacketProcessor - entro en paso 1");
-
-                /*
-                 * Add to the cache
-                 */
-                getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().
-                                                get(platformComponentProfileToRegister.getPlatformComponentType()).
-                                                get(platformComponentProfileToRegister.getNetworkServiceType()).
-                                                add(platformComponentProfileToRegister);
-            }else {
-
-                System.out.println("ComponentRegistrationRequestPacketProcessor - entro en paso 2");
-
-                /*
-                 * Create new list by the NetworkServiceType and add the profile
-                 */
-                List<PlatformComponentProfile> newListPCP = new ArrayList<>();
-                newListPCP.add(platformComponentProfileToRegister);
-
-                /*
-                 * Add to the cache
-                 */
-                getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().
-                                                get(platformComponentProfileToRegister.getPlatformComponentType()).
-                                                put(platformComponentProfileToRegister.getNetworkServiceType(), newListPCP);
-
-            }
+            networkServiceRegistered.get(platformComponentProfileToRegister.getNetworkServiceType()).add(platformComponentProfileToRegister);
 
         }else {
 
-            System.out.println("ComponentRegistrationRequestPacketProcessor - entro en paso 3");
-
             /*
-             * Create new list and add the profile
+             * Create new list by the NetworkServiceType and add the profile
              */
             List<PlatformComponentProfile> newListPCP = new ArrayList<>();
             newListPCP.add(platformComponentProfileToRegister);
 
-            /*
-             * Create a new map for holds the NetworkServiceTypes and add the list
-             */
-            Map<NetworkServiceType, List<PlatformComponentProfile>> newMapNS = new ConcurrentHashMap<>();
-            newMapNS.put(platformComponentProfileToRegister.getNetworkServiceType(), newListPCP);
-
-            /*
-             * Add to the cache
-             */
-            getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().put(platformComponentProfileToRegister.getPlatformComponentType(), newMapNS);
+            networkServiceRegistered.put(platformComponentProfileToRegister.getNetworkServiceType(), newListPCP);
 
         }
-
-        System.out.println("ComponentRegistrationRequestPacketProcessor - getRegisteredPlatformComponentProfileCache = " + getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().size());
-        System.out.println("ComponentRegistrationRequestPacketProcessor - getPlatformComponentType = "+getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentProfileToRegister.getPlatformComponentType()).size());
-        System.out.println("ComponentRegistrationRequestPacketProcessor - getNetworkServiceType = "+getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentProfileToRegister.getPlatformComponentType()).get(platformComponentProfileToRegister.getNetworkServiceType()).size());
 
 
         /*
@@ -267,10 +231,63 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
                                                                                                                     FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
                                                                                                                     serverIdentity.getPrivateKey());                  //Sender private key
 
-        /*
+         /*
          * Send the encode packet to the server
          */
         clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+        System.out.println("ComponentRegistrationRequestPacketProcessor - Total Network Service Component Registered ("+platformComponentProfileToRegister.getNetworkServiceType()+") = " + networkServiceRegistered.get(platformComponentProfileToRegister.getNetworkServiceType()).size());
+
+    }
+
+    /**
+     * Method that process the registration of the others components
+     */
+    private void registerOtherComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity){
+
+        System.out.println(" ============================================================================ ");
+        System.out.println("ComponentRegistrationRequestPacketProcessor - registerOtherComponent");
+
+
+        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache();
+
+        /*
+         * Validate if contain a list for the NetworkServiceType
+         */
+        if (registeredPlatformComponentProfile.containsKey(platformComponentProfileToRegister.getPlatformComponentType())){
+
+            /*
+             * Add to the list
+             */
+            registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType()).add(platformComponentProfileToRegister);
+
+        }else {
+
+            /*
+             * Create new list by the PlatformComponentType and add the profile
+             */
+            List<PlatformComponentProfile> newListPCP = new ArrayList<>();
+            newListPCP.add(platformComponentProfileToRegister);
+
+            registeredPlatformComponentProfile.put(platformComponentProfileToRegister.getPlatformComponentType(), newListPCP);
+
+        }
+
+        /*
+         * Construct a fermat packet whit the same platform component profile and different FermatPacketType
+         */
+        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
+                serverIdentity.getPublicKey(),                    //Sender
+                platformComponentProfileToRegister.toJson(),      //Message Content
+                FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
+                serverIdentity.getPrivateKey());                  //Sender private key
+
+         /*
+         * Send the encode packet to the server
+         */
+        clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+        System.out.println("ComponentRegistrationRequestPacketProcessor - Total (" + platformComponentProfileToRegister.getPlatformComponentType() + ") Component Registered  = " + registeredPlatformComponentProfile.get(platformComponentProfileToRegister.getPlatformComponentType()).size());
 
     }
 

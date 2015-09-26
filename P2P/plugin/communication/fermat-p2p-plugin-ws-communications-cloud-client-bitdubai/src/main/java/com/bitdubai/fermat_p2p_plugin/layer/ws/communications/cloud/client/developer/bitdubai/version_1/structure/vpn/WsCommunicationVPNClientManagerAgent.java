@@ -61,11 +61,10 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * Create a new WsCommunicationVPNClient
      *
      * @param serverURI
-     * @param networkServiceType
      * @param vpnServerIdentity
-     * @param remotePlatformComponentProfileIdentity
+     * @param remotePlatformComponentProfile
      */
-    public void createNewWsCommunicationVPNServer(URI serverURI, NetworkServiceType networkServiceType, String vpnServerIdentity, String remotePlatformComponentProfileIdentity) {
+    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, PlatformComponentProfile remotePlatformComponentProfile) {
 
         /*
          * Create the identity
@@ -81,7 +80,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
          * Get json representation
          */
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, requestedVpnConnections.get(networkServiceType).get(remotePlatformComponentProfileIdentity).getIdentityPublicKey());
+        jsonObject.addProperty(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, remotePlatformComponentProfile.toJson());
         jsonObject.addProperty(AttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
 
         /*
@@ -92,20 +91,20 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         /*
          * Construct the vpn client
          */
-        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, requestedVpnConnections.get(networkServiceType).get(remotePlatformComponentProfileIdentity), vpnServerIdentity, headers);
+        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, remotePlatformComponentProfile, vpnServerIdentity, headers);
 
         /*
          * Add to the vpn client active
          */
-        if (vpnClientActiveCache.containsKey(networkServiceType)){
+        if (vpnClientActiveCache.containsKey(remotePlatformComponentProfile.getNetworkServiceType())){
 
-            vpnClientActiveCache.get(networkServiceType).put(remotePlatformComponentProfileIdentity, vpnClient);
+            vpnClientActiveCache.get(remotePlatformComponentProfile.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
 
         }else {
 
             Map<String, WsCommunicationVPNClient> newMap = new HashMap<>();
-            newMap.put(remotePlatformComponentProfileIdentity, vpnClient);
-            vpnClientActiveCache.put(networkServiceType, newMap);
+            newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
+            vpnClientActiveCache.put(remotePlatformComponentProfile.getNetworkServiceType(), newMap);
         }
 
         /*

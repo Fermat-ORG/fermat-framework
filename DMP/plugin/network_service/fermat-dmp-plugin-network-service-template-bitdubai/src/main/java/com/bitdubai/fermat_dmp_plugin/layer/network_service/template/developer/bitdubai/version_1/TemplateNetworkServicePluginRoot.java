@@ -300,6 +300,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     public void start() throws CantStartPluginException {
 
         logManager.log(TemplateNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
+        System.out.println("TemplateNetworkServicePluginRoot - plugin id = "+getId());
 
         /*
          * Validate required resources
@@ -691,10 +692,9 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(String remoteIdentity){
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
 
         System.out.println(" TemplateNetworkServiceManager - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
-        System.out.println(" TemplateNetworkServiceManager - Starting method remoteIdentity = " + remoteIdentity);
 
         /*
          * Get the manager create for this client plugin
@@ -704,14 +704,14 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * Tell the manager to handler the new connection stablished
          */
-        templateNetworkServiceManager.handleEstablishedRequestedNetworkServiceConnection(remoteIdentity);
+        templateNetworkServiceManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
         /* -------------------------------------------------------------------------------------------------
          * This is for test and example of how to use
          * Get the local representation of the remote network service
          */
-        TemplateNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceManager.getTemplateNetworkServiceLocalInstance(remoteIdentity);
+        TemplateNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceManager.getTemplateNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
 
         /*
          * Get a remote network service registered from the list requested
