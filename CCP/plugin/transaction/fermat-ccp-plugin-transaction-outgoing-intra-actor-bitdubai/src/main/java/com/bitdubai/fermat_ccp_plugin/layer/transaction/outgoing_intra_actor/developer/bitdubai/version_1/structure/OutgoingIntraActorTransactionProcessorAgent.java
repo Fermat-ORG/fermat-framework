@@ -189,7 +189,12 @@ public class OutgoingIntraActorTransactionProcessorAgent {
 
                 for (OutgoingIntraActorTransactionWrapper transaction : transactionList) {
                     try {
-                        String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getIdTransaction(), transaction.getAddressTo(), transaction.getAmount());
+                        String hash;
+                        if (transaction.getOp_Return() == null)
+                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getIdTransaction(), transaction.getAddressTo(), transaction.getAmount());
+                        else
+                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getIdTransaction(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
+
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
                         //       we will just send the metadata in this place. This MUST be corrected.
