@@ -63,6 +63,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             //Get all values
             URI vpnServerUri = new URI(respond.get(AttNamesConstants.JSON_ATT_NAME_VPN_URI).getAsString());
             String vpnServerIdentity = respond.get(AttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY).getAsString();
+            String participantIdentity = respond.get(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
             /*
@@ -73,7 +74,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             /**
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, remotePlatformComponentProfile);
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile);
 
             /*
              * Is not running
@@ -82,10 +83,8 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
                 wsCommunicationVPNClientManagerAgent.start();
             }
 
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
            throw new RuntimeException(e);
-        }catch (Exception e) {
-            e.printStackTrace();
         }
 
     }

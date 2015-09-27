@@ -1,5 +1,5 @@
 /*
- * @#TemplateNetworkServiceManager.java - 2015
+ * @#TemplateNetworkServiceConnectionManager.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -25,14 +25,14 @@ import java.util.Map;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceConnectionManager</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceManager implements TemplateManager {
+public class TemplateNetworkServiceConnectionManager implements TemplateManager {
 
     /**
      * Represent the communicationsCloudClientConnection
@@ -86,7 +86,7 @@ public class TemplateNetworkServiceManager implements TemplateManager {
      * @param communicationsCloudClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public TemplateNetworkServiceManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsCloudClientConnection communicationsCloudClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public TemplateNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsCloudClientConnection communicationsCloudClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.platformComponentProfile = platformComponentProfile;
         this.identity = identity;
@@ -148,7 +148,7 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     }
 
     /**
-     * Handles events that indicate a connection to been established between two intra user
+     * Handles events that indicate a connection to been established between two
      * network services and prepares all objects to work with this new connection
      *
      * @param remoteComponentProfile
@@ -195,6 +195,7 @@ public class TemplateNetworkServiceManager implements TemplateManager {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
     }

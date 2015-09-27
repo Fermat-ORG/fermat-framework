@@ -65,7 +65,6 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
             System.out.println("ComponentConnectionRequestPacketProcessor - participant = "+participant.getIdentityPublicKey());
         }
 
-
         //Create a new vpn
         WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
 
@@ -102,6 +101,7 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
         JsonObject packetContent = new JsonObject();
         packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_VPN_URI, vpnServer.getUriConnection().toString());
         packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY, vpnServer.getVpnServerIdentityPublicKey());
+        packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, platformComponentProfileDestination.getIdentityPublicKey());
         packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN, remote.toJson());
 
         /*

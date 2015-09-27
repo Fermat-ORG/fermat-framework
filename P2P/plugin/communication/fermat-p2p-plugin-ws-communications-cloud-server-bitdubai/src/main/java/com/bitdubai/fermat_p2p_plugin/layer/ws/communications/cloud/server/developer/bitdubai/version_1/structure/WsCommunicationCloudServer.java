@@ -331,6 +331,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
          * Clean all the caches, remove data bind whit this connection
          */
         //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
+        removeNetworkServiceRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
         removePlatformComponentRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
         pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
         registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
@@ -371,7 +372,13 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                 }
             }
 
+            if (registeredNetworkServicesCache.get(networkServiceType).isEmpty()){
+                registeredNetworkServicesCache.remove(networkServiceType);
+            }
+
         }
+
+
 
     }
 
@@ -395,6 +402,10 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                     break;
 
                 }
+            }
+
+            if (registeredPlatformComponentProfileCache.get(platformComponentType).isEmpty()){
+                registeredPlatformComponentProfileCache.remove(platformComponentType);
             }
 
         }

@@ -70,6 +70,7 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
                 PlatformComponentProfile platformComponentProfile =  communicationsCloudClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service ("+templateNetworkServicePluginRoot.getId()+")", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
                 communicationsCloudClientConnection.registerComponentInCommunicationCloudServer(platformComponentProfile);
                 templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                templateNetworkServicePluginRoot.initializeTemplateNetworkServiceConnectionManager();
                 active = Boolean.FALSE;
 
             }else if (!templateNetworkServicePluginRoot.isRegister()){
