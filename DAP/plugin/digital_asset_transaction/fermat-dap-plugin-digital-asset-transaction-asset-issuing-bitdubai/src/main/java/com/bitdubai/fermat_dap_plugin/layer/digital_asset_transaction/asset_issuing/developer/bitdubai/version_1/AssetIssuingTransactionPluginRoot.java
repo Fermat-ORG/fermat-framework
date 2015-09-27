@@ -361,7 +361,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setGenesisAmount(1);
         digitalAsset.setDescription("TestAsset");
         digitalAsset.setName("testName");
-        digitalAsset.setPublicKey("testPublicKey");
+        digitalAsset.setPublicKey(new ECCKeyPair().getPublicKey());
         LOG.info("MAP_DigitalAsset:"+digitalAsset);
         List<Resource> resources=new ArrayList<>();
         digitalAsset.setResources(resources);
