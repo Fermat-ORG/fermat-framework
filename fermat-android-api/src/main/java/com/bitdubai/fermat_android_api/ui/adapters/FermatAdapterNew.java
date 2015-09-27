@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
@@ -64,14 +65,13 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
                 "        />\n" +
                 "\n" +
                 "    <ImageView\n" +
-                "        android:layout_width=\"100dp\"\n" +
-                "        android:layout_height=\"100dp\"\n" +
+                "        android:layout_width=\"75dp\"\n" +
+                "        android:layout_height=\"75dp\"\n" +
                 "        android:src=\"@drawable/mati_profile\"\n" +
                 "        android:layout_marginLeft=\"20dp\"\n" +
-                "        android:layout_marginTop=\"30dp\"\n" +
+                "        android:layout_marginTop=\"20dp\"\n" +
                 "        android:layout_marginBottom=\"30dp\"\n" +
                 "        android:id=\"@+id/imageView_contact\"\n" +
-                "        android:background=\"#122222\"\n" +
                 "\n" +
                 "        />\n" +
                 "\n" +
@@ -81,11 +81,11 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
                 "        android:orientation=\"vertical\"\n" +
                 "        android:layout_marginLeft=\"7dp\"\n" +
                 "        android:paddingLeft=\"20dp\"\n" +
-                "        android:paddingTop=\"20dp\"\n" +
+                "        android:layout_marginTop=\"20dp\"\n" +
                 "        android:background=\"#1222a2\">\n" +
                 "\n" +
                 "        <TextView\n" +
-                "            android:layout_width=\"wrap_content\"\n" +
+                "            android:layout_width=\"match_parent\"\n" +
                 "            android:layout_height=\"wrap_content\"\n" +
                 "            android:text=\"25 btc\"\n" +
                 "            android:id=\"@+id/txt_amount\"\n" +
@@ -93,7 +93,7 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
                 "            />\n" +
                 "\n" +
                 "        <TextView\n" +
-                "            android:layout_width=\"wrap_content\"\n" +
+                "            android:layout_width=\"match_parent\"\n" +
                 "            android:layout_height=\"wrap_content\"\n" +
                 "            android:text=\"Matias Furszyfer\"\n" +
                 "            android:id=\"@+id/txt_contact_name\"\n" +
@@ -115,7 +115,8 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
                 "            android:layout_height=\"wrap_content\"\n" +
                 "            android:orientation=\"vertical\"\n" +
                 "            android:gravity=\"right\"\n" +
-                "            android:background=\"#aaaaaa\">\n" +
+                "            android:background=\"#aaaaaa\"\n" +
+                "            >\n" +
                 "\n" +
                 "            <TextView\n" +
                 "                android:layout_width=\"wrap_content\"\n" +
@@ -129,35 +130,34 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
                 "                android:layout_height=\"wrap_content\"\n" +
                 "                android:text=\"09 ago 2015\"\n" +
                 "                android:id=\"@+id/txt_time\"\n" +
+                "                android:layout_below=\"@+id/txt_notes\"\n" +
                 "                />\n" +
+                "\n" +
+                "\n" +
                 "\n" +
                 "        </LinearLayout>\n" +
                 "\n" +
                 "\n" +
                 "        <LinearLayout\n" +
-                "            android:layout_width=\"match_parent\"\n" +
+                "            android:layout_width=\"wrap_content\"\n" +
                 "            android:layout_height=\"wrap_content\"\n" +
-                "            android:layout_marginTop=\"20dp\"\n" +
-                "            android:background=\"#acacee\">\n" +
+                "            android:layout_marginTop=\"30dp\"\n" +
+                "            android:background=\"#acacee\"\n" +
+                "            >\n" +
                 "\n" +
                 "            <Button\n" +
                 "                android:layout_width=\"wrap_content\"\n" +
                 "                android:layout_height=\"wrap_content\"\n" +
-                "                android:text=\"Refuse\"\n" +
+                "                android:text=\"accept\"\n" +
                 "                android:textSize=\"10dp\"\n" +
-                "                android:id=\"@+id/btn_refuse_request\"\n" +
-                "                android:layout_marginRight=\"5dp\"\n" +
-                "                android:background=\"@null\"\n" +
-                "                android:padding=\"2dp\"/>\n" +
-                "\n" +
+                "                android:visibility=\"gone\"/>\n" +
                 "\n" +
                 "            <Button\n" +
                 "                android:layout_width=\"wrap_content\"\n" +
                 "                android:layout_height=\"wrap_content\"\n" +
-                "                android:text=\"Accept\"\n" +
+                "                android:text=\"refuse\"\n" +
                 "                android:textSize=\"10dp\"\n" +
-                "                android:id=\"@+id/btn_accept_request\"\n" +
-                "                android:background=\"@null\"/>\n" +
+                "                android:visibility=\"gone\"/>\n" +
                 "\n" +
                 "\n" +
                 "        </LinearLayout>\n" +
@@ -174,16 +174,28 @@ public abstract class FermatAdapterNew<M, H extends FermatViewHolder> extends Re
                 "\n" +
                 "\n" +
                 "</LinearLayout>";
+
+        LinearLayout linearLayout = new LinearLayout(context);
+
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout.LayoutParams lps = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        lps.setMargins(0,15,5,0);
+
+        linearLayout.setLayoutParams(lps);
+
+
         try{
 
 
             //return createHolder(viewInflater.inflate(resourceProviderManager.getLayoutResource(getCardViewResourceName(), ScreenOrientation.PORTRAIT, UUID.fromString("f39421a2-0b63-4d50-aba6-51b70d492c3e"), "reference_wallet")),type);
 
-           return createHolder(viewInflater.inflate(layout),type);
+           return createHolder(viewInflater.inflate(layout,linearLayout),type);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return createHolder(viewInflater.inflate(layout),type);
+        return createHolder(viewInflater.inflate(layout,linearLayout),type);
         //return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(), viewGroup, false), type);
     }
 

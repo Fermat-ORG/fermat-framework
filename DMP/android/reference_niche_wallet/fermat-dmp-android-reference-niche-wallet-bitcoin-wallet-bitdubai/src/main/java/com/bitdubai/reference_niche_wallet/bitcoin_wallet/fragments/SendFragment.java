@@ -154,7 +154,10 @@ public class SendFragment extends FermatWalletFragment {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_send_new, container, false);
         try {
 
-            contact = referenceWalletSession.getLastContactSelected();
+            CryptoWalletWalletContact cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
+            if(cryptoWalletWalletContact!=null) contact = new WalletContact(cryptoWalletWalletContact.getContactId(),cryptoWalletWalletContact.getActorPublicKey(),cryptoWalletWalletContact.getActorName(),cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress());
+
+            //contact = referenceWalletSession.getLastContactSelected();
 
             editAddress = (EditText) rootView.findViewById(R.id.address);
             editAddress.setTypeface(tf);

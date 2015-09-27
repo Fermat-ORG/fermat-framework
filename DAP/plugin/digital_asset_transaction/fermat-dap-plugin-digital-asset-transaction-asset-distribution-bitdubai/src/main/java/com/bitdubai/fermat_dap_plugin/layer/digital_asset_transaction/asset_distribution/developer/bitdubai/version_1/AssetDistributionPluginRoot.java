@@ -15,6 +15,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.AssetDistributionTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
  */
 public class AssetDistributionPluginRoot implements AssetDistributionManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service {
 
-    AssetDistributionManager assetDistributionManager;
+    AssetDistributionTransactionManager assetDistributionTransactionManager;
     ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
@@ -44,6 +45,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
     @Override
     public void start() throws CantStartPluginException {
         //printSomething("Plugin started");
+        this.assetDistributionTransactionManager=new AssetDistributionTransactionManager();
     }
 
     @Override
@@ -74,7 +76,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
 
     @Override
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException {
-        this.assetDistributionManager.distributeAssets(digitalAssetsToDistribute);
+        this.assetDistributionTransactionManager.distributeAssets(digitalAssetsToDistribute);
     }
 
     @Override

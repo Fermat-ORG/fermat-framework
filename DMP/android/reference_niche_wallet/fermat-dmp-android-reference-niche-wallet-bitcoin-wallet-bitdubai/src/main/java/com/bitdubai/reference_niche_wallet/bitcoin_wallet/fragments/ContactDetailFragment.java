@@ -114,6 +114,12 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
 
         referenceWalletSession = (ReferenceWalletSession) walletSession;
 
+
+
+        CryptoWalletWalletContact cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
+
+        walletContact = new WalletContact(cryptoWalletWalletContact.getContactId(),cryptoWalletWalletContact.getActorPublicKey(),cryptoWalletWalletContact.getActorName(),cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress());
+
         typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
         errorManager = walletSession.getErrorManager();
@@ -130,18 +136,18 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
         } catch (CantGetAllWalletContactsException e) {
             e.printStackTrace();
         }
-        /* Load Wallet Contact */
-        walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
-            @Override
-            public boolean evaluate(WalletContact walletContact) {
-                try {
-                    return walletContact.name.equalsIgnoreCase(accountName);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                return false;
-            }
-        });
+//        /* Load Wallet Contact */
+//        walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
+//            @Override
+//            public boolean evaluate(WalletContact walletContact) {
+//                try {
+//                    return walletContact.name.equalsIgnoreCase(accountName);
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//                return false;
+//            }
+//        });
     }
 
     @Nullable
@@ -166,7 +172,6 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
 //                    .attach(fragment)
 //                    .show(fragment)
 //                    .commit();
-            referenceWalletSession.setLastContactSelected(walletContact);
             com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet installedWallet = walletSession.getWalletSessionType();
             ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey());
 
@@ -196,7 +201,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
 //                    .show(fragment)
 //                    .commit();
 
-            referenceWalletSession.setLastContactSelected(walletContact);
+
             com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet installedWallet = walletSession.getWalletSessionType();
             ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST.getKey());
         }

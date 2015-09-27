@@ -65,7 +65,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         setAssetVaultManager(assetVaultManager);
         setCryptoAddressBookManager(cryptoAddressBookManager);
         //TODO: when the OutgoingIntraUser is working, please, uncomment the following line
-        //setOutgoingIntraActorManager(outgoingIntraActorManager);
+        setOutgoingIntraActorManager(outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId,
                 this.cryptoVaultManager,
                 this.cryptoWallet,
