@@ -252,7 +252,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public void issuePendingDigitalAssets(String publicKey) {
-        this.issuePendingDigitalAssets(publicKey);
+        this.assetIssuingTransactionManager.issuePendingDigitalAssets(publicKey);
     }
 
     @Override
