@@ -539,10 +539,8 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, cryptoStatus.toString(), DatabaseFilterType.EQUAL);
-
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.toString(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-
             this.database.closeDatabase();
             return !databaseTable.getRecords().isEmpty();
 
@@ -552,6 +550,65 @@ public class AssetIssuingTransactionDao {
         }catch(Exception exception){
             this.database.closeDatabase();
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Getting pending transactions.", "Unexpected exception");
+        }
+    }
+
+    public List<String> getTransactionsHashByCryptoStatus(CryptoStatus cryptoStatus)throws CantCheckAssetIssuingProgressException{
+
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            List<String> transactionsHashList=new ArrayList<>();
+            databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            for (DatabaseTableRecord record : databaseTable.getRecords()){
+                transactionsHashList.add(record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME));
+            }
+            this.database.closeDatabase();
+            return transactionsHashList;
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Cannot load table to memory");
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Cannot open or find the Asset Issuing database");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Unexpected exception");
+        }
+
+    }
+
+    public void updateDigitalAssetCryptoStatusByTransactionHash(String transactionHash, CryptoStatus cryptoStatus) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            DatabaseTransaction databaseTransaction=this.database.newTransaction();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Transaction hash:" + transactionHash);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.toString());
+            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Cannot open or find the Asset Issuing database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Cannot load the table into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Unexpected exception");
         }
     }
 

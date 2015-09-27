@@ -11,8 +11,14 @@ import java.util.HashMap;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
  */
 public class AssetDistributionTransactionManager implements AssetDistributionManager {
+
+    DigitalAssetDistributor digitalAssetDistributor;
+    public AssetDistributionTransactionManager(){
+        this.digitalAssetDistributor=new DigitalAssetDistributor();
+    }
+
     @Override
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException {
-        
+        this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
     }
 }
