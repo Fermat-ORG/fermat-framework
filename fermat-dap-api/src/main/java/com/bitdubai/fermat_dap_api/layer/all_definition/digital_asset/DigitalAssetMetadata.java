@@ -33,4 +33,13 @@ public class DigitalAssetMetadata {
         this.genesisTransaction = genesisTransaction;
     }
 
+    @Override
+    public String toString(){
+        String digitalAssetMetadataString="\nDigital Asset Metadata:\n" +
+                "Digital Asset XML:\n"+digitalAsset+"\n" +
+                "Genesis Transaction: "+genesisTransaction+"\n" +
+                "Hash:"+hash;
+        return digitalAssetMetadataString;
+    }
+
 }
