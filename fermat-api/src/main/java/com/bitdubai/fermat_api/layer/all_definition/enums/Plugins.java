@@ -96,6 +96,7 @@ public enum Plugins {
 
     BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI),
     BITDUBAI_ASSET_FACTORY_MODULE("BASFM", Developers.BITDUBAI),
+    BITDUBAI_ASSET_WALLET_ISSUER("BASWI", Developers.BITDUBAI),
 
     BITDUBAI_DESKTOP_RUNTIME("BDR",Developers.BITDUBAI),
 
@@ -287,6 +288,8 @@ public enum Plugins {
                 return BITDUBAI_ASSET_FACTORY;
             case "BASFM":
                 return BITDUBAI_ASSET_FACTORY_MODULE;
+            case "BASWI":
+                return BITDUBAI_ASSET_WALLET_ISSUER;
             case "BDR":
                 return BITDUBAI_DESKTOP_RUNTIME;
 
