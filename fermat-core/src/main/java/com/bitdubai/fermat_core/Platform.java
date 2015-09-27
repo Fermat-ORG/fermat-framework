@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformLayers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_core.layer.dap_wallet.DAPWalletLayer;
 import com.bitdubai.fermat_core.layer.wpd_network_service.WPDNetworkServiceLayer;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
@@ -46,6 +47,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interf
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.DealsWithAssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.DealsWithModuleAseetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -430,6 +433,7 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new DAPIdentityLayer(), PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPMiddlewareLayer(), PlatformLayers.BITDUBAI_DIGITAL_ASSET_FACTORY);
             corePlatformContext.registerPlatformLayer(new DAPModuleLayer(), PlatformLayers.BITDUBAI_DAP_MODULE_LAYER);
+            corePlatformContext.registerPlatformLayer(new DAPWalletLayer(), PlatformLayers.BITDUBAI_DAP_WALLET_LAYER);
             corePlatformContext.registerPlatformLayer(new EngineLayer(),PlatformLayers.BITDUBAI_ENGINE_LAYER);
             corePlatformContext.registerPlatformLayer(new WPDNetworkServiceLayer(), PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER);
 
@@ -1205,6 +1209,13 @@ public class Platform implements Serializable {
             Plugin assetFactoryModlue = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginAssetFactoryModule();
             injectPluginReferencesAndStart(assetFactoryModlue, Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
 
+             /*
+             * Plugin Asset Wallet Asset Issuer
+             * -----------------------------
+             */
+            Plugin assetWalletIssuer = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletIssuer();
+            injectPluginReferencesAndStart(assetWalletIssuer, Plugins.BITDUBAI_ASSET_WALLET_ISSUER);
+
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
             LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
@@ -1410,6 +1421,9 @@ public class Platform implements Serializable {
             }
             if(plugin instanceof DealsWithModuleAseetFactory){
                 ((DealsWithModuleAseetFactory) plugin).setAssetFactoryModuleManager((AssetFactoryModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE));
+            }
+            if(plugin instanceof DealsWithAssetIssuerWallet){
+                ((DealsWithAssetIssuerWallet) plugin).setAssetIssuerManager((AssetIssuerWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_WALLET_ISSUER));
             }
             if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
                 ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
