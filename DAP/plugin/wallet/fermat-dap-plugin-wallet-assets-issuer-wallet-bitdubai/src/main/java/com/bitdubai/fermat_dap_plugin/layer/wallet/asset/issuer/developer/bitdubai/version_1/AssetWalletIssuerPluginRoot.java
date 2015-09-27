@@ -4,8 +4,15 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -15,18 +22,22 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerPluginRoot implements Plugin, Service, DealsWithErrors, DealsWithPluginFileSystem {
+public class AssetWalletIssuerPluginRoot implements Plugin, Service, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
 
     private static final String WALLET_ISSUER_FILE_NAME = "walletsIssuer";
     private Map<String, UUID> walletIssuer = new HashMap<>();
@@ -42,6 +53,11 @@ public class AssetWalletIssuerPluginRoot implements Plugin, Service, DealsWithEr
      * DealsWithPluginFileSystem Interface member variables.
      */
     private PluginFileSystem pluginFileSystem;
+
+    /**
+     * DealsWithDatabaseSystem Interface member variables.
+     */
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     @Override
     public void setId(UUID pluginId) {
@@ -130,5 +146,30 @@ public class AssetWalletIssuerPluginRoot implements Plugin, Service, DealsWithEr
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
+    }
+
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        List<String> databasesNames = new ArrayList<>();
+        Collection<UUID> ids = this.walletIssuer.values();
+        for (UUID id : ids)
+            databasesNames.add(id.toString());
+        DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(this.pluginId.toString(), databasesNames);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return null;
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return null;
     }
 }
