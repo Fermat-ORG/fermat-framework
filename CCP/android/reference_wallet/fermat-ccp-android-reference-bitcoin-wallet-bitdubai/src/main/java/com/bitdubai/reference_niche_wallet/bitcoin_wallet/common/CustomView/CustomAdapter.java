@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
 import java.util.ArrayList;
 

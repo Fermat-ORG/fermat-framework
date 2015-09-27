@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;

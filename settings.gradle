@@ -306,12 +306,12 @@ project(':fermat-dmp-addon-license-wallet-bitdubai').projectDir = new File('DMP/
 // DMP Projects (Wallets)
 
 // Milestone 1 project:
-include ':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai'
-project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai').projectDir = new File('DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
+include ':fermat-ccp-android-reference-bitcoin-wallet-bitdubai'
+project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
 
 
-include ':fermat-dmp-android-clone-reference-nich-wallet'
-project(':fermat-dmp-android-clone-reference-nich-wallet').projectDir = new File('DMP/android/reference_niche_wallet/fermat-dmp-android-clone-reference-nich-wallet')
+include ':fermat-ccp-android-clone-reference-nich-wallet'
+project(':fermat-ccp-android-clone-reference-nich-wallet').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-clone-reference-nich-wallet')
 
 
 

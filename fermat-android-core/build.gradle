@@ -74,9 +74,9 @@ dependencies {
 
     // DMP Projects (Wallets)
 
-    compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
+    compile project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
 
-    compile project(':fermat-dmp-android-clone-reference-nich-wallet')
+    compile project(':fermat-ccp-android-clone-reference-nich-wallet')
 
     /*
     Wallets on the pipeline:
