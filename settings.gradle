@@ -30,6 +30,7 @@ project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectD
 include ':fermat-ccp-plugin-identity-intra-user-bitdubai'
 project(':fermat-ccp-plugin-identity-intra-user-bitdubai').projectDir = new File('CCP/plugin/identity/fermat-ccp-plugin-identity-intra-user-bitdubai')
 
+
 include ':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai'
 project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai').projectDir = new File('CCP/plugin/middleware/fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
 
@@ -306,12 +307,12 @@ project(':fermat-dmp-addon-license-wallet-bitdubai').projectDir = new File('DMP/
 // DMP Projects (Wallets)
 
 // Milestone 1 project:
-include ':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai'
-project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai').projectDir = new File('DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
+include ':fermat-ccp-android-reference-bitcoin-wallet-bitdubai'
+project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
 
 
-include ':fermat-dmp-android-clone-reference-nich-wallet'
-project(':fermat-dmp-android-clone-reference-nich-wallet').projectDir = new File('DMP/android/reference_niche_wallet/fermat-dmp-android-clone-reference-nich-wallet')
+include ':fermat-ccp-android-clone-reference-nich-wallet'
+project(':fermat-ccp-android-clone-reference-nich-wallet').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-clone-reference-nich-wallet')
 
 
 
@@ -360,8 +361,13 @@ project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai').projectDir = ne
 include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
 // Intra user
-include ':fermat-dmp-android-sub-app-intra-user-bitdubai'
-project(':fermat-dmp-android-sub-app-intra-user-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-intra-user-bitdubai')
+include ':fermat-ccp-android-sub-app-intra-user-identity-bitdubai'
+project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
+
+
+include ':fermat_ccp_android_sub_app_intra_user_community_bitdubai'
+project(':fermat_ccp_android_sub_app_intra_user_community_bitdubai').projectDir = new File('CCP/android/sub_apps/fermat_ccp_android_sub_app_intra_user_community_bitdubai')
+
 
 // Milestone 2 project middlware:
 
