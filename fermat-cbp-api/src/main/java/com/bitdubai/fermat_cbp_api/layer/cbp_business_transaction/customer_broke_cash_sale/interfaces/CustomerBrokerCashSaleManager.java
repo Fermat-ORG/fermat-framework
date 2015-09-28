@@ -18,15 +18,14 @@ public interface CustomerBrokerCashSaleManager {
     List<CustomerBrokerCashSale> getAllCustomerBrokerCashSaleFromCurrentDeviceUser() throws CantGetCustomerBrokerCashSaleException;
 
     CustomerBrokerCashSale createCustomerBrokerCashSale(
-             final String operationId
-            ,final String contractId
+             final String contractId
             ,final String publicKeyCustomer
+            ,final String paymentBankMoneyTransactionId
+            ,final String paymentCurrency
             ,final String publicKeyBroker
             ,final String merchandiseCurrency
-            ,final float merchandiseAmount
-            ,final String referenceCurrency
-            ,final float referenceCurrencyPrice
-            ,final String CashCurrencyType
+            ,final String executionCashMoneyTransactionId
+            ,final String cashCurrencyType
     ) throws CantCreateCustomerBrokerCashSaleException;
 
     void updateStatusCustomerBrokerCashSale(final UUID transactionId) throws CantUpdateStatusCustomerBrokerCashSaleException;

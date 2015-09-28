@@ -18,20 +18,15 @@ public interface CustomerBrokerBankPurchaseManager {
     List<CustomerBrokerBankPurchase> getAllCustomerBrokerBankPurchaseFromCurrentDeviceUser() throws CantGetCustomerBrokeBankPurchaseException;
 
     CustomerBrokerBankPurchase createCustomerBrokerBankPurchase(
-             final String operationId
-            ,final String contractId
+             final String contractId
             ,final String publicKeyCustomer
+            ,final String paymentBankMoneyTransactionId
+            ,final String paymentCurrency
             ,final String publicKeyBroker
             ,final String merchandiseCurrency
-            ,final float merchandiseAmount
-            ,final String referenceCurrency
-            ,final float referenceCurrencyPrice
-            ,final String cryptoCurrency
-            ,final String cryptoAddress
-            ,final String bankName
-            ,final String bankAccountNumber
-            ,final String bankAccountType
-            ,final String bankDocumentReference
+            ,final String executionBankMoneyTransactionId
+            ,final String bankCurrencyType
+            ,final String bankOperationType
     ) throws CantCreateCustomerBrokerBankPurchaseException;
 
     void updateStatusCustomerBrokerBankPurchase(final UUID transactionId) throws CantUpdateStatusCustomerBrokeBankPurchaseException;

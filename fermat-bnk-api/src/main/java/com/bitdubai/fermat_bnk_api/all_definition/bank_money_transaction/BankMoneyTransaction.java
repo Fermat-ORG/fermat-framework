@@ -20,7 +20,11 @@ public interface BankMoneyTransaction {
 
     BankTransactionStatus getStatus();
 
-    Float getAmount();
+    float getMerchandiseAmount();
+
+    //ReferenceCurrency getReferenceCurrency();
+
+    float getReferenceCurrencyPrice();
 
     BankCurrencyType getBankCurrencyType();
 

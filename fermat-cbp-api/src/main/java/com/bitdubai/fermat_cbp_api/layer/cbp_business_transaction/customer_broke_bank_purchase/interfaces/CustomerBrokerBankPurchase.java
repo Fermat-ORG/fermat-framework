@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_bank_purchase.interfaces;
 
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 
 import java.util.UUID;
 
@@ -12,6 +13,20 @@ import java.util.UUID;
 
 public interface CustomerBrokerBankPurchase  extends BusinessTransaction {
 
+    UUID getContractId();
+
+    String getPublicKeyCustomer();
+
+    UUID getPaymentBankMoneyTransactionId();
+
+    CurrencyType getPaymentCurrency();
+
+    UUID getExecutionBankMoneyTransactionId();
+
+    BankCurrencyType getBankCurrencyType();
+
+    BankOperationType getBankOperationType();
+    /*
     UUID getContractId();
 
     String getPublicKeyCustomer();
@@ -27,4 +42,5 @@ public interface CustomerBrokerBankPurchase  extends BusinessTransaction {
     BankAccountType getBankAccountType();
 
     String getBankDocumentReference();
+    */
 }
