@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -16,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -29,17 +30,16 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
-import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.*;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.DealsWithAssetIssuing;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantPublishAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-
-import org.bouncycastle.asn1.dvcs.Data;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 07/09/15.
  */
-public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
     public static final String PATH_DIRECTORY = "assetFactory/resources";
     /**
      * AssetFactoryMiddlewareManager member variables
@@ -89,12 +89,13 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager) {
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.assetIssuingManager = assetIssuingManager;
     }
 
     private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao()
@@ -118,9 +119,11 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
             assetFactory.setContractProperties(contractProperties);
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
             for (Resource resource : assetFactory.getResources()) {
-                PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-                imageFile.setContent(resource.getResourceBinayData());
-                imageFile.persistToMedia();
+                //if (resource.getResourceBinayData() != null) {
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    imageFile.setContent(resource.getResourceBinayData());
+                    imageFile.persistToMedia();
+                //}
             }
         }catch (CantCreateFileException cantCreateFileException)
         {
@@ -133,7 +136,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     }
 
-    private List<AssetFactory> getAssetFactories(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException
+    private List<AssetFactory> getAssetFactories(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException, CantCreateFileException
     {
         List<AssetFactory> assetFactories = new ArrayList<>();
 
@@ -145,10 +148,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         return assetFactories;
     }
 
-    @Override
-    public void setAssetIssuingManager(AssetIssuingManager assetIssuingManager) throws CantSetObjectException {
-        this.assetIssuingManager = assetIssuingManager;
-    }
 
     @Override
     public void setErrorManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager) {
@@ -181,7 +180,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public AssetFactory getAssetFactory(final String publicKey) throws CantGetAssetFactoryException
+    public AssetFactory getAssetFactory(final String publicKey) throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to search for the public Key
         DatabaseTableFilter filter = new DatabaseTableFilter() {
@@ -236,7 +235,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public List<AssetFactory> getAssetFactoryByIssuer(final String issuerIdentityPublicKey) throws CantGetAssetFactoryException
+    public List<AssetFactory> getAssetFactoryByIssuer(final String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to search for the issuer identity public Key
         DatabaseTableFilter filter = new DatabaseTableFilter() {
@@ -282,7 +281,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public List<AssetFactory> getAssetFactoryByState(final State state) throws CantGetAssetFactoryException
+    public List<AssetFactory> getAssetFactoryByState(final State state) throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to search for the state
         DatabaseTableFilter filter = new DatabaseTableFilter() {
@@ -328,7 +327,7 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
         }
     }
 
-    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException
+    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to null for all
         DatabaseTableFilter filter = null;
@@ -347,44 +346,65 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
     public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException
     {
         try {
-            DigitalAsset digitalAsset = new DigitalAsset();
-            DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
+            if(assetFactory.getState() == State.DRAFT) {
+                DigitalAsset digitalAsset = new DigitalAsset();
+                DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
 
-            for(ContractProperty property : assetFactory.getContractProperties())
-            {
-                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
-                digitalAssetContract.setContractProperty(contractProperty);
+//            for(ContractProperty property : assetFactory.getContractProperties())
+//            {
+//                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
+//                digitalAssetContract.setContractProperty(contractProperty);
+//            }
+                ContractProperty redeemable;
+                ContractProperty expirationDate;
+                redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+                expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+                ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+                ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+                redeemable1.setValue(assetFactory.getIsRedeemable());
+                expirationDate1.setValue(assetFactory.getExpirationDate());
+                //TODO: Revisar porque la asignacion del value al property no la asigna
+                try {
+
+                    digitalAssetContract.setContractProperty(redeemable1);
+                } catch (Exception e) {
+                    digitalAssetContract.setContractProperty(expirationDate1);
+                }
+                digitalAsset.setContract(digitalAssetContract);
+                digitalAsset.setName(assetFactory.getName());
+                digitalAsset.setDescription(assetFactory.getDescription());
+                digitalAsset.setPublicKey(assetFactory.getPublicKey());
+                digitalAsset.setGenesisAmount(assetFactory.getAmount());
+                digitalAsset.setState(assetFactory.getState());
+                AssetIssuerIdentity aseetIssuerIdentity = new AssetIssuerIdentity();
+                aseetIssuerIdentity.setAlias(assetFactory.getIdentyAssetIssuer().getAlias());
+                aseetIssuerIdentity.setPublicKey(assetFactory.getIdentyAssetIssuer().getPublicKey());
+                aseetIssuerIdentity = (AssetIssuerIdentity)assetFactory.getIdentyAssetIssuer();
+                digitalAsset.setIdentityAssetIssuer(aseetIssuerIdentity);
+                digitalAsset.setResources(assetFactory.getResources());
+                //Actualiza el State a Pending_Final del objeto assetFactory
+                assetFactory.setState(State.PENDING_FINAL);
+                saveAssetFactory(assetFactory);
+                //Llama al metodo AssetIssuer de la transaction
+                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), blockchainNetworkType);
+                assetFactory.setState(State.FINAL);
+                saveAssetFactory(assetFactory);
             }
-            ContractProperty redeemable;
-            ContractProperty expirationDate;
-            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
-            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
-            redeemable1.setValue(assetFactory.getIsRedeemable());
-            expirationDate1.setValue(assetFactory.getExpirationDate());
-            digitalAssetContract.setContractProperty(redeemable1);
-            digitalAssetContract.setContractProperty(expirationDate1);
-            digitalAsset.setContract(digitalAssetContract);
-            digitalAsset.setName(assetFactory.getName());
-            digitalAsset.setDescription(assetFactory.getDescription());
-            digitalAsset.setPublicKey(assetFactory.getPublicKey());
-            digitalAsset.setGenesisAmount(assetFactory.getAmount());
-            digitalAsset.setState(assetFactory.getState());
-            digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
-            digitalAsset.setResources(assetFactory.getResources());
-            //Actualiza el State a Pending_Final del objeto assetFactory
-            assetFactory.setState(State.PENDING_FINAL);
-            saveAssetFactory(assetFactory);
-            //Llama al metodo AssetIssuer de la transaction
-            //TODO: Revisar porque la asignacion del value al property no la asigna
-            assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), blockchainNetworkType);
+            else
+            {
+                throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
+            }
+
+        }catch (CantIssueDigitalAssetsException e){
+            e.printStackTrace();
+            throw new CantSaveAssetFactoryException(e, "Exception General", "Method: issueAssets");
         }
         catch (CantSaveAssetFactoryException exception)
         {
             throw new CantSaveAssetFactoryException(exception, "Cant Save Asset Factory", "Method: publishAsset");
         }
         catch (Exception e){
+            e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: publishAsset");
         }
     }
@@ -397,186 +417,196 @@ public class AssetFactoryMiddlewareManager implements DealsWithAssetIssuing, Dea
 
     public AssetFactory getNewAssetFactory() throws  CantCreateAssetFactoryException, CantCreateEmptyAssetFactoryException
     {
-        AssetFactory assetFactory = new AssetFactory() {
-            String publicKey;
-            String name;
-            String description;
-            List<Resource> resources;
-            DigitalAssetContract digitalAssetContract;
-            State state;
-            List<ContractProperty> contractProperties;
-            int quantity;
-            long amount;
-            long fee;
-            Timestamp creationTimestamp;
-            Timestamp lastModificationTimestamp;
-            boolean isRedeemable;
-            Timestamp expirationDate;
-            AssetBehavior assetBehavior;
-            IdentityAssetIssuer identityAssetIssuer;
-            @Override
-            public IdentityAssetIssuer getIdentyAssetIssuer() {
-                return identityAssetIssuer;
-            }
+            AssetFactory assetFactory = new AssetFactory() {
+                String walletPublicKey;
+                String publicKey;
+                String name;
+                String description;
+                List<Resource> resources;
+                DigitalAssetContract digitalAssetContract;
+                State state;
+                List<ContractProperty> contractProperties;
+                int quantity;
+                long amount;
+                long fee;
+                Timestamp creationTimestamp;
+                Timestamp lastModificationTimestamp;
+                boolean isRedeemable;
+                Timestamp expirationDate;
+                AssetBehavior assetBehavior;
+                IdentityAssetIssuer identityAssetIssuer;
 
-            @Override
-            public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
-                this.identityAssetIssuer = identityAssetIssuer;
-            }
+                @Override
+                public IdentityAssetIssuer getIdentyAssetIssuer() {
+                    return identityAssetIssuer;
+                }
 
-            @Override
-            public String getPublicKey() {
-                return publicKey;
-            }
+                @Override
+                public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
+                    this.identityAssetIssuer = identityAssetIssuer;
+                }
 
-            @Override
-            public void setPublicKey(String publicKey) {
-                this.publicKey = publicKey;
-            }
+                @Override
+                public String getWalletPublicKey() {
+                    return walletPublicKey;
+                }
 
-            @Override
-            public String getName() {
-                return name;
-            }
+                @Override
+                public void setWalletPublicKey(String walletPublicKey) {
+                    this.walletPublicKey = walletPublicKey;
+                }
 
-            @Override
-            public void setName(String name) {
-                this.name = name;
-            }
+                @Override
+                public String getPublicKey() {
+                    return publicKey;
+                }
 
-            @Override
-            public String getDescription() {
-                return description;
-            }
+                @Override
+                public void setPublicKey(String publicKey) {
+                    this.publicKey = publicKey;
+                }
 
-            @Override
-            public void setDescription(String description) {
-                this.description = description;
-            }
+                @Override
+                public String getName() {
+                    return name;
+                }
 
-            @Override
-            public List<Resource> getResources() {
-                return resources;
-            }
+                @Override
+                public void setName(String name) {
+                    this.name = name;
+                }
 
-            @Override
-            public void setResources(List<Resource> resources) {
-                this.resources = resources;
-            }
+                @Override
+                public String getDescription() {
+                    return description;
+                }
 
-            @Override
-            public DigitalAssetContract getContract() {
-                return digitalAssetContract;
-            }
+                @Override
+                public void setDescription(String description) {
+                    this.description = description;
+                }
 
-            @Override
-            public void setContract(DigitalAssetContract contract) {
-                this.digitalAssetContract = contract;
-            }
+                @Override
+                public List<Resource> getResources() {
+                    return resources;
+                }
 
-            @Override
-            public List<ContractProperty> getContractProperties() {
-                return contractProperties;
-            }
+                @Override
+                public void setResources(List<Resource> resources) {
+                    this.resources = resources;
+                }
 
-            @Override
-            public void setContractProperties(List<ContractProperty> contractProperties) {
-                this.contractProperties = contractProperties;
-            }
+                @Override
+                public DigitalAssetContract getContract() {
+                    return digitalAssetContract;
+                }
 
-            @Override
-            public State getState() {
-                return state;
-            }
+                @Override
+                public void setContract(DigitalAssetContract contract) {
+                    this.digitalAssetContract = contract;
+                }
 
-            @Override
-            public void setState(State state) {
-                this.state = state;
-            }
+                @Override
+                public List<ContractProperty> getContractProperties() {
+                    return contractProperties;
+                }
 
-            @Override
-            public int getQuantity() {
-                return quantity;
-            }
+                @Override
+                public void setContractProperties(List<ContractProperty> contractProperties) {
+                    this.contractProperties = contractProperties;
+                }
 
-            @Override
-            public void setQuantity(int quantity) {
-                this.quantity = quantity;
-            }
+                @Override
+                public State getState() {
+                    return state;
+                }
 
-            @Override
-            public long getAmount() {
-                return amount;
-            }
+                @Override
+                public void setState(State state) {
+                    this.state = state;
+                }
 
-            @Override
-            public void setAmount(long amount) {
-                this.amount = amount;
-            }
+                @Override
+                public int getQuantity() {
+                    return quantity;
+                }
 
-            @Override
-            public long getFee() {
-                return fee;
-            }
+                @Override
+                public void setQuantity(int quantity) {
+                    this.quantity = quantity;
+                }
 
-            @Override
-            public void setFee(long fee) {
-                this.fee = fee;
-            }
+                @Override
+                public long getAmount() {
+                    return amount;
+                }
 
-            @Override
-            public boolean getIsRedeemable() {
-                return isRedeemable;
-            }
+                @Override
+                public void setAmount(long amount) {
+                    this.amount = amount;
+                }
 
-            @Override
-            public void setIsRedeemable(boolean isRedeemable) {
-                this.isRedeemable = isRedeemable;
-            }
+                @Override
+                public long getFee() {
+                    return fee;
+                }
 
-            @Override
-            public Timestamp getExpirationDate() {
-                return expirationDate;
-            }
+                @Override
+                public void setFee(long fee) {
+                    this.fee = fee;
+                }
 
-            @Override
-            public void setExpirationDate(Timestamp expirationDate) {
-                this.expirationDate = expirationDate;
-            }
+                @Override
+                public boolean getIsRedeemable() {
+                    return isRedeemable;
+                }
 
-            @Override
-            public AssetBehavior getAssetBehavior() {
-                return assetBehavior;
-            }
+                @Override
+                public void setIsRedeemable(boolean isRedeemable) {
+                    this.isRedeemable = isRedeemable;
+                }
 
-            @Override
-            public void setAssetBehavior(AssetBehavior assetBehavior) {
-                this.assetBehavior = assetBehavior;
-            }
+                @Override
+                public Timestamp getExpirationDate() {
+                    return expirationDate;
+                }
 
-            @Override
-            public Timestamp getCreationTimestamp() {
-                return creationTimestamp;
-            }
+                @Override
+                public void setExpirationDate(Timestamp expirationDate) {
+                    this.expirationDate = expirationDate;
+                }
 
-            @Override
-            public void setCreationTimestamp(Timestamp timestamp) {
-                this.creationTimestamp = timestamp;
-            }
+                @Override
+                public AssetBehavior getAssetBehavior() {
+                    return assetBehavior;
+                }
 
-            @Override
-            public Timestamp getLastModificationTimestamp() {
-                return lastModificationTimestamp;
-            }
+                @Override
+                public void setAssetBehavior(AssetBehavior assetBehavior) {
+                    this.assetBehavior = assetBehavior;
+                }
 
-            @Override
-            public void setLastModificationTimeststamp(Timestamp timestamp) {
-                this.lastModificationTimestamp = timestamp;
-            }
-        };
+                @Override
+                public Timestamp getCreationTimestamp() {
+                    return creationTimestamp;
+                }
 
-        return assetFactory;
+                @Override
+                public void setCreationTimestamp(Timestamp timestamp) {
+                    this.creationTimestamp = timestamp;
+                }
+
+                @Override
+                public Timestamp getLastModificationTimestamp() {
+                    return lastModificationTimestamp;
+                }
+
+                @Override
+                public void setLastModificationTimeststamp(Timestamp timestamp) {
+                    this.lastModificationTimestamp = timestamp;
+                }
+            };
+
+            return assetFactory;
     }
-
-
 }

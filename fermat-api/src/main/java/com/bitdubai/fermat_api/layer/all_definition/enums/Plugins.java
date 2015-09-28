@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -34,7 +33,6 @@ public enum Plugins {
     BITDUBAI_ASSETS_CRYPTO_VAULT("BASSTCRYV", Developers.BITDUBAI),
     BITDUBAI_INTRA_USER_FACTORY_MODULE("BINUSFACM", Developers.BITDUBAI),
     BITDUBAI_INTRA_USER_ACTOR("BINUSERA", Developers.BITDUBAI),
-    BITDUBAI_INTRA_USER_IDENTITY("BINUSERI", Developers.BITDUBAI),
     BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE("BBNWWM", Developers.BITDUBAI),
     BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE("BCLPWWM", Developers.BITDUBAI),
     BITDUBAI_CRYPTO_WALLET_WALLET_MODULE("BCWWM", Developers.BITDUBAI),
@@ -43,7 +41,6 @@ public enum Plugins {
     BITDUBAI_FIAT_OVER_CRYPTO_WALLET_WALLET_MODULE("BFOCWWM", Developers.BITDUBAI),
     BITDUBAI_MULTI_ACCOUNT_WALLET_WALLET_MODULE("BMAWWM", Developers.BITDUBAI),
     BITDUBAI_INCOMING_INTRA_USER_TRANSACTION("BININUST", Developers.BITDUBAI),
-    BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION("BOUINUST", Developers.BITDUBAI),
     BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION("BINDEVUT", Developers.BITDUBAI),
     BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION("BODEVUST", Developers.BITDUBAI),
     BITDUBAI_INTER_WALLET_TRANSACTION("BINWALLT", Developers.BITDUBAI),
@@ -51,10 +48,8 @@ public enum Plugins {
     BITDUBAI_BANK_NOTES_NETWORK_SERVICE("BBNNETSER", Developers.BITDUBAI),
     BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE("BWRNETSER", Developers.BITDUBAI),
     BITDUBAI_WALLET_STORE_NETWORK_SERVICE("BWSTONETSER", Developers.BITDUBAI),
-    BITDUBAI_WALLET_CONTACTS_MIDDLEWARE("BWALLCMIDD", Developers.BITDUBAI),
     BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE("BWCNETSER", Developers.BITDUBAI),
     BITDUBAI_CRYPTO_ADDRESS_BOOK("BCADDB", Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE("BCADDNS", Developers.BITDUBAI),
     BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION("BOUEXUT", Developers.BITDUBAI),
     BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION("BINEXUT", Developers.BITDUBAI),
     BITDUBAI_INCOMING_CRYPTO_TRANSACTION("BINCRYT", Developers.BITDUBAI),
@@ -90,6 +85,7 @@ public enum Plugins {
     BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI),
 
     BITDUBAI_ASSET_ISSUING_TRANSACTION("BAIT", Developers.BITDUBAI),
+    BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION("BADT", Developers.BITDUBAI),
 
     BITDUBAI_DAP_ISSUER_ACTOR_LAYER("BDAPIAL",Developers.BITDUBAI),
     BITDUBAI_DAP_USER_ACTOR_LAYER("BDAPUAL",Developers.BITDUBAI),
@@ -101,8 +97,19 @@ public enum Plugins {
 
     BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI),
     BITDUBAI_ASSET_FACTORY_MODULE("BASFM", Developers.BITDUBAI),
+    BITDUBAI_ASSET_WALLET_ISSUER("BASWI", Developers.BITDUBAI),
 
-    BITDUBAI_DESKTOP_RUNTIME("BDR",Developers.BITDUBAI)
+    BITDUBAI_DESKTOP_RUNTIME("BDR",Developers.BITDUBAI),
+
+    // Init CCP Plugins
+
+    BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE("BCCPCANS", Developers.BITDUBAI),
+    BITDUBAI_CCP_INTRA_USER_IDENTITY             ("BCCPIUI" , Developers.BITDUBAI),
+    BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE      ("BCCPWCM" , Developers.BITDUBAI),
+    BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION("BCCPOIAT", Developers.BITDUBAI)
+
+    // End  CCP Plugins
+
 
     ;
 
@@ -172,8 +179,6 @@ public enum Plugins {
                 return BITDUBAI_MULTI_ACCOUNT_WALLET_WALLET_MODULE;
             case "BININUST":
                 return BITDUBAI_INCOMING_INTRA_USER_TRANSACTION;
-            case "BOUINUST":
-                return BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION;
             case "BINDEVUT":
                 return BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION;
             case "BODEVUST":
@@ -204,14 +209,10 @@ public enum Plugins {
                 return BITDUBAI_WALLET_PUBLISHER_MIDDLEWARE;
             case "BWPMOD":
                 return BITDUBAI_WALLET_PUBLISHER_MODULE;
-            case "BWALLCMIDD":
-                return BITDUBAI_WALLET_CONTACTS_MIDDLEWARE;
             case "BWCNETSER":
                 return BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE;
             case "BCADDB":
                 return BITDUBAI_CRYPTO_ADDRESS_BOOK;
-            case "BCADDNS":
-                return BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE;
             case "BOUEXUT":
                 return BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION;
             case "BINEXUT":
@@ -250,8 +251,6 @@ public enum Plugins {
                 return BITDUBAI_INTRA_USER_FACTORY_MODULE;
             case "BINUSERA":
                 return BITDUBAI_INTRA_USER_ACTOR;
-            case "BINUSERI":
-                return BITDUBAI_INTRA_USER_IDENTITY;
             case "BWNSMIDD":
                 return BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE;
             case "BWSEMIDD":
@@ -274,6 +273,8 @@ public enum Plugins {
                 return BITDUBAI_MIDDLEWARE_NOTIFICATION;
             case "BAIT":
                 return BITDUBAI_ASSET_ISSUING_TRANSACTION;
+            case "BADT":
+                return BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION;
             case "BDAPIAL":
                 return BITDUBAI_DAP_ISSUER_ACTOR_LAYER;
             case "BDAPUAL":
@@ -290,8 +291,24 @@ public enum Plugins {
                 return BITDUBAI_ASSET_FACTORY;
             case "BASFM":
                 return BITDUBAI_ASSET_FACTORY_MODULE;
+            case "BASWI":
+                return BITDUBAI_ASSET_WALLET_ISSUER;
             case "BDR":
                 return BITDUBAI_DESKTOP_RUNTIME;
+
+            // Init CCP Plugins
+
+            case "BCCPCANS":
+                return BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE;
+            case "BCCPIUI":
+                return BITDUBAI_CCP_INTRA_USER_IDENTITY;
+            case "BCCPWCM":
+                return BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE;
+            case "BCCPOIAT":
+                return BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION;
+
+            // End  CCP Plugins
+
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

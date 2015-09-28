@@ -2,11 +2,15 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.inter
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,32 +28,35 @@ public interface CryptoAddressesManager {
      *
      * @param walletPublicKey         wallet which is sending the request
      * @param cryptoAddressToSend     a crypto address generated that will be sent to the actor
-     * @param actorType               actor type who wants to exchange addresses
+     * @param actorTypeBy             actor type who wants to exchange addresses
+     * @param actorTypeTo             actor type with whom wants to exchange addresses
      * @param requesterActorPublicKey the actor public key that is sending the request
      * @param actorToRequestPublicKey the actor with whom we want to exchange addresses
+     * @param blockchainNetworkType   network type in which we're working
      *
      * @throws CantSendAddressExchangeRequestException if something goes wrong.
      */
-    void sendAddressExchangeRequest(String          walletPublicKey,
-                                    CryptoAddress   cryptoAddressToSend,
-                                    Actors          actorType,
-                                    String          requesterActorPublicKey,
-                                    String          actorToRequestPublicKey) throws CantSendAddressExchangeRequestException;
+    void sendAddressExchangeRequest(String                walletPublicKey        ,
+                                    CryptoAddress         cryptoAddressToSend    ,
+                                    Actors                actorTypeBy            ,
+                                    Actors                actorTypeTo            ,
+                                    String                requesterActorPublicKey,
+                                    String                actorToRequestPublicKey,
+                                    BlockchainNetworkType blockchainNetworkType  ) throws CantSendAddressExchangeRequestException;
 
     /**
      * The method <code>acceptAddressExchangeRequest</code> is used to accept an address exchange request-
      * If the actor can return a crypto address, he'll send it.
-     * If not, he'll return a result message with the reason.
      *
      * @param requestId             the id of the request sent before
      * @param cryptoAddressReceived a crypto address that is received
-     * @param result                the intra-user public key that is accepting the request
      *
-     * @throws CantConfirmAddressExchangeRequestException if something goes wrong.
+     * @throws CantAcceptAddressExchangeRequestException  if something goes wrong.
+     * @throws PendingRequestNotFoundException            if i can't find the pending address exchange request.
      */
-    void acceptAddressExchangeRequest(UUID          requestId,
-                                      CryptoAddress cryptoAddressReceived,
-                                      String        result) throws CantConfirmAddressExchangeRequestException;
+    void acceptAddressExchangeRequest(UUID          requestId            ,
+                                      CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException,
+                                                                                  PendingRequestNotFoundException          ;
 
     /**
      * The method <code>listPendingRequests</code> return the list of requests
@@ -61,24 +68,41 @@ public interface CryptoAddressesManager {
      *
      * @throws CantListPendingAddressExchangeRequestsException if something goes wrong.
      */
-    List<PendingAddressExchangeRequest> listPendingRequests(Actors                      actorType,
-                                                            AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException;
+    List<AddressExchangeRequest> listPendingRequests(Actors                      actorType                  ,
+                                                     AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException;
 
     /**
-     * Throw the method <code>getPendingRequest</code>
+     * Throw the method <code>getPendingRequest</code> brings an unique pending address exchange request by request id
      *
      * @param requestId identifier of the request.
-     * @return an instance of a PendingAddressExchangeRequest
-     * @throws CantGetPendingAddressExchangeRequestException
+     *
+     * @return an instance of a AddressExchangeRequest
+     *
+     * @throws CantGetPendingAddressExchangeRequestException  if something goes wrong.
+     * @throws PendingRequestNotFoundException                if i can't find the pending address exchange request.
      */
-    PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException;
+    AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
+                                                                    PendingRequestNotFoundException              ;
 
     /**
-     * The method <code>confirmExchangeAddressRequest</code> deletes the finalized requests.
+     * The method <code>confirmAddressExchangeRequest</code> deletes the finalized requests.
      *
      * @param requestId the id of the request to delete.
      *
-     * @throws CantConfirmAddressExchangeRequestException if something goes wrong.
+     * @throws CantConfirmAddressExchangeRequestException  if something goes wrong.
+     * @throws PendingRequestNotFoundException             if i can't find the pending address exchange request.
      */
-    void confirmExchangeAddressRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException;
+    void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException,
+                                                              PendingRequestNotFoundException           ;
+
+    /**
+     * The method <code>denyAddressExchangeRequest</code> deny an address exchange request by incompatibility.
+     *
+     * @param requestId the id of the request to deny.
+     *
+     * @throws CantDenyAddressExchangeRequestException   if something goes wrong.
+     * @throws PendingRequestNotFoundException           if i can't find the pending address exchange request.
+     */
+    void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException,
+                                                           PendingRequestNotFoundException        ;;
 }

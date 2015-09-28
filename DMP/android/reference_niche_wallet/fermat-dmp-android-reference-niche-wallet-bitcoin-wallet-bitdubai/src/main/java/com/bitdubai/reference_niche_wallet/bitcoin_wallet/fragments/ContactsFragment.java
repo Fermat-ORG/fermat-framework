@@ -20,9 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -35,6 +35,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatLis
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.IndexBarView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.SortIgnoreCase;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceFragmentsEnumType;
@@ -53,7 +54,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends Fragment implements FermatListViewFragment {
+public class ContactsFragment extends FermatWalletFragment implements FermatListViewFragment {
 
     private static final String ARG_POSITION = "position";
     private static final String ARG_PLATFORM = "platform";
@@ -71,7 +72,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     Typeface tf;
 
     /** Wallet session */
-    ReferenceWalletSession walletSession;
+    ReferenceWalletSession referenceWalletSession;
 
     // unsorted list items
     ArrayList<String> mItems;
@@ -97,17 +98,11 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
 
+    List<CryptoWalletWalletContact> walletContactRecords;
 
+    public static ContactsFragment newInstance() {
 
-    public static ContactsFragment newInstance(ReferenceWalletSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
-        if (walletSession == null) {
-            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            return null;
-        }
         ContactsFragment f = new ContactsFragment();
-        f.setWalletSession(walletSession);
-        f.setWalletResourcesProviderManager(walletResourcesProviderManager);
-
 
         return f;
     }
@@ -116,6 +111,9 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        referenceWalletSession =(ReferenceWalletSession) walletSession;
+
         setRetainInstance(true);
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
                 .penaltyDeath().build());
@@ -124,7 +122,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
         errorManager = walletSession.getErrorManager();
 
-        cryptoWalletManager = walletSession.getCryptoWalletManager();
+        cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -142,8 +140,7 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
         setupViews(rootView);
 
 
-        //get contacts list
-        List<CryptoWalletWalletContact> walletContactRecords = new ArrayList<>();
+         walletContactRecords = new ArrayList<>();
         try {
             walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
         } catch (CantGetAllWalletContactsException e) {
@@ -272,9 +269,9 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 //        FT.attach(createContactFragment);
 //        FT.show(createContactFragment);
 //        FT.commit();
-        walletSession.setAccountName(name);
+        referenceWalletSession.setAccountName(name);
         com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet installedWallet = walletSession.getWalletSessionType();
-        ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(),installedWallet.getWalletType().getCode() ,installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS.getKey());
+        ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS.getKey());
     }
 
 
@@ -330,7 +327,9 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 //                            .attach(fragment)
 //                            .show(fragment)
 //                            .commit();
-                    walletSession.setAccountName(String.valueOf(adapter.getItem(position)));
+                    referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
+                    CryptoWalletWalletContact cryptoWalletWalletContact;
+                    referenceWalletSession.setLastContactSelected(walletContactRecords.get(position-1));
                     com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet installedWallet = walletSession.getWalletSessionType();
                     ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
 
@@ -351,16 +350,6 @@ public class ContactsFragment extends Fragment implements FermatListViewFragment
 
             }
         });
-    }
-
-
-    public static ContactsFragment newInstance(int position, ReferenceWalletSession walletSession) {
-        ContactsFragment balanceFragment = new ContactsFragment();
-        balanceFragment.setWalletSession(walletSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        balanceFragment.setArguments(b);
-        return balanceFragment;
     }
 
 
