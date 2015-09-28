@@ -53,6 +53,7 @@ The answers to each of these questions are addressed within the FERMAT platform.
 
 
 === FERMAT's Principles
+:numbered!:
 
 ==== 1. FERMAT should not allow censorship.
 * Open Source.

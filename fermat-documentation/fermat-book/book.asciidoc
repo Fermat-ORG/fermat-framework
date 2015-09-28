@@ -1,4 +1,5 @@
 :bookseries: animal
+:numbered:
 
 = FERMAT: expanding the cryptoworld
 
