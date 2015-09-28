@@ -15,7 +15,14 @@ public interface AssetIssuingManager /*extends TransactionProtocolManager<Crypto
                             List<Resource> resources,
                             DigitalAssetContract contract,
                             long genesisAmount) throws CantCreateDigitalAssetTransactionException;*/
-    void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String walletPublickey ,BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException;
+    /**
+     * This method will create and deliver digital assets according to the amount indicated by the assetsAmount argument.
+     * The process includes creating the transaction and send the crypto genesisAmount from the bitcoin wallet to wallet asset.
+     * */
+    void issueAssets(DigitalAsset digitalAssetToIssue,
+                     int assetsAmount,
+                     String walletPublicKey,
+                     BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException;
     void issuePendingDigitalAssets(String assetPublicKey);
     void setCryptoWallet(CryptoWallet cryptoWallet);
     /*void setActors(String deliveredByActorPublicKey,

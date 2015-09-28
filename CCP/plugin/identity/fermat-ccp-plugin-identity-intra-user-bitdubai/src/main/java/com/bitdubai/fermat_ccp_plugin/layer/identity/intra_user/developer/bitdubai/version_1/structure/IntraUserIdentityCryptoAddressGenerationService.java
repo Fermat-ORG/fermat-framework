@@ -107,7 +107,8 @@ public class IntraUserIdentityCryptoAddressGenerationService {
                 cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
             }
 
-        } catch (CantDenyAddressExchangeRequestException      |
+        } catch (PendingRequestNotFoundException              |
+                 CantDenyAddressExchangeRequestException      |
                  CantAcceptAddressExchangeRequestException    |
                  CantRegisterCryptoAddressBookRecordException |
                  CallToGetByCodeOnNONEException               |

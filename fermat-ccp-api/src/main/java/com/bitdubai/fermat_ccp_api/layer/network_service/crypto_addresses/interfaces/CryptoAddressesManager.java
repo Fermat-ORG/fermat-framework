@@ -36,13 +36,13 @@ public interface CryptoAddressesManager {
      *
      * @throws CantSendAddressExchangeRequestException if something goes wrong.
      */
-    void sendAddressExchangeRequest(String                walletPublicKey,
-                                    CryptoAddress         cryptoAddressToSend,
-                                    Actors                actorTypeBy,
-                                    Actors                actorTypeTo,
+    void sendAddressExchangeRequest(String                walletPublicKey        ,
+                                    CryptoAddress         cryptoAddressToSend    ,
+                                    Actors                actorTypeBy            ,
+                                    Actors                actorTypeTo            ,
                                     String                requesterActorPublicKey,
                                     String                actorToRequestPublicKey,
-                                    BlockchainNetworkType blockchainNetworkType) throws CantSendAddressExchangeRequestException;
+                                    BlockchainNetworkType blockchainNetworkType  ) throws CantSendAddressExchangeRequestException;
 
     /**
      * The method <code>acceptAddressExchangeRequest</code> is used to accept an address exchange request-
@@ -51,10 +51,12 @@ public interface CryptoAddressesManager {
      * @param requestId             the id of the request sent before
      * @param cryptoAddressReceived a crypto address that is received
      *
-     * @throws CantAcceptAddressExchangeRequestException if something goes wrong.
+     * @throws CantAcceptAddressExchangeRequestException  if something goes wrong.
+     * @throws PendingRequestNotFoundException            if i can't find the pending address exchange request.
      */
-    void acceptAddressExchangeRequest(UUID          requestId,
-                                      CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException;
+    void acceptAddressExchangeRequest(UUID          requestId            ,
+                                      CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException,
+                                                                                  PendingRequestNotFoundException          ;
 
     /**
      * The method <code>listPendingRequests</code> return the list of requests
@@ -66,33 +68,41 @@ public interface CryptoAddressesManager {
      *
      * @throws CantListPendingAddressExchangeRequestsException if something goes wrong.
      */
-    List<AddressExchangeRequest> listPendingRequests(Actors                      actorType,
-                                                            AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException;
+    List<AddressExchangeRequest> listPendingRequests(Actors                      actorType                  ,
+                                                     AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException;
 
     /**
-     * Throw the method <code>getPendingRequest</code>
+     * Throw the method <code>getPendingRequest</code> brings an unique pending address exchange request by request id
      *
      * @param requestId identifier of the request.
+     *
      * @return an instance of a AddressExchangeRequest
-     * @throws CantGetPendingAddressExchangeRequestException
+     *
+     * @throws CantGetPendingAddressExchangeRequestException  if something goes wrong.
+     * @throws PendingRequestNotFoundException                if i can't find the pending address exchange request.
      */
-    AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException;
+    AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
+                                                                    PendingRequestNotFoundException              ;
 
     /**
      * The method <code>confirmAddressExchangeRequest</code> deletes the finalized requests.
      *
      * @param requestId the id of the request to delete.
      *
-     * @throws CantConfirmAddressExchangeRequestException if something goes wrong.
+     * @throws CantConfirmAddressExchangeRequestException  if something goes wrong.
+     * @throws PendingRequestNotFoundException             if i can't find the pending address exchange request.
      */
-    void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException;
+    void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException,
+                                                              PendingRequestNotFoundException           ;
 
     /**
      * The method <code>denyAddressExchangeRequest</code> deny an address exchange request by incompatibility.
      *
      * @param requestId the id of the request to deny.
      *
-     * @throws CantDenyAddressExchangeRequestException if something goes wrong.
+     * @throws CantDenyAddressExchangeRequestException   if something goes wrong.
+     * @throws PendingRequestNotFoundException           if i can't find the pending address exchange request.
      */
-    void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException;
+    void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException,
+                                                           PendingRequestNotFoundException        ;;
 }
