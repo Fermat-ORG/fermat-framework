@@ -72,7 +72,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.factory_available_projects_fragment, container, false);
 
-        //listView = (ListView) rootView.findViewById(R.id.projects);
+        listView = (ListView) rootView.findViewById(R.id.projects);
         ArrayAdapter<InstalledWallet> adapter = new ArrayAdapter<InstalledWallet>(getActivity(), android.R.layout.simple_list_item_1, wallets);
         listView.setAdapter(adapter);
 
