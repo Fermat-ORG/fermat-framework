@@ -787,6 +787,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      */
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters){
 
+        System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
+
         /*
          * Request the list of component registers
          */
