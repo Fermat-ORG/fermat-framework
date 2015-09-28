@@ -376,13 +376,19 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
                 digitalAsset.setPublicKey(assetFactory.getPublicKey());
                 digitalAsset.setGenesisAmount(assetFactory.getAmount());
                 digitalAsset.setState(assetFactory.getState());
-                digitalAsset.setIdentityAssetIssuer(assetFactory.getIdentyAssetIssuer());
+                AssetIssuerIdentity aseetIssuerIdentity = new AssetIssuerIdentity();
+                aseetIssuerIdentity.setAlias(assetFactory.getIdentyAssetIssuer().getAlias());
+                aseetIssuerIdentity.setPublicKey(assetFactory.getIdentyAssetIssuer().getPublicKey());
+                aseetIssuerIdentity = (AssetIssuerIdentity)assetFactory.getIdentyAssetIssuer();
+                digitalAsset.setIdentityAssetIssuer(aseetIssuerIdentity);
                 digitalAsset.setResources(assetFactory.getResources());
                 //Actualiza el State a Pending_Final del objeto assetFactory
                 assetFactory.setState(State.PENDING_FINAL);
                 saveAssetFactory(assetFactory);
                 //Llama al metodo AssetIssuer de la transaction
-                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(),assetFactory.getWalletPublicKey(), blockchainNetworkType);
+                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), blockchainNetworkType);
+                assetFactory.setState(State.FINAL);
+                saveAssetFactory(assetFactory);
             }
             else
             {
