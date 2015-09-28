@@ -59,3 +59,5 @@ In simple terms, a transfer of bitcoins from one address to another. More precis
 
 wallet::
 Software that holds all your bitcoin addresses and secret keys. Use it to send, receive, and store your bitcoin.((("wallet"))) 
+=======
+

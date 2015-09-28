@@ -1,28 +1,21 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.structure.CryptoAddressBookCryptoModuleRecord;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Vaults;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantShowProfileImageException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.structure.CryptoAddressBookCryptoModuleRecord;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by natalia on 07/09/15.
@@ -46,7 +39,7 @@ private CryptoAddressBookCryptoModuleRecord cryptoAddressBookCryptoModuleRecord;
 
     private Platforms platform = Platforms.CRYPTO_CURRENCY_PLATFORM;
 
-    private Vaults vault = Vaults.BITCOIN_VAULT;
+    private CryptoCurrencyVault vault = CryptoCurrencyVault.BITCOIN_VAULT;
 
     private String walletPublicKey = UUID.randomUUID().toString();;
 

@@ -6,8 +6,6 @@
  */
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 import java.util.UUID;
@@ -23,7 +21,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserLoggedInEvent extends AbstractPlatformEvent {
+public class IntraUserLoggedInEvent extends AbstractFermatEvent {
 
 
     /**

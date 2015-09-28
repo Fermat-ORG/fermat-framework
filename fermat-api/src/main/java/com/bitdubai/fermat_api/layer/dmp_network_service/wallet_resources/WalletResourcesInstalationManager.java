@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.WalletInstalationProgress;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
 
 import java.util.UUID;
@@ -42,7 +42,7 @@ public interface WalletResourcesInstalationManager {
      * @param navigationStructureVersion
      * @throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException
      */
-    public void installSkinForWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String navigationStructureVersion) throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
+    public void installSkinForWallet(String walletCategory, String walletType, String developer, String screenSize, String skinName, String navigationStructureVersion,String walletPublicKey) throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 
 
     /**
@@ -55,7 +55,7 @@ public interface WalletResourcesInstalationManager {
      * @param languageName
      * @throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException
      */
-    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, UUID skinId, String languageName) throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
+    public void installLanguageForWallet(String walletCategory, String walletType, String developer, String screenSize, UUID skinId, String languageName,String walletPublicKey) throws com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 
 
     /**
@@ -72,34 +72,26 @@ public interface WalletResourcesInstalationManager {
 
     //TODO: la wallet puede tener mas de un lenguage y skin, este metodo va a recibir el array de skins y language?
 
-    public void unninstallCompleteWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet)throws WalletResourcesUnninstallException;
+    public void uninstallCompleteWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String walletPublicKey)throws WalletResourcesUnninstallException;
 
 
     /**
      *
-     * @param walletCategory
-     * @param walletType
-     * @param developer
      * @param skinId
-     * @param screenSize
-     * @param navigationStructureVersion
-     * @param isLastWallet
+     * @param walletPublicKey
+     * @throws WalletResourcesUnninstallException
      */
-
-    public void unninstallSkinForWallet(String walletCategory, String walletType, String developer, String walletName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet)throws WalletResourcesUnninstallException;
+    public void uninstallSkinForWallet( UUID skinId,String walletPublicKey) throws WalletResourcesUnninstallException;
 
 
     /**
      *
-     * @param walletCategory
-     * @param walletType
-     * @param developer
-     * @param isLastWallet
+     * @param skinId
+     * @param walletPublicKey
+     * @param languageName
+     * @throws WalletResourcesUnninstallException
      */
-
-//TODO: No deberia recibir el id del lenguage que va a desinstalar?
-
-    public void unninstallLanguageForWallet(String walletCategory, String walletType, String developer,String walletName, boolean isLastWallet) throws WalletResourcesUnninstallException;
+    public void uninstallLanguageForWallet(UUID skinId,String walletPublicKey, String languageName) throws WalletResourcesUnninstallException;
 
 
 
@@ -108,7 +100,7 @@ public interface WalletResourcesInstalationManager {
      *  Get enum type of wallet instalation progress
      * @return
      */
-    public WalletInstalationProgress getWalletInstalationProgress();
+    public InstalationProgress getInstallationProgress();
 
 
 }

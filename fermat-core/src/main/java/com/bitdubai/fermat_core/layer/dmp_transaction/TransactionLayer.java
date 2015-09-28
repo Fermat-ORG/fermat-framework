@@ -10,7 +10,6 @@ import com.bitdubai.fermat_core.layer.dmp_transaction.incoming_extra_user.Incomi
 import com.bitdubai.fermat_core.layer.dmp_transaction.incoming_intra_user.IncomingIntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_transaction.inter_wallet.InterWalletSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_transaction.outgoing_extra_user.OutgoingExtrauserSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_transaction.outgoing_intra_user.OutgoingIntraUserSubsytem;
 import com.bitdubai.fermat_core.layer.dmp_transaction.outgoing_device_user.OutgoingDeviceUserSubsystem;
 
 /**
@@ -27,8 +26,6 @@ public class TransactionLayer implements PlatformLayer {
     private Plugin mOutgoingDeviceUser;
 
     private Plugin mIncomingIntraUser;
-
-    private Plugin mOutgoingIntraUser;
     
     private Plugin mInterWallet;
 
@@ -50,10 +47,6 @@ public class TransactionLayer implements PlatformLayer {
 
     public  Plugin getOutgoingExtraUserPlugin() {
         return mOutgoingExtraUser;
-    }
-
-    public  Plugin getOutgoingIntraUserPlugin() {
-        return mOutgoingIntraUser;
     }
 
     public  Plugin getOutgoingDeviceUserPlugin() {
@@ -135,22 +128,6 @@ public class TransactionLayer implements PlatformLayer {
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
-        }
-
-
-        /**
-         * Let's try to start the Outgoing Intra User Subsytem. 
-         */
-        
-        TransactionSubsystem outgoingIntraUserSubsystem = new OutgoingIntraUserSubsytem();
-        
-        try {
-            outgoingIntraUserSubsystem.start();
-            mOutgoingIntraUser = outgoingIntraUserSubsystem.getPlugin();
-
-        }catch (CantStartSubsystemException e){
-            System.err.println("CantStartSubsystemException: " + e.getMessage());
-            
         }
 
         /**

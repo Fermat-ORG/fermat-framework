@@ -23,6 +23,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.IncomingTemplateNetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -488,19 +490,19 @@ public class IncomingMessageDao {
 
         try {
 
-            incomingTemplateNetworkServiceMessage.setId(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setSender(UUID.fromString(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME)));
-            incomingTemplateNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setId(UUID.fromString(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setSender(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME));
+            incomingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME));
             ;
-            incomingTemplateNetworkServiceMessage.setTextContent(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setMessageType(MessagesTypes.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setContent(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
+            incomingTemplateNetworkServiceMessage.setFermatMessageContentType((FermatMessageContentType.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME))));
             incomingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
             incomingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
             ;
-            incomingTemplateNetworkServiceMessage.setStatus(MessagesStatus.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
+            incomingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
-
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             //this should not happen, but if it happens return null
             return null;
         }
@@ -525,14 +527,14 @@ public class IncomingMessageDao {
         /*
          * Set the entity values
          */
-        entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getId());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getId().toString());
         entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getSender().toString());
         entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getTextContent());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getMessageType().getCode());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getContent());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
         entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
         entityRecord.setLongValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getStatus().getCode());
+        entityRecord.setStringValue(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
 
         /*
          * return the new table record

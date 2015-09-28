@@ -227,7 +227,8 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                         event.getLongValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName)
                 );
             }
-            return null;
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        return null;
     }
 
     void disableEvent(UUID eventId) throws CantReadEvent, CantSaveEvent {
@@ -299,7 +300,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     // Retorna las que están en (A,TBN)
-    public List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantGetTransactionsException
+    public List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantListTransactionsException
         List<Transaction<CryptoTransaction>> tbaList = new ArrayList<>();
         try {
             DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
@@ -511,6 +512,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 

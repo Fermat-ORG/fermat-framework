@@ -2,9 +2,9 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.de
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.basic_wallet_common_exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -85,7 +85,7 @@ public class GetTransactionsTest {
         catchException(testWalletDao).getTransactions(1, 0);
         assertThat(caughtException())
                 .isNotNull()
-                .isInstanceOf(CantGetTransactionsException.class);
+                .isInstanceOf(CantListTransactionsException.class);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class GetTransactionsTest {
         catchException(testWalletDao).getTransactions(1, 0);
         assertThat(caughtException())
                 .isNotNull()
-                .isInstanceOf(CantGetTransactionsException.class);
+                .isInstanceOf(CantListTransactionsException.class);
     }
 
     private BitcoinWalletTransaction constructBitcoinWalletTransactionFromRecord(final DatabaseTableRecord record){

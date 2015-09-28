@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
-import com.bitdubai.fermat_dap_api.all_definition.digital_asset.enums.State;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
@@ -13,27 +16,55 @@ import java.util.List;
  * Created by franklin on 07/09/15.
  */
 public interface AssetFactoryManager {
-    //Documentar los meteodos
-    //Geters Asset Factory
-    AssetFactory getAssetFactoryByPublicKey(String publicKey) throws CantGetAssetFactoryException;
-    List<AssetFactory> getAllAssetFactory() throws CantGetAssetFactoryException;
-    List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException;
-    List<AssetFactory> getDigitalAssetByState(State state) throws CantGetAssetFactoryException;
-    AssetFactory getDigitalAssetByPublicKey(String publicKey) throws CantGetAssetFactoryException;
+    //Getters
+    /**
+     * This method returns the information stored about the Asset Factory
+     */
+    AssetFactory getAssetFactoryByPublicKey(String assetPublicKey) throws CantGetAssetFactoryException, CantCreateFileException;
+
+    /**
+     * This method returns the information stored about the all Asset Factory by issuerIdentityKey.
+     */
+    List<AssetFactory> getAssetFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException;
+
+    /**
+     * This method returns the information stored about the all Asset Factory by state
+     */
+    List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException;
+
+    /**
+     * This method returns the information stored about the all Asset Factory
+     */
+    List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException;
 
     //CRUD
-    AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException;
-    void createAssetFactory(AssetFactory assetFactory) throws CantCreateAssetFactoryException;
-    void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
+    /**
+     * This method create an empty object AssetFactory
+     */
+    AssetFactory createEmptyAssetFactory() throws CantCreateEmptyAssetFactoryException, CantCreateAssetFactoryException;
+
+    /**
+     * This method save object AssetFactory in database
+     */
+    void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException;
+
+    /**
+     * This method mark object AssetFactory in database with close
+     */
+    void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException, CantCreateFileException, CantPersistFileException;
+
+    /**
+     * This method remove object AssetFactory in database
+     */
     void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException;
 
-    //Deals
-    //TODO: Revisar
-    boolean verifiedGenesisAmount(AssetFactory assetFactory);
+    /**
+     * This method retrieves the bitcoin wallet and check if you have available balance
+     */
+    long getAvailableBalance(long amount);
 
-    //TODO: Revisar
-    long getEstimatedFeeValue(AssetFactory assetFactory);
-
-    //TODO: Revisar
-    void IssueAsset(AssetFactory assetFactory);
+    /**
+     * TThis method publishes the asset digital object with the number and amount of Asset, start the transaction
+     */
+    void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException;
 }

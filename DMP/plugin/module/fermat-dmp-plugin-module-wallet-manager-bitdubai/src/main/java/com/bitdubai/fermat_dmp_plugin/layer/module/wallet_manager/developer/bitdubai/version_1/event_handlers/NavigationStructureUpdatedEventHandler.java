@@ -6,13 +6,13 @@ import com.bitdubai.fermat_api.layer.dmp_module.ModuleNotRunningException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantEnableWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
 /**
  * Created by loui on 19/02/15.
  */
-public class NavigationStructureUpdatedEventHandler implements EventHandler {
+public class NavigationStructureUpdatedEventHandler implements FermatEventHandler {
     
     WalletManager walletManager;
 
@@ -21,7 +21,7 @@ public class NavigationStructureUpdatedEventHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
         if (((Service) this.walletManager).getStatus() == ServiceStatus.STARTED){
 

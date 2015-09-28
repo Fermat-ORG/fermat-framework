@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedCryptoStatusException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -141,7 +141,7 @@ public class VaultEventListeners extends AbstractWalletEventListener implements 
     }
 
     private void raiseTransactionEvent(EventType eventType) {
-        PlatformEvent transactionEvent = eventManager.getNewEvent(eventType);
+        FermatEvent transactionEvent = eventManager.getNewEvent(eventType);
         transactionEvent.setSource(EventSource.CRYPTO_VAULT);
         eventManager.raiseEvent(transactionEvent);
     }

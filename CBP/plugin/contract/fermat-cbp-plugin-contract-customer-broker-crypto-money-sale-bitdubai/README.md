@@ -1,6 +1,10 @@
-# Fermat CBP Java Business Transaction Crypto Broker Fiat Cash Stock Replenish
+# Fermat CBP Plugin Contract Customer Broker Crypto Money Sale
 
-Recarga de stock Cash de Fiat Money.
+Almacena toda la información de una negociación de venta de tipo Crypto Money.
+
+## Características
+* Debe crear contratos con la información de venta de tipo Crypto Money.
+ * Debe actualizar el estado del mismo en los diferentes momentos de la negociación y ejecución de la venta.
 
 ## Developer
 

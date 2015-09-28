@@ -12,13 +12,13 @@ package com.bitdubai.fermat_api.layer.osa_android.location_system;
  * */
 public interface Location {
 
-    public double getLatitude();
+    public Double getLatitude();
 
-    public double getLongitude();
+    public Double getLongitude();
 
-    public double getAltitude();
+    public Double getAltitude();
 
-    public long getTime();
+    public Long getTime();
 
     public LocationProvider getProvider();
 

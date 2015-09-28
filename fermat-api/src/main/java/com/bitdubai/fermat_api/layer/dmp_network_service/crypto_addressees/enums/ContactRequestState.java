@@ -7,8 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * represents the state of the Contact Request.
  */
 public enum ContactRequestState {
+
     PENDING_REMOTE_ACCEPTANCE ("PRA"),
-    PENDING_LOCALLY_ACCEPTANCE ("PLA"),
+    PENDING_LOCAL_ACCEPTANCE ("PLA"),
     ACCEPTED ("ACC");
 
     private String code;
@@ -23,12 +24,11 @@ public enum ContactRequestState {
 
     public static ContactRequestState getByCode(String code) throws InvalidParameterException {
         switch (code){
-            case "PRA": return ContactRequestState.PENDING_REMOTE_ACCEPTANCE;
-            case "PLA": return ContactRequestState.PENDING_LOCALLY_ACCEPTANCE;
-            case "ACC": return ContactRequestState.ACCEPTED;
-            default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactRequestState enum");
-
+            case "PRA": return PENDING_REMOTE_ACCEPTANCE;
+            case "PLA": return PENDING_LOCAL_ACCEPTANCE;
+            case "ACC": return ACCEPTED;
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactRequestState enum");
         }
     }
+
 }
