@@ -198,8 +198,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.assetIssuingTransactionMonitorAgent.start();*/
             //testIssueSingleAsset();
-            testIssueMultipleAssetsWithNoIdentity();
-            testIssueMultipleFullAssets();
+            //testIssueMultipleAssetsWithNoIdentity();
+            //testIssueMultipleFullAssets();
         }
         catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "Cannot set an object, probably is null");

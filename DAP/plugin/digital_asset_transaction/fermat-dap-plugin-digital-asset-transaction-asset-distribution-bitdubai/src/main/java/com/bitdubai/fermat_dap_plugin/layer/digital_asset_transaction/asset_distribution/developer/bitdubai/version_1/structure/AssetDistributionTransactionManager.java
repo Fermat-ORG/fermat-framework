@@ -6,6 +6,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
 
@@ -16,10 +17,18 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
 
     AssetVaultManager assetVaultManager;
     DigitalAssetDistributor digitalAssetDistributor;
+    ErrorManager errorManager;
 
-    public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager) throws CantSetObjectException {
+    public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager, ErrorManager errorManager) throws CantSetObjectException {
         setAssetVaultManager(assetVaultManager);
-        this.digitalAssetDistributor=new DigitalAssetDistributor(assetVaultManager);
+        this.digitalAssetDistributor=new DigitalAssetDistributor(assetVaultManager, errorManager);
+    }
+
+    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
+        if(errorManager==null){
+            throw new CantSetObjectException("ErrorManager is null");
+        }
+        this.errorManager=errorManager;
     }
 
     public void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException{

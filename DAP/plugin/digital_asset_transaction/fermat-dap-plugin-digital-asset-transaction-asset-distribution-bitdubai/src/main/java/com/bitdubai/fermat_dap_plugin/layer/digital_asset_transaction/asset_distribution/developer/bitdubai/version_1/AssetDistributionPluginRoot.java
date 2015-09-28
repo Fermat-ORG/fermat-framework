@@ -50,10 +50,11 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
     public void start() throws CantStartPluginException {
         //printSomething("Plugin started");
         try{
-            this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(this.assetVaultManager);
+            this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(this.assetVaultManager, this.errorManager);
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         }
+        this.serviceStatus=ServiceStatus.STARTED;
 
     }
 
@@ -79,8 +80,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
 
     //TODO: DELETE THIS USELESS METHOD
     private void printSomething(String information){
-        //LOG.info("ASSET_DISTRIBUTION: "+information);
-        this.serviceStatus = ServiceStatus.STARTED;
+        LOG.info("ASSET_DISTRIBUTION: "+information);
     }
 
     @Override

@@ -560,9 +560,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //LOG.info("MAP_DIGITAL ASSET FULL: "+this.digitalAsset);
             LOG.info("MAP_HASH DEL ASSET: " + digitalAssetHash);
             //envío de BTC
-            //sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
+            sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
             //Entregamos el digital asset a la AssetWallet
-            //deliverDigitalAssetToAssetWallet(transactionId, digitalAssetMetadata, this.digitalAsset);
+            deliverDigitalAssetToAssetWallet(transactionId, digitalAssetMetadata, this.digitalAsset);
 
         } catch (CantPersistsGenesisAddressException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis Address in database");
@@ -578,9 +578,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot get the Digital Asset genesis transaction from bitcoin vault");
         }*/ catch (CantPersistDigitalAssetException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis transaction id in database");
-        } /*catch (CantSendGenesisAmountException exception) {
+        } catch (CantSendGenesisAmountException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot send the Digital Asset genesis amount");
-        }*/
+        }
 
     }
 
