@@ -115,7 +115,7 @@ public abstract class FermatListFragmentNew<M> extends FermatWalletFragment
 //        } catch (CantGetResourcesException e) {
 //            e.printStackTrace();
 //        }
-        View rootView = viewInflater.inflate(layout);  //inflater.inflate(getLayoutResource(), container, false);
+        View rootView = viewInflater.inflate(layout,null);  //inflater.inflate(getLayoutResource(), container, false);
         initViews(rootView);
         return rootView;
     }

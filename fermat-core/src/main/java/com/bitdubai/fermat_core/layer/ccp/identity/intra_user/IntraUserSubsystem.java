@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_ccp_api.layer.identity.CantStartSubsystemException;
 import com.bitdubai.fermat_ccp_api.layer.identity.IdentitySubsystem;
 
-
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.DeveloperBitDubai;
 
 /**

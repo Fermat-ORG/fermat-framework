@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 
 public class CantCreateGiveCashOnHandException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "Falled To Create Cash Transaction Give Cash On Hand.";
+    public static final String DEFAULT_MESSAGE = "Falled To Create Cash Money Transaction Cash Transaction Give Cash On Hand.";
     public CantCreateGiveCashOnHandException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

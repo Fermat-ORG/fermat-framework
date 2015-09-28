@@ -4,9 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Designer;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Designer;
 
 import org.junit.Assert;
 import org.junit.Test;
