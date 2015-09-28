@@ -68,9 +68,9 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
     *
     */
 
-    private String typeBalanceSelected =BalanceType.AVAILABLE.getCode();
+    public static String typeBalanceSelected =BalanceType.AVAILABLE.getCode();
 
-    private int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
+    public static int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
 
     private CryptoWalletWalletContact lastContactSelected;
 
