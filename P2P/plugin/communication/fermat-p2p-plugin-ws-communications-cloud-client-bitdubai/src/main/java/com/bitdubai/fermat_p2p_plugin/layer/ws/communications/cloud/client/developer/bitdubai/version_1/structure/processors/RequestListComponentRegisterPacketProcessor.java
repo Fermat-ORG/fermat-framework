@@ -6,23 +6,22 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-
 
 import java.util.List;
 
@@ -61,13 +60,13 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         JsonParser parser = new JsonParser();
         JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
 
-        NetworkServiceType networkServiceType       = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE), NetworkServiceType.class);
-        PlatformComponentType platformComponentType = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE), PlatformComponentType.class);
+        NetworkServiceType networkServiceType       = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE), NetworkServiceType.class);
+        PlatformComponentType platformComponentType = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE), PlatformComponentType.class);
 
          /*
          * Get the list
          */
-        List<PlatformComponentProfile> list = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
+        List<PlatformComponentProfile> list = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
 

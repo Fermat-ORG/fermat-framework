@@ -6,16 +6,16 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -103,17 +103,17 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNServer - Starting method onOpen");
         System.out.println(" WsCommunicationVPNServer - New Participant Client: "+clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
-        System.out.println(" WsCommunicationVPNServer - tmp-i = " + handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI));
+        System.out.println(" WsCommunicationVPNServer - tmp-i = " + handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI));
 
         /*
          * Validate is a handshake valid
          */
-        if (handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI)     != null &&
-                handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI) != ""     ){
+        if (handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI)     != null &&
+                handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI) != ""     ){
 
             boolean isRegistered = Boolean.FALSE;
 
-            String messageContentJsonStringRepresentation =  AsymmectricCryptography.decryptMessagePrivateKey(handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI), vpnServerIdentity.getPrivateKey());
+            String messageContentJsonStringRepresentation =  AsymmectricCryptography.decryptMessagePrivateKey(handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI), vpnServerIdentity.getPrivateKey());
 
             System.out.println(" WsCommunicationVPNServer - messageContentJsonStringRepresentation = " + messageContentJsonStringRepresentation);
 
@@ -123,8 +123,8 @@ public class WsCommunicationVPNServer extends WebSocketServer{
             /*
              * Get the identity send by the participant
              */
-            String participantIdentity =  respond.get(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
-            String vpnClientIdentity   =  respond.get(AttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN).getAsString();
+            String participantIdentity =  respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            String vpnClientIdentity   =  respond.get(JsonAttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN).getAsString();
 
             for (PlatformComponentProfile registeredParticipant : registeredParticipants) {
 
@@ -179,7 +179,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
          */
         Gson gson = new Gson();
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
 
 
         /*

@@ -4,10 +4,10 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums;
+package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 /**
- * The enum <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType</code> define
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponentType</code> define
  * all types that a platform component cam be
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/09/15.

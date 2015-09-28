@@ -6,16 +6,16 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.server.CommunicationCloudServer;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn.WsCommunicationVpnServerManagerAgent;
@@ -130,20 +130,20 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         System.out.println(" WsCommunicationCloudServer - Starting method onOpen");
         System.out.println(" WsCommunicationCloudServer - New Client: " + clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
         System.out.println(" WsCommunicationCloudServer - Handshake Resource Descriptor = " + handshake.getResourceDescriptor());
-        System.out.println(" WsCommunicationCloudServer - temp-i = " + handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI));
+        System.out.println(" WsCommunicationCloudServer - temp-i = " + handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI));
 
         /*
          * Validate is a handshake valid
          */
-        if (handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI)     != null &&
-                handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI) != ""){
+        if (handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI)     != null &&
+                handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI) != ""){
 
             /*
              * Get the temporal identity of the CommunicationsCloudClientConnection componet
              */
             JsonParser parser = new JsonParser();
-            JsonObject temporalIdentity = parser.parse(handshake.getFieldValue(AttNamesConstants.HEADER_ATT_NAME_TI)).getAsJsonObject();
-            String temporalClientIdentity = temporalIdentity.get(AttNamesConstants.JSON_ATT_NAME_IDENTITY).getAsString();
+            JsonObject temporalIdentity = parser.parse(handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI)).getAsJsonObject();
+            String temporalClientIdentity = temporalIdentity.get(JsonAttNamesConstants.JSON_ATT_NAME_IDENTITY).getAsString();
 
             /*
              * Create a new server identity to talk with this client
@@ -159,7 +159,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
              * Get json representation for the serverIdentity
              */
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(AttNamesConstants.JSON_ATT_NAME_SERVER_IDENTITY, serverIdentity.getPublicKey());
+            jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_SERVER_IDENTITY, serverIdentity.getPublicKey());
 
             /*
              * Construct a fermat packet whit the server identity

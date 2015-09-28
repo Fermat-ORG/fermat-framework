@@ -148,6 +148,8 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
         toReceive.start();
         toSend.start();
 
+        System.out.println("TemplateNetworkServiceRemoteAgent - started ");
+
     }
 
     /**
@@ -186,10 +188,14 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
 
         try {
 
+            System.out.println("TemplateNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
+
+                System.out.println("TemplateNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -212,6 +218,9 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                      */
                     ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
 
+                    System.out.println("TemplateNetworkServiceRemoteAgent - message.getContent() = ");
+                    System.out.println(message.getContent());
+
                     /*
                      * Change to the new status
                      */
@@ -230,6 +239,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Notify all observer of this agent that Received a new message
                      */
+                    setChanged();
                     notifyObservers(message);
 
                 }

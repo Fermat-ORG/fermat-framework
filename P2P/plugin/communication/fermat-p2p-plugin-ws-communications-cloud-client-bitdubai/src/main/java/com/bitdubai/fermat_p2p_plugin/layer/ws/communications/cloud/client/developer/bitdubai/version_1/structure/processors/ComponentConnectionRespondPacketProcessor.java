@@ -6,20 +6,18 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor</code> implement
@@ -61,10 +59,10 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         try {
 
             //Get all values
-            URI vpnServerUri = new URI(respond.get(AttNamesConstants.JSON_ATT_NAME_VPN_URI).getAsString());
-            String vpnServerIdentity = respond.get(AttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY).getAsString();
-            String participantIdentity = respond.get(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
-            PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(AttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+            URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_VPN_URI).getAsString());
+            String vpnServerIdentity = respond.get(JsonAttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY).getAsString();
+            String participantIdentity = respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
             /*
              * Get the  wsCommunicationVPNClientManagerAgent

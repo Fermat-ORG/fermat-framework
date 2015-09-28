@@ -9,6 +9,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.components.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -16,6 +18,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDeveloperDatabaseFactory;
@@ -28,10 +32,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -665,7 +665,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
 
-        System.out.println(" TemplateNetworkServiceConnectionManager - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+        System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
         /*
          * Tell the manager to handler the new connection stablished
@@ -673,29 +673,36 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         templateNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
-        /* -------------------------------------------------------------------------------------------------
-         * This is for test and example of how to use
-         * Get the local representation of the remote network service
-         */
-        TemplateNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceConnectionManager.getTemplateNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
 
-        /*
-         * Get a remote network service registered from the list requested
-         */
-        PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
+            /* -------------------------------------------------------------------------------------------------
+             * This is for test and example of how to use
+             * Get the local representation of the remote network service
+             */
+            TemplateNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceConnectionManager.getTemplateNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
 
-        /**
-         * Create the message content
-         * RECOMMENDATION: the content have to be a json string
-         */
-        String messageContent = "*********************************************************************************\n " +
-                                "* HELLO TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
-                                "*********************************************************************************";
+            /*
+             * Get a remote network service registered from the list requested
+             */
+            PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
 
-        /*
-         * Send a message using the local representation
-         */
-        templateNetworkServiceLocal.sendMessage(messageContent, identity);
+            /**
+             * Create the message content
+             * RECOMMENDATION: the content have to be a json string
+             */
+            String messageContent = "*********************************************************************************\n " +
+                                    "* HELLO TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
+                                    "*********************************************************************************";
+
+            /*
+             * Send a message using the local representation
+             */
+            templateNetworkServiceLocal.sendMessage(messageContent, identity);
+
+        }
+
+
+
 
     }
 

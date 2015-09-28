@@ -6,11 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
 
 import java.io.Serializable;

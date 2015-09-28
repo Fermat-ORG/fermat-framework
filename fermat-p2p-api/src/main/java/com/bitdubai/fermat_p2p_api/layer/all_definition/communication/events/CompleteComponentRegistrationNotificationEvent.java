@@ -7,8 +7,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.CompleteComponentRegistrationNotificationEvent</code> is

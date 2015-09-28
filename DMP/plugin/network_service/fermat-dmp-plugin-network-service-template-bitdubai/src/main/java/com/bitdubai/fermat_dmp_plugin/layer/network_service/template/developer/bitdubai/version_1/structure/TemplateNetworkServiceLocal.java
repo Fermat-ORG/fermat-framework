@@ -6,12 +6,13 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -39,7 +40,7 @@ import java.util.Observer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceLocal implements Observer {
+public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
     /**
      * Represent the profile of the remote network service
@@ -118,7 +119,7 @@ public class TemplateNetworkServiceLocal implements Observer {
     private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
 
 
-        System.out.println("TemplateNetworkServiceLocal - onMessageReceived = ");
+        System.out.println("TemplateNetworkServiceLocal - onMessageReceived ");
         System.out.println(incomingTemplateNetworkServiceMessage);
 
         /**
@@ -141,8 +142,12 @@ public class TemplateNetworkServiceLocal implements Observer {
     @Override
     public void update(Observable observable, Object data) {
 
+        System.out.println("TemplateNetworkServiceLocal - update ");
+        System.out.println("TemplateNetworkServiceLocal - data instanceof FermatMessage = "+(data instanceof FermatMessage));
+
         //Validate and process
-        if (data instanceof FermatMessage)
+        if (data instanceof FermatMessage) {
             onMessageReceived((FermatMessage) data);
+        }
     }
 }
