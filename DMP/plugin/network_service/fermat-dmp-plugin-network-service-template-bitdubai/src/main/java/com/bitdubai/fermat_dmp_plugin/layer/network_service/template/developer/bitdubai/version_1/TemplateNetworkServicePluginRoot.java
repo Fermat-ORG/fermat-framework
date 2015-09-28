@@ -307,7 +307,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     public void start() throws CantStartPluginException {
 
         logManager.log(TemplateNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
-        System.out.println("TemplateNetworkServicePluginRoot - plugin id = " + getId());
 
         /*
          * Validate required resources
