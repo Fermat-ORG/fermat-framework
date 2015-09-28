@@ -4,7 +4,7 @@ import java.util.UUID;
 
 /**
  * Created by ciencias on 30.12.14.
- * Update by Roberto Requena - (rart3001@gmail.com) on 28/09/15.
+ * TODO: change name from NetworkService to ActorNetworkService to differentiate between
  */
 public interface NetworkService {
 
