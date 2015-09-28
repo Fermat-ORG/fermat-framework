@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantCreateWalletDescriptorFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantRemoveWalletFactoryProject;
@@ -11,15 +12,15 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableProjectsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetInstalledWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryDeveloper;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -35,7 +36,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 07/08/15.
  */
-public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, DealsWithWalletManagerDesktopModule, LogManagerForDevelopers,WalletFactoryManager, Service, Plugin {
+public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, DealsWithWalletManager, LogManagerForDevelopers,WalletFactoryManager, Service, Plugin {
 
     WalletFactoryModuleManager  walletFactoryModuleManager ;
     UUID pluginId;
@@ -58,12 +59,12 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
     }
 
     /**
-     * DealsWithWalletManagerDesktopModule interface variable and implementation
+     * DealsWithWalletManager interface variable and implementation
      */
-    WalletManagerModule walletManagerModule;
+    WalletManagerManager walletManagerManager;
     @Override
-    public void setWalletManagerModule(WalletManagerModule walletManagerModule) {
-        this.walletManagerModule = walletManagerModule;
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
+        this.walletManagerManager = walletManagerManager;
     }
 
     /**
@@ -219,17 +220,12 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
         }
     }
 
-    /**
-     * Lists the installed wallets in the platform.
-     * @return
-     * @throws CantGetInstalledWalletsException
-     */
     @Override
-    public List<InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException {
+    public List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException {
         try {
-            return walletManagerModule.getInstalledWallets();
-        } catch (WalletsListFailedToLoadException e) {
-            throw new CantGetInstalledWalletsException(CantGetInstalledWalletsException.DEFAULT_MESSAGE, e, "there was an error trying to get the installed wallets from the Desktop Manager Module.", "check the wallet desktop manager.");
+            return walletManagerManager.getInstalledWallets();
+        } catch (CantListWalletsException e) {
+            throw new CantGetInstalledWalletsException(CantGetInstalledWalletsException.DEFAULT_MESSAGE, e, "there was an error listing the installed wallets from the Factory.", null);
         }
     }
 

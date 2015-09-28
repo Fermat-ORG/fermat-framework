@@ -46,10 +46,13 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Stack;
 
 
@@ -61,10 +64,11 @@ import java.util.Stack;
 
 public class ViewInflater {
 
+        final String ANDROID_WIDGET_PACKAGE = "android.widget.";
         final String NAMESPACE = "http://schemas.android.com/apk/res/android";
 
         Stack<ViewGroup> layoutStack;
-        private Hashtable<String, Integer> ids;
+        private HashMap<String, Integer> ids;
         Context context;
         int idg;
 
@@ -75,14 +79,14 @@ public class ViewInflater {
 
         public ViewInflater(Context context) {
                 this.layoutStack = new Stack<ViewGroup>();
-                this.ids = new Hashtable<String, Integer>();
+                this.ids = new HashMap<String, Integer>();
                 this.context = context;
                 this.idg = 0;
         }
 
         public ViewInflater(Context context,ResourceProviderManager resourceProviderManager) {
                 this.layoutStack = new Stack<ViewGroup>();
-                this.ids = new Hashtable<String, Integer>();
+                this.ids = new HashMap<String, Integer>();
                 this.context = context;
                 this.idg = 0;
                 this.resourceProviderManager = resourceProviderManager;
@@ -158,60 +162,15 @@ public class ViewInflater {
                 return null;
         }
 
+
         protected View createView(XmlPullParser parse) {
                 String name = parse.getName();
                 View result = null;
                 AttributeSet atts = Xml.asAttributeSet(parse);
-                if (name.equals("LinearLayout")) {
-                        result = new LinearLayout(context);
-                } else if (name.equals("RadioGroup")) {
-                        result = new RadioGroup(context);
-                } else if (name.equals("TableRow")) {
-                        result = new TableRow(context);
-                } else if (name.equals("TableLayout")) {
-                        result = new TableLayout(context);
-                } else if (name.equals("AbsoluteLayout")) {
-                        result = new AbsoluteLayout(context);
-                } else if (name.equals("RelativeLayout")) {
-                        result = new RelativeLayout(context);
-                } else if (name.equals("android.support.v4.widget.SwipeRefreshLayout")) {
-                        result = new SwipeRefreshLayout(context);
-                } else if (name.equals("android.support.v7.widget.RecyclerView")) {
-                        result = new RecyclerView(context);
-                } else if (name.equals("ScrollView")) {
-                        result = new ScrollView(context);
-                } else if (name.equals("FrameLayout")) {
-                        result = new FrameLayout(context);
-                } else if (name.equals("ExpandableListView")) {
-                        result = new ExpandableListView(context);
-                } else if (name.equals("TextView")) {
-                        result = new TextView(context);
-                } else if (name.equals("com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView")) {
-                        result = new FermatTextView(context);
-                } else if (name.equals("AutoCompleteTextView")) {
-                        result = new AutoCompleteTextView(context);
-                } else if (name.equals("AnalogClock")) {
-                        result = new AnalogClock(context);
-                } else if (name.equals("Button")) {
-                        result = new Button(context);
-                } else if (name.equals("CheckBox")) {
-                        result = new CheckBox(context);
-                } else if (name.equals("DatePicker")) {
-                        result = new DatePicker(context);
-                } else if (name.equals("DigitalClock")) {
-                        result = new DigitalClock(context);
-                } else if (name.equals("EditText")) {
-                        result = new EditText(context);
-                } else if (name.equals("ProgressBar")) {
-                        result = new ProgressBar(context);
-                } else if (name.equals("RadioButton")) {
-                        result = new RadioButton(context);
-                } else if (name.equals("ImageView")) {
-                        result = new ImageView(context);
-                } else {
-                        Toast.makeText(context, "Unhandled tag:" + name,
-                                Toast.LENGTH_SHORT).show();
-                }
+
+
+                result = createClass(name);
+
 
                 if (result == null)
                         return null;
@@ -811,6 +770,37 @@ public class ViewInflater {
                         Log.e("ViewInflater", "Call", e);
                 }
                 return false;
+        }
+
+        private View createClass(String name){
+            Class klass;
+            try{
+
+                if(name.contains(".")){
+                    klass = Class.forName(name);
+                }else {
+                    klass = Class.forName(ANDROID_WIDGET_PACKAGE+name);
+                }
+
+
+                Constructor viewConstructor = klass.getConstructor(new Class[]{Context.class});
+
+                return (View) viewConstructor.newInstance(context);
+
+            }catch (ClassNotFoundException classNotFoundException){
+                classNotFoundException.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(context, "Unhandled tag:" + name,
+                    Toast.LENGTH_SHORT).show();
+            return null;
         }
 
         String[] relative_strings = new String[]

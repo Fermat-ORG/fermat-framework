@@ -27,8 +27,8 @@ project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = n
 include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
 
-include ':fermat-ccp-plugin-identity-intra-user-bitdubai'
-project(':fermat-ccp-plugin-identity-intra-user-bitdubai').projectDir = new File('CCP/plugin/identity/fermat-ccp-plugin-identity-intra-user-bitdubai')
+include ':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai'
+project(':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai').projectDir = new File('CCP/plugin/identity/fermat-ccp-plugin-identity-intra-wallet-user-bitdubai')
 
 
 include ':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai'
