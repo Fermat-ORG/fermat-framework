@@ -82,14 +82,14 @@ public class BitcoinWalletBasicWalletDao {
         }
     }
 
-    public List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,
+    public List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,TransactionType transactionType,
                                                            int max,
                                                            int offset) throws CantListTransactionsException {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
             bitcoinWalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-
+            bitcoinWalletTable.setStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
             bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             bitcoinWalletTable.setFilterTop(String.valueOf(max));
