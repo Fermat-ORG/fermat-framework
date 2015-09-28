@@ -6,6 +6,6 @@ import com.bitdubai.fermat_api.Plugin;
  * Created by franklin on 04/09/15.
  */
 public interface DAPAssetWalletSubsystem {
-    void star() throws CantStartSubsystemException;
+    void start() throws CantStartSubsystemException;
     Plugin getPlugin();
 }

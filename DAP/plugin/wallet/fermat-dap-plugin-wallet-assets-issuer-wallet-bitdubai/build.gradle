@@ -13,8 +13,11 @@ repositories {
 }
 
 dependencies {
-
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':fermat-dap-api')
+    compile project(':fermat-api')
+    compile project(':fermat-bch-api')
+    compile project(':fermat-pip-api')
 }
 
 pmd {

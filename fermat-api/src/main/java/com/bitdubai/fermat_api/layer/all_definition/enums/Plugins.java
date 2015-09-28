@@ -85,6 +85,7 @@ public enum Plugins {
     BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI),
 
     BITDUBAI_ASSET_ISSUING_TRANSACTION("BAIT", Developers.BITDUBAI),
+    BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION("BADT", Developers.BITDUBAI),
 
     BITDUBAI_DAP_ISSUER_ACTOR_LAYER("BDAPIAL",Developers.BITDUBAI),
     BITDUBAI_DAP_USER_ACTOR_LAYER("BDAPUAL",Developers.BITDUBAI),
@@ -96,13 +97,14 @@ public enum Plugins {
 
     BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI),
     BITDUBAI_ASSET_FACTORY_MODULE("BASFM", Developers.BITDUBAI),
+    BITDUBAI_ASSET_WALLET_ISSUER("BASWI", Developers.BITDUBAI),
 
     BITDUBAI_DESKTOP_RUNTIME("BDR",Developers.BITDUBAI),
 
     // Init CCP Plugins
 
     BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE("BCCPCANS", Developers.BITDUBAI),
-    BITDUBAI_CCP_INTRA_USER_IDENTITY             ("BCCPIUI" , Developers.BITDUBAI),
+    BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY      ("BCCPIUI" , Developers.BITDUBAI),
     BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE      ("BCCPWCM" , Developers.BITDUBAI),
     BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION("BCCPOIAT", Developers.BITDUBAI)
 
@@ -271,6 +273,8 @@ public enum Plugins {
                 return BITDUBAI_MIDDLEWARE_NOTIFICATION;
             case "BAIT":
                 return BITDUBAI_ASSET_ISSUING_TRANSACTION;
+            case "BADT":
+                return BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION;
             case "BDAPIAL":
                 return BITDUBAI_DAP_ISSUER_ACTOR_LAYER;
             case "BDAPUAL":
@@ -287,19 +291,17 @@ public enum Plugins {
                 return BITDUBAI_ASSET_FACTORY;
             case "BASFM":
                 return BITDUBAI_ASSET_FACTORY_MODULE;
+            case "BASWI":
+                return BITDUBAI_ASSET_WALLET_ISSUER;
             case "BDR":
                 return BITDUBAI_DESKTOP_RUNTIME;
 
             // Init CCP Plugins
 
-            case "BCCPCANS":
-                return BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE;
-            case "BCCPIUI":
-                return BITDUBAI_CCP_INTRA_USER_IDENTITY;
-            case "BCCPWCM":
-                return BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE;
-            case "BCCPOIAT":
-                return BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION;
+            case "BCCPCANS": return BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE;
+            case "BCCPIUI":  return BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY      ;
+            case "BCCPWCM":  return BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE      ;
+            case "BCCPOIAT": return BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION;
 
             // End  CCP Plugins
 
