@@ -7,7 +7,6 @@ import com.bitdubai.sub_app.intra_user.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user.fragments.ConnectionsRequestListFragment;
 import com.bitdubai.sub_app.intra_user.fragments.DetailsActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.HomeFragment;
-import com.bitdubai.sub_app.intra_user.fragments.MainActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.MoreDetailsActivityFragment;
 import com.bitdubai.sub_app.intra_user.fragments.RegisterIntraUserFragment;
 import com.bitdubai.sub_app.intra_user.preference_settings.IntraUserPreferenceSettings;
@@ -30,20 +29,20 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 currentFragment = HomeFragment.newInstance(1);
                 break;
             case CWP_WALLET_STORE_DETAIL_ACTIVITY:
-                currentFragment = ConnectionsListFragment.newInstance();
+                //currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY:
-                currentFragment = ConnectionsListFragment.newInstance();
+                //currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_ALL_FRAGMENT:
                 //currentFragment = HomeFragment.newInstance(1);
-                currentFragment = ConnectionsListFragment.newInstance();
+                //currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_FREE_FRAGMENT:
                 currentFragment = RegisterIntraUserFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_PAID_FRAGMENT:
-                currentFragment = ConnectionsRequestListFragment.newInstance();
+                //currentFragment = ConnectionsRequestListFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.toString(), "Swith failed");

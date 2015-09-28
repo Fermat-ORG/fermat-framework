@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import junit.framework.TestCase;
@@ -80,7 +80,7 @@ public class CreateIntraUserTest extends TestCase {
 
     private IntraUserSettings intraUserSettings;
 
-    private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
+    private IntraWalletUserModulePluginRoot testIntraUserModulePluginRoot;
 
     private IntraUserLoginIdentity testIntraUser;
 
@@ -100,7 +100,7 @@ public class CreateIntraUserTest extends TestCase {
         MockitoAnnotations.initMocks(this);
 
         pluginId= UUID.randomUUID();
-        testIntraUserModulePluginRoot = new IntraUserModulePluginRoot();
+        testIntraUserModulePluginRoot = new IntraWalletUserModulePluginRoot();
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
 
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
