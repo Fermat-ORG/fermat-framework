@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.MiddlewareSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.app_runtime.AppRuntimeSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.bank_notes.BankNotesSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_contacts.WalletContactsSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_factory.WalletFactorySubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_language.WalletLanguageSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_middleware.wallet_manager.WalletManagerSubsystem;
@@ -26,8 +25,6 @@ public class MiddlewareLayer implements PlatformLayer {
     private Plugin mAppRuntimePlugin;
 
     private Plugin mBankNotesPlugin;
-
-    private Plugin mWalletContactsPlugin;
 
     private Plugin mWalletFactoryPlugin;
 
@@ -54,8 +51,6 @@ public class MiddlewareLayer implements PlatformLayer {
         mAppRuntimePlugin = getPlugin(new AppRuntimeSubsystem());
 
         mBankNotesPlugin = getPlugin(new BankNotesSubsystem());
-
-        mWalletContactsPlugin = getPlugin(new WalletContactsSubsystem());
 
         mWalletFactoryPlugin = getPlugin(new WalletFactorySubsystem());
 
@@ -91,10 +86,6 @@ public class MiddlewareLayer implements PlatformLayer {
 
     public Plugin getBankNotesPlugin() {
         return mBankNotesPlugin;
-    }
-
-    public Plugin getWalletContactsPlugin() {
-        return mWalletContactsPlugin;
     }
 
     public Plugin getWalletFactoryPlugin() {

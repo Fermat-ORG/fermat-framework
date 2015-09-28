@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.factory.develo
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
@@ -31,7 +31,7 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
         this.assetFactoryManager = assetFactoryManager;
     }
 
-    public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException {
+    public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByPublicKey(assetPublicKey);
     }
 
@@ -47,15 +47,15 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
         assetFactoryManager.publishAsset(assetFactory, blockchainNetworkType);
     }
 
-    public List<AssetFactory> getAssetsFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
     }
 
-    public List<AssetFactory> getAssetsFactoryByState(State state) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByState(state);
     }
 
-    public List<AssetFactory> getAssetsFactoryAll() throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryAll();
     }
 

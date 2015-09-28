@@ -82,13 +82,8 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
      */
     private DeveloperSubAppSession developerSubAppSession;
 
-    public static LogToolsFragmentLevel1 newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
-        LogToolsFragmentLevel1 f = new LogToolsFragmentLevel1();
-        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static LogToolsFragmentLevel1 newInstance() {
+        return new LogToolsFragmentLevel1();
     }
 
     @Override

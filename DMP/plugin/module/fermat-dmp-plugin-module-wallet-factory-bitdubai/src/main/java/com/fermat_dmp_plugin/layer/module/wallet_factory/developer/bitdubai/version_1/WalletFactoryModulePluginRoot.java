@@ -11,9 +11,15 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.Ca
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetAvailableProjectsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantGetInstalledWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryDeveloper;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -29,7 +35,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 07/08/15.
  */
-public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, LogManagerForDevelopers,WalletFactoryManager, Service, Plugin {
+public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWithWalletFactory, DealsWithWalletManagerDesktopModule, LogManagerForDevelopers,WalletFactoryManager, Service, Plugin {
 
     WalletFactoryModuleManager  walletFactoryModuleManager ;
     UUID pluginId;
@@ -49,6 +55,15 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
     @Override
     public void setWalletFactoryProjectManager(WalletFactoryProjectManager walletFactoryProjectManager) {
         this.walletFactoryProjectManager = walletFactoryProjectManager;
+    }
+
+    /**
+     * DealsWithWalletManagerDesktopModule interface variable and implementation
+     */
+    WalletManagerModule walletManagerModule;
+    @Override
+    public void setWalletManagerModule(WalletManagerModule walletManagerModule) {
+        this.walletManagerModule = walletManagerModule;
     }
 
     /**
@@ -202,5 +217,30 @@ public class WalletFactoryModulePluginRoot implements DealsWithLogger, DealsWith
         } catch (Exception e){
             throw new CantGetWalletFactoryProjectException(CantGetWalletFactoryProjectException.DEFAULT_MESSAGE, e, null, null);
         }
+    }
+
+    /**
+     * Lists the installed wallets in the platform.
+     * @return
+     * @throws CantGetInstalledWalletsException
+     */
+    @Override
+    public List<InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException {
+        try {
+            return walletManagerModule.getInstalledWallets();
+        } catch (WalletsListFailedToLoadException e) {
+            throw new CantGetInstalledWalletsException(CantGetInstalledWalletsException.DEFAULT_MESSAGE, e, "there was an error trying to get the installed wallets from the Desktop Manager Module.", "check the wallet desktop manager.");
+        }
+    }
+
+    /**
+     * Clones a previously installed wallet under the new assigned name.
+     * @param walletToClone
+     * @param newName
+     * @throws CantCloneInstalledWalletException
+     */
+    @Override
+    public void cloneInstalledWallets(InstalledWallet walletToClone, String newName) throws CantCloneInstalledWalletException {
+        walletFactoryModuleManager.cloneInstalledWallets(walletToClone, newName);
     }
 }

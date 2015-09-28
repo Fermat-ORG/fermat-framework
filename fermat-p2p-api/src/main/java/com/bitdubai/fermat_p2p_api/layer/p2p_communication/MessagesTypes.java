@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 
 /**
- * The enum <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
+ * The enum <code>com.bitdubai.fermat_ccp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
  * represent the status various for the messages<p/>
  *
  * Created by ciencias on 2/23/15.
