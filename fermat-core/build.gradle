@@ -72,11 +72,15 @@ dependencies {
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
-    // CCP Projects (Plugins)
-    compile project(':fermat-ccp-plugin-identity-intra-user-bitdubai')
-    compile project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
+
+
+    // Init CCP Projects (Plugins)
+    compile project(':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai'      )
+    compile project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai'      )
     compile project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
     compile project(':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai')
+    // End  CCP Projects (Plugins)
+
     // DMP Projects (Addons)
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
     //DAP Projects (Plugins)
