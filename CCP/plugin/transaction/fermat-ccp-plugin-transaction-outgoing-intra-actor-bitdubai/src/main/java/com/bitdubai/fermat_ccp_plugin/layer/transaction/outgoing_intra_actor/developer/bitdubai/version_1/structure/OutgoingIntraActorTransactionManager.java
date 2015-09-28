@@ -77,8 +77,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
             ;
             long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
 
-            //todo when the bitcoin wallet is working properly and balance is updated, I will change the < with >. (Rodrigo)
-            if (cryptoAmount < funds)
+            if (cryptoAmount > funds)
                 throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
 
             OutgoingIntraActorDao dao = new OutgoingIntraActorDao(this.errorManager, this.pluginDatabaseSystem);
