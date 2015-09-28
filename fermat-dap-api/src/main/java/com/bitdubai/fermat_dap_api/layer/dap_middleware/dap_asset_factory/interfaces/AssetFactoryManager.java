@@ -10,6 +10,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 
 import java.util.List;
@@ -75,4 +76,6 @@ public interface AssetFactoryManager {
      */
 
     List<InstalledWallet> getInstallWallets()  throws WalletsListFailedToLoadException;
+
+    boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy;
 }

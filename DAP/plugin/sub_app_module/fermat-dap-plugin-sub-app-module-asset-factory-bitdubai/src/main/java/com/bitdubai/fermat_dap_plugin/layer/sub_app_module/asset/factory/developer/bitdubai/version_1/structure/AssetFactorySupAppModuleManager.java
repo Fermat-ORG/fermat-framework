@@ -9,6 +9,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
@@ -64,4 +65,10 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
     public List<InstalledWallet> getInstallWallets() throws WalletsListFailedToLoadException{
         return  assetFactoryManager.getInstallWallets();
     }
+
+    public boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy
+    {
+        return assetFactoryManager.isReadyToPublish(assetPublicKey);
+    }
+
 }

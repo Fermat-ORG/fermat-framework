@@ -41,6 +41,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
@@ -416,6 +417,16 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
     @Override
     public List<InstalledWallet> getInstallWallets() throws WalletsListFailedToLoadException {
         return assetFactoryMiddlewareManager.getInstallWallets();
+    }
+
+    @Override
+    public boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy {
+        try
+        {
+            return assetFactoryMiddlewareManager.isReadyToPublish(assetPublicKey);
+        }catch (Exception exception){
+            throw new CantPublishAssetFactoy(exception, "Cant Publish Asset Factory", "Asset Factory incomplete");
+        }
     }
 
 }

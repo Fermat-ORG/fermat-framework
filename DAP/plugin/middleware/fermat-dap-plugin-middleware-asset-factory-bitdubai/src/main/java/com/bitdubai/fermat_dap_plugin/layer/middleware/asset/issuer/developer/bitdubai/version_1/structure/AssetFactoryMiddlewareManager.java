@@ -111,6 +111,20 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         return dao;
     }
 
+    private boolean areObjectsSettled(AssetFactory assetFactory)
+    {
+        boolean isBoolean = true;
+        if (assetFactory.getResources() == null) isBoolean = false;
+        if (assetFactory.getState() == null) isBoolean = false;
+        if (assetFactory.getName() == null) isBoolean = false;
+        if (assetFactory.getDescription() == null) isBoolean = false;
+        if (assetFactory.getQuantity() == 0) isBoolean = false;
+        if (assetFactory.getAmount() == 0) isBoolean = false;
+        if (assetFactory.getExpirationDate() == null) isBoolean = false;
+        if (assetFactory.getAssetBehavior() == null) isBoolean = false;
+        return isBoolean;
+    }
+
     //De esa forma poder almacenarlo en la tabla de contract seteando la variable assetFactory.setContractProperties
     //Asi mismo cuando se vaya a enviar el DigitalAsset a la transaccion traer el objeto AssetFactory lleno, y las propiedades del contrato
     //asignarselas mas adelante al objeto DigitalAssetContract, que a su vez sera seteado a ala propiedad setContract del DigitalAsset
@@ -357,6 +371,17 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         catch (DatabaseOperationException  | InvalidParameterException | CantLoadTableToMemoryException e)
         {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryAll", "");
+        }
+    }
+
+    public boolean isReadyToPublish(String asssetPublicKey) throws CantPublishAssetException
+    {
+        try {
+            AssetFactory assetFactory = getAssetFactory(asssetPublicKey);
+            return areObjectsSettled(assetFactory);
+        }
+        catch (Exception exception){
+            throw new CantPublishAssetException("Cant Publish Asset Factory", exception, null, "Asset Factory incomplete");
         }
     }
 
