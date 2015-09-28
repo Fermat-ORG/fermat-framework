@@ -6,10 +6,10 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 

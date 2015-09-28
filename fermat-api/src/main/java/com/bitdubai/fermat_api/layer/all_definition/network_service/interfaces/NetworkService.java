@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 
 import java.util.List;
 import java.util.UUID;

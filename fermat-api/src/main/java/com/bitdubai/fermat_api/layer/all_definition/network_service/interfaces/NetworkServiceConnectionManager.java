@@ -6,8 +6,7 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.NetworkServiceLocal;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager</code>
