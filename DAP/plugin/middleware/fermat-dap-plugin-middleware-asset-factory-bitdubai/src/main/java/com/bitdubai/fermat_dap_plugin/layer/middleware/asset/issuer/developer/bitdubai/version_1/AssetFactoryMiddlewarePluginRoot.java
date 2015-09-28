@@ -17,7 +17,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -184,13 +186,13 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
             //Luego comente de nuevo el metodo testSaveAssetFactory
             //Luego Descomente el bloque de codigo de metodo testPublishAsset, para que proceda con la publicacion del Asset
             //testSaveAssetFactory();
-            try
+/*            try
             {
                 testPublishAsset();
             }catch(CantIssueDigitalAssetsException e){
                 System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
                 e.printStackTrace();
-            }
+            }*/
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -341,7 +343,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
 //            digitalAsset.setResources(assetFactory.getResources());
             //Actualiza el State a Pending_Final del objeto assetFactory
             assetFactory.setState(State.DRAFT);
-            assetFactory.setWalletPublicKey(new ECCKeyPair().getPublicKey());
+            assetFactory.setWalletPublicKey(walletPublicKey);
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
 
@@ -409,6 +411,11 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
     @Override
     public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException{
         assetFactoryMiddlewareManager.publishAsset(assetFactory, blockchainNetworkType);
+    }
+
+    @Override
+    public List<InstalledWallet> getInstallWallets() throws WalletsListFailedToLoadException {
+        return assetFactoryMiddlewareManager.getInstallWallets();
     }
 
 }

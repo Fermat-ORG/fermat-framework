@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
@@ -67,4 +69,10 @@ public interface AssetFactoryManager {
      * TThis method publishes the asset digital object with the number and amount of Asset, start the transaction
      */
     void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException;
+
+    /**
+     * TThis method list all wallet installed in device, start the transaction
+     */
+
+    List<InstalledWallet> getInstallWallets()  throws WalletsListFailedToLoadException;
 }
