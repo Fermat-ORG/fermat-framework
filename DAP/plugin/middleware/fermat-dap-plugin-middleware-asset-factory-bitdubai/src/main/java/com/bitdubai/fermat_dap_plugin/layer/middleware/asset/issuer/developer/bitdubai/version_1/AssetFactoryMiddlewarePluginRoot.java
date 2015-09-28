@@ -17,6 +17,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -37,6 +41,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
@@ -64,7 +69,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 9/7/15.
  */
-public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, AssetFactoryManager, LogManagerForDevelopers,  DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
+public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerDesktopModule, DealsWithAssetIssuing, AssetFactoryManager, LogManagerForDevelopers,  DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
     /**
      * DealsWithErrors interface member variables
      */
@@ -103,6 +108,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
+
+    WalletManagerModule walletManagerModule;
 
     @Override
     public void setId(UUID pluginId) {
@@ -149,6 +156,12 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
         this.assetIssuingManager = assetIssuingManager;
     }
 
+
+    @Override
+    public void setWalletManagerModule(WalletManagerModule walletManagerModule) {
+        this.walletManagerModule = walletManagerModule;
+    }
+
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
@@ -166,10 +179,10 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
 
     @Override
     public void start() throws CantStartPluginException {
-        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetIssuingManager) ;
+        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetIssuingManager, walletManagerModule) ;
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            //TODO: Boorar luego solo es para Test
+            //TODO: Borrar luego solo es para Test
             //Para probar primero descomente el metodo testSaveAssetFactory para que sea guardado el Asset en Factory
             //Luego comente de nuevo el metodo testSaveAssetFactory
             //Luego Descomente el bloque de codigo de metodo testPublishAsset, para que proceda con la publicacion del Asset
@@ -295,6 +308,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
         try{
             java.util.Date date= new java.util.Date();
             System.out.println(new Timestamp(date.getTime()));
+            String walletPublicKey = assetFactoryMiddlewareManager.getInstallWallets().get(0).getWalletPublicKey();
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
             assetFactory = assetFactoryMiddlewareManager.getAssetFactory("ASD-125412541-BS-854");
 //            DigitalAsset digitalAsset = new DigitalAsset();
@@ -330,7 +344,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
 //            digitalAsset.setResources(assetFactory.getResources());
             //Actualiza el State a Pending_Final del objeto assetFactory
             assetFactory.setState(State.DRAFT);
-            assetFactory.setWalletPublicKey(new ECCKeyPair().getPublicKey());
+            assetFactory.setWalletPublicKey(walletPublicKey);
             saveAssetFactory(assetFactory);
             //Llama al metodo AssetIssuer de la transaction
 
@@ -399,4 +413,20 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithAssetIssuing, 
     public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException{
         assetFactoryMiddlewareManager.publishAsset(assetFactory, blockchainNetworkType);
     }
+
+    @Override
+    public List<InstalledWallet> getInstallWallets() throws WalletsListFailedToLoadException {
+        return assetFactoryMiddlewareManager.getInstallWallets();
+    }
+
+    @Override
+    public boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy {
+        try
+        {
+            return assetFactoryMiddlewareManager.isReadyToPublish(assetPublicKey);
+        }catch (Exception exception){
+            throw new CantPublishAssetFactoy(exception, "Cant Publish Asset Factory", "Asset Factory incomplete");
+        }
+    }
+
 }
