@@ -104,7 +104,7 @@ public enum Plugins {
     // Init CCP Plugins
 
     BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE("BCCPCANS", Developers.BITDUBAI),
-    BITDUBAI_CCP_INTRA_USER_IDENTITY             ("BCCPIUI" , Developers.BITDUBAI),
+    BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY      ("BCCPIUI" , Developers.BITDUBAI),
     BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE      ("BCCPWCM" , Developers.BITDUBAI),
     BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION("BCCPOIAT", Developers.BITDUBAI)
 
@@ -298,14 +298,10 @@ public enum Plugins {
 
             // Init CCP Plugins
 
-            case "BCCPCANS":
-                return BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE;
-            case "BCCPIUI":
-                return BITDUBAI_CCP_INTRA_USER_IDENTITY;
-            case "BCCPWCM":
-                return BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE;
-            case "BCCPOIAT":
-                return BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION;
+            case "BCCPCANS": return BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE;
+            case "BCCPIUI":  return BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY      ;
+            case "BCCPWCM":  return BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE      ;
+            case "BCCPOIAT": return BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION;
 
             // End  CCP Plugins
 
