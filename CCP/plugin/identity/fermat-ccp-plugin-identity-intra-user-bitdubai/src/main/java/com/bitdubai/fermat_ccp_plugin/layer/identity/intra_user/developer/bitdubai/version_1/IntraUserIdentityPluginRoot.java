@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
@@ -27,6 +29,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
@@ -34,6 +42,12 @@ import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdub
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserIdentityDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityIdentity;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityCryptoAddressGenerationService;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityVaultAdministrator;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -65,13 +79,41 @@ import java.util.UUID;
  */
 
 
-public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, IntraUserIdentityManager, LogManagerForDevelopers, Service, Plugin {
+public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers,
+                                                    DealsWithCryptoAddressesNetworkService,
+                                                    DealsWithCryptoVault,
+                                                    DealsWithCryptoAddressBook,
+                                                    DealsWithDeviceUser,
+                                                    DealsWithErrors,
+                                                    DealsWithEvents,
+                                                    DealsWithPluginDatabaseSystem,
+                                                    DealsWithPluginFileSystem,
+                                                    DealsWithWalletManager,
+                                                    IntraUserIdentityManager,
+                                                    LogManagerForDevelopers,
+                                                    Service,
+                                                    Plugin {
 
     private IntraUserIdentityDao intraUserIdentityDao;
+
+    /**
+     * DealsWithCryptoAddressesNetworkService Interface member variables.
+     */
+    private CryptoAddressesManager cryptoAddressesManager;
+
+    /**
+     * DealsWithCryptoAddressBook Interface member variables.
+     */
+    private CryptoAddressBookManager cryptoAddressBookManager;
+
+    /**
+     * DealsWithCryptoVault Interface member variables.
+     */
+    private CryptoVaultManager cryptoVaultManager;
+
     /**
      * DealsWithDeviceUsers Interface member variables.
      */
-
     private DeviceUserManager deviceUserManager;
 
     /**
@@ -86,26 +128,32 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     // DealsWithPluginDatabaseSystem Interface member variables.
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * FileSystem Interface member variables.
      */
-    PluginFileSystem pluginFileSystem;
+    private PluginFileSystem pluginFileSystem;
 
 
     /**
      * DealsWithPluginIdentity Interface member variables.
      */
-    UUID pluginId;
+    private UUID pluginId;
+
+    /**
+     * DealsWithWalletManager Interface member variables.
+     */
+    private WalletManagerManager walletManagerManager;
+
 
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
-    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     public static final String INTRA_USERS_PROFILE_IMAGE_FILE_NAME = "intraUserIdentityProfileImage";
     public static final String INTRA_USERS_PRIVATE_KEYS_FILE_NAME = "intraUserIdentityPrivateKey";
@@ -188,17 +236,47 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
             this.intraUserIdentityDao.initializeDatabase();
 
         } catch (CantInitializeIntraUserIdentityDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_IDENTITY);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY);
         }
 
+        IntraUserIdentityVaultAdministrator intraUserIdentityVaultAdministrator = new IntraUserIdentityVaultAdministrator(
+                cryptoVaultManager
+        );
+
+        IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService = new IntraUserIdentityCryptoAddressGenerationService(
+                cryptoAddressesManager,
+                cryptoAddressBookManager,
+                intraUserIdentityVaultAdministrator,
+                walletManagerManager
+        );
+
+        executePendingAddressExchangeRequests(cryptoAddressGenerationService);
+
         FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_REQUESTED);
-        cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler());
+        cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressGenerationService));
         eventManager.addListener(cryptoAddressReceivedEventListener);
         listenersAdded.add(cryptoAddressReceivedEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
+
+    private void executePendingAddressExchangeRequests(IntraUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
+        try {
+            List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
+                    IntraUserIdentityCryptoAddressGenerationService.actorType,
+                    AddressExchangeRequestState.PENDING_LOCAL_RESPONSE
+            );
+
+            for (AddressExchangeRequest request : addressExchangeRequestList) {
+                cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(request);
+            }
+
+        } catch (CantListPendingAddressExchangeRequestsException | CantHandleCryptoAddressRequestEventException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+    }
+
 
     @Override
     public void pause() {
@@ -232,12 +310,8 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-
-
         IntraUserIdentityDeveloperDatabaseFactory dbFactory = new IntraUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
-
-
     }
 
     @Override
@@ -254,7 +328,7 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeIntraUserIdentityDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
@@ -265,17 +339,14 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
      */
     @Override
     public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity.intra_user.developer.bitdubai.version_1IntraUserIdentityPluginRoot");
-        returnedClasses.add("IntraUserIdentityIdentity");
-        returnedClasses.add("IntraUserIdentityDao");
-        returnedClasses.add("IntraUserIdentityDatabaseConstants");
-        returnedClasses.add("IntraUserIdentityDatabaseFactory");
+        List<String> returnedClasses = new ArrayList<>();
 
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.IntraUserIdentityPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDao");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraUserIdentityDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraUserIdentityIdentity");
 
-        /**
-         * I return the values.
-         */
         return returnedClasses;
     }
 
@@ -295,6 +366,21 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
                 IntraUserIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+    }
+
+    @Override
+    public void setCryptoAddressesManager(CryptoAddressesManager cryptoAddressesManager) {
+        this.cryptoAddressesManager = cryptoAddressesManager;
+    }
+
+    @Override
+    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
+    }
+
+    @Override
+    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
+        this.cryptoVaultManager = cryptoVaultManager;
     }
 
     /**
@@ -344,5 +430,10 @@ public class IntraUserIdentityPluginRoot implements DatabaseManagerForDevelopers
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
+        this.walletManagerManager = walletManagerManager;
     }
 }

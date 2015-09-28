@@ -12,17 +12,20 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
  */
 public class CryptoWalletWalletModuleActorTransactionSummary implements ActorTransactionSummary {
 
-    private int sentTransactionsNumber;
-    private int receivedTransactionsNumber;
+    private final int   sentTransactionsNumber;
+    private final int   receivedTransactionsNumber;
+    private final long  sentAmount;
+    private final long  receivedAmount;
 
-    private long sentAmount;
-    private long receivedAmount;
+    public CryptoWalletWalletModuleActorTransactionSummary(final int   sentTransactionsNumber,
+                                                           final int   receivedTransactionsNumber,
+                                                           final long  sentAmount,
+                                                           final long  receivedAmount) {
 
-    public CryptoWalletWalletModuleActorTransactionSummary(int sentTransactionsNumber, int receivedTransactionsNumber, long sentAmount, long receivedAmount) {
-        this.sentTransactionsNumber = sentTransactionsNumber;
+        this.sentTransactionsNumber     = sentTransactionsNumber;
         this.receivedTransactionsNumber = receivedTransactionsNumber;
-        this.sentAmount = sentAmount;
-        this.receivedAmount = receivedAmount;
+        this.sentAmount                 = sentAmount;
+        this.receivedAmount             = receivedAmount;
     }
 
     @Override

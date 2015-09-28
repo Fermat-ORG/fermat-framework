@@ -7,6 +7,5 @@ import java.util.UUID;
  */
 public interface NetworkService {
     
-    UUID getId();
-
+    public UUID getId();
 }

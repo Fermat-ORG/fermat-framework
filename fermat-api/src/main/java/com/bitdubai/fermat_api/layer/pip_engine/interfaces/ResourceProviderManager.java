@@ -23,13 +23,14 @@ public interface ResourceProviderManager {
 
 
     /**
-     * This method let us get an skin file referenced by its name
-     *
-     * @param fileName the name of the Skin file (without the path structure).
-     * @return The content of the file
+     * This method let us get an skin file referenced by its Id
+     * @param skinId
+     * @param walletPublicKey
+     * @return
      * @throws CantGetSkinFileException
+     * @throws CantGetResourcesException
      */
-    public Skin getSkinFile(String fileName, UUID skinId) throws CantGetSkinFileException,CantGetResourcesException;
+    public Skin getSkinFile(UUID skinId,String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -38,7 +39,7 @@ public interface ResourceProviderManager {
      * @return The content of the file
      * @throws CantGetLanguageFileException
      */
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException;
+    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException;
 
 
     /**
@@ -48,7 +49,7 @@ public interface ResourceProviderManager {
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName, UUID skinId) throws CantGetImageResourceException;
+    public byte[] getImageResource(String imageName, UUID skinId, String walletPublicKey) throws CantGetImageResourceException;
 
     /**
      * This method let us get a video referenced by a name
