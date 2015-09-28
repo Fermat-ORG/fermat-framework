@@ -361,7 +361,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setGenesisAmount(1);
         digitalAsset.setDescription("TestAsset");
         digitalAsset.setName("testName");
-        digitalAsset.setPublicKey("testPublicKey");
+        digitalAsset.setPublicKey(new ECCKeyPair().getPublicKey());
         LOG.info("MAP_DigitalAsset:"+digitalAsset);
         List<Resource> resources=new ArrayList<>();
         digitalAsset.setResources(resources);
@@ -375,7 +375,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     }
 
-    private void testIssueMultipleAssetsWithNoIdentity() throws CantDefineContractPropertyException {
+    private void testIssueMultipleAssetsWithNoIdentity() throws CantDefineContractPropertyException, CantIssueDigitalAssetsException {
         LOG.info("MAP_TEST_MULTIPLE_ASSETS_WITH_NO_Identity");
         DigitalAsset digitalAsset = new DigitalAsset();
         digitalAsset.setPublicKey(new ECCKeyPair().getPublicKey());
@@ -421,10 +421,11 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setContract(contract);
 
         System.out.println(digitalAsset.toString());
+        this.assetIssuingTransactionManager.issueAssets(digitalAsset, 10, "TESTING PUBLICKEY", BlockchainNetworkType.REG_TEST);
         LOG.info("MAP_END_TEST_MULTIPLE_ASSETS_WITH_NO_Identity");
     }
 
-    private void testIssueMultipleFullAssets() throws CantDefineContractPropertyException {
+    private void testIssueMultipleFullAssets() throws CantDefineContractPropertyException, CantIssueDigitalAssetsException {
         LOG.info("MAP_TEST_MULTIPLE_FULL_ASSETS");
         DigitalAsset digitalAsset = new DigitalAsset();
         digitalAsset.setPublicKey(new ECCKeyPair().getPublicKey());
@@ -470,6 +471,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setContract(contract);
 
         System.out.println(digitalAsset.toString());
+        this.assetIssuingTransactionManager.issueAssets(digitalAsset, 10, "TESTING PUBLICKEY", BlockchainNetworkType.REG_TEST);
         LOG.info("MAP_END_TEST_MULTIPLE_FULL_ASSETS");
     }
 

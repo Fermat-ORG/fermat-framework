@@ -53,6 +53,7 @@ public enum PlatformLayers {
     BITDUBAI_DAP_ACTOR_LAYER("BDAPAL",Developers.BITDUBAI),
     BITDUBAI_DAP_IDENTITY_LAYER("BDAPIL", Developers.BITDUBAI),
     BITDUBAI_DAP_MODULE_LAYER("BDAPML", Developers.BITDUBAI),
+    BITDUBAI_DAP_WALLET_LAYER("BDAPWA", Developers.BITDUBAI),
     BITDUBAI_DIGITAL_ASSET_FACTORY("BDAF", Developers.BITDUBAI),
     BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI),
 
@@ -181,6 +182,8 @@ public enum PlatformLayers {
                 return BITDUBAI_DIGITAL_ASSET_FACTORY;
             case "BDAPML":
                 return BITDUBAI_DAP_MODULE_LAYER;
+            case "BDAPWA":
+                return BITDUBAI_DAP_WALLET_LAYER;
             case "BEL":
                 return BITDUBAI_ENGINE_LAYER;
             case "BWPDNSL":
