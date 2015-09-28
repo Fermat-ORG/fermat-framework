@@ -1,12 +1,32 @@
-[[fbk-02 FERMAT'S MASTER PLAN]]
 == FERMAT'S Master Plan
 
+As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. Thus this is the first acknowledgment that sets the foundation of FERMAT's plan inside this global trend: to address this UNIQUENESS of each individuum and every kind of collective gathering of human beings (associations, clubs, NGO's, educational institutions, even banks, financial institutions, etc) that will adopt blockchain technology based transactions on their lives, in a similar way we have already adopted digitalised pictures, music, books, cell phones and internet as a whole.
+NOTE: We have an special word for this selectivity. We call it : SEGMENTATION
+
+On the other hand, there are many people who earn their living generating products and services at the heart of this digital world, being interconnected in an complex pattern of giving and receiving, services, money, assets, knowledge, permanently exchanging information of all kinds, weaving relationships, building a * community *. We do believe the community collectively has more talent than any of us individually. We believe it is important to build on top of services and knowledge that others took time and effort to build.
+NOTE: we believe in a vision of humanity as a COLLABORATIVE LEARNING SPECIES and in an ECOSYSTEM view of a Global Integral Civilisation.
+
+FERMAT'S Master Plan is about laying a solid foundation organized in layers and pillars, building a coherent pattern of relationships and interactions which can help to bridge the gap between the already complex world of digital systems and the end user's very specific need in a simple, easy to understand, transparent and yet very powerful way.
+
+We believe in decentralization. 
+
+We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world and move it forward.
+
 === Core concepts 
-====OPEN SOURCE
-====PUBLIC
-====OPEN
-====INCLUSIVE
-====OPEN STANDARD
+what's behind money?
+consensus agreement to transport value from one point to another
+
+Paper Money / Digital Money
+Fiat Currency / cryptocurrency
+trust
+financial institutions
+goverments
+ 
+==== OPEN SOURCE
+==== PUBLIC
+==== OPEN
+==== INCLUSIVE
+==== OPEN STANDARD
 
 === Segmentation and different levels of abstraction
 === Specific architecture 

@@ -1,5 +1,5 @@
 [conventions]
-=== Conventions Used in This Book
+== Conventions Used in This Book
 
 The following typographical conventions are used in this book:
 
@@ -41,3 +41,5 @@ We appreciate, but do not require, attribution. An attribution usually includes 
 Some editions of this book are offered under an open source license, such as CC-BY-NC (creativecommons.org), in which case the terms of that license apply.
 
 If you feel your use of code examples falls outside fair use or the permission given above, feel free to contact us at pass:[<email>permissions@oreilly.com</email>].
+=======
+

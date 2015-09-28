@@ -1,4 +1,4 @@
-[preface]
+[glossary]
 == Quick Glossary
 
 This quick glossary contains many of the terms used in relation to bitcoin. These terms are used throughout the book, so bookmark this for a quick reference.
@@ -59,3 +59,5 @@ In simple terms, a transfer of bitcoins from one address to another. More precis
 
 wallet::
 Software that holds all your bitcoin addresses and secret keys. Use it to send, receive, and store your bitcoin.((("wallet"))) 
+=======
+
