@@ -2,7 +2,7 @@ String developerName = "Leon Acosta"
 String developerMail = "laion.cj91@gmail.com"
 String pluginName = "Intra User"
 String layerName = "Identity"
-String packageRoot = "com.bitdubai.fermat_dmp_plugin"
+String packageRoot = "com.bitdubai.fermat_ccp_plugin"
 String jdkVersion = "1.7"
 
 

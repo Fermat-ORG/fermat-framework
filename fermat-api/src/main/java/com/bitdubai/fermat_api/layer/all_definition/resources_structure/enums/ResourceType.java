@@ -46,7 +46,7 @@ public enum ResourceType implements Serializable {
     }
 
     /**
-     * Método no modificado ya que se usa en com/bitdubai/fermat_dmp_plugin/layer/middleware/wallet_factory/developer/bitdubai/version_1/structure/WalletFactoryMiddlewareProjectSkinManager.java
+     * Método no modificado ya que se usa en com/bitdubai/fermat_ccp_plugin/layer/middleware/wallet_factory/developer/bitdubai/version_1/structure/WalletFactoryMiddlewareProjectSkinManager.java
      * */
     public String value() { return this.code; }
 }

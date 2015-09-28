@@ -8,8 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.UUID;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**

@@ -76,10 +76,6 @@ public class CryptoBrokerWalletSession implements WalletSession {
         return data.get(key);
     }
 
-    @Override
-    public CryptoWalletManager getCryptoWalletManager() {
-        return null;
-    }
 
     /**
      * Return the Error Manager

@@ -11,24 +11,20 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
  */
 public class CryptoWalletWalletModuleIntraUserActor implements CryptoWalletIntraUserActor {
 
-    private final String publicKey;
+    private final String     alias;
+    private final boolean    isContact;
+    private final byte[]     profileImage;
+    private final String     publicKey;
 
-    private final String alias;
+    public CryptoWalletWalletModuleIntraUserActor(final String   alias,
+                                                  final boolean  isContact,
+                                                  final byte[]   profileImage,
+                                                  final String   publicKey) {
 
-    private final byte[] profileImage;
-
-    private final boolean isContact;
-
-    public CryptoWalletWalletModuleIntraUserActor(final String publicKey, final String alias, final byte[] profileImage, final boolean isContact) {
-        this.publicKey = publicKey;
-        this.alias = alias;
+        this.alias        = alias;
+        this.isContact    = isContact;
         this.profileImage = profileImage;
-        this.isContact = isContact;
-    }
-
-    @Override
-    public String getPublicKey() {
-        return publicKey;
+        this.publicKey    = publicKey;
     }
 
     @Override
@@ -37,12 +33,17 @@ public class CryptoWalletWalletModuleIntraUserActor implements CryptoWalletIntra
     }
 
     @Override
+    public boolean isContact() {
+        return isContact;
+    }
+
+    @Override
     public byte[] getProfileImage() {
         return profileImage;
     }
 
     @Override
-    public boolean isContact() {
-        return isContact;
+    public String getPublicKey() {
+        return publicKey;
     }
 }

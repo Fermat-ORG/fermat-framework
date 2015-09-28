@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -29,6 +30,7 @@ import java.util.UUID;
 public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
     Database database;
     UUID pluginId;
+
 
     /**
      * DealsWithPluginDatabaseSystem interface variable and implementation
@@ -111,8 +113,8 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
         List<DatabaseTableFilter> filters = new ArrayList<>();
         filters.add(databaseTable.getNewFilter(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseFilterType.EQUAL, String.valueOf(accountNumber)));
         filters.add(databaseTable.getNewFilter(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_CHAIN_NUMBER_COLUMN_NAME, DatabaseFilterType.EQUAL, String.valueOf(chainNumber)));
-
-        DatabaseTableFilterGroup filterGroup = databaseTable.getNewFilterGroup(filters,null, DatabaseFilterOperator.AND);
+        List<DatabaseTableFilterGroup> filterGroups = new ArrayList<>();
+        DatabaseTableFilterGroup filterGroup = databaseTable.getNewFilterGroup(filters,filterGroups, DatabaseFilterOperator.AND);
         return filterGroup;
     }
 
@@ -124,11 +126,6 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
      * @throws CantExecuteDatabaseOperationException
      */
     private DatabaseTable loadKeyHierarchyWithFilterGroup(int accountNumber, int chainNumber) throws CantExecuteDatabaseOperationException {
-        try {
-            initializeDatabase();
-        } catch (CantInitializeAssetVaultCryptoVaultDatabaseException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Database could not be initialized. Tried to load and create it.", "Database plugin issue");
-        }
         DatabaseTable databaseTable = getKeyHierarchyDatabaseTable();
         databaseTable.setFilterGroup(getFilterGroup(accountNumber, chainNumber));
         try {
@@ -149,7 +146,18 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
      * @throws InconsistentDatabaseResultException
      */
     public int getAvailableKeyPosition(int accountNumber, int chainNumber) throws CantExecuteDatabaseOperationException, InconsistentDatabaseResultException {
-        DatabaseTableRecord tableRecord = getDatabaseTableRecord(accountNumber, chainNumber);
+        if (database == null)
+            try {
+                initializeDatabase();
+            } catch (CantInitializeAssetVaultCryptoVaultDatabaseException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "the database could not be initialized. probably failed initial creation.", "database plugin error.");
+            }
+
+        DatabaseTableRecord tableRecord = getKeyHierarchyRecord(accountNumber, chainNumber);
+        /**
+         * I close the database and return the value
+         */
+        database.closeDatabase();
         return tableRecord.getIntegerValue(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_KEY_POSITION_COLUMN_NAME);
     }
 
@@ -161,10 +169,27 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
      * @throws CantExecuteDatabaseOperationException
      * @throws InconsistentDatabaseResultException if more than one records existed with the specified filter.
      */
-    private DatabaseTableRecord getDatabaseTableRecord (int accountNumber, int chainNumber) throws CantExecuteDatabaseOperationException, InconsistentDatabaseResultException {
+    private DatabaseTableRecord getKeyHierarchyRecord (int accountNumber, int chainNumber) throws CantExecuteDatabaseOperationException, InconsistentDatabaseResultException {
         DatabaseTable databaseTable = loadKeyHierarchyWithFilterGroup(accountNumber, chainNumber);
+        if (databaseTable.getRecords().size() == 0){
+            /**
+             * If there is no matching record, then I will add this accountNumber (the bitcoin network) with chain and position equal to 0
+             * I'm doing this because this should happen only on the initial load of the vault. After this, when adding new chains I will add
+             * them somewhere else.
+             */
+            try {
+                resetVaultKeyPosition(accountNumber);
+            } catch (CantInsertRecordException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "problem reseting to zero the asset vault branch for the specified account number.", "error trying to insert the record.");
+            }
+            /**
+             * Once added the record, I will re run the method.
+             */
+            getKeyHierarchyRecord(accountNumber, chainNumber);
+        }
+
         if (databaseTable.getRecords().size() != 1)
-            throw new InconsistentDatabaseResultException(InconsistentDatabaseResultException.DEFAULT_MESSAGE, null, "Filter Account Number: " + accountNumber + " Chain Number: " + chainNumber, "inconsistent data in database.");
+            throw new InconsistentDatabaseResultException(InconsistentDatabaseResultException.DEFAULT_MESSAGE, null, "the specified account number:" + accountNumber + " and chainNumber:" + chainNumber + " generated an inconsistency result in the database", "database inconsistency.");
 
         DatabaseTableRecord tableRecord = databaseTable.getRecords().get(0);
         return tableRecord;
@@ -179,7 +204,14 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
      * @throws CantExecuteDatabaseOperationException
      */
     public void setNewAvailableKeyPosition(int accountNumber, int chainNumber) throws InconsistentDatabaseResultException, CantExecuteDatabaseOperationException {
-        DatabaseTableRecord record = getDatabaseTableRecord(accountNumber, chainNumber);
+        if (database == null)
+            try {
+                initializeDatabase();
+            } catch (CantInitializeAssetVaultCryptoVaultDatabaseException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "the database could not be initialized. probably failed initial creation.", "database plugin error.");
+            }
+
+        DatabaseTableRecord record = getKeyHierarchyRecord(accountNumber, chainNumber);
         int currentValue = record.getIntegerValue(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_KEY_POSITION_COLUMN_NAME);
         int newValue = currentValue + 1;
 
@@ -188,7 +220,9 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
         transaction.addRecordToUpdate(getKeyHierarchyDatabaseTable(), record);
         try {
             database.executeTransaction(transaction);
+            database.closeDatabase();
         } catch (DatabaseTransactionFailedException e) {
+            database.closeDatabase();
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error executing update transaction to increase the key position in the chain.", null);
         }
     }
@@ -210,19 +244,56 @@ public class AssetVaultCryptoVaultDao implements DealsWithPluginDatabaseSystem {
      * @return
      */
     public boolean isValidChainNumber(int accountNumber, int chainNumber) throws CantExecuteDatabaseOperationException {
-        DatabaseTable databaseTable = loadKeyHierarchyWithFilterGroup(accountNumber, chainNumber);
-        boolean result = false;
+        if (database == null)
+            try {
+                initializeDatabase();
+            } catch (CantInitializeAssetVaultCryptoVaultDatabaseException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "the database could not be initialized. probably failed initial creation.", "database plugin error.");
+            }
 
+        boolean result = false;
+        DatabaseTable databaseTable = loadKeyHierarchyWithFilterGroup(accountNumber, chainNumber);
         if (databaseTable.getRecords().size() != 1)
+        {
+            /**
+             * If the result is invalid, and the chain number is 0 (which belongs to this vault, I just will add it.)
+             */
+            if (chainNumber == 0){
+                try {
+                    resetVaultKeyPosition(accountNumber);
+                    return true;
+                } catch (CantInsertRecordException e) {
+                    throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "there was an error reseting the key position for the asset vault.", "insert failed.");
+                }
+            }
+            /**
+             * if the result is invalid and not from account 0, then this is a mistake, I will return false.
+             */
             result = false;
-        else
+        } else
             result = true;
 
+        /**
+         * I close the database and return the result.
+         */
         database.closeDatabase();
         return result;
     }
 
-
+    /**
+     * Add the records that sets the position of zero to the asset vault branch on the specified network type.
+     * @param accountNumber
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private void resetVaultKeyPosition(int accountNumber) throws CantInsertRecordException {
+        DatabaseTable table = getKeyHierarchyDatabaseTable();
+        DatabaseTableRecord record = table.getEmptyRecord();
+        record.setIntegerValue(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_ACCOUNT_NUMBER_COLUMN_NAME, accountNumber);
+        record.setIntegerValue(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_CHAIN_NUMBER_COLUMN_NAME, 0);
+        record.setStringValue(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_CHAIN_PUBLICKEY_COLUMN_NAME, "AssetVault");
+        record.setIntegerValue(AssetVaultCryptoVaultDatabaseConstants.KEY_HIERARCHY_KEY_POSITION_COLUMN_NAME, 0);
+        table.insertRecord(record);
+    }
 }
 
 

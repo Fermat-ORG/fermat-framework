@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NicheWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -9,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantFindProcessException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallLanguageException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantInstallWalletException;
@@ -134,6 +138,21 @@ public interface WalletManagerManager {
      *  get Installed wallet
      * @return
      */
-
     InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException;
+
+    /**
+     * Throw the method <code>getDefaultWallet</code> you can get a default wallet for a specific crypto currency and
+     * network type
+     *
+     * @param cryptoCurrency        crypto currency that the wallet need to manage.
+     * @param actorType             actor type that manages the wallet.
+     * @param blockchainNetworkType blockchain network type in which is created the wallet.
+     *
+     * @return an instance of InstalledWallet with the values of the specific wallet.
+     *
+     * @throws CantGetInstalledWalletException if something goes wrong
+     */
+    InstalledWallet getDefaultWallet(CryptoCurrency        cryptoCurrency,
+                                     Actors                actorType,
+                                     BlockchainNetworkType blockchainNetworkType) throws CantGetInstalledWalletException;
 }

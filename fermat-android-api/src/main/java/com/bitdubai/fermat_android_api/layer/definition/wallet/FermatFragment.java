@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 
+import java.util.Objects;
+
 /**
  * Common Android Fragment Base
  *
@@ -102,8 +104,8 @@ public abstract class FermatFragment extends Fragment {
     /**
      * Change activity
      */
-    protected final void changeActivity(Activities activity) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activity.getCode());
+    protected final void changeActivity(String activityCode,Object... objectses) {
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode,objectses);
     }
 
     /**

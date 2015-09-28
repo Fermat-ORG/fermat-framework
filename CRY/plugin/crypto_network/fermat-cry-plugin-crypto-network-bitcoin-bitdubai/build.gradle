@@ -50,7 +50,7 @@ dependencies {
     compile project(':fermat-pip-api')
 
     testCompile 'junit:junit:4.11'
-    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     compile('org.bitcoinj:bitcoinj-core:0.13.2') {
         exclude module: 'scrypt'
     }

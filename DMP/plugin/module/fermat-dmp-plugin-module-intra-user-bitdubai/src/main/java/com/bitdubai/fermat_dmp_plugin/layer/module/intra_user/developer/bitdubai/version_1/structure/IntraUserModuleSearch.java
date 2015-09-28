@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.exceptions.CantGetUserIntraUserIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUserSearchResult;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
@@ -30,10 +30,10 @@ public class IntraUserModuleSearch implements IntraUserSearch {
     IntraUserManager intraUserNSManager;
 
     /**
-     * DealsWithIdentityIntraUser interface member variable
+     * DealsWithCCPIntraWalletUser interface member variable
      */
 
-    IntraUserIdentityManager intraUserIdentityManager;
+    IntraWalletUserManager intraWalletUserManager;
 
     private String nameToSearch;
 
@@ -41,9 +41,9 @@ public class IntraUserModuleSearch implements IntraUserSearch {
      * Constructor
      */
 
-   public IntraUserModuleSearch(IntraUserManager intraUserNSManager, IntraUserIdentityManager intraUserIdentityManager){
+   public IntraUserModuleSearch(IntraUserManager intraUserNSManager, IntraWalletUserManager intraWalletUserManager){
        this.intraUserNSManager = intraUserNSManager;
-       this.intraUserIdentityManager = intraUserIdentityManager;
+       this.intraWalletUserManager = intraWalletUserManager;
 
    }
     /**
@@ -73,16 +73,16 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             /**
              * search Device User intra users  from intra user identity
              */
-            List<IntraUserIdentity>  intraUserIdentityList = this.intraUserIdentityManager.getAllIntraUsersFromCurrentDeviceUser();
+            List<IntraWalletUser> intraWalletUserList = this.intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
             /**
              * I only add intra users belonging to the Device User log
              */
             for (IntraUser intraUser : intraUserList) {
 
-                for (IntraUserIdentity intraUserIdentity : intraUserIdentityList) {
-                   if(intraUserIdentity.getPublicKey().equals(intraUser.getPublicKey()) )
-                       intraUserInformationList.add(new IntraUserModuleInformation(intraUserIdentity.getAlias(),intraUserIdentity.getPublicKey(),intraUserIdentity.getProfileImage()));
+                for (IntraWalletUser intraWalletUser : intraWalletUserList) {
+                   if(intraWalletUser.getPublicKey().equals(intraUser.getPublicKey()) )
+                       intraUserInformationList.add(new IntraUserModuleInformation(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage()));
 
                 }
              }
@@ -93,7 +93,7 @@ public class IntraUserModuleSearch implements IntraUserSearch {
         {
             throw new CantGetIntraUserSearchResult("CAN'T GET INTRA USERS SEARCH RESULT",e,"","");
         }
-        catch(CantGetUserIntraUserIdentitiesException e)
+        catch(CantListIntraWalletUsersException e)
         {
             throw new CantGetIntraUserSearchResult("CAN'T GET INTRA USERS SEARCH RESULT",e,"","");
         }
