@@ -23,28 +23,14 @@ public class DeveloperSubAppSession implements com.bitdubai.fermat_android_api.l
      */
     Map<String,Object> data;
 
-    /**
-     * Error manager
-     */
     private ErrorManager errorManager;
 
-    /**
-     * Tool Manager
-     */
     private ToolManager toolManager;
 
 
-    /**
-     * Event manager.
-     */
-    // Ver si esto va acá
-    //private EventManager eventManager;
-
-
-
-    public DeveloperSubAppSession(SubApps subApps, ErrorManager errorManager, ToolManager toolManager){
+    public DeveloperSubAppSession(final SubApps subApps, final ErrorManager errorManager, final ToolManager toolManager){
         this.subApps=subApps;
-        data= new HashMap<String,Object>();
+        data= new HashMap<>();
         this.errorManager=errorManager;
         this.toolManager=toolManager;
     }
