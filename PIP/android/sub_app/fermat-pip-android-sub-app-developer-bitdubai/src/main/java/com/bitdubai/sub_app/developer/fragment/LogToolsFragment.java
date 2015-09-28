@@ -84,12 +84,8 @@ public class LogToolsFragment extends FermatFragment {
 
     Typeface tf;
 
-    public static LogToolsFragment newInstance(int position) {
-        LogToolsFragment f = new LogToolsFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static LogToolsFragment newInstance() {
+        return new LogToolsFragment();
     }
 
     @Override
