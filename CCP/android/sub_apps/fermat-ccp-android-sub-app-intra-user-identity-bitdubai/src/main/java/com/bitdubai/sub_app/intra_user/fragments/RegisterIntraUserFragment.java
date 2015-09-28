@@ -38,7 +38,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 
 import com.bitdubai.sub_app.intra_user.common.Views.RoundedDrawable;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 import com.squareup.picasso.Picasso;
 
 /**

@@ -20,7 +20,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user.common.UtilsFuncs;
 import com.bitdubai.sub_app.intra_user.common.models.IntraUserConnectionListItem;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

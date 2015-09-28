@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.Installat
 import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.INSTALLED;
 import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.NOT_UNINSTALLED;
 import static com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus.UPGRADE_AVAILABLE;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 /**
  * Created by Matias Furszyfer on 28/08/15.
  */

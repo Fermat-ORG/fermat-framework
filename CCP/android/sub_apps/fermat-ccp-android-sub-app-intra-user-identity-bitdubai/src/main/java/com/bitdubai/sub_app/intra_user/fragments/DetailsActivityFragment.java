@@ -23,7 +23,7 @@ import com.bitdubai.sub_app.intra_user.common.UtilsFuncs;
 import com.bitdubai.sub_app.intra_user.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.intra_user.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 
 import java.util.ArrayList;
 

@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 
 /**
  * Fragment que luce como un Activity donde se muestra mas informacion sobre la Wallet mostrada en DetailsActivityFragment

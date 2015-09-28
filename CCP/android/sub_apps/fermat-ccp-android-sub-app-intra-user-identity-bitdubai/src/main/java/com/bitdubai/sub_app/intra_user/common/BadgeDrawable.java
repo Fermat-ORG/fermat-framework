@@ -10,7 +10,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 
 
 public class BadgeDrawable extends Drawable {

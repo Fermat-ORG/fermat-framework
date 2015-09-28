@@ -88,7 +88,7 @@ dependencies {
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
     */
     // DMP Projects (Sub APPs)
-    compile project(':fermat-dmp-android-sub-app-intra-user-bitdubai')
+    compile project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
 
     compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')

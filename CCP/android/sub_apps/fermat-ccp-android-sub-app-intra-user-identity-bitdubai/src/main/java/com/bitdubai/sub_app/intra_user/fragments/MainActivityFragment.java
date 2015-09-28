@@ -30,7 +30,7 @@ import com.bitdubai.sub_app.intra_user.common.DetailedCatalogItemLoaderListener;
 import com.bitdubai.sub_app.intra_user.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user.util.CommonLogger;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;

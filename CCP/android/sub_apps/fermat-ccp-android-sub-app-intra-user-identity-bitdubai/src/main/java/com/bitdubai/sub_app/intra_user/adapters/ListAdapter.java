@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 
 import java.util.List;
 

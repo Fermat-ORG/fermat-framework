@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.intra_user.bitdubai.R;
+import com.bitdubai.intra_user_identity.R;
 
 
 public class HomeFragment extends FermatFragment {
