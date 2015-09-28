@@ -66,7 +66,7 @@ public class ReceiveTransactionsFragment extends FermatListFragment<CryptoWallet
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        referenceWalletSession = (ReferenceWalletSession)walletSession;
+        //referenceWalletSession = (ReferenceWalletSession)walletSession;
 
         super.onCreate(savedInstanceState);
         try {
@@ -109,7 +109,7 @@ public class ReceiveTransactionsFragment extends FermatListFragment<CryptoWallet
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new TransactionNewAdapter(getActivity(), lstCryptoWalletTransactions);
+            adapter = new TransactionNewAdapter(getActivity(), lstCryptoWalletTransactions,cryptoWallet,referenceWalletSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;

@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="7dp">
+    >
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:elevation="2dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="15dp"
         >
 
         <ImageView
@@ -51,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:paddingRight="7dp"
+            android:paddingRight="15dp"
             android:orientation="vertical"
             android:gravity="end"
             android:layout_weight="1"
@@ -75,6 +76,44 @@
         </LinearLayout>
 
 
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bbccc7"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingRight="15dp"
+        >
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_total_balance"
+            android:text="15 BTC"
+            android:textSize="12dp"
+            android:layout_marginRight="10dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_total_number_transactions"
+            android:text="5 Records"
+            android:textSize="12dp"
+            android:layout_marginRight="10dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ImageView_see_all_transactions"
+            android:src="@drawable/ic_home_arrow_down"/>
 
     </LinearLayout>
 
