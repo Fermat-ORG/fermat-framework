@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
@@ -21,7 +22,7 @@ import java.util.Objects;
  * @author Francisco Vasquez
  * @version 1.1
  */
-public abstract class FermatFragment extends Fragment {
+public abstract class FermatFragment extends Fragment implements FermatFragments {
 
     /**
      * FLAGS
