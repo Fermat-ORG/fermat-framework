@@ -38,7 +38,6 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     CryptoAddressBookManager cryptoAddressBookManager;
     CryptoVaultManager cryptoVaultManager;
     CryptoWallet cryptoWallet;
-    //DigitalAsset digitalAsset;
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;

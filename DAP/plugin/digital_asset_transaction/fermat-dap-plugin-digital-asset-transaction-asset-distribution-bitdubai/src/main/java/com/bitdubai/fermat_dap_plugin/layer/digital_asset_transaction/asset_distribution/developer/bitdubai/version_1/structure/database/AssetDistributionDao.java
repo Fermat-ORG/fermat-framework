@@ -6,11 +6,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantPersistDigitalAssetException;
 
 import java.util.UUID;
 
@@ -43,7 +44,7 @@ public class AssetDistributionDao {
             throw new CantExecuteDatabaseOperationException(exception, "Opening the Asset Distribution Transaction Database", "Error in database plugin.");
         }
     }
-    public void persistDigitalAsset(String genesisTransaction, String localStoragePath, String digitalAssetHash, String actorReceiverPublicKey){
+    public void persistDigitalAsset(String genesisTransaction, String localStoragePath, String digitalAssetHash, String actorReceiverPublicKey)throws CantPersistDigitalAssetException{
         try{
             this.database=openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
@@ -55,8 +56,15 @@ public class AssetDistributionDao {
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME, DistributionStatus.CHECKING_HASH.getCode());
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode());
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode());
-        } catch (CantExecuteDatabaseOperationException e) {
-            e.printStackTrace();
+            databaseTable.insertRecord(record);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantPersistDigitalAssetException(exception, "Persisting a forming genesis digital asset","Cannot open the Asset Distribution database");
+        } catch (CantInsertRecordException exception) {
+            throw new CantPersistDigitalAssetException(exception, "Persisting a forming genesis digital asset","Cannot insert a record in the Asset Distribution database");
+        } catch (Exception exception){
+            throw new CantPersistDigitalAssetException(exception, "Persisting a forming genesis digital asset","Unexpected exception");
         }
     }
 
