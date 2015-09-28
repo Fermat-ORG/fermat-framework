@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_api.all_definition.identity;
 
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
+
 /**
  * Created by jorgegonzalez on 2015.09.18..
  */
@@ -12,8 +14,5 @@ public interface ActorIdentity {
 
     void setNewProfileImage(final byte[] imageBytes);
 
-    /*
-     * TODO add exception
-     */
-    String createMessageSignature(String message);
+    String createMessageSignature(String message) throws CantCreateMessageSignatureException;
 }
