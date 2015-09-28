@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_api.layer.dmp_network_service;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.dmp_network_service.NetworkServiceConnectionManager</code>
  * <p/>
@@ -14,14 +16,14 @@ package com.bitdubai.fermat_api.layer.dmp_network_service;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface NetworkServiceConnectionManager<T extends NetworkServiceLocal> {
+public interface NetworkServiceConnectionManager {
 
     /**
      * Create a new connection to
      *
      * @param remotePlatformComponentProfile the remote PlatformComponentProfile
      */
-    //public void connectTo(PlatformComponentProfile remotePlatformComponentProfile);
+    public void connectTo(PlatformComponentProfile remotePlatformComponentProfile);
 
 
     /**
@@ -44,5 +46,5 @@ public interface NetworkServiceConnectionManager<T extends NetworkServiceLocal> 
      * @param remoteNetworkServicePublicKey the remote network service public key
      * @return NetworkServiceLocal the local instance that represent
      */
-    public T getTemplateNetworkServiceLocalInstance(String remoteNetworkServicePublicKey);
+    public NetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey);
 }

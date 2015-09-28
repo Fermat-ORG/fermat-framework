@@ -218,9 +218,6 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                      */
                     ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
 
-                    System.out.println("TemplateNetworkServiceRemoteAgent - message.getContent() = ");
-                    System.out.println(message.getContent());
-
                     /*
                      * Change to the new status
                      */
@@ -275,7 +272,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Read all pending message from database
                      */
-                    List<FermatMessage> messages = outgoingMessageDao.findAll();
+                    List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
                     /*
                      * For each message
                      */

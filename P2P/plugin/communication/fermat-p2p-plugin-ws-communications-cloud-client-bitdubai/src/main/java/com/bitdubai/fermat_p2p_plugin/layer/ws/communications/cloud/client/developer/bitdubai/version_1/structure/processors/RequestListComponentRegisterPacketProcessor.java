@@ -64,16 +64,15 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         PlatformComponentType platformComponentType = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE), PlatformComponentType.class);
 
          /*
-         * Get the list
+         * Get the receivedList
          */
-        List<PlatformComponentProfile> list = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
+        List<PlatformComponentProfile> receivedList = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - list = " + list);
+        System.out.println("RequestListComponentRegisterPacketProcessor - receivedlist.size() = " + receivedList.size());
 
          /*
-         * Create a new event whit the list
+         * Create a new event whit the receivedlist
          */
         FermatEvent event =  EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
@@ -81,7 +80,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * configure the event
          */
-        ((CompleteRequestListComponentRegisteredNotificationEvent)event).setRegisteredComponentList(list);
+        ((CompleteRequestListComponentRegisteredNotificationEvent)event).setRegisteredComponentList(receivedList);
         ((CompleteRequestListComponentRegisteredNotificationEvent)event).setNetworkServiceType(networkServiceType);
         ((CompleteRequestListComponentRegisteredNotificationEvent)event).setPlatformComponentType(platformComponentType);
 

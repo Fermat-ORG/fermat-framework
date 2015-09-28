@@ -63,6 +63,11 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
     private OutgoingMessageDao outgoingMessageDao;
 
     /**
+     * Represent the lastMessageReceived
+     */
+    private FermatMessage lastMessageReceived;
+
+    /**
      * Constructor with parameters
      *
      * @param remoteNetworkServiceProfile
@@ -78,10 +83,8 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
 
 
     /**
-     * This method prepare the message to send and save on the
-     * data base in the table <code>outgoing_messages</code>
-     *
-     * @param messageContent the message to send
+     * (non-javadoc)
+     * @see NetworkServiceLocal#sendMessage(String, ECCKeyPair)
      */
     public void sendMessage(final String messageContent, final ECCKeyPair senderIdentity) {
 
@@ -118,9 +121,13 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
      */
     private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
 
-
         System.out.println("TemplateNetworkServiceLocal - onMessageReceived ");
         System.out.println(incomingTemplateNetworkServiceMessage);
+
+        /*
+         * set the last message received
+         */
+        this.lastMessageReceived = incomingTemplateNetworkServiceMessage;
 
         /**
          * Put the message on a event and fire new event
@@ -142,12 +149,17 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
     @Override
     public void update(Observable observable, Object data) {
 
-        System.out.println("TemplateNetworkServiceLocal - update ");
-        System.out.println("TemplateNetworkServiceLocal - data instanceof FermatMessage = "+(data instanceof FermatMessage));
-
         //Validate and process
         if (data instanceof FermatMessage) {
             onMessageReceived((FermatMessage) data);
         }
+    }
+
+    /**
+     * (non-javadoc)
+     * @see NetworkServiceLocal#getLastMessageReceived()
+     */
+    public FermatMessage getLastMessageReceived() {
+        return lastMessageReceived;
     }
 }

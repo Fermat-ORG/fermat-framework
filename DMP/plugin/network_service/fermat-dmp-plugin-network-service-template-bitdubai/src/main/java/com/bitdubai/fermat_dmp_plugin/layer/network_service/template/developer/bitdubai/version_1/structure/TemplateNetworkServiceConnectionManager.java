@@ -10,6 +10,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 import com.bitdubai.fermat_api.layer.all_definition.components.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communication.IncomingMessageDao;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceConnectionManager implements TemplateManager {
+public class TemplateNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
     /**
      * Represent the communicationsCloudClientConnection
@@ -101,10 +102,8 @@ public class TemplateNetworkServiceConnectionManager implements TemplateManager 
 
 
     /**
-     * Create a new connection to
-     *
-     * @param remotePlatformComponentProfile the remote PlatformComponentProfile
-     * @return TemplateNetworkServiceLocal a new instance
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile)
      */
     public void connectTo(PlatformComponentProfile remotePlatformComponentProfile) {
 
@@ -123,9 +122,8 @@ public class TemplateNetworkServiceConnectionManager implements TemplateManager 
     }
 
     /**
-     * Close a previous connection
-     *
-     * @param remoteNetworkServicePublicKey he remote network service public key
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager# closeConnection(PlatformComponentProfile)
      */
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
@@ -135,7 +133,8 @@ public class TemplateNetworkServiceConnectionManager implements TemplateManager 
     }
 
     /**
-     * Close all previous connections
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager#closeAllConnection()
      */
     public void closeAllConnection() {
 
@@ -201,12 +200,10 @@ public class TemplateNetworkServiceConnectionManager implements TemplateManager 
     }
 
     /**
-     * Return the TemplateNetworkServiceLocal that represent the intra user network service remote
-     *
-     * @param remoteNetworkServicePublicKey the remote network service public key
-     * @return TemplateNetworkServiceLocal the local instance that represent
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
-    public TemplateNetworkServiceLocal getTemplateNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
+    public TemplateNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance
         return templateNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);

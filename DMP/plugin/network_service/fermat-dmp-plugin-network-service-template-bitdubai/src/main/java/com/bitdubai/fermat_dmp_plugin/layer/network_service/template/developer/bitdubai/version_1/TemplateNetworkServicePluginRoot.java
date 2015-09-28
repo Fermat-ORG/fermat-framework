@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -620,7 +621,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Request the list of component registers
              */
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         }
 
@@ -678,7 +679,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              * This is for test and example of how to use
              * Get the local representation of the remote network service
              */
-            TemplateNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceConnectionManager.getTemplateNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+            TemplateNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
 
             /*
              * Get a remote network service registered from the list requested
@@ -699,9 +700,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             templateNetworkServiceLocal.sendMessage(messageContent, identity);
 
         }
-
-
-
 
     }
 
@@ -740,14 +738,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         return register;
     }
 
-    /*
-     * Get the RemoteNetworkServicesRegisteredList
-     * @return List<PlatformComponentProfile>
-     */
-    public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
-        return remoteNetworkServicesRegisteredList;
-    }
-
     /**
      * (non-Javadoc)
      * @see DatabaseManagerForDevelopers#getDatabaseList(DeveloperObjectFactory)
@@ -776,10 +766,32 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Get the TemplateNetworkServiceConnectionManager
-     * @return TemplateNetworkServiceConnectionManager
+     * (non-javadoc)
+     * @see NetworkService#getNetworkServiceConnectionManager()
      */
-    public TemplateNetworkServiceConnectionManager getTemplateNetworkServiceConnectionManager() {
+    public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
         return templateNetworkServiceConnectionManager;
     }
+
+    /**
+     * (non-javadoc)
+     * @see NetworkService#getRemoteNetworkServicesRegisteredList()
+     */
+    public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
+        return remoteNetworkServicesRegisteredList;
+    }
+
+    /**
+     * (non-javadoc)
+     * @see NetworkService#requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters)
+     */
+    public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters){
+
+        /*
+         * Request the list of component registers
+         */
+        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+
+    }
+
 }

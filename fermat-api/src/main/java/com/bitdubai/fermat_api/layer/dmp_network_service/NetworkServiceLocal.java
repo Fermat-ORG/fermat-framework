@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_api.layer.dmp_network_service;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.dmp_network_service.NetworkServiceLocal</code>
  * <p/>
@@ -15,4 +17,15 @@ package com.bitdubai.fermat_api.layer.dmp_network_service;
  * @since Java JDK 1.7
  */
 public interface NetworkServiceLocal {
+
+    /**
+     * This method prepare the message to send and save on the
+     * data base in the table <code>outgoing_messages</code>
+     *
+     * @param messageContent the message to send
+     */
+    public void sendMessage(final String messageContent, final ECCKeyPair senderIdentity);
+
+
+    //public FermatMessage getLastMessageReceived();
 }
