@@ -50,7 +50,7 @@ public interface WalletFactoryManager {
 
     public void closeProject(WalletFactoryProject walletFactoryProject)throws CantGetWalletFactoryProjectException;
 
-    public List<InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException;
+    public List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException;
 
     public void cloneInstalledWallets (InstalledWallet walletToClone, String newName) throws CantCloneInstalledWalletException;
 
