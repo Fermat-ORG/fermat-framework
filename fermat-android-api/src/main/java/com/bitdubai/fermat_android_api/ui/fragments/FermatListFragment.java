@@ -16,6 +16,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragment;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -30,8 +31,8 @@ import java.util.concurrent.Executors;
 /**
  * RecyclerView Fragment
  */
-public abstract class FermatListFragment<M> extends FermatWalletFragment
-        implements RecyclerListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
+public abstract class FermatListFragment<M> extends FermatFragment
+        implements RecyclerListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack, FermatFragments {
 
     /**
      * CONSTANTS
