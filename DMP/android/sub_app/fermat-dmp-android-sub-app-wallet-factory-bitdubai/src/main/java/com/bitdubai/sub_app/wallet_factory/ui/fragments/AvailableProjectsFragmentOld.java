@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
@@ -70,7 +71,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.factory_available_projects_fragment, container, false);
+        rootView = inflater.inflate(R.layout.factory_available_projects_old_fragment, container, false);
 
         listView = (ListView) rootView.findViewById(R.id.projects);
         ArrayAdapter<InstalledWallet> adapter = new ArrayAdapter<InstalledWallet>(getActivity(), android.R.layout.simple_list_item_1, wallets);
@@ -85,13 +86,18 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
                  * Usá el metodo ese de changeActivity, y pasale esos parametros, despues lo que va a hacer esto es pintarte en la pantalla toda la wallet con tu estructura de navegación
                  * y los fragmentos nuevos que acabas de poner
                  */
+//
 
                 Object[] o = new Object[2];
                 o[0] = (Object) startWalletNavigationStructure();
                 o[1] = (Object) wallets.get(i);
 
                 //TODO: Como tercer parametro me tenes que pasar el Skin de la wallet que vas a cambiar así lo pinto por pantalla y se va cambiando
+
+                //TODO: tenes que conseguir el skin desde el tu module o desde algún lado
                 //o[2] = (Object)
+
+                //TODO: tenes que pasarme el callBack class
                 changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(), o);
             }
         });
@@ -124,7 +130,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        publicKey = "reference_wallet";
+        publicKey = "test_wallet";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
 

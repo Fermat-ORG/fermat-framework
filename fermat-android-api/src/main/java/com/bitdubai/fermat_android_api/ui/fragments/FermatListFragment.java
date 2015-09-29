@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
  * RecyclerView Fragment
  */
 public abstract class FermatListFragment<M> extends FermatFragment
-        implements RecyclerListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack, FermatFragments {
+        implements RecyclerListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
 
     /**
      * CONSTANTS
