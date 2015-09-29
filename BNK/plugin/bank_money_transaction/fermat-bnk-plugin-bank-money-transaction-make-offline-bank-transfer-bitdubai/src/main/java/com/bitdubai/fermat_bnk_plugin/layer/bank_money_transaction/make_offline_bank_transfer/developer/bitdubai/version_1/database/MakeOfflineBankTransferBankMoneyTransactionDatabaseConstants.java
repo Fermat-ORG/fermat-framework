@@ -21,7 +21,7 @@ public class MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants {
     static final String MAKE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME = "status";
     static final String MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
     static final String MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME = "public_key_customer";
-    static final String MAKE_OFFLINE_BANK_TRANSFER_BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME = "bank_money_transaction_type";
+//    static final String MAKE_OFFLINE_BANK_TRANSFER_BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME = "bank_money_transaction_type";
     static final String MAKE_OFFLINE_BANK_TRANSFER_MERCHANDISE_AMOUNT_COLUMN_NAME = "merchandise_amount";
     static final String MAKE_OFFLINE_BANK_TRANSFER_BANK_CURRENCY_TYPE_COLUMN_NAME = "bank_currency_type";
     static final String MAKE_OFFLINE_BANK_TRANSFER_BANK_OPERATION_TYPE_COLUMN_NAME = "bank_operation_type";

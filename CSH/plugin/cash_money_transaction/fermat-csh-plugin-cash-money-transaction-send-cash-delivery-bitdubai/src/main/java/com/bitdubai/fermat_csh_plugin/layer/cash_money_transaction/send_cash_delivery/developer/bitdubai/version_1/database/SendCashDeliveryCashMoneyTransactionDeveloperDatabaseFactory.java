@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.receive_offline_bank_transfer.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.send_cash_delivery.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,14 +15,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.receive_offline_bank_transfer.developer.bitdubai.version_1.exceptions.CantInitializeReceiveOfflineBankTransferBankMoneyTransactionDatabaseException;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.send_cash_delivery.developer.bitdubai.version_1.exceptions.CantInitializeSendCashDeliveryCashMoneyTransactionDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.receive_offline_bank_transfer.developer.bitdubai.version_1.database.ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.send_cash_delivery.developer.bitdubai.version_1.database.SendCashDeliveryCashMoneyTransactionDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
@@ -32,7 +32,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class SendCashDeliveryCashMoneyTransactionDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -53,7 +53,7 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFact
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public SendCashDeliveryCashMoneyTransactionDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
@@ -61,9 +61,9 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFact
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeReceiveOfflineBankTransferBankMoneyTransactionDatabaseException
+     * @throws CantInitializeSendCashDeliveryCashMoneyTransactionDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeReceiveOfflineBankTransferBankMoneyTransactionDatabaseException {
+    public void initializeDatabase() throws CantInitializeSendCashDeliveryCashMoneyTransactionDatabaseException {
         try {
 
              /*
@@ -76,7 +76,7 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFact
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeReceiveOfflineBankTransferBankMoneyTransactionDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeSendCashDeliveryCashMoneyTransactionDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -84,18 +84,18 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFact
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            ReceiveOfflineBankTransferBankMoneyTransactionDatabaseFactory receiveOfflineBankTransferBankMoneyTransactionDatabaseFactory = new ReceiveOfflineBankTransferBankMoneyTransactionDatabaseFactory(pluginDatabaseSystem);
+            SendCashDeliveryCashMoneyTransactionDatabaseFactory sendCashDeliveryCashMoneyTransactionDatabaseFactory = new SendCashDeliveryCashMoneyTransactionDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = receiveOfflineBankTransferBankMoneyTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = sendCashDeliveryCashMoneyTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeReceiveOfflineBankTransferBankMoneyTransactionDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeSendCashDeliveryCashMoneyTransactionDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -106,7 +106,7 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFact
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Receive Offline Bank Transfer", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Send Cash Delivery", this.pluginId.toString()));
         return databases;
     }
 
@@ -115,27 +115,23 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFact
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table Receive Offline Bank Transfer columns.
+         * Table Send Cash Delivery columns.
          */
-        List<String> receiveOfflineBankTransferColumns = new ArrayList<String>();
+        List<String> sendCashDeliveryColumns = new ArrayList<String>();
 
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-//        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_MERCHANDISE_AMOUNT_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_CURRENCY_TYPE_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_OPERATION_TYPE_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_NAME_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_ACCOUNT_TYPE_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_DOCUMENT_REFERENCE_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_CASH_TRANSACTION_ID_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_STATUS_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_MERCHANDISE_AMOUNT_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_CASH_CURRENCY_TYPE_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_CASH_REFERENCE_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_INFO_DELIVERY_COLUMN_NAME);
         /**
-         * Table Receive Offline Bank Transfer addition.
+         * Table Send Cash Delivery addition.
          */
-        DeveloperDatabaseTable receiveOfflineBankTransferTable = developerObjectFactory.getNewDeveloperDatabaseTable(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_TABLE_NAME, receiveOfflineBankTransferColumns);
-        tables.add(receiveOfflineBankTransferTable);
+        DeveloperDatabaseTable sendCashDeliveryTable = developerObjectFactory.getNewDeveloperDatabaseTable(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_TABLE_NAME, sendCashDeliveryColumns);
+        tables.add(sendCashDeliveryTable);
 
 
 
