@@ -4,6 +4,8 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
  */
 public class AssetDistributionDatabaseConstants {
+
+    public static final String ASSET_DISTRIBUTION_DATABASE = "asset_distribution_database";
     /**
      * Asset Distribution database table definition.
      */

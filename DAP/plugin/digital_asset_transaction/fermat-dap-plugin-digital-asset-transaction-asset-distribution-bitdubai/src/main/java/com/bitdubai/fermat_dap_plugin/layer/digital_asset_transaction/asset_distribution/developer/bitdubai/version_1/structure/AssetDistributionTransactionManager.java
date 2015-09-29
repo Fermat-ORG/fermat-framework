@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -23,15 +24,22 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
+    PluginFileSystem pluginFileSystem;
 
     public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager,
                                                ErrorManager errorManager,
                                                UUID pluginId,
-                                               PluginDatabaseSystem pluginDatabaseSystem) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+                                               PluginDatabaseSystem pluginDatabaseSystem,
+                                               PluginFileSystem pluginFileSystem) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         setAssetVaultManager(assetVaultManager);
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
-        this.digitalAssetDistributor=new DigitalAssetDistributor(assetVaultManager, errorManager, pluginId, pluginDatabaseSystem);
+        setPluginFileSystem(pluginFileSystem);
+        this.digitalAssetDistributor=new DigitalAssetDistributor(assetVaultManager,
+                errorManager,
+                pluginId,
+                pluginDatabaseSystem,
+                pluginFileSystem);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{
@@ -46,6 +54,13 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
             throw new CantSetObjectException("pluginDatabaseSystem is null");
         }
         this.pluginDatabaseSystem=pluginDatabaseSystem;
+    }
+
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
+        if(pluginFileSystem==null){
+            throw new CantSetObjectException("pluginFileSystem is null");
+        }
+        this.pluginFileSystem=pluginFileSystem;
     }
 
     public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
