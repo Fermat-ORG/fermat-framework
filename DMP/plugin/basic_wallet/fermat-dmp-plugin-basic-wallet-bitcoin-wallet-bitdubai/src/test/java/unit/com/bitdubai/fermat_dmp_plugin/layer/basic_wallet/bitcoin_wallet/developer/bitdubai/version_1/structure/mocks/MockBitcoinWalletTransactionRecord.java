@@ -22,7 +22,7 @@ public class MockBitcoinWalletTransactionRecord implements BitcoinWalletTransact
     }
 
     @Override
-    public UUID getIdTransaction() {
+    public UUID getTransactionId() {
         return UUID.randomUUID();
     }
 
