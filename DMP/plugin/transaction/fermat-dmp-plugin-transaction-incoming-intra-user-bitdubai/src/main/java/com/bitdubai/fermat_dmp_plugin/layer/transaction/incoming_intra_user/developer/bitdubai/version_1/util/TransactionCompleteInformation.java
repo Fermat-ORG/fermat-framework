@@ -35,31 +35,31 @@ public class TransactionCompleteInformation {
     public BitcoinWalletTransactionRecord generateBitcoinTransaction(final CryptoAddressBookManager cryptoAddressBookManager) throws IncomingIntraUserCantGenerateTransactionException {
 
         try {
-            CryptoTransaction cryptoTransaction             = this.cryptoTransactionContainer.getInformation();
+            CryptoTransaction       cryptoTransaction       = this.cryptoTransactionContainer.getInformation();
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransaction.getAddressTo());
 
-            long timestamp                                                     = this.cryptoTransactionContainer.getTimestamp();
-            String memo                                                        = this.transactionMetadata.getInformation().getPaymentDescription();
-            IncomingIntraUserTransactionWrapper bitcoinWalletTransactionRecord = new IncomingIntraUserTransactionWrapper();
+            long  timestamp = this.cryptoTransactionContainer.getTimestamp()                          ;
+            String memo     = this.transactionMetadata       .getInformation().getPaymentDescription();
 
-            bitcoinWalletTransactionRecord.setIdTransaction(this.cryptoTransactionContainer.getTransactionID());
-            bitcoinWalletTransactionRecord.setTransactionHash(cryptoTransaction.getTransactionHash());
-            bitcoinWalletTransactionRecord.setAddressFrom(cryptoTransaction.getAddressFrom());
-            bitcoinWalletTransactionRecord.setAddressTo(cryptoTransaction.getAddressTo());
-            bitcoinWalletTransactionRecord.setAmount(cryptoTransaction.getCryptoAmount());
-            bitcoinWalletTransactionRecord.setTimestamp(timestamp);
-            bitcoinWalletTransactionRecord.setMemo(memo);
-
-            bitcoinWalletTransactionRecord.setActorFromPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
-            bitcoinWalletTransactionRecord.setActorFromType(cryptoAddressBookRecord.getDeliveredByActorType());
-            bitcoinWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-            bitcoinWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
-
-            return bitcoinWalletTransactionRecord;
+            return new IncomingIntraUserTransactionWrapper(
+                    cryptoTransactionContainer.getTransactionID()            ,
+                    cryptoAddressBookRecord   .getDeliveredByActorPublicKey(),
+                    cryptoAddressBookRecord   .getDeliveredToActorPublicKey(),
+                    cryptoAddressBookRecord   .getDeliveredByActorType()     ,
+                    cryptoAddressBookRecord   .getDeliveredToActorType()     ,
+                    cryptoTransaction         .getTransactionHash()          ,
+                    cryptoTransaction         .getAddressFrom()              ,
+                    cryptoTransaction         .getAddressTo()                ,
+                    cryptoTransaction         .getCryptoAmount()             ,
+                    timestamp                                                ,
+                    memo
+            );
 
         } catch (CantGetCryptoAddressBookRecordException e) {
+
             throw new IncomingIntraUserCantGenerateTransactionException("I couldn't get crypto address book record",e,"","");
         } catch (CryptoAddressBookRecordNotFoundException e) {
+
             throw new IncomingIntraUserCantGenerateTransactionException("I couldn't find the crypto address book record",e,"","");
         }
     }
