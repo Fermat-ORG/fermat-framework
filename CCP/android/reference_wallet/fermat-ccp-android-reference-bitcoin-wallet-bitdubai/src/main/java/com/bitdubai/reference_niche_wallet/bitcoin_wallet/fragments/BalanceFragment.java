@@ -230,7 +230,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
             ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
             this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
-            lstCryptoWalletTransactions = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, referenceWalletPreferenceSettings.getTransactionsToShow(), 0);
+            //lstCryptoWalletTransactions = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, referenceWalletPreferenceSettings.getTransactionsToShow(), 0);
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
                 if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
@@ -262,8 +262,6 @@ public class BalanceFragment extends FermatWalletFragment {
                     ((FermatScreenSwapper) getActivity()).changeActivity("CWRWBWBV1T");
                 }
             });
-        } catch (CantListTransactionsException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

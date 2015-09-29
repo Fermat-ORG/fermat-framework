@@ -85,7 +85,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
      * WalletManager Interface member variables.
      */
     String deviceUserPublicKey = "";
-    String walletId = "reference_wallet";
+    String walletPublicKey = "reference_wallet";
 
     List<InstalledWallet> userWallets;
 
@@ -172,7 +172,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
             while (iterator.hasNext()) {
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
-                if (mapEntry.getValue().toString().equals(walletId))
+                if (mapEntry.getValue().toString().equals(walletPublicKey))
                     existWallet = true;
             }
 
@@ -185,12 +185,12 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
                     ((DealsWithErrors) bitcoinWalletManager).setErrorManager(this.errorManager);
                     ((DealsWithPluginDatabaseSystem) bitcoinWalletManager).setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
-                    bitcoinWalletManager.createWallet(walletId);
+                    bitcoinWalletManager.createWallet(walletPublicKey);
 
                     //Save wallet id on file
 
                     try {
-                        this.persistWallet(walletId);
+                        this.persistWallet(walletPublicKey);
                     } catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
 

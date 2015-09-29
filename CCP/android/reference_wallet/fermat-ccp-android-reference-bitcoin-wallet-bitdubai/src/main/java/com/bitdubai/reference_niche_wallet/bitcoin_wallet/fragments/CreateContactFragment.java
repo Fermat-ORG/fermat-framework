@@ -228,7 +228,7 @@ public class CreateContactFragment extends FermatWalletFragment {
 
             editAddress = (EditText) rootView.findViewById(R.id.contact_address);
             editAddress.setTypeface(tf);
-            editAddress.addTextChangedListener(new TextWatcher() {
+           /* editAddress.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {
                     if (validateAddress(editAddress.getText().toString(), cryptoWallet) != null) {
                         editAddress.setTextColor(Color.parseColor("#72af9c"));
@@ -242,7 +242,7 @@ public class CreateContactFragment extends FermatWalletFragment {
 
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                 }
-            });
+            });*/
 
             ImageView scanImage = (ImageView) rootView.findViewById(R.id.scan_qr);
 
@@ -292,11 +292,11 @@ public class CreateContactFragment extends FermatWalletFragment {
             }
         } catch (CantCreateWalletContactException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error-" + e.getMessage(), Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error - " +  e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

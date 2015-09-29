@@ -184,7 +184,7 @@ public class TransactionsBookFragment extends Fragment{
             // Create the adapter to convert the array to views
 
 
-            lstTransactions=cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions,pointerOffset);
+            //lstTransactions=cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions,pointerOffset);
 
 
             //BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
@@ -273,10 +273,6 @@ public class TransactionsBookFragment extends Fragment{
             adapter = new EntryAdapter(getActivity(), items);
             listViewTransactions.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-
-        } catch (CantListTransactionsException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -381,46 +377,46 @@ public class TransactionsBookFragment extends Fragment{
      *  Update transaction list
      */
     private void loadNewTransactions(){
-        try {
-            if (lstTransactions.isEmpty()){
-
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
-
-                for (CryptoWalletTransaction transaction : lst) {
-                    lstTransactions.add(0, transaction);
-                }
-            }
-            else{
-
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
-                for (CryptoWalletTransaction transaction : lst) {
-                    lstTransactions.add(0, transaction);
-
-
-                }
-                pointerOffset = lstTransactions.size();
-
-                if(type==0){
-                    lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.BOOK);
-                }else if(type==1){
-                    lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.AVAILABLE);
-                }
-
-                adapter.notifyDataSetChanged();
-
-            }
-        }
-
-        catch (CantListTransactionsException e)
-        {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        }
-        catch(Exception ex)
-        {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        }
+//        try {
+//            if (lstTransactions.isEmpty()){
+//
+//                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
+//
+//                for (CryptoWalletTransaction transaction : lst) {
+//                    lstTransactions.add(0, transaction);
+//                }
+//            }
+//            else{
+//
+//                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
+//                for (CryptoWalletTransaction transaction : lst) {
+//                    lstTransactions.add(0, transaction);
+//
+//
+//                }
+//                pointerOffset = lstTransactions.size();
+//
+//                if(type==0){
+//                    lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.BOOK);
+//                }else if(type==1){
+//                    lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.AVAILABLE);
+//                }
+//
+//                adapter.notifyDataSetChanged();
+//
+//            }
+//        }
+//
+//        catch (CantListTransactionsException e)
+//        {
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+//            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+//        }
+//        catch(Exception ex)
+//        {
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+//            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+//        }
 
 
     }

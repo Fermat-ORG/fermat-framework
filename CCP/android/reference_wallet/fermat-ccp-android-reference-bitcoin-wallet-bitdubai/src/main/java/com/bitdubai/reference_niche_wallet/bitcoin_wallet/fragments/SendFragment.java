@@ -230,7 +230,7 @@ public class SendFragment extends FermatWalletFragment {
             /**
              *  Address validation
              */
-            editAddress.addTextChangedListener(new TextWatcher() {
+          /*  editAddress.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {
                     if (validateAddress(editAddress.getText().toString()) != null) {
                         editAddress.setTextColor(Color.parseColor("#72af9c"));
@@ -244,7 +244,7 @@ public class SendFragment extends FermatWalletFragment {
 
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                 }
-            });
+            });*/
 
             /**
              *  Paste clipboard button

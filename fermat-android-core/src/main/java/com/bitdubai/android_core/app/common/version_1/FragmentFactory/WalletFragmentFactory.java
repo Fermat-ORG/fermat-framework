@@ -30,7 +30,7 @@ public class WalletFragmentFactory {
                             switch (walletPublicKey){
                                 case "reference_wallet":
                                     return new ReferenceWalletFragmentFactory();
-                                case "wallet test":
+                                case "test_wallet":
                                     return new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory.ReferenceWalletFragmentFactory();
 //                                case "asset_issuer":
 //                                    return new WalletAssetIssuerFragmentFactory();
