@@ -397,11 +397,11 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             throw new CantListWalletsException("CAN'T INSTALL REQUESTED Language",FermatException.wrapException(exception), null, null);
         }
         //Voy a harcodear esto para tener la reference wallet instalada
-        return installedWallets;
+        //return installedWallets;
 
 
         // Harcoded para testear el circuito más arriba
-       /* InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.REFERENCE_WALLET,
+       InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.REFERENCE_WALLET,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",
@@ -412,14 +412,14 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
                 WalletType.REFERENCE,
                 "300",
                 "1",
-                "1",
+                UUID.randomUUID(),
                 "Natalia",
                 ""
                 );
 
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
         lstInstalledWallet.add(installedWallet);
-        return lstInstalledWallet;*/
+        return lstInstalledWallet;
 
     }
 
