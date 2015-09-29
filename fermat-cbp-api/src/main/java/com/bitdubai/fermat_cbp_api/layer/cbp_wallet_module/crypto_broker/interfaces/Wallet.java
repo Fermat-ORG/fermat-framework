@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces;
 
-
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.BuyRequest;
 
 import java.util.List;
