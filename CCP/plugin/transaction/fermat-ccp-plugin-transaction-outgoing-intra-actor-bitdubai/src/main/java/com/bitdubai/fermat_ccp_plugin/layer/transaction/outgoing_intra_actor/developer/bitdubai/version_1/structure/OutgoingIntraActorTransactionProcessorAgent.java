@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by eze on 2015.09.19..
  */
-public class OutgoingIntraActorTransactionProcessorAgent {
+public class OutgoingIntraActorTransactionProcessorAgent  {
 
     private ErrorManager                               errorManager;
     private CryptoVaultManager                         cryptoVaultManager;
