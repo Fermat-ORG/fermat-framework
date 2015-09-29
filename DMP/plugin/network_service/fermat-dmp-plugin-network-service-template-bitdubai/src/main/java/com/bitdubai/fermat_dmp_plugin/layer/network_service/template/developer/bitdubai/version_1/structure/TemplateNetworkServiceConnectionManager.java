@@ -1,5 +1,5 @@
 /*
- * @#TemplateNetworkServiceManager.java - 2015
+ * @#TemplateNetworkServiceConnectionManager.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -7,39 +7,32 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.IncomingMessageDao;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.OutgoingMessageDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communication.IncomingMessageDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceManager</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceConnectionManager</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceManager implements TemplateManager {
+public class TemplateNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
     /**
      * Represent the communicationsCloudClientConnection
@@ -82,9 +75,9 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     private OutgoingMessageDao outgoingMessageDao;
 
     /**
-     * Represent the eccKeyPair
+     * Represent the identity
      */
-    private ECCKeyPair eccKeyPair;
+    private ECCKeyPair identity;
 
 
     /**
@@ -93,10 +86,10 @@ public class TemplateNetworkServiceManager implements TemplateManager {
      * @param communicationsCloudClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public TemplateNetworkServiceManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair eccKeyPair, CommunicationsCloudClientConnection communicationsCloudClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public TemplateNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsCloudClientConnection communicationsCloudClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.platformComponentProfile = platformComponentProfile;
-        this.eccKeyPair = eccKeyPair;
+        this.identity = identity;
         this.communicationsCloudClientConnection = communicationsCloudClientConnection;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
@@ -108,10 +101,8 @@ public class TemplateNetworkServiceManager implements TemplateManager {
 
 
     /**
-     * Create a new connection to
-     *
-     * @param remotePlatformComponentProfile the remote PlatformComponentProfile
-     * @return TemplateNetworkServiceLocal a new instance
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile)
      */
     public void connectTo(PlatformComponentProfile remotePlatformComponentProfile) {
 
@@ -130,9 +121,8 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     }
 
     /**
-     * Close a previous connection
-     *
-     * @param remoteNetworkServicePublicKey he remote network service public key
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager# closeConnection(PlatformComponentProfile)
      */
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
@@ -142,7 +132,8 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     }
 
     /**
-     * Close all previous connections
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager#closeAllConnection()
      */
     public void closeAllConnection() {
 
@@ -155,70 +146,19 @@ public class TemplateNetworkServiceManager implements TemplateManager {
     }
 
     /**
-     * Method to accept incoming connection request
-     *
-     * @param remoteNetworkServicePublicKey the remote network service public key
-     */
-    public void acceptIncomingNetworkServiceConnectionRequest(String remoteNetworkServicePublicKey) {
-
-        try {
-
-             /*
-             * Get the active connection
-             */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsCloudClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteNetworkServicePublicKey);
-
-
-            //Validate the connection
-            if (communicationsVPNConnection != null &&
-                    communicationsVPNConnection.isActive()) {
-
-                /*
-                 * Instantiate the local reference
-                 */
-                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, eventManager, outgoingMessageDao);
-
-                /*
-                 * Instantiate the remote reference
-                 */
-                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, communicationsVPNConnection, remoteNetworkServicePublicKey, errorManager, incomingMessageDao, outgoingMessageDao);
-
-                /*
-                 * Register the observer to the observable agent
-                 */
-                templateNetworkServiceRemoteAgent.addObserver(templateNetworkServiceLocal);
-
-                /*
-                 * Start the service thread
-                 */
-                templateNetworkServiceRemoteAgent.start();
-
-                /*
-                 * Add to the cache
-                 */
-                templateNetworkServiceLocalsCache.put(remoteNetworkServicePublicKey, templateNetworkServiceLocal);
-                templateNetworkServiceRemoteAgentsCache.put(remoteNetworkServicePublicKey, templateNetworkServiceRemoteAgent);
-
-            }
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not accept incoming connection"));
-        }
-
-    }
-
-    /**
-     * Handles events that indicate a connection to been established between two intra user
+     * Handles events that indicate a connection to been established between two
      * network services and prepares all objects to work with this new connection
+     *
+     * @param remoteComponentProfile
      */
-    public void handleEstablishedRequestedNetworkServiceConnection(String remoteNetworkServicePublicKey) {
+    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile remoteComponentProfile) {
 
         try {
 
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsCloudClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteNetworkServicePublicKey);
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsCloudClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
 
             //Validate the connection
             if (communicationsVPNConnection != null &&
@@ -227,12 +167,12 @@ public class TemplateNetworkServiceManager implements TemplateManager {
                  /*
                  * Instantiate the local reference
                  */
-                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(null, errorManager, eventManager, outgoingMessageDao);
+                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(eccKeyPair, communicationsVPNConnection, remoteNetworkServicePublicKey, errorManager, incomingMessageDao, outgoingMessageDao);
+                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -247,23 +187,22 @@ public class TemplateNetworkServiceManager implements TemplateManager {
                 /*
                  * Add to the cache
                  */
-                templateNetworkServiceLocalsCache.put(remoteNetworkServicePublicKey, templateNetworkServiceLocal);
-                templateNetworkServiceRemoteAgentsCache.put(remoteNetworkServicePublicKey, templateNetworkServiceRemoteAgent);
+                templateNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), templateNetworkServiceLocal);
+                templateNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), templateNetworkServiceRemoteAgent);
 
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
     }
 
     /**
-     * Return the TemplateNetworkServiceLocal that represent the intra user network service remote
-     *
-     * @param remoteNetworkServicePublicKey the remote network service public key
-     * @return TemplateNetworkServiceLocal the local instance that represent
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
-    public TemplateNetworkServiceLocal getIntraUserNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
+    public TemplateNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance
         return templateNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);

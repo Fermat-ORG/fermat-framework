@@ -4,14 +4,14 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components;
+package com.bitdubai.fermat_api.layer.all_definition.components.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters</code> this if use to pass
+ * The Class <code>com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters</code> this if use to pass
  * the parameters whit the communication cloud server search on all register PlatformComponentProfile to match whit this params
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 16/09/15.
