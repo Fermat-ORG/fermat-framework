@@ -3,21 +3,17 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_fina
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.PopupMenu;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -28,7 +24,8 @@ import java.util.concurrent.ExecutorService;
 /**
  * Created by mati on 2015.09.28..
  */
-public class ReceiveTransactionsFragment extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>{
+public class TransactionsSendHistory extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction> {
+
 
     /**
      * MANAGERS
@@ -110,7 +107,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new TransactionNewAdapter(getActivity(), lstCryptoWalletTransactions,cryptoWallet,referenceWalletSession);
+            adapter = new TransactionHistoryAdapter(getActivity(), lstCryptoWalletTransactions,cryptoWallet,referenceWalletSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -129,8 +126,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         List<CryptoWalletTransaction> lstTransactions  = null;
 
         try {
-            lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
-            offset+=MAX_TRANSACTIONS;
+            lstTransactions = cryptoWallet.getTransactions(BalanceType.AVAILABLE,TransactionType.DEBIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, offset);
+            offset += MAX_TRANSACTIONS;
         } catch (Exception e) {
 //            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(e,
 //                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

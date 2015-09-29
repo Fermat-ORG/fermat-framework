@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
@@ -51,6 +52,8 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
                 //testing
 
+
+
                 rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
                 /*switch (ApplicationSession.getActivityId())
                 {
@@ -72,15 +75,15 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 }
 
 
-                //        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_edit_profile);
-                //        iconEdit.setOnClickListener(new View.OnClickListener() {
+                        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_change_profile);
+                        iconEdit.setOnClickListener(new View.OnClickListener() {
 
-                //            @Override
-                //            public void onClick(View v) {
-                //                Intent intent;
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(context,"cambiando de ususario proximamente",Toast.LENGTH_SHORT).show();
 
-                //            }
-                //       });
+                            }
+                       });
 
             }
             else {
