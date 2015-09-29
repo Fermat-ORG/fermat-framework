@@ -14,10 +14,10 @@ import android.view.animation.AnimationUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.adapters.InstalledWalletsAdapter;
-import com.bitdubai.sub_app.wallet_factory.models.Wallet;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
 
@@ -54,7 +54,7 @@ public class AvailableProjectsFragment extends FermatFragment
     private RecyclerView.LayoutManager layoutManager;
     private InstalledWalletsAdapter adapter;
 
-    private ArrayList<Wallet> dataSet;
+    private ArrayList<InstalledWallet> dataSet;
 
     public static FermatFragment newInstance() {
         return new AvailableProjectsFragment();
@@ -122,7 +122,7 @@ public class AvailableProjectsFragment extends FermatFragment
                     if (isAttached) {
                         swipeRefresh.setRefreshing(false);
                         if (result != null && result.length > 0) {
-                            dataSet = (ArrayList<Wallet>) result[0];
+                            dataSet = (ArrayList<InstalledWallet>) result[0];
                             adapter.changeDataSet(dataSet);
                             showEmpty();
                         }

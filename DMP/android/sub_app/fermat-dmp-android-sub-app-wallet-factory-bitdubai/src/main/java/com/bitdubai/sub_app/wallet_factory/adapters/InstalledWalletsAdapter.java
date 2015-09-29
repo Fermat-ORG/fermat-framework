@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.holders.InstalledWalletViewHolder;
-import com.bitdubai.sub_app.wallet_factory.models.Wallet;
 
 import java.util.ArrayList;
 
@@ -16,13 +16,13 @@ import java.util.ArrayList;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class InstalledWalletsAdapter extends FermatAdapter<Wallet, InstalledWalletViewHolder> {
+public class InstalledWalletsAdapter extends FermatAdapter<InstalledWallet, InstalledWalletViewHolder> {
 
     public InstalledWalletsAdapter(Context context) {
         super(context);
     }
 
-    public InstalledWalletsAdapter(Context context, ArrayList<Wallet> dataSet) {
+    public InstalledWalletsAdapter(Context context, ArrayList<InstalledWallet> dataSet) {
         super(context, dataSet);
     }
 
@@ -37,7 +37,7 @@ public class InstalledWalletsAdapter extends FermatAdapter<Wallet, InstalledWall
     }
 
     @Override
-    protected void bindHolder(InstalledWalletViewHolder holder, Wallet data, int position) {
+    protected void bindHolder(InstalledWalletViewHolder holder, InstalledWallet data, int position) {
         holder.title.setText(data.getWalletName());
         holder.description.setText(data.getWalletPublicKey());
         holder.type.setText(data.getWalletType().getCode());
