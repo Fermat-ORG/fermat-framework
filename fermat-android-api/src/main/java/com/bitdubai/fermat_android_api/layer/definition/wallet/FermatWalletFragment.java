@@ -8,6 +8,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
@@ -20,7 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.Su
 /**
  * Created by Matias Furszyfer on 2015.26.21..
  */
-public class FermatWalletFragment extends Fragment {
+public class FermatWalletFragment extends Fragment implements FermatFragments {
 
     /**
      * FLAGS
