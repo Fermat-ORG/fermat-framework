@@ -28,41 +28,35 @@ public class DeveloperSubAppFragmentFactory extends FermatSubAppFragmentFactory<
 
     @Override
     public FermatFragment getFermatFragment(DeveloperFragmentsEnumType fragments) throws FragmentNotFoundException {
-        FermatFragment currentFragment = null;
 
         switch (fragments){
-            /**
-             * Executing fragments for BITCOIN REQUESTED.
-             */
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT:
-                currentFragment = DatabaseToolsDatabaseListFragment.newInstance(0, null);
-                break;
+                return DatabaseToolsDatabaseListFragment.newInstance();
+
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT:
-                currentFragment = DatabaseToolsDatabaseTableListFragment.newInstance(0);
-                break;
+                return DatabaseToolsDatabaseTableListFragment.newInstance();
+
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT:
-                currentFragment = DatabaseToolsDatabaseTableRecordListFragment.newInstance(0, null);
-                break;
+                return DatabaseToolsDatabaseTableRecordListFragment.newInstance();
 
             case CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT:
-                currentFragment =  DatabaseToolsFragment.newInstance(0);
-                break;
+                return DatabaseToolsFragment.newInstance();
+
             case CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT:
-                currentFragment = LogToolsFragment.newInstance(0);
-                break;
+                return LogToolsFragment.newInstance();
+
             case CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT:
-                currentFragment = LogToolsFragmentLevel1.newInstance(0, null);
-                break;
+                return LogToolsFragmentLevel1.newInstance();
+
             case CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT:
-                currentFragment = LogToolsFragmentLevel2.newInstance(0, null);
-                break;
+                return LogToolsFragmentLevel2.newInstance();
+
             case CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT:
-                currentFragment = LogToolsFragmentLevel3.newInstance(0, null);
-                break;
+                return LogToolsFragmentLevel3.newInstance();
+
             default:
                 throw new FragmentNotFoundException("Fragment not found",new Exception(),fragments.getKey(),"Swith failed");
         }
-        return currentFragment;
     }
 
     @Override

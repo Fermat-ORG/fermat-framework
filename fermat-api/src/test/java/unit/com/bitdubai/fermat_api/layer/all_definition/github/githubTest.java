@@ -1,8 +1,8 @@
 package unit.com.bitdubai.fermat_api.layer.all_definition.github;
 
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
-import com.bitdubai.fermat_api.layer.ccp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
 
 import org.junit.Test;
 

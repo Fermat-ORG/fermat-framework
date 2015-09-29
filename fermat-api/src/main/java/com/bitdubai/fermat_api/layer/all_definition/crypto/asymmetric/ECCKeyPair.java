@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
-public class ECCKeyPair {
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+
+public class ECCKeyPair implements KeyPair {
 	
 	private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
 	private static final int HASH_PRIME_NUMBER_ADD = 2819;
