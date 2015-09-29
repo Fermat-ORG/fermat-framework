@@ -232,9 +232,10 @@ public class BalanceFragment extends FermatWalletFragment {
             ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
             this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
 
+            BalanceType balanceType = referenceWalletPreferenceSettings.getBalanceType() != null ? referenceWalletPreferenceSettings.getBalanceType() : BalanceType.AVAILABLE;
             lstCryptoWalletTransactions.addAll(
                     cryptoWallet.getTransactions(
-                            BalanceType.AVAILABLE,
+                            balanceType,
                             TransactionType.DEBIT,
                             walletPublicKey,
                             referenceWalletPreferenceSettings.getTransactionsToShow(),
@@ -244,11 +245,11 @@ public class BalanceFragment extends FermatWalletFragment {
 
             lstCryptoWalletTransactions.addAll(
                     cryptoWallet.getTransactions(
-                        BalanceType.AVAILABLE,
-                        TransactionType.CREDIT,
-                        walletPublicKey,
-                        referenceWalletPreferenceSettings.getTransactionsToShow(),
-                        0
+                            balanceType,
+                            TransactionType.CREDIT,
+                            walletPublicKey,
+                            referenceWalletPreferenceSettings.getTransactionsToShow(),
+                            0
                 )
             );
 
