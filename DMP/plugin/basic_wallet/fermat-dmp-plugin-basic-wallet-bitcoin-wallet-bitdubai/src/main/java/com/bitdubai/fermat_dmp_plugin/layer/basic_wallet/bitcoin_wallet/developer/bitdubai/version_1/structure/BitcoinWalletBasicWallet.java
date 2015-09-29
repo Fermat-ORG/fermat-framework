@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
@@ -238,7 +239,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
     private PluginTextFile createIdsFile() throws CantCreateWalletException {
         try {
-            return pluginFileSystem.getTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            return pluginFileSystem.getTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException cantCreateFileException) {
             throw new CantCreateWalletException("File could not be created (?)", cantCreateFileException, "File Name: " + WALLET_IDS_FILE_NAME, "");
         } catch (FileNotFoundException e) {
@@ -252,12 +253,12 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
             Map<String, UUID> walletIds = new HashMap<>();
             walletIdsFile.loadFromMedia();
-            String[] stringWalletIds = walletIdsFile.getContent().split(";", -1);
+            String[] stringWalletIds = walletIdsFile.getContent().split(";");
 
             for (String stringWalletId : stringWalletIds) {
 
                 if (!stringWalletId.equals("")) {
-                    String[] idPair = stringWalletId.split(",", -1);
+                    String[] idPair = stringWalletId.split(",");
                     walletIds.put(idPair[0], UUID.fromString(idPair[1]));
                 }
             }
@@ -269,21 +270,17 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
         }
     }
 
-    private void persistWalletIds(final PluginTextFile walletIdsFile, Map<String, UUID> walletsIdMap) throws CantCreateWalletException {
+    private void persistWalletIds(final PluginTextFile    walletIdsFile,
+                                  final Map<String, UUID> walletsIdMap ) throws CantCreateWalletException {
+
         StringBuilder stringBuilder = new StringBuilder();
 
-        Iterator iterator = walletsIdMap.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry pair = (Map.Entry) iterator.next();
-
+        for (Map.Entry pair : walletsIdMap.entrySet()) {
             stringBuilder
                     .append(pair.getKey().toString())
                     .append(",")
                     .append(pair.getValue().toString())
                     .append(";");
-
-            iterator.remove();
         }
 
         walletIdsFile.setContent(stringBuilder.toString());
