@@ -14,13 +14,12 @@ public interface ReceiveCashOnHandManager {
     List<ReceiveCashOnHand> getAllReceiveCashOnHandFromCurrentDeviceUser() throws CantGetReceiveCashOnHandException;
 
     ReceiveCashOnHand createReceiveCashOnHand(
-            final String publicKeyCustomer
+             final String publicKeyCustomer
             ,final String publicKeyBroker
-            ,final Float amount
+            ,final Float merchandiseAmount
             ,final String cashCurrencyType
             ,final String cashReference
-            ,final String infoDelivery
     ) throws CantCreateReceiveCashOnHandException;
 
-    void updateStatusReceiveCashOnHand(final UUID cashtransactionId) throws CantUpdateStatusReceiveCashOnHandException;
+    void updateStatusReceiveCashOnHand(final UUID cashTransactionId) throws CantUpdateStatusReceiveCashOnHandException;
 }

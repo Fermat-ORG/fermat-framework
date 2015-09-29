@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantCreateWalletException;
@@ -221,6 +222,9 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             UUID internalWalletId = bitcoinWallet.create(walletId);
 
             walletIds.put(walletId, internalWalletId);
+
+            loadWalletIdsMap();
+
         } catch (CantCreateWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateWalletException("Wallet Creation Failed", exception, "walletId: " + walletId, "");
@@ -232,33 +236,30 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
     private void loadWalletIdsMap() throws CantStartPluginException {
         PluginTextFile walletIdsFile = getWalletIdsFile();
-        String[] stringWalletIds = walletIdsFile.getContent().split(";", -1);
+        String[] stringWalletIds = walletIdsFile.getContent().split(";");
 
-        for (String stringWalletId : stringWalletIds)
+        for (String stringWalletId : stringWalletIds) {
             if (!stringWalletId.equals("")) {
-                String[] idPair = stringWalletId.split(",", -1);
+                String[] idPair = stringWalletId.split(",");
                 walletIds.put(idPair[0], UUID.fromString(idPair[1]));
             }
+        }
     }
 
     private PluginTextFile getWalletIdsFile() throws CantStartPluginException {
         try {
-            PluginTextFile walletIdsFile = pluginFileSystem.getTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile walletIdsFile = pluginFileSystem.getTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             walletIdsFile.loadFromMedia();
             return walletIdsFile;
         } catch (FileNotFoundException | CantCreateFileException exception) {
-            return createWalletdsFile();
+            try {
+                PluginTextFile walletIdsFile = pluginFileSystem.createTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                walletIdsFile.persistToMedia();
+                return walletIdsFile;
+            } catch (CantCreateFileException | CantPersistFileException e) {
+                throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
+            }
         } catch (CantLoadFileException exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
-        }
-    }
-
-    private PluginTextFile createWalletdsFile() throws CantStartPluginException {
-        try {
-            PluginTextFile walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            walletIdsFile.persistToMedia();
-            return walletIdsFile;
-        } catch (CantCreateFileException | CantPersistFileException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }

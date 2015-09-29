@@ -1,4 +1,4 @@
-package com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment;
+package com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment;
 
 
 import android.app.Fragment;
@@ -67,7 +67,7 @@ public class WalletDesktopFragment extends Fragment {
         lstInstalledWallet = new ArrayList<InstalledWallet>();
 
         // Harcoded para testear el circuito más arriba
-        InstalledWallet installedWallet= new com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+        InstalledWallet installedWallet= new com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
                 WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
@@ -78,7 +78,7 @@ public class WalletDesktopFragment extends Fragment {
                 new Version(1,0,0));
         lstInstalledWallet.add(installedWallet);
 
-        installedWallet= new com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+        installedWallet= new com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
                 WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
@@ -89,7 +89,7 @@ public class WalletDesktopFragment extends Fragment {
                 new Version(1,0,0));
         lstInstalledWallet.add(installedWallet);
 
-        installedWallet= new com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+        installedWallet= new com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
                 WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
