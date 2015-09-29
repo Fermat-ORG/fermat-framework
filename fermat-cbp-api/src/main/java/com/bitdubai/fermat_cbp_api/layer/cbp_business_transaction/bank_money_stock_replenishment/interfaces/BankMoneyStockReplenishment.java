@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces;
 
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankCurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
 
