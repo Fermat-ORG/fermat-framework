@@ -8,13 +8,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatFragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettings;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
-
-import java.util.Objects;
 
 /**
  * Common Android Fragment Base
@@ -52,6 +49,7 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
         super.onCreate(savedInstanceState);
         try {
             context = (WizardConfiguration) getActivity();
+            viewInflater = new ViewInflater(getActivity(), subAppResourcesProviderManager);
         } catch (Exception ex) {
             throw new ClassCastException("cannot convert the current context to WizardConfiguration");
         }
@@ -111,8 +109,8 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
     /**
      * Change activity
      */
-    protected final void changeActivity(String activityCode,Object... objectses) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode,objectses);
+    protected final void changeActivity(String activityCode, Object... objectses) {
+        ((FermatScreenSwapper) getActivity()).changeActivity(activityCode, objectses);
     }
 
     /**
