@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -138,6 +139,19 @@ public class DatabaseToolsFragment extends FermatFragment {
             AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
             adapter.notifyDataSetChanged();
             gridView.setAdapter(adapter);
+
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+
+                    Resource item=(Resource) gridView.getItemAtPosition(position);
+                    developerSubAppSession.setData("resource",item);
+                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),null);
+
+
+                }
+            });
+
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -160,6 +174,7 @@ public class DatabaseToolsFragment extends FermatFragment {
 
            final Resource item = getItem(position);
 
+
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
@@ -170,7 +185,8 @@ public class DatabaseToolsFragment extends FermatFragment {
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
-                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                //no hago el click listener en este punto porque la position no es correcta cuando va a la segunda pagina
+               /* holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -179,11 +195,12 @@ public class DatabaseToolsFragment extends FermatFragment {
                         //set the next fragment and params
                       //  Object[] params = new Object[1];
                        // params[0] = item;
-                        developerSubAppSession.setData("resource",item);
+
+                        developerSubAppSession.setData("resource",view.getTag(position));
                         ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),null);
 
                     }
-                });
+                });*/
 
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
@@ -218,6 +235,8 @@ public class DatabaseToolsFragment extends FermatFragment {
 
             return convertView;
         }
+
+
 
     }
     /**
