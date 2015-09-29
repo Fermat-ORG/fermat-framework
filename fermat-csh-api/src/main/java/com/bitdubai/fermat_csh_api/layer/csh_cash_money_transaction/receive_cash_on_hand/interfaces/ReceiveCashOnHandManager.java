@@ -19,8 +19,7 @@ public interface ReceiveCashOnHandManager {
             ,final Float merchandiseAmount
             ,final String cashCurrencyType
             ,final String cashReference
-            ,final String infoDelivery
     ) throws CantCreateReceiveCashOnHandException;
 
-    void updateStatusReceiveCashOnHand(final UUID cashtransactionId) throws CantUpdateStatusReceiveCashOnHandException;
+    void updateStatusReceiveCashOnHand(final UUID cashTransactionId) throws CantUpdateStatusReceiveCashOnHandException;
 }

@@ -22,5 +22,5 @@ public interface ReceiveCashDeliveryManager {
         ,final String infoDelivery
     ) throws CantCreateReceiveCashDeliveryException;
 
-    void updateStatusReceiveCashDelivery(final UUID cashtransactionId) throws CantUpdateStatusReceiveCashDeliveryException;
+    void updateStatusReceiveCashDelivery(final UUID cashTransactionId) throws CantUpdateStatusReceiveCashDeliveryException;
 }
