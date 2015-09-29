@@ -78,7 +78,7 @@ public class MakeOfflineBankTransferBankMoneyTransactionDatabaseFactory implemen
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+//            table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,0, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_OPERATION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);

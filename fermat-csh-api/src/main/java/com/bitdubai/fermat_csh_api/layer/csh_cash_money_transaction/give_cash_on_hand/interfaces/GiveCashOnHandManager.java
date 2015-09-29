@@ -21,5 +21,5 @@ public interface GiveCashOnHandManager {
         ,final String cashReference
     ) throws CantCreateGiveCashOnHandException;
 
-    void updateStatusGiveCashOnHand(final UUID cashtransactionId) throws CantUpdateStatusGiveCashOnHandException;
+    void updateStatusGiveCashOnHand(final UUID cashTransactionId) throws CantUpdateStatusGiveCashOnHandException;
 }
