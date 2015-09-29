@@ -3,5 +3,5 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.cash_money_sto
 /**
  * Created by Yordin Alayn on 27.09.15.
  */
-public class BusinessTransactionCashMoneyStockReplenishmentDatabaseConstants {
+public class CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants {
 }
