@@ -46,7 +46,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     }
 
     @Override
-    public UUID getIdTransaction() {
+    public UUID getTransactionId() {
         return this.transactionId;
     }
 

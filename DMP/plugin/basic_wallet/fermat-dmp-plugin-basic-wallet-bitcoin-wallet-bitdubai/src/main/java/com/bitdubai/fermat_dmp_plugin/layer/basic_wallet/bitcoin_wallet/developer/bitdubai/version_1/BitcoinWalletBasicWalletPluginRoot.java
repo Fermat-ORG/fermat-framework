@@ -198,6 +198,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     @Override
     public BitcoinWalletWallet loadWallet(String walletId) throws CantLoadWalletException {
         try {
+            System.out.println("****************** TRYING TO LOAD WALLET: '"+walletId+"'");
             BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             UUID internalWalletId = walletIds.get(walletId);
@@ -232,13 +233,16 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
     private void loadWalletIdsMap() throws CantStartPluginException {
         PluginTextFile walletIdsFile = getWalletIdsFile();
+        System.out.println("****************** walletIdsFile.getContent(): '"+walletIdsFile.getContent()+"'");
         String[] stringWalletIds = walletIdsFile.getContent().split(";", -1);
 
-        for (String stringWalletId : stringWalletIds)
+        for (String stringWalletId : stringWalletIds) {
+            System.out.println("****************** LOADING WALLET: '"+stringWalletId+"'");
             if (!stringWalletId.equals("")) {
                 String[] idPair = stringWalletId.split(",", -1);
                 walletIds.put(idPair[0], UUID.fromString(idPair[1]));
             }
+        }
     }
 
     private PluginTextFile getWalletIdsFile() throws CantStartPluginException {
