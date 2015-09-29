@@ -20,7 +20,7 @@ public interface CryptoMoneyStockReplenishmentManager {
     CryptoMoneyStockReplenishment createCryptoMoneyStockReplenishment(
          final String publicKeyBroker
         ,final String merchandiseCurrency
-        ,final String executionCryptoMoneyTransactionId
+        ,final String executionTransactionId
         ,final String cryptoCurrencyType
     ) throws CantCreateCryptoMoneyStockReplenishmentException;
 

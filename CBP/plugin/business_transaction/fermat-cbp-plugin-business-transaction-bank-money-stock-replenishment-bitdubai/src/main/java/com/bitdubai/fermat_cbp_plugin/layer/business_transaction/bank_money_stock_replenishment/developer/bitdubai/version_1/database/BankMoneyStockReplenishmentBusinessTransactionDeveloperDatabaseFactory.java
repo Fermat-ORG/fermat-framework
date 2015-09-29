@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 28/09/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 29/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -123,7 +123,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFact
         bankMoneyStockReplenishmentColumns.add(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME);
         bankMoneyStockReplenishmentColumns.add(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME);
         bankMoneyStockReplenishmentColumns.add(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME);
-        bankMoneyStockReplenishmentColumns.add(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_EXECUTION_BANK_MONEY_TRANSACTION_ID_COLUMN_NAME);
+        bankMoneyStockReplenishmentColumns.add(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME);
         bankMoneyStockReplenishmentColumns.add(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_CURRENCY_TYPE_COLUMN_NAME);
         bankMoneyStockReplenishmentColumns.add(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_OPERATION_TYPE_COLUMN_NAME);
         /**

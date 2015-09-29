@@ -16,14 +16,10 @@ public interface CustomerBrokerCryptoPurchase extends BusinessTransaction {
 
     String getPublicKeyCustomer();
 
-    UUID getPaymentBankMoneyTransactionId();
+    UUID getPaymentTransactionId();
 
     CurrencyType getPaymentCurrency();
 
-    UUID getExecutionCryptoMoneyTransactionId();
-
     CryptoCurrencyType getCryptoCurrencyType();
-
-    //CustomerBrokerCryptoMoneyPurchase getContract();
 
 }

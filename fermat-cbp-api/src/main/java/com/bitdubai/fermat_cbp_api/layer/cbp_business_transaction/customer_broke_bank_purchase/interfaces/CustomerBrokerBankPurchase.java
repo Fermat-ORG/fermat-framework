@@ -17,30 +17,11 @@ public interface CustomerBrokerBankPurchase  extends BusinessTransaction {
 
     String getPublicKeyCustomer();
 
-    UUID getPaymentBankMoneyTransactionId();
+    UUID getPaymentTransactionId();
 
     CurrencyType getPaymentCurrency();
-
-    UUID getExecutionBankMoneyTransactionId();
 
     BankCurrencyType getBankCurrencyType();
 
     BankOperationType getBankOperationType();
-    /*
-    UUID getContractId();
-
-    String getPublicKeyCustomer();
-
-    float getPaymentAmount();
-
-    CurrencyType getPaymentCurrency();
-
-    String getBankName();
-
-    String getBankAccountNumber();
-
-    BankAccountType getBankAccountType();
-
-    String getBankDocumentReference();
-    */
 }

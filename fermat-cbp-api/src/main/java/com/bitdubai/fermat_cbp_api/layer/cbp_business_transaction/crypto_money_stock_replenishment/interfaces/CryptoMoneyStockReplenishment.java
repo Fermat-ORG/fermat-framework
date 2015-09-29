@@ -11,17 +11,6 @@ import java.util.UUID;
 
 public interface CryptoMoneyStockReplenishment  extends BusinessTransaction {
 
-    UUID getExecutionCryptoMoneyTransactionId();
-
     CryptoCurrencyType getCryptoCurrencyType();
-
-    /*
-     * enum de cual crypto currency hace la operacion
-     */
-    /*
-    String getCryptoCurrency();
-
-    String getCryptoAddress();
-    */
 
 }

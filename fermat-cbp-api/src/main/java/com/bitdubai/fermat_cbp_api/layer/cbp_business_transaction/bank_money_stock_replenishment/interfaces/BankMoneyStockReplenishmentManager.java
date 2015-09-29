@@ -19,7 +19,7 @@ public interface BankMoneyStockReplenishmentManager {
     BankMoneyStockReplenishment createBankMoneyStockReplenishment(
          final String publicKeyBroker
         ,final String merchandiseCurrency
-        ,final String executionBankMoneyTransactionId
+        ,final String executionTransactionId
         ,final String bankCurrencyType
         ,final String bankOperationType
     ) throws CantCreateBankMoneyStockReplenishmentException;

@@ -17,11 +17,9 @@ public interface CustomerBrokerBankSale extends BusinessTransaction {
 
     String getPublicKeyCustomer();
 
-    UUID getPaymentBankMoneyTransactionId();
+    UUID getPaymentTransactionId();
 
     CurrencyType getPaymentCurrency();
-
-    UUID getExecutionBankMoneyTransactionId();
 
     BankCurrencyType getBankCurrencyType();
 

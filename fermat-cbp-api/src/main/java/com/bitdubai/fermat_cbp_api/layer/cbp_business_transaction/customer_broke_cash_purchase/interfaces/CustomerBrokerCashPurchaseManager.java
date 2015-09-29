@@ -20,11 +20,11 @@ public interface CustomerBrokerCashPurchaseManager {
     CustomerBrokerCashPurchase createCustomerBrokerCashPurchase(
              final String contractId
             ,final String publicKeyCustomer
-            ,final String paymentBankMoneyTransactionId
+            ,final String paymentTransactionId
             ,final String paymentCurrency
             ,final String publicKeyBroker
             ,final String merchandiseCurrency
-            ,final String executionCashMoneyTransactionId
+            ,final String executionTransactionId
             ,final String cashCurrencyType
     ) throws CantCreateCustomerBrokerCashPurchaseException;
 

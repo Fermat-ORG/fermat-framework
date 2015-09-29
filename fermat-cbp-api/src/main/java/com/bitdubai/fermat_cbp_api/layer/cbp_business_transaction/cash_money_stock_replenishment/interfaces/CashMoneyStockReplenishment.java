@@ -11,8 +11,6 @@ import java.util.UUID;
 
 public interface CashMoneyStockReplenishment  extends BusinessTransaction {
 
-    UUID getExecutionCashMoneyTransactionId();
-
     CashCurrencyType getCashCurrencyType();
 
 }

@@ -20,11 +20,11 @@ public interface CustomerBrokerCryptoSaleManager {
     CustomerBrokerCryptoSale createCustomerBrokerCryptoSale(
              final String contractId
             ,final String publicKeyCustomer
-            ,final String paymentBankMoneyTransactionId
+            ,final String paymentTransactionId
             ,final String paymentCurrency
             ,final String publicKeyBroker
             ,final String merchandiseCurrency
-            ,final String executionCryptoMoneyTransactionId
+            ,final String executionTransactionId
             ,final String cryptoCurrencyType
     ) throws CantCreateCustomerBrokerCryptoSaleException;
 
