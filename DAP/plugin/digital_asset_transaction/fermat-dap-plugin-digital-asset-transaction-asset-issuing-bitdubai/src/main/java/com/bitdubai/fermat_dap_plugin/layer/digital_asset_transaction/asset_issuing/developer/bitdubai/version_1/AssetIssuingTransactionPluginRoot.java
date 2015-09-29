@@ -360,7 +360,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         Logger LOG = Logger.getGlobal();
         LOG.info("MAP_TEST_SINGLE");
         DigitalAsset digitalAsset=new DigitalAsset();
-        digitalAsset.setGenesisAmount(1);
+        digitalAsset.setGenesisAmount(100000);
         digitalAsset.setDescription("TestAsset");
         digitalAsset.setName("testName");
         digitalAsset.setPublicKey(new ECCKeyPair().getPublicKey());
@@ -373,7 +373,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setContract(digitalAssetContract);
         LOG.info("MAP_DigitalAsset2:"+digitalAsset);
 
-            this.assetIssuingTransactionManager.issueAssets(digitalAsset,10,"TESTING PUBLICKEY",BlockchainNetworkType.REG_TEST);
+            this.assetIssuingTransactionManager.issueAssets(digitalAsset,10,new ECCKeyPair().getPublicKey(),BlockchainNetworkType.REG_TEST);
 
     }
 

@@ -163,6 +163,16 @@ public enum EventType implements FermatEventEnum {
 
     INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICOCNWTIU") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEvent();
+        }
+    },
+
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOCNWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
         }
 

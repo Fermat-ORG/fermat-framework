@@ -39,7 +39,7 @@ public class AssetDistributionDao {
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
         try {
-            return pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
+            return pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE);
         } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Opening the Asset Distribution Transaction Database", "Error in database plugin.");
         }
