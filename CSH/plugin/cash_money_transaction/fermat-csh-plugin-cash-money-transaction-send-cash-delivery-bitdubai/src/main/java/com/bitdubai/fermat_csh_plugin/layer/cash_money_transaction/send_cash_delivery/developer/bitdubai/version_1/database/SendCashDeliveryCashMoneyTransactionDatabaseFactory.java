@@ -1,4 +1,4 @@
-package   com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.receive_offline_bank_transfer.developer.bitdubai.version_1.database;
+package   com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.send_cash_delivery.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- *  The Class  <code>com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.receive_offline_bank_transfer.developer.bitdubai.version_1.database.Receive Offline Bank TransferBankMoneyTransactionDatabaseFactory</code>
+ *  The Class  <code>com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.send_cash_delivery.developer.bitdubai.version_1.database.Send Cash DeliveryCashMoneyTransactionDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
@@ -22,7 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ReceiveOfflineBankTransferBankMoneyTransactionDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class SendCashDeliveryCashMoneyTransactionDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -35,7 +35,7 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDatabaseFactory imple
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public ReceiveOfflineBankTransferBankMoneyTransactionDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public SendCashDeliveryCashMoneyTransactionDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -70,24 +70,20 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDatabaseFactory imple
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Receive Offline Bank Transfer table.
+             * Create Send Cash Delivery table.
              */
-            table = databaseFactory.newTableFactory(ownerId, ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_TABLE_NAME);
 
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-//            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_OPERATION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_NAME_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_ACCOUNT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_DOCUMENT_REFERENCE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+            table.addColumn(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_CASH_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_CASH_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_CASH_REFERENCE_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
+            table.addColumn(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_INFO_DELIVERY_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
 
-            table.addIndex(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_FIRST_KEY_COLUMN);
+            table.addIndex(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

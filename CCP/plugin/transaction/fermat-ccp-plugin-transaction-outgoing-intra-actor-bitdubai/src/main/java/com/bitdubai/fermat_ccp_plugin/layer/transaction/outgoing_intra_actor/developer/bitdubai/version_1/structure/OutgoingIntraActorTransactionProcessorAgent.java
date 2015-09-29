@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by eze on 2015.09.19..
  */
-public class OutgoingIntraActorTransactionProcessorAgent {
+public class OutgoingIntraActorTransactionProcessorAgent  {
 
     private ErrorManager                               errorManager;
     private CryptoVaultManager                         cryptoVaultManager;
@@ -178,6 +178,8 @@ public class OutgoingIntraActorTransactionProcessorAgent {
                             | CantRegisterDebitException | OutgoingIntraActorCantCancelTransactionException
                             | CantLoadWalletException e) {
                         reportUnexpectedException(e);
+                        // Todo: Rodrigo, since the wallet cant be loaded at this time, I'm still putting the transacction in PIA
+                        dao.setToPIA(transaction);
                     }
                 }
 

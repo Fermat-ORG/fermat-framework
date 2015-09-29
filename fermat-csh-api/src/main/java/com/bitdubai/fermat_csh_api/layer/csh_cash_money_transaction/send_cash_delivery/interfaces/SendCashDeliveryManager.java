@@ -22,5 +22,5 @@ public interface SendCashDeliveryManager {
             ,final String infoDelivery
     ) throws CantCreateSendCashDeliveryException;
 
-    void updateStatusSendCashDelivery(final UUID cashtransactionId) throws CantUpdateStatusSendCashDeliveryException;
+    void updateStatusSendCashDelivery(final UUID cashTransactionId) throws CantUpdateStatusSendCashDeliveryException;
 }
