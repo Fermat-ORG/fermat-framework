@@ -99,7 +99,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 //
 
         //container_header_balance.addView(balance_header);
-        RelativeLayout container_header_balance = getActivityHeader();
+//        RelativeLayout container_header_balance = getActivityHeader();
 //
 //        inflater =
 //                (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
