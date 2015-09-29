@@ -9,6 +9,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
@@ -27,7 +28,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * Created by mati on 2015.09.28..
  */
-public class ReceiveTransactionsFragment extends FermatListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>{
+public class ReceiveTransactionsFragment extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>{
 
     /**
      * MANAGERS
@@ -66,7 +67,7 @@ public class ReceiveTransactionsFragment extends FermatListFragment<CryptoWallet
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        //referenceWalletSession = (ReferenceWalletSession)walletSession;
+        referenceWalletSession = (ReferenceWalletSession)walletSession;
 
         super.onCreate(savedInstanceState);
         try {

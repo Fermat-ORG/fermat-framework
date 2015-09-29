@@ -494,14 +494,14 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithB
     }
 
     @Override
-    public List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
+    public List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,TransactionType transactionType,
                                                          String walletPublicKey,
                                                          int max,
                                                          int offset) throws CantListTransactionsException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, max, offset);
+            List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType,transactionType, max, offset);
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt));

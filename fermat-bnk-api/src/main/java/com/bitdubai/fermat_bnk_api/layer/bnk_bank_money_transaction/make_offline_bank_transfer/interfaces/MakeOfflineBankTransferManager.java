@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by yordin on 25/09/15.
+ * Created by Yordin Alayn on 25,09,15.
  */
 public interface MakeOfflineBankTransferManager {
 
@@ -17,12 +17,14 @@ public interface MakeOfflineBankTransferManager {
     MakeOfflineBankTransfer createMakeOfflineBankTransfer(
          final String publicKeyCustomer
         ,final String publicKeyBroker
-        ,final Float amount
+        ,final String bankMoneyTransactionType
+        ,final float merchandiseAmount
         ,final String bankCurrencyType
-        ,final String bankName
-        ,final String bankAccountNumber
-        ,final String bankAccountType
-        ,final String bankDocumentReference
+        ,final String bankOperationType
+        ,final String getBankName
+        ,final String getBankAccountNumber
+        ,final String getBankAccountType
+        ,final String getBankDocumentReference
     ) throws CantCreateMakeOfflineBankTransferException;
 
     void updateStatusMakeOfflineBankTransfer(final UUID bankTransactionId) throws CantUpdateStatusMakeOfflineBankTransferException;

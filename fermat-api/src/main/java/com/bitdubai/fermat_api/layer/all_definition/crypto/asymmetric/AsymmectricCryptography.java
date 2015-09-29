@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import javax.crypto.BadPaddingException;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PrivateKey;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Signature;
@@ -98,5 +99,11 @@ public class AsymmectricCryptography {
 
         return new ECCKeyPair(privateKey, publicKey);
     }
+
+	public static KeyPair createKeyPair(final String privateKey){
+		checkStringArgument(privateKey);
+		String publicKey  = derivePublicKey(privateKey);
+		return new ECCKeyPair(privateKey, publicKey);
+	}
 	
 }

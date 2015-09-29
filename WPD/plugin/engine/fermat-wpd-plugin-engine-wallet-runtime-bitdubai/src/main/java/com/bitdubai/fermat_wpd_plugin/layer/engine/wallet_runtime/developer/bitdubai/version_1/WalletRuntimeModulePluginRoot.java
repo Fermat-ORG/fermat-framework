@@ -1207,13 +1207,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         String publicKey="reference_wallet";
 
-        try {
-
-            walletResourcesManger.installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(),WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
-
-        } catch (WalletResourcesInstalationException e) {
-            e.printStackTrace();
-        }
+//        try {
+//
+//            walletResourcesManger.installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(),WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
+//
+//        } catch (WalletResourcesInstalationException e) {
+//            e.printStackTrace();
+//        }
 
 
         try{

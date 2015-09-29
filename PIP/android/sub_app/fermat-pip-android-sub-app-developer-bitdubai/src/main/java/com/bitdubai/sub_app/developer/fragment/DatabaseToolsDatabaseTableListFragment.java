@@ -81,12 +81,8 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
      */
     DeveloperSubAppSession developerSubAppSession;
 
-    public static DatabaseToolsDatabaseTableListFragment newInstance(int position) {
-        DatabaseToolsDatabaseTableListFragment f = new DatabaseToolsDatabaseTableListFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static DatabaseToolsDatabaseTableListFragment newInstance() {
+        return new DatabaseToolsDatabaseTableListFragment();
     }
 
     @Override

@@ -20,8 +20,8 @@ public interface SubAppSessionManager {
 
     public SubAppsSession openSubAppSession(SubApps subApps, ErrorManager errorManager, WalletFactoryManager walletFactoryManager, ToolManager toolManager,WalletStoreModuleManager walletStoreModuleManager,WalletPublisherModuleManager walletPublisherManager,IntraUserModuleManager intraUserModuleManager);
     public boolean closeSubAppSession(SubApps subApps);
-    public Map<String,SubAppsSession> listOpenSubApps();
+    public Map<SubApps,SubAppsSession> listOpenSubApps();
     public boolean isSubAppOpen(SubApps subApps);
-    public SubAppsSession getSubAppsSession(String subAppType);
+    public SubAppsSession getSubAppsSession(SubApps subAppType);
 
 }
