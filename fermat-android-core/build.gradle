@@ -69,14 +69,14 @@ dependencies {
 
     compile project(':fermat-osa-addon-android-database-system-bitdubai')
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
-//    compile project(':fermat-osa-addon-android-device-location-bitdubai')
+    compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
 
     // DMP Projects (Wallets)
 
-    compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
+    compile project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
 
-
+    compile project(':fermat-ccp-android-clone-reference-nich-wallet')
 
     /*
     Wallets on the pipeline:
@@ -88,8 +88,10 @@ dependencies {
         compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
     */
     // DMP Projects (Sub APPs)
+    compile project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
 
     compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
 
@@ -97,7 +99,6 @@ dependencies {
     Sub APPs on the pipeline
     */
 
-    compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
 
 
@@ -105,6 +106,17 @@ dependencies {
     // PIP Projects (Sub APPs)
 
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
+
+    compile project(':fermat-dap-android-desktop-sub-app-manager-bitdubai')
+    compile project(':fermat-dap-android-desktop-wallet-manager-bitdubai')
+
+    compile project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai')
+    compile project(':fermat-cbp-android-desktop-wallet-manager-bitdubai')
+
+
+    compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
+    compile project(':fermat-dap-android-reference-wallet-asset-user-bitdubai')
+    compile project(':fermat-dap-android-reference-wallet-redeem-point-bitdubai')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'

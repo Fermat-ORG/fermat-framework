@@ -2,16 +2,17 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CryptoStatusNotHandledException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistAndCryptoStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.SpecialistNotRegisteredException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
@@ -20,8 +21,8 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.EventsLauncher;
 
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -47,13 +48,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 
-public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , TransactionAgent {
+public class IncomingCryptoRelayAgent implements DealsWithCryptoAddressBook, DealsWithErrors, DealsWithEvents, DealsWithRegistry , TransactionAgent {
 
 
     /**
-     * DealsWithActorAddressBook Interface member variables.
+     * DealsWithCryptoAddressBook Interface member variables.
      */
-    private ActorAddressBookManager actorAddressBook;
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -78,11 +79,11 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
     private RelayAgent relayAgent;
 
     /**
-     * DealsWithActorAddressBook Interface implementation.
+     * DealsWithCryptoAddressBook Interface implementation.
      */
     @Override
-    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
+    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
     /**
@@ -120,7 +121,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
 
         this.relayAgent = new RelayAgent ();
         try {
-            this.relayAgent.setActorAddressBookManager(this.actorAddressBook);
+            this.relayAgent.setCryptoAddressBookManager(this.cryptoAddressBookManager);
             this.relayAgent.setErrorManager(this.errorManager);
             this.relayAgent.setEventManager(this.eventManager);
             this.relayAgent.setRegistry(this.registry);
@@ -145,7 +146,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
         return this.relayAgent.isRunning();
     }
 
-    private static class RelayAgent implements DealsWithActorAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , Runnable  {
+    private static class RelayAgent implements DealsWithCryptoAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , Runnable  {
 
         private AtomicBoolean running = new AtomicBoolean(false);
 
@@ -155,7 +156,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
         /**
          * DealsWithActorAddressBook Interface member variables.
          */
-        private ActorAddressBookManager actorAddressBook;
+        private CryptoAddressBookManager cryptoAddressBookManager;
 
         /**
          * DealsWithErrors Interface member variables.
@@ -182,12 +183,13 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
 
 
 
+
         /**
-         * DealsWithActorAddressBook Interface implementation.
+         * DealsWithCryptoAddressBook Interface implementation.
          */
         @Override
-        public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
-            this.actorAddressBook = actorAddressBook;
+        public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+            this.cryptoAddressBookManager = cryptoAddressBookManager;
         }
 
         /**
@@ -225,7 +227,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             this.eventsLauncher.setEventManager(this.eventManager);
 
             this.specialistSelector = new SpecialistSelector();
-            this.specialistSelector.setActorAddressBookManager(actorAddressBook);
+            this.specialistSelector.setCryptoAddressBookManager(cryptoAddressBookManager);
         }
 
         /**
@@ -289,7 +291,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             for (Transaction<CryptoTransaction> transaction : responsibleTransactionList) {
                 try {
                     this.registry.setToNotify(transaction.getTransactionID(),
-                            this.specialistSelector.getSpecialist(transaction.getInformation()));
+                                              this.specialistSelector.getSpecialist(transaction.getInformation()));
                     System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST SETTED");
                 } catch (CantSelectSpecialistException e) {
                     // TODO: MANAGE EXCEPTION
@@ -301,7 +303,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             Cuando termina de recorrer la lista recorre ahora todas las que están con TransactonStatus RESPONSIBLE y ProtocolStatus TO_BE_NOTIFIED o SENDING_NOTIFIED. Registra todos los especialistas que vio en este recoorido (no intentar optimizar usando el recorrido anterior porque puede perderse si el sistema se cae) y realiza los siguente pasos en el orden enunciado:
             Por cada Specialist registrado en el recorrido anterior lanza el evento correspondiente (IncomingCryptTransactionsWaitingTransferenceSpecalistEvent)
             */
-            EnumSet<Specialist> specialistSet;
+            Set<SpecialistAndCryptoStatus> specialistSet;
             try {
                 specialistSet = this.registry.getSpecialists();
             } catch (InvalidParameterException e) {
@@ -316,7 +318,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
 
             try {
                 this.eventsLauncher.sendEvents(specialistSet);
-            } catch (SpecialistNotRegisteredException e) {
+            } catch (SpecialistNotRegisteredException | CryptoStatusNotHandledException e) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
                 return;
             }

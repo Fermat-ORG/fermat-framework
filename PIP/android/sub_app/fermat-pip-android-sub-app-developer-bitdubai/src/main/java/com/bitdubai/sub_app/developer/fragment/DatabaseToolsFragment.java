@@ -69,12 +69,8 @@ public class DatabaseToolsFragment extends FermatFragment {
 
     private GridView gridView;
 
-    public static DatabaseToolsFragment newInstance(int position) {
-        DatabaseToolsFragment f = new DatabaseToolsFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static DatabaseToolsFragment newInstance() {
+        return new DatabaseToolsFragment();
     }
 
 
@@ -82,7 +78,9 @@ public class DatabaseToolsFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        }
 
         errorManager = developerSubAppSession.getErrorManager();
         try {
@@ -190,7 +188,7 @@ public class DatabaseToolsFragment extends FermatFragment {
                         //set the next fragment and params
                         Object[] params = new Object[1];
                         params[0] = item;
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), params);
 
                     }
                 });

@@ -2,9 +2,13 @@ package com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources;
 
 
 
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.CantCheckResourcesException;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetSubAppNavigationStructureException;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetSubAppResourcesException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.InstalationProgress;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantInstallCompleteSubAppResourcesException;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantInstallSubAppLanguageException;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantInstallSubAppSkinException;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallCompleteSubAppException;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallSubAppLanguageException;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantUninstallSubAppSkinException;
 
 import java.util.UUID;
 
@@ -14,28 +18,50 @@ import java.util.UUID;
 public interface SubAppResourcesInstalationManager {
 
 
+
+     void installCompleteSubApp(String subAppType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion,String subAppPublickey) throws CantInstallCompleteSubAppResourcesException;
+
+
     /**
      *
-     * @param walletCategory
-     * @param walletType
      * @param developer
      * @param screenSize
-     * @param screenDensity
      * @param skinName
-     * @param languageName
      * @param navigationStructureVersion
+     * @throws CantInstallSubAppSkinException
      */
+     void installSkinForSubApp(String subAppType, String developer, String screenSize, String skinName, String navigationStructureVersion,String subAppPublicKey) throws CantInstallSubAppSkinException;
 
-    public void installResources(String walletCategory, String walletType,String developer,String screenSize,String screenDensity,String skinName,String languageName,String navigationStructureVersion);
+
+     void installLanguageForSubApp(String subAppType, String developer, String screenSize, UUID skinId, String languageName,String subAppPublicKey) throws CantInstallSubAppLanguageException;
+
+
+
+    //TODO: la wallet puede tener mas de un lenguage y skin, este metodo va a recibir el array de skins y language?
+
+     void uninstallCompleteSubApp(String subAppType, String developer, String subAppName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet,String subAppPublicKey) throws CantUninstallCompleteSubAppException;
+
+
+
+    public void uninstallSkinForSubApp(UUID skinId,String subAppPublicKey) throws CantUninstallSubAppSkinException;
 
 
     /**
      *
-     * @param walletPath
      * @param skinId
-     * @param navigationStructureVersion
+     * @param languageName
+     * @param subAppPublicKey
+     * @throws CantUninstallSubAppLanguageException
      */
 
-    public void unninstallResources(String walletPath,UUID skinId,String navigationStructureVersion);
+    public void uninstallLanguageForSubApp(UUID skinId, String languageName,  String subAppPublicKey) throws CantUninstallSubAppLanguageException;
 
+
+
+
+    /**
+     *  Get enum type of wallet instalation progress
+     * @return
+     */
+    public InstalationProgress getInstallationProgress();
 }

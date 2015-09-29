@@ -6,17 +6,20 @@
  */
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.*;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.*;
 
 /**
  * The enum <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType</code>
  * represent the different type for the events<p/>
- *
+ * <p/>
  * Created by ciencias on 24/01/15.
  * Update by Roberto Requena - (rart3001@gmail.com) on 24/06/15.
  * Updated by Leon Acosta - (laion.cj91@gmail.com) on 22/08/15.
@@ -24,351 +27,630 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.list
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum EventType {
+public enum EventType implements FermatEventEnum {
 
     BEGUN_WALLET_INSTALLATION("BWI") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new BegunWalletInstallationEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new BegunWalletInstallationEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new BegunWalletInstallationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new BegunWalletInstallationEvent(this);
+        }
     },
 
-    BITCOIN_BLOCKCHAIN_DOWNLOADED("BBD") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    BITCOIN_CRYPTO_WALLET_LOADED("BCWL") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    BITCOIN_NEW_CRYPTO_WALLET_CREATED("BNCWC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    BITCOIN_NEW_PEER_CONNECTED("BNPC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    BITCOIN_NEW_PEER_CONNECTED_INTRA_USER("BNPCIU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    DEVICE_CONNECTIVITY_NETWORK_CHANGE("DCNC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
 
     DEVICE_USER_CREATED("DUC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new DeviceUserCreatedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new DeviceUserCreatedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new DeviceUserCreatedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new DeviceUserCreatedEvent(this);
+        }
     },
 
     DEVICE_USER_LOGGED_IN("DLI") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new DeviceUserLoggedInEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new DeviceUserLoggedInEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new DeviceUserLoggedInEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new DeviceUserLoggedInEvent(this);
+        }
     },
 
     DEVICE_USER_LOGGED_OUT("DLO") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new DeviceUserLoggedOutEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new DeviceUserLoggedOutEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new DeviceUserLoggedOutEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new DeviceUserLoggedOutEvent(this);
+        }
     },
 
-    ESTABLISHED_NETWORK_SERVICE_CONNECTION("SNSC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
 
     FINISHED_WALLET_INSTALLATION("FWI") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new FinishedWalletInstallationEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new FinishedWalletInstallationEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new FinishedWalletInstallationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new FinishedWalletInstallationEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_IDENTIFIED("ICI") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoIdentifiedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoIdentifiedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoIdentifiedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoIdentifiedEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER("ICIDU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoIdentifiedFromDeviceUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoIdentifiedFromDeviceUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoIdentifiedFromDeviceUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoIdentifiedFromDeviceUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER("ICIEU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoIdentifiedFromExtraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoIdentifiedFromExtraUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoIdentifiedFromExtraUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoIdentifiedFromExtraUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER("ICIIU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoIdentifiedFromIntraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoIdentifiedFromIntraUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoIdentifiedFromIntraUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoIdentifiedFromIntraUserEvent(this);
+        }
     },
 
-    INCOMING_CRYPTO_IRREVERSIBLE("ICIRR") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return new IncomingCryptoIrreversibleEvent(this); }
-    },
+    INCOMING_CRYPTO_METADATA("ICMD") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoMetadataEventListener(fermatEventMonitor);
+        }
 
-    INCOMING_CRYPTO_ON_BLOCKCHAIN("ICOBC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnBlockchainEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoOnBlockchainEvent(this); }
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoMetadataEvent();
+        }
     },
 
     INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICOBWTEU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener( eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent(); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent(this);
+        }
     },
 
-    INCOMING_CRYPTO_ON_CRYPTO_NETWORK("ICOCN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnCryptoNetworkEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoOnCryptoNetworkEvent(this); }
+    INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER("ICOBWTIU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEvent();
+        }
     },
 
     INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICOCNWTEU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(this);
+        }
+    },
+
+    INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICOCNWTIU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEvent();
+        }
     },
 
     INCOMING_CRYPTO_RECEIVED("ICR") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReceivedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReceivedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReceivedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReceivedEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER("ICRDU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReceivedFromDeviceUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReceivedFromDeviceUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReceivedFromDeviceUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReceivedFromDeviceUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER("ICREU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReceivedFromExtraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReceivedFromExtraUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReceivedFromExtraUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReceivedFromExtraUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER("ICRIU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReceivedFromIntraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReceivedFromIntraUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReceivedFromIntraUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReceivedFromIntraUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_RECEPTION_CONFIRMED("IIRC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReceptionConfirmedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReceptionConfirmedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReceptionConfirmedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReceptionConfirmedEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER("ICCDU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReceptionConfirmedFromDeviceUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReceptionConfirmedFromDeviceUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReceptionConfirmedFromDeviceUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReceptionConfirmedFromDeviceUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER("ICCEU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReceptionConfirmedFromExtraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReceptionConfirmedFromExtraUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReceptionConfirmedFromExtraUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReceptionConfirmedFromExtraUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER("ICCIU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReceptionConfirmedFromIntraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReceptionConfirmedFromIntraUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReceptionConfirmedFromIntraUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReceptionConfirmedFromIntraUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_REVERSED("ICREV") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER("REVDU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedFromDeviceUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedFromDeviceUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedFromDeviceUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedFromDeviceUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER("REVEU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedFromExtraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedFromExtraUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedFromExtraUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedFromExtraUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER("REVIU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedFromIntraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedFromIntraUserEvent(this); }
-    },
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedFromIntraUserEventListener(this, fermatEventMonitor);
+        }
 
-    INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN("ICROBC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnBlockchainEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnBlockchainEvent(this); }
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedFromIntraUserEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICROBWTEU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent(); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent(this);
+        }
     },
 
-    INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK("ICROCN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnCryptoNetworkEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnCryptoNetworkEvent(this); }
+    INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER("ICROBWTIU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEvent();
+        }
     },
 
     INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICROCNWTEU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener(eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent(); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent(this);
+        }
+    },
+
+    INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICROCNWTIU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEvent();
+        }
     },
 
     INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE("TWT") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoTransactionsWaitingTransferenceEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoTransactionsWaitingTransferenceEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoTransactionsWaitingTransferenceEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoTransactionsWaitingTransferenceEvent(this);
+        }
     },
 
     INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER("TWE") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent(this);
+        }
     },
 
     INCOMING_MONEY_REQUEST_APPROVED("IMRA") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingMoneyRequestApprovedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingMoneyRequestApprovedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingMoneyRequestApprovedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingMoneyRequestApprovedEvent(this);
+        }
     },
 
     INCOMING_MONEY_REQUEST_RECEIVED("IMRR") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingMoneyRequestReceivedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingMoneyRequestReceivedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingMoneyRequestReceivedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingMoneyRequestReceivedEvent(this);
+        }
     },
 
     INCOMING_MONEY_REQUEST_REJECTED("IMRRJ") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IncomingMoneyRequestRejectedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IncomingMoneyRequestRejectedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingMoneyRequestRejectedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingMoneyRequestRejectedEvent(this);
+        }
     },
 
     INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST("INSCR") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        public FermatEvent getNewEvent() {
+            return null;
+        }
     },
 
+    ESTABLISHED_NETWORK_SERVICE_CONNECTION("SNSC") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        public FermatEvent getNewEvent() {
+            return null;
+        }
+    },
+
+
     INTRA_USER_CONNECTION_ACCEPTED("IUCA") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserActorConnectionAcceptedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IntraUserActorConnectionAcceptedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IntraUserActorConnectionAcceptedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IntraUserActorConnectionAcceptedEvent(this);
+        }
     },
 
     INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION("IUCAN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IntraUserActorConnectionAcceptedNotificactionEventListener(this, fermatEventMonitor);
+        }
 
-    INTRA_USER_CONNECTION_DENIED("IUCD") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserDeniedConnectionEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IntraUserActorConnectionDeniedEvent(this); }
+        public FermatEvent getNewEvent() {
+            return new IntraUserActorConnectionAcceptedNotificactionEvent(this);
+        }
     },
 
     INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION("IUCRRN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IntraUserActorConnectionRequestRecivedNotificactionEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IntraUserActorConnectionRequestRecivedNotificactionEvent(this);
+        }
+    },
+
+    INTRA_USER_CONNECTION_DENIED("IUCD") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IntraUserDeniedConnectionEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IntraUserActorConnectionDeniedEvent(this);
+        }
     },
 
     INTRA_USER_CONTACT_CREATED("ICC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserContactCreatedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IntraUserContactCreatedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IntraUserContactCreatedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IntraUserContactCreatedEvent(this);
+        }
     },
 
     INTRA_USER_DISCONNECTION_REQUEST_RECEIVED("IUCC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserActorConnectionCancelledEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IntraUserActorConnectionCancelledEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IntraUserActorConnectionCancelledEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IntraUserActorConnectionCancelledEvent(this);
+        }
     },
 
     INTRA_USER_LOGGED_IN("ILI") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserLoggedInEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IntraUserLoggedInEvent(this); }
-    },
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IntraUserLoggedInEventListener(this, fermatEventMonitor);
+        }
 
-    INTRA_USER_LOGGED_OUT("ILO") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return new IntraUserLoggedOutEvent(this); }
+        public FermatEvent getNewEvent() {
+            return new IntraUserLoggedInEvent(this);
+        }
     },
 
     INTRA_USER_REQUESTED_CONNECTION("IURC") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new IntraUserActorRequestConnectionEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new IntraUserActorRequestConnectionEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IntraUserActorRequestConnectionEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IntraUserActorRequestConnectionEvent(this);
+        }
     },
 
-    INTRA_USER_REQUESTED_CONNECTION_RECEIVED("IURCR") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
-
-    INTRA_USER_REQUESTED_CONNECTION_RECEIVED_NOTIFICATION("IURCRN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
-    },
 
     MONEY_RECEIVED("MR1") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new MoneyReceivedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new MoneyReceivedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new MoneyReceivedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new MoneyReceivedEvent(this);
+        }
     },
 
     NAVIGATION_STRUCTURE_UPDATED("NSU") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new NavigationStructureUpdatedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new NavigationStructureUpdatedEvent(this); }
-    },
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NavigationStructureUpdatedEventListener(this, fermatEventMonitor);
+        }
 
-    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return null; }
+        public FermatEvent getNewEvent() {
+            return new NavigationStructureUpdatedEvent(this);
+        }
     },
 
     NEW_NOTIFICATION("NN") {
-        public EventListener getListener(EventMonitor eventMonitor) { return null; }
-        public PlatformEvent getEvent() { return new NewNotificationEvent(); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        public FermatEvent getNewEvent() {
+            return new NewNotificationEvent();
+        }
+    },
+
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageReceivedEvent(this);
+        }
+    },
+
+    OUTGOING_INTRA_ACTOR_TRANSACTION_SENT("OMRA") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new OutgoingIntraActorTransactionSentEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new OutgoingIntraActorTransactionSentEvent();
+        }
     },
 
     OUTGOING_MONEY_REQUEST_APPROVED("OMRA") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new OutgoingMoneyRequestApprovedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new OutgoingMoneyRequestApprovedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new OutgoingMoneyRequestApprovedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new OutgoingMoneyRequestApprovedEvent(this);
+        }
     },
 
     OUTGOING_MONEY_REQUEST_DELIVERED("OMRD") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new OutgoingMoneyRequestDeliveredEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new OutgoingMoneyRequestDeliveredEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new OutgoingMoneyRequestDeliveredEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new OutgoingMoneyRequestDeliveredEvent(this);
+        }
     },
 
     OUTGOING_MONEY_REQUEST_REJECTED("OMRRJ") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new OutgoingMoneyRequestRejectedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new OutgoingMoneyRequestRejectedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new OutgoingMoneyRequestRejectedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new OutgoingMoneyRequestRejectedEvent(this);
+        }
     },
 
     WALLET_CLOSED("WC2") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new WalletClosedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletClosedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new WalletClosedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new WalletClosedEvent(this);
+        }
     },
 
     WALLET_CREATED("WC1") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new WalletCreatedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletCreatedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new WalletCreatedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new WalletCreatedEvent(this);
+        }
     },
 
     WALLET_INSTALLED("WI1") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new WalletInstalledEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletInstalledEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new WalletInstalledEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new WalletInstalledEvent(this);
+        }
     },
 
     WALLET_OPENED("WO1") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new WalletOpenedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletOpenedEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new WalletOpenedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new WalletOpenedEvent(this);
+        }
     },
 
     WALLET_RESOURCES_INSTALLED("WRI") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new WalletResourcesInstalledEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletResourcesInstalledEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new WalletResourcesInstalledEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new WalletResourcesInstalledEvent(this);
+        }
     },
 
     WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED("WRNSD") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new WalletNavigationStructureDownloadedEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletNavigationStructureDownloadedEvent(); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new WalletNavigationStructureDownloadedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new WalletNavigationStructureDownloadedEvent(this);
+        }
     },
 
     WALLET_UNINSTALLED("WU1") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new WalletUninstalledEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletUninstalledEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new WalletUninstalledEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new WalletUninstalledEvent(this);
+        }
     },
 
     WALLET_WENT_ONLINE("WWO") {
-        public EventListener getListener(EventMonitor eventMonitor) { return new WalletWentOnlineEventListener(this, eventMonitor); }
-        public PlatformEvent getEvent() { return new WalletWentOnlineEvent(this); }
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new WalletWentOnlineEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new WalletWentOnlineEvent(this);
+        }
+    },
+
+    INCOMING_MONEY_NOTIFICATION("IMN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingMoneyNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingMoneyNotificationEvent(this);
+        }
     };
 
 
@@ -382,20 +664,14 @@ public enum EventType {
      *
      * @param code the valid code
      */
-    EventType (String code) {
+    EventType(String code) {
         this.code = code;
     }
 
-    /**
-     * Return a string code
-     *
-     * @return String that represent of the message status
-     */
-    public String getCode()   { return this.code ; }
 
-    public abstract EventListener getListener(EventMonitor eventMonitor);
+    public abstract FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor);
 
-    public abstract PlatformEvent getEvent();
+    public abstract FermatEvent getNewEvent();
 
     /**
      * Return the enum by the code
@@ -413,10 +689,17 @@ public enum EventType {
         throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code isn't valid for the EventType Enum");
     }
 
-    /**
-     * (non-Javadoc)
-     * @see Object#toString()
-     */
+    @Override
+    public Platforms getPlatform() {
+        return null;
+    }
+
+    @Override
+    public String getCode() {
+        return this.code;
+    }
+
+
     @Override
     public String toString() {
         return getCode();

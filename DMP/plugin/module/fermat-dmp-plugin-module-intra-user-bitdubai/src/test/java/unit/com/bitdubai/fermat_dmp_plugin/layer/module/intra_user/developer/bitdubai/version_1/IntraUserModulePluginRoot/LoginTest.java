@@ -13,14 +13,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 
 import junit.framework.TestCase;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -75,13 +74,13 @@ public class LoginTest extends TestCase {
     private PluginTextFile mockIntraUserLoginXml;
 
 
-    private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
+    private IntraWalletUserModulePluginRoot testIntraUserModulePluginRoot;
 
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    IntraUserSettings intraUserSettings = new IntraUserSettings();
+
+    IntraUserSettings intraUserSettings;
     @Mock
     XMLParser xmlParser;
 
@@ -99,7 +98,7 @@ public class LoginTest extends TestCase {
         MockitoAnnotations.initMocks(this);
 
         pluginId= UUID.randomUUID();
-        testIntraUserModulePluginRoot = new IntraUserModulePluginRoot();
+        testIntraUserModulePluginRoot = new IntraWalletUserModulePluginRoot();
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
         testIntraUserModulePluginRoot.setIntraUserManager(mockIntraUserIdentityManager);
@@ -115,15 +114,15 @@ public class LoginTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
 
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
-
     }
 
-    @Ignore
+
     @Test
     public void loginIntraUserTest_LoggedOk_throwsCantLoginIntraUserException() throws Exception{
 
@@ -134,7 +133,7 @@ public class LoginTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void loginIntraUser_CantLogged_throwsCantLoginIntraUserException() throws Exception{
 

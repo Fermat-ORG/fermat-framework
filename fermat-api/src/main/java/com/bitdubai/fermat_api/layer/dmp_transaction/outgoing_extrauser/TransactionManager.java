@@ -9,7 +9,16 @@ import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.17..
+ *
  */
 public interface TransactionManager {
-    public void send(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String notes, UUID deliveredByActorId, Actors deliveredByActorType, UUID deliveredToActorId, Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException ;
+
+    void send(String walletPublicKey,
+              CryptoAddress destinationAddress,
+              long cryptoAmount,
+              String notes,
+              String deliveredByActorPublicKey,
+              Actors deliveredByActorType,
+              String deliveredToActorPublicKey,
+              Actors deliveredToActorType) throws InsufficientFundsException, CantSendFundsException ;
 }

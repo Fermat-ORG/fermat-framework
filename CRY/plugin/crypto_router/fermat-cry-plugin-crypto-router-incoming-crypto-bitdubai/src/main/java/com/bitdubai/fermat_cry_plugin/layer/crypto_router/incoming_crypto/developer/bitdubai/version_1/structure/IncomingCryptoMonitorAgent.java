@@ -7,7 +7,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -243,9 +243,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         }
 
         private void doTheMainTask() {
-
-            // TODO: delete this. Every tune registry is initialized we add a new transaction
-            // this.registry.proofTransaction();
 
             IncomingCryptoRegistry.EventWrapper eventWrapper = null;
             try {

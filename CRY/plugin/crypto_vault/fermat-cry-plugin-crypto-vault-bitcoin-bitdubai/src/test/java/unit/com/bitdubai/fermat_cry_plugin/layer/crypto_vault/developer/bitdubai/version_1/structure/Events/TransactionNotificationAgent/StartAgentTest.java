@@ -41,7 +41,7 @@ public class StartAgentTest {
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
 
-    MockedPluginFileSystem pluginFileSystem;
+
 
     @Test
     public void startTest() throws CantStartAgentException {

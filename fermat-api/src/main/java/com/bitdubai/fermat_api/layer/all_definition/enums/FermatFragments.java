@@ -5,4 +5,6 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
  */
 public interface FermatFragments {
 
+    public String getStringValue();
+
 }

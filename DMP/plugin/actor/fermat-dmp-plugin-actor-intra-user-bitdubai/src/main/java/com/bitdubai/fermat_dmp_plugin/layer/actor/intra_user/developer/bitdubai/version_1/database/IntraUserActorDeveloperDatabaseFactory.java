@@ -61,7 +61,8 @@ public class IntraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME);
+            database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -106,7 +107,7 @@ public class IntraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Intra User", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(IntraUserActorDatabaseConstants.INTRA_USER_DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -152,7 +153,9 @@ public class IntraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
             /**
              * if there was an error, I will returned an empty list.
              */
@@ -169,7 +172,7 @@ public class IntraUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

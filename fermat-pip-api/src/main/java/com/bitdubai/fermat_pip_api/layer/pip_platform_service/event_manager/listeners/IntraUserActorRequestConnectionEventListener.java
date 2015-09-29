@@ -1,22 +1,22 @@
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
 
 /**
  * Created by natalia on 17/08/15.
  */
-public class IntraUserActorRequestConnectionEventListener implements EventListener {
-    EventMonitor eventMonitor;
+public class IntraUserActorRequestConnectionEventListener implements FermatEventListener {
+    FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
-    private EventHandler eventHandler;
+    private FermatEventHandler fermatEventHandler;
 
-    public IntraUserActorRequestConnectionEventListener(EventType eventType, EventMonitor eventMonitor){
+    public IntraUserActorRequestConnectionEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor){
         this.eventType = eventType;
-        this.eventMonitor = eventMonitor;
+        this.fermatEventMonitor = fermatEventMonitor;
     }
 
     @Override
@@ -25,25 +25,25 @@ public class IntraUserActorRequestConnectionEventListener implements EventListen
     }
 
     @Override
-    public void setEventHandler(EventHandler eventHandler) {
-        this.eventHandler = eventHandler;
+    public void setEventHandler(FermatEventHandler fermatEventHandler) {
+        this.fermatEventHandler = fermatEventHandler;
     }
 
     @Override
-    public EventHandler getEventHandler() {
-        return this.eventHandler;
+    public FermatEventHandler getEventHandler() {
+        return this.fermatEventHandler;
     }
 
     @Override
-    public void raiseEvent(PlatformEvent platformEvent) {
+    public void raiseEvent(FermatEvent fermatEvent) {
 
         try
         {
-            this.eventHandler.handleEvent(platformEvent);
+            this.fermatEventHandler.handleEvent(fermatEvent);
         }
         catch (Exception exception)
         {
-            eventMonitor.handleEventException(exception, platformEvent);
+            fermatEventMonitor.handleEventException(exception, fermatEvent);
         }
 
     }

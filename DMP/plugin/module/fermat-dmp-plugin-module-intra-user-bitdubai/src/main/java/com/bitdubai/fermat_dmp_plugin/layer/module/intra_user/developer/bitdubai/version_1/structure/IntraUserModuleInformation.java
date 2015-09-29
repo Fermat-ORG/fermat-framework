@@ -20,7 +20,7 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     {
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[] )profileImage.clone();
+        //this.profileImage = (byte[] )profileImage.clone();
     }
     /**
      * That method returns the public key of the represented Intra User

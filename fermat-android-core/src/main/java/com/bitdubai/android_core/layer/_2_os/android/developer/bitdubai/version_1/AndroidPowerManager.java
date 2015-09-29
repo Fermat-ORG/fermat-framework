@@ -41,8 +41,6 @@ public class AndroidPowerManager  implements PowerManager {
      */
     @Override
     public PlugType getPlugType(){
-
-
         return null;
     }
 

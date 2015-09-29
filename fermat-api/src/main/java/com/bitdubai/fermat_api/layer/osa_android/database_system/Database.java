@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
@@ -18,17 +19,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 
  public interface Database {
 
-    public void executeQuery();
+    void executeQuery(String query) throws CantExecuteQueryException;
 
-    public DatabaseTable getTable(String tableName);
+    DatabaseTable getTable(String tableName);
 
-    public DatabaseTransaction newTransaction();
+    DatabaseTransaction newTransaction();
 
-    public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException;
+    void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException;
 
-    public DatabaseFactory getDatabaseFactory();
+    DatabaseFactory getDatabaseFactory();
 
-    public void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException;
+    void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException;
 
-    public void closeDatabase();
+    void closeDatabase();
 }

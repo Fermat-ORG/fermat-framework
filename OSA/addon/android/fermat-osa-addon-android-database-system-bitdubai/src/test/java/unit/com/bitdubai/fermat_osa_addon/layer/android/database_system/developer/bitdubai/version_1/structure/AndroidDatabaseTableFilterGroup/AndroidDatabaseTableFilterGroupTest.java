@@ -1,4 +1,4 @@
-package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.AndroidDatabaseTableFilterGroupTest;
+package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableFilterGroup;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -48,9 +48,10 @@ public class AndroidDatabaseTableFilterGroupTest{
             filters_2.add(new AndroidDatabaseTableFilter());
             subGroups_2.add(new AndroidDatabaseTableFilterGroup());
 
-        FilterGroup_1.setFilters(filters_1);
-        FilterGroup_1.setSubGroups(subGroups_1);
-        FilterGroup_1.setOperator(DatabaseFilterOperator.AND);
+
+        //FilterGroup_1.setFilters(filters_1);
+        //FilterGroup_1.setSubGroups(subGroups_1);
+        //FilterGroup_1.setOperator(DatabaseFilterOperator.AND);
     }
 
     @Test

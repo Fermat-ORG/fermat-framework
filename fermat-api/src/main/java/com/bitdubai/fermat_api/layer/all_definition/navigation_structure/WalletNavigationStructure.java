@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +13,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.23..
  */
 
-public class WalletNavigationStructure implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet{
+public class WalletNavigationStructure implements FermatWallet,Serializable{
 
     /**
      * WalletNavigationStructure identifiers

@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class Skin implements Serializable {//implements FermatSkin {
 
     private ScreenSize screenSize;
 
-    private Designer designer;
+    private DesignerIdentity designeDesignerIdentity;
 
     private int size;
 
@@ -121,12 +121,12 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.screenSize = screenSize;
     }
 
-    public Designer getDesigner() {
-        return designer;
+    public DesignerIdentity getDesigner() {
+        return designeDesignerIdentity;
     }
 
-    public void setDesigner(Designer designer) {
-        this.designer = designer;
+    public void setDesigner(DesignerIdentity designer) {
+        this.designeDesignerIdentity = designer;
     }
 
     public int getSize() {

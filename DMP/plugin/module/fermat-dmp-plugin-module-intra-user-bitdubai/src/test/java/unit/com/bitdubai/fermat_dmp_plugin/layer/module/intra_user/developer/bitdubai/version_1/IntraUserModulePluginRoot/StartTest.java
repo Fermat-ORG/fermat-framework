@@ -4,25 +4,18 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUsersModuleLoginConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import junit.framework.TestCase;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -58,10 +51,10 @@ public class StartTest extends TestCase {
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    IntraUserSettings intraUserSettings = new IntraUserSettings();
 
-    private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
+    IntraUserSettings intraUserSettings;
+
+    private IntraWalletUserModulePluginRoot testIntraUserModulePluginRoot;
 
 
     UUID pluginId;
@@ -70,7 +63,7 @@ public class StartTest extends TestCase {
     public void setUp() throws Exception {
 
         pluginId= UUID.randomUUID();
-        testIntraUserModulePluginRoot = new IntraUserModulePluginRoot();
+        testIntraUserModulePluginRoot = new IntraWalletUserModulePluginRoot();
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
 
@@ -80,14 +73,15 @@ public class StartTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
 
 
     }
 
-    @Ignore
+
     @Test
     public void teststart_ThePlugInHasStartedOk_ThrowsCantStartPluginException() throws Exception {
 
@@ -96,7 +90,7 @@ public class StartTest extends TestCase {
         Assertions.assertThat(serviceStatus).isEqualTo(ServiceStatus.STARTED);
     }
 
-    @Ignore
+
     @Test
     public void startTest_IntraUserModulePluginRootCanStarted_throwsCantStartPluginException() throws Exception {
 

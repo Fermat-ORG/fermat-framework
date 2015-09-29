@@ -1,0 +1,21 @@
+[[actor-asset-user-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+.Relacionado al Asset Issuer
+1) Al iniciarse, notifica al Communication Server de su conexión.
+
+2) Cuando recibe del communication Server el mensaje de registrar una nueva dirección de Bitcoin, valida que la propiedad NotifyBitcoinAddress
+está en true y solicita una nueva dirección de Bitcoin a la Asset Vault a través del getBitcoinAddress y registra este pedido en CryptoAddressBook.
+
+
+.Relacionado al Redeem Point
+1) Al iniciarse, notifica al communication server de su conexión y ubicación.
+2) Le solicita al Server los Redeem Points que están cerca. (definir "cerca").
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

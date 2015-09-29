@@ -8,12 +8,20 @@ import android.support.v13.BuildConfig;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantSendFundsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTable;
+import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableColumn;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableFactory;
 
 import org.junit.Before;
@@ -24,6 +32,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
@@ -31,13 +41,14 @@ import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 ;
 import static org.robolectric.Shadows.shadowOf;
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
  * Created by natalia on 15/07/15.
  */
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = CustomBuildConfig.class, sdk = 21)
 public class LoadToMemoryTest {
 
     private Activity mockActivity;
@@ -82,9 +93,45 @@ public class LoadToMemoryTest {
     }
 
     @Test
+    public void loadTable_TableFilters_RecordsListLoaded() throws Exception{
+        testDatabaseTable = testDatabase.getTable(testTableName);
+        testDatabaseTable.setStringFilter("testColumn1","1", DatabaseFilterType.EQUAL);
+        testDatabaseTable.loadToMemory();
+        assertThat(testDatabaseTable.getRecords()).isNotNull();
+    }
+
+    @Test
+    public void loadTable_TableOrder_RecordsListLoaded() throws Exception{
+        testDatabaseTable = testDatabase.getTable(testTableName);
+        testDatabaseTable.setFilterOrder("testColumn1", DatabaseFilterOrder.DESCENDING);
+        testDatabaseTable.loadToMemory();
+        assertThat(testDatabaseTable.getRecords()).isNotNull();
+    }
+
+    @Test
+    public void loadTable_TableTop_RecordsListLoaded() throws Exception{
+        testDatabaseTable = testDatabase.getTable(testTableName);
+        testDatabaseTable.setFilterTop("10");
+        testDatabaseTable.loadToMemory();
+        assertThat(testDatabaseTable.getRecords()).isNotNull();
+    }
+
+    @Test
+    public void loadTable_TableGroupFilter_RecordsListLoaded() throws Exception{
+        testDatabaseTable = testDatabase.getTable(testTableName);
+        List<DatabaseTableFilter> databaseTableFilterList = new ArrayList<>();
+        List<DatabaseTableFilterGroup>  databaseTableFilterGroupList = new ArrayList<>();
+        testDatabaseTable.setFilterGroup(databaseTableFilterList, databaseTableFilterGroupList, DatabaseFilterOperator.OR);
+        testDatabaseTable.loadToMemory();
+        assertThat(testDatabaseTable.getRecords()).isNotNull();
+    }
+
+    @Test
     public void loadTable_TableDoesNotExist_ThrowsCantLoadTableToMemoryException() throws Exception{
         testDatabaseTable = testDatabase.getTable("otherTable");
         catchException(testDatabaseTable).loadToMemory();
         assertThat(caughtException()).isInstanceOf(CantLoadTableToMemoryException.class);
     }
+
+
 }

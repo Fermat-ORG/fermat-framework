@@ -7,20 +7,17 @@ import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUse
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUsersModuleLoginConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import junit.framework.TestCase;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -71,13 +68,12 @@ public class GetIntraUsersWaitingYourAcceptanceTest extends TestCase {
     private PluginTextFile mockIntraUserLoginXml;
 
 
-    private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
+    private IntraWalletUserModulePluginRoot testIntraUserModulePluginRoot;
 
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
 
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private IntraUserSettings intraUserSettings;
 
     private UUID pluginId;
 
@@ -88,13 +84,10 @@ public class GetIntraUsersWaitingYourAcceptanceTest extends TestCase {
     @Before
     public void setUp() throws Exception{
 
+  MockitoAnnotations.initMocks(this);
 
         pluginId= UUID.randomUUID();
-
-        MockitoAnnotations.initMocks(this);
-
-        pluginId= UUID.randomUUID();
-        testIntraUserModulePluginRoot = new IntraUserModulePluginRoot();
+        testIntraUserModulePluginRoot = new IntraWalletUserModulePluginRoot();
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
         testIntraUserModulePluginRoot.setActorIntraUserManager(mockActorIntraUserManager);
@@ -108,29 +101,29 @@ public class GetIntraUsersWaitingYourAcceptanceTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
-         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
+
+        when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
     }
 
-    @Ignore
     @Test
     public void getIntraUsersWaitingYourAcceptanceTest_GetOk_throwsCantGetIntraUsersListException() throws Exception{
 
-
-        intraUserInformationList = testIntraUserModulePluginRoot.getIntraUsersWaitingYourAcceptance();
+        intraUserInformationList = testIntraUserModulePluginRoot.getIntraUsersWaitingYourAcceptance(0,10);
 
         Assertions.assertThat(intraUserInformationList)
                 .isNotNull();
 
     }
 
-    @Ignore
     @Test
     public void getIntraUsersWaitingYourAcceptanceTest_GetError_throwsCantGetIntraUsersListException() throws Exception{
 
         testIntraUserModulePluginRoot.setActorIntraUserManager(null);
 
-        catchException(testIntraUserModulePluginRoot).getIntraUsersWaitingYourAcceptance();
+        catchException(testIntraUserModulePluginRoot).getIntraUsersWaitingYourAcceptance(0,10);
 
         assertThat(caughtException())
                 .isNotNull()

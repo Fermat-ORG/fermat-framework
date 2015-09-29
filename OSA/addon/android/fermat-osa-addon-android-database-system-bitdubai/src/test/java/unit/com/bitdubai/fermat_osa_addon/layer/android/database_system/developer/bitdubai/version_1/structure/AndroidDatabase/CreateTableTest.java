@@ -25,12 +25,13 @@ import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Shadows.shadowOf;
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
  * Created by jorgegonzalez on 2015.06.27..
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = CustomBuildConfig.class)
 public class CreateTableTest {
 
     private Activity mockActivity;
@@ -69,7 +70,7 @@ public class CreateTableTest {
     public void CreateTableWithOwnerId_TheOwnerUUIDIsDifferent_MethodInvokedSuccessfully() throws Exception{
         catchException(testDatabase).createTable(UUID.randomUUID(), testTableFactory);
         assertThat(caughtException()).isInstanceOf(InvalidOwnerIdException.class);
-        caughtException().printStackTrace();
+
     }
 
     @Test
@@ -82,6 +83,17 @@ public class CreateTableTest {
     public void CreateTable_NullTableFactory_ThrowCantCreateTableException() throws Exception{
         catchException(testDatabase).createTable(testOwnerId, null);
         assertThat(caughtException()).isInstanceOf(CantCreateTableException.class);
-        caughtException().printStackTrace();
+
     }
+
+
+    @Test
+    public void CreateTable_InvalidOwnerId_ThrowCantCreateTableException() throws Exception{
+        testDatabase = new AndroidDatabase(mockContext, testOwnerId, "DataBase2");
+        testDatabase.createDatabase("DataBase2");
+        catchException(testDatabase).createTable(UUID.randomUUID(), testTableFactory);
+        assertThat(caughtException()).isInstanceOf(InvalidOwnerIdException.class);
+
+    }
+
 }

@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleTransaction</code>
@@ -12,13 +15,17 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
  */
 public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransaction {
 
-    BitcoinWalletTransaction bitcoinWalletTransaction;
+    private final BitcoinWalletTransaction bitcoinWalletTransaction;
+    private final UUID                     contactId;
+    private final Actor                    involvedActor;
 
-    String involvedActorName;
+    public CryptoWalletWalletModuleTransaction(final BitcoinWalletTransaction bitcoinWalletTransaction,
+                                               final UUID                     contactId,
+                                               final Actor                    involvedActor) {
 
-    public CryptoWalletWalletModuleTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, String involvedActorName) {
         this.bitcoinWalletTransaction = bitcoinWalletTransaction;
-        this.involvedActorName = involvedActorName;
+        this.contactId = contactId;
+        this.involvedActor = involvedActor;
     }
 
     @Override
@@ -27,7 +34,12 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
     }
 
     @Override
-    public String getInvolvedActorName() {
-        return involvedActorName;
+    public UUID getContactId() {
+        return contactId;
+    }
+
+    @Override
+    public Actor getInvolvedActor() {
+        return involvedActor;
     }
 }

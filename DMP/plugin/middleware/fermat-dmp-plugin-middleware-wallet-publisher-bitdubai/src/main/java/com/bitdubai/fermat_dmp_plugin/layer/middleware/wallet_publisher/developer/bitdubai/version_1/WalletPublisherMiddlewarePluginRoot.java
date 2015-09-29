@@ -21,24 +21,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.Designer;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.DescriptorFactoryProjectType;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.DealsWithWalletLanguage;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.interfaces.WalletLanguageManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewareManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_publisher.interfaces.WalletPublisherMiddlewarePlugin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.DealsWithWalletSkin;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.interfaces.WalletSkinManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
@@ -84,7 +79,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileSystem, DealsWithWalletFactory, DealsWithWalletStoreNetworkService, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewarePlugin, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers, DealsWithWalletSkin, DealsWithWalletLanguage {
+public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileSystem, DealsWithWalletFactory, DealsWithWalletStoreNetworkService, DealsWithErrors,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, WalletPublisherMiddlewarePlugin, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
 
     /**
      * Represent the logManager
@@ -115,16 +110,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
      * Represent the walletStoreManager
      */
     private WalletStoreManager walletStoreManager;
-
-    /**
-     * Represent the walletLanguageManager
-     */
-    private WalletLanguageManager walletLanguageManager;
-
-    /**
-     * Represent the walletSkinManager
-     */
-    private WalletSkinManager walletSkinManager;
 
     /**
      * Represent the pluginFileSystem
@@ -180,8 +165,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
                 errorManager                == null ||
                 walletFactoryProjectManager == null ||
                 pluginFileSystem            == null ||
-                walletLanguageManager       == null ||
-                walletSkinManager           == null ||
                 pluginDatabaseSystem        == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -198,10 +181,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             contextBuffer.append("walletStoreManager: " + walletStoreManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginFileSystem: " + pluginFileSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("walletLanguageManager: " + walletLanguageManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("walletSkinManager: " + walletSkinManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
 
@@ -283,8 +262,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         /*
          * Validate required resources
          */
-        //TODO: DESCOMENTAR LA VALIDACION
-        //validateInjectedResources();
+        validateInjectedResources();
 
         try {
 
@@ -319,7 +297,8 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             throw pluginStartException;
         }
 
-        test();
+
+        //test();
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -443,24 +422,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
     /**
      * (non-Javadoc)
-     * @see DealsWithWalletLanguage#setWalletLanguageManager(WalletLanguageManager)
-     */
-    @Override
-    public void setWalletLanguageManager(WalletLanguageManager walletLanguageManager) {
-        this.walletLanguageManager = walletLanguageManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithWalletSkin#setWalletSkinManager(WalletSkinManager)
-     */
-    @Override
-    public void setWalletSkinManager(WalletSkinManager walletSkinManager) {
-        this.walletSkinManager = walletSkinManager;
-    }
-
-    /**
-     * (non-Javadoc)
      * @see DealsWithPluginDatabaseSystem#setPluginDatabaseSystem(PluginDatabaseSystem)
      */
     @Override
@@ -530,15 +491,13 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             URL videoUrl = new URL("http://www.youtube.com/watch?v=pBzjx7V3Ldw");
             String observations = "Its Rock!";
-            Version initialWalletVersion = new Version(1,0,0);
-            Version finalWalletVersion = new Version(1,0,0);;
-            Version initialPlatformVersion = new Version(1,0,0);;
-            Version finalPlatformVersion = new Version(1,0,0);;
+            Version initialPlatformVersion = new Version(1,0,0);
+            Version finalPlatformVersion = new Version(1,0,0);
             String publisherIdentityPublicKey = "04D707E1C33B2C82AE81E3FACA2025D1E0E439F9AAFD52CA844D3AFA47A0480093EF343790546F1E7C1BB454A426E054E26F080A61B1C0083C25EE77C7F97C6A80";
             String signature = "25928f344d466ae103d9a6643113a5003f061e8d81ec64048aafa3cd7bfd25cf 26337334089289ea0de1770a067d110c776b4a6dfba25c1ef218eb5cb639c6c5";
             URL publisherWebsiteUrl = new URL("http://www.publishertest.com");
 
-            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, WalletCategory.REFERENCE_WALLET, icon, mainScreenShot, screenShotDetails, videoUrl, observations, initialWalletVersion, finalWalletVersion, initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
+            walletPublisherMiddlewareManager.publishWallet(walletFactoryProject, icon, mainScreenShot, screenShotDetails, videoUrl, observations,  initialPlatformVersion, finalPlatformVersion, publisherWebsiteUrl, publisherIdentityPublicKey, signature);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -548,9 +507,6 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
 
     private WalletFactoryProject constructWalletFactoryProjectTest(){
-
-
-
         WalletFactoryProject walletFactoryProject = new WalletFactoryProject() {
 
             @Override
@@ -560,6 +516,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setProjectPublickKey(String publickKey) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -569,6 +526,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setName(String name) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -578,16 +536,17 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setDescription(String description) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
             public WalletType getWalletType() {
-                return null;
+                return WalletType.NICHE;
             }
 
             @Override
             public void setWalletType(WalletType walletType) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -597,7 +556,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setProjectState(WalletFactoryProjectState projectState) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -607,7 +566,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setCreationTimestamp(Timestamp timestamp) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -617,7 +576,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setLastModificationTimeststamp(Timestamp timestamp) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -627,7 +586,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setSize(int size) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -637,7 +596,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setDefaultSkin(Skin skin) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -649,12 +608,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setSkins(List<Skin> skins) {
-
-            }
-
-            @Override
-            public void deleteSkin(Skin skin) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -664,7 +618,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setDefaultLanguage(Language language) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
             @Override
@@ -676,13 +630,9 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setLanguages(List<Language> languages) {
-
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 
-            @Override
-            public void deleteLanguage(Language language) {
-
-            }
 
             @Override
             public WalletNavigationStructure getNavigationStructure() {
@@ -701,6 +651,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
                     @Override
                     public String createMessageSignature(String mensage) throws CantSingMessageException {
+                        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                         return null;
                     }
                 });
@@ -711,7 +662,27 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            }
 
+            @Override
+            public WalletCategory getWalletCategory() {
+                return WalletCategory.BRANDED_NICHE_WALLET;
+            }
+
+            @Override
+            public void setWalletCategory(WalletCategory walletCategory) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            }
+
+            @Override
+            public FactoryProjectType getFactoryProjectType() {
+                return FactoryProjectType.WALLET;
+            }
+
+            @Override
+            public void setFactoryProjectType(FactoryProjectType factoryProjectType) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
         };
 
@@ -726,7 +697,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         skin.setId(UUID.randomUUID());
         skin.setName("Skin Publication Test " + System.currentTimeMillis());
         skin.setScreenSize(ScreenSize.SMALL);
-        skin.setDesigner(new Designer() {
+        skin.setDesigner(new DesignerIdentity() {
             @Override
             public String getAlias() {
                 return "Rart3001";
@@ -739,6 +710,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
             }
         });
@@ -755,7 +727,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
         language.setName("Language Publication Test " + System.currentTimeMillis());
         language.setType(Languages.LATIN_AMERICAN_SPANISH);
         language.setVersion(new Version(1, 0, 0));
-        language.setTranslator(new Translator() {
+        language.setTranslator(new TranslatorIdentity() {
             @Override
             public String getAlias() {
                 return "Rart3001";
@@ -768,6 +740,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
 
             @Override
             public String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
             }
         });
@@ -785,6 +758,9 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             for (InformationPublishedComponent info:list) {
                 System.out.println(info.toString());
             }
+
+            InformationPublishedComponent infoWithDetails = walletPublisherMiddlewareManager.getInformationPublishedComponentWithDetails(list.get(0).getId());
+            System.out.println(infoWithDetails.toString());
 
 
         } catch (CantGetPublishedComponentInformationException e) {

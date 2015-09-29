@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.ExpectedTransactionNotFoundException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistAndCryptoStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -29,7 +30,9 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -224,7 +227,8 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                         event.getLongValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName)
                 );
             }
-            return null;
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        return null;
     }
 
     void disableEvent(UUID eventId) throws CantReadEvent, CantSaveEvent {
@@ -296,7 +300,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     // Retorna las que están en (A,TBN)
-    public List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantGetTransactionsException
+    public List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantListTransactionsException
         List<Transaction<CryptoTransaction>> tbaList = new ArrayList<>();
         try {
             DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
@@ -464,7 +468,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     // Da los Specialist de las que están en TBN y SN
-    public EnumSet<Specialist> getSpecialists() throws InvalidParameterException {//throws CantReadSpecialistsException
+    public Set<SpecialistAndCryptoStatus> getSpecialists() throws InvalidParameterException {//throws CantReadSpecialistsException
 
         try {
             DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
@@ -472,7 +476,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
             List<Transaction<CryptoTransaction>> transactionList = getResponsibleTransactionsPendingAction();
 
-            EnumSet<Specialist> specialistEnumSet = EnumSet.noneOf(Specialist.class);
+            Set<SpecialistAndCryptoStatus> specialistAndCryptoStatuses = new HashSet<>();
 
 
             for(Transaction<CryptoTransaction> transaction : transactionList) {
@@ -494,18 +498,21 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                     //TODO: MANAGE EXCEPTION
                 } else {
                     r = records.get(0);
-                    specialistEnumSet.add(Specialist.getByCode(r.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName)));
+                    Specialist s = Specialist.getByCode(r.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName));
+                    CryptoStatus c = CryptoStatus.getByCode(r.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName));
+                    specialistAndCryptoStatuses.add(new SpecialistAndCryptoStatus(s,c));
                 }
 
                 registryTable.clearAllFilters();
             }
-            return specialistEnumSet;
+            return specialistAndCryptoStatuses;
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 

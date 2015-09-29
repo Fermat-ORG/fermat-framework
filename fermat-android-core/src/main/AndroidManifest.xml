@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bitdubai.fermat" >
+    package="com.bitdubai.fermat">
 
     <uses-sdk android:minSdkVersion="16" />
 
@@ -23,7 +23,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <!-- Permission to boot -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature
@@ -59,38 +59,47 @@
             </intent-filter>
         </activity>
 
+        <!--
         <receiver android:name="com.bitdubai.android_core.app.BootupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        -->
 
         <!-- Falta darle el permiso a alguien para que pueda o no apagar el servicio este -->
-        <service android:name="com.bitdubai.android_core.app.LoaderService"
+        <service
+            android:name="com.bitdubai.android_core.app.LoaderService"
             android:enabled="true" />
 
 
         <activity
             android:name="com.bitdubai.android_core.app.SubAppActivity"
-            android:label="Fermat" >
+            android:label="Fermat">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.StartActivity" />
         </activity>
-        <activity android:name="com.bitdubai.android_core.app.EditableWalletActivity"
+        <activity
+            android:name="com.bitdubai.android_core.app.EditableWalletActivity"
             android:label="Factory">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.SubAppActivity"></meta-data>
+                android:value="com.bitdubai.android_core.app.SubAppActivity"/>
         </activity>
         <activity
             android:name="com.bitdubai.android_core.app.WalletActivity"
-            android:label="Wallet" >
+            android:label="Wallet">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.SubAppActivity" />
         </activity>
+
+        <activity
+            android:name="com.bitdubai.android_core.app.WizardActivity"
+            android:label="Wizard"
+            android:screenOrientation="portrait" />
 
     </application>
 </manifest>

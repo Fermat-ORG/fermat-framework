@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 import java.util.UUID;
@@ -9,10 +8,10 @@ import java.util.UUID;
 /**
  * Created by loui on 18/02/15.
  */
-public class WalletResourcesInstalledEvent implements PlatformEvent {
+public class WalletResourcesInstalledEvent extends AbstractFermatEvent {
    //Loui TODO: cambiar walletType por la variable correspodiente del tipo de dato correspondiente.
     private UUID walletType;
-    private EventType eventType;
+
     private EventSource eventSource;
 
     public void setWalletType (UUID walletType){
@@ -24,22 +23,9 @@ public class WalletResourcesInstalledEvent implements PlatformEvent {
     }
 
     public WalletResourcesInstalledEvent (EventType eventType){
-        this.eventType = eventType;
+        super(eventType);
     }
 
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
 
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
-    }
 }
 

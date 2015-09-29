@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure;
 
 import java.nio.channels.SelectionKey;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -35,7 +37,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	private Map<String, CloudNetworkServiceVPN> activeVPNConnections = new ConcurrentHashMap<String, CloudNetworkServiceVPN>();
 	
 	public CloudNetworkServiceManager(final CommunicationChannelAddress address, final ExecutorService executor, final ECCKeyPair keyPair, final NetworkServices networkService, final Collection<Integer> availableVPNPorts) throws IllegalArgumentException{
-		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
+		super(address, executor, keyPair, CloudFMPConnectionManagerMode.FMP_SERVER);
 		if(networkService == null)
 			throw new IllegalArgumentException();
 		this.networkService = networkService;
@@ -140,7 +142,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	
 	private void requestUnregisteredConnection(final FMPPacket packet) throws FMPException {
 		if(!packet.getDestination().equals(getIdentityPublicKey()))
-			throw new IncorrectFMPPacketDestinationException(IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE, null, "Packet Data: " + packet.toString(), "The Destination of the Packet is not the server");
+			throw new IncorrectFMPPacketDestinationException(IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE, null, "FermatPacketCommunication Data: " + packet.toString(), "The Destination of the FermatPacketCommunication is not the server");
 		
 		NetworkServices networkService;
 		try{
@@ -274,11 +276,16 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		possibleReason += " even though this might be due to improper client message flow, it can also be a threading problem";
 		possibleReason += " as we can process a register packet for a connection that has already been registered, we need to improve this";
 
-		String context = "Packet Data: " + packet.toString();
+		String context = "FermatPacketCommunication Data: " + packet.toString();
 		context += RegisteringAddressHasNotRequestedConnectionException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Is this connection already registered? " + registeredConnections.containsKey(packet.getSender());
 
 		return new RegisteringAddressHasNotRequestedConnectionException(message, null, context, possibleReason);
 
+	}
+
+	public List<String> getNetworkServicesConnectedList(){
+
+		return  new ArrayList<>(activeVPNConnections.keySet());
 	}
 }

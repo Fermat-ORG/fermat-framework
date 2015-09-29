@@ -2,8 +2,6 @@ package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.eve
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 import java.util.UUID;
@@ -11,11 +9,10 @@ import java.util.UUID;
 /**
  * Created by ciencias on 26.01.15.
  */
-public class WalletCreatedEvent implements PlatformEvent {
+public class WalletCreatedEvent extends AbstractFermatEvent {
 
     private UUID walletId;
-    private EventType eventType;
-    private EventSource eventSource;
+
     private CryptoCurrency cryptoCurrency;
     private FiatCurrency fiatCurrency;
 
@@ -36,23 +33,7 @@ public class WalletCreatedEvent implements PlatformEvent {
     public FiatCurrency getFiatCurrency(){return fiatCurrency;}
 
     public WalletCreatedEvent (EventType eventType){
-        this.eventType = eventType;
-    }
-
-
-    @Override
-    public EventType getEventType() {
-        return this.eventType;
-    }
-
-    @Override
-    public void setSource(EventSource eventSource) {
-        this.eventSource = eventSource;
-    }
-
-    @Override
-    public EventSource getSource() {
-        return this.eventSource;
+        super(eventType);
     }
 }
 

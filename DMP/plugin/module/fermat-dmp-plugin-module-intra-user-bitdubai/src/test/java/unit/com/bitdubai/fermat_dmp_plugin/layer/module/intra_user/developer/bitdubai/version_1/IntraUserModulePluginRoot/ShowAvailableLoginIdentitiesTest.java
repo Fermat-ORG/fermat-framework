@@ -4,23 +4,19 @@ import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSaveProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUsersModuleLoginConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import junit.framework.TestCase;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -62,15 +58,15 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
 
     @Mock
     private PluginTextFile mockIntraUserLoginXml;
-
-    @Mock
-    private IntraUserSettings intraUserSettings = new IntraUserSettings();
-
-    private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
-
-
     @Mock
     IntraUserIdentity mockIntraUserIdentity;
+
+    private IntraUserSettings intraUserSettings;
+
+    private IntraWalletUserModulePluginRoot testIntraUserModulePluginRoot;
+
+
+
 
 
     private UUID pluginId;
@@ -87,7 +83,7 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
 
         pluginId= UUID.randomUUID();
 
-        testIntraUserModulePluginRoot = new IntraUserModulePluginRoot();
+        testIntraUserModulePluginRoot = new IntraWalletUserModulePluginRoot();
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
         testIntraUserModulePluginRoot.setIntraUserManager(mockIntraUserIdentityManager);
@@ -100,12 +96,14 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
     }
 
     public void setUpMockitoRules()  throws Exception{
+        intraUserSettings = new IntraUserSettings();
+        intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
 
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
     }
 
-    @Ignore
+
     @Test
     public void showAvailableLoginIdentitiesTest_GetOk_throwsCantShowLoginIdentitiesException() throws Exception{
 
@@ -117,7 +115,7 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
 
     }
 
-    @Ignore
+
     @Test
     public void showAvailableLoginIdentitiesTest_GetError_throwsCantShowLoginIdentitiesException() throws Exception{
 

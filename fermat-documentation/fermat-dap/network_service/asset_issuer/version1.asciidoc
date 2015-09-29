@@ -1,0 +1,32 @@
+[[actor-asset-issuer-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+.Relacionado al Asset User
+
+1) Al iniciarse, solicita al Communication Server la lista de Asset Users que han notificado al servidor de su conexión.
+
+2) Persiste en su base de datos aquellos nuevos Asset Users de los cuales no dispone registros conjuntamente con la dirección Bitcoin
+de la Asset Vault.
+
+3) Limpia de su base de datos, aquellos Asset Users que no se han conectado por ejemplo, en la última semana.
+
+4) Actualiza la información de conexión con la fecha actual.
+
+.Relacionado al Redeem Point
+
+1) Al iniciarse, solicita al Communication Server la lista de Redeem Points que han notificado al servidor de su conexión.
+
+2) Por cada Reedeem Point online al que no se haya comunicado anteriormente, solicitará a la Asset Vault la creación de una nueva rama en el árbol de claves HD.
+Creada la nueva rama, la extended public Key (que permite la generación de claves públicas), será guardada en la RedeemPoint Address Book.
+
+3) Transmitirá a través del communication server la clave pública para que sea guardada en el Redeem Point.
+Cuando una transacción bitcoin ingrese de la rama generada por esta extended public key, se disparará el evento especifico para informar a la Asset Issuer Wallet que el Redeem Point dueño de
+esa clave, redimió un asset.
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

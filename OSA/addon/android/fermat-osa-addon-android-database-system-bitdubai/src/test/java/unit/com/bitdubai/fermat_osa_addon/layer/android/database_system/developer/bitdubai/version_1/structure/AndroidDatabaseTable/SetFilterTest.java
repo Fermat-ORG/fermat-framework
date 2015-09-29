@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
+import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTable;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableFactory;
 
 import org.junit.Before;
@@ -22,13 +23,14 @@ import java.util.UUID;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Shadows.shadowOf;
+import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.CustomBuildConfig;
 
 /**
  * Created by natalia on 15/07/15.
  */
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = CustomBuildConfig.class, sdk = 21)
 public class SetFilterTest {private Activity mockActivity;
     private Context mockContext;
 
@@ -49,6 +51,8 @@ public class SetFilterTest {private Activity mockActivity;
         testDatabase = new AndroidDatabase(mockContext, testOwnerId, testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);
         testDatabaseTable = testDatabase.getTable(testTableName);
+
+
 
     }
 
@@ -74,4 +78,9 @@ public class SetFilterTest {private Activity mockActivity;
     }
 
 
+    @Test
+    public void constructorTest_Succefuly() throws Exception{
+        testDatabaseTable = new AndroidDatabaseTable(testDatabase,"tableName");
+
+    }
 }

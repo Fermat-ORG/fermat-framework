@@ -90,4 +90,8 @@ public class WalletPublisherSubAppSession implements com.bitdubai.fermat_android
     public int hashCode() {
         return subApps.hashCode();
     }
+
+    public WalletPublisherModuleManager getWalletPublisherManager() {
+        return walletPublisherManager;
+    }
 }

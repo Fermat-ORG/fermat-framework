@@ -54,12 +54,11 @@ import java.util.UUID;
  */
 public class IntraUserActorDao implements Serializable{
 
+    String INTRA_USERS_PROFILE_IMAGE_FILE_NAME = "intraUserActorProfileImage";
     /**
      * Represent the Plugin Database.
      */
 
-
-    String INTRA_USERS_PROFILE_IMAGE_FILE_NAME = "intraUserActorProfileImage";
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     private PluginFileSystem pluginFileSystem;
@@ -155,7 +154,7 @@ public class IntraUserActorDao implements Serializable{
                 record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode());
                 record.setStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey);
                 record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
-                record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+                record.setLongValue(IntraUserActorDatabaseConstants.INTRA_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
 
                 table.insertRecord(record);
 
@@ -251,7 +250,7 @@ public class IntraUserActorDao implements Serializable{
     }
 
 
-    public List<ActorIntraUser> getAllIntraUsers (String intraUserLoggedInPublicKey) throws CantGetIntraUsersListException {
+    public List<ActorIntraUser> getAllIntraUsers (String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUsersListException {
 
 
         // Setup method.
@@ -277,7 +276,8 @@ public class IntraUserActorDao implements Serializable{
             // 2) Find all Intra Users.
             table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, ContactState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
-
+            table.setFilterOffSet(String.valueOf(offset));
+            table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
 
 
@@ -314,7 +314,7 @@ public class IntraUserActorDao implements Serializable{
     }
 
 
-    public List<ActorIntraUser> getIntraUsers (String intraUserLoggedInPublicKey, ContactState contactState) throws CantGetIntraUsersListException {
+    public List<ActorIntraUser> getIntraUsers (String intraUserLoggedInPublicKey, ContactState contactState,int max,int offset) throws CantGetIntraUsersListException {
 
 
         // Setup method.
@@ -340,7 +340,8 @@ public class IntraUserActorDao implements Serializable{
             // 2) Find  Intra Users by state.
             table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME, contactState.getCode(), DatabaseFilterType.EQUAL);
-
+            table.setFilterOffSet(String.valueOf(offset));
+            table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
 
 

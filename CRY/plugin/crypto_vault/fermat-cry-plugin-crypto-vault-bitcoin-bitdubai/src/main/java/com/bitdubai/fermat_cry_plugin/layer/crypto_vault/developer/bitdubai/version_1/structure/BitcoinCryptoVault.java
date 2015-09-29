@@ -51,6 +51,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
@@ -397,6 +398,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * I generate the address in the BitcoinJ format
              */
+
+
             address = new Address(this.networkParameters, addressTo.getAddress());
 
             /**
@@ -431,13 +434,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * I broadcast and wait for the confirmation of the network
              */
-            ListenableFuture<Transaction> future = peers.broadcastTransaction(request.tx);
+            TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(request.tx);
+            ListenableFuture<Transaction> listenableFuture = transactionBroadcast.broadcast();
 
             /**
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
-             future.get();
+            listenableFuture.get();
             /**
              * returns the created transaction id
              */

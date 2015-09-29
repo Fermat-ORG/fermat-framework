@@ -72,7 +72,7 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
      */
     @Override
     public String getSubAppPlatformIdentifier() {
-        return null;
+        return "Method: getSubAppPlatformIdentifier - NO TIENE valor ASIGNADO para RETURN";
     }
 
     /**

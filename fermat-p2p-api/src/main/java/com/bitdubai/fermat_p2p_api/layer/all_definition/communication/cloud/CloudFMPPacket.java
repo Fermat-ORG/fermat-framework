@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import java.util.Objects;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPPacket</code> implements
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.FermatPacketCommunication</code> implements
  * the package to transport the data
  * <p/>
  *
@@ -248,7 +248,7 @@ public class CloudFMPPacket implements FMPPacket {
      */
     @Override
     public String toString() {
-        return "CloudFMPPacket{" +
+        return "FermatPacketCommunication{" +
                 "destination='" + destination + '\'' +
                 ", sender='" + sender + '\'' +
                 ", type=" + type +

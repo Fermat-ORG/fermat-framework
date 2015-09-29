@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdu
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translator;
+import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 
 /**
  * Created by natalia on 31/07/15.
@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.Translat
  *
  * @version 1.0
  */
-public class IdentityTranslatorTranslator implements Translator {
+public class IdentityTranslatorTranslator implements TranslatorIdentity {
 
     private String alias;
     private String publicKey;

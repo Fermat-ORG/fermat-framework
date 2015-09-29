@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStar
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallSkinException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantStartUninstallWalletException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletsCatalogException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.DetailedCatalogItem;
 
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public interface WalletStoreModuleManager {
      */
     public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException;
 
-    public WalletStoreDetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException;
+    public DetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException;
 
     /**
      * This method initialize the installation presses of a skin by giving the control to the
@@ -54,7 +55,6 @@ public interface WalletStoreModuleManager {
      * wallet manager.
      *
      * @param walletCategory the category of the wallet to install
-     * @param nicheWallet the type of the wallet to install
      * @param skinId the skin to install with the wallet
      * @param languageId the language to install in the wallet
      * @param walletCatalogueId the wallet identifier in the catalogue
@@ -62,7 +62,6 @@ public interface WalletStoreModuleManager {
      * @throws CantStartInstallationException
      */
     public void installWallet(WalletCategory walletCategory,
-                              NicheWallet nicheWallet,
                               UUID skinId,
                               UUID languageId,
                               UUID walletCatalogueId,

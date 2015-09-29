@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFa
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
@@ -47,7 +47,7 @@ public class ServiceImplementationStartTest extends TestCase {
     EventManager eventManager;
 
     @Mock
-    EventListener eventListener;
+    FermatEventListener fermatEventListener;
 
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -75,7 +75,7 @@ public class ServiceImplementationStartTest extends TestCase {
         incomingCryptoTransactionPluginRoot.setErrorManager(errorManager);
         incomingCryptoTransactionPluginRoot.setEventManager(eventManager);
         incomingCryptoTransactionPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
-        doReturn(eventListener).when(eventManager).getNewListener(any(EventType.class));
+        doReturn(fermatEventListener).when(eventManager).getNewListener(any(EventType.class));
     }
 
     @Test

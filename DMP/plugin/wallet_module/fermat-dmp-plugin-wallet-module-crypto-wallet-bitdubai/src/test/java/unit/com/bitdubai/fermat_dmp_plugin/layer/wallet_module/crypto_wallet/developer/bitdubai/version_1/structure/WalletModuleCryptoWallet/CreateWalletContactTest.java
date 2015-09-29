@@ -10,19 +10,17 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 
 import junit.framework.TestCase;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -38,12 +36,6 @@ import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CreateWalletContactTest extends TestCase {
-
-    /**
-     * DealsWithActorAddressBook interface Mocked
-     */
-    @Mock
-    ActorAddressBookManager actorAddressBookManager;
 
     /**
      * DealsWithExtraUserManager interface Mocked
@@ -64,22 +56,16 @@ public class CreateWalletContactTest extends TestCase {
     ExtraUserManager extraUserManager;
 
     /**
-     * DealsWithWalletAddressBook interface Mocked
+     * DealsWithCryptoAddressBook interface Mocked
      */
     @Mock
-    WalletAddressBookManager walletAddressBookManager;
+    CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * DealsWithWalletContacts interface Mocked
      */
     @Mock
     WalletContactsManager walletContactsManager;
-
-    @Mock
-    ActorAddressBookRegistry actorAddressBookRegistry;
-
-    @Mock
-    WalletAddressBookRegistry walletAddressBookRegistry;
 
     @Mock
     WalletContactsRegistry walletContactsRegistry;
@@ -99,7 +85,7 @@ public class CreateWalletContactTest extends TestCase {
     ReferenceWallet referenceWallet;
     String walletPublicKey;
 
-    WalletModuleCryptoWallet walletModuleCryptoWallet;
+    CryptoWalletWalletModuleManager walletModuleCryptoWallet;
 
     @Before
     public void setUp() throws Exception {
@@ -108,33 +94,37 @@ public class CreateWalletContactTest extends TestCase {
         deliveredCryptoAddress = new CryptoAddress("asdasd ", CryptoCurrency.BITCOIN);
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
         walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
-        walletModuleCryptoWallet.setActorAddressBookManager(actorAddressBookManager);
+        walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setExtraUserManager(extraUserManager);
-        walletModuleCryptoWallet.setWalletAddressBookManager(walletAddressBookManager);
+        walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
         walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
         walletModuleCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
-        doReturn(actorAddressBookRegistry).when(actorAddressBookManager).getActorAddressBookRegistry();
-        doReturn(walletAddressBookRegistry).when(walletAddressBookManager).getWalletAddressBookRegistry();
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
         doReturn(user).when(extraUserManager).createActor(anyString());
         doReturn(cryptoAddress).when(cryptoVaultManager).getAddress();
-        doReturn(walletContactRecord).when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), anyString());
+        doReturn(walletContactRecord).when(walletContactsRegistry)
+                .createWalletContact(
+                        anyString(),
+                        anyString(),
+                        any(Actors.class),
+                        any(CryptoAddress.class),
+                        anyString()
+                );
         walletModuleCryptoWallet.initialize();
     }
 
     @Test
     public void testCreateWalletContact_NotNull() throws Exception {
-        WalletContactRecord walletContactRecord = walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
+        CryptoWalletWalletContact walletContactRecord = walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
         assertThat(walletContactRecord).isNotNull();
     }
 
     // CONTACTS ALREADY EXISTS TEST
-    @Ignore
-    @Test
-    public void testCreateWalletContact_ContactAlreadyExists() throws Exception {
+    @Test(expected=ContactNameAlreadyExistsException.class)
+    public void testCreateWalletContact_ContactNameAlreadyExistsException() throws Exception {
         doReturn(walletContactRecord).when(walletContactsRegistry).getWalletContactByNameAndWalletPublicKey(anyString(), anyString());
+        doReturn(UUID.randomUUID()).when(walletContactRecord).getContactId();
 
         walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
     }
@@ -156,7 +146,7 @@ public class CreateWalletContactTest extends TestCase {
     @Test(expected=CantCreateWalletContactException.class)
     public void testCreateWalletContact_CantRegisterActorAddressBookException() throws Exception {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException("MOCK", null, null, null))
-                .when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), anyString());
+                .when(walletContactsRegistry).createWalletContact(anyString(), anyString(), any(Actors.class), any(CryptoAddress.class), anyString());
 
         walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
     }
@@ -172,7 +162,7 @@ public class CreateWalletContactTest extends TestCase {
 
     @Test
     public void testCreateWalletContact_RegistryIsNotInitialized_CantGetWalletContactException() throws Exception {
-        walletModuleCryptoWallet = new WalletModuleCryptoWallet();
+        walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         catchException(walletModuleCryptoWallet).createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
         assertThat(caughtException())
                 .isNotNull()

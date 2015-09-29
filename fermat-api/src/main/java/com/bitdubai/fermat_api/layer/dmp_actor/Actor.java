@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_actor;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSignExtraUserMessageException;
 
 import java.util.UUID;
 
@@ -14,17 +15,14 @@ import java.util.UUID;
 
 public interface Actor {
 
-    public void setName(String name);
+    String getActorPublicKey();
 
-    public void setId(UUID id);
+    String getName();
 
-    public String getName();
+    Actors getType();
 
-    public UUID getId();
+    byte[] getPhoto();
 
-    public Actors getType();
+    String createMessageSignature(String message) throws CantSignExtraUserMessageException;
 
-    public byte[] getPhoto();
-
-    public void setPhoto(byte[] photo);
 }

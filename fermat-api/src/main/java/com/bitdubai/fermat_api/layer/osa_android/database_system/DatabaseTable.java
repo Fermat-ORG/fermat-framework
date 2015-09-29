@@ -23,58 +23,57 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
  * */
 public interface DatabaseTable {
     
+    List<DatabaseTableRecord> customQuery(String query, boolean customResult) throws CantLoadTableToMemoryException;
 
-    public DatabaseTableColumn newColumn();
+    DatabaseTableColumn newColumn();
 
-    public List<String> getColumns();
+    List<DatabaseTableRecord> getRecords();
 
-    public List<DatabaseTableRecord> getRecords();
+    DatabaseTableRecord getEmptyRecord();
 
-    public List<DatabaseVariable> getVariablesResult();
-
-    public DatabaseTableRecord getEmptyRecord();
-
-    public void clearAllFilters();
+    void clearAllFilters();
     
-    public List<DatabaseTableFilter> getFilters();
+    List<DatabaseTableFilter> getFilters();
 
-    public DatabaseTableFilterGroup getFilterGroup();
+    DatabaseTableFilterGroup getFilterGroup();
 
-    public DatabaseTableFilter getEmptyTableFilter();
+    DatabaseTableFilter getEmptyTableFilter();
 
-    public DatabaseTableFilterGroup getEmptyTableFilterGroup();
+    DatabaseTableFilter getNewFilter(String column, DatabaseFilterType type, String value);
 
-    public void selectRecord (DatabaseTableRecord record) throws CantSelectRecordException;
+    DatabaseTableFilterGroup getNewFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator);
 
-    public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
+    void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
 
-    public void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;
+    void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;
 
-    public void loadToMemory() throws CantLoadTableToMemoryException;
+    void loadToMemory() throws CantLoadTableToMemoryException;
 
-    public boolean isTableExists();
+    boolean isTableExists();
 
-    public void setStringFilter(String columnName, String value,DatabaseFilterType type);
+    void setStringFilter(String columnName, String value,DatabaseFilterType type);
 
-    public void setFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator type);
+    void setFilterGroup(DatabaseTableFilterGroup filterGroup);
 
-    public void setUUIDFilter(String columnName, UUID value,DatabaseFilterType type);
+    void setFilterGroup(List<DatabaseTableFilter> tableFilters, List<DatabaseTableFilterGroup> filterGroups, DatabaseFilterOperator filterOperator);
 
-    public void setStateFilter(String columName, WalletFactoryProjectState walletFactoryProjectState,DatabaseFilterType type);
+    void setUUIDFilter(String columnName, UUID value,DatabaseFilterType type);
 
-    public void setFilterOrder(String columnName, DatabaseFilterOrder direction);
+    void setFilterOrder(String columnName, DatabaseFilterOrder direction);
 
-    public void setFilterTop(String top);
+    void setFilterTop(String top);
 
-    public void setFilterOffSet(String offset);
+    void setFilterOffSet(String offset);
 
-    public void setVarialbesResult(List<DatabaseVariable> variables);
+    void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
 
-    public void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
+    void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
 
-    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
+    DatabaseTableRecord getRecordFromPk(String pk) throws Exception;
 
-    public DatabaseTableRecord getRecordFromPk(String pk) throws Exception;
-
+    // modif leon
+    String makeFilter();
+    String getTableName();
+    List<DatabaseSelectOperator> getTableSelectOperator();
 
 }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_tabs_diagonal_rotated"
+    android:orientation="horizontal"
+    android:paddingLeft="7dip"
+    android:paddingRight="7dip"
+    android:id="@+id/send_form">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+        <ImageView
+            android:id="@+id/frame_tx_record"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:background="@drawable/object_frame_3x1_filled"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <AutoCompleteTextView
+                    android:id="@+id/contact_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="name"
+                    android:textColor="#72af9c"
+                    android:textColorHint="#BDBDBD"
+                    android:textSize="22sp"
+                    android:textStyle="normal"
+                    android:paddingTop="20dip"
+                    android:paddingLeft="21dip"
+                    android:paddingRight="14dip"
+                    android:paddingBottom="7dip"
+                    android:ems="10"
+                    android:layout_weight="0.2"
+                    android:background="@null"
+                    android:gravity="center"
+
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dip"
+                android:paddingBottom="10dip"
+                android:paddingTop="3dip"
+                android:paddingRight="7dip"
+                android:id="@+id/linear_send"
+                android:orientation="horizontal"
+                >
+                <Button
+                    android:id="@+id/btn_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_action_send_now_grey"
+                    android:padding="3dp"
+                    android:clickable="true"
+                    android:text="Give me an Address!"
+                    android:layout_weight="0.5"
+
+                    />
+
+                <Button
+                    android:id="@+id/btn_share"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_action_send_now_grey"
+                    android:padding="3dp"
+                    android:clickable="true"
+                    android:text="Share"
+                    android:layout_weight="0.5"
+
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

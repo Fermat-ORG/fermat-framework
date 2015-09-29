@@ -36,12 +36,12 @@ public class ImageMiddlewareImpl implements Image {
     /**
      * Represent the data
      */
-    public byte [] data;
+    public byte[] data;
 
     /**
      * Constructor
      */
-    public ImageMiddlewareImpl(){
+    public ImageMiddlewareImpl() {
         super();
     }
 
@@ -60,10 +60,10 @@ public class ImageMiddlewareImpl implements Image {
     }
 
     /**
-     * (non-Javadoc)
-     * @see ImageMiddleware#getComponentId()
+     * Get the Component Id
+     *
+     * @return UUID
      */
-    @Override
     public UUID getComponentId() {
         return componentId;
     }
@@ -79,10 +79,10 @@ public class ImageMiddlewareImpl implements Image {
 
 
     /**
-     * (non-Javadoc)
-     * @see ImageMiddleware#getFileId()
+     * Get the FileId
+     *
+     * @return UUID
      */
-    @Override
     public UUID getFileId() {
         return fileId;
     }
@@ -98,7 +98,8 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
-     * @see ImageMiddleware#getData()
+     *
+     * @see Image#getData()
      */
     @Override
     public byte[] getData() {
@@ -116,6 +117,7 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#equals(Object)
      */
     @Override
@@ -128,6 +130,7 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#hashCode()
      */
     @Override
@@ -137,6 +140,7 @@ public class ImageMiddlewareImpl implements Image {
 
     /**
      * (non-Javadoc)
+     *
      * @see Object#toString()
      */
     @Override

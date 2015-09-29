@@ -18,6 +18,7 @@ import java.util.UUID;
 
 /**
  * Created by ciencias on 20.01.15.
+ *
  */
 
 /**
@@ -146,7 +147,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
      * @throws NoSuchAlgorithmException
      */
     private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
-        String encryptedString = databaseName;
+        String encryptedString;
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(databaseName.getBytes(Charset.forName("UTF-8")));
@@ -164,7 +165,6 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             throw e;
         }
         encryptedString = encryptedString.replace("/","");
-
         return encryptedString.replace("\n","");
     }
 

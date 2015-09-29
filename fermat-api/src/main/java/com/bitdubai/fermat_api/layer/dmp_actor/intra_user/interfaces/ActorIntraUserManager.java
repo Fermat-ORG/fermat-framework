@@ -3,10 +3,9 @@ package com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDecideAcceptanceLaterException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUSersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
 
 import java.util.List;
 
@@ -83,9 +82,9 @@ public interface ActorIntraUserManager {
      *
      * @param intraUserLoggedInPublicKey the public key of the intra user logged in
      * @return the list of intra users the logged in intra user has as connections.
-     * @throws CantGetIntraUSersException
+     * @throws CantGetIntraUsersException
      */
-    List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getAllIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUsersException;
 
     /**
      * The method <code>getWaitingYourAcceptanceIntraUsers</code> shows the list of all intra users
@@ -93,9 +92,9 @@ public interface ActorIntraUserManager {
      *
      * @param intraUserLoggedInPublicKey the public key of the intra user logged in
      * @return the list of intra users the logged in intra user has as connections.
-     * @throws CantGetIntraUSersException
+     * @throws CantGetIntraUsersException
      */
-    List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getWaitingYourAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUsersException;
 
     /**
      * The method <code>getWaitingTheirAcceptanceIntraUsers</code> shows the list of all intra users
@@ -103,8 +102,8 @@ public interface ActorIntraUserManager {
      *
      * @param intraUserLoggedInPublicKey the public key of the intra user logged in
      * @return the list of intra users the logged in intra user has as connections.
-     * @throws CantGetIntraUSersException
+     * @throws CantGetIntraUsersException
      */
-    List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey) throws CantGetIntraUSersException;
+    List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUsersException;
     
 }

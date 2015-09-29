@@ -85,20 +85,15 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
      */
     private DeveloperSubAppSession developerSubAppSession;
 
-    public static LogToolsFragmentLevel2 newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
-        LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
-        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static LogToolsFragmentLevel2 newInstance() {
+        return new LogToolsFragmentLevel2();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
         errorManager = developerSubAppSession.getErrorManager();
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
