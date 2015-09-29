@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
@@ -19,14 +17,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.Contract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
@@ -36,6 +28,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerIdentity;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -110,6 +103,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, assetFactory.getCreationTimestamp().toString());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, assetFactory.getLastModificationTimestamp().toString());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, assetFactory.getAssetBehavior().getCode());
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, assetFactory.getWalletPublicKey());
 
         return record;
     }
@@ -309,6 +303,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
     private AssetFactory getEmptyAssetFactory()
     {
         AssetFactory assetFactory = new AssetFactory() {
+            String walletPublicKey;
             String publicKey;
             String name;
             String description;
@@ -325,6 +320,16 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
             Timestamp expirationDate;
             AssetBehavior assetBehavior;
             IdentityAssetIssuer identityAssetIssuer;
+
+            @Override
+            public String getWalletPublicKey() {
+                return walletPublicKey;
+            }
+
+            @Override
+            public void setWalletPublicKey(String walletPublicKey) {
+                this.walletPublicKey = walletPublicKey;
+            }
 
             @Override
             public String getPublicKey() {
@@ -499,24 +504,11 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         assetFactory.setDescription(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN));
         assetFactory.setAmount(assetFactoriesRecord.getLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN));
 
-        IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
-            @Override
-            public String getAlias() {
-                return assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN);
-            }
-
-            @Override
-            public String getPublicKey() {
-                return assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
-            }
-
-            @Override
-            public String createMessageSignature(String mensage) throws CantSingMessageException {
-                return "signature";
-            }
-        };
+        AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
+        assetIssuerIdentity.setAlias(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN));
+        assetIssuerIdentity.setPublicKey(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN));
         //assetFactory.setAssetUserIdentityPublicKey(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN));
-        assetFactory.setIdentityAssetIssuer(identityAssetIssuer);
+        assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
         assetFactory.setState(State.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN)));
         assetFactory.setFee(assetFactoriesRecord.getLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN));
         assetFactory.setQuantity(assetFactoriesRecord.getIntegerValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN));
@@ -579,7 +571,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                 List<ContractProperty> contractProperties =  new ArrayList<>();
                 // I will add the contract properties information from database
                 for (DatabaseTableRecord contractpropertyRecords : getContractsData(assetFactory.getPublicKey())) {
-                    //TODO: Revisar este objeto contractProperty
+
                     ContractProperty contractProperty = new ContractProperty(null, null);
 
                     contractProperty.setName(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN));
@@ -595,28 +587,11 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                     contractProperties.add(contractProperty);
                 }
 
-                List<IdentityAssetIssuer> identityAssetIssuers =  new ArrayList<>();
+                AssetIssuerIdentity assetIssuerIdentity =  new AssetIssuerIdentity();
                 // I will add the indetity issuer information from database
-
                 for (final DatabaseTableRecord identityIssuerRecords : getIdentityIssuerData(assetFactory.getPublicKey())) {
-                    IdentityAssetIssuer identityAssetIssuer = new IdentityAssetIssuer() {
-                        @Override
-                        public String getAlias() {
-                            return identityIssuerRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN);
-                        }
-
-                        @Override
-                        public String getPublicKey() {
-                            return identityIssuerRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
-                        }
-
-                        @Override
-                        public String createMessageSignature(String mensage) throws CantSingMessageException {
-                            return null;
-                        }
-                    };
-
-                    identityAssetIssuers.add(identityAssetIssuer);
+                    assetIssuerIdentity.setPublicKey(identityIssuerRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN));
+                    assetIssuerIdentity.setAlias(identityIssuerRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN));
                 }
 
                 List<Resource> resources =  new ArrayList<>();
@@ -661,6 +636,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                 }
                 assetFactory.setContractProperties(contractProperties);
                 assetFactory.setResources(resources);
+                assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
 
                 assetFactoryList.add(assetFactory);
             }

@@ -24,7 +24,6 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 
 import junit.framework.TestCase;
@@ -218,6 +217,8 @@ public class xmlConversionTest extends TestCase {
         resource.setId(UUID.randomUUID());
         resource.setName("person1");
         resource.setFileName("person1.png");
+        resource.setResourceDensity(ResourceDensity.MDPI);
+        resource.setResourceType(ResourceType.IMAGE);
 
         resourceHashMap.put("person1", resource);
 

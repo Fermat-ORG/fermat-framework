@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -15,13 +17,16 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.PendingAddressExchangeRequest;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressesNetworkServiceDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -38,13 +43,12 @@ import java.util.UUID;
  *
  * Created by Leon Acosta (laion.cj91@gmail.com) on 22/09/2015.
  */
-public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesManager, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, NetworkService, Plugin, Service {
+public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesManager, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, NetworkService, Plugin, Service {
 
     /**
      * Service Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -62,57 +66,37 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
-    private PluginFileSystem pluginFileSystem;
-
-    /**
      * DealsWithPluginIdentity Interface member variables.
      */
     private UUID pluginId;
 
-
-    @Override
-    public void sendAddressExchangeRequest(String walletPublicKey, CryptoAddress cryptoAddressToSend, Actors actorTypeBy, Actors actorTypeTo, String requesterActorPublicKey, String actorToRequestPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantSendAddressExchangeRequestException {
-
-    }
-
-    @Override
-    public void acceptAddressExchangeRequest(UUID requestId, CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException {
-
-    }
-
-    @Override
-    public List<PendingAddressExchangeRequest> listPendingRequests(Actors actorType, AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException {
-        return null;
-    }
-
-    @Override
-    public PendingAddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException, PendingRequestNotFoundException {
-        return null;
-    }
-
-    @Override
-    public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException {
-
-    }
-
-    @Override
-    public void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException {
-
-    }
+    private CryptoAddressesNetworkServiceDao cryptoAddressesNetworkServiceDao;
 
     /**
      * Service Interface implementation.
      */
-
     @Override
     public void start() throws CantStartPluginException {
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-        FermatEventListener fermatEventListener;
-        FermatEventHandler fermatEventHandler;
+
+        try {
+
+            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(
+                    pluginDatabaseSystem,
+                    pluginId
+            );
+
+            cryptoAddressesNetworkServiceDao.initialize();
+
+        } catch (CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "There is a problem when trying to initialize CryptoAddresses NetworkService DAO", null);
+        } catch (Exception e) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "There is a problem I can't identify.", null);
+        }
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -128,19 +112,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
 
     @Override
     public void stop() {
-
-
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-
-        for (FermatEventListener fermatEventListener : listenersAdded) {
-            eventManager.removeListener(fermatEventListener);
-        }
-
-        listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -148,23 +120,148 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
         return this.serviceStatus;
     }
 
+
+    @Override
+    public void sendAddressExchangeRequest(String                walletPublicKey        ,
+                                           CryptoAddress         cryptoAddressToSend    ,
+                                           Actors                actorTypeBy            ,
+                                           Actors                actorTypeTo            ,
+                                           String                requesterActorPublicKey,
+                                           String                actorToRequestPublicKey,
+                                           BlockchainNetworkType blockchainNetworkType  ) throws CantSendAddressExchangeRequestException {
+
+        try {
+
+            cryptoAddressesNetworkServiceDao.sendAddressExchangeRequest(
+                    walletPublicKey,
+                    cryptoAddressToSend,
+                    actorTypeBy,
+                    actorTypeTo,
+                    requesterActorPublicKey,
+                    actorToRequestPublicKey,
+                    blockchainNetworkType
+            );
+
+        } catch (CantSendAddressExchangeRequestException e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantSendAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void acceptAddressExchangeRequest(UUID          requestId            ,
+                                             CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException,
+                                                                                         PendingRequestNotFoundException          {
+
+        try {
+
+            // TODO send to the other part the acceptance with the crypto address
+
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAcceptAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public List<AddressExchangeRequest> listPendingRequests(Actors                      actorType                  ,
+                                                            AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException {
+        try {
+
+            return cryptoAddressesNetworkServiceDao.listPendingRequests(
+                    actorType                  ,
+                    addressExchangeRequestState
+            );
+
+        } catch (CantListPendingAddressExchangeRequestsException e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListPendingAddressExchangeRequestsException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
+                                                                           PendingRequestNotFoundException              {
+
+        try {
+
+            return cryptoAddressesNetworkServiceDao.getPendingRequest(requestId);
+
+        } catch (PendingRequestNotFoundException e){
+            // when i don't find it i only pass the exception (maybe another plugin confirm the pending request).
+            throw e;
+        } catch (CantGetPendingAddressExchangeRequestException e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetPendingAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException,
+                                                                     PendingRequestNotFoundException           {
+
+        try {
+
+            cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
+
+        } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantConfirmAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException,
+                                                                  PendingRequestNotFoundException        {
+
+        try {
+
+            // TODO send to the other part the denial
+            cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
+
+        } catch (PendingRequestNotFoundException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (CantConfirmAddressExchangeRequestException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDenyAddressExchangeRequestException(FermatException.wrapException(e), null, "Can' confirm the request.");
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDenyAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+
     /**
      * NetworkService Interface implementation.
      */
     @Override
     public UUID getId() {
         return pluginId;
-    }
-
-
-
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-    @Override
-    public void setEventManager(final EventManager eventManager) {
-        this.eventManager = eventManager;
     }
 
     /**
@@ -176,19 +273,19 @@ public class CryptoAddressesNetworkServicePluginRoot implements CryptoAddressesM
     }
 
     /**
+     * DealWithEvents Interface implementation.
+     */
+    @Override
+    public void setEventManager(final EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
     @Override
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(final PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
  */
 public class DigitalAssetMetadata {
     DigitalAsset digitalAsset;
+    String genesisTransaction;
     String hash;
 
     public DigitalAssetMetadata(DigitalAsset digitalAsset) {
@@ -23,4 +24,22 @@ public class DigitalAssetMetadata {
         hash = generateHash();
         return hash;
     }
+
+    public String getGenesisTransaction() {
+        return genesisTransaction;
+    }
+
+    public void setGenesisTransaction(String genesisTransaction) {
+        this.genesisTransaction = genesisTransaction;
+    }
+
+    @Override
+    public String toString(){
+        String digitalAssetMetadataString="\nDigital Asset Metadata:\n" +
+                "Digital Asset XML:\n"+digitalAsset+"\n" +
+                "Genesis Transaction: "+genesisTransaction+"\n" +
+                "Hash:"+hash;
+        return digitalAssetMetadataString;
+    }
+
 }
