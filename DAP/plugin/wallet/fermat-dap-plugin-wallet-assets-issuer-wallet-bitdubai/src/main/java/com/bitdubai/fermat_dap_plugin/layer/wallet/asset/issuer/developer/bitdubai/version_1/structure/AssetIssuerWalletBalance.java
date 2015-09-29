@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
+
 /**
  * Created by franklin on 29/09/15.
  */
-public class AssetIssuerWalletBalance {
+public class AssetIssuerWalletBalance implements AssetIssuerWalletList {
     String assetPublicKey;
     String name;
     String description;
