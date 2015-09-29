@@ -3,6 +3,10 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -49,7 +53,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 07/09/15.
  */
-public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
     public static final String PATH_DIRECTORY = "assetFactory/resources";
     /**
      * AssetFactoryMiddlewareManager member variables
@@ -81,6 +85,8 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
      */
     AssetIssuingManager assetIssuingManager;
 
+    WalletManagerModule walletManagerModule;
+
     /**
      * Constructor
      *
@@ -89,19 +95,34 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager) {
+    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager, WalletManagerModule walletManagerModule) {
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.assetIssuingManager = assetIssuingManager;
+        this.walletManagerModule = walletManagerModule;
     }
 
     private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao()
     {
         AssetFactoryMiddlewareDao dao = new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
         return dao;
+    }
+
+    private boolean areObjectsSettled(AssetFactory assetFactory)
+    {
+        boolean isBoolean = true;
+        if (assetFactory.getResources() == null) isBoolean = false;
+        if (assetFactory.getState() == null) isBoolean = false;
+        if (assetFactory.getName() == null) isBoolean = false;
+        if (assetFactory.getDescription() == null) isBoolean = false;
+        if (assetFactory.getQuantity() == 0) isBoolean = false;
+        if (assetFactory.getAmount() == 0) isBoolean = false;
+        if (assetFactory.getExpirationDate() == null) isBoolean = false;
+        if (assetFactory.getAssetBehavior() == null) isBoolean = false;
+        return isBoolean;
     }
 
     //De esa forma poder almacenarlo en la tabla de contract seteando la variable assetFactory.setContractProperties
@@ -167,6 +188,16 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
+    }
+
+    public List<InstalledWallet> getInstallWallets()  throws WalletsListFailedToLoadException{
+        try
+        {
+            return walletManagerModule.getInstalledWallets();
+        }catch (WalletsListFailedToLoadException exception){
+            throw new WalletsListFailedToLoadException("Load Wallet installed", exception, null, null);
+        }
+
     }
 
     public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException
@@ -340,6 +371,17 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
         catch (DatabaseOperationException  | InvalidParameterException | CantLoadTableToMemoryException e)
         {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryAll", "");
+        }
+    }
+
+    public boolean isReadyToPublish(String asssetPublicKey) throws CantPublishAssetException
+    {
+        try {
+            AssetFactory assetFactory = getAssetFactory(asssetPublicKey);
+            return areObjectsSettled(assetFactory);
+        }
+        catch (Exception exception){
+            throw new CantPublishAssetException("Cant Publish Asset Factory", exception, null, "Asset Factory incomplete");
         }
     }
 
@@ -609,4 +651,6 @@ public class AssetFactoryMiddlewareManager implements DealsWithErrors, DealsWith
 
             return assetFactory;
     }
+
+
 }
