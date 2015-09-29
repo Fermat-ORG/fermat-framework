@@ -16,7 +16,7 @@ public interface GiveCashOnHandManager {
     GiveCashOnHand createGiveCashOnHand(
          final String publicKeyCustomer
         ,final String publicKeyBroker
-        ,final Float amount
+        ,final Float merchandiseAmount
         ,final String cashCurrencyType
         ,final String cashReference
     ) throws CantCreateGiveCashOnHandException;
