@@ -12,18 +12,7 @@ import java.util.UUID;
 
 public interface BankMoneyStockReplenishment  extends BusinessTransaction {
 
-    UUID getExecutionBankMoneyTransactionId();
-
     BankCurrencyType getBankCurrencyType();
 
     BankOperationType getBankOperationType();
-
-    /*String getBankName();
-
-    String getBankAccountNumber();
-
-    BankAccountType getBankAccountType();
-
-    String getBankDocumentReference();*/
-
 }

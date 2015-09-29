@@ -13,30 +13,12 @@ public interface BusinessTransaction {
 
     UUID getTransactionId();
 
-    String getPublicKeyBroker();
-
-    BusinessTransactionStatus getStatus();
-
-    CurrencyType getMerchandiseCurrency();
-
-    /*UUID getTransactionId();
-
-    UUID getOperationId();
-
-    UUID getWalletId();
+    UUID getExecutionTransactionId();
 
     String getPublicKeyBroker();
 
     BusinessTransactionStatus getStatus();
 
     CurrencyType getMerchandiseCurrency();
-
-    float getMerchandiseAmount();
-
-    ReferenceCurrency getReferenceCurrency();
-
-    float getReferenceCurrencyPrice();
-
-    */
 
 }
