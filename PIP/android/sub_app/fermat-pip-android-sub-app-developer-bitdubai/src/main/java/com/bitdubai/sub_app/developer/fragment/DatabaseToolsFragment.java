@@ -49,7 +49,6 @@ import java.util.List;
 public class DatabaseToolsFragment extends FermatFragment {
 
 
-    private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES.getKey();
     private ErrorManager errorManager;
 
     /**
@@ -149,13 +148,6 @@ public class DatabaseToolsFragment extends FermatFragment {
     }
 
 
-
-    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
-        this.developerSubAppSession = developerSubAppSession;
-
-    }
-
-
     public class AppListAdapter extends ArrayAdapter<Resource> {
 
 
@@ -166,7 +158,7 @@ public class DatabaseToolsFragment extends FermatFragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            Resource item = getItem(position);
+           final Resource item = getItem(position);
 
             ViewHolder holder;
             if (convertView == null) {
@@ -182,7 +174,7 @@ public class DatabaseToolsFragment extends FermatFragment {
                     @Override
                     public void onClick(View view) {
 
-                        Resource item=(Resource) gridView.getItemAtPosition(position);
+                      //  Resource item=(Resource) gridView.getItemAtPosition(position);
 
                         //set the next fragment and params
                       //  Object[] params = new Object[1];

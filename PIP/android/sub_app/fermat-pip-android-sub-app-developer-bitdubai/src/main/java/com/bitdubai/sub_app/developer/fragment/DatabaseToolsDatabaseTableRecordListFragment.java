@@ -78,6 +78,8 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
             developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
 
             resource = (Resource)developerSubAppSession.getData("resource");
+            developerDatabaseTable = (DeveloperDatabaseTable)developerSubAppSession.getData("databaseTable");
+            developerDatabase = (DeveloperDatabase)developerSubAppSession.getData("developerDataBase");
         }
 
         errorManager = developerSubAppSession.getErrorManager();

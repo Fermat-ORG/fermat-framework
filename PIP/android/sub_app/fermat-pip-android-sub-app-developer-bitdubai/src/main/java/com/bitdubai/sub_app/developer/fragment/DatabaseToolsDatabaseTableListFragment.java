@@ -230,8 +230,8 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                         //set the next fragment and params
 
                         developerSubAppSession.setData("resource",databases);
-                        developerSubAppSession.setData("developer",developerDatabase);
-                        developerSubAppSession.setData("database",developerDatabaseTableList.get(position));
+                        developerSubAppSession.setData("developerDataBase",developerDatabase);
+                        developerSubAppSession.setData("databaseTable",developerDatabaseTableList.get(position));
 
                         ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),null);
                     }
