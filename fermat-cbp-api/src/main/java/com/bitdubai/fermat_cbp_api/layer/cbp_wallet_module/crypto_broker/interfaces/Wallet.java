@@ -1,10 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.ContractInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCurrencyInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.RequestAndContractBasicInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.WalletModuleCryptoCustomer;
+
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.BuyRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,4 +11,27 @@ import java.util.UUID;
  */
 public interface Wallet {
 
+    List<BuyRequest> getListOfBuyRequest(int max, int offset);
+
+    List<ContractBasicInformation> getListOfDealsWaitingForBroker(int max, int offset);
+
+    List<ContractBasicInformation> getListOfDealsWaitingForCustomer(int max, int offset);
+
+    List<ContractBasicInformation> getListOfContractsWaitingForBroker(int max, int offset);
+
+    List<ContractBasicInformation> getListOfContractsWaitingForCustomer(int max, int offset);
+
+    CryptoBrokerContractInformation getContractDetails(UUID contractId);
+
+    void updateContractInformation(CryptoBrokerContractInformation contractInformation);
+
+    void acceptDeal(UUID contractId);
+
+    void acceptBuyRequest(UUID requestId, float merchandisePrice);
+
+    void cancelBuyRequest(UUID requestId);
+
+    void confirmPayment(UUID contractId);
+
+    StockInformation getCurrentStock(String stockCurrency);
 }
