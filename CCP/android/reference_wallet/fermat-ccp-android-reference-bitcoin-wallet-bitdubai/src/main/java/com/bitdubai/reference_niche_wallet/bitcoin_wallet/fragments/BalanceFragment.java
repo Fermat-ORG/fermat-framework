@@ -141,7 +141,7 @@ public class BalanceFragment extends FermatWalletFragment {
             /**
              * Get AvailableBalance
              */
-            balanceAvailable = cryptoWallet.getBalance(BalanceType.AVAILABLE, walletPublicKey);
+            balanceAvailable = cryptoWallet.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
 
             /**
              * Get BookBalance

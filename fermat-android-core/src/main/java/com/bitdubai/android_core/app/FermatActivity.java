@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
@@ -64,7 +65,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
-import com.bitdubai.fermat_android_api.engine.PaintActionBar;
+import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -106,7 +107,7 @@ import static java.lang.System.gc;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActionBar,Observer {
+public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures,Observer {
 
     private static final String TAG = "fermat-core";
     private MainMenu mainMenu;
@@ -1312,5 +1313,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             e.printStackTrace();
         }
 
+    }
+    public RelativeLayout getActivityHeader(){
+        return (RelativeLayout) findViewById(R.id.activity_header);
     }
 }

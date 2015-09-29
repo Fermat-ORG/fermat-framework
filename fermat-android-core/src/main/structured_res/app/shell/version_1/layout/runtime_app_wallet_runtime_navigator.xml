@@ -33,6 +33,16 @@
         android:layout_height="match_parent"
 
         >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dip"
+            android:id="@+id/activity_header"
+            android:visibility="gone"
+            >
+
+
+        </RelativeLayout>
+
         <com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
