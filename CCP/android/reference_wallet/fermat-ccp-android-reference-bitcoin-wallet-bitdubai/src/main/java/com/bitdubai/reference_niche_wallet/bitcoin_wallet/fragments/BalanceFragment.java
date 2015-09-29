@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
@@ -97,7 +98,7 @@ public class BalanceFragment extends FermatWalletFragment {
     /**
      * list of last 5 transactions
      */
-    List<CryptoWalletTransaction> lstCryptoWalletTransactions;
+    List<CryptoWalletTransaction> lstCryptoWalletTransactions = new ArrayList<>();
 
 
     /**
@@ -226,11 +227,30 @@ public class BalanceFragment extends FermatWalletFragment {
                 }
             });
 
-            List<CustomComponentsObjects> lstData = new ArrayList<CustomComponentsObjects>();
+            List<CustomComponentsObjects> lstData = new ArrayList<>();
 
             ReferenceWalletPreferenceSettings referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
             this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
-            //lstCryptoWalletTransactions = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, referenceWalletPreferenceSettings.getTransactionsToShow(), 0);
+
+            lstCryptoWalletTransactions.addAll(
+                    cryptoWallet.getTransactions(
+                            BalanceType.AVAILABLE,
+                            TransactionType.DEBIT,
+                            walletPublicKey,
+                            referenceWalletPreferenceSettings.getTransactionsToShow(),
+                            0
+                    )
+            );
+
+            lstCryptoWalletTransactions.addAll(
+                    cryptoWallet.getTransactions(
+                        BalanceType.AVAILABLE,
+                        TransactionType.CREDIT,
+                        walletPublicKey,
+                        referenceWalletPreferenceSettings.getTransactionsToShow(),
+                        0
+                )
+            );
 
             for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
                 if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {

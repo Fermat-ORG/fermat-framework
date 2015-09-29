@@ -105,14 +105,14 @@ public class BitcoinWalletBasicWalletDao {
         }
     }
 
-    public List<BitcoinWalletTransaction> listTransactionsByActor(String actorPublicKey,
-                                                                  BalanceType balanceType,
-                                                                  int max,
-                                                                  int offset) throws CantListTransactionsException {
+    public List<BitcoinWalletTransaction> listTransactionsByActor(final String actorPublicKey,
+                                                                  final BalanceType balanceType,
+                                                                  final int max,
+                                                                  final int offset) throws CantListTransactionsException {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-            bitcoinWalletTable.setFilterTop(String.valueOf(max));
+            bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
             bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
 
             bitcoinWalletTable.setFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
