@@ -20,7 +20,7 @@ public interface CashMoneyTransaction {
 
     CashTransactionStatus getStatus();
 
-    Float getAmount();
+    float getMerchandiseAmount();
 
     CashCurrencyType getCashCurrencyType();
 

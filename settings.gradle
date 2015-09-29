@@ -27,8 +27,8 @@ project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = n
 include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
 
-include ':fermat-ccp-plugin-identity-intra-user-bitdubai'
-project(':fermat-ccp-plugin-identity-intra-user-bitdubai').projectDir = new File('CCP/plugin/identity/fermat-ccp-plugin-identity-intra-user-bitdubai')
+include ':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai'
+project(':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai').projectDir = new File('CCP/plugin/identity/fermat-ccp-plugin-identity-intra-wallet-user-bitdubai')
 
 
 include ':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai'
@@ -259,19 +259,6 @@ project(':fermat-dmp-plugin-network-service-intra-user-bitdubai').projectDir = n
 
 include ':fermat-dmp-plugin-network-service-template-bitdubai'
 project(':fermat-dmp-plugin-network-service-template-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-template-bitdubai')
-
-
-include ':fermat-dmp-plugin-module-wallet-factory-bitdubai'
-project(':fermat-dmp-plugin-module-wallet-factory-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai')
-
-include ':fermat-dmp-plugin-module-wallet-manager-bitdubai'
-project(':fermat-dmp-plugin-module-wallet-manager-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai')
-
-include ':fermat-dmp-plugin-module-wallet-publisher-bitdubai'
-project(':fermat-dmp-plugin-module-wallet-publisher-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai')
-
-include ':fermat-dmp-plugin-module-wallet-store-bitdubai'
-project(':fermat-dmp-plugin-module-wallet-store-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai')
 
 // engine
 include ':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai'
@@ -566,6 +553,10 @@ project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectD
 include ':fermat-wpd-plugin-actor-publisher-bitdubai'
 project(':fermat-wpd-plugin-actor-publisher-bitdubai').projectDir = new File('WPD/plugin/actor/fermat-wpd-plugin-actor-publisher-bitdubai')
 
+//DESKTOP MODULE
+include ':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai'
+project(':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai').projectDir = new File('WPD/plugin/desktop_module/fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai')
+
 //engine
 include ':fermat-wpd-plugin-engine-wallet-runtime-bitdubai'
 project(':fermat-wpd-plugin-engine-wallet-runtime-bitdubai').projectDir = new File('WPD/plugin/engine/fermat-wpd-plugin-engine-wallet-runtime-bitdubai')
@@ -602,6 +593,17 @@ project(':fermat-wpd-plugin-network-service-wallet-store-bitdubai').projectDir =
 
 include ':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai'
 project(':fermat-wpd-plugin-network-service-wallet-statistics-bitdubai').projectDir = new File('WPD/plugin/network_service/fermat-wpd-plugin-network-service-wallet-statistics-bitdubai')
+
+//SUB APP MODULE
+
+include ':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai'
+project(':fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai').projectDir = new File('WPD/plugin/sub_app_module/fermat-wpd-plugin-sub-app-module-wallet-factory-bitdubai')
+
+include ':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai'
+project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai').projectDir = new File('WPD/plugin/sub_app_module/fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
+
+include ':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai'
+project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai').projectDir = new File('WPD/plugin/sub_app_module/fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
 
 // MKT Projects
 

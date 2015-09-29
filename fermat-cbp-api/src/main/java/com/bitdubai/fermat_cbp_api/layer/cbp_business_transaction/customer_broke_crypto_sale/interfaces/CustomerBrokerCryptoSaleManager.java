@@ -18,16 +18,14 @@ public interface CustomerBrokerCryptoSaleManager {
     List<CustomerBrokerCryptoSale> getAllCustomerBrokerCryptoSaleFromCurrentDeviceUser() throws CantGetCustomerBrokerCryptoSaleException;
 
     CustomerBrokerCryptoSale createCustomerBrokerCryptoSale(
-             final String operationId
-            ,final String contractId
+             final String contractId
             ,final String publicKeyCustomer
+            ,final String paymentTransactionId
+            ,final String paymentCurrency
             ,final String publicKeyBroker
             ,final String merchandiseCurrency
-            ,final float merchandiseAmount
-            ,final String referenceCurrency
-            ,final float referenceCurrencyPrice
-            ,final String cryptoCurrency
-            ,final String cryptoAddress
+            ,final String executionTransactionId
+            ,final String cryptoCurrencyType
     ) throws CantCreateCustomerBrokerCryptoSaleException;
 
     void updateStatusCustomerBrokerCryptoSale(final UUID transactionId) throws CantUpdateStatusCustomerBrokerCryptoSaleException;

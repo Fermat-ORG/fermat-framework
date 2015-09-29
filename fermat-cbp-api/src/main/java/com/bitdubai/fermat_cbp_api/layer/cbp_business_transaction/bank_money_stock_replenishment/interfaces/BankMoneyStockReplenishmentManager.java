@@ -17,16 +17,11 @@ public interface BankMoneyStockReplenishmentManager {
     List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetBankMoneyStockReplenishmentException;
 
     BankMoneyStockReplenishment createBankMoneyStockReplenishment(
-         final String operationId
-        ,final String publicKeyBroker
+         final String publicKeyBroker
         ,final String merchandiseCurrency
-        ,final float merchandiseAmount
-        ,final String referenceCurrency
-        ,final float referenceCurrencyPrice
-        ,final String bankName
-        ,final String bankAccountNumber
-        ,final String bankAccountType
-        ,final String bankDocumentReference
+        ,final String executionTransactionId
+        ,final String bankCurrencyType
+        ,final String bankOperationType
     ) throws CantCreateBankMoneyStockReplenishmentException;
 
     void updateStatusBankMoneyStockReplenishment(final UUID transactionId) throws CantUpdateStatusBankMoneyStockReplenishmentException;

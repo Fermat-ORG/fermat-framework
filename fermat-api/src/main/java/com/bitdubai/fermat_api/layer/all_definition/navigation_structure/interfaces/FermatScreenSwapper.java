@@ -18,4 +18,6 @@ public interface FermatScreenSwapper {
 
     public void changeWalletFragment(String walletCategory, String walletType,String walletPublicKey, String fragmentType);
 
+    public void onCallbackViewObserver(FermatCallback fermatCallback);
+
 }

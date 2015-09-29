@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
-import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.DeveloperBitDubai;
+import com.fermat_wpd_plugin.layer.sub_app_module.wallet_factory.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 26/04/15.
