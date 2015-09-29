@@ -96,7 +96,10 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-//        RelativeLayout container_header_balance = getActivityHeader();
+//
+
+        //container_header_balance.addView(balance_header);
+        RelativeLayout container_header_balance = getActivityHeader();
 //
 //        inflater =
 //                (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -118,9 +121,6 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 //        TextView txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
 //
 //        TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_amount_type);
-
-        //container_header_balance.addView(balance_header);
-
         //container_header_balance.invalidate();
 
         //((PaintActivtyFeactures)getActivity()).invalidate();
