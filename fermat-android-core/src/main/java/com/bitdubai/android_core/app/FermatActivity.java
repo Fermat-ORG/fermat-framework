@@ -282,9 +282,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             paintTitleBar(titleBar, activity);
 
-            Notification notification = new Notification(R.drawable.bitcoin_icon, "", Notification.DEFAULT_ALL);
-            notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
             if (tabs != null && tabs.getWizards() != null)
                 setWizards(tabs.getWizards());
 
@@ -825,7 +822,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         fragments.add(subAppDesktopFragment);
                         break;
                     case "DDAP":
-                        com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment walletDesktopFragment1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
+                        com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment walletDesktopFragment1 = com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment.newInstance(0);
                         fragments.add(walletDesktopFragment1);
                         com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
                         fragments.add(dapDesktopFragment);
@@ -1341,8 +1338,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
     @Override
     public RelativeLayout getActivityHeader(){
-        return (RelativeLayout) findViewById(R.id.container_header_balance);
-
+        //return (RelativeLayout) findViewById(R.id.container_header_balance);
+        return null;
     }
 
 

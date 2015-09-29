@@ -96,28 +96,28 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        RelativeLayout container_header_balance = getActivityHeader();
-
-        inflater =
-                (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        container_header_balance.setVisibility(View.VISIBLE);
-
-        View balance_header = inflater.inflate(R.layout.balance_header, container_header_balance, true);
-
-        TextView txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
-
-        TextView txt_touch_to_change = (TextView) balance_header.findViewById(R.id.txt_touch_to_change);
-        txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(),"holas",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        TextView txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
-
-        TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_amount_type);
+//        RelativeLayout container_header_balance = getActivityHeader();
+//
+//        inflater =
+//                (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//        container_header_balance.setVisibility(View.VISIBLE);
+//
+//        View balance_header = inflater.inflate(R.layout.balance_header, container_header_balance, true);
+//
+//        TextView txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
+//
+//        TextView txt_touch_to_change = (TextView) balance_header.findViewById(R.id.txt_touch_to_change);
+//        txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(getActivity(),"holas",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        TextView txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
+//
+//        TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_amount_type);
 
         //container_header_balance.addView(balance_header);
 

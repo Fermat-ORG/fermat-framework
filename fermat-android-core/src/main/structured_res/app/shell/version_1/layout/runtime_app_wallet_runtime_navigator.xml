@@ -45,17 +45,11 @@
             android:layout_width="match_parent"
             android:layout_height="48dip"
             android:background="@drawable/background_tabs"
-            android:layout_below="@+id/container_header_balance"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/container_header_balance"
-            android:layout_alignParentTop="true"
-            >
+            />
 
 
-        </RelativeLayout>
+
+
 
 
 
