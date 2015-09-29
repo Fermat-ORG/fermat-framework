@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
@@ -76,6 +77,8 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         Bundle bundle = getIntent().getExtras();
 
         walletNavigationStructure =(WalletNavigationStructure) bundle.getSerializable(WALLET_NAVIGATION_STRUCTURE);
+
+        lastWallet = (InstalledWallet) bundle.getSerializable(INSTALLED_WALLET);
 
 
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
@@ -426,6 +429,11 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onCallbackViewObserver(FermatCallback fermatCallback) {
+
     }
 
     @Override

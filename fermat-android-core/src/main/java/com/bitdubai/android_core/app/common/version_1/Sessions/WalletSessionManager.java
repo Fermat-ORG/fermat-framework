@@ -37,9 +37,17 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
         if(installedWallet!=null){
             switch (installedWallet.getWalletCategory()){
                 case REFERENCE_WALLET:
-                    walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
-                    lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
-                    return walletSession;
+                    switch (installedWallet.getWalletPublicKey()){
+                        case "reference_wallet":
+                            walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
+                            lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
+                            return walletSession;
+                        case "test_wallet":
+                            walletSession= new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
+                            //lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
+                            return walletSession;
+                    }
+
                 case NICHE_WALLET:
                     break;
                 case BRANDED_NICHE_WALLET:
@@ -47,12 +55,14 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
                 case BRANDED_REFERENCE_WALLET:
                     break;
                 default:
-                    walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
+                    walletSession= new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
                     break;
             }
         }else{
             walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
         }
+
+        walletSession= new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
 
         return walletSession;
     }
