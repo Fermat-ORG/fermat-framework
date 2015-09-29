@@ -48,7 +48,6 @@ import java.util.List;
  */
 public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment {
 
-    private static final String ARG_POSITION = "position";
     View rootView;
     private ErrorManager errorManager;
     private DatabaseTool databaseTools;
@@ -60,9 +59,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
 
 
     private Resource resource;
-
     LinearLayout base;
-    TableLayout tableLayout;
 
     /**
      * SubApp session
@@ -77,7 +74,11 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+            resource = (Resource)developerSubAppSession.getData("resource");
+        }
 
         errorManager = developerSubAppSession.getErrorManager();
         try {

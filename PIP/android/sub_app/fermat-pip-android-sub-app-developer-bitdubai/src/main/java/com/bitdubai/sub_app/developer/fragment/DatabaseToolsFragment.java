@@ -56,10 +56,8 @@ public class DatabaseToolsFragment extends FermatFragment {
      * SubApp session
      */
 
-    DeveloperSubAppSession developerSubAppSession;
+    public  DeveloperSubAppSession developerSubAppSession;
 
-    private static final String ARG_POSITION = "position";
-    private static final int TAG_FRAGMENT_DATABASE = 1;
     View rootView;
 
     private DatabaseTool databaseTools;
@@ -154,6 +152,7 @@ public class DatabaseToolsFragment extends FermatFragment {
 
     public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
         this.developerSubAppSession = developerSubAppSession;
+
     }
 
 
@@ -186,9 +185,10 @@ public class DatabaseToolsFragment extends FermatFragment {
                         Resource item=(Resource) gridView.getItemAtPosition(position);
 
                         //set the next fragment and params
-                        Object[] params = new Object[1];
-                        params[0] = item;
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), params);
+                      //  Object[] params = new Object[1];
+                       // params[0] = item;
+                        developerSubAppSession.setData("resource",item);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),null);
 
                     }
                 });

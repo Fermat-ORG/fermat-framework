@@ -72,7 +72,6 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
 
     private Resource databases;
 
-    private String[] params;
     private GridView gridView;
 
 
@@ -88,7 +87,13 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
+
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+            databases = (Resource)developerSubAppSession.getData("resource");
+        }
+
 
         errorManager = developerSubAppSession.getErrorManager();
         setRetainInstance(true);
@@ -223,13 +228,12 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
 
                         //set the next fragment and params
-                        Object[] params = new Object[3];
 
-                        params[0] = databases;
-                        params[1] = developerDatabase;
-                        params[2] = developerDatabaseTableList.get(position);
+                        developerSubAppSession.setData("resource",databases);
+                        developerSubAppSession.setData("developer",developerDatabase);
+                        developerSubAppSession.setData("database",developerDatabaseTableList.get(position));
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),null);
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);

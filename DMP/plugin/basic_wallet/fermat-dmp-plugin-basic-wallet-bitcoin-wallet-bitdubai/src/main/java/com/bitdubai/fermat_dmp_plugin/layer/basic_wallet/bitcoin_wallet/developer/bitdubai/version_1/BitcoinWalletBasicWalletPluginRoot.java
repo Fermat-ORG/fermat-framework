@@ -221,6 +221,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             UUID internalWalletId = bitcoinWallet.create(walletId);
 
             walletIds.put(walletId, internalWalletId);
+            //TODO no deberia guardar el id en el archivo?
         } catch (CantCreateWalletException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantCreateWalletException("Wallet Creation Failed", exception, "walletId: " + walletId, "");
