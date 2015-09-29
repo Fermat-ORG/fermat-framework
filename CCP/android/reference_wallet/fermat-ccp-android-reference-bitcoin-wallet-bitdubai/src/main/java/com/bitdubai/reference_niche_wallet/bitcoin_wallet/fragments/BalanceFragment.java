@@ -232,12 +232,12 @@ public class BalanceFragment extends FermatWalletFragment {
             this.referenceWalletPreferenceSettings = new ReferenceWalletPreferenceSettings();
             //lstCryptoWalletTransactions = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, referenceWalletPreferenceSettings.getTransactionsToShow(), 0);
 
-            for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
-                if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
-                    ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
-                    lstData.add(listComponent);
-                }
-            }
+//            for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
+//                if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
+//                    ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
+//                    lstData.add(listComponent);
+//                }
+//            }
 
             Resources res = getResources();
 
