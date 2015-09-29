@@ -45,7 +45,7 @@ public class WalletFactoryProject implements
     }
 
     @Override
-    public void setProjectPublickKey(String publicKey) {
+    public void setProjectPublicKey(String publicKey) {
         this.projectPublicKey = publicKey;
     }
 
