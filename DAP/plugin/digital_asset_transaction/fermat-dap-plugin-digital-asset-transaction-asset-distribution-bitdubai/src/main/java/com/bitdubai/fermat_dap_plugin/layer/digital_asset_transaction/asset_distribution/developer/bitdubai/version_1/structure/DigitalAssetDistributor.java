@@ -31,13 +31,18 @@ public class DigitalAssetDistributor {
     ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH="digital-asset-distribution/";
     //String digitalAssetLocalFilePath;
-    String digitalAssetFileName;
+    //String digitalAssetFileName;
     String digitalAssetFileStoragePath;
+    //String digitalAssetMetadataFileName;
+    //String digitalAssetMetadataFileStoragePath;
     AssetDistributionDao assetDistributionDao;
+    PluginFileSystem pluginFileSystem;
+
     public DigitalAssetDistributor(AssetVaultManager assetVaultManager,
                                    ErrorManager errorManager,
                                    UUID pluginId,
-                                   PluginDatabaseSystem pluginDatabaseSystem) throws CantExecuteDatabaseOperationException {
+                                   PluginDatabaseSystem pluginDatabaseSystem,
+                                   PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
         this.assetVaultManager=assetVaultManager;
         this.errorManager=errorManager;
         assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem,pluginId);
@@ -93,15 +98,19 @@ public class DigitalAssetDistributor {
     }
 
     //TODO: preguntar al thunder team si sería conveniente persistir en archivo el digitalAssetMetadata
-    /*private void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        //Path structure: digital-asset-distribution/hash.xml
+    private void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
+        //DigitalAsset Path structure: digital-asset-distribution/hash/digital-asset.xml
+        //DigitalAssetMetadata Path structure: digital-asset-distribution/hash/digital-asset-metadata.xml
         setDigitalAssetLocalFilePath(digitalAssetMetadata);
+
     }
 
     private void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata){
-        this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
-        this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetFileName;
-    }*/
+        //this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
+        this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetMetadata.getDigitalAssetHash();
+        //this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
+        //this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetFileName;
+    }
 
 
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException {
