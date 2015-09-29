@@ -25,7 +25,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.sub_app.wallet_factory.Callback.FactoryCallback;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.models.Wallet;
 
@@ -38,7 +40,7 @@ import java.util.ArrayList;
  * @author Matias Furszy
  * @version 1.0
  */
-public class AvailableProjectsFragmentOld extends FermatFragment {
+public class AvailableProjectsFragmentOld extends FermatFragment implements FermatCallback{
 
     /**
      * Views
@@ -97,7 +99,8 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
                 //TODO: tenes que conseguir el skin desde el tu module o desde algún lado
                 //o[2] = (Object)
 
-                //TODO: tenes que pasarme el callBack class
+
+                o[3] = this;
                 changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(), o);
             }
         });
@@ -370,5 +373,15 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
 
 
         return runtimeWalletNavigationStructure;
+    }
+
+    @Override
+    public void onTouchView(Object v) {
+
+    }
+
+    @Override
+    public int getCallBackId() {
+        return 0;
     }
 }
