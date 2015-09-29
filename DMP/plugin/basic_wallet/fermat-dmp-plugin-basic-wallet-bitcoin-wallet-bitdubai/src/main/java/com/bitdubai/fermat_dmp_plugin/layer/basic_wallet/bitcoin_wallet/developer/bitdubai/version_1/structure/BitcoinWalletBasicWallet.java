@@ -125,12 +125,12 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,
+    public List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,TransactionType transactionType,
                                                            int max,
                                                            int offset) throws CantListTransactionsException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            return bitcoinWalletBasicWalletDao.listTransactions(balanceType, max, offset);
+            return bitcoinWalletBasicWalletDao.listTransactions(balanceType,transactionType, max, offset);
         } catch (CantListTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
