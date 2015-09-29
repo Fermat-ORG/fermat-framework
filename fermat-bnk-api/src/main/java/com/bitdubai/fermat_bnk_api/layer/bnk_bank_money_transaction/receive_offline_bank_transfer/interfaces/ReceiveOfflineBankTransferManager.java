@@ -17,7 +17,6 @@ public interface ReceiveOfflineBankTransferManager {
     ReceiveOfflineBankTransfer createReceiveOfflineBankTransfer(
          final String publicKeyCustomer
         ,final String publicKeyBroker
-        ,final String bankMoneyTransactionType
         ,final float merchandiseAmount
         ,final String bankCurrencyType
         ,final String bankOperationType
