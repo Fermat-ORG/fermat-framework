@@ -16,10 +16,10 @@ public interface GiveCashOnHandManager {
     GiveCashOnHand createGiveCashOnHand(
          final String publicKeyCustomer
         ,final String publicKeyBroker
-        ,final Float amount
+        ,final Float merchandiseAmount
         ,final String cashCurrencyType
         ,final String cashReference
     ) throws CantCreateGiveCashOnHandException;
 
-    void updateStatusGiveCashOnHand(final UUID cashtransactionId) throws CantUpdateStatusGiveCashOnHandException;
+    void updateStatusGiveCashOnHand(final UUID cashTransactionId) throws CantUpdateStatusGiveCashOnHandException;
 }

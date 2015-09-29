@@ -18,14 +18,10 @@ public interface CryptoMoneyStockReplenishmentManager {
     List<CryptoMoneyStockReplenishment> getAllCryptoMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetCryptoMoneyStockReplenishmentException;
 
     CryptoMoneyStockReplenishment createCryptoMoneyStockReplenishment(
-         final String operationId
-        ,final String publicKeyBroker
+         final String publicKeyBroker
         ,final String merchandiseCurrency
-        ,final float merchandiseAmount
-        ,final String referenceCurrency
-        ,final float referenceCurrencyPrice
-        ,final String cryptoCurrency
-        ,final String cryptoAddress
+        ,final String executionTransactionId
+        ,final String cryptoCurrencyType
     ) throws CantCreateCryptoMoneyStockReplenishmentException;
 
     void updateStatusCryptoMoneyStockReplenishment(final UUID transactionId) throws CantUpdateStatusCryptoMoneyStockReplenishmentException;

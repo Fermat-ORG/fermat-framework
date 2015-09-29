@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction;
 
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankCurrencyType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 
 import java.util.UUID;
@@ -20,9 +21,11 @@ public interface BankMoneyTransaction {
 
     BankTransactionStatus getStatus();
 
-    Float getAmount();
+    float getMerchandiseAmount();
 
     BankCurrencyType getBankCurrencyType();
+
+    BankOperationType getBankOperationType();
 
     String getBankName();
 
