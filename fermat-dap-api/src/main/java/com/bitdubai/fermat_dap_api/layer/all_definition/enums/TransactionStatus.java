@@ -42,7 +42,7 @@ public enum TransactionStatus {
             case "ISSUED":
                 return TransactionStatus.ISSUED;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the State enum.");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionStatus enum.");
         }
     }
 }

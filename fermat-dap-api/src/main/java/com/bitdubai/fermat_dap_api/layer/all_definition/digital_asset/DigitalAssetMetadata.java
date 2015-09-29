@@ -42,4 +42,8 @@ public class DigitalAssetMetadata {
         return digitalAssetMetadataString;
     }
 
+    public DigitalAsset getDigitalAsset(){
+        return this.digitalAsset;
+    }
+
 }

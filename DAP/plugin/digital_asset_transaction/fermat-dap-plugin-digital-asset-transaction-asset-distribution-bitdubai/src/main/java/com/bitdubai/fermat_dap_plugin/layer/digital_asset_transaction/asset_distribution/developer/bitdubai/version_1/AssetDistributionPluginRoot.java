@@ -16,6 +16,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Dea
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.AssetDistributionTransactionManager;
@@ -50,9 +51,16 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
     public void start() throws CantStartPluginException {
         //printSomething("Plugin started");
         try{
-            this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(this.assetVaultManager, this.errorManager);
+            this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(
+                    this.assetVaultManager,
+                    this.errorManager,
+                    this.pluginId,
+                    this.pluginDatabaseSystem);
+            //TODO: start database
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
+        } catch (CantExecuteDatabaseOperationException exception) {
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
         }
         this.serviceStatus=ServiceStatus.STARTED;
 
