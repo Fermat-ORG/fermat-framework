@@ -1,4 +1,4 @@
-package com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.provisory_classes;
+package com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.provisory_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
