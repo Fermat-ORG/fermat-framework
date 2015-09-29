@@ -7,9 +7,8 @@ import com.bitdubai.fermat_bnk_api.all_definition.exceptions.InvalidParameterExc
  */
  
 public enum BankTransactionStatus {
-    NEGOTIATION("NEG"),
     PAUSED("PAU"),
-    PENDING_PAYMENT("PEN"),
+    PENDING("PEN"),
     COMPLETED("COM"),
     CANCELLED ("CAN");
 
@@ -25,9 +24,8 @@ public enum BankTransactionStatus {
 
     public static BankTransactionStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "NEG": return BankTransactionStatus.NEGOTIATION;
             case "PAU": return BankTransactionStatus.PAUSED;
-            case "PEN": return BankTransactionStatus.PENDING_PAYMENT;
+            case "PEN": return BankTransactionStatus.PENDING;
             case "COM": return BankTransactionStatus.COMPLETED;
             case "CAN": return BankTransactionStatus.CANCELLED;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankTransactionStatus enum");
