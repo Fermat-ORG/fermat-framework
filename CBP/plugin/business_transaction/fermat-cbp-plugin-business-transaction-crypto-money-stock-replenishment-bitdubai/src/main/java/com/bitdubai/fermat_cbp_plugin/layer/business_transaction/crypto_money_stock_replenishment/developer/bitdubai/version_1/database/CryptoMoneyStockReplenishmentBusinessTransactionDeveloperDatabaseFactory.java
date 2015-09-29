@@ -123,7 +123,7 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFa
         cryptoMoneyStockReplenishmentColumns.add(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME);
         cryptoMoneyStockReplenishmentColumns.add(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME);
         cryptoMoneyStockReplenishmentColumns.add(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME);
-        cryptoMoneyStockReplenishmentColumns.add(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_EXECUTION_MONEY_TRANSACTION_ID_COLUMN_NAME);
+        cryptoMoneyStockReplenishmentColumns.add(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME);
         cryptoMoneyStockReplenishmentColumns.add(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_CRYPTO_CURRENCY_TYPE_COLUMN_NAME);
         /**
          * Table Crypto Money Stock Replenishment addition.
