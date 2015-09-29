@@ -123,7 +123,7 @@ public class CashMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFact
         cashMoneyStockReplenishmentColumns.add(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME);
         cashMoneyStockReplenishmentColumns.add(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME);
         cashMoneyStockReplenishmentColumns.add(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME);
-        cashMoneyStockReplenishmentColumns.add(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_EXECUTION_CASH_MONEY_TRANSACTION_ID_COLUMN_NAME);
+        cashMoneyStockReplenishmentColumns.add(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_EXECUTION_MONEY_TRANSACTION_ID_COLUMN_NAME);
         cashMoneyStockReplenishmentColumns.add(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_CASH_CURRENCY_TYPE_COLUMN_NAME);
         /**
          * Table Cash Money Stock Replenishment addition.
