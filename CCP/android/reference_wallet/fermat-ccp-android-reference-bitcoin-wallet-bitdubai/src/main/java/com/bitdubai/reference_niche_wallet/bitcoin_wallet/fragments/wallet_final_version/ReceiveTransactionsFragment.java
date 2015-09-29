@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -106,13 +108,22 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         TextView txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
         TextView txt_touch_to_change = (TextView) balance_header.findViewById(R.id.txt_touch_to_change);
+        txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(),"holas",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         TextView txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
 
         TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_amount_type);
 
-        container_header_balance.addView(balance_header);
+        //container_header_balance.addView(balance_header);
 
+        //container_header_balance.invalidate();
+
+        //((PaintActivtyFeactures)getActivity()).invalidate();
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
