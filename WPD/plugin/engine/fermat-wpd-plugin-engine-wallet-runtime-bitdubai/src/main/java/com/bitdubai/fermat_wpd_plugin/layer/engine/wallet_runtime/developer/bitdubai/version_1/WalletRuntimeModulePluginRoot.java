@@ -420,6 +420,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
         activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
         activity.setColor("#03A9F4");
+        navigationStructure.setStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
 
 
         TitleBar titleBar = new TitleBar();
