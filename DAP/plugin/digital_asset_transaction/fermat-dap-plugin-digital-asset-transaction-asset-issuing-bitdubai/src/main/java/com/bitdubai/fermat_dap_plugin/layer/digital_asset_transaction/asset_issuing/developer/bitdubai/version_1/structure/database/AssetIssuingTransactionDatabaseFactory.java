@@ -86,22 +86,24 @@ public class AssetIssuingTransactionDatabaseFactory implements DealsWithPluginDa
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME+" table", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME+" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
 
-            DatabaseTableFactory transitionProtocolTable = databaseFactory.newTableFactory(ownerId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_NAME);
+            DatabaseTableFactory transitionProtocolTable = databaseFactory.newTableFactory(ownerId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
 
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_PROTOCOL_STATUS, DatabaseDataType.STRING,100, Boolean.TRUE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,34, Boolean.FALSE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_OCCURRENCES_COLUMN_NAME,DatabaseDataType.INTEGER,4, Boolean.FALSE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_ID_COLUMN, DatabaseDataType.STRING,36, Boolean.TRUE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_EVENT_COLUMN, DatabaseDataType.STRING,10, Boolean.FALSE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_SOURCE_COLUMN,DatabaseDataType.STRING,10, Boolean.FALSE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_STATUS_COLUMN, DatabaseDataType.STRING,10, Boolean.FALSE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN,DatabaseDataType.LONG_INTEGER,100, Boolean.FALSE);
 
-            transitionProtocolTable.addIndex(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_FIRST_KEY_COLUMN);
+            transitionProtocolTable.addIndex(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, transitionProtocolTable);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_NAME+" table", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
 
             DatabaseTableFactory assetIssuingTable = databaseFactory.newTableFactory(ownerId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
