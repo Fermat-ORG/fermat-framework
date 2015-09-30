@@ -36,7 +36,8 @@ TIP: Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need
 consensus agreement to transport value from one point to another
 
 
-=== FERMAT as system
+=== FERMAT as a system of platforms
+FERMAT was originally conceived as a new platform for wallet production to reach end user's that were ready to adopt cryptocurrency but did not want to get involved in the technichal aspecting of programming or needing developer{ s skills to use them. The initial goal could be reached and at the same time the technology to be developed was thought to expand the possibilities of wallets to marketing agencies to rebrand wallets  for their customers and event reach to the retailers circuit in a very convinient way. After the first months of development where the team has rapidly grwn to more than 30 people, the impllications of FERMAT{ s conceptual framework led to the exploration and development of new applications, that reorganized, have turn FERMAT instead of a platform into a system of platforms based on a plug-in architecture to be implemented as a distributed system.
 
 * OPEN SOURCE
 The code can be reviewed and audited by anyone.
