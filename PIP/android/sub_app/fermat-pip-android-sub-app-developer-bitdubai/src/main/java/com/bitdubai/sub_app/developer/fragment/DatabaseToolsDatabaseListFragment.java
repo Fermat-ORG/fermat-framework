@@ -174,7 +174,7 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
                         //set the next fragment and params
                         developerSubAppSession.setData("resource",resource);
                         developerSubAppSession.setData("database",developerDatabaseList.get(position));
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),null);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
                     }
                 });
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);

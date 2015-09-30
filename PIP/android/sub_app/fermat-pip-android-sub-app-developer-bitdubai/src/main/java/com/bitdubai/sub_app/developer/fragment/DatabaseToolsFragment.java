@@ -146,7 +146,7 @@ public class DatabaseToolsFragment extends FermatFragment {
 
                     Resource item=(Resource) gridView.getItemAtPosition(position);
                     developerSubAppSession.setData("resource",item);
-                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),null);
+                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
 
 
                 }
