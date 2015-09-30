@@ -13,36 +13,36 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_agent.crypto_broker.exceptions.Cant
  */
 public interface CryptoBrokerManager {
 
-    CryptoBroker BasePriceMerchandiseCurrency(
+    CryptoBroker basePriceMerchandiseCurrency(
          final Double totalMerchandiseCurrency
         ,final Double totalInvestedMerchandiseCurrency
     ) throws CantCalculateBasePriceMerchandiseCurrencyException;
 
-    CryptoBroker Spread(
+    CryptoBroker spread(
          final Float percentageSale
         ,final Float percentagePurchase
     ) throws CantCalculateSpreadException;
 
-    CryptoBroker SuggestedPriceSale(
+    CryptoBroker suggestedPriceSale(
          final Float percentageSale
         ,final Float basePriceMerchandiseCurrency
     ) throws CantCalculateSuggestedPriceSaleException;
 
-    CryptoBroker SuggestedPricePurchase(
+    CryptoBroker suggestedPricePurchase(
          final Float percentagePurchase
         ,final Float basePriceMerchandiseCurrency
     ) throws CantCalculateSuggestedPricePurchaseException;
 
-    CryptoBroker ProtecionInvestmentSale(
-         final Double referenceCurrency
-        ,final Double priceMarketCurrent
+    CryptoBroker protecionInvestmentSale(
+         final Double priceReferenceCurrencyCurrent
+        ,final Double priceMarketMerchandiseCurrencyCurrent
         ,final Double suggestedPriceSale
         ,final Double priceSale
     ) throws CantCalculateProtecionInvestmentSaleException;
 
-    CryptoBroker ProtecionInvestmentPurchase(
-         final Double referenceCurrency
-        ,final Double priceMarketCurrent
+    CryptoBroker protecionInvestmentPurchase(
+         final Double priceReferenceCurrencyCurrent
+        ,final Double priceMarketMerchandiseCurrencyCurrent
         ,final Double suggestedPricePurchase
         ,final Double pricePurchase
     ) throws CantCalculateProtecionInvestmentPurchaseException;
