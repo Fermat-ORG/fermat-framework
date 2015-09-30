@@ -85,6 +85,7 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
     public void start() throws CantStartPluginException {
         try{
             loadWalletIssuerMap();
+            createWalletAssetIssuer("walletPublicKeyTest");
             System.out.println("Star Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){

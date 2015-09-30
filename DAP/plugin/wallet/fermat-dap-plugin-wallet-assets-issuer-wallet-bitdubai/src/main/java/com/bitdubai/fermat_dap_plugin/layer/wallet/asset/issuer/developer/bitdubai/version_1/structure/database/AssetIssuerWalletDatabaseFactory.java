@@ -82,7 +82,6 @@ public class AssetIssuerWalletDatabaseFactory implements DealsWithPluginDatabase
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
-        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME, DatabaseDataType.STRING, 30, false);

@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -20,6 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletBalance;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletTransactionWrapper;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantExecuteAssetIssuerTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantGetBalanceRecordException;
 
@@ -134,7 +137,7 @@ public class AssetIssuerWalletDao {
         }
     }
 
-    public List<AssetIssuerWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, int max, int offset) throws CantGetTransactionsException{
+    public List<AssetIssuerWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException{
         try {
             DatabaseTable databaseTableAssuerIssuerWallet = getBalancesTable();
             databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, "", DatabaseFilterType.EQUAL);
@@ -167,9 +170,29 @@ public class AssetIssuerWalletDao {
         return transactions;
     }
 
-    //private BitcoinWalletTransaction constructBitcoinWalletTransactionFromRecord(final DatabaseTableRecord record){
-    private AssetIssuerWalletTransaction constructAssetIssuerWalletTransactionFromRecord(DatabaseTableRecord databaseTableRecord){
-        return null;
+
+    private AssetIssuerWalletTransaction constructAssetIssuerWalletTransactionFromRecord(DatabaseTableRecord record){
+
+        UUID transactionId              = record.getUUIDValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME);
+        String assetPublicKey           = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME);
+        String transactionHash          = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TRANSACTION_HASH_COLUMN_NAME);
+        TransactionType transactionType = TransactionType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME));
+        CryptoAddress addressFrom       = new CryptoAddress();
+        addressFrom.setAddress(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ADDRESS_FROM_COLUMN_NAME));
+        CryptoAddress addressTo         = new CryptoAddress();
+        addressTo.setAddress(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ADDRESS_TO_COLUMN_NAME));
+        String actorFromPublicKey       = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_COLUMN_NAME);
+        String actorToPublicKey         = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_COLUMN_NAME);
+        Actors actorFromType            = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_TYPE_COLUMN_NAME));
+        Actors actorToType              = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_TYPE_COLUMN_NAME));
+        BalanceType balanceType         = BalanceType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME));
+        long amount                     = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__AMOUNT_COLUMN_NAME);
+        long runningBookBalance         = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__RUNNING_BOOK_BALANCE_COLUMN_NAME);
+        long runningAvailableBalance    = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+        long timeStamp                  = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME);
+        String memo                     = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__MEMO_COLUMN_NAME);
+        return new AssetIssuerWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, addressFrom, addressTo,
+                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
     }
 
     private void executeTransaction(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance) throws CantExecuteAssetIssuerTransactionException{
@@ -197,6 +220,7 @@ public class AssetIssuerWalletDao {
             {
                 record = getBalancesTable().getEmptyRecord();
             }
+            record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, digitalAsset.getPublicKey());
             record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
             record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
             return record;
