@@ -9,7 +9,11 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
@@ -283,7 +287,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          */
         boolean isValid =AsymmectricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), getServerIdentity());
 
-        System.out.println(" WsCommunicationsCloudClientChannel - isValid = "+isValid);
+        System.out.println(" WsCommunicationsCloudClientChannel - isValid = " + isValid);
 
         /*
          * if not valid signature
@@ -425,5 +429,18 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public EventManager getEventManager() {
         return eventManager;
+    }
+
+    /**
+     * Notify when cloud client component es registered,
+     * this event is raise to show the message in a popup of the UI
+     */
+    public void launchCompleteClientComponentRegistrationNotificationEvent() {
+
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        CompleteClientComponentRegistrationNotificationEvent event =  (CompleteClientComponentRegistrationNotificationEvent) platformEvent;
+        event.setSource(EventSource.INCOMING_EXTRA_USER);
+        event.setMessage("Cloud client communication, registered and established connection.");
+        eventManager.raiseEvent(platformEvent);
     }
 }

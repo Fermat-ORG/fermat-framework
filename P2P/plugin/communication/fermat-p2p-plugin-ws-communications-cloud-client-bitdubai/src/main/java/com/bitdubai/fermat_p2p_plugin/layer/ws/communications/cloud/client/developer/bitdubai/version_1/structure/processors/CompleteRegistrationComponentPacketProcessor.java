@@ -74,7 +74,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
              * Mark as register
              */
             getWsCommunicationsCloudClientChannel().setIsRegister(Boolean.TRUE);
-
+            getWsCommunicationsCloudClientChannel().launchCompleteClientComponentRegistrationNotificationEvent();
             System.out.println("CompleteRegistrationComponentPacketProcessor - getWsCommunicationsCloudClientChannel().isRegister() = "+ getWsCommunicationsCloudClientChannel().isRegister());
         }
 
@@ -105,4 +105,8 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
     public FermatPacketType getFermatPacketType() {
         return FermatPacketType.COMPLETE_COMPONENT_REGISTRATION;
     }
+
+
+
+
 }
