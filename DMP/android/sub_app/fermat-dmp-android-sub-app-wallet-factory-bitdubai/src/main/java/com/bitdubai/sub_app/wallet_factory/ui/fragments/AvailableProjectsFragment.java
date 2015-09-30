@@ -7,9 +7,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -18,6 +21,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.In
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.adapters.InstalledWalletsAdapter;
+import com.bitdubai.sub_app.wallet_factory.interfaces.PopupMenu;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
 
@@ -31,7 +35,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class AvailableProjectsFragment extends FermatFragment
-        implements SwipeRefreshLayout.OnRefreshListener {
+        implements SwipeRefreshLayout.OnRefreshListener, OnMenuItemClickListener {
 
     private final String TAG = "FactoryProjects";
 
@@ -73,10 +77,21 @@ public class AvailableProjectsFragment extends FermatFragment
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new InstalledWalletsAdapter(getActivity());
+        adapter.setMenuItemClickListener(new PopupMenu() {
+            @Override
+            public void onMenuItemClickListener(View menuView, Object project, int position) {
+                /*Showing up popup menu*/
+                android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.menu_installed_wallet, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(AvailableProjectsFragment.this);
+                popupMenu.show();
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         return rootView;
@@ -156,5 +171,10 @@ public class AvailableProjectsFragment extends FermatFragment
             rootView.findViewById(R.id.empty).setAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
             rootView.findViewById(R.id.empty).setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        return false;
     }
 }

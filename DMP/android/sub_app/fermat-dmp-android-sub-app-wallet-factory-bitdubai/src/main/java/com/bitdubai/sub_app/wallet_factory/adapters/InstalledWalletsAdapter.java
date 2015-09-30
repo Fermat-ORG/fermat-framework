@@ -7,6 +7,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.holders.InstalledWalletViewHolder;
+import com.bitdubai.sub_app.wallet_factory.interfaces.PopupMenu;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,8 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class InstalledWalletsAdapter extends FermatAdapter<InstalledWallet, InstalledWalletViewHolder> {
+
+    private PopupMenu menuItemClickListener;
 
     public InstalledWalletsAdapter(Context context) {
         super(context);
@@ -37,9 +40,21 @@ public class InstalledWalletsAdapter extends FermatAdapter<InstalledWallet, Inst
     }
 
     @Override
-    protected void bindHolder(InstalledWalletViewHolder holder, InstalledWallet data, int position) {
+    protected void bindHolder(final InstalledWalletViewHolder holder, final InstalledWallet data, final int position) {
         holder.title.setText(data.getWalletName());
         holder.description.setText(data.getWalletPublicKey());
         holder.type.setText(data.getWalletType().getCode());
+        if (menuItemClickListener != null) {
+            holder.menu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    menuItemClickListener.onMenuItemClickListener(holder.menu, data, position);
+                }
+            });
+        }
+    }
+
+    public void setMenuItemClickListener(PopupMenu menuItemClickListener) {
+        this.menuItemClickListener = menuItemClickListener;
     }
 }

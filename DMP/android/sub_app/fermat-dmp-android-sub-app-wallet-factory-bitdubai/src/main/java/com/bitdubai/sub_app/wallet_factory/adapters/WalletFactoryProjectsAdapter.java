@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.holders.WalletItemViewHolder;
 import com.bitdubai.sub_app.wallet_factory.interfaces.PopupMenu;
+import com.bitdubai.sub_app.wallet_factory.models.WalletFactoryProject;
 
 import java.util.ArrayList;
 
