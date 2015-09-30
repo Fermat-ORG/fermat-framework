@@ -230,7 +230,8 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,TransactionType transactionType,
+    List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
+                                                  TransactionType transactionType,
                                                   String      walletPublicKey,
                                                   int         max,
                                                   int         offset) throws CantListTransactionsException;

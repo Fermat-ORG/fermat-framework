@@ -39,16 +39,22 @@
 
         >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:id="@+id/container_header_balance"
+            android:layout_alignParentTop="true">
+
+        </RelativeLayout>
+
 
         <com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="48dip"
             android:background="@drawable/background_tabs"
+            android:layout_below="@+id/container_header_balance"
             />
-
-
-
 
 
 

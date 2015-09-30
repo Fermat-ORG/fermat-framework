@@ -2,11 +2,12 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -14,22 +15,19 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
  */
 
 
-public class TransactionItemViewHolder extends FermatViewHolder {
+public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     private ImageView contactIcon;
     private TextView txt_contactName;
     private TextView txt_amount;
     private TextView txt_notes;
     private TextView txt_time;
 
-    private TextView txt_total_balance;
-    private TextView txt_total_number_transactions;
-    private ImageView ImageView_see_all_transactions;
-
-    private ListView listView_transactions;
+    private TextView txt_state;
 
 
 
-    public TransactionItemViewHolder(View itemView) {
+
+    public PaymentHistoryItemViewHolder(View itemView) {
         super(itemView);
 
         contactIcon = (ImageView) itemView.findViewById(R.id.contactIcon);
@@ -37,12 +35,8 @@ public class TransactionItemViewHolder extends FermatViewHolder {
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
         txt_time = (TextView) itemView.findViewById(R.id.txt_time);
+        txt_state = (TextView) itemView.findViewById(R.id.state);
 
-        txt_total_balance = (TextView) itemView.findViewById(R.id.txt_total_balance);
-        txt_total_number_transactions = (TextView) itemView.findViewById(R.id.txt_total_number_transactions);
-        ImageView_see_all_transactions = (ImageView) itemView.findViewById(R.id.ImageView_see_all_transactions);
-
-        listView_transactions = (ListView) itemView.findViewById(R.id.listView_transactions);
 
 
     }
@@ -68,19 +62,7 @@ public class TransactionItemViewHolder extends FermatViewHolder {
         return txt_time;
     }
 
-    public ImageView getImageView_see_all_transactions() {
-        return ImageView_see_all_transactions;
-    }
-
-    public TextView getTxt_total_balance() {
-        return txt_total_balance;
-    }
-
-    public TextView getTxt_total_number_transactions() {
-        return txt_total_number_transactions;
-    }
-
-    public ListView getListView_transactions() {
-        return listView_transactions;
+    public TextView getTxt_state() {
+        return txt_state;
     }
 }
