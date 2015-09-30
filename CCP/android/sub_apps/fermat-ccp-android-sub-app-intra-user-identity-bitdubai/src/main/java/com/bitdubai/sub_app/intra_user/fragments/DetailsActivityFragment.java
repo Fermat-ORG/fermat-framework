@@ -17,9 +17,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.intra_user.common.UtilsFuncs;
 import com.bitdubai.sub_app.intra_user.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.intra_user.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
