@@ -13,7 +13,7 @@ import org.bitcoinj.wallet.DeterministicSeed;
 /**
  * Created by rodrigo on 9/30/15.
  */
-public class BitcoinCryptoNetworkManager implements BitcoinNetworkManager {
+public class BitcoinCryptoNetworkManager {
 
     EventManager eventManager;
 
@@ -25,7 +25,7 @@ public class BitcoinCryptoNetworkManager implements BitcoinNetworkManager {
         this.eventManager = eventManager;
     }
 
-    @Override
+
     public void monitorNetworkFromSeed(BlockchainNetworkType blockchainNetworkType, DeterministicSeed deterministicSeed) throws CantMonitorBitcoinNetworkException {
         Wallet wallet = Wallet.fromSeed(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), deterministicSeed);
         NetworkMonitorAgent networkMonitorAgent = new NetworkMonitorAgent(wallet, wallet.getNetworkParameters(), this.eventManager);

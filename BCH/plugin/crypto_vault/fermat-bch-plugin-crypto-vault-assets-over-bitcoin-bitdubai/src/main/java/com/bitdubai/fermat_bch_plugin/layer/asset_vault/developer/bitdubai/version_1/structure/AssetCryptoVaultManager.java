@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 9/19/15.
  */
-public class AssetCryptoVaultManager implements AssetVaultManager {
+public class AssetCryptoVaultManager  {
     /**
      * AssetVaultManager variables
      */
@@ -108,17 +108,17 @@ public class AssetCryptoVaultManager implements AssetVaultManager {
      * @return
      * @throws GetNewCryptoAddressException
      */
-    @Override
+
     public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
             return vaultKeyHierarchy.getNewCryptoAddressFromChain(blockchainNetworkType, 0);
     }
 
-    @Override
+
     public CryptoTransaction getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException {
         return null;
     }
 
-    @Override
+
     public long getAvailableBalanceForTransaction(String genesisTransaction) {
         return 0;
     }

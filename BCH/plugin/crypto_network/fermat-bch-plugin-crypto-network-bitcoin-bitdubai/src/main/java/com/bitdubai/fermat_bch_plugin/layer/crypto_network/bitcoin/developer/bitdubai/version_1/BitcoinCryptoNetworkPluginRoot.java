@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -17,8 +18,8 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 9/23/15.
  */
-public class BitcoinCryptoNetworkPluginRoot implements DealsWithEvents, Plugin, Service {
-
+public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, DealsWithEvents, Plugin, Service {
+    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
     /**
      * DealsWithEvents interface variable and implementation
      */
@@ -45,7 +46,7 @@ public class BitcoinCryptoNetworkPluginRoot implements DealsWithEvents, Plugin, 
 
     @Override
     public void start() throws CantStartPluginException {
-        BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager);
+         bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager);
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -72,4 +73,9 @@ public class BitcoinCryptoNetworkPluginRoot implements DealsWithEvents, Plugin, 
         return this.serviceStatus;
     }
 
+
+    @Override
+    public void monitorNetworkFromSeed(BlockchainNetworkType blockchainNetworkType, DeterministicSeed deterministicSeed) throws CantMonitorBitcoinNetworkException {
+        this.bitcoinCryptoNetworkManager.monitorNetworkFromSeed(blockchainNetworkType, deterministicSeed);
+    }
 }

@@ -25,7 +25,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetVaultPluginRoot implements DealsWithBitcoinNetwork, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithBitcoinNetwork, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
     AssetCryptoVaultManager assetCryptoVaultManager;
 
@@ -125,5 +125,20 @@ public class AssetVaultPluginRoot implements DealsWithBitcoinNetwork, DealsWithD
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
+    }
+
+    @Override
+    public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        return assetCryptoVaultManager.getNewAssetVaultCryptoAddress(blockchainNetworkType);
+    }
+
+    @Override
+    public CryptoTransaction getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException {
+        return assetCryptoVaultManager.getGenesisTransaction(transactionId);
+    }
+
+    @Override
+    public long getAvailableBalanceForTransaction(String genesisTransaction) {
+        return assetCryptoVaultManager.getAvailableBalanceForTransaction(genesisTransaction);
     }
 }
