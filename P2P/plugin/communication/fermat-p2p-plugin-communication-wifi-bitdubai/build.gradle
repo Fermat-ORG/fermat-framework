@@ -86,7 +86,7 @@ tasks.withType(FindBugs) {
 		html.enabled = true
 	}
 }
-
+//falto
 task jenkins(dependsOn: ['clean', 'check', 'jacocoTestReport']) << {
 	println 'Estos son los chequeos que se tienen que pasar antes de hacer push al servidor Jenkins'
 }
