@@ -515,7 +515,7 @@ public class WalletPublisherMiddlewarePluginRoot implements DealsWithPluginFileS
             }
 
             @Override
-            public void setProjectPublickKey(String publickKey) {
+            public void setProjectPublicKey(String publickKey) {
                 //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             }
 

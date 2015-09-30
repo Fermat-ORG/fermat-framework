@@ -1,6 +1,4 @@
-package com.bitdubai.sub_app.wallet_factory.Callback;
-
-import android.view.View;
+package com.bitdubai.sub_app.wallet_factory.callbacks;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 
