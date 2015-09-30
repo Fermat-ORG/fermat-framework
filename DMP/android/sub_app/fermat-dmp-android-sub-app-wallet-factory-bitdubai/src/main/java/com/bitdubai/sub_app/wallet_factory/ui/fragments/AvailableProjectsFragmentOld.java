@@ -27,7 +27,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.sub_app.wallet_factory.R;
-import com.bitdubai.sub_app.wallet_factory.models.Wallet;
 
 import java.util.ArrayList;
 
@@ -55,6 +54,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment implements Ferm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
         wallets = new ArrayList<>();
         Wallet wallet = new Wallet();
         wallet.setNavigation(startWalletNavigationStructure());
@@ -66,6 +66,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment implements Ferm
         wallets.add(wallet);
         wallets.add(wallet);
         wallets.add(wallet);
+        */
     }
 
     @Nullable
