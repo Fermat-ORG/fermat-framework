@@ -46,6 +46,8 @@ public class SpecialistSelector implements DealsWithCryptoAddressBook {
                     return Specialist.INTRA_USER_SPECIALIST;
                 case EXTRA_USER:
                     return Specialist.EXTRA_USER_SPECIALIST;
+                case ASSET_ISSUER:
+                    return Specialist.ASSET_ISSUER_SPECIALIST;
                 default:
                     // Here we have a serious problem
                     throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Actor: " + cryptoAddressBookRecord.getDeliveredToActorType() + " with code " + cryptoAddressBookRecord.getDeliveredToActorType().getCode(),"Actor not considered in switch statement");

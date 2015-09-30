@@ -66,7 +66,6 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
 
-    private static final String ARG_POSITION = "position";
     View rootView;
 
     private LogTool logTool;
@@ -91,7 +90,12 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession)super.subAppsSession;
+
+            lstLoggers = (ArrayListLoggers)developerSubAppSession.getData("list");
+        }
+
         errorManager = developerSubAppSession.getErrorManager();
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
@@ -253,12 +257,10 @@ public class LogToolsFragmentLevel1 extends FermatFragment {
                         }
 
                         //set the next fragment and params
-                        Object[] params = new Object[2];
 
-                        params[0] = lst;
-                        params[1] = level;
-
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(),params);
+                        developerSubAppSession.setData("list",lst);
+                        developerSubAppSession.setData("level",level);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(),R.id.logContainer,null);
 
 
                     }

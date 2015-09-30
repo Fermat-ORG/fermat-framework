@@ -302,7 +302,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         WalletSession walletSession = null;
         try {
             //WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
-            walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),null, getWalletResourcesProviderManager(), getErrorManager());
+            walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),null, getWalletResourcesProviderManager(), getErrorManager(),getCryptoBrokerWalletModuleManager());
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
@@ -436,12 +436,13 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     }
 
-    @Override
-    public void changeScreen(String fragment, Object[] objects) {
 
+    private void loadFragment(String fragmentType){
 
     }
-    private void loadFragment(String fragmentType){
+
+    @Override
+    public void changeScreen(String screen, int idContainer, Object[] objects) {
 
     }
 

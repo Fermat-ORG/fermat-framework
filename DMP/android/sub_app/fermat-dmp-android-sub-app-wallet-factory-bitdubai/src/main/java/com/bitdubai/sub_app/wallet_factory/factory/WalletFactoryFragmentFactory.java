@@ -5,7 +5,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.settings.WalletFactoryPreferenceSettings;
-import com.bitdubai.sub_app.wallet_factory.ui.fragments.AvailableProjectsFragment;
 import com.bitdubai.sub_app.wallet_factory.ui.fragments.AvailableProjectsFragmentOld;
 import com.bitdubai.sub_app.wallet_factory.ui.fragments.MainFragment;
 

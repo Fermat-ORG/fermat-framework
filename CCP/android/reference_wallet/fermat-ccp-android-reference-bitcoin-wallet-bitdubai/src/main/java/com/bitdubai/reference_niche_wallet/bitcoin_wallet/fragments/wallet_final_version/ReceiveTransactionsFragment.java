@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,14 +22,18 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
  * Created by mati on 2015.09.28..
@@ -58,6 +64,9 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     private int MAX_TRANSACTIONS = 20;
     private int offset = 0;
 
+    View rootView;
+    private LinearLayout linear_layout_receive_form;
+
     /**
      * Create a new instance of this fragment
      *
@@ -86,6 +95,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         }
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -96,36 +106,69 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        rootView = super.onCreateView(inflater,container, savedInstanceState);
 //
+        RelativeLayout container_header_balance = getActivityHeader();
 
-        //container_header_balance.addView(balance_header);
-//        RelativeLayout container_header_balance = getActivityHeader();
-//
-//        inflater =
-//                (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//        container_header_balance.setVisibility(View.VISIBLE);
-//
-//        View balance_header = inflater.inflate(R.layout.balance_header, container_header_balance, true);
-//
-//        TextView txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
-//
-//        TextView txt_touch_to_change = (TextView) balance_header.findViewById(R.id.txt_touch_to_change);
-//        txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(getActivity(),"holas",Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        TextView txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
-//
-//        TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_amount_type);
+        inflater =
+                (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        container_header_balance.setVisibility(View.VISIBLE);
+
+        View balance_header = inflater.inflate(R.layout.balance_header, container_header_balance, true);
+
+        final TextView txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
+
+
+        TextView txt_touch_to_change = (TextView) balance_header.findViewById(R.id.txt_touch_to_change);
+        txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
+                txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+            }
+        });
+
+        TextView txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
+
+        try {
+            long balance = cryptoWallet.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()),referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            txt_balance_amount.setText(formatBalanceString(balance, referenceWalletSession.getTypeAmount()));
+        } catch (CantGetBalanceException e) {
+            e.printStackTrace();
+        }
+
         //container_header_balance.invalidate();
 
         //((PaintActivtyFeactures)getActivity()).invalidate();
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        //rootView    = inflater.inflate(R.layout.receive_button, container, false);
+
+
+        linear_layout_receive_form = (LinearLayout) rootView.findViewById(R.id.receive_form);
+
+        ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isShow = linear_layout_receive_form.isShown();
+                //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+                if (isShow) {
+                    Fx.slide_up(getActivity(), linear_layout_receive_form);
+                    linear_layout_receive_form.setVisibility(View.GONE);
+                } else {
+                    linear_layout_receive_form.setVisibility(View.VISIBLE);
+                    Fx.slide_down(getActivity(), linear_layout_receive_form);
+                }
+
+            }
+        });
+
+
+
+
+
+
+        return rootView;
     }
 
 
@@ -136,7 +179,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_main_fragment;
+        return R.layout.transaciotn_main_fragment_receive;
     }
 
     @Override

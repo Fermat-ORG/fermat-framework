@@ -1097,24 +1097,27 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             // DAP
 
 
-            runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.DAP_ASSETS_FACTORY);
-            runtimeSubApp.setStartActivity(Activities.DAP_MAIN);
+            RuntimeSubApp dapFactory = new RuntimeSubApp();
+            dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
+            dapFactory.setStartActivity(Activities.DAP_MAIN);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_MAIN);
-            subAppIntraUser.addActivity(runtimeActivity);
             runtimeActivity.setColor("#FF0B46F0");
+
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
             statusBar.setColor("#FF0B46F0");
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("DAP factory");
             runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey());
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey());
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY.getKey(), runtimeFragment);
 
-            listSubApp.put(SubApps.DAP_ASSETS_FACTORY,runtimeSubApp);
+            dapFactory.addActivity(runtimeActivity);
+
+            listSubApp.put(SubApps.DAP_ASSETS_FACTORY,dapFactory);
             /**
              * End of intra user sub app
              */
