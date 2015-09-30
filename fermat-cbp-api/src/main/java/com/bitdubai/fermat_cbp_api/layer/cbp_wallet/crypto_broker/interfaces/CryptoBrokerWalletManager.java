@@ -15,7 +15,12 @@ public interface CryptoBrokerWalletManager {
 
     void cryptoBrokerWalletBalance() throws CantGenerateBalanceCryptoBrokerWalletException;
 
+    Double TotalMerchandiseCurrency() throws CantGenerateBalanceCryptoBrokerWalletException;
+
+    Double TotalInvestedMerchandiseCurrency() throws CantGenerateBalanceCryptoBrokerWalletException;
+
     Double PriceReferenceCurrencyCurrent() throws CantGenerateBalanceCryptoBrokerWalletException;
 
     Double PriceMarketMerchandiseCurrencyCurrent() throws CantGenerateBalanceCryptoBrokerWalletException;
+
 }
