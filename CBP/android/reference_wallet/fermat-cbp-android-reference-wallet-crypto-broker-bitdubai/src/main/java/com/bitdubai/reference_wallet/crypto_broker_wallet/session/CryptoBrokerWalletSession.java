@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.Instal
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class CryptoBrokerWalletSession implements WalletSession {
     /**
      * Wallet Store Module
      */
-    private WalletStoreModuleManager moduleManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
 
 
     /**
@@ -41,7 +42,7 @@ public class CryptoBrokerWalletSession implements WalletSession {
      * @param errorManager             the error manager
      * @param moduleManager the module of this SubApp
      */
-    public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletStoreModuleManager moduleManager) {
+    public CryptoBrokerWalletSession(InstalledWallet wallet, ErrorManager errorManager, CryptoBrokerWalletModuleManager moduleManager) {
         this.wallet = wallet;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -102,7 +103,7 @@ public class CryptoBrokerWalletSession implements WalletSession {
      *
      * @return reference to the Wallet Store Module
      */
-    public WalletStoreModuleManager getModuleManager() {
+    public CryptoBrokerWalletModuleManager getModuleManager() {
         return moduleManager;
     }
 

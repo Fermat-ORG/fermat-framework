@@ -5,4 +5,19 @@ package com.bitdubai.fermat_cbp_api.all_definition.agent;
  */
 public interface Agent {
 
+    Double getTotalMerchandiseCurrency();
+
+    Double getTotalInvestedMerchandiseCurrency();
+
+    Float getPercentageSale();
+
+    Float getPercentagePurchase();
+
+    Double getPriceReferenceCurrencyCurrent();
+
+    Double getPriceMarketMerchandiseCurrencyCurrent();
+
+    Double getPriceSale();
+
+    Double getPricePurchase();
 }
