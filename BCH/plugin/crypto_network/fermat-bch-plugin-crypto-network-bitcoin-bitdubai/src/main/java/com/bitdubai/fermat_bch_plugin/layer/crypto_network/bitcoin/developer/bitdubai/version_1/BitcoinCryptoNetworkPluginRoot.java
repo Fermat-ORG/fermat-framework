@@ -1,13 +1,32 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+
+import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 9/23/15.
  */
-public class BitcoinCryptoNetworkPluginRoot implements Plugin {
+public class BitcoinCryptoNetworkPluginRoot implements DealsWithEvents, Plugin, Service {
+
+    /**
+     * DealsWithEvents interface variable and implementation
+     */
+    EventManager eventManager;
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
 
     /**
      * Plugin interface variable and implementation
@@ -18,4 +37,39 @@ public class BitcoinCryptoNetworkPluginRoot implements Plugin {
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
+    /**
+     *Service interface variable and implementation
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+    @Override
+    public void start() throws CantStartPluginException {
+        BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager);
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void pause() {
+
+        this.serviceStatus = ServiceStatus.PAUSED;
+    }
+
+    @Override
+    public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void stop() {
+        this.serviceStatus = ServiceStatus.STOPPED;
+
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return this.serviceStatus;
+    }
+
 }

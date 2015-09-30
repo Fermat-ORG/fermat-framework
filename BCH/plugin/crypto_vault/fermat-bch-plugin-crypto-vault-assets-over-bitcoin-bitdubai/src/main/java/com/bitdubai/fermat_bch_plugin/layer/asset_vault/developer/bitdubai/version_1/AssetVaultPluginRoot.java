@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
@@ -23,9 +25,18 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+public class AssetVaultPluginRoot implements DealsWithBitcoinNetwork, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
     AssetCryptoVaultManager assetCryptoVaultManager;
+
+    /**
+     * DealsWithBitcoinNetwork interface variable and implementation
+     */
+    BitcoinNetworkManager bitcoinNetworkManager;
+    @Override
+    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+    }
 
     /**
      * DealsWithDeviceUser interface variable and implementation
@@ -78,7 +89,11 @@ public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithDeviceU
          */
         try{
             String deviceUserLoggerPubliKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId, pluginFileSystem, pluginDatabaseSystem, deviceUserLoggerPubliKey);
+            assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId,
+                    pluginFileSystem,
+                    pluginDatabaseSystem,
+                    deviceUserLoggerPubliKey,
+                    bitcoinNetworkManager);
         } catch (Exception e){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
         }
@@ -110,19 +125,5 @@ public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithDeviceU
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
-    }
-
-    @Override public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
-        return assetCryptoVaultManager.getNewAssetVaultCryptoAddress(blockchainNetworkType);
-    }
-
-    @Override
-    public CryptoTransaction getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException {
-        return null;
-    }
-
-    @Override
-    public long getAvailableBalanceForTransaction(String genesisTransaction) {
-        return 0;
     }
 }
