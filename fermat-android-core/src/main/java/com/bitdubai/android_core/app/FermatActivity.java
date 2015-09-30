@@ -1338,8 +1338,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
     @Override
     public RelativeLayout getActivityHeader(){
-        //return (RelativeLayout) findViewById(R.id.container_header_balance);
-        return null;
+        return (RelativeLayout) findViewById(R.id.container_header_balance);
     }
 
 
