@@ -11,5 +11,5 @@ public interface BitcoinNetworkConfiguration {
     public static final String BITCOIN_FULL__NODE_IP = "52.11.156.16";
     public static final int  BITCOIN_FULL__NODE_PORT = 18444;
     public static final String USER_AGENT_NAME = "Fermat Agent";
-    public static final String USER_AGENT_VERSION ="1.0.0";
+    public static final String USER_AGENT_VERSION ="2.0.0";
 }
