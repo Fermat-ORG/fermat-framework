@@ -17,4 +17,6 @@ public interface PaymentRequest {
     CryptoWalletWalletContact getContact();
 
     int getType();
+
+    String getState();
 }
