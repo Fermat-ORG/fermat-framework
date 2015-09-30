@@ -113,6 +113,9 @@ dependencies {
     compile project(':fermat-cbp-android-desktop-sub-app-manager-bitdubai')
     compile project(':fermat-cbp-android-desktop-wallet-manager-bitdubai')
 
+    //cbp wallets
+    compile project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
+
 
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-user-bitdubai')
