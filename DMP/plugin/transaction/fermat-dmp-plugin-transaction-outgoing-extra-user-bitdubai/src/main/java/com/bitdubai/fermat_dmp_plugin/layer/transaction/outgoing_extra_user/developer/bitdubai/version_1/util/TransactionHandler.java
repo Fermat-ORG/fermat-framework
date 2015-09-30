@@ -43,9 +43,9 @@ public class TransactionHandler {
                     }
                 case REVERSED_ON_CRYPTO_NETWORK:
                     try {
-                        transaction.setMemo("Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed");
+                        String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
-                        dao.cancelTransaction(transaction);
+                        dao.cancelTransaction(transaction, memo);
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
@@ -71,9 +71,9 @@ public class TransactionHandler {
                     // por lo que no lo revertimos
                     // TODO: Analizar si eso puede fallar
                     try {
-                        transaction.setMemo("Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed");
+                        String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
-                        dao.cancelTransaction(transaction);
+                        dao.cancelTransaction(transaction, memo);
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
@@ -110,9 +110,9 @@ public class TransactionHandler {
                     return;
                 case REVERSED_ON_CRYPTO_NETWORK:
                     try {
-                        transaction.setMemo("Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed");
+                        String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
-                        dao.cancelTransaction(transaction);
+                        dao.cancelTransaction(transaction, memo);
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
@@ -138,9 +138,9 @@ public class TransactionHandler {
                     // por lo que no lo revertimos
                     // TODO: Analizar si eso puede fallar
                     try {
-                        transaction.setMemo("Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed");
+                        String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
-                        dao.cancelTransaction(transaction);
+                        dao.cancelTransaction(transaction, memo);
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
@@ -181,10 +181,10 @@ public class TransactionHandler {
                     return;
                 case REVERSED_ON_BLOCKCHAIN:
                     try {
-                        transaction.setMemo("Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed");
+                        String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.BOOK).credit(transaction);
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
-                        dao.cancelTransaction(transaction);
+                        dao.cancelTransaction(transaction, memo);
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);

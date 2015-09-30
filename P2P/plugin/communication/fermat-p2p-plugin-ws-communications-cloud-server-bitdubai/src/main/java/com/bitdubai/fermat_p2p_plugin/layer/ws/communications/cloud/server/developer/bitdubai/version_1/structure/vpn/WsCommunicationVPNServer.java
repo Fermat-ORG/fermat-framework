@@ -6,18 +6,20 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -52,19 +54,24 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     private ECCKeyPair vpnServerIdentity;
 
     /**
-     * Represent the registered participants to this vpn
+     * Represent the registered participantsConnections to this vpn
      */
     private List<PlatformComponentProfile> registeredParticipants;
 
     /**
      * Holds all the participants connections
      */
-    private Map<String, WebSocket> participants;
+    private Map<String, WebSocket> participantsConnections;
 
     /**
-     * Holds all the participants connections
+     * Holds all the vpnClientIdentity By Participants
      */
     private Map<String, String> vpnClientIdentityByParticipants;
+
+    /**
+     * Represent the wsCommunicationCloudServer
+     */
+    private WsCommunicationCloudServer wsCommunicationCloudServer;
 
     /**
      * Constructor with parameters
@@ -72,12 +79,18 @@ public class WsCommunicationVPNServer extends WebSocketServer{
      * @param address
      * @param registeredParticipants
      */
-    public WsCommunicationVPNServer(InetSocketAddress address, List<PlatformComponentProfile> registeredParticipants) {
+    public WsCommunicationVPNServer(InetSocketAddress address, List<PlatformComponentProfile> registeredParticipants, WsCommunicationCloudServer wsCommunicationCloudServer) {
         super(address);
         this.vpnServerIdentity               = new ECCKeyPair();
         this.registeredParticipants          = registeredParticipants;
-        this.participants                    = new ConcurrentHashMap<>();
+        this.participantsConnections = new ConcurrentHashMap<>();
         this.vpnClientIdentityByParticipants = new ConcurrentHashMap<>();
+        this.wsCommunicationCloudServer      = wsCommunicationCloudServer;
+
+
+        participantsConnections.clear();
+        vpnClientIdentityByParticipants.clear();
+        vpnClientIdentityByParticipants.clear();
     }
 
     /**
@@ -90,31 +103,34 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationVPNServer - Starting method onOpen");
         System.out.println(" WsCommunicationVPNServer - New Participant Client: "+clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
-        System.out.println(" WsCommunicationVPNServer - reg-part-i = " + handshake.getFieldValue(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN));
-        System.out.println(" WsCommunicationVPNServer - vpn-cl-i = " + handshake.getFieldValue(AttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN));
+        System.out.println(" WsCommunicationVPNServer - tmp-i = " + handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI));
 
         /*
          * Validate is a handshake valid
          */
-        if (handshake.getFieldValue(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN)     != null &&
-                handshake.getFieldValue(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN) != ""   &&
-                    handshake.getFieldValue(AttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN)           != null &&
-                        handshake.getFieldValue(AttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN)       != ""){
+        if (handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI)     != null &&
+                handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI) != ""     ){
 
             boolean isRegistered = Boolean.FALSE;
+
+            String messageContentJsonStringRepresentation =  AsymmectricCryptography.decryptMessagePrivateKey(handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI), vpnServerIdentity.getPrivateKey());
+
+            System.out.println(" WsCommunicationVPNServer - messageContentJsonStringRepresentation = " + messageContentJsonStringRepresentation);
+
+            JsonParser parser = new JsonParser();
+            JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
 
             /*
              * Get the identity send by the participant
              */
-            String participantIdentity =  AsymmectricCryptography.decryptMessagePrivateKey(handshake.getFieldValue(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN), vpnServerIdentity.getPrivateKey());
-            String vpnClientIdentity   =  AsymmectricCryptography.decryptMessagePrivateKey(handshake.getFieldValue(AttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN), vpnServerIdentity.getPrivateKey());
-
+            String participantIdentity =  respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            String vpnClientIdentity   =  respond.get(JsonAttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN).getAsString();
 
             for (PlatformComponentProfile registeredParticipant : registeredParticipants) {
 
                 //Validate if registered
-                if (registeredParticipant.getIdentityPublicKey() == participantIdentity) {
-                    isRegistered = Boolean.FALSE;
+                if (registeredParticipant.getIdentityPublicKey().equals(participantIdentity)) {
+                    isRegistered = Boolean.TRUE;
                 }
 
             }
@@ -123,54 +139,63 @@ public class WsCommunicationVPNServer extends WebSocketServer{
             if (!isRegistered){
                 clientConnection.closeConnection(404, "NOT A PARTICIPANT REGISTER FOR THIS VPN");
             }else {
-                participants.put(participantIdentity, clientConnection);
+                participantsConnections.put(participantIdentity, clientConnection);
                 vpnClientIdentityByParticipants.put(participantIdentity, vpnClientIdentity);
             }
+            
+            System.out.println(" WsCommunicationVPNServer - registeredParticipants.size() = " + registeredParticipants.size());
+            System.out.println(" WsCommunicationVPNServer - participantsConnections.size() = " + participantsConnections.size());
+            System.out.println(" WsCommunicationVPNServer - Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0 = " + (Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0));
 
+            //Validate if all participantsConnections register are connect
+            if(Integer.compare(registeredParticipants.size(), participantsConnections.size()) == 0){
 
-            //Validate if all participants register are connect
-            if(registeredParticipants.size() == participants.size()){
-
-                PlatformComponentProfile peer1 =  registeredParticipants.get(0);
+                PlatformComponentProfile peer1 = registeredParticipants.get(0);
                 PlatformComponentProfile peer2 = registeredParticipants.get((registeredParticipants.size()-1));
 
-                sendNotificationPacketConnectionComplete(peer1, peer2.getIdentityPublicKey());
-                sendNotificationPacketConnectionComplete(peer2, peer1.getIdentityPublicKey());
+                sendNotificationPacketConnectionComplete(peer1, peer2);
+                sendNotificationPacketConnectionComplete(peer2, peer1);
 
             }
 
+        }else {
+            clientConnection.closeConnection(404, "DENIED, NOT VALID HANDSHAKE");
         }
 
     }
 
     /**
+     * Construct a packet whit the information that a vpn is ready
      *
      * @param destinationPlatformComponentProfile
-     * @param remotePlatformComponentProfileIdentity
+     * @param remotePlatformComponentProfile
      */
-    private void sendNotificationPacketConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, String remotePlatformComponentProfileIdentity){
+    private void sendNotificationPacketConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, PlatformComponentProfile remotePlatformComponentProfile){
+
+        System.out.println(" WsCommunicationVPNServer - sendNotificationPacketConnectionComplete = " + destinationPlatformComponentProfile.getIdentityPublicKey());
 
          /*
          * Construct the content of the msj
          */
         Gson gson = new Gson();
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE,  destinationPlatformComponentProfile.getNetworkServiceType().toString());
-        packetContent.addProperty(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN,  remotePlatformComponentProfileIdentity);
+        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
+
+
+        /*
+         * Get the connection client of the destination
+         * IMPORTANT: No send by vpn connection, no support this type of packet
+         */
+        WebSocket clientConnectionDestination = wsCommunicationCloudServer.getRegisteredClientConnectionsCache().get(destinationPlatformComponentProfile.getCommunicationCloudClientIdentity());
 
         /*
         * Construct a new fermat packet whit the same message and different destination
         */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientIdentityByParticipants.get(destinationPlatformComponentProfile.getIdentityPublicKey()), //Destination
-                                                                                                                    vpnServerIdentity.getPublicKey(),                                  //Sender
+        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(destinationPlatformComponentProfile.getCommunicationCloudClientIdentity(), //Destination
+                                                                                                                    wsCommunicationCloudServer.getServerIdentityByClientCache().get(clientConnectionDestination.hashCode()).getPublicKey(),                                  //Sender
                                                                                                                     gson.toJson(packetContent),                                        //Message Content
                                                                                                                     FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST,            //Packet type
-                                                                                                                    vpnServerIdentity.getPrivateKey());                                //Sender private key
-        /*
-         * Get the connection of the destination
-         */
-        WebSocket clientConnectionDestination = participants.get(destinationPlatformComponentProfile.getIdentityPublicKey());
-
+                                                                                                                    wsCommunicationCloudServer.getServerIdentityByClientCache().get(clientConnectionDestination.hashCode()).getPrivateKey());                                //Sender private key
         /*
         * Send the encode packet to the destination
         */
@@ -191,13 +216,13 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         System.out.println(" WsCommunicationVPNServer - Starting method onClose");
         System.out.println(" WsCommunicationVPNServer - " + clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
 
-        if (participants.size() <= 1){
+        if (participantsConnections.size() <= 1){
 
             /*
              * Close all the connection
              */
             for (WebSocket conn: connections()) {
-                conn.closeConnection(505, " All participants close her connections ");
+                conn.closeConnection(505, " All participantsConnections close her connections ");
             }
         }
 
@@ -210,61 +235,73 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     @Override
     public void onMessage(WebSocket clientConnection, String fermatPacketEncode) {
 
+        System.out.println("WsCommunicationVPNServer - onMessage ");
+
         /*
          * Decode the fermatPacketEncode into a fermatPacket
          */
         FermatPacket receiveFermatPacket = FermatPacketDecoder.decode(fermatPacketEncode, vpnServerIdentity.getPrivateKey());
 
-        /*
-         * Get the FermatMessage from the message content and decrypt
-         */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), vpnServerIdentity.getPrivateKey());
 
-        /*
-         * Construct the fermat message object
-         */
-        FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
+        if (receiveFermatPacket.getFermatPacketType() == FermatPacketType.MESSAGE_TRANSMIT){
 
-        /*
-         * Send the message to the other participants
-         */
-        for (String participantIdentity : participants.keySet()) {
+            /*
+             * Get the FermatMessage from the message content and decrypt
+             */
+            String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), vpnServerIdentity.getPrivateKey());
 
-            //If participantIdentity is different from the sender, send the message
-            if (participantIdentity != receiveFermatPacket.getSender()){
+            /*
+             * Construct the fermat message object
+             */
+            FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
-                /*
-                * Construct a new fermat packet whit the same message and different destination
-                */
-                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientIdentityByParticipants.get(participantIdentity), //Destination
-                                                                                                                            vpnServerIdentity.getPublicKey(),                         //Sender
-                                                                                                                            fermatMessage.toJson(),                                   //Message Content
-                                                                                                                            FermatPacketType.MESSAGE_TRANSMIT,                        //Packet type
-                                                                                                                            vpnServerIdentity.getPrivateKey());                       //Sender private key
 
-                /*
-                 * Get the connection of the destination
-                 */
-                WebSocket clientConnectionDestination = participants.get(participantIdentity);
+            System.out.println("WsCommunicationVPNServer - fermatMessage = "+fermatMessage);
 
-                System.out.println("WsCommunicationVPNServer - clientConnectionDestination "+clientConnectionDestination);
+            /*
+             * Send the message to the other participantsConnections
+             */
+           // for (String participantIdentity : participantsConnections.keySet()) {
 
-                /*
-                 * If the connection to client destination available
-                 */
-                if (clientConnectionDestination != null && clientConnectionDestination.isOpen()){
+                //If participantIdentity is different from the sender, send the message
+             //  if (participantIdentity != receiveFermatPacket.getSender()){
 
-                    System.out.println("WsCommunicationVPNServer - sending to destination "+fermatPacketRespond.getDestination());
-
-                   /*
-                    * Send the encode packet to the destination
+                    /*
+                    * Construct a new fermat packet whit the same message and different destination
                     */
-                    clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+                    FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientIdentityByParticipants.get(fermatMessage.getReceiver()), //Destination
+                                                                                                                                vpnServerIdentity.getPublicKey(),                         //Sender
+                                                                                                                                fermatMessage.toJson(),                                   //Message Content
+                                                                                                                                FermatPacketType.MESSAGE_TRANSMIT,                        //Packet type
+                                                                                                                                vpnServerIdentity.getPrivateKey());                       //Sender private key
 
-                }
+                    /*
+                     * Get the connection of the destination
+                     */
+                    WebSocket clientConnectionDestination = participantsConnections.get(fermatMessage.getReceiver());
 
-            }
 
+
+                    /*
+                     * If the connection to client destination available
+                     */
+                    if (clientConnectionDestination != null && clientConnectionDestination.isOpen()){
+
+                        System.out.println("WsCommunicationVPNServer - sending to destination "+fermatPacketRespond.getDestination());
+
+                       /*
+                        * Send the encode packet to the destination
+                        */
+                        clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+                    }
+
+           //    }
+
+         //   }
+
+        }else {
+            System.out.println("WsCommunicationVPNServer - Packet type " + receiveFermatPacket.getFermatPacketType() + "is not supported");
         }
 
     }

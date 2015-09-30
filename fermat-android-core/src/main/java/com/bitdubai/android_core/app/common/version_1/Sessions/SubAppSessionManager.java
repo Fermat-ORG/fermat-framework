@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
@@ -38,7 +40,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
     }
 
     @Override
-    public SubAppsSession openSubAppSession(SubApps subApps, ErrorManager errorManager, WalletFactoryManager walletFactoryManager, ToolManager toolManager,WalletStoreModuleManager walletStoreModuleManager,WalletPublisherModuleManager walletPublisherManager,IntraUserModuleManager intraUserModuleManager) {
+    public SubAppsSession openSubAppSession(SubApps subApps, ErrorManager errorManager, WalletFactoryManager walletFactoryManager, ToolManager toolManager,WalletStoreModuleManager walletStoreModuleManager,WalletPublisherModuleManager walletPublisherManager,IntraUserModuleManager intraUserModuleManager,AssetFactoryModuleManager assetFactoryModuleManager) {
 
         switch (subApps){
             case CWP_WALLET_FACTORY:
@@ -65,6 +67,10 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 IntraUserSubAppSession intraUserSubAppSession = new IntraUserSubAppSession(subApps,errorManager,intraUserModuleManager);
                 lstSubAppSession.put(subApps,intraUserSubAppSession);
                 return intraUserSubAppSession;
+            case DAP_ASSETS_FACTORY:
+                AssetFactorySession assetFactorySession = new AssetFactorySession(subApps,errorManager,assetFactoryModuleManager);
+                lstSubAppSession.put(subApps,assetFactorySession);
+                return assetFactorySession;
             default:
                 return null;
                 //throw new FermatException("")

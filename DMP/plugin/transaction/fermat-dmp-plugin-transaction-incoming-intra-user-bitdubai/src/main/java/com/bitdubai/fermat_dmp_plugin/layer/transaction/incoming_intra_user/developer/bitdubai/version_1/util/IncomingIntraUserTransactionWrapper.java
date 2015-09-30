@@ -8,77 +8,70 @@ import java.util.UUID;
 
 /**
  * Created by eze on 2015.09.15..
+ * Modified by Leon Acosta (laion.cj91@gmail.com) on 29/09/2015.
  */
 public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransactionRecord {
 
-    /*
-     * BitcoinWalletTransactionRecord Interface member variables
-     */
-    private UUID          transactionId;
-    private String        actorFromPublicKey;
-    private String        actorToPublicKey;
-    private Actors        actorFromType;
-    private Actors        actorToType;
-    private String        transactionHash;
-    private CryptoAddress addressFrom;
-    private CryptoAddress addressTo;
-    private long          amount;
-    private long          timestamp;
-    private String        memo;
+    private final UUID          transactionId     ;
+    private final String        actorFromPublicKey;
+    private final String        actorToPublicKey  ;
+    private final Actors        actorFromType     ;
+    private final Actors        actorToType       ;
+    private final String        transactionHash   ;
+    private final CryptoAddress addressFrom       ;
+    private final CryptoAddress addressTo         ;
+    private final long          amount            ;
+    private final long          timestamp         ;
+    private final String        memo              ;
 
-    @Override
-    public CryptoAddress getAddressFrom() {
-        return addressFrom;
-    }
+    public IncomingIntraUserTransactionWrapper(final UUID          transactionId     ,
+                                               final String        actorFromPublicKey,
+                                               final String        actorToPublicKey  ,
+                                               final Actors        actorFromType     ,
+                                               final Actors        actorToType       ,
+                                               final String        transactionHash   ,
+                                               final CryptoAddress addressFrom       ,
+                                               final CryptoAddress addressTo         ,
+                                               final long          amount            ,
+                                               final long          timestamp         ,
+                                               final String        memo              ) {
 
-    public void setAddressFrom(CryptoAddress addressFrom) {
-        this.addressFrom = addressFrom;
-    }
-
-    @Override
-    public UUID getIdTransaction() {
-        return this.transactionId;
-    }
-
-
-    public void setIdTransaction(UUID id) {
-        this.transactionId = id;
-    }
-
-    @Override
-    public CryptoAddress getAddressTo() {
-        return addressTo;
-    }
-
-    public void setAddressTo(CryptoAddress addressTo) {
-        this.addressTo = addressTo;
+        this.transactionId      = transactionId     ;
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey   = actorToPublicKey  ;
+        this.actorFromType      = actorFromType     ;
+        this.actorToType        = actorToType       ;
+        this.transactionHash    = transactionHash   ;
+        this.addressFrom        = addressFrom       ;
+        this.addressTo          = addressTo         ;
+        this.amount             = amount            ;
+        this.timestamp          = timestamp         ;
+        this.memo               = memo              ;
     }
 
     @Override
-    public long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(long amount) {
-        this.amount = amount;
+    public UUID getTransactionId() {
+        return transactionId;
     }
 
     @Override
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public String getActorFromPublicKey() {
+        return actorFromPublicKey;
     }
 
     @Override
-    public String getMemo() {
-        return memo;
+    public String getActorToPublicKey() {
+        return actorToPublicKey;
     }
 
-    public void setMemo(String memo) {
-        this.memo = memo;
+    @Override
+    public Actors getActorFromType() {
+        return actorFromType;
+    }
+
+    @Override
+    public Actors getActorToType() {
+        return actorToType;
     }
 
     @Override
@@ -86,42 +79,29 @@ public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransac
         return transactionHash;
     }
 
-
-    public String getActorFromPublicKey() {
-        return actorFromPublicKey;
-    }
-
-    public void setActorFromPublicKey(String actorFromPublicKey) {
-        this.actorFromPublicKey = actorFromPublicKey;
-    }
-
-    public String getActorToPublicKey() {
-        return actorToPublicKey;
-    }
-
-    public void setActorToPublicKey(String actorToPublicKey) {
-        this.actorToPublicKey = actorToPublicKey;
+    @Override
+    public CryptoAddress getAddressFrom() {
+        return addressFrom;
     }
 
     @Override
-    public Actors getActorToType() {
-        return this.actorToType;
-    }
-
-    public void setActorToType(Actors actorToType) {
-        this.actorToType = actorToType;
+    public CryptoAddress getAddressTo() {
+        return addressTo;
     }
 
     @Override
-    public Actors getActorFromType() {
-        return this.actorFromType;
+    public long getAmount() {
+        return amount;
     }
 
-    public void setActorFromType(Actors actorFromType) {
-        this.actorFromType = actorFromType;
+    @Override
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTransactionHash(String tramsactionHash) {
-        this.transactionHash = tramsactionHash;
+    @Override
+    public String getMemo() {
+        return memo;
     }
+
 }
