@@ -3,5 +3,5 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.inte
 /**
  * Created by nelson on 22/09/15.
  */
-public interface RequestAndContractBasicInformation {
+public interface NegotiationBasicInformation {
 }
