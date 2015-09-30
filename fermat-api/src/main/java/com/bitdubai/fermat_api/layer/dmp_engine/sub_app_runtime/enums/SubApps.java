@@ -19,7 +19,8 @@ public enum SubApps {
     CBP_CRYPTO_BROKER_COMMUNITY("CBPCBC"),
     CBP_CRYPTO_CUSTOMER_IDENTITY("CBPCCI"),
     CBP_CRYPTO_CUSTOMER_COMMUNITY("CBPCCC"),
-    CBP_CUSTOMERS("CBPC");
+    CBP_CUSTOMERS("CBPC"),
+    DAP_ASSETS_FACTORY("DAPAF"),;
 
 
     private final String code;
@@ -43,6 +44,7 @@ public enum SubApps {
             case "CBPC": return CBP_CUSTOMERS;
             //Modified by Manuel Perez on 05/08/2015
             case "CS": return SubApps.CWP_SHELL;
+            case "DAPAF": return  DAP_ASSETS_FACTORY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 

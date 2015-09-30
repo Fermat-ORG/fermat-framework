@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.Instal
  */
 public interface FermatScreenSwapper {
 
-    public void changeScreen(String screen,Object[] objects);
+    public void changeScreen(String screen,int idContainer,Object[] objects);
 
     public void selectWallet(InstalledWallet installedWallet);
 

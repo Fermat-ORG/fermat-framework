@@ -4,10 +4,10 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums;
+package com.bitdubai.fermat_api.layer.all_definition.network_service.enums;
 
 /**
- * The enum <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType</code> represent
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType</code> represent
  * all types that a network service cam be.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 01/09/15.

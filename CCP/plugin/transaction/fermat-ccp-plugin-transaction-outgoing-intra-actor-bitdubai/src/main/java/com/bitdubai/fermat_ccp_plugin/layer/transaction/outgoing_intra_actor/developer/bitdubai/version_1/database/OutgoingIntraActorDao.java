@@ -180,7 +180,7 @@ public class OutgoingIntraActorDao {
     public void setTransactionHash(OutgoingIntraActorTransactionWrapper bitcoinTransaction, String hash) throws OutgoingIntraActorCantSetTranactionHashException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
+            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getTransactionId());
             recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME, hash);
             transactionTable.updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
@@ -236,7 +236,7 @@ public class OutgoingIntraActorDao {
 
     private void setToState(OutgoingIntraActorTransactionWrapper bitcoinTransaction, TransactionState status) throws CantUpdateRecordException, OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-        DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
+        DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getTransactionId());
         recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
         transactionTable.updateRecord(recordToUpdate);
     }
@@ -271,7 +271,7 @@ public class OutgoingIntraActorDao {
     public void setToCryptoStatus(OutgoingIntraActorTransactionWrapper transactionWrapper, CryptoStatus cryptoStatus) throws CantUpdateRecordException, CantLoadTableToMemoryException, OutgoingIntraActorInconsistentTableStateException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(transactionWrapper.getIdTransaction());
+            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(transactionWrapper.getTransactionId());
             recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
             transactionTable.updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {

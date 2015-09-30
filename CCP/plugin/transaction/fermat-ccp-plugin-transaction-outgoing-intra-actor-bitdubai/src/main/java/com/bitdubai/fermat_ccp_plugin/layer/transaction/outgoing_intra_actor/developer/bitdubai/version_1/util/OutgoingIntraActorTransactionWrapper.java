@@ -40,7 +40,7 @@ public class OutgoingIntraActorTransactionWrapper implements BitcoinWalletTransa
     }
 
     @Override
-    public UUID getIdTransaction() {
+    public UUID getTransactionId() {
         return this.transactionId;
     }
 

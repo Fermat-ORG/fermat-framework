@@ -553,24 +553,30 @@ public class AndroidDatabaseTable implements DatabaseTable {
             strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
 
             int ix = 0;
-            for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                if (subGroup.getFilters().size() > 0 || ix > 0) {
-                    switch (databaseTableFilterGroup.getOperator()) {
-                        case AND:
-                            strFilter.append(" AND ");
-                            break;
-                        case OR:
-                            strFilter.append(" OR ");
-                            break;
-                        default:
-                            strFilter.append(" ");
+
+            if (databaseTableFilterGroup.getSubGroups() != null){
+
+                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
+                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
                     }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
                 }
-                strFilter.append("(");
-                strFilter.append(makeGroupFilters(subGroup));
-                strFilter.append(")");
-                ix++;
+
             }
+
             strFilter.append(")");
         }
 

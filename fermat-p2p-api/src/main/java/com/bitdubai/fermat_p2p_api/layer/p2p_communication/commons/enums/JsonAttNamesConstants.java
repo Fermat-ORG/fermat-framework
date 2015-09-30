@@ -1,5 +1,5 @@
 /*
- * @#AttNamesConstants.java - 2015
+ * @#JsonAttNamesConstants.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -7,14 +7,14 @@
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AttNamesConstants {
+public class JsonAttNamesConstants {
 
     /**
      * Represent the value of HEADER_ATT_NAME_TI
@@ -61,8 +61,13 @@ public class AttNamesConstants {
     public static final String JSON_ATT_NAME_VPN_SERVER_IDENTITY = "v-s-i";
 
     /**
-     * Represent the value of JSON_ATT_NAME_REMOTE_PARTICIPANT_IDENTITY_VPN
+     * Represent the value of JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN
      */
-    public static final String JSON_ATT_NAME_REMOTE_PARTICIPANT_IDENTITY_VPN = "r-p-iv";
+    public static final String JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN = "r-p-v";
+
+    /**
+     * Represent the value of JSON_ATT_NAME_RESULT_LIST
+     */
+    public static final String JSON_ATT_NAME_RESULT_LIST = "rl";
 
 }

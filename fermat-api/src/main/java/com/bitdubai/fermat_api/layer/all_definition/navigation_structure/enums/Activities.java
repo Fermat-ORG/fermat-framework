@@ -77,7 +77,7 @@ public enum Activities {
     //Desktop
     CCP_DESKTOP("CCPD"),
     DAP_DESKTOP("DAPD"),
-    CBP_DESKTOP("CBPD");
+    CBP_DESKTOP("CBPD"), DAP_MAIN("DAPM");
 
     private String code;
 
@@ -205,6 +205,8 @@ public enum Activities {
                 return DAP_DESKTOP;
             case "CBPD":
                 return CBP_DESKTOP;
+            case "DAPM":
+                return DAP_MAIN;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
