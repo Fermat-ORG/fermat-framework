@@ -107,7 +107,7 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Asset Issuing", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE, this.pluginId.toString()));
         return databases;
     }
 

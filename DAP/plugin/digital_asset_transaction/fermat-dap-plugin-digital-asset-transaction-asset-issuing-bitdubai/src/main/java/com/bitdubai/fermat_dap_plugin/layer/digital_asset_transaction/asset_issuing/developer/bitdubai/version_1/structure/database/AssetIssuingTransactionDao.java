@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantSaveEventException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
@@ -615,6 +616,10 @@ public class AssetIssuingTransactionDao {
     public int updateTransactionProtocolStatus(boolean occurrence) throws CantExecuteQueryException {
         //TODO: implement this method
         return 0;
+    }
+
+    public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException{
+        //TODO: implement this 30/09/2015
     }
 
 }
