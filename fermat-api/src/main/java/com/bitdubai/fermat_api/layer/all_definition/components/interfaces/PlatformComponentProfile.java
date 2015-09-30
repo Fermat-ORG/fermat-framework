@@ -4,17 +4,14 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components;
+package com.bitdubai.fermat_api.layer.all_definition.components.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
-
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile</code> represent
+ * The Class <code>com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile</code> represent
  * the profile of the platform component, that is use to register like a platform component whit the web socket communication cloud server.
  * <p/>
  *

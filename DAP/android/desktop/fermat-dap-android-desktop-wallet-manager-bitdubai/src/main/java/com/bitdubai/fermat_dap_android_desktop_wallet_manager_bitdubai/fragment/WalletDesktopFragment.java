@@ -29,8 +29,9 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledSkin;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.R;
+import com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class WalletDesktopFragment extends Fragment {
         lstInstalledWallet = new ArrayList<InstalledWallet>();
 
         // Harcoded para testear el circuito más arriba
-        InstalledWallet installedWallet= new com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+        InstalledWallet installedWallet= new InstalledWallet(WalletCategory.REFERENCE_WALLET,
                 WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
@@ -78,7 +79,7 @@ public class WalletDesktopFragment extends Fragment {
                 new Version(1,0,0));
         lstInstalledWallet.add(installedWallet);
 
-        installedWallet= new com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+        installedWallet= new InstalledWallet(WalletCategory.REFERENCE_WALLET,
                 WalletType.REFERENCE,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),

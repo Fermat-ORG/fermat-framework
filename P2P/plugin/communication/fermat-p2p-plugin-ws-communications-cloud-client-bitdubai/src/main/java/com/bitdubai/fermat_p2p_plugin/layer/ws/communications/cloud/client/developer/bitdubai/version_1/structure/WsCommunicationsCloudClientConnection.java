@@ -6,9 +6,12 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
@@ -16,15 +19,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientPingAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
@@ -104,7 +105,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new ServerHandshakeRespondPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new CompleteRegistrationComponentPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
-        //wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new MessageTransmitPacketProcessor());
+        wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new ComponentConnectionRespondPacketProcessor());
+        wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new CompleteComponentConnectionRequestPacketProcessor());
+
     }
 
     /**
@@ -148,34 +151,15 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
             }
 
-            Location pointOne = new Location() {
-                @Override
-                public Double getLatitude() {
-                    return 32.9697;
-                }
+            Location location = null;
 
-                @Override
-                public Double getLongitude() {
-                    return -96.80322;
-                }
+            try {
 
-                @Override
-                public Double getAltitude() {
-                    return 0.0;
-                }
+                location = locationManager.getLocation();
 
-                @Override
-                public Long getTime() {
-                    return new Long(0);
-                }
-
-                @Override
-                public LocationProvider getProvider() {
-                    return null;
-                }
-            };
-
-
+            }catch (CantGetDeviceLocationException e){
+                e.printStackTrace();
+            }
 
             /*
              * Construct a PlatformComponentProfile instance
@@ -183,15 +167,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
             return new PlatformComponentProfileCommunication(alias,
                                                              wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
                                                              identityPublicKey,
-                                                             //pointOne,
-                                                             locationManager.getLocation(),
+                                                             location,
                                                              name,
                                                              networkServiceType,
                                                              platformComponentType,
                                                              extraData);
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new IllegalArgumentException(e);
         }
 
@@ -290,7 +272,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
     public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination){
 
 
-        System.out.println("WsCommunicationsCloudClientConnection - requestListComponentRegistered");
+        System.out.println("WsCommunicationsCloudClientConnection - requestVpnConnection");
 
         /*
          * Validate parameter

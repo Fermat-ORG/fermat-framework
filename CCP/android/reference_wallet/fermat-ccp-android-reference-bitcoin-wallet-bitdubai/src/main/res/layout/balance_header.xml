@@ -19,15 +19,16 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Balance"
+                android:text="Available balance"
                 android:textSize="22dp"
-                />
+                android:id="@+id/txt_type_balance" />
 
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Touch to change"/>
+                android:text="Touch to change"
+                android:id="@+id/txt_touch_to_change"/>
 
         </LinearLayout>
 

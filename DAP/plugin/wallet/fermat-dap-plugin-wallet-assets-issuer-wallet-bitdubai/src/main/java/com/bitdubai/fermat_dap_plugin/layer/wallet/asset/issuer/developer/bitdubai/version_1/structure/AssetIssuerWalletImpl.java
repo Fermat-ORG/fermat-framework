@@ -24,6 +24,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreate
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -46,8 +47,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     private Map<String, UUID> walletAssetIssuer = new HashMap<>();
 
     //TODO: Implementar clase DAO y los metodos de la interfaz manager y otros metodos.
-    //private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
-
+    private AssetIssuerWalletDao assetIssuerWalletDao;
     private ErrorManager errorManager;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -159,7 +159,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     @Override
     public AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
-        return null;
+        return new AssetIssuerWallletBalanceImpl(database);
     }
 
     @Override

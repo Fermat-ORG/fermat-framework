@@ -25,6 +25,8 @@ public enum Fragments implements FermatFragments {
     CWP_WALLET_STORE_PAID_FRAGMENT("CWSPF"),
     CWP_WALLET_STORE_SEARCH_MODE("CWSSM"),
 
+    DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY("DSAAFMA"),
+
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT("CWDTDLF"),
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT("CWDTDTLF"),
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT("CWDTDTRLF"),
@@ -282,6 +284,8 @@ public enum Fragments implements FermatFragments {
                 return CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE;
             case "DWAIMA":
                 return DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY;
+            case "DSAAFMA":
+                return DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

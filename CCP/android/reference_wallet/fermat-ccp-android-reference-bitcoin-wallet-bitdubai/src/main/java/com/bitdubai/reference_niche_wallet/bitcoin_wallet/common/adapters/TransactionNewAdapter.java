@@ -102,16 +102,16 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
             e.printStackTrace();
         }
 
-        holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
-
-        holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
-
-        holder.getImageView_see_all_transactions().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context,"estoy tocando esto",Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
+//
+//        holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
+//
+//        holder.getImageView_see_all_transactions().setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(context,"estoy tocando esto",Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 }

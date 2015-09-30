@@ -3,7 +3,9 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
@@ -91,8 +93,15 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
     /**
      * Change activity
      */
-    protected final void changeFragment(String fragment) {
-        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, null);
+    protected final void changeFragment(String fragment,int idContainer) {
+        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, idContainer,null);
+    }
+
+    /**
+     *  Get Activity header
+     */
+    protected final RelativeLayout getActivityHeader(){
+        return ((PaintActivtyFeactures)getActivity()).getActivityHeader();
     }
 }
 

@@ -6,20 +6,21 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.WebSocket;
@@ -53,9 +54,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          */
         String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
 
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
-
         /*
          * Construct the json object
          */
@@ -67,9 +65,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          */
         PlatformComponentType platformComponentType = discoveryQueryParameters.getPlatformComponentType();
         NetworkServiceType networkServiceType       = discoveryQueryParameters.getNetworkServiceType();
-
-        System.out.println("RequestListComponentRegisterPacketProcessor - platformComponentType = "+platformComponentType);
-        System.out.println("RequestListComponentRegisterPacketProcessor - networkServiceType    = "+networkServiceType);
 
         /*
          * Get the list
@@ -91,32 +86,53 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
                 list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
                 break;
 
+            //NETWORK_SERVICE_COMPONENT
+            case "NS_COMP" :
+                list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                break;
+
             //Others
             default :
-                list = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType).get(networkServiceType);
+                list = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
 
+        /*
+         * Remove the requester from the list
+         */
+        for (PlatformComponentProfile platformComponentProfileRegistered: list) {
+            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
+                list.remove(platformComponentProfileRegistered);
+                break;
+            }
+        }
 
         List<PlatformComponentProfile>  filteredLis = applyDiscoveryQueryParams(list, discoveryQueryParameters);
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size()    = "+filteredLis.size());
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size() ="+filteredLis.size());
 
         /*
          * Convert to json representation
          */
-        String jsonListRepresentation = gson.toJson(filteredLis, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
+        String jsonListRepresentation = gson.toJson(filteredLis, new TypeToken<List<PlatformComponentProfileCommunication>>() {
+        }.getType());
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - gson.toJson(list)    = "+jsonListRepresentation);
-
+        /*
+         * Create the respond
+         */
+        JsonObject jsonObjectRespond = new JsonObject();
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE,       platformComponentType.toString());
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE, networkServiceType.toString());
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_RESULT_LIST,          jsonListRepresentation);
 
          /*
          * Construct a fermat packet whit the list
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
                                                                                                                     serverIdentity.getPublicKey(),                      //Sender
-                                                                                                                    jsonListRepresentation,                             //Message Content
+                                                                                                                    gson.toJson(jsonObjectRespond),                     //Message Content
                                                                                                                     FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
                                                                                                                     serverIdentity.getPrivateKey());                    //Sender private key
 
@@ -139,6 +155,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         int totalFilterToApply = countFilers(discoveryQueryParameters);
         int filterMatched = 0;
         List<PlatformComponentProfile>  filteredLis = new ArrayList<>();
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - totalFilterToApply    = "+totalFilterToApply);
 
 
         if (totalFilterToApply > 0){
