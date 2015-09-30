@@ -274,11 +274,10 @@ public class LogToolsFragment extends FermatFragment {
                         ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_0);
 
                         //set the next fragment and params
-                        Object[] params = new Object[1];
 
-                        params[0] = lst;
+                        developerSubAppSession.setData("list",lst);
 
-                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), params);
+                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), null);
 
 
                     }
