@@ -85,6 +85,7 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mUserLearnedDrawer;
 
     private List<String> menuOption;
+    private  List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> menuItem = new ArrayList<>();
 
     public NavigationDrawerFragment() {
     }
@@ -196,7 +197,6 @@ public class NavigationDrawerFragment extends Fragment {
         try {
 
             menuOption = new ArrayList<String>();
-            List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> menuItem = new ArrayList<>();
 
             if (sideMenu != null) {
                 menuItem = sideMenu.getMenuItems();
@@ -298,13 +298,11 @@ public class NavigationDrawerFragment extends Fragment {
             }
             if (mCallbacks != null) {
 
-                mCallbacks.onNavigationDrawerItemSelected(position);
-
-              //  if(menuOption!=null) {
-                  //  com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = menuOption.get(position);
-                   // if (menuItem != null)
-                    //    mCallbacks.onNavigationDrawerItemSelected(position, menuItem.getLinkToActivity().getCode());
-              //  }
+                if(menuOption!=null) {
+                    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = this.menuItem.get(position);
+                   if (menuItem != null)
+                        mCallbacks.onNavigationDrawerItemSelected(position, menuItem.getLinkToActivity().getCode());
+               }
 
             }
             //test mati
@@ -440,10 +438,13 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
+    /**
+     * Callbacks interface that all activities using this fragment must implement.
+     */
     public static interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(int position);
+        void onNavigationDrawerItemSelected(int position,String activityCode);
     }
 }
