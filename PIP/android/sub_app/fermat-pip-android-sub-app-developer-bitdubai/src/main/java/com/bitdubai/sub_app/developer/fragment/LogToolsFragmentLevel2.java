@@ -273,7 +273,7 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
                         developerSubAppSession.setData("list",lst);
                         developerSubAppSession.setData("level",level);
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(),null);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(),R.id.logContainer,null);
 
 
                     }
