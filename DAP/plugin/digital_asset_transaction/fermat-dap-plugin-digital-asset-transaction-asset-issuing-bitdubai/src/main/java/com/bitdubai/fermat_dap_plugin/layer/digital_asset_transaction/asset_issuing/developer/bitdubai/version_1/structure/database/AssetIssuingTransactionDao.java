@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantSaveEventException;
@@ -571,10 +572,10 @@ public class AssetIssuingTransactionDao {
             return transactionsHashList;
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Cannot load table to memory");
+            throw new CantCheckAssetIssuingProgressException(exception, "Getting transactions hash.", "Cannot load table to memory");
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Cannot open or find the Asset Issuing database");
+            throw new CantCheckAssetIssuingProgressException(exception, "Getting transactions hash.", "Cannot open or find the Asset Issuing database");
         } catch(Exception exception){
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Unexpected exception");
@@ -603,10 +604,10 @@ public class AssetIssuingTransactionDao {
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Cannot open or find the Asset Issuing database");
+            throw new CantCheckAssetIssuingProgressException(exception, "Updating Crypto Status.", "Cannot open or find the Asset Issuing database");
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Cannot load the table into memory");
+            throw new CantCheckAssetIssuingProgressException(exception, "Updating Crypto Status.", "Cannot load the table into memory");
         } catch(Exception exception){
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Unexpected exception");
@@ -619,7 +620,27 @@ public class AssetIssuingTransactionDao {
     }
 
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException{
-        //TODO: implement this 30/09/2015
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable = this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+            UUID eventRecordID = UUID.randomUUID();
+            long unixTime = System.currentTimeMillis();
+            eventRecord.setUUIDValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_ID_COLUMN, eventRecordID);
+            eventRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_EVENT_COLUMN, eventType);
+            eventRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_SOURCE_COLUMN, eventSource);
+            eventRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_STATUS_COLUMN, "PENDING");
+            eventRecord.setLongValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN, unixTime);
+            databaseTable.insertRecord(eventRecord);
+            this.database.closeDatabase();
+        }  catch (CantExecuteDatabaseOperationException exception) {
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Issuing database");
+        } catch (CantInsertRecordException exception) {
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot inter a record in Asset Issuing database");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
+        }
     }
 
 }
