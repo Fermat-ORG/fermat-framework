@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.wallet_factory.ui.fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -23,6 +25,7 @@ import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.adapters.InstalledWalletsAdapter;
 import com.bitdubai.sub_app.wallet_factory.interfaces.PopupMenu;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
+import com.bitdubai.sub_app.wallet_factory.ui.dialogs.GetProjectNameDialog;
 import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
 
 import java.util.ArrayList;
@@ -84,6 +87,7 @@ public class AvailableProjectsFragment extends FermatFragment
         adapter.setMenuItemClickListener(new PopupMenu() {
             @Override
             public void onMenuItemClickListener(View menuView, Object project, int position) {
+                projectToClone = (InstalledWallet) project;
                 /*Showing up popup menu*/
                 android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
                 MenuInflater inflater = popupMenu.getMenuInflater();
@@ -173,8 +177,46 @@ public class AvailableProjectsFragment extends FermatFragment
         }
     }
 
+    private InstalledWallet projectToClone;
+
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.action_clone && projectToClone != null) {
+            final GetProjectNameDialog getProjectName = new GetProjectNameDialog();
+            getProjectName.setCancelable(true);
+            getProjectName.setCallBack(new GetProjectNameDialog.DialogChooseNameListener() {
+                @Override
+                public void onCompleteInfo(final String name) {
+                    getProjectName.dismiss();
+                    final ProgressDialog dialog = new ProgressDialog(getActivity());
+                    dialog.setCancelable(false);
+                    dialog.setMessage("Please wait...");
+                    dialog.show();
+                    new FermatWorker(getActivity(), new FermatWorkerCallBack() {
+                        @Override
+                        public void onPostExecute(Object... result) {
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "The current project has been cloned...", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onErrorOccurred(Exception ex) {
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "Fermat has detected an exception", Toast.LENGTH_SHORT).show();
+                            CommonLogger.exception(TAG, ex.getMessage(), ex);
+                        }
+                    }) {
+                        @Override
+                        protected Object doInBackground() throws Exception {
+                            manager.cloneInstalledWallets(projectToClone, name);
+                            projectToClone = null;
+                            return true;
+                        }
+                    }.execute();
+                }
+            });
+            getProjectName.show(getActivity().getFragmentManager(), null);
+        }
         return false;
     }
 }
