@@ -799,9 +799,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         fragments.add(subAppDesktopFragment);
                         break;
                     case "DDAP":
-                        com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment walletDesktopFragment1 = com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
+                        com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment walletDesktopFragment1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
                         fragments.add(walletDesktopFragment1);
-                        com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
+                        com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
                         fragments.add(dapDesktopFragment);
                         break;
                     case "DCBP":
@@ -815,11 +815,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 }
             }
             //Activity activity =  desktopObject.getLastActivity();
-
-
-
-
-
 
             /*for (FermatFragments key : activity.getFragments().keySet()) {
                 Fragment fragment = activity.getFragments().get(key);
