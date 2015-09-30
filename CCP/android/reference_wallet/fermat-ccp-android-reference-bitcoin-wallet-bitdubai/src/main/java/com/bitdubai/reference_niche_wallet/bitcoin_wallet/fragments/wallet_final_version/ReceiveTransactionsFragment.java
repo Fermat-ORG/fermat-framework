@@ -144,13 +144,10 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
         //rootView    = inflater.inflate(R.layout.receive_button, container, false);
 
-        RelativeLayout transacion_form =(RelativeLayout)rootView.findViewById(R.id.transacion_form);
 
-        View transaction_container =  inflater.inflate(R.layout.receive_button,transacion_form,false);
+        linear_layout_receive_form = (LinearLayout) rootView.findViewById(R.id.receive_form);
 
-        linear_layout_receive_form = (LinearLayout) transaction_container.findViewById(R.id.receive_form);
-
-        ((Button) rootView.findViewById(R.id.btn_expand_receive_form)).setOnClickListener(new View.OnClickListener() {
+        ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 boolean isShow = linear_layout_receive_form.isShown();
@@ -182,7 +179,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_main_fragment;
+        return R.layout.transaciotn_main_fragment_receive;
     }
 
     @Override
