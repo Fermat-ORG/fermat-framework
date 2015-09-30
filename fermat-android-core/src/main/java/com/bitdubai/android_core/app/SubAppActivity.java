@@ -127,9 +127,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         SubAppSessionManager subAppSessionManager = ((ApplicationSession) getApplication()).getSubAppSessionManager();
         SubAppsSession subAppsSession = subAppSessionManager.getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getType());
 
+
         try {
             getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(fragmentType);
             com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subApp);
+
 
             android.app.Fragment fragment = subAppFragmentFactory.getFragment(
                     fragmentType,
@@ -234,12 +236,20 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             if (frgBackType != null) {
 
-                com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(frgBackType); //set back fragment to actual fragment to run
+                Activity activities = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
+
+                com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = activities.getFragment(frgBackType); //set back fragment to actual fragment to run
 
 
                 //TODO: ver como hacer para obtener el id del container
+                if(fragmentBack.getType().equals("CSADDTD") || fragmentBack.getType().equals("CSADDTT") || fragmentBack.getType().equals("CSADDTR")  || fragmentBack.getType().equals("CSADDT")){
+                    this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.logContainer,frgBackType);
+                }else {
+                    this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.startContainer,frgBackType);
+                }
 
-                this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), 0,frgBackType);
+
+
             } else {
                 // set Desktop current activity
                 Activity activity = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
