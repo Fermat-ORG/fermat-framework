@@ -16,8 +16,7 @@ import java.util.List;
 /**
  * Wallet Factory Project Module
  */
-public class WalletFactoryProject implements
-        com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject, Serializable {
+public class WalletFactoryProject implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject {
 
     private String projectPublicKey;
     private String name;
