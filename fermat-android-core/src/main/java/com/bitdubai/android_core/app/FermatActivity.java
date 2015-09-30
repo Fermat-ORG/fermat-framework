@@ -512,13 +512,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //            }
 
 
-
-
-
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-
-
 
             /**
              * Set up the navigationDrawer
@@ -1365,13 +1359,18 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
     }
 
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+
+    }
+
     /**
      * Called when an item in the navigation drawer is selected.
      *
      * @param position
      */
-    @Override
-    public void onNavigationDrawerItemSelected(int position,String activityCode) {
-        Toast.makeText(this,"holas",LENGTH_SHORT).show();
-    }
+   // @Override
+   // public void onNavigationDrawerItemSelected(int position,String activityCode) {
+  //      Toast.makeText(this,"holas",LENGTH_SHORT).show();
+  //  }
 }
