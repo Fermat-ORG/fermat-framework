@@ -452,7 +452,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void changeScreen(String fragment, Object[] objects) {
+    public void changeScreen(String fragment, int containerId,Object[] objects) {
 
 
     }

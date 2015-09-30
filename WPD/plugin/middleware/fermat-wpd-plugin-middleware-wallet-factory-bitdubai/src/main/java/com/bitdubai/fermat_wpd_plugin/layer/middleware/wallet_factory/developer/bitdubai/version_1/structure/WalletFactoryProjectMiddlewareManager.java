@@ -238,7 +238,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 }
 
                 @Override
-                public void setProjectPublickKey(String publickKey) {
+                public void setProjectPublicKey(String publickKey) {
                     this.publicKey = publickKey;
                 }
 
@@ -696,7 +696,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
         clonedWalletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
         java.util.Date date= new java.util.Date();
         clonedWalletFactoryProject.setCreationTimestamp(new Timestamp(date.getTime()));
-        clonedWalletFactoryProject.setProjectPublickKey(new ECCKeyPair().getPublicKey());
+        clonedWalletFactoryProject.setProjectPublicKey(new ECCKeyPair().getPublicKey());
         clonedWalletFactoryProject.setDescription("Clone from wallet " + wallet.getWalletName());
         clonedWalletFactoryProject.setProjectState(WalletFactoryProjectState.IN_PROGRESS);
         clonedWalletFactoryProject.setWalletCategory(wallet.getWalletCategory());

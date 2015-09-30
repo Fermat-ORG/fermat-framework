@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -24,6 +25,8 @@ public class TransactionItemViewHolder extends FermatViewHolder {
     private TextView txt_total_number_transactions;
     private ImageView ImageView_see_all_transactions;
 
+    private ListView listView_transactions;
+
 
 
     public TransactionItemViewHolder(View itemView) {
@@ -38,6 +41,9 @@ public class TransactionItemViewHolder extends FermatViewHolder {
         txt_total_balance = (TextView) itemView.findViewById(R.id.txt_total_balance);
         txt_total_number_transactions = (TextView) itemView.findViewById(R.id.txt_total_number_transactions);
         ImageView_see_all_transactions = (ImageView) itemView.findViewById(R.id.ImageView_see_all_transactions);
+
+        listView_transactions = (ListView) itemView.findViewById(R.id.listView_transactions);
+
 
     }
 
@@ -72,5 +78,9 @@ public class TransactionItemViewHolder extends FermatViewHolder {
 
     public TextView getTxt_total_number_transactions() {
         return txt_total_number_transactions;
+    }
+
+    public ListView getListView_transactions() {
+        return listView_transactions;
     }
 }

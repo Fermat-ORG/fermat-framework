@@ -368,7 +368,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             walletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
             walletFactoryProject.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
             walletFactoryProject.setSize(300);
-            walletFactoryProject.setProjectPublickKey(UUID.randomUUID().toString());
+            walletFactoryProject.setProjectPublicKey(UUID.randomUUID().toString());
             walletFactoryProject.setWalletType(WalletType.REFERENCE);
             Skin skin = new Skin();
             skin.setId(UUID.randomUUID());

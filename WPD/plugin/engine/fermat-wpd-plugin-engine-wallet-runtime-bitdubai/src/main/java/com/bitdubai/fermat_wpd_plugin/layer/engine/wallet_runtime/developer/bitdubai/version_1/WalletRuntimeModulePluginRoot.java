@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.CantRe
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.DealsWithWalletResources;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -1200,13 +1201,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         String publicKey="reference_wallet";
 
-//        try {
-//
-//            walletResourcesManger.installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(),WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
-//
-//        } catch (WalletResourcesInstalationException e) {
-//            e.printStackTrace();
-//        }
+        try {
+
+            walletResourcesManger.installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(),WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
+
+        } catch (WalletResourcesInstalationException e) {
+            e.printStackTrace();
+        }
 
 
         try{

@@ -18,7 +18,7 @@ import java.util.List;
 public interface WalletFactoryProject {
     // project info
     String getProjectPublicKey();
-    void setProjectPublickKey(String publickKey);
+    void setProjectPublicKey(String publickKey);
 
     String getName();
     void setName(String name);

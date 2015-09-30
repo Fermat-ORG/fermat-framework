@@ -433,12 +433,13 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
     }
 
-    @Override
-    public void changeScreen(String fragment, Object[] objects) {
 
+    private void loadFragment(String fragmentType){
 
     }
-    private void loadFragment(String fragmentType){
+
+    @Override
+    public void changeScreen(String screen, int idContainer, Object[] objects) {
 
     }
 

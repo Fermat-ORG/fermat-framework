@@ -9,7 +9,9 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetai
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.CreateContactFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.ReceiveTransactionsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestPaymentFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.HomeFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -38,11 +40,13 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);
-                    currentFragment = RequestPaymentFragment.newInstance();
+                    //currentFragment = RequestPaymentFragment.newInstance();
+                    currentFragment = ReceiveTransactionsFragment.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.SendFragment.newInstance(0);
-                    currentFragment = SendFragment.newInstance();
+                    //currentFragment = SendFragment.newInstance();
+                    currentFragment = SendTransactionsFragment.newInstance();
                     break;
 
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
