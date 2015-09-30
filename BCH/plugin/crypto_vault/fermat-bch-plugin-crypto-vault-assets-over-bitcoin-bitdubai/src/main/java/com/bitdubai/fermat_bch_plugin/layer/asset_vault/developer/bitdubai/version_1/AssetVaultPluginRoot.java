@@ -15,15 +15,26 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
     AssetCryptoVaultManager assetCryptoVaultManager;
+
+    /**
+     * DealsWithDeviceUser interface variable and implementation
+     */
+    DeviceUserManager deviceUserManager;
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
+    }
 
     /**
      * DealsWithPluginDatabaseSystem interface variable and implementation
@@ -60,11 +71,14 @@ public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithPluginD
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     @Override
     public void start() throws CantStartPluginException {
+
         /**
          * I create the VaultManager that will load or create the seed and recreate the key hierarchy.
+         * The seed created belongs only to the currently device user Logged.
          */
         try{
-            assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId, pluginFileSystem, pluginDatabaseSystem);
+            String deviceUserLoggerPubliKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId, pluginFileSystem, pluginDatabaseSystem, deviceUserLoggerPubliKey);
         } catch (Exception e){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
         }

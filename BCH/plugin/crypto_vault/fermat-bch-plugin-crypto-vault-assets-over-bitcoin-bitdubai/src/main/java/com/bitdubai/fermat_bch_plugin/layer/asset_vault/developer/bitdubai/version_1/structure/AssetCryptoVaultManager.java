@@ -21,7 +21,7 @@ import java.util.UUID;
  */
 public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem {
     private final String ASSET_VAULT_SEED_FILEPATH = "AssetVaultSeed";
-    private final String ASSET_VAULT_SEED_FILENAME = "Seed";
+    private final String ASSET_VAULT_SEED_FILENAME;
     UUID pluginId;
     VaultKeyHierarchy vaultKeyHierarchy;
 
@@ -50,8 +50,10 @@ public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, Deals
      * @param pluginId
      * @param pluginFileSystem
      */
-    public AssetCryptoVaultManager(UUID pluginId, PluginFileSystem pluginFileSystem, PluginDatabaseSystem pluginDatabaseSystem) throws CantCreateAssetVaultSeed, CantLoadExistingVaultSeed, VaultKeyHierarchyException {
+    public AssetCryptoVaultManager(UUID pluginId, PluginFileSystem pluginFileSystem, PluginDatabaseSystem pluginDatabaseSystem, String deviceUserLoggerPubliKey) throws CantCreateAssetVaultSeed, CantLoadExistingVaultSeed, VaultKeyHierarchyException {
         this.pluginId = pluginId;
+        // I'm defining and the filename, the publick key of the device used logged.
+        ASSET_VAULT_SEED_FILENAME = deviceUserLoggerPubliKey;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
 
@@ -59,7 +61,7 @@ public class AssetCryptoVaultManager implements DealsWithPluginFileSystem, Deals
     }
 
     /**
-     * Creates a new Seed or loads and existing one.
+     * Creates a new Seed or loads and existing one for the user logged.
      * @return
      * @throws CantCreateAssetVaultSeed
      * @throws CantLoadExistingVaultSeed
