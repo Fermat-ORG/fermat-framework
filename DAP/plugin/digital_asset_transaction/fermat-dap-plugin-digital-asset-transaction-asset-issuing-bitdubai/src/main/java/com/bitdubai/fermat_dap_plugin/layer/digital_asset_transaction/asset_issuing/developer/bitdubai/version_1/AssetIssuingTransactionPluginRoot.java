@@ -220,7 +220,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.assetIssuingTransactionMonitorAgent.start();*/
 
             //For testing, please, clean up your database or change the asset public key
-            //testIssueSingleAsset();
+            testIssueSingleAsset();
             //testIssueMultipleAssetsWithNoIdentity();
             //testIssueMultipleFullAssets();
         }

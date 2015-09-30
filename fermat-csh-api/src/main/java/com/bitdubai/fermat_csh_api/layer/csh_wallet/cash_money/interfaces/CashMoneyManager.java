@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces;
 
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantCreateCashMoneyException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantGetCashMoneyException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantTransactionCashMoneyException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantGenerateBalanceCashMoneyException;
 
 import java.util.List;
 
@@ -10,10 +11,12 @@ import java.util.List;
  */
 public interface CashMoneyManager {
 
-    List<CashMoney> getAllCashMoneyFromCurrentDeviceUser() throws CantGetCashMoneyException;
+    List<CashMoney> getTransactionsCashMoney() throws CantTransactionCashMoneyException;
 
     CashMoney createCashMoney(
          final String publicKeyBroker
         ,final String walletId
     ) throws CantCreateCashMoneyException;
+
+    void generateBankMoneyBalance() throws CantGenerateBalanceCashMoneyException;
 }

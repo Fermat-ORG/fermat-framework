@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -36,6 +37,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
@@ -84,6 +86,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletSt
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
@@ -515,13 +518,26 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-            NavigationDrawerFragment.setMenuVisibility(true);
+
+
+
             /**
              * Set up the navigationDrawer
              */
             NavigationDrawerFragment.setUp(
                     R.id.navigation_drawer,
                     (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+
+            NavigationDrawerFragment.setMenuVisibility(true);
+
+            NavigationDrawerFragment.getmAdapter().setValues(sidemenu.getMenuItems());
+
+//            FragmentTransaction ft = getFragmentManager().beginTransaction();
+//            ft.detach(NavigationDrawerFragment);
+//            ft.attach(NavigationDrawerFragment);
+//            ft.addToBackStack(NavigationDrawerFragment.class.getSimpleName());
+//            ft.commit();
+
         }
 
         /**
@@ -552,6 +568,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onResume() {
         super.onResume();
         getNotificationManager().addObserver(this);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -1212,7 +1233,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public AssetFactoryModuleManager getAssetFactoryModuleManager() {
         return (AssetFactoryModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
     }
-
+    /**
+     * CBP
+     */
+    public CryptoBrokerWalletModuleManager getCryptoBrokerWalletModuleManager() {
+//        return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BRO);
+        return null;
+    }
 
     /**
      * Set up wizards to this activity can be more than one.
@@ -1346,4 +1373,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public void invalidate() {
         //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
     }
+
+
 }

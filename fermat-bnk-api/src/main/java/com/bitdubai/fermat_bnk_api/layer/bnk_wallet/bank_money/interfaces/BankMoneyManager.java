@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces;
 
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCreateBankMoneyException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetBankMoneyException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGenerateBalanceBankMoneyException;
 
 import java.util.List;
 
@@ -10,10 +11,12 @@ import java.util.List;
  */
 public interface BankMoneyManager {
 
-    List<BankMoney> getAllBankMoneyFromCurrentDeviceUser() throws CantGetBankMoneyException;
+    List<BankMoney> getTransactionsBankMoney() throws CantTransactionBankMoneyException;
 
-    BankMoney createBankMoney(
+    BankMoney registerBankMoney(
          final String publicKeyBroker
         ,final String walletId
     ) throws CantCreateBankMoneyException;
+
+    void generateBankMoneyBalance() throws CantGenerateBalanceBankMoneyException;
 }
