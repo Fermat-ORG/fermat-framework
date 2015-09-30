@@ -17,13 +17,10 @@ public interface CashMoneyStockReplenishmentManager {
     List<CashMoneyStockReplenishment> getAllCashMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetCashMoneyStockReplenishmentException;
 
     CashMoneyStockReplenishment createCashMoneyStockReplenishment(
-             final String operationId
-            ,final String publicKeyBroker
-            ,final String merchandiseCurrency
-            ,final float merchandiseAmount
-            ,final String referenceCurrency
-            ,final float referenceCurrencyPrice
-            ,final String CashCurrencyType
+         final String publicKeyBroker
+        ,final String merchandiseCurrency
+        ,final String executionTransactionId
+        ,final String cashCurrencyType
     ) throws CantCreateCashMoneyStockReplenishmentException;
 
     void updateStatusCashMoneyStockReplenishment(final UUID transactionId) throws CantUpdateStatusCashMoneyStockReplenishmentException;

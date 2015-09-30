@@ -140,7 +140,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            FT.replace(R.id.only_fragment_container, fragment);
+            FT.replace(R.id.startContainer, fragment);
 
             FT.commit();
         } catch (Exception e) {
@@ -476,7 +476,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager toolManager = getToolManager();
                     WalletStoreModuleManager walletStoreModuleManager = getWalletStoreModuleManager();
                     WalletPublisherModuleManager walletPublisherModuleManager = getWalletPublisherManager();
-                    subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), toolManager,walletStoreModuleManager,walletPublisherModuleManager,getIntraUserModuleManager());
+                    subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), toolManager,walletStoreModuleManager,walletPublisherModuleManager,getIntraUserModuleManager(),getAssetFactoryModuleManager());
                 }
             }
 

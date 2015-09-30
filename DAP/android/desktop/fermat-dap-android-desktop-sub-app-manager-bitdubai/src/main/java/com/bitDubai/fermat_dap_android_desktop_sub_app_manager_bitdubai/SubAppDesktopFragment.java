@@ -1,4 +1,4 @@
-package com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai;
+package com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai;
 
 import android.app.Fragment;
 import android.app.Service;
@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.provisory_classes.InstalledSubApp;
+import com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.provisory_classes.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -85,7 +85,7 @@ public class SubAppDesktopFragment extends Fragment {
         mlist = new ArrayList<InstalledSubApp>();
 
 
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"sub-app-asset-factory","Assets factory","sub-app-asset-factory","sub-app-asset-factory",new Version(1,0,0));
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY,null,null,"sub-app-asset-factory","Assets factory","sub-app-asset-factory","sub-app-asset-factory",new Version(1,0,0));
         mlist.add(installedSubApp);
 //        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet publisher","wallet_publisher","wallet_publisher",new Version(1,0,0));
 //        mlist.add(installedSubApp);

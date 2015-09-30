@@ -64,6 +64,8 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
 
     private int database_type;
 
+    public  DeveloperSubAppSession developerSubAppSession;
+
     public static DatabaseToolsDatabaseListFragment newInstance() {
         return new DatabaseToolsDatabaseListFragment();
     }
@@ -72,6 +74,11 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+           resource = (Resource)developerSubAppSession.getData("resource");
+        }
 
         //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
 
@@ -165,10 +172,9 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
                     @Override
                     public void onClick(View view) {
                         //set the next fragment and params
-                        Object[] params = new Object[2];
-                        params[0] = resource;
-                        params[1] = developerDatabaseList.get(position);
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),params);
+                        developerSubAppSession.setData("resource",resource);
+                        developerSubAppSession.setData("database",developerDatabaseList.get(position));
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),null);
                     }
                 });
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);

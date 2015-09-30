@@ -16,11 +16,11 @@ public interface SendCashDeliveryManager {
     SendCashDelivery createSendCashDelivery(
             final String publicKeyCustomer
             ,final String publicKeyBroker
-            ,final Float amount
+            ,final Float merchandiseAmount
             ,final String cashCurrencyType
             ,final String cashReference
             ,final String infoDelivery
     ) throws CantCreateSendCashDeliveryException;
 
-    void updateStatusSendCashDelivery(final UUID cashtransactionId) throws CantUpdateStatusSendCashDeliveryException;
+    void updateStatusSendCashDelivery(final UUID cashTransactionId) throws CantUpdateStatusSendCashDeliveryException;
 }

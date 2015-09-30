@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 
 import java.util.UUID;
 
