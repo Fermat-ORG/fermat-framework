@@ -1,7 +1,9 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.AssetTransactionService;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantSaveEventException;
@@ -13,6 +15,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/09/15.
@@ -53,18 +56,44 @@ public class AssetIssuingRecorderService implements DealsWithEvents, AssetTransa
 
     public void incomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent(IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent event) throws CantSaveEventException {
         //TODO: SaveEventMethod in database
-        //this.assetIssuingTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        this.assetIssuingTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
     }
 
     @Override
     public void start() throws CantStartServiceException {
 
+        try{
+            /**
+             * I will initialize the handling of com.bitdubai.platform events.
+             */
+            FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
+            fermatEventHandler = new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventHandler();
+            ((IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventHandler) fermatEventHandler).setAssetIssuingRecorderService(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+            //Logger LOG = Logger.getGlobal();
+            //LOG.info("ASSET ISSUING EVENT RECORDER STARTED");
+        } catch (CantSetObjectException exception){
+            throw new CantStartServiceException(exception,"Starting the AssetIssuingRecorderService", "The AssetIssuingRecorderService is probably null");
+        }
+
     }
 
     @Override
     public void stop() {
+        removeRegisteredListeners();
+        this.serviceStatus = ServiceStatus.STOPPED;
+    }
 
+    private void removeRegisteredListeners(){
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
+        }
+        listenersAdded.clear();
     }
 
     @Override
