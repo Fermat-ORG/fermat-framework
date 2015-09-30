@@ -56,9 +56,9 @@ public class TransactionsSendHistory extends FermatWalletListFragment<CryptoWall
      *
      * @return InstalledFragment instance object
      */
-    public static RequestPaymentFragment newInstance() {
-        RequestPaymentFragment requestPaymentFragment = new RequestPaymentFragment();
-        return new RequestPaymentFragment();
+    public static TransactionsSendHistory newInstance() {
+        TransactionsSendHistory requestPaymentFragment = new TransactionsSendHistory();
+        return new TransactionsSendHistory();
     }
 
     @Override
