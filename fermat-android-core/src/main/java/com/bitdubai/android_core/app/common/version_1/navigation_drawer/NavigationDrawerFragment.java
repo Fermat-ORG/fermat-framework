@@ -92,6 +92,9 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
 
+    public NavigationDrawerArrayAdapter getmAdapter() {
+        return mAdapter;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -306,7 +309,11 @@ public class NavigationDrawerFragment extends Fragment {
                 mDrawerLayout.closeDrawer(mFragmentContainerView);
             }
             if (mCallbacks != null) {
-                mCallbacks.onNavigationDrawerItemSelected(position,menuOption.get(position).getLinkToActivity().getCode());
+                if(menuOption!=null) {
+                    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = menuOption.get(position);
+                    if (menuItem != null)
+                        mCallbacks.onNavigationDrawerItemSelected(position, menuItem.getLinkToActivity().getCode());
+                }
             }
             //test mati
 //            if (((FermatActivity)(getActivity())).getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getType().getCode() == "DesktopActivity") {
