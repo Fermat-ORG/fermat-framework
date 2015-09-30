@@ -55,11 +55,11 @@ public class AssetCryptoVaultManager  {
     public AssetCryptoVaultManager(UUID pluginId,
                                    PluginFileSystem pluginFileSystem,
                                    PluginDatabaseSystem pluginDatabaseSystem,
-                                   String deviceUserLoggerPubliKey,
+                                   String deviceUserLoggerPublicKey,
                                    BitcoinNetworkManager bitcoinNetworkManager) throws CantCreateAssetVaultSeed, CantLoadExistingVaultSeed, VaultKeyHierarchyException, CantMonitorBitcoinNetworkException {
         this.pluginId = pluginId;
         // I'm defining the filename to be the publick key of the device used logged.
-        ASSET_VAULT_SEED_FILENAME = deviceUserLoggerPubliKey;
+        ASSET_VAULT_SEED_FILENAME = deviceUserLoggerPublicKey;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;

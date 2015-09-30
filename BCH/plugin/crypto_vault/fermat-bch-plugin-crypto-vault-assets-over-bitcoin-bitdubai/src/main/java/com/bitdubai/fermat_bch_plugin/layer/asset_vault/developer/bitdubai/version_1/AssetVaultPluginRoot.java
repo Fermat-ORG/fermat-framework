@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
+
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
@@ -88,11 +89,11 @@ public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithBitcoin
          * The seed created belongs only to the currently device user Logged.
          */
         try{
-            String deviceUserLoggerPubliKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            String deviceUserLoggerPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId,
                     pluginFileSystem,
                     pluginDatabaseSystem,
-                    deviceUserLoggerPubliKey,
+                    deviceUserLoggerPublicKey,
                     bitcoinNetworkManager);
         } catch (Exception e){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
