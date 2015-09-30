@@ -18,7 +18,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.Request
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.stock.StockPreferencesActivityFragment;
-//import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +26,6 @@ import org.mockito.Mock;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
 
 /**
  * Created by nelson on 17/09/15.

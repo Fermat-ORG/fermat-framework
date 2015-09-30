@@ -1,21 +1,17 @@
 package unit.com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.NavigationStructure;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.NavigationStructureFactory;
-
-import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by nelson on 29/09/15.
