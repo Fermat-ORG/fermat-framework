@@ -121,7 +121,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      * @param fragmentType Type Id of fragment to show
      */
 
-    private void loadFragment(SubApps subApp, String fragmentType) throws InvalidParameterException {
+    private void loadFragment(SubApps subApp,int idContainer, String fragmentType) throws InvalidParameterException {
 
 
         SubAppSessionManager subAppSessionManager = ((ApplicationSession) getApplication()).getSubAppSessionManager();
@@ -140,7 +140,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            FT.replace(R.id.startContainer, fragment);
+
+            FT.replace(idContainer, fragment);
 
             FT.commit();
         } catch (Exception e) {
@@ -236,7 +237,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(frgBackType); //set back fragment to actual fragment to run
 
 
-                this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), frgBackType);
+                //TODO: ver como hacer para obtener el id del container
+
+                this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), 0,frgBackType);
             } else {
                 // set Desktop current activity
                 Activity activity = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
@@ -271,13 +274,13 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      */
 
     @Override
-    public void changeScreen(String screen,Object[] objects) {
+    public void changeScreen(String screen,int idContainer,Object[] objects) {
 
         try {
 
             SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
 
-            loadFragment(subAppRuntimeManager.getLastSubApp().getType(), screen);
+            loadFragment(subAppRuntimeManager.getLastSubApp().getType(),idContainer, screen);
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
