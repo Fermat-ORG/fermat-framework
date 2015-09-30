@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF"
     >
 
 
@@ -116,5 +117,11 @@
             android:src="@drawable/ic_home_arrow_down"/>
 
     </LinearLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView_transactions"
+        android:visibility="gone"></ListView>
 
 </LinearLayout>

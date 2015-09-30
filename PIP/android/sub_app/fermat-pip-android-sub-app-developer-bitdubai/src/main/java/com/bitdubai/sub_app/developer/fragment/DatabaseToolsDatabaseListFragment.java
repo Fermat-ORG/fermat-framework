@@ -64,35 +64,33 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
 
     private int database_type;
 
-    protected DeveloperSubAppSession developerSubAppSession;
+    public  DeveloperSubAppSession developerSubAppSession;
 
-
-
-
-    public static DatabaseToolsDatabaseListFragment newInstance(int position,DeveloperSubAppSession subAppsSession) {
-        DatabaseToolsDatabaseListFragment f = new DatabaseToolsDatabaseListFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static DatabaseToolsDatabaseListFragment newInstance() {
+        return new DatabaseToolsDatabaseListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+           resource = (Resource)developerSubAppSession.getData("resource");
+        }
 
         //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
 
         try {
-            ToolManager toolManager = developerSubAppSession.getToolManager();
+            ToolManager toolManager = ((DeveloperSubAppSession) subAppsSession).getToolManager();
 
             databaseTools = toolManager.getDatabaseTool();
         } catch (CantGetDataBaseToolException e) {
-            developerSubAppSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            subAppsSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            developerSubAppSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+            subAppsSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -136,7 +134,7 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
             gridView.setAdapter(adapter);
 
         } catch (Exception e) {
-            developerSubAppSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            subAppsSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -148,10 +146,6 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
 
     public void setResource(Resource resource) {
         this.resource = resource;
-    }
-
-    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
-        this.developerSubAppSession = developerSubAppSession;
     }
 
 
@@ -178,10 +172,9 @@ public class DatabaseToolsDatabaseListFragment extends FermatFragment {
                     @Override
                     public void onClick(View view) {
                         //set the next fragment and params
-                        Object[] params = new Object[2];
-                        params[0] = resource;
-                        params[1] = developerDatabaseList.get(position);
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),params);
+                        developerSubAppSession.setData("resource",resource);
+                        developerSubAppSession.setData("database",developerDatabaseList.get(position));
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
                     }
                 });
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
