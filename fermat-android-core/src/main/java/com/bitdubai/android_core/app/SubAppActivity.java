@@ -140,7 +140,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            FT.replace(R.id.only_fragment_container, fragment);
+            FT.replace(R.id.startContainer, fragment);
 
             FT.commit();
         } catch (Exception e) {
