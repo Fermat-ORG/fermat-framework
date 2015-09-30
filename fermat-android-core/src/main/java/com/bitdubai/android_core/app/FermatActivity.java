@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -36,6 +37,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
@@ -110,7 +112,7 @@ import static java.lang.System.gc;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures,Observer {
+public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures,Observer, com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final String TAG = "fermat-core";
     private MainMenu mainMenu;
@@ -515,13 +517,24 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-            NavigationDrawerFragment.setMenuVisibility(true);
+
+
+
             /**
              * Set up the navigationDrawer
              */
             NavigationDrawerFragment.setUp(
                     R.id.navigation_drawer,
                     (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+
+            NavigationDrawerFragment.setMenuVisibility(true);
+
+//            FragmentTransaction ft = getFragmentManager().beginTransaction();
+//            ft.detach(NavigationDrawerFragment);
+//            ft.attach(NavigationDrawerFragment);
+//            ft.addToBackStack(NavigationDrawerFragment.class.getSimpleName());
+//            ft.commit();
+
         }
 
         /**
@@ -552,6 +565,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onResume() {
         super.onResume();
         getNotificationManager().addObserver(this);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -1345,5 +1363,15 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     public void invalidate() {
         //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
+    }
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position,String activityCode) {
+        Toast.makeText(this,"holas",LENGTH_SHORT).show();
     }
 }

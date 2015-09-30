@@ -1467,7 +1467,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Contacts");
         runtimeMenuItem.setIcon("contacts");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1480,14 +1480,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Payment request");
         runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Settings");
         runtimeMenuItem.setIcon("Settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
@@ -1501,21 +1501,21 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         //fin navigation
 
 
-        /**
-         * Menu
-         */
-
-        runtimeMainMenu = new MainMenu();
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMainMenu.addMenuItem(runtimeMenuItem);
-
-
-        runtimeActivity.setMainMenu(runtimeMainMenu);
-
-        /**
-         *  Fin de menu
-         */
+//        /**
+//         * Menu
+//         */
+//
+//        runtimeMainMenu = new MainMenu();
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Settings");
+//        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+//
+//
+//        runtimeActivity.setMainMenu(runtimeMainMenu);
+//
+//        /**
+//         *  Fin de menu
+//         */
 
         /**
          * Transaction Activity
@@ -1545,49 +1545,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT.getKey(), runtimeFragment);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED.getKey(), runtimeFragment);
 
 
-        //Navigation
-
-        runtimeSideMenu = new SideMenu();
-
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Personal Wallets");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Shops");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Commercial wallets");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Factory Projects");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Published Wallets");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Wallet Store");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-
-        //fin navigation
 
 
 

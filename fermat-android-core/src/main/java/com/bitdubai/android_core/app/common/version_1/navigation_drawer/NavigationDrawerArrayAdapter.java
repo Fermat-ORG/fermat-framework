@@ -1,5 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -12,42 +13,50 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 
 import java.util.List;
 
 
-public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
-    private final Context context;
-    private final List<String> values;
+public class NavigationDrawerArrayAdapter extends ArrayAdapter<MenuItem>  {
 
 
-    public NavigationDrawerArrayAdapter(Context context, List<String> values) {
-        super(context, R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, values);
-        try
-        {
+    //private final Context context;
+    private List<MenuItem> values;
 
-            this.context = context;
-            this.values = values;
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
 
+//    public NavigationDrawerArrayAdapter(Context context, List<String> values) {
+//        super(context, R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, values);
+//        try
+//        {
+//
+//            this.context = context;
+//            this.values = values;
+//        }
+//        catch (Exception e)
+//        {
+//            throw e;
+//        }
+//
+//    }
+
+
+    public NavigationDrawerArrayAdapter(Context context, List<MenuItem> menuItem) {
+        super(context, R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty);
+        values = menuItem;
     }
-
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+
         View rowView = convertView;
         try
         {
             if (position == 0) {
 
 
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 
                 //testing
@@ -68,28 +77,28 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 TextView txtView_description = (TextView) rowView.findViewById(R.id.txtView_description);
                 if(txtView_description != null){
 
-                    txtView_description.setTypeface(tf, 1);
+                    //txtView_description.setTypeface(tf, 1);
 
                     //ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
                     txtView_description.setText("Tessa Crankston");
                 }
 
 
-                        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_change_profile);
-                        iconEdit.setOnClickListener(new View.OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(context,"cambiando de ususario proximamente",Toast.LENGTH_SHORT).show();
-
-                            }
-                       });
+//                        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_change_profile);
+//                        iconEdit.setOnClickListener(new View.OnClickListener() {
+//
+//                            @Override
+//                            public void onClick(View v) {
+//                                Toast.makeText(getContext(),"cambiando de ususario proximamente",Toast.LENGTH_SHORT).show();
+//
+//                            }
+//                       });
 
             }
             else {
-                LayoutInflater inflater = (LayoutInflater) context
+                LayoutInflater inflater = (LayoutInflater) getContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+                //rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
 
                 //test mati
@@ -103,19 +112,21 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         break;
 
                 }
+
                 */
-                ImageView imageView = null;
-                imageView = (ImageView) rowView.findViewById(R.id.icon);
-                if(rowView.findViewById(R.id.label) != null)
-                {
-                    TextView textView = (TextView) rowView.findViewById(R.id.label);
-                    textView.setTypeface(tf, 1);
 
-                    textView.setText(values.get(position));
-                }
+                if(!values.isEmpty()) {
+                    ImageView imageView = null;
+                    imageView = (ImageView) rowView.findViewById(R.id.icon);
+                    if (rowView.findViewById(R.id.label) != null) {
+                        TextView textView = (TextView) rowView.findViewById(R.id.label);
+                        //textView.setTypeface(tf, 1);
+
+                        textView.setText(values.get(position).getLabel());
+                    }
 
 
-                //if (ApplicationSession.getActivityId() == "DesktopActivity") {
+                    //if (ApplicationSession.getActivityId() == "DesktopActivity") {
 
                     switch (position) {
                         case 1:
@@ -140,10 +151,10 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         default:
                             imageView.setImageResource(R.drawable.unknown_icon);
                     }
-
-
-
                 }
+
+
+            }
 
             //}
         }
@@ -153,5 +164,10 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
         return rowView;
+    }
+
+    public void setValues(List<MenuItem> menuItems){
+        values = menuItems;
+        notifyDataSetChanged();
     }
 }
