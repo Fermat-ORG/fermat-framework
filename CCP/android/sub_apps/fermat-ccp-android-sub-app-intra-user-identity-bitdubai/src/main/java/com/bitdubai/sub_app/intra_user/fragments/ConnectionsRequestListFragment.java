@@ -24,7 +24,7 @@ import android.widget.ListPopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.engine.PaintActionBar;
+import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -32,7 +32,6 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
@@ -220,7 +219,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
             ListAdapter listAdapter = new ListAdapter(getActivity(),R.layout.itemlistrow,lstCheckBox);
 
 
-            ((PaintActionBar) getActivity()).paintComboBoxInActionBar(listAdapter, this);
+            ((PaintActivtyFeactures) getActivity()).paintComboBoxInActionBar(listAdapter, this);
         } catch (CantShowLoginIdentitiesException e) {
             e.printStackTrace();
         }

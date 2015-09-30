@@ -25,4 +25,12 @@ public interface WsCommunicationsCloudClientManager {
      */
     public CommunicationsCloudClientConnection getCommunicationsCloudClientConnection();
 
+
+    /**
+     * Get the disable server flag
+     *
+     * @return Boolean
+     */
+    public Boolean isDisable();
+
 }

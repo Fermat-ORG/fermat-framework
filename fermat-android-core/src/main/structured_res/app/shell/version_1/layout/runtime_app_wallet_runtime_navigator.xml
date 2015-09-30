@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:osContext="com.bitdubai.android_core.app.RuntimeAppActivityActivity">
 
+
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
     <FrameLayout android:id="@+id/container"
@@ -16,28 +17,41 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        >
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/balance_header" />
+
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             />
     </LinearLayout>
+
+
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
 
         >
+
+
         <com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="48dip"
-            android:background="@drawable/background_tabs" />
+            android:background="@drawable/background_tabs"
+            />
+
+
+
+
+
+
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
