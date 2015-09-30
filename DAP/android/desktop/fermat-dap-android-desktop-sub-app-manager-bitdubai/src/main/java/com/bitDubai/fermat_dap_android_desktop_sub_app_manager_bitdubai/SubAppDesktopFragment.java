@@ -34,9 +34,11 @@ import java.util.List;
 public class SubAppDesktopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
-
-    private static final String DAP_SUB_APP_ASSET_FACTORY_MAIN = Activities.DAP_SUB_APP_ASSET_FACTORY_MAIN.getCode();
-
+    private static final String CWP_SUB_APP_ALL_DEVELOPER = Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode();
+    private static final String CWP_WALLET_BASIC_ALL_MAIN = Activities.CWP_WALLET_BASIC_ALL_MAIN.getCode();
+    private static final String CWP_WALLET_FACTORY_MAIN = Activities.CWP_WALLET_FACTORY_MAIN.getCode();
+    private static final String CWP_WALLET_PUBLISHER_MAIN = Activities.CWP_WALLET_PUBLISHER_MAIN.getCode();
+    private static final String CWP_WALLET_RUNTIME_STORE_MAIN = Activities.CWP_WALLET_RUNTIME_STORE_MAIN.getCode();
     private static int tabId;
     Typeface tf;
     private ArrayList<InstalledSubApp> mlist;
@@ -46,24 +48,27 @@ public class SubAppDesktopFragment extends Fragment {
         SubAppDesktopFragment f = new SubAppDesktopFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
-        //    f.setArguments(b);
+    //    f.setArguments(b);
         return f;
     }
 
-    // @Override
+   // @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      //  setHasOptionsMenu(true);
+
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+
         String[] installed =
-                {"true",
+                {  "true",
                         "true",
                         "true",
                         "true",
                         "true"
                 };
         String[] sub_app_names =
-                {"Developer",
-                        "Wallet Factory",
-                        "Wallet Publisher",
+                { "Developer",
+                   "Wallet Factory",
+                   "Wallet Publisher",
                         "Wallet Store",
                         "Intra user"
                 };
@@ -77,8 +82,10 @@ public class SubAppDesktopFragment extends Fragment {
                         "intra_user"
                 };
 
-        mlist = new ArrayList<>();
-        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.DAP_ASSET_FACTORY, null, null, "sub-app-asset-factory", "Assets factory", "sub-app-asset-factory", "sub-app-asset-factory", new Version(1, 0, 0));
+        mlist = new ArrayList<InstalledSubApp>();
+
+
+        InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY,null,null,"sub-app-asset-factory","Assets factory","sub-app-asset-factory","sub-app-asset-factory",new Version(1,0,0));
         mlist.add(installedSubApp);
 //        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet publisher","wallet_publisher","wallet_publisher",new Version(1,0,0));
 //        mlist.add(installedSubApp);
@@ -100,19 +107,20 @@ public class SubAppDesktopFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //   ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_sub_app_desktop_fragment_grid_item, mlist);
+        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_sub_app_desktop_fragment_grid_item ,mlist);
         _adpatrer.notifyDataSetChanged();
         gridView.setAdapter(_adpatrer);
+
 
 
         return gridView;
     }
 
 
-    //  @Override
+  //  @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //   inflater.inflate(R.menu.shell_shop_desktop_fragment_menu, menu);
-        //  super.onCreateOptionsMenu(menu,inflater);
+     //   inflater.inflate(R.menu.shell_shop_desktop_fragment_menu, menu);
+      //  super.onCreateOptionsMenu(menu,inflater);
     }
 
 
@@ -132,6 +140,7 @@ public class SubAppDesktopFragment extends Fragment {
         public String Address;
 
 
+
         public float rate;
 
         public int value;
@@ -145,6 +154,7 @@ public class SubAppDesktopFragment extends Fragment {
         public boolean installed;
 
     }
+
 
 
     public class AppListAdapter extends ArrayAdapter<InstalledSubApp> {
@@ -162,7 +172,7 @@ public class SubAppDesktopFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_sub_app_desktop_fragment_grid_item, parent, false);
+               convertView = inflater.inflate(R.layout.shell_sub_app_desktop_fragment_grid_item, parent, false);
                 holder = new ViewHolder();
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
@@ -174,11 +184,12 @@ public class SubAppDesktopFragment extends Fragment {
             holder.companyTextView.setText(installedSubApp.getSubAppName());
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
-            LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.sub_apps);
-            switch (installedSubApp.getSubAppIcon()) {
+            LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.sub_apps);
+            switch (installedSubApp.getSubAppIcon())
+            {
                 case "sub-app-asset-factory":
                     holder.imageView.setImageResource(R.drawable.factory_nuevo);
-                    holder.imageView.setTag("DevelopersActivity|1");
+                  holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -225,7 +236,7 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
 
-                            //set the next fragment and params
+          //set the next fragment and params
                             ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
                         }
                     });

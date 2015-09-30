@@ -8,7 +8,6 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.deve
 
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientChannel;
 
-import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.framing.FramedataImpl1;
 

@@ -118,8 +118,8 @@ public abstract class FermatFragment extends Fragment implements FermatFragments
     /**
      * Change activity
      */
-    protected final void changeFragment(String fragment) {
-        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, null);
+    protected final void changeFragment(String fragment,int idContainer) {
+        ((FermatScreenSwapper) getActivity()).changeScreen(fragment,idContainer ,null);
     }
 
 
