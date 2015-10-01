@@ -21,7 +21,7 @@ public enum RequestProtocolState implements FermatEnum {
         this.code = code;
     }
 
-    public RequestProtocolState getByCode(String code) throws InvalidParameterException {
+    public static RequestProtocolState getByCode(String code) throws InvalidParameterException {
 
         switch (code){
 
