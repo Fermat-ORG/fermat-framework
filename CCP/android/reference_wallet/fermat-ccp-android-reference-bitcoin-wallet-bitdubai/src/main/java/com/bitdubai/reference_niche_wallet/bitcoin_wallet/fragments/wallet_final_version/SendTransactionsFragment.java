@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_fina
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -98,6 +99,11 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
     private int actorType;
     private TextView txt_notes;
+    private LinearLayout linear_address;
+
+
+    private Handler mHandler = new Handler();
+    private boolean activeAddress = true;
 
     /**
      * Create a new instance of this fragment
@@ -173,14 +179,48 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 walletContact = (WalletContact) arg0.getItemAtPosition(position);
                 editTextAddress.setText(walletContact.address);
+                linear_address.setVisibility(View.GONE);
             }
         });
 
-        editTextAddress = (EditText) rootView.findViewById(R.id.address);
 
+        autocompleteContacts.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                linear_address.setVisibility(activeAddress ? View.VISIBLE : View.GONE);
+               // if (!editTextAddress.getText().equals("")) linear_address.setVisibility(View.VISIBLE);
+            }
+        });
+
+        /**
+         *  Address line
+         */
+        linear_address = (LinearLayout) rootView.findViewById(R.id.linear_address);
+
+
+
+
+        editTextAddress = (EditText) rootView.findViewById(R.id.address);
+        editTextAddress.setText("");
+
+        /**
+         * Notes line
+         */
 
         txt_notes = (TextView) rootView.findViewById(R.id.notes);
 
+        /**
+         * Amount
+         */
 
         editTextAmount = (EditText) rootView.findViewById(R.id.amount);
         /**
