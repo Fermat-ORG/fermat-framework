@@ -148,6 +148,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
     }
 
 
@@ -159,7 +160,17 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+        try{
+
+            if(savedInstanceState==null){
+                savedInstanceState=new Bundle();
+            }else
+            super.onRestoreInstanceState(savedInstanceState);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
 
@@ -355,9 +366,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //        }
 
         try {
-            //resetThisActivity();
+            resetThisActivity();
 
-            getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
+            Activity activity = getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
 
 
 
@@ -392,10 +403,20 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
                 //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 //startActivity(intent);
+
+
+                for(int i=0;i<activity.getFragments().size();i++){
+                    getFragmentManager().popBackStack();
+                }
+
+                //NavigationDrawerFragment.onDetach();
+                //NavigationDrawerFragment = null;
+
                 recreate();
                 //finish();
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 //System.gc();
+
 
             }catch (Exception e){
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -504,6 +525,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
      */
     @Override
     public void onNavigationDrawerItemSelected(int position, String activityCode) {
+        Toast.makeText(this,activityCode,Toast.LENGTH_LONG).show();
         changeActivity(activityCode);
     }
 }
