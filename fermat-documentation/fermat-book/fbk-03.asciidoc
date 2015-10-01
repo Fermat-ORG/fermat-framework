@@ -1,3 +1,4 @@
+:numbered:
 == First run on FERMAT 
 
 === Fermat Reference Distribution
