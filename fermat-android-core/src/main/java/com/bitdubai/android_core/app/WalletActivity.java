@@ -151,23 +151,25 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
      *  Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle)
      * @param outState
      */
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-
-    /**
-     * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
-     * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
-     * @param savedInstanceState
-     */
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
+//
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//
+//    }
+//
+//
+//    /**
+//     * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
+//     * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
+//     * @param savedInstanceState
+//     */
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//
+//    }
 
 
     /**
@@ -362,9 +364,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //        }
 
         try {
-            //resetThisActivity();
+            resetThisActivity();
 
-            getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
+            Activity activity = getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
 
 
 
@@ -399,10 +401,20 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
                 //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 //startActivity(intent);
+
+
+                for(int i=0;i<activity.getFragments().size();i++){
+                    getFragmentManager().popBackStack();
+                }
+
+                //NavigationDrawerFragment.onDetach();
+                //NavigationDrawerFragment = null;
+
                 recreate();
                 //finish();
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 //System.gc();
+
 
             }catch (Exception e){
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -511,6 +523,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
      */
     @Override
     public void onNavigationDrawerItemSelected(int position, String activityCode) {
+        Toast.makeText(this,activityCode,Toast.LENGTH_LONG).show();
         changeActivity(activityCode);
     }
 }

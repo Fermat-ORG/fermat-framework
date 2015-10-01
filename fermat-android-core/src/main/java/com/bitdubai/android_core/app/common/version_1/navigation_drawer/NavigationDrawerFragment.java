@@ -147,12 +147,12 @@ public class NavigationDrawerFragment extends Fragment {
                 }
             });
 
-            //create menu option based activity submenu definition
-            Platform platform = ((ApplicationSession)(getActivity().getApplication())).getFermatPlatform();
-
-            this.platformContext = platform.getCorePlatformContext();
-
-            this.appRuntimeMiddleware =  (SubAppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+//            //create menu option based activity submenu definition
+//            Platform platform = ((ApplicationSession)(getActivity().getApplication())).getFermatPlatform();
+//
+//            this.platformContext = platform.getCorePlatformContext();
+//
+//            this.appRuntimeMiddleware =  (SubAppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
             menuOption = new ArrayList<String>();
 
@@ -338,7 +338,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            //*** CAST EXCEPTION ! mCallbacks = (NavigationDrawerCallbacks) activity;
+            mCallbacks = (NavigationDrawerCallbacks) activity;
         } catch (ClassCastException e) {
             throw e;
         }

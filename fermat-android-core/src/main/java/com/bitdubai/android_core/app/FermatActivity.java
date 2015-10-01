@@ -121,7 +121,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     /**
      * Navigation menu
      */
-    private NavigationDrawerFragment NavigationDrawerFragment;
+    protected NavigationDrawerFragment NavigationDrawerFragment;
 
     /**
      * Screen adapters
