@@ -92,6 +92,7 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY:
                     currentFragment = TransactionsSendHistory.newInstance();
+                    break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");
             }
