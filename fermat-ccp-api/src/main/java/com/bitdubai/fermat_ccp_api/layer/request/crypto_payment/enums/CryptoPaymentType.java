@@ -40,4 +40,5 @@ public enum CryptoPaymentType implements FermatEnum {
     public String getCode(){
         return this.code;
     }
+
 }

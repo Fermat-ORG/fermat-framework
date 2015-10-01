@@ -7,7 +7,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantA
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantSendCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
 
 import java.util.List;
@@ -22,8 +22,8 @@ import java.util.UUID;
 public interface CryptoPaymentManager {
 
     /**
-     * Throw the method <code>sendCryptoPaymentRequest</code> you can send a crypto payment request to the actor with
-     * public key receiverActorPublicKey the actors are always intra-wallet-user of CCP.
+     * Throw the method <code>generateCryptoPaymentRequest</code> you can generate a crypto payment request and send it
+     * to the actor with public key actorPublicKey; now the identities and actors are always intra-wallet-user of CCP.
      *
      * @param walletPublicKey     public key of the wallet sending the request.
      * @param identityPublicKey   public key of the identity sending the request.
@@ -32,17 +32,17 @@ public interface CryptoPaymentManager {
      * @param description         text describing the crypto payment request.
      * @param amount              amount of crypto expected.
      *
-     * @throws CantSendCryptoPaymentRequestException if something goes wrong.
+     * @throws CantGenerateCryptoPaymentRequestException if something goes wrong.
      */
-    void sendCryptoPaymentRequest(String        walletPublicKey  ,
-                                  String        identityPublicKey,
-                                  CryptoAddress cryptoAddress    ,
-                                  String        actorPublicKey   ,
-                                  String        description      ,
-                                  long          amount           ) throws CantSendCryptoPaymentRequestException;
+    void generateCryptoPaymentRequest(String        walletPublicKey  ,
+                                      String        identityPublicKey,
+                                      CryptoAddress cryptoAddress    ,
+                                      String        actorPublicKey   ,
+                                      String        description      ,
+                                      long          amount           ) throws CantGenerateCryptoPaymentRequestException;
 
     /**
-     * Throw the method <code>refuseRequest</code> you can inform the rejection of a request to its requester.
+     * Throw the method <code>refuseRequest</code> you can refuse a request.
      *
      * @param requestId  uuid identifying the request to reject.
      *
@@ -53,7 +53,7 @@ public interface CryptoPaymentManager {
                                               CryptoPaymentRequestNotFoundException  ;
 
     /**
-     * Throw the method <code>approveRequest</code> you can approve a request to its requester and send crypto.
+     * Throw the method <code>approveRequest</code> you can approve a request and send the specified crypto.
      *
      * @param requestId  uuid identifying the request to approve.
      *
@@ -68,11 +68,13 @@ public interface CryptoPaymentManager {
      *
      * @param requestId  uuid identifying the request to bring.
      *
+     * @return the specified instance of Crypto Payment Request.
+     *
      * @throws CantGetCryptoPaymentRequestException    if something goes wrong.
      * @throws CryptoPaymentRequestNotFoundException   if we can't find the payment request.
      */
-    void getRequestById(UUID requestId) throws CantGetCryptoPaymentRequestException ,
-                                               CryptoPaymentRequestNotFoundException;
+    CryptoPayment getRequestById(UUID requestId) throws CantGetCryptoPaymentRequestException ,
+                                                        CryptoPaymentRequestNotFoundException;
 
     /**
      * Throw the method <code>listCryptoPaymentRequests</code> you can get the list of the requests related with a wallet.
@@ -86,8 +88,8 @@ public interface CryptoPaymentManager {
      * @throws CantListCryptoPaymentRequestsException if something goes wrong.
      */
     List<CryptoPayment> listCryptoPaymentRequests(String  walletPublicKey,
-                                                         Integer max            ,
-                                                         Integer offset         ) throws CantListCryptoPaymentRequestsException;
+                                                  Integer max            ,
+                                                  Integer offset         ) throws CantListCryptoPaymentRequestsException;
 
     /**
      * Throw the method <code>listCryptoPaymentRequestsByState</code> you can get the list of the requests related with a wallet,
