@@ -49,8 +49,8 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.SendFragment.newInstance(0);
-                    //currentFragment = SendFragment.newInstance();
-                    currentFragment = SendTransactionsFragment.newInstance();
+                    currentFragment = SendFragment.newInstance();
+                   // currentFragment = SendTransactionsFragment.newInstance();
                     break;
 
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
@@ -87,6 +87,11 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                 case CCP_BITCOIN_WALLET_REQUEST_SEND:
                     currentFragment = RequestsReceivedFragment.newInstance();
                     break;
+                case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
+                    currentFragment = TransactionsReceivedHistory.newInstance();
+                    break;
+                case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY:
+                    currentFragment = TransactionsSendHistory.newInstance();
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");
             }
