@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetLanguageException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetLanguageException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetWalletDetailsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -236,7 +236,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return transaction;
     }
 
-    private DatabaseTableRecord getSkinRecord(com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin){
+    private DatabaseTableRecord getSkinRecord(com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin skin){
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETSKIN_ID_COLUMN_NAME, skin.getSkinId());
@@ -262,7 +262,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         return record;
     }
 
-    private DatabaseTransaction addSkinInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin) throws InvalidDatabaseOperationException {
+    private DatabaseTransaction addSkinInTransaction(DatabaseOperations databaseOperation, DatabaseTransaction transaction, com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin skin) throws InvalidDatabaseOperationException {
         DatabaseTable databaseTable = getDatabaseTable(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME);
         DatabaseTableRecord record = getSkinRecord(skin);
 
@@ -519,15 +519,15 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         };
         List<DatabaseTableRecord> records = getRecordsFromDatabase(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_TABLE_NAME, tableFilter);
 
-        List<com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language> languages = new ArrayList<>();
+        List<com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language> languages = new ArrayList<>();
         for (DatabaseTableRecord record : records){
-            languages.add((com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language) getLanguageFromDatabase(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME)));
+            languages.add((com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language) getLanguageFromDatabase(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME)));
         }
 
         if (languages.size() == 0)
             throw new InvalidResultReturnedByDatabaseException(null, "Id: " + tableFilter.getValue() + " number of records: " + records.size(), "database inconsistency");
 
-        for (com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language language : languages){
+        for (com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language language : languages){
             if (language.isDefault())
                 detailedCatalogItemImpl.setLanguage(language);
         }
@@ -584,7 +584,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
             }
         };
 
-        List<com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin> skins = new ArrayList<>();
+        List<com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin> skins = new ArrayList<>();
         records = getRecordsFromDatabase(WalletStoreCatalogDatabaseConstants.WALLETSKIN_TABLE_NAME, tableFilter);
 
         for (DatabaseTableRecord record : records){
@@ -593,7 +593,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         if (skins.size() == 0)
             throw new InvalidResultReturnedByDatabaseException(null, "Id: " + tableFilter.getValue() + " number of records: " + records.size(), "database inconsistency");
 
-        for (com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin : skins){
+        for (com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin skin : skins){
             if (skin.isDefault())
                 detailedCatalogItemImpl.setDefaultSkin(skin);
         }
@@ -913,7 +913,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
      * @param designer
      * @throws CantExecuteDatabaseOperationException
      */
-    public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, TranslatorIdentity translator,  com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Skin skin, DesignerIdentity designer) throws CantExecuteDatabaseOperationException {
+    public void catalogDatabaseOperation(DatabaseOperations databaseOperation, CatalogItemImpl catalogItemImpl, DeveloperIdentity developer, Language language, TranslatorIdentity translator,  com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin skin, DesignerIdentity designer) throws CantExecuteDatabaseOperationException {
 
         database = openDatabase();
         DatabaseTransaction transaction = database.newTransaction();

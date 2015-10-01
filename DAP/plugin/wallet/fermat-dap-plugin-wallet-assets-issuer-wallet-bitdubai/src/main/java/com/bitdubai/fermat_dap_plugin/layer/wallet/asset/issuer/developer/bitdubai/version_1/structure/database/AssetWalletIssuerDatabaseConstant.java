@@ -12,6 +12,7 @@ public class AssetWalletIssuerDatabaseConstant {
     // This second Id is used to verify that that the same transaction is not applied twice.
     // We can't use the transaction hash because some credit/debit operations do not involve a hash
     public static final String ASSET_WALLET_ISSUER__VERIFICATION_ID_COLUMN_NAME = "VerificationId";
+    public static final String ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME = "assetPublicKey";
     public static final String ASSET_WALLET_ISSUER__ADDRESS_FROM_COLUMN_NAME = "addressFrom";
     public static final String ASSET_WALLET_ISSUER__ADDRESS_TO_COLUMN_NAME = "addressTo";
     public static final String ASSET_WALLET_ISSUER__ACTOR_FROM_COLUMN_NAME= "actorFrom";

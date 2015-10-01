@@ -11,6 +11,8 @@ import java.util.UUID;
  * Created by franklin on 24/09/15.
  */
 public interface AssetIssuerWalletTransaction {
+    public String getAssetPublicKey();
+
     public UUID getTransactionId();
 
     public String getTransactionHash();
