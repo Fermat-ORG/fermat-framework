@@ -32,8 +32,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
 
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResourcesProvider;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.DealsWithWalletResourcesProvider;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -368,7 +368,7 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
             walletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
             walletFactoryProject.setCreationTimestamp(new Timestamp(System.currentTimeMillis()));
             walletFactoryProject.setSize(300);
-            walletFactoryProject.setProjectPublickKey(UUID.randomUUID().toString());
+            walletFactoryProject.setProjectPublicKey(UUID.randomUUID().toString());
             walletFactoryProject.setWalletType(WalletType.REFERENCE);
             Skin skin = new Skin();
             skin.setId(UUID.randomUUID());

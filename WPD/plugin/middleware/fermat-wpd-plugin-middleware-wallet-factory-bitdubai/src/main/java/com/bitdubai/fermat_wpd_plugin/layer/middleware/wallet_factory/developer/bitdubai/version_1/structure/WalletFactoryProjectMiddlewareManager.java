@@ -20,10 +20,10 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.exceptions.CantCloneInstalledWalletException;
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResourcesProvider;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.CantGetSkinFileException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.DealsWithWalletResourcesProvider;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -238,7 +238,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 }
 
                 @Override
-                public void setProjectPublickKey(String publickKey) {
+                public void setProjectPublicKey(String publickKey) {
                     this.publicKey = publickKey;
                 }
 
@@ -696,7 +696,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
         clonedWalletFactoryProject.setFactoryProjectType(FactoryProjectType.WALLET);
         java.util.Date date= new java.util.Date();
         clonedWalletFactoryProject.setCreationTimestamp(new Timestamp(date.getTime()));
-        clonedWalletFactoryProject.setProjectPublickKey(new ECCKeyPair().getPublicKey());
+        clonedWalletFactoryProject.setProjectPublicKey(new ECCKeyPair().getPublicKey());
         clonedWalletFactoryProject.setDescription("Clone from wallet " + wallet.getWalletName());
         clonedWalletFactoryProject.setProjectState(WalletFactoryProjectState.IN_PROGRESS);
         clonedWalletFactoryProject.setWalletCategory(wallet.getWalletCategory());

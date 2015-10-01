@@ -82,8 +82,8 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.Wallet
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
@@ -121,7 +121,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     /**
      * Navigation menu
      */
-    private NavigationDrawerFragment NavigationDrawerFragment;
+    protected NavigationDrawerFragment NavigationDrawerFragment;
 
     /**
      * Screen adapters
@@ -513,13 +513,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //            }
 
 
-
-
-
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-
-
 
             /**
              * Set up the navigationDrawer
@@ -530,7 +524,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             NavigationDrawerFragment.setMenuVisibility(true);
 
-            NavigationDrawerFragment.getmAdapter().setValues(sidemenu.getMenuItems());
+           // NavigationDrawerFragment.getmAdapter().setValues(sidemenu.getMenuItems());
 
 //            FragmentTransaction ft = getFragmentManager().beginTransaction();
 //            ft.detach(NavigationDrawerFragment);
@@ -1374,5 +1368,15 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
     }
 
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+   // @Override
+   // public void onNavigationDrawerItemSelected(int position,String activityCode) {
+  //      Toast.makeText(this,"holas",LENGTH_SHORT).show();
+  //  }
 
 }

@@ -45,6 +45,7 @@ public class DeveloperDatabaseFactory {
          */
         List<String> assetWalletIssuerColumns = new ArrayList<>();
         assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME);
         assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_COLUMN_NAME);
         assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_TYPE_COLUMN_NAME);
         assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_COLUMN_NAME);

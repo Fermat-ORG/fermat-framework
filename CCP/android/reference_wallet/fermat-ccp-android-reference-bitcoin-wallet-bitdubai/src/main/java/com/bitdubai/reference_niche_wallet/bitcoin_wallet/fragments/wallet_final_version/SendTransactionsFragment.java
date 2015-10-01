@@ -1,34 +1,44 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
  * Created by Matias Furszyfer on 2015.09.28..
@@ -58,6 +68,18 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
     private int MAX_TRANSACTIONS = 20;
     private int offset = 0;
+
+    /**
+     * UI
+     */
+    private View rootView;
+    private LinearLayout linear_layout_send_form;
+    private AutoCompleteTextView autocompleteContacts;
+    private EditText editTextAddress;
+    private EditText editTextAmount;
+
+    private WalletContactListAdapter contactsAdapter;
+
 
     /**
      * Create a new instance of this fragment
@@ -93,12 +115,106 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         lstCryptoWalletTransactions = new ArrayList<CryptoWalletTransaction>();
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+
+        linear_layout_send_form = (LinearLayout)rootView.findViewById(R.id.send_form);
+
+        ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean isShow =linear_layout_send_form.isShown();
+                //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+                if(isShow){
+                    Fx.slide_up(getActivity(), linear_layout_send_form);
+                    linear_layout_send_form.setVisibility(View.GONE);
+                    //showDialog();
+                }
+                else{
+                    linear_layout_send_form.setVisibility(View.VISIBLE);
+                    Fx.slide_down(getActivity(), linear_layout_send_form);
+                }
+
+            }
+        });
+
+        autocompleteContacts = (AutoCompleteTextView)rootView.findViewById(R.id.contact_name);
+
+        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
+
+        autocompleteContacts.setAdapter(contactsAdapter);
+        //autocompleteContacts.setTypeface(tf);
+        autocompleteContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                WalletContact walletContact = (WalletContact) arg0.getItemAtPosition(position);
+                editTextAddress.setText(walletContact.address);
+            }
+        });
+
+        editTextAddress = (EditText) rootView.findViewById(R.id.address);
+
+        TextView tv;
+
+        tv = (TextView) rootView.findViewById(R.id.notes);
+
+
+        editTextAmount = (EditText) rootView.findViewById(R.id.amount);
+        /**
+         *  Amount observer
+         */
+        editTextAmount.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                try {
+                    Long amount = Long.parseLong(editTextAmount.getText().toString());
+                    if (amount > 0) {
+                        //long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+                        //editTextAmount.setHint("Available amount: " + actualBalance + " bits");
+                    }
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        /**
+         * BarCode Scanner
+         */
+        rootView.findViewById(R.id.scan_qr).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
+                integrator.initiateScan();
+            }
+        });
+
+
+
+        //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
+
+        Button btnSend = (Button) rootView.findViewById(R.id.send_button);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+
+        return rootView;
     }
+
 
 
     @Override
@@ -108,7 +224,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_main_fragment;
+        return R.layout.transaction_main_fragment_send;
     }
 
     @Override
@@ -212,6 +328,59 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
     public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
         this.referenceWalletSession = referenceWalletSession;
+    }
+
+    /**
+     * Obtain the wallet contacts from the cryptoWallet
+     *
+     * @return
+     */
+    private List<WalletContact> getWalletContactList() {
+        List<WalletContact> contacts = new ArrayList<>();
+
+//        new FermatWorker(getActivity(), new FermatWorkerCallBack() {
+//            @SuppressWarnings("unchecked")
+//            @Override
+//            public void onPostExecute(Object... result) {
+//                if (isAttached) {
+//                    if (adapter != null) {
+//                        intraUserItemList = (ArrayList<IntraUserConnectionListItem>) result[0];
+//                        adapter.changeDataSet(intraUserItemList);
+//                        isStartList = true;
+//
+//                    }
+//                    showEmpty();
+//                }
+//            }
+//
+//            @Override
+//            public void onErrorOccurred(Exception ex) {
+//                if (isAttached) {
+//                    dialog.dismiss();
+//                    dialog = null;
+//                    Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+//                    showEmpty();
+//                }
+//            }
+//        }) {
+//
+//            @Override
+//            protected Object doInBackground() throws Exception {
+//
+//                return getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+//
+//            }
+//        }.execute();
+        try {
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts("reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/);
+            for (CryptoWalletWalletContact wcr : walletContactRecords) {
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress()));
+            }
+        } catch (CantGetAllWalletContactsException e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
+        }
+        return contacts;
     }
 
 }

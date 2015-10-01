@@ -3,7 +3,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_community.de
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_community.WalletCommunityManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_community.interfaces.WalletCommunityManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;

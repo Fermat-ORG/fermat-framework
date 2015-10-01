@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CryptoNetworks {
      BITCOIN("BTC"),
+     BITCOIN2("BTC2"),
      LITECOIN("LTC"),
      DOGECOIN("DGC");
 
@@ -23,6 +24,7 @@ public enum CryptoNetworks {
      private static CryptoNetworks getByCode(final String code) throws InvalidParameterException{
           switch (code){
                case "BTC": return BITCOIN;
+               case "BTC2": return BITCOIN2;
                case "LTC": return LITECOIN;
                case "DGC": return DOGECOIN;
                default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code: " + code, null);
