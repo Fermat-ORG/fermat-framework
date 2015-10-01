@@ -1423,13 +1423,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         String publicKey="reference_wallet";
 
-        try {
-
-            walletResourcesManger.installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(),WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
-
-        } catch (WalletResourcesInstalationException e) {
-            e.printStackTrace();
-        }
+//        try {
+//
+//            walletResourcesManger.installCompleteWallet(WalletCategory.REFERENCE_WALLET.getCode(),WalletType.REFERENCE.getCode(), "bitDubai", "medium", "default", "en", "1.0.0",publicKey);
+//
+//        } catch (WalletResourcesInstalationException e) {
+//            e.printStackTrace();
+//        }
 
 
         try{
@@ -1750,22 +1750,37 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#72af9c");
         //runtimeActivity.setColor("#d07b62");
-        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
 
 
         runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
         runtimeStatusBar.setColor("#72af9c");
 
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Sent");
+        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Received");
+        runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTabStrip.setDividerColor(0x72af9c);
+        //runtimeTabStrip.setBackgroundColor("#72af9c");
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS.getKey());
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY.getKey());
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY.getKey(), runtimeFragment);
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY.getKey(), runtimeFragment);
 
 
 

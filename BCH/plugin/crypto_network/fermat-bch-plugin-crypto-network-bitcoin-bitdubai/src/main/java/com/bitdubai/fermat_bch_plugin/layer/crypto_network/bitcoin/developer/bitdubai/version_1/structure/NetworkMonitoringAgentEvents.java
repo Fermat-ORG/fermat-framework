@@ -6,14 +6,27 @@ import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.AbstractWalletEventListener;
+import org.bitcoinj.core.Block;
+import org.bitcoinj.core.BlockChainListener;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.FilteredBlock;
+import org.bitcoinj.core.GetDataMessage;
+import org.bitcoinj.core.Message;
+import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerAddress;
+import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by rodrigo on 9/30/15.
  */
-public class NetworkMonitoringAgentEvents extends AbstractWalletEventListener{
+public class NetworkMonitoringAgentEvents extends AbstractWalletEventListener implements PeerEventListener{
     EventManager eventManager;
 
     /**
@@ -38,5 +51,46 @@ public class NetworkMonitoringAgentEvents extends AbstractWalletEventListener{
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
         super.onTransactionConfidenceChanged(wallet, tx);
+    }
+
+    @Override
+    public void onPeersDiscovered(Set<PeerAddress> peerAddresses) {
+
+    }
+
+    @Override
+    public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
+
+    }
+
+    @Override
+    public void onChainDownloadStarted(Peer peer, int blocksLeft) {
+
+    }
+
+    @Override
+    public void onPeerConnected(Peer peer, int peerCount) {
+
+    }
+
+    @Override
+    public void onPeerDisconnected(Peer peer, int peerCount) {
+
+    }
+
+    @Override
+    public Message onPreMessageReceived(Peer peer, Message m) {
+        return null;
+    }
+
+    @Override
+    public void onTransaction(Peer peer, Transaction t) {
+        System.out.println("New transaction detected: " + t.toString());
+    }
+
+    @Nullable
+    @Override
+    public List<Message> getData(Peer peer, GetDataMessage m) {
+        return null;
     }
 }

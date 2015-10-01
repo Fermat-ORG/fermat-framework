@@ -328,7 +328,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 //                            .commit();
                     referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
                     CryptoWalletWalletContact cryptoWalletWalletContact;
-                    referenceWalletSession.setLastContactSelected(walletContactRecords.get(position-1));
+                    referenceWalletSession.setLastContactSelected(walletContactRecords.get(position));
                     InstalledWallet installedWallet = walletSession.getWalletSessionType();
                     ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
 

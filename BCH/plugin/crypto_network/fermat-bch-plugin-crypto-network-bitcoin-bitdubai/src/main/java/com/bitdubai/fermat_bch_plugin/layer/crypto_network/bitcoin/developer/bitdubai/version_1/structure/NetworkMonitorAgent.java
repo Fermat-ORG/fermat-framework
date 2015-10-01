@@ -39,24 +39,21 @@ class NetworkMonitorAgent implements Agent{
 
     @Override
     public void start() throws CantStartAgentException {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    doTheThing();
-                }
-            }).start();
+           doTheThing();
     }
 
     //todo I will fix this, I properly need to define the Agent structure to run on a separate thread.
     private void doTheThing(){
         try {
             NetworkMonitoringAgentEvents networkMonitoringAgentEvents = new NetworkMonitoringAgentEvents(this.eventManager);
-            wallet.addEventListener(networkMonitoringAgentEvents);
+
 
             //todo this needs to be fixed. I will in the future save the blocks in a database
             SPVBlockStore spvBlockStore = new SPVBlockStore(networkParameters, new File("/data/data/com.bitdubai.fermat/files/bitcoinnetwork.spv"));
+
             BlockChain blockChain = new BlockChain(networkParameters, wallet, spvBlockStore);
             peerGroup = new PeerGroup(networkParameters, blockChain);
+
             peerGroup.addWallet(wallet);
             peerGroup.setUseLocalhostPeerWhenPossible(true);
 
@@ -69,6 +66,10 @@ class NetworkMonitorAgent implements Agent{
                 peerGroup.addPeerDiscovery(new DnsDiscovery(networkParameters));
             }
             peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
+
+            wallet.addEventListener(networkMonitoringAgentEvents);
+            peerGroup.addEventListener(networkMonitoringAgentEvents);
+
             peerGroup.start();
             peerGroup.downloadBlockChain();
         } catch (BlockStoreException e) {
