@@ -226,6 +226,8 @@ public enum Activities {
                 return CBP_DESKTOP;
             case "DAPM":
                 return DAP_MAIN;
+            case "CWRWBWBV1C":
+                return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
