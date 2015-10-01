@@ -17,9 +17,9 @@ public interface BankMoneyTransaction {
 
     UUID getBankTransactionId();
 
-    String getPublicKeyCustomer();
-
     String getPublicKeyBroker();
+
+    String getPublicKeyCustomer();
 
     BankTransactionStatus getStatus();
 
