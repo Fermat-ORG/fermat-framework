@@ -24,4 +24,8 @@ dependencies {
     compile project(':fermat-android-api')
     compile project(':fermat-api')
     compile project(':fermat-dap-api')
+
+
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:cardview-v7:23.0.0'
 }
