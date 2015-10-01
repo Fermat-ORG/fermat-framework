@@ -513,13 +513,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //            }
 
 
-
-
-
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-
-
 
             /**
              * Set up the navigationDrawer
@@ -530,7 +524,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             NavigationDrawerFragment.setMenuVisibility(true);
 
-            NavigationDrawerFragment.getmAdapter().setValues(sidemenu.getMenuItems());
+           // NavigationDrawerFragment.getmAdapter().setValues(sidemenu.getMenuItems());
 
 //            FragmentTransaction ft = getFragmentManager().beginTransaction();
 //            ft.detach(NavigationDrawerFragment);
@@ -1374,5 +1368,15 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
     }
 
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+   // @Override
+   // public void onNavigationDrawerItemSelected(int position,String activityCode) {
+  //      Toast.makeText(this,"holas",LENGTH_SHORT).show();
+  //  }
 
 }
