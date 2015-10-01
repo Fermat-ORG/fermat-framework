@@ -368,7 +368,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         try {
             resetThisActivity();
 
-            Activity activity = getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
+            WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+
+            Activity activity = walletNavigationStructure.getActivity(Activities.getValueFromString(activityName));
 
 
 
