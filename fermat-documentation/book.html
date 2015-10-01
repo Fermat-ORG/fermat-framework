@@ -1943,11 +1943,11 @@ chunk exchange rate</strong></p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Check that N &gt;= 0, if not we end the execution with an error fermatMessage</p>
+<p>Check that N &gt;= 0, if not we end the execution with an error message</p>
 </li>
 <li>
 <p>Check that the available amount &gt;= N, if not end the execution with
-an error fermatMessage</p>
+an error message</p>
 </li>
 <li>
 <p>Take the chunks from the ValueChunks table with state UNSPENT and
@@ -2003,7 +2003,7 @@ should remark are:</p>
 <ul>
 <li>
 <p>The crypto currency can be different from Bitcoin, but a single wallet
-will work with only one fermatPacketType of crypto currency from the beginning of it
+will work with only one type of crypto currency from the beginning of it
 existence to the end.</p>
 </li>
 <li>
@@ -2186,10 +2186,10 @@ still use N):</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Check that N &gt;= 0, if not we end the execution with an error fermatMessage</p>
+<p>Check that N &gt;= 0, if not we end the execution with an error message</p>
 </li>
 <li>
-<p>Check that the available amount &gt;= N, if not end the execution with an error fermatMessage</p>
+<p>Check that the available amount &gt;= N, if not end the execution with an error message</p>
 </li>
 <li>
 <p>Take the chunks from the ValueChunks table with state UNSPENT and store them in a list.</p>
@@ -4198,34 +4198,42 @@ Excepciones desencadenadas de NULL</p>
 </div>
 </div>
 <div class="paragraph">
-<p>El objetivo de esta técnica es evitar que los métodos getters devuelvan null, para ello se debe realizar una verificación previa antes de devolver algún objeto.</p>
+<p>El objetivo de esta técnica es evitar que los métodos getters devuelvan null, para ello se debe realizar una verificación previa antes de obtener algún objeto.</p>
 </div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_refactor_pendientes_por_hacer">Refactor Pendientes por hacer:</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_dap_actor_2">FERMAT-DAP /actor</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="digital-asset-transaction-asset-issuing-BitDubai-V1">Version 1</h3>
 <div class="paragraph">
-<p>Este plugin, de naturaleza transaccional, tiene por objetivo recopilar toda la información necesaria para la emisión de un Digital Asset.
+<p>En el caso de implementar un método get proveniente de una interfaz que no posea throws ObjectNotSetException, se recomienda usar el report manager para que quede registrada el intento de obtener un objeto que está null, por ejemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="java language-java">@Override
+public void getSomething(){
+    ...
+    try{
+        if(returningObject==null){
+            throw new ObjectNotSetException("The object to get is null")
+        }
+    } catch(ObjectNotSetException exception) {
+        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_PLUGIN, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+    }
+}
+
+
+== Refactor Pendientes por hacer:
+
+* Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.
+
+:leveloffset: 1
+= FERMAT-DAP /actor
+
+:leveloffset: 2
+[[digital-asset-transaction-asset-issuing-BitDubai-V1]]
+= Version 1
+
+Este plugin, de naturaleza transaccional, tiene por objetivo recopilar toda la información necesaria para la emisión de un Digital Asset.
 Esta información, no solo contendrá el detalle de la transacción cripto (Genesis transaction) asociada al asset,
-deberá incluir la información multimedia que sirva para la construcción de la UI del Asset en el dispositivo, asi como el contrato de uso del mismo.</p>
-</div>
-<div class="paragraph">
-<p>El plugin Asset Issuing será el encargado de la creación de los Assets, incluyendo metadata y crypto monto, que posteriormente serán enviados a los posibles destinatarios de los Digital Assets. Este plugin
+deberá incluir la información multimedia que sirva para la construcción de la UI del Asset en el dispositivo, asi como el contrato de uso del mismo.
+
+El plugin Asset Issuing será el encargado de la creación de los Assets, incluyendo metadata y crypto monto, que posteriormente serán enviados a los posibles destinatarios de los Digital Assets. Este plugin
 deberá solicitar la genesis transaction, la cual se define como la transacción origen de los crypto montos a ser transferidos junto al asset, así mismo, debe solicitar
 la genesis address, la cual se define como la dirección que emitió el Asset. Una vez obtenida la información antes mencionada, este plugin debe crear las transacciones que
 permitan la transferencia de los Assets a los destinatarios. Este plugin debe ser responsable de cada uno de los Assets generados hasta que todos hayan sido entregados a los
@@ -4237,735 +4245,409 @@ Estos Assets pueden ser enviados a cualquier tipo de wallet, es decir, debe ser 
 Los Assets que no se hayan enviado deben permanecer en el dispositivo emisor (Asset Distribution) hasta que el beneficiario haya autorizado la instalación/descarga del digital asset
 a su dispositivo. Al momento de instalación del Asset en el dispositivo destino es que se debe realizar la trasferencia del crypto monto al dispositivo destino.
 Los crypto montos del emisor asociados a cada assets deben estar reservados en el dispositivo emisor hasta que sean transferidos a los beneficiarios. Estos montos no deben
-cambiar una vez reservados.</p>
-</div>
-<div class="sect3">
-<h4 id="_plug_in_description_12">Plug-in Description</h4>
-<div class="paragraph">
-<p>El objeto DigitalAsset de la plataforma, contará con las siguientes propiedades:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Identity Asset Issuer: Identity del Actor AssetIssuer</p>
-</li>
-<li>
-<p>String name: nombre del Asset definido por el issuer.</p>
-</li>
-<li>
-<p>String description: descripción del asset definido por el issuer.</p>
-</li>
-<li>
-<p>List&lt;Resource&gt;: lista de recursos posibles del asset, como por ejemplo imágenes, videos, etc.</p>
-</li>
-<li>
-<p>String GenesisTransaction: hash de la transacciín bitcoin donde el asset está incluido.</p>
-</li>
-<li>
-<p>Address GenesisAddress: dirección Genesis generada por la Asset Vault</p>
-</li>
-<li>
-<p>long GenesisAmount: valor crypto del digital asset en Satoshis.</p>
-<div class="literalblock">
-<div class="content">
-<pre>Digital Asset Contract (DAC)</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Como contrato básico para el Digital Asset para poder cerrar el ciclo en el desarrollo inicial de la plataforma,
-especificaremos que:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Redimible.</p>
-</li>
-<li>
-<p>ExpirationDate: fecha de expiración que puede ser nunca.</p>
-</li>
-<li>
-<p>Transferible.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>La emisión de un Digital Asset va a tener un enum con los siguientes estados:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Draft: cuando el issuer está completando los datos básicos del asset y del contrato.</p>
-</li>
-<li>
-<p>PendingFinal: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.</p>
-</li>
-<li>
-<p>Final: cuando se generó el hash del DA y el Asset ya no se puede modificar.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>La construcción de una Digital Asset Transaction va a tener los siguientes estados:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Blank: estado inicial, en el cual no se ha llevado ningún proceso transaccional.</p>
-</li>
-<li>
-<p>RequestingGenesisAddress: solicitando una dirección a la cryptoVault.</p>
-</li>
-<li>
-<p>GenesisAddressObtained: la genesis address se obtuvo de la Crypto Vault.</p>
-</li>
-<li>
-<p>SendingBitcoins: estado en el cual se solicita la transferencia de fondos a la wallet Issuer.</p>
-</li>
-<li>
-<p>BitcoinsSent: La transferencia de fondos se realizó correctamente.</p>
-</li>
-<li>
-<p>ToRedeem: estado en el cual se espera el canje del Asset.</p>
-</li>
-<li>
-<p>CheckingAsset: estado en el cual se verifica la transacción asociada al Asset.</p>
-</li>
-<li>
-<p>ReturningBitcoins: estado en el cual la genesis amount se comienza a transferir a la Wallet emisora.</p>
-</li>
-<li>
-<p>BitcoinsReturned: estado en el cual se ha completado la transferencia a la Wallet Emisora.</p>
-</li>
-<li>
-<p>Redeemed: estado en el cual el Asset se considera redimido.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Al iniciar el plugin este instancia al objeto DigitalAssetCryptoTransactionFactory, el cual será el encargado de tomar el Digital Asset creado por AssetIssuingTransactionPluginRoot con los datos provenientes de la UI a través del AssetIssuerModule.
+cambiar una vez reservados.
+
+== Plug-in Description
+
+El objeto DigitalAsset de la plataforma, contará con las siguientes propiedades:
+
+ * Identity Asset Issuer: Identity del Actor AssetIssuer
+ * String name: nombre del Asset definido por el issuer.
+ * String description: descripción del asset definido por el issuer.
+ * List&lt;Resource&gt;: lista de recursos posibles del asset, como por ejemplo imágenes, videos, etc.
+ * String GenesisTransaction: hash de la transacciín bitcoin donde el asset está incluido.
+ * Address GenesisAddress: dirección Genesis generada por la Asset Vault
+ * long GenesisAmount: valor crypto del digital asset en Satoshis.
+
+ Digital Asset Contract (DAC)
+
+Como contrato básico para el Digital Asset para poder cerrar el ciclo en el desarrollo inicial de la plataforma,
+especificaremos que:
+
+ * Redimible.
+ * ExpirationDate: fecha de expiración que puede ser nunca.
+ * Transferible.
+
+La emisión de un Digital Asset va a tener un enum con los siguientes estados:
+
+* Draft: cuando el issuer está completando los datos básicos del asset y del contrato.
+* PendingFinal: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
+* Final: cuando se generó el hash del DA y el Asset ya no se puede modificar.
+
+La construcción de una Digital Asset Transaction va a tener los siguientes estados:
+
+* Blank: estado inicial, en el cual no se ha llevado ningún proceso transaccional.
+* RequestingGenesisAddress: solicitando una dirección a la cryptoVault.
+* GenesisAddressObtained: la genesis address se obtuvo de la Crypto Vault.
+* SendingBitcoins: estado en el cual se solicita la transferencia de fondos a la wallet Issuer.
+* BitcoinsSent: La transferencia de fondos se realizó correctamente.
+* ToRedeem: estado en el cual se espera el canje del Asset.
+* CheckingAsset: estado en el cual se verifica la transacción asociada al Asset.
+* ReturningBitcoins: estado en el cual la genesis amount se comienza a transferir a la Wallet emisora.
+* BitcoinsReturned: estado en el cual se ha completado la transferencia a la Wallet Emisora.
+* Redeemed: estado en el cual el Asset se considera redimido.
+
+
+Al iniciar el plugin este instancia al objeto DigitalAssetCryptoTransactionFactory, el cual será el encargado de tomar el Digital Asset creado por AssetIssuingTransactionPluginRoot con los datos provenientes de la UI a través del AssetIssuerModule.
 DigitalAssetCryptoTransactionFactory (DACTF) usará una instancia del CryptoVaultManager para crear la genesis transaction, la cual quedará registrada en el CryptoAddressBook por medio de CryptoAddressBookManager, que se va a asociar al objeto Digital Asset y así crear un nuevo DigitalAssetMetadata, este último objeto debe generase al concluir
-el proceso de creación del digital Asset, ya que este es quien ajustaría el estado a <em>final</em>, una vez que se encuentra en este estado ya no se debe modificar ninguna característica del Digital Asset.</p>
-</div>
-<div class="sect4">
-<h5 id="_pasos_detallados">Pasos detallados:</h5>
-<div class="paragraph">
-<p>1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
- realizarán distintas especificaciones del asset y el contrato inicial.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre> La Issuer Subapp debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
+el proceso de creación del digital Asset, ya que este es quien ajustaría el estado a _final_, una vez que se encuentra en este estado ya no se debe modificar ninguna característica del Digital Asset.
+
+=== Pasos detallados:
+
+Diagrama de Flujo en Prezi: http://prezi.com/fy3cag7olwbz/?utm_campaign=share&amp;utm_medium=copy&amp;rc=ex0share
+
+1) La AssetIssuer subApp, a través de un wizard solicitará los datos básicos necesarios para la creación del asset. En el mismo se
+ realizarán distintas especificaciones del asset y el contrato inicial.
+
+
+
+ La Asset Factory debe mostrar al usuario el monto final de la transacción bitcoin (GenesisAmount) para su aprobación mediante
  el uso de los siguientes campos:
 * Cantidad de Assets que se están creando (DigitalAsset.quantity)
 * Valor de cada Asset. (DigitalAsset.unitValue)
-* Valor del Fee de cada transacción. (DigitalAsset.transactionFee).</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>El valor del GenesisAmount se calculará de la siguiente forma:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>*DigitalAsset.quantity * DigitalAsset.unitValue + ( DigitalAsset.transactionFee * DigitalAsset.quantity)*</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>El DigitalAsset.transactionFee es un valor que calculará la cryptoVault a través del método getEstimatedFeeValue.</p>
-</div>
-<div class="paragraph">
-<p>La Issuer subApp no permitirá iniciar el proceso de issuing del Asset si no dispone los fondos disponibles para cubrir el GenesisAmount.</p>
-</div>
-<div class="paragraph">
-<p>Todos los procesos de generación y edicion del Asset serán persistidos en el plugin Middleware Asset Factory. Al momento de finalizar con la
-edición y dar comienzo a la transacción de Asset Issuing, el mismo ya dejará de estar editable en la sub App del issuer.</p>
-</div>
-<div class="paragraph">
-<p>La transacción de Asset Issuing se dará inicio a través del método IssueAsset(DigitalAsset digitalAsset).</p>
-</div>
-<div class="paragraph">
-<p>1) El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
-GenesisAddress.</p>
-</div>
-<div class="paragraph">
-<p>2) Al estar todo completado para emitir el Asset, se persiste el DA (en archivo) y se actualiza el TransactionStatus a FormingGenesis.
-El asset guardado en la Asset Factory pasa a estado final y no puede volver a ser modificado en la subApp Issuer.</p>
-</div>
-<div class="paragraph">
-<p>3) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
-para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se actualiza este valor en el DA y se persisten los cambios.</p>
-</div>
-<div class="paragraph">
-<p>4) Se llama al método requestGenesisAddress de la AssetWallet y se persistirá este valor en la GenesisAddress. Esta solicitud de dirección
-debe ser registrada en el CryptoAddressBook a través del método registerCryptoAddress.</p>
-</div>
-<div class="paragraph">
-<p>5) Se creará el objeto DigitalAssetMetadata y se generará el hash del DA con el método getDigitalAssetHash. La transacción pasaría a estar en estado PendingSubmitCryptoNetwork.</p>
-</div>
-<div class="paragraph">
-<p>6) Se enviará la transacción a través de la cryptoVault utilizando el metodo send de la CryptoWallet y se pasan los siguientes valores:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>transactionId: el obtenido en el paso 3.</p>
-</li>
-<li>
-<p>addressTo: la obtenida en el paso 4.</p>
-</li>
-<li>
-<p>OP_RETURN: el hash del objeto DigitalAssetMetadata (DigitalAssetMetadata.getDigitalAssetHash())</p>
-</li>
-<li>
-<p>Amount: el valor calculado en el punto 1.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>La transacción pasa a estado PendingReceiveCryptoNetwork</p>
-</div>
-<div class="paragraph">
-<p>7) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
+* Valor del Fee de cada transacción. (DigitalAsset.transactionFee).
+
+El valor del GenesisAmount se calculará de la siguiente forma:
+
+ *DigitalAsset.quantity * DigitalAsset.unitValue + ( DigitalAsset.transactionFee * DigitalAsset.quantity)*
+
+El DigitalAsset.transactionFee es un valor que calculará la cryptoVault a través del método getEstimatedFeeValue.
+
+La Issuer subApp no permitirá iniciar el proceso de issuing del Asset si no dispone los fondos disponibles para cubrir el GenesisAmount.
+
+Todos los procesos de generación y edicion del Asset serán persistidos en el plugin Middleware Asset Factory. Al momento de finalizar con la
+edición y dar comienzo a la transacción de Asset Issuing, el mismo ya dejará de estar editable en la sub App del issuer.
+
+La transacción de Asset Issuing se dará inicio a través del método IssueAsset(DigitalAsset digitalAsset).
+
+1) El primer paso es asegurarse que el DigitalAsset (DA) está completo en todos sus campos y contrato. Las únicas propiedades que no deben estar completas son GenesisTransaction y
+GenesisAddress.
+
+2) Al estar todo completado para emitir el Asset, se persiste el DA (en archivo) y se actualiza el TransactionStatus a FormingGenesis.
+El asset guardado en la Asset Factory pasa a estado final y no puede volver a ser modificado en la subApp Issuer.
+
+3) Se llama al método generateEmptyTransactionHash() de la CryptoVault que devolverá un String con el Hash de la genesis Transaction. El especialista de la transacción
+para a ser en este momento la CryptoVault hasta que devuelve el valor esperado. Se actualiza este valor en el DA y se persisten los cambios.
+
+4) Se llama al método requestGenesisAddress de la AssetWallet y se persistirá este valor en la GenesisAddress. Esta solicitud de dirección
+debe ser registrada en el CryptoAddressBook a través del método registerCryptoAddress.
+
+5) Se creará el objeto DigitalAssetMetadata y se generará el hash del DA con el método getDigitalAssetHash. La transacción pasaría a estar en estado PendingSubmitCryptoNetwork.
+
+6) Se enviará la transacción a través de la cryptoVault utilizando el metodo send de la CryptoWallet y se pasan los siguientes valores:
+
+* transactionId: el obtenido en el paso 3.
+* addressTo: la obtenida en el paso 4.
+* OP_RETURN: el hash del objeto DigitalAssetMetadata (DigitalAssetMetadata.getDigitalAssetHash())
+* Amount: el valor calculado en el punto 1.
+
+La transacción pasa a estado PendingReceiveCryptoNetwork
+
+7) Al momento de ingresar la transacción bitcoin a través de la crypto Network, la transacción pasa a estado PendingConfirmCryptoNetwork y ejecutamos un crédito en el book
 balance de la Asset Wallet. En este momento, el DigitalAssetMetadata queda persistido en la Asset Wallet. La transacción debe escuchar los eventos
-del incoming crypto.</p>
-</div>
-<div class="paragraph">
-<p>8) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingConfirmationIssuerWallet y se genera el crédito  en el Available balance en la
-Issuer Wallet.</p>
-</div>
-<div class="paragraph">
-<p>9) La issuerWallet genera un crédito en el available balance de la wallet y confirma que toma posesión del DA.</p>
-</div>
-<div class="paragraph">
-<p>10) La transacción finaliza y actualiza a Finalized.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_plug_in_structure_6">Plug-in Structure</h4>
+del incoming crypto.
 
-</div>
-<div class="sect3">
-<h4 id="_events_6">Events</h4>
 
-</div>
-<div class="sect3">
-<h4 id="_implementation_details_6">Implementation Details</h4>
 
-</div>
-</div>
-<div class="sect2">
-<h3 id="digital-asset-transaction-incoming-issuer-BitDubai-V1">Version 1</h3>
-<div class="literalblock">
-<div class="content">
-<pre>    Por definir.
-= Plug-in Description</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_pasos_detallados_2">Pasos detallados</h3>
-<div class="paragraph">
-<div class="title">Escenario:</div>
-<p>Nos encontramos con balance positivo en la Asset Wallet de al menos un asset disponible. Esto significa que disponemos del objeto <em>DigitalAssetMetadata</em> persistido
-en la wallet y bitcoins en la Asset Vault (Ver <a href="#digital-asset-transaction-asset-issuing-BitDubai-V1">Asset Issuing Transaction</a> ) suficientes para transferir el asset la cantidad de veces que sea necesaria.</p>
-</div>
-<div class="paragraph">
-<p>Al tener instalada en el dispositivo la Issuer Wallet, el <a href="#actor-asset-issuer-BitDubai-V1">Actor NetworkService Issuer</a> ha comenzado a solicitar al Communication Server
-la lista de Asset Users disponibles y persiste esta información en su base de datos. Entre otros datos, se guarda la dirección Bitcoin de cada user.</p>
-</div>
-<div class="paragraph">
-<p>Es decir, tenemos balance positivo y una lista de usuarios a quienes enviar el asset.</p>
-</div>
-<div class="paragraph">
-<p>En la reference Wallet del Asset Issuer se ha seleccionado enviar el asset (o los assets) a ciertos usuarios, lo cual inicia la transacción Asset Distribution
-con los siguientes pasos:</p>
-</div>
-<div class="paragraph">
-<p>1) Se llama al método distributeAsset (String assetPublicKey, List&lt;AssetUser&gt; assetUsers) que inicia la transacción recibiendo el id del asset a distribuir y
-la lista de usuarios a distribuir. El estado de la transacción se actualiza a PendingVerify</p>
-</div>
-<div class="paragraph">
-<p>2) Se debe verificar que el Asset no ha sido modificado externamente y que sigue siendo válido comparando el Hash del Asset con el Hash guardado en la Genesis Transaction.
-Para ello, se obtiene el hash de la genesis transaction invocando al método getAssetHash(transactionId genesisTransaction) de la AssetVault.</p>
-</div>
-<div class="paragraph">
-<p>Si la comparación entre el <em>DigitalAssetMetadata</em> es igual a la obtenida por la Asset Vault, entonces el asset es válido sigue siendo válido.</p>
-</div>
-<div class="paragraph">
-<p>3) Debemos verificar que seguimos disponiendo fondos suficientes en la Asset Vault para transferir los assets invocando al método <em>getAssetVaultBalance</em> de la Asset Vault
- y verificando que disponemos de un balance superior al GenesisAmount del DA.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Tip</div>
-</td>
-<td class="content">
-En esta etapa, el asset es válido para ser transferido y la transacción pasa a estado VerifyCompleted.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>4) Lo siguiente ocurre por cada AssetUser a quien se transfiera. El objeto <em>assetUser</em> va a tener la propiedad <em>CryptoAddress</em> con la dirección bitcoin propia.</p>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Important</div>
-</td>
-<td class="content">
-La AssetDistribution transaction debe mantener un registro por cada transacción de envío a Asset Users. La transaction macro de envío de/l asset/s
+8) Al confirmarse la transacción en la cryptoNetwork la transacción pasa a estado PendingConfirmationIssuerWallet y se genera el crédito  en el Available balance en la
+Issuer Wallet.
+
+9) La issuerWallet genera un crédito en el available balance de la wallet y confirma que toma posesión del DA.
+
+10) La transacción finaliza y actualiza a Finalized.
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+
+:leveloffset: 2
+[[digital-asset-transaction-incoming-issuer-BitDubai-V1]]
+= Version 1
+    Por definir.
+= Plug-in Description
+
+= Pasos detallados
+
+Diagrama de flujo en Prezi: http://prezi.com/_mbtb0pa22c3/?utm_campaign=share&amp;utm_medium=copy&amp;rc=ex0share
+
+.Escenario:
+
+
+Nos encontramos con balance positivo en la Asset Wallet de al menos un asset disponible. Esto significa que disponemos del objeto _DigitalAssetMetadata_ persistido
+en la wallet y bitcoins en la Asset Vault (Ver &lt;&lt;digital-asset-transaction-asset-issuing-BitDubai-V1,Asset Issuing Transaction&gt;&gt; ) suficientes para transferir el asset la cantidad de veces que sea necesaria.
+
+Al tener instalada en el dispositivo la Issuer Wallet, el &lt;&lt;actor-asset-issuer-BitDubai-V1, Actor NetworkService Issuer&gt;&gt; ha comenzado a solicitar al Communication Server
+la lista de Asset Users disponibles y persiste esta información en su base de datos. Entre otros datos, se guarda la dirección Bitcoin de cada user.
+
+Es decir, tenemos balance positivo y una lista de usuarios a quienes enviar el asset.
+
+En la reference Wallet del Asset Issuer se ha seleccionado enviar el asset (o los assets) a ciertos usuarios, lo cual inicia la transacción Asset Distribution
+con los siguientes pasos:
+
+1) Se llama al método distributeAsset (String assetPublicKey, List&lt;AssetUser&gt; assetUsers) que inicia la transacción recibiendo el id del asset a distribuir y
+la lista de usuarios a distribuir. El estado de la transacción se actualiza a PendingVerify
+
+2) Se debe verificar que el Asset no ha sido modificado externamente y que sigue siendo válido comparando el Hash del Asset con el Hash guardado en la Genesis Transaction.
+Para ello, se obtiene el hash de la genesis transaction invocando al método getAssetHash(transactionId genesisTransaction) de la AssetVault.
+
+Si la comparación entre el _DigitalAssetMetadata_ es igual a la obtenida por la Asset Vault, entonces el asset es válido sigue siendo válido.
+
+3) Debemos verificar que seguimos disponiendo fondos suficientes en la Asset Vault para transferir los assets invocando al método _getAssetVaultBalance_ de la Asset Vault
+ y verificando que disponemos de un balance superior al GenesisAmount del DA.
+
+TIP: En esta etapa, el asset es válido para ser transferido y la transacción pasa a estado VerifyCompleted.
+
+4) Lo siguiente ocurre por cada AssetUser a quien se transfiera. El objeto _assetUser_ va a tener la propiedad _CryptoAddress_ con la dirección bitcoin propia.
+
+IMPORTANT: La AssetDistribution transaction debe mantener un registro por cada transacción de envío a Asset Users. La transaction macro de envío de/l asset/s
 se descompone en tantas transacciones como usuarios a enviar existan.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<div class="title"><strong>En el dispositivo del Asset Issuer</strong></div>
-<p>A través del Asset Transmission NetworkService, va a transmitir el AssetMetadata especificando al AssetUser llamando al método:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="java language-java">UUID distributeAssetToAssetUser(DigitalAssetMetadata, AssetUser);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Esta llamada será en forma asincrónica y su valor de retorno será un <em>DistributionId</em> para persistir esta información y aguardar a que obtengamos el ok desde el Asset User networkService.</p>
-</div>
-<div class="paragraph">
-<div class="title"><strong>En el dispositivo del usuario</strong></div>
-<p>El ActorNetworkService Asset User recibe el mensaje con el <em>DigitalAssetMetadata</em> para validarlo y ejecuta lo siguiente:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>El UUID generado por <em>distributeAssetToAssetUser</em> será persistido localmente para mantener un registro del ID de transacción y poder informar
-luego el resutado.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Validación de <em>DigitalAssetMetadata</em></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Verifica que el Asset es válido buscando en la blockChain la GenesisTransaction y obteniendo el hash del DigitalAsset. Compara el hash
-obtenido con el generado por el <em>DigitalAssetMetadata</em>.getDigitalAssetHash. Si los valores son iguales el DA es válido.</p>
-</li>
-<li>
-<p>Verifica que el contrato del Digital Asset cumple con las propiedades. Es decir,</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="java language-java">DigitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE)</code></pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>está dentro de la fecha válida.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Infoma a través del NetworkService AssetUser que el AssetMetadata es válido informado el status completed del <em>DistributionId</em> pasado originalmente.
-En caso de error o que el asset no es válido o no cumple el contrato, se informa igualmente para cerrar esta transacción.</p>
-</li>
-<li>
-<p>De ser aceptado, el <em>DigitalAssetMetadata</em> es persistido en la UserWallet sin actualizar aún balance ya que es medio asset.</p>
-</li>
-<li>
-<p>Informa a través del Asset User NetworkService pasando el <em>DistributionId</em> y el status de ok para informar fin del proceso.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<div class="title"><strong>En el dispositivo del Asset Issuer</strong></div>
-<p>El network Service del AssetUser retorna mensaje de OK o fallido para el <em>DistributionId</em> generado y ocurre lo siguiente:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Si no se aceptó el <em>DigitalAssetMetadata</em>, esta transacción se marca fallida y se cierra.</p>
-</li>
-<li>
-<p>Si se aceptó el <em>DigitalAssetMetadata</em> entonces lo siguiente ocurre:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Se envían los Bitcoins a través de un método de la AssetVault llamando al método:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="java language-java">sendAssetBitcoins (long amount, CryptoAddress sendTo, String AssetPublicKey)</code></pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>El *Amount* es la cantidad de satoshis del Asset que se obtiene de la propiedad DigitalAsset.getUnitValue()</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>El *sentTo* es la dirección del AssetUser que la obtuvimos al inicio a través del ActorNetworkService Asset Issuer.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>El *AssetPublicKey* es el Id del asset que se obtiene de DigitalAsset.getPublicKey().</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Esto genera una nueva transacción en la AssetVault que colocará el PublicKey del asset dentro de la transacción (<strong>Output OP_RETURN</strong>) y la enviará al usuario.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Se genera un dèbito en la Issuer Wallet que indica que el Asset ha sido enviado tanto en su metadata como los bitcoins.</p>
-</li>
-<li>
-<p>Cuando luego la transacción bitcoin sea confirmada en la red por un bloque, se actualizará el balance available.</p>
-</li>
-</ul>
-</div>
-<div class="ulist">
-<div class="title"><strong>En el dispositivo del usuario</strong></div>
-<ul>
-<li>
-<p>El Agent IncomingCrypto detectará el ingreso de los bitcoins y como la direccion a la que llegan está registrada a través del Address Book
-se informará un evento que la Asset User Wallet escucha.</p>
-</li>
-<li>
-<p>La Asset User Wallet obtendrá de la transacción bitcoin que llegó la publicKey del asset buscando el output del tipo OP_RETURN para machearlo con la <em>DigitalAssetMetadata</em> que
-ya tiene guardada del paso anterior y actualizará el book balance.</p>
-</li>
-<li>
-<p>Cuando esta transacción bitcoin se confirme, actualizará el available balance de la wallet.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Si la conexión con el AssetUser no estaba abierta, entonces esta transmisión será marcada como fallida y se tendrá que reintentar más adelante.
-Una propiedad en la Issuer Reference Wallet  definirá estos parámetros de retry.</p>
-</div>
-<div class="paragraph">
-<p>Si el <em>DigitalAssetMetadata</em> no fue aceptado, esta transmisión será marcada como erronea y no se volverá a reintentar.</p>
-</div>
-<div class="sect3">
-<h4 id="_plug_in_structure_7">Plug-in Structure</h4>
 
-</div>
-<div class="sect3">
-<h4 id="_events_7">Events</h4>
+.*En el dispositivo del Asset Issuer*
 
-</div>
-<div class="sect3">
-<h4 id="_implementation_details_7">Implementation Details</h4>
+A través del Asset Transmission NetworkService, va a transmitir el AssetMetadata especificando al AssetUser llamando al método:
+[source, java]
+UUID distributeAssetToAssetUser(DigitalAssetMetadata, AssetUser);
 
-</div>
-</div>
-<div class="sect2">
-<h3 id="digital-asset-transaction-asset-redemption-BitDubai-V1">Version 1</h3>
-<div class="sect3">
-<h4 id="_plug_in_description_13">Plug-in Description</h4>
-<div class="paragraph">
-<div class="title">Escenario:</div>
-<p>Nos encontramos en el dispositivo del usuario con al menos un asset disponible en su Asset User Wallet y los fondos necesarios en su Asset Vault
-para al menos pagar el fee de una transacción.</p>
-</div>
-<div class="paragraph">
-<p>El asset se encuentra confirmado y el Asset está disponible en el available Balance.</p>
-</div>
-<div class="paragraph">
-<p>En la Asset user Reference Wallet el usuario tiene disponibles algunos Redeem Point obtenidos automáticamente por el Redeem Point Network Service.
-El usuario selecciona el que tiene más cerca y se dirige a ese Redeem Point.</p>
-</div>
-<div class="paragraph">
-<p>El redeem point seleccionado, tiene direcciones bitcoin generadas en forma independiente, a partir de una extended key enviada por el issuer.</p>
-</div>
-<div class="paragraph">
-<p>Para redimir el asset en ese Reedem Point especifico el usuario pulsa la opcion Redeem habiendo seleccionado el Redeem Point correspondiente.</p>
-</div>
-<div class="paragraph">
-<p>La transacción Asset Redemption ejecuta los siguientes pasos:</p>
-</div>
-<div class="paragraph">
-<p>Se repiten los mismos pasos de la transacción Asset Distribution, con la diferencia que el asset se envía a un redeem point pero básicamente.</p>
-</div>
-<div class="paragraph">
-<p>1) Verifica que el contrato del Asset permite que sea redimible. Luego valida que el Asset a enviar sigue siendo válido y no fue modificado.</p>
-</div>
-<div class="paragraph">
-<p>2) Envía la metadata al Redeem Point para que haga las validaciones correspondientes del contrato.</p>
-</div>
-<div class="paragraph">
-<p>3) Si es aceptado, hace el envío de bitcoins y genera el débito en la User Wallet.</p>
-</div>
-<div class="paragraph">
-<p>4) El redeem point recibe los bitcoins con el asset publicKey en el output y marca genera el crédito en la Redeem Point wallet.</p>
-</div>
-<div class="paragraph">
-<p>5) En el Asset Issuer se reciben también los bitcoins y se tiene registrada que la dirección a la que fueron enviados a que rama del árbol HD corresponden.
+Esta llamada será en forma asincrónica y su valor de retorno será un _DistributionId_ para persistir esta información y aguardar a que obtengamos el ok desde el Asset User networkService.
+
+.*En el dispositivo del usuario*
+
+El ActorNetworkService Asset User recibe el mensaje con el _DigitalAssetMetadata_ para validarlo y ejecuta lo siguiente:
+
+* El UUID generado por _distributeAssetToAssetUser_ será persistido localmente para mantener un registro del ID de transacción y poder informar
+luego el resultado.
+
+Validación de _DigitalAssetMetadata_
+
+* Verifica que el Asset es válido buscando en la blockChain la GenesisTransaction y obteniendo el hash del DigitalAsset. Compara el hash
+obtenido con el generado por el _DigitalAssetMetadata_.getDigitalAssetHash. Si los valores son iguales el DA es válido.
+* Verifica que el contrato del Digital Asset cumple con las propiedades. Es decir,
+[source, java]
+DigitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE)
+
+está dentro de la fecha válida.
+
+* Infoma a través del NetworkService AssetUser que el AssetMetadata es válido informado el status completed del _DistributionId_ pasado originalmente.
+En caso de error o que el asset no es válido o no cumple el contrato, se informa igualmente para cerrar esta transacción.
+
+* De ser aceptado, el _DigitalAssetMetadata_ es persistido en la UserWallet sin actualizar aún balance ya que es medio asset.
+
+* Informa a través del Asset User NetworkService pasando el _DistributionId_ y el status de ok para informar fin del proceso.
+
+.*En el dispositivo del Asset Issuer*
+
+El network Service del AssetUser retorna mensaje de OK o fallido para el _DistributionId_ generado y ocurre lo siguiente:
+
+* Si no se aceptó el _DigitalAssetMetadata_, esta transacción se marca fallida y se cierra.
+* Si se aceptó el _DigitalAssetMetadata_ entonces lo siguiente ocurre:
+** Se envían los Bitcoins a través de un método de la AssetVault llamando al método:
+[source, java]
+sendAssetBitcoins (long amount, CryptoAddress sendTo, String AssetPublicKey)
+
+ El *Amount* es la cantidad de satoshis del Asset que se obtiene de la propiedad DigitalAsset.getUnitValue()
+
+ El *sentTo* es la dirección del AssetUser que la obtuvimos al inicio a través del ActorNetworkService Asset Issuer.
+
+ El *AssetPublicKey* es el Id del asset que se obtiene de DigitalAsset.getPublicKey().
+
+Esto genera una nueva transacción en la AssetVault que colocará el PublicKey del asset dentro de la transacción (*Output OP_RETURN*) y la enviará al usuario.
+
+** Se genera un dèbito en la Issuer Wallet que indica que el Asset ha sido enviado tanto en su metadata como los bitcoins.
+
+** Cuando luego la transacción bitcoin sea confirmada en la red por un bloque, se actualizará el balance available.
+
+.*En el dispositivo del usuario*
+* El Agent IncomingCrypto detectará el ingreso de los bitcoins y como la direccion a la que llegan está registrada a través del Address Book
+se informará un evento que la Asset User Wallet escucha.
+* La Asset User Wallet obtendrá de la transacción bitcoin que llegó la publicKey del asset buscando el output del tipo OP_RETURN para machearlo con la _DigitalAssetMetadata_ que
+ya tiene guardada del paso anterior y actualizará el book balance.
+* Cuando esta transacción bitcoin se confirme, actualizará el available balance de la wallet.
+
+
+Si la conexión con el AssetUser no estaba abierta, entonces esta transmisión será marcada como fallida y se tendrá que reintentar más adelante.
+Una propiedad en la Issuer Reference Wallet  definirá estos parámetros de retry.
+
+Si el _DigitalAssetMetadata_ no fue aceptado, esta transmisión será marcada como erronea y no se volverá a reintentar.
+
+
+
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+:leveloffset: 2
+[[digital-asset-transaction-asset-redemption-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+Transaction Flow on Prezi: https://prezi.com/jwnuv7i13mnb/dap-asset-redemption/
+
+.Escenario:
+
+Nos encontramos en el dispositivo del usuario con al menos un asset disponible en su Asset User Wallet y los fondos necesarios en su Asset Vault
+para al menos pagar el fee de una transacción.
+
+El asset se encuentra confirmado y el Asset está disponible en el available Balance.
+
+En la Asset user Reference Wallet el usuario tiene disponibles algunos Redeem Point obtenidos automáticamente por el Redeem Point Network Service.
+El usuario selecciona el que tiene más cerca y se dirige a ese Redeem Point.
+
+El redeem point seleccionado, tiene direcciones bitcoin generadas en forma independiente, a partir de una extended key enviada por el issuer.
+
+Para redimir el asset en ese Reedem Point especifico el usuario pulsa la opcion Redeem habiendo seleccionado el Redeem Point correspondiente.
+
+La transacción Asset Redemption ejecuta los siguientes pasos:
+
+Se repiten los mismos pasos de la transacción Asset Distribution, con la diferencia que el asset se envía a un redeem point pero básicamente.
+
+1) Verifica que el contrato del Asset permite que sea redimible. Luego valida que el Asset a enviar sigue siendo válido y no fue modificado.
+
+2) Envía la metadata al Redeem Point para que haga las validaciones correspondientes del contrato.
+
+3) Si es aceptado, hace el envío de bitcoins y genera el débito en la User Wallet.
+
+4) El redeem point recibe los bitcoins con el asset publicKey en el output y marca genera el crédito en la Redeem Point wallet.
+
+5) En el Asset Issuer se reciben también los bitcoins y se tiene registrada que la dirección a la que fueron enviados a que rama del árbol HD corresponden.
 Con esta información, actualiza la estadística de la redimición de assets en la Issuer SubAp. Los bitcoins ingresados son enviados en una nueva transacción a la crypto Vault
-ya que no pertenecen a ningún asset.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_plug_in_structure_8">Plug-in Structure</h4>
+ya que no pertenecen a ningún asset.
 
-</div>
-<div class="sect3">
-<h4 id="_events_8">Events</h4>
+== Plug-in Structure
 
-</div>
-<div class="sect3">
-<h4 id="_implementation_details_8">Implementation Details</h4>
+== Events
 
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="[[flujo-general-BitDubai-V1]">Flujo General de la Plataform DAP</h2>
-<div class="sectionbody">
+== Implementation Details
 
-</div>
-</div>
-<div class="sect1">
-<h2 id="_flujo_desarrollo">Flujo Desarrollo</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>El flujo de desarrollo del Asset describe lo necesario para generar un Digital Asset.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Objeto Digital Asset (DA)</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>El objeto DigitalAsset de la plataforma, contará con las siguientes propiedades:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Identity Asset Issuer: Identity del Actor AssetIssuer</p>
-</li>
-<li>
-<p>String name: nombre del Asset definido por el issuer.</p>
-</li>
-<li>
-<p>String description: descripción del asset definido por el issuer.</p>
-</li>
-<li>
-<p>List&lt;Resource&gt;: lista de recursos posibles del asset, como por ejemplo imágenes, videos, etc.</p>
-</li>
-<li>
-<p>String GenesisTransaction: hash de la transacciín bitcoin donde el asset está incluido.</p>
-</li>
-<li>
-<p>Address GenesisAddress: dirección Genesis generada por la Asset Vault</p>
-</li>
-<li>
-<p>long GenesisAmount: valor crypto del digital asset en Satoshis.</p>
-<div class="literalblock">
-<div class="content">
-<pre>Digital Asset Contract (DAC)</pre>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Como contrato básico para el Digital Asset para poder cerrar el ciclo en el desarrollo inicial de la plataforma,
-especificaremos que:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Redimible</p>
-</li>
-<li>
-<p>ExpirationDate: fecha de expiración que puede ser nunca.</p>
-</li>
-<li>
-<p>Transferible <em>(es bueno plantearlo desde la versión inicial para poder establecer a los responsables del proceso de traspaso de propiedad del Digital Asset)</em></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>La emisión de un Digital Asset va a tener un enum con los siguientes estados:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Draft: cuando el issuer está completando los datos básicos del asset y del contrato.</p>
-</li>
-<li>
-<p>PendingFinal: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.</p>
-</li>
-<li>
-<p>Final: cuando se generó el hash del DA y el Asset ya no se puede modificar.</p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="_assset_issuing">Assset Issuing</h3>
-<div class="paragraph">
-<p>Una vez completadas estas propiedades por parte del Issuer, la Asset Issuer subApp, inicia una Digital Asset Transaction de Asset Issuing en la que lo siguiente ocurre:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Se reciben la información multimedia y las características de la transacción del Digital Asset.</p>
-</li>
-<li>
-<p>Se solicita a la Crypto Vault la creación de una transaction bitcoin a través del Outoing Intra user. Este hash se define como la GenesisTransaction
-en el Digital Asset.</p>
-</li>
-<li>
-<p>Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
-la plataforma DAP y la vault de donde sale la dirección.</p>
-</li>
-<li>
-<p>Se completa la crypto transacción especificando el GenesisAmount.</p>
-</li>
-<li>
-<p>Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_RETURN de la crypto transacción.</p>
-</li>
-<li>
-<p>Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.</p>
-</li>
-<li>
-<p>Se asocia la metadata a la genesis transaction.</p>
-</li>
-<li>
-<p>El Digital Asset es considerado creado.</p>
-</li>
-<li>
-<p>El Digital Asset se considera available cuando la transacción bitcoin es detectada como entrante por el Incoming Crypto. <em>no entiendo este paso</em></p>
-</li>
-<li>
-<p>Todos los Digital Assets generados deben ser transferidos al plugin AssetDistribution, este plugin se encargará de realizar la transferencia.</p>
-<div class="literalblock">
-<div class="content">
-<pre>Detalles de Modulos:</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Asset Issuer (Module)
-Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Asset Issuet (sub app)</p>
-</li>
-<li>
-<p>Asset Issuer (Sub App Module)
-Registrara toda la logica de negocio que seran expuestas para la Asset Issuet (module)</p>
-</li>
-<li>
-<p>Asset User (Module)
-Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Asset User (sub app)</p>
-</li>
-<li>
-<p>Asset User (Sub App Module)
-Registrara toda la logica de negocio que seran expuestas para la Asset User (module)</p>
-</li>
-<li>
-<p>Redeem Point (Module)
-Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Redeem Point (sub app)</p>
-</li>
-<li>
-<p>Redeem Point (Sub App Module)
-Registrara toda la logica de negocio que seran expuestas para la Redeem Point (module)</p>
-</li>
-<li>
-<p>(Manuel completar más info de la transacción) *</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Realizadas estas operaciones, y al momento de recibir el GenesisAmount en la Asset Vault, las operaciones de crédito dentro de la
-Asset Wallet deben ocurrir.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Asset Issuer Wallet (wallet)</strong></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Realizara una transaccion contable al balance (asset issuet wallet), debitando la cantidad de Asset originado en su creacion, en el momento en que
+
+:leveloffset: 1
+[line-through]#[[flujo-general-BitDubai-V1]]
+
+= Flujo General de la Plataform DAP
+
+= Flujo Desarrollo
+
+El flujo de desarrollo del Asset describe lo necesario para generar un Digital Asset.
+
+  Objeto Digital Asset (DA)
+
+El objeto DigitalAsset de la plataforma, contará con las siguientes propiedades:
+
+ * Identity Asset Issuer: Identity del Actor AssetIssuer
+ * String name: nombre del Asset definido por el issuer.
+ * String description: descripción del asset definido por el issuer.
+ * List&lt;Resource&gt;: lista de recursos posibles del asset, como por ejemplo imágenes, videos, etc.
+ * String GenesisTransaction: hash de la transacciín bitcoin donde el asset está incluido.
+ * Address GenesisAddress: dirección Genesis generada por la Asset Vault
+ * long GenesisAmount: valor crypto del digital asset en Satoshis.
+
+ Digital Asset Contract (DAC)
+
+Como contrato básico para el Digital Asset para poder cerrar el ciclo en el desarrollo inicial de la plataforma,
+especificaremos que:
+
+ * Redimible
+ * ExpirationDate: fecha de expiración que puede ser nunca.
+ * Transferible _(es bueno plantearlo desde la versión inicial para poder establecer a los responsables del proceso de traspaso de propiedad del Digital Asset)_
+
+La emisión de un Digital Asset va a tener un enum con los siguientes estados:
+
+* Draft: cuando el issuer está completando los datos básicos del asset y del contrato.
+* PendingFinal: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
+* Final: cuando se generó el hash del DA y el Asset ya no se puede modificar.
+
+== Assset Issuing
+
+Una vez completadas estas propiedades por parte del Issuer, la Asset Issuer subApp, inicia una Digital Asset Transaction de Asset Issuing en la que lo siguiente ocurre:
+
+* Se reciben la información multimedia y las características de la transacción del Digital Asset.
+* Se solicita a la Crypto Vault la creación de una transaction bitcoin a través del Outoing Intra user. Este hash se define como la GenesisTransaction
+en el Digital Asset.
+* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
+la plataforma DAP y la vault de donde sale la dirección.
+* Se completa la crypto transacción especificando el GenesisAmount.
+* Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_RETURN de la crypto transacción.
+* Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.
+* Se asocia la metadata a la genesis transaction.
+* El Digital Asset es considerado creado.
+* El Digital Asset se considera available cuando la transacción bitcoin es detectada como entrante por el Incoming Crypto. _no entiendo este paso_
+* Todos los Digital Assets generados deben ser transferidos al plugin AssetDistribution, este plugin se encargará de realizar la transferencia.
+
+ Detalles de Modulos:
+
+ * Asset Issuer (Module)
+ Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Asset Issuet (sub app)
+
+ * Asset Issuer (Sub App Module)
+ Registrara toda la logica de negocio que seran expuestas para la Asset Issuet (module)
+
+ * Asset User (Module)
+   Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Asset User (sub app)
+
+ * Asset User (Sub App Module)
+   Registrara toda la logica de negocio que seran expuestas para la Asset User (module)
+
+ * Redeem Point (Module)
+   Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Redeem Point (sub app)
+
+ * Redeem Point (Sub App Module)
+   Registrara toda la logica de negocio que seran expuestas para la Redeem Point (module)
+* (Manuel completar más info de la transacción) *
+
+Realizadas estas operaciones, y al momento de recibir el GenesisAmount en la Asset Vault, las operaciones de crédito dentro de la
+Asset Wallet deben ocurrir.
+
+
+ * *Asset Issuer Wallet (wallet)*
+
+Realizara una transaccion contable al balance (asset issuet wallet), debitando la cantidad de Asset originado en su creacion, en el momento en que
 el Issuer envie un Asset a un User, este le sea acreditado dicho al (asset issuet wallet) y debitado a la (asset user wallet), de esta forma el Issuer podria determinar el balance total enviado y disponible en su Book Address,
-todo esta operacion debe ser originado mediante una transaccion de la capa transaction.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Asset User Wallet (wallet)</strong></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Este proceso realizara una transaccion contable a la (asset user wallet), debitando el disponible de asset, y acreditando cuando sea redimido el asset,todo esta operacion debe ser originado mediante una transaccion
-de la capa transaction.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Redeem Point Wallet (wallet)</strong></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Este proceso determina el intercambio de la wallet Asset User donde mediante un metodo donde se pase las direcciones correspondiente se realizara una transaccion contable a la Asset del User, disminuyendo la cantidad de la wallet Asset User,
+todo esta operacion debe ser originado mediante una transaccion de la capa transaction.
+
+* *Asset User Wallet (wallet)*
+
+Este proceso realizara una transaccion contable a la (asset user wallet), debitando el disponible de asset, y acreditando cuando sea redimido el asset,todo esta operacion debe ser originado mediante una transaccion
+de la capa transaction.
+
+* *Redeem Point Wallet (wallet)*
+
+Este proceso determina el intercambio de la wallet Asset User donde mediante un metodo donde se pase las direcciones correspondiente se realizara una transaccion contable a la Asset del User, disminuyendo la cantidad de la wallet Asset User,
 y acreditando o retornando dicho asset a la Asset Issuer en punto Reddem Point o en alguna wallet que determine la Redemcion.
 Aclarar que pasa con este Asset si se puede volver a enviar.
 Una vez verificada la genesis transaction por parte del Redeem Point, se debe notificar al plugin Outgoing Issuer que debe realizar la transferencia del monto crypto asociado
 a la genesis transaction hacía el dispositivo que va a recibir el digital asset para su "redemción". Una vez que se produzca la transferencia del monto del Digital Asset
-el dispositivo del beneficiero del asset debe proceder a registrar el consumo del mencionado Asset y proceder a su inhabilitación (¿?) del dispositivo y registrarlo como consumido.</p>
-</div>
-<div class="paragraph">
-<p>El proceso de canje de un Asset por un servicio (Redeem Point) va a tener un enum, en el dispositivo del beneficierio, con los siguientes estados:
+el dispositivo del beneficiero del asset debe proceder a registrar el consumo del mencionado Asset y proceder a su inhabilitación (¿?) del dispositivo y registrarlo como consumido.
+
+
+El proceso de canje de un Asset por un servicio (Redeem Point) va a tener un enum, en el dispositivo del beneficierio, con los siguientes estados:
  * ToRedeem: cuando la Asset Wallet comienza el proceso de canje del DA.
  * Checking: cuando el DA ha sido enviado al Redeem point para su verificación.
  * Checked: cuando el Redeem Point ha revisado el DA.
  * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
  * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
  * NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
- * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>En el caso del dispositivo Redeem Point, el proceso de canje de un Digital Asset incluye los siguientes estados, definidos en un enum:
-* Incoming: cuando se recibe la notificación de un Asset entrante.
-* ToCheck: cuando el DA se ha recibido en el RP.
-* Checking: cuando el RP esté verificando la información provista por el DA.
-* Checked: cuando el Redeem Point ha revisado el DA.
-* Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
-* NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
-* NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
-* Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_funciones_del_asset_issuing">Funciones del Asset Issuing</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>El plugin Asset Issuing será el encargado de la creación de los Assets, incluyendo metadata y crypto monto, que posteriormente serán enviados a los posibles destinatarios de los Digital Assets. Este plugin
+ * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
+
+ En el caso del dispositivo Redeem Point, el proceso de canje de un Digital Asset incluye los siguientes estados, definidos en un enum:
+ * Incoming: cuando se recibe la notificación de un Asset entrante.
+ * ToCheck: cuando el DA se ha recibido en el RP.
+ * Checking: cuando el RP esté verificando la información provista por el DA.
+ * Checked: cuando el Redeem Point ha revisado el DA.
+ * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
+ * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
+ * NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
+ * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
+
+
+= Funciones del Asset Issuing
+
+El plugin Asset Issuing será el encargado de la creación de los Assets, incluyendo metadata y crypto monto, que posteriormente serán enviados a los posibles destinatarios de los Digital Assets. Este plugin
 deberá solicitar la genesis transaction, la cual se define como la transacción origen de los crypto montos a ser transferidos junto al asset, así mismo, debe solicitar
 la genesis address, la cual se define como la dirección que emitió el Asset. Una vez obtenida la información antes mencionada, este plugin debe crear las transacciones que
 permitan la transferencia de los Assets a los destinatarios. Este plugin debe ser responsable de cada uno de los Assets generados hasta que todos hayan sido entregados a los
@@ -4977,21 +4659,14 @@ Estos Assets pueden ser enviados a cualquier tipo de wallet, es decir, debe ser 
 Los Assets que no se hayan enviado deben permanecer en el dispositivo emisor hasta que el beneficiario haya autorizado la instalación/descarga del digital asset
 a su dispositivo. Al momento de instalación del Asset en el dispositivo destino es que se debe realizar la trasferencia del crypto monto al dispositivo destino.
 Los crypto montos del emisor asociados a cada assets deben estar reservados en el dispositivo emisor hasta que sean transferidos a los beneficiarios. Estos montos no deben
-cambiar una vez reservados.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_transferencia_y_confirmaci_n_de_asset_a_beneficiario">Transferencia y confirmación de Asset a beneficiario</h2>
-<div class="sectionbody">
+cambiar una vez reservados.
 
-</div>
-</div>
-<div class="sect1">
-<h2 id="_notificaci_n_en_incoming_issuer">Notificación en Incoming Issuer</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>El plugin Incoming Issuer en el lado del consumidor o beneficiario será el encargado de monitorear la existencia de un Digital Asset (de alguna manera, por definir) que esté dirigido para la Asset Wallet del usuario,
+
+= Transferencia y confirmación de Asset a beneficiario
+
+= Notificación en Incoming Issuer
+
+El plugin Incoming Issuer en el lado del consumidor o beneficiario será el encargado de monitorear la existencia de un Digital Asset (de alguna manera, por definir) que esté dirigido para la Asset Wallet del usuario,
 en caso de recibir la notificación de la existencia de un Digital Asset, este plugin deberá verificar la metadata que debe estar incluida en el Asset,  esta comprobación debe
 incluir la verificación de la genesis Transaction, con lo cual se puede verificar el origen del Asset.
 Una vez verificado el origen del Asset, el plugin debe lanzará una notificación a una capa superior para que el usuario esté en cuenta de la existencia de este Asset.
@@ -5002,798 +4677,485 @@ ya que se plantea que este Asset puede estar "pre-instalado" en el dispositivo. 
  * preinstalada en la Asset Wallet.
 Una vez que la Asset Wallet autoriza la instalación o descarga del Digital Asset, se procede a crear la transacción que va a transferir el monto crypto asociado a la metadata
 de la genesis transaction a la Asset Vault del destinatario. Una vez realizada correctamente la transferencia de fondos, se debe notificar a las capas que controlan la UI la
-correcta instalación/descarga del Asset.</p>
-</div>
-<div class="paragraph">
-<p><strong>Preguntar al team</strong>:
-¿Un asset puede ser descargado o instalado por algún otro medio distinto a la red de fermat? ¿Se podría recibir vía código QR?</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>= Transferencia y confirmación del Digital Asset a Redeem Point.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>El proceso de transferencia de un Digital Asset a un Redeem Point es aquel en el cual el usuario va a canjear el DA por un servicio provisto por el emisor del asset (Issuer).
+correcta instalación/descarga del Asset.
+
+*Preguntar al team*:
+¿Un asset puede ser descargado o instalado por algún otro medio distinto a la red de fermat? ¿Se podría recibir vía código QR?
+
+ = Transferencia y confirmación del Digital Asset a Redeem Point.
+
+El proceso de transferencia de un Digital Asset a un Redeem Point es aquel en el cual el usuario va a canjear el DA por un servicio provisto por el emisor del asset (Issuer).
 Este proceso incluye la participación del Plugin Outgoing Issuer en el dispositivo del beneficiario, el cual será el encargado de generar la trasacción que transferirá el DA
 al Redeem Point. Este plugin, una vez culminada la creación de la transacción para realizar el envío del Digital Asset este debe modificar el estado del DA para que los siguientes
-actores de la DAP procedan a notificar al usuario su consumo o su rechazo y su eliminación de la Asset Wallet.</p>
-</div>
-<div class="paragraph">
-<p>#</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_dap_actor_3">FERMAT-DAP /actor</h2>
-<div class="sectionbody">
+actores de la DAP procedan a notificar al usuario su consumo o su rechazo y su eliminación de la Asset Wallet.
 
-</div>
-</div>
-<div class="sect1">
-<h2 id="identityPublicKey-asset-issuer-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_14">Plug-in Description</h3>
+#
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_9">Plug-in Structure</h3>
+:leveloffset: 1
+= FERMAT-DAP /actor
 
-</div>
-<div class="sect2">
-<h3 id="_events_9">Events</h3>
+:leveloffset: 1
+[[identityPublicKey-asset-issuer-BitDubai-V1]]
+= Version 1
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_9">Implementation Details</h3>
+== Plug-in Description
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="identityPublicKey-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_15">Plug-in Description</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_10">Plug-in Structure</h3>
+== Events
 
-</div>
-<div class="sect2">
-<h3 id="_events_10">Events</h3>
+== Implementation Details
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_10">Implementation Details</h3>
+:leveloffset: 1
+[[identityPublicKey-asset-user-BitDubai-V1]]
+= Version 1
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_16">Plug-in Description</h3>
+== Plug-in Description
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_11">Plug-in Structure</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_events_11">Events</h3>
+== Events
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_11">Implementation Details</h3>
+== Implementation Details
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_dap_actor_4">FERMAT-DAP /actor</h2>
-<div class="sectionbody">
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
 
-</div>
-</div>
-<div class="sect1">
-<h2 id="actor-asset-issuer-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_17">Plug-in Description</h3>
-<div class="paragraph">
-<div class="title">Relacionado al Asset User</div>
-<p>1) Al iniciarse, solicita al Communication Server la lista de Asset Users que han notificado al servidor de su conexión.</p>
-</div>
-<div class="paragraph">
-<p>2) Persiste en su base de datos aquellos nuevos Asset Users de los cuales no dispone registros conjuntamente con la dirección Bitcoin
-de la Asset Vault.</p>
-</div>
-<div class="paragraph">
-<p>3) Limpia de su base de datos, aquellos Asset Users que no se han conectado por ejemplo, en la última semana.</p>
-</div>
-<div class="paragraph">
-<p>4) Actualiza la información de conexión con la fecha actual.</p>
-</div>
-<div class="paragraph">
-<div class="title">Relacionado al Redeem Point</div>
-<p>1) Al iniciarse, solicita al Communication Server la lista de Redeem Points que han notificado al servidor de su conexión.</p>
-</div>
-<div class="paragraph">
-<p>2) Por cada Reedeem Point online al que no se haya comunicado anteriormente, solicitará a la Asset Vault la creación de una nueva rama en el árbol de claves HD.
-Creada la nueva rama, la extended public Key (que permite la generación de claves públicas), será guardada en la RedeemPoint Address Book.</p>
-</div>
-<div class="paragraph">
-<p>3) Transmitirá a través del communication server la clave pública para que sea guardada en el Redeem Point.
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+
+:leveloffset: 1
+= FERMAT-DAP /actor
+
+:leveloffset: 1
+[[actor-asset-issuer-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+.Relacionado al Asset User
+
+1) Al iniciarse, solicita al Communication Server la lista de Asset Users que han notificado al servidor de su conexión.
+
+2) Persiste en su base de datos aquellos nuevos Asset Users de los cuales no dispone registros conjuntamente con la dirección Bitcoin
+de la Asset Vault.
+
+3) Limpia de su base de datos, aquellos Asset Users que no se han conectado por ejemplo, en la última semana.
+
+4) Actualiza la información de conexión con la fecha actual.
+
+.Relacionado al Redeem Point
+
+1) Al iniciarse, solicita al Communication Server la lista de Redeem Points que han notificado al servidor de su conexión.
+
+2) Por cada Reedeem Point online al que no se haya comunicado anteriormente, solicitará a la Asset Vault la creación de una nueva rama en el árbol de claves HD.
+Creada la nueva rama, la extended public Key (que permite la generación de claves públicas), será guardada en la RedeemPoint Address Book.
+
+3) Transmitirá a través del communication server la clave pública para que sea guardada en el Redeem Point.
 Cuando una transacción bitcoin ingrese de la rama generada por esta extended public key, se disparará el evento especifico para informar a la Asset Issuer Wallet que el Redeem Point dueño de
-esa clave, redimió un asset.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_12">Plug-in Structure</h3>
+esa clave, redimió un asset.
 
-</div>
-<div class="sect2">
-<h3 id="_events_12">Events</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_12">Implementation Details</h3>
+== Events
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="actor-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_18">Plug-in Description</h3>
-<div class="paragraph">
-<div class="title">Relacionado al Asset Issuer</div>
-<p>1) Al iniciarse, notifica al Communication Server de su conexión.</p>
-</div>
-<div class="paragraph">
-<p>2) Cuando recibe del communication Server el mensaje de registrar una nueva dirección de Bitcoin, valida que la propiedad NotifyBitcoinAddress
-está en true y solicita una nueva dirección de Bitcoin a la Asset Vault a través del getBitcoinAddress y registra este pedido en CryptoAddressBook.</p>
-</div>
-<div class="paragraph">
-<div class="title">Relacionado al Redeem Point</div>
-<p>1) Al iniciarse, notifica al communication server de su conexión y ubicación.
-2) Le solicita al Server los Redeem Points que están cerca. (definir "cerca").</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_13">Plug-in Structure</h3>
+== Implementation Details
 
-</div>
-<div class="sect2">
-<h3 id="_events_13">Events</h3>
+:leveloffset: 1
+[[actor-asset-user-BitDubai-V1]]
+= Version 1
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_13">Implementation Details</h3>
+== Plug-in Description
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_19">Plug-in Description</h3>
-<div class="paragraph">
-<div class="title">Relacionado al Asset Issuer</div>
-<p>El DAP Manager, al detectar que se ha instalado la RedeemPoint wallet, habilitará los componentes de este networkservice, que al iniciarse
-se registrará con el communication server.</p>
-</div>
-<div class="paragraph">
-<p>En un determinado momento, llegará una petición de comunicación a través del ActorNetworkService Issuer enviando una extended public Key para ser guardada
+.Relacionado al Asset Issuer
+1) Al iniciarse, notifica al Communication Server de su conexión.
+
+2) Cuando recibe del communication Server el mensaje de registrar una nueva dirección de Bitcoin, valida que la propiedad NotifyBitcoinAddress
+está en true y solicita una nueva dirección de Bitcoin a la Asset Vault a través del getBitcoinAddress y registra este pedido en CryptoAddressBook.
+
+
+.Relacionado al Redeem Point
+1) Al iniciarse, notifica al communication server de su conexión y ubicación.
+2) Le solicita al Server los Redeem Points que están cerca. (definir "cerca").
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+.Relacionado al Asset Issuer
+El DAP Manager, al detectar que se ha instalado la RedeemPoint wallet, habilitará los componentes de este networkservice, que al iniciarse
+se registrará con el communication server.
+
+En un determinado momento, llegará una petición de comunicación a través del ActorNetworkService Issuer enviando una extended public Key para ser guardada
 en la Redeem Point Address Book. De esta extended Public Key, el Redeem Point generará todas las claves públicas y activará a la CRypto Network para que escuche transacciones
-de estas direcciones.</p>
-</div>
-<div class="paragraph">
-<p>Llegada una transacción enviada a una de estas direcciones, se disparará un evento que generará el débito en la Asset User Wallet.</p>
-</div>
-<div class="paragraph">
-<div class="title">Relacionado al Asset User</div>
-<p>Al iniciarse debe conectarse con el communication Server y notificar su posición.
+de estas direcciones.
+
+Llegada una transacción enviada a una de estas direcciones, se disparará un evento que generará el débito en la Asset User Wallet.
+
+.Relacionado al Asset User
+Al iniciarse debe conectarse con el communication Server y notificar su posición.
 Si algún usuario está "cerca", recibirá la solicitud de brindar información del Redeem Point a través del communication server. Entre la información que estará pasando
-al Asset User se encuentra la dirección de bitcoin generada a través de la clave pública.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_14">Plug-in Structure</h3>
+al Asset User se encuentra la dirección de bitcoin generada a través de la clave pública.
 
-</div>
-<div class="sect2">
-<h3 id="_events_14">Events</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_14">Implementation Details</h3>
+== Events
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_dap_actor_5">FERMAT-DAP /actor</h2>
-<div class="sectionbody">
+== Implementation Details
 
-</div>
-</div>
-<div class="sect1">
-<h2 id="referencie-wallet-asset-issuer-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_20">Plug-in Description</h3>
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_15">Plug-in Structure</h3>
+:leveloffset: 1
+= FERMAT-DAP /actor
 
-</div>
-<div class="sect2">
-<h3 id="_events_15">Events</h3>
+:leveloffset: 1
+[[referencie-wallet-asset-issuer-BitDubai-V1]]
+= Version 1
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_15">Implementation Details</h3>
+== Plug-in Description
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="referencie-wallet-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_21">Plug-in Description</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_16">Plug-in Structure</h3>
+== Events
 
-</div>
-<div class="sect2">
-<h3 id="_events_16">Events</h3>
+== Implementation Details
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_16">Implementation Details</h3>
+:leveloffset: 1
+[[referencie-wallet-asset-user-BitDubai-V1]]
+= Version 1
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_22">Plug-in Description</h3>
+== Plug-in Description
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_17">Plug-in Structure</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_events_17">Events</h3>
+== Events
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_17">Implementation Details</h3>
+== Implementation Details
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_dap_actor_6">FERMAT-DAP /actor</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="wallet-module-asset-issuer-BitDubai-V1">Version 1</h3>
-<div class="literalblock">
-<div class="content">
-<pre>    El Modulo Asset Issuer implementara todo lo necesario para que permita creación del Asset, con toda la información necesaria para proceder enviar dicho Asset al User que tenga dicha Asset instalada, y de esa manera poder saber con exactitud
-todas las transacciones relacionadas al Asset que el Issuer origino.</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_description_23">Plug-in Description</h3>
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_18">Plug-in Structure</h3>
+== Plug-in Description
 
-</div>
-<div class="sect2">
-<h3 id="_events_18">Events</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_18">Implementation Details</h3>
+== Events
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_24">Plug-in Description</h3>
+== Implementation Details
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_19">Plug-in Structure</h3>
 
-</div>
-<div class="sect2">
-<h3 id="_events_19">Events</h3>
+:leveloffset: 1
+= FERMAT-DAP /actor
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_19">Implementation Details</h3>
+:leveloffset: 1
+[[wallet-module-asset-issuer-BitDubai-V1]]
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_25">Plug-in Description</h3>
+== Version 1
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_20">Plug-in Structure</h3>
+El Modulo Asset Issuer implementara todo lo necesario para que permita creación del Asset, con toda la información necesaria para proceder enviar dicho Asset al User que tenga dicha Asset instalada, y de esa manera poder saber con exactitud
+todas las transacciones relacionadas al Asset que el Issuer origino.
 
-</div>
-<div class="sect2">
-<h3 id="_events_20">Events</h3>
+== Plug-in Description
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_20">Implementation Details</h3>
+== Plug-in Structure
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_dap_actor_7">FERMAT-DAP /actor</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="wallet-module-asset-issuer-BitDubai-V1">Version 1</h3>
+== Events
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_description_26">Plug-in Description</h3>
+== Implementation Details
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_21">Plug-in Structure</h3>
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
 
-</div>
-<div class="sect2">
-<h3 id="_events_21">Events</h3>
+== Plug-in Description
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_21">Implementation Details</h3>
+== Plug-in Structure
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_27">Plug-in Description</h3>
+== Events
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_22">Plug-in Structure</h3>
+== Implementation Details
 
-</div>
-<div class="sect2">
-<h3 id="_events_22">Events</h3>
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_22">Implementation Details</h3>
+== Plug-in Description
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_28">Plug-in Description</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_23">Plug-in Structure</h3>
+== Events
 
-</div>
-<div class="sect2">
-<h3 id="_events_23">Events</h3>
+== Implementation Details
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_23">Implementation Details</h3>
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_dap_actor_8">FERMAT-DAP /actor</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="wallet-asset-issuer-BitDubai-V1">Version 1</h3>
-<div class="paragraph">
-<p>El componente asset issuer wallet registrara todas las transacciones contables que ocurran en la Reference Asset Issuer Wallet, y almacenara dicha transacción en la base de datos,
+:leveloffset: 1
+= FERMAT-DAP /actor
+
+:leveloffset: 1
+[[wallet-module-asset-issuer-BitDubai-V1]]
+== Version 1
+
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+
+:leveloffset: 1
+= FERMAT-DAP /actor
+
+:leveloffset: 1
+[[wallet-asset-issuer-BitDubai-V1]]
+== Version 1
+El componente asset issuer wallet registrara todas las transacciones contables que ocurran en la Reference Asset Issuer Wallet, y almacenara dicha transacción en la base de datos,
 de esa manera el componente podra emitir todo los movimientos registrados en el Asset Issuer Wallet.
  Todas las transacciones deberan de pasar por el componente "Transacction" que sera en el que determine si la operacion debera ser persitida en la base de datos del componente asset
- issuer wallet.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_description_29">Plug-in Description</h3>
-<div class="paragraph">
-<p>Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
+ issuer wallet.
+
+
+== Plug-in Description
+Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
 la plataforma DAP y la vault de donde sale la dirección.
-Definir en que momento quedara como disponible.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_24">Plug-in Structure</h3>
-<div class="literalblock">
-<div class="content">
-<pre>fermat-dap-api===&gt;layer===&gt;dap_wallet===&gt;asset_issuer_wallet</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_events_24">Events</h3>
+Definir en que momento quedara como disponible.
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_24">Implementation Details</h3>
-<div class="literalblock">
-<div class="content">
-<pre>Se crearan las siguientes Interfaces:
-  assetissuerwallet:
-     Implementara todo el objeto que manipulara la información de la Asset.
-        *Metodos sugeridos:*</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>String getWalletPublicKey();
-String getDigitalAssetPublicKey();
-long getBalance()  throws CantCalculateBalanceException;
-void debit(); //Debemos de definir la estructura de la transaccion
-void credit(); //Debemos de definir la estructura de la transaccion</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>assetissuerwalletmanager:
-   Implementara la interfaz publica hacia los otros pluggins.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>dealswithassetissuerwallet:
-   Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>assetissuerwallettransaction:
-   Implementara la interfaz para el registro de la transacción involucrada.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>assetissuerwalletsubsystem:
-   Implementara la interfaz para el comportamiento del modulo.</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="wallet-asset-over-bitcoin-BitDubai-V1">Version 1</h3>
-<div class="literalblock">
-<div class="content">
-<pre>  El componente Over Bitcoin Wallet registrara todas las transacciones contables que ocurran en la Reference Asset Wallet, y almacenara dicha transacción en la base de datos,
-de esa manera el componente podra emitir todo los movimientos registrados en el Asset Wallets.</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_description_30">Plug-in Description</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_25">Plug-in Structure</h3>
-<div class="literalblock">
-<div class="content">
-<pre>fermat-dap-api===&gt;wallet===&gt;fermat-dap-plugin-wallet-asset-over-bitcoin-bitdubai</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_events_25">Events</h3>
+    fermat-dap-api===&gt;layer===&gt;dap_wallet===&gt;asset_issuer_wallet
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_25">Implementation Details</h3>
-<div class="literalblock">
-<div class="content">
-<pre>Se crearan las siguientes Interfaces:
-  bitcoinwalletasset:
-     Implementara todo el objeto que manipulara la información de la Asset.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>bitCoinwalletassetmanager:
-   Implementara la interfaz publica hacia los otros pluggins.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>dealswithbitcoinwalletassets:
-   Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>bitcoinwalletassettransaction:
-   Implementara la interfaz para el registro de la transacción involucrada.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>bitcoinwalletassetsubsystem:
-   Implementara la interfaz para el comportamiento del Pluggin.</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="wallet-asset-over-bitcoin-BitDubai-V1">Version 1</h3>
-<div class="literalblock">
-<div class="content">
-<pre>  El componente Over Bitcoin Wallet registrara todas las transacciones contables que ocurran en la Reference Asset Wallet, y almacenara dicha transacción en la base de datos,
-de esa manera el componente podra emitir todo los movimientos registrados en el Asset Wallets.</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_description_31">Plug-in Description</h3>
+== Events
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_26">Plug-in Structure</h3>
-<div class="literalblock">
-<div class="content">
-<pre>fermat-dap-api===&gt;wallet===&gt;fermat-dap-plugin-wallet-asset-over-bitcoin-bitdubai</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_events_26">Events</h3>
+== Implementation Details
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_26">Implementation Details</h3>
-<div class="literalblock">
-<div class="content">
-<pre>Se crearan las siguientes Interfaces:
-  bitcoinwalletasset:
-     Implementara todo el objeto que manipulara la información de la Asset.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>bitCoinwalletassetmanager:
-   Implementara la interfaz publica hacia los otros pluggins.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>dealswithbitcoinwalletassets:
-   Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>bitcoinwalletassettransaction:
-   Implementara la interfaz para el registro de la transacción involucrada.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>bitcoinwalletassetsubsystem:
-   Implementara la interfaz para el comportamiento del Pluggin.</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_dap_actor_9">FERMAT-DAP /actor</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="wallet-module-asset-issuer-BitDubai-V1">Version 1</h3>
-<div class="literalblock">
-<div class="content">
-<pre>    El Modulo Asset Issuer implementara todo lo necesario para que permita creación del Asset, con toda la información necesaria para proceder enviar dicho Asset al User que tenga dicha Asset instalada, y de esa manera poder saber con exactitud
-todas las transacciones relacionadas al Asset que el Issuer origino.</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_plug_in_description_32">Plug-in Description</h3>
+    Se crearan las siguientes Interfaces:
+      assetissuerwallet:
+         Implementara todo el objeto que manipulara la información de la Asset.
+            *Metodos sugeridos:*
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_27">Plug-in Structure</h3>
+            String getWalletPublicKey();
+            String getDigitalAssetPublicKey();
+            long getBalance()  throws CantCalculateBalanceException;
+            void debit(); //Debemos de definir la estructura de la transaccion
+            void credit(); //Debemos de definir la estructura de la transaccion
 
-</div>
-<div class="sect2">
-<h3 id="_events_27">Events</h3>
+      assetissuerwalletmanager:
+         Implementara la interfaz publica hacia los otros pluggins.
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_27">Implementation Details</h3>
+      dealswithassetissuerwallet:
+         Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_33">Plug-in Description</h3>
+      assetissuerwallettransaction:
+         Implementara la interfaz para el registro de la transacción involucrada.
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_28">Plug-in Structure</h3>
+      assetissuerwalletsubsystem:
+         Implementara la interfaz para el comportamiento del modulo.
 
-</div>
-<div class="sect2">
-<h3 id="_events_28">Events</h3>
+:leveloffset: 1
+[[wallet-asset-over-bitcoin-BitDubai-V1]]
+== Version 1
+    El componente Over Bitcoin Wallet registrara todas las transacciones contables que ocurran en la Reference Asset Wallet, y almacenara dicha transacción en la base de datos,
+  de esa manera el componente podra emitir todo los movimientos registrados en el Asset Wallets.
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_28">Implementation Details</h3>
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<<<<<<< HEAD
-<h2 id="wallet-module-asset-user-BitDubai-V1">Version 1</h2>
-=======
-<h2 id="_fermat_ccp_system_layers">Fermat-DMP System Layers</h2>
->>>>>>> 62da8aa1112e962ae7934e96bb3c2e6dcef65f17
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_plug_in_description_34">Plug-in Description</h3>
+== Plug-in Description
 
-</div>
-<div class="sect2">
-<h3 id="_plug_in_structure_29">Plug-in Structure</h3>
+== Plug-in Structure
 
-</div>
-<div class="sect2">
-<h3 id="_events_29">Events</h3>
+    fermat-dap-api===&gt;wallet===&gt;fermat-dap-plugin-wallet-asset-over-bitcoin-bitdubai
 
-</div>
-<div class="sect2">
-<h3 id="_implementation_details_29">Implementation Details</h3>
+== Events
 
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_iniciaci_n_en_fermat_sobre_la_plataforma_android">Iniciación en fermat sobre la plataforma Android</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_comenzar_con_una_breve_introduccion_a_la_aplicaci_n_para_que_sepan_cual_ser_su_ubicaci_n_dentro_de_fermat">Comenzaré con una breve introduccion a la aplicación para que sepan cual será su ubicación dentro de Fermat.</h3>
-<div class="paragraph">
-<p>Basicamente deberia comenzar con el concepto de wallet o cartera. Una Wallet es un applicación que en su version más simple nos permite enviar y recibir dinero. En este caso nos abocamos al intercambio de cryptocurrencies (por el momento Bitcoins).
+== Implementation Details
+
+    Se crearan las siguientes Interfaces:
+      bitcoinwalletasset:
+         Implementara todo el objeto que manipulara la información de la Asset.
+
+      bitCoinwalletassetmanager:
+         Implementara la interfaz publica hacia los otros pluggins.
+
+      dealswithbitcoinwalletassets:
+         Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.
+
+      bitcoinwalletassettransaction:
+         Implementara la interfaz para el registro de la transacción involucrada.
+
+      bitcoinwalletassetsubsystem:
+         Implementara la interfaz para el comportamiento del Pluggin.
+
+:leveloffset: 1
+[[wallet-asset-over-bitcoin-BitDubai-V1]]
+== Version 1
+    El componente Over Bitcoin Wallet registrara todas las transacciones contables que ocurran en la Reference Asset Wallet, y almacenara dicha transacción en la base de datos,
+  de esa manera el componente podra emitir todo los movimientos registrados en el Asset Wallets.
+
+
+== Plug-in Description
+
+== Plug-in Structure
+
+    fermat-dap-api===&gt;wallet===&gt;fermat-dap-plugin-wallet-asset-over-bitcoin-bitdubai
+
+== Events
+
+== Implementation Details
+
+    Se crearan las siguientes Interfaces:
+      bitcoinwalletasset:
+         Implementara todo el objeto que manipulara la información de la Asset.
+
+      bitCoinwalletassetmanager:
+         Implementara la interfaz publica hacia los otros pluggins.
+
+      dealswithbitcoinwalletassets:
+         Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.
+
+      bitcoinwalletassettransaction:
+         Implementara la interfaz para el registro de la transacción involucrada.
+
+      bitcoinwalletassetsubsystem:
+         Implementara la interfaz para el comportamiento del Pluggin.
+
+
+:leveloffset: 1
+= FERMAT-DAP /actor
+
+:leveloffset: 1
+[[wallet-module-asset-issuer-BitDubai-V1]]
+== Version 1
+    El Modulo Asset Issuer implementara todo lo necesario para que permita creación del Asset, con toda la información necesaria para proceder enviar dicho Asset al User que tenga dicha Asset instalada, y de esa manera poder saber con exactitud
+todas las transacciones relacionadas al Asset que el Issuer origino.
+
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+:leveloffset: 1
+[[wallet-module-asset-user-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details
+
+
+
+
+
+:leveloffset: 0
+== Iniciación en fermat sobre la plataforma Android
+
+=== Comenzaré con una breve introduccion a la aplicación para que sepan cual será su ubicación dentro de Fermat.
+
+Basicamente deberia comenzar con el concepto de wallet o cartera. Una Wallet es un applicación que en su version más simple nos permite enviar y recibir dinero. En este caso nos abocamos al intercambio de cryptocurrencies (por el momento Bitcoins).
 A partir de este concepto podemos decir que lo que nosotros estamos construyendo es una fabrica de Wallet, las cuales derivan de una wallet padre llamada reference Wallet. Aquí es donde nos vamos a centrar en este momento en la capa de Android:
-La reference Wallet posee 5 tabs en este momento, cada uno con una función especifica:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Transaction: permite ver todas las transacciones realizadas, se hace una diferenciación por transacciones en Book balance y en Available balance</p>
-</li>
-<li>
-<p>Contacts:    permite ver un listado de contactos disponibles y posee un boton el cual permite el ingreso</p>
-</li>
-<li>
-<p>Send:        permite enviar bitcoins a un contacto o a una dirección de wallet desconocida por medio de su address</p>
-</li>
-<li>
-<p>Receive:     permite recibir bitcoins obteniendo una direccion para que otras wallet puedan enviar el dinero</p>
-</li>
-<li>
-<p>Balance:     permite ver el saldo disponible en el book balance y el availabe balance</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Luego de los tabs en este momento se encuentra:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>CreateContacts: pantalla que nace al hacer un click sobre el boton que se encuentra en el tab Contacts, como su nombre lo indica este fragmento se encarga de la creacion de los contactos</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_manejo_de_sesiones">Manejo de sesiones:</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Uno de los problemas encontrados es la persistencia de datos en memoria ya que como conocen el ciclo de vida un fragmento al no estar visible se elimina y se vuelve a crear al llamarlo nuevamente. Estos datos deben estar guardados en algún lugar en caso de que el usuario quiera cambiar de wallet y dejar la sesion abierta, para resolver esto se implementó la creación de una sesión por cada wallet y un wallet manager que se encarga de la gestión de dichas sesiones teniendo así la posibilidad de regresar al momento en el que se encontraba el usuario al cambiar de pantalla.
-El developer puede así persistir objetos en la sesión de cualquier tipo, dentro de un map que trabaja con una key y el objeto que el developer necesite guardar.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_manejo_de_la_estructura_de_navegaci_n">Manejo de la estructura de navegación:</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Como lo habrán notado Fermat es una aplicación distinta al resto de las aplicaciones android, posee una estructura de navegación propia. la cual se basa en pantallas y subPantallas que se van "pintando" desde objetos cargados en tiempo de ejecución , desde archivos, que entregan la información sobre que es lo que se necesita dibujar en cada pantalla/sub pantalla.
-Para realizar esto a nivel de la Reference wallet hay un mecanismo implementado:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Cada tipo de Wallet posee un Enum con los fragmentos, que se llama por medió de un Factory (en el core) y te dice que controladores se pueden "pintar" en pantalla, con esto quiero decir un identificador de la libreria a la cual debe ir a buscar los fragmentos (controladores) para la wallet. Los nombres de estos fragmentos deben estar en la estructura de navegación de la wallet para ser invocados.</p>
-</li>
-<li>
-<p>En la estructura de navegación tambien se pueden determinar tabs,colores,acciones, posiciones de las fragmentos a la hora de hacer el back, entre otras cosas.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<h1 id="_fermat_expanding_the_cryptoworld_the_official_book" class="sect0">FERMAT: expanding the cryptoworld (the official book)</h1>
-<div class="sect1">
-<h2 id="_welcome_to_fermat">Welcome to FERMAT !</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_beyond_bitcoin_fermat">Beyond Bitcoin: FERMAT</h3>
-<div class="paragraph">
-<p>
+La reference Wallet posee 5 tabs en este momento, cada uno con una función especifica:
+
+* Transaction: permite ver todas las transacciones realizadas, se hace una diferenciación por transacciones en Book balance y en Available balance
+* Contacts:    permite ver un listado de contactos disponibles y posee un boton el cual permite el ingreso
+* Send:        permite enviar bitcoins a un contacto o a una dirección de wallet desconocida por medio de su address
+* Receive:     permite recibir bitcoins obteniendo una direccion para que otras wallet puedan enviar el dinero
+* Balance:     permite ver el saldo disponible en el book balance y el availabe balance
+
+Luego de los tabs en este momento se encuentra:
+
+*  CreateContacts: pantalla que nace al hacer un click sobre el boton que se encuentra en el tab Contacts, como su nombre lo indica este fragmento se encarga de la creacion de los contactos
+
+== Manejo de sesiones:
+Uno de los problemas encontrados es la persistencia de datos en memoria ya que como conocen el ciclo de vida un fragmento al no estar visible se elimina y se vuelve a crear al llamarlo nuevamente. Estos datos deben estar guardados en algún lugar en caso de que el usuario quiera cambiar de wallet y dejar la sesion abierta, para resolver esto se implementó la creación de una sesión por cada wallet y un wallet manager que se encarga de la gestión de dichas sesiones teniendo así la posibilidad de regresar al momento en el que se encontraba el usuario al cambiar de pantalla.
+El developer puede así persistir objetos en la sesión de cualquier tipo, dentro de un map que trabaja con una key y el objeto que el developer necesite guardar.
+
+== Manejo de la estructura de navegación:
+Como lo habrán notado Fermat es una aplicación distinta al resto de las aplicaciones android, posee una estructura de navegación propia. la cual se basa en pantallas y subPantallas que se van "pintando" desde objetos cargados en tiempo de ejecución , desde archivos, que entregan la información sobre que es lo que se necesita dibujar en cada pantalla/sub pantalla.
+Para realizar esto a nivel de la Reference wallet hay un mecanismo implementado:
+
+* Cada tipo de Wallet posee un Enum con los fragmentos, que se llama por medió de un Factory (en el core) y te dice que controladores se pueden "pintar" en pantalla, con esto quiero decir un identificador de la libreria a la cual debe ir a buscar los fragmentos (controladores) para la wallet. Los nombres de estos fragmentos deben estar en la estructura de navegación de la wallet para ser invocados.
+* En la estructura de navegación tambien se pueden determinar tabs,colores,acciones, posiciones de las fragmentos a la hora de hacer el back, entre otras cosas.
+
+
+= FERMAT: expanding the cryptoworld (the official book)
+
+:leveloffset: 0
+[[fbk-01 Welcome to FERMAT]]
+== Welcome to FERMAT !
+
+=== Beyond Bitcoin: FERMAT
+
+((("fermat", id="ix_fbk-01-asciidoc0", range="startofrange")))((("fermat","defined")))
 FERMAT is an inspired vision, a project to attain this vision, a group of pioneers of the software development industry working on it, a community supporting the core idea and providing the environment, and the whole world of potential users who will profit and be served by this.
-FERMAT&#8217;s vision is based on the huge potential of the blockchain transaction technology underlying the first sucessfully implemented cryptocurrency: Bitcoin. The undeniable goal of Bitcoin&#8217;s crytographic based electronic signature protocol that builds a distributed public ledger of peer-to-peer electronic transactions opens the door to a new paradigma in economics, computer science, financial operations, and world-wide commerce. Sakamoto&#8217;s invention makes possible to unveil the world of financial transactions, to get rid of the necessity of trust into a third party institution or central goverments, to make money a secure thing, and transactions transparent and effortless, giving back the absolute control to the money&#8217;s owner. The cryptocurrency scheme encourages us to adopt a radical new point of view on money and the concept fo value itself and its transport, so radical, that it will take us some time and effort to really grasp it, because it leads to unconditionally honoring and empowering of each individual.
+FERMAT's vision is based on the huge potential of the blockchain transaction technology underlying the first sucessfully implemented cryptocurrency: Bitcoin. The undeniable goal of Bitcoin's crytographic based electronic signature protocol that builds a distributed public ledger of peer-to-peer electronic transactions opens the door to a new paradigma in economics, computer science, financial operations, and world-wide commerce. Sakamoto's invention makes possible to unveil the world of financial transactions, to get rid of the necessity of trust into a third party institution or central goverments, to make money a secure thing, and transactions transparent and effortless, giving back the absolute control to the money's owner. The cryptocurrency scheme encourages us to adopt a radical new point of view on money and the concept fo value itself and its transport, so radical, that it will take us some time and effort to really grasp it, because it leads to unconditionally honoring and empowering of each individual.
 FERMAT as a project is also a big challenge to the open source software industry because it firmly believes that the comunnity has much more talent and intelligent collectively than isolated individuals, and the project is inscribed in the wolrd-wide cryptoindustry ecosystem with the conviction of laying the seeds of a global collaborative endeavourw ith a firm call to commited collaboration from peers and colleagues.
-FERMAT from its conception is addressed to pioneers, and we have already engaged a solid core of software developers that is working in shaping the first version of the platform to be soon released.</p>
-</div>
-<div class="paragraph">
-<p>FERMAT is, technically speaking , an Open Source P2P (Peer-to-Peer) System built on a Plug-in Architecture running on end-user&#8217;s devices. The first goal is to get very close to the end user offering and easy way of coming onboard the crytocurrency world by means of and insutitively easy to access cryptocurrency Wallet. At the same time, the open source plug-in platform allow any skilled actor in the community to jump in and develop applications and offering services with different abstractin levels and addressing a wide range of segmented markets. In fact, FERMAT as whole sets a common ground, a kind of "Master Plan" for developing wallets, wallet services, p2p network services and all kind of future develpments based in blockchain tech, using the existent global talent and intelligence that the community already has and collaborating with very intense feedback in expanding this technology to reach rapidily end user&#8217;s mass adoption, giving all the participants in the different sectors a sense of trust, safety and equity, and the corresponding right to become a revenue for each one&#8217;s contribution and effort.
-Instead of begginning a new project in this industry completley from zero point, the clear and firm logic of FERMAT can turn it to become a new standard in the industry by giving the collective a group coherence as it had never before, and encourages to grow safely in a collaborative way.</p>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="title">Challenges and opportunities: inspiration from Fermat&#8217;s Last Theorem</div>
-<div class="paragraph">
-<p></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>As you may have noticed, the entire project has been named following the famous mathematical puzzle that haunted generations of mathemathicians until it was finally proven after 350 years. (if you are courious about the whole story, see http: ....    ).
+FERMAT from its conception is addressed to pioneers, and we have already engaged a solid core of software developers that is working in shaping the first version of the platform to be soon released.
+
+FERMAT is, technically speaking , an Open Source P2P (Peer-to-Peer) System built on a Plug-in Architecture running on end-user's devices. The first goal is to get very close to the end user offering and easy way of coming onboard the crytocurrency world by means of and insutitively easy to access cryptocurrency Wallet. At the same time, the open source plug-in platform allow any skilled actor in the community to jump in and develop applications and offering services with different abstractin levels and addressing a wide range of segmented markets. In fact, FERMAT as whole sets a common ground, a kind of "Master Plan" for developing wallets, wallet services, p2p network services and all kind of future develpments based in blockchain tech, using the existent global talent and intelligence that the community already has and collaborating with very intense feedback in expanding this technology to reach rapidily end user's mass adoption, giving all the participants in the different sectors a sense of trust, safety and equity, and the corresponding right to become a revenue for each one's contribution and effort.
+Instead of begginning a new project in this industry completley from zero point, the clear and firm logic of FERMAT can turn it to become a new standard in the industry by giving the collective a group coherence as it had never before, and encourages to grow safely in a collaborative way.
+
+.Challenges and opportunities: inspiration from Fermat's Last Theorem
+****
+
+((("bitcoin","precursors to")))
+---------------------
+As you may have noticed, the entire project has been named following the famous mathematical puzzle that haunted generations of mathemathicians until it was finally proven after 350 years. (if you are courious about the whole story, see http: ....    ).
 It is so because this project was born when trying to solve the new questions, issues and puzzles that the genious Sakamoto's solution to an old cryptographic called , which let him consolidet the foundation of Bitcoin, the first sucessfull cryptocurrency. (for a wonderful detailed introduction to Bitcoin's world, please refer to the "must read"excellent book of Antonio Papadopoulos "Mastering Bitcoin").
 
 The "puzzle"to solve in the emerging field of blockchain tecnology is related to finding the answers to the following questions:
@@ -5804,291 +5166,155 @@ The "puzzle"to solve in the emerging field of blockchain tecnology is related to
 * How do we integrate legacy financial institutions in a way they feel comfortable?
 * How do we integrate merchants, retailers and brands of all sizes in a clever way?
 
-The answers to each of these questions are addressed within the FERMAT platform.</pre>
+The answers to each of these questions are addressed within the FERMAT platform.
+****
+
+=== FERMAT's Mission:
+
+&gt; Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.
+
+
+=== What makes FERMAT different from other wallet platforms or services?
+
+* **FERMAT is P2P.** This makes it censorship resistent and difficult to be attacked.
+
+* **FERMAT is built with plugins.** This enables functionality to be reused and opens the door to any developer to participate.
+
+* **FERMAT runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party.
+
+* **FERMAT is inclusive.** By creating their own plugins, current industry members can integrate with FERMAT to offer their services and products to FERMAT user base.
+
+* **FERMAT segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the FERMAT platform.
+
+* **FERMAT guaratees plugins and wallet developers a revenue stream.** FERMAT implements an innovative business model which allows plugins and wallet developers to define a use license, and FERMAT itself enforces this license on behalf of developers. )
+
+
+
+=== FERMAT's Principles
+
+==== 1. FERMAT should not allow censorship.
+* Open Source.
+* P2P architecture.
+
+#### 2. FERMAT should not allow spying on their user base.
+
+
+* Point to point encrypted communications.
+* Geofenced P2P network enabling the shortest communication path between peers.
+* Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, mesh, etc.).
+
+
+#### 3. FERMAT should be secure and resistant to all kind of attacks.
+
+
+* No centralized point to be attacked.
+* Multiple identities and roles per user.
+* Device Private Network (DPN) concept.
+* Pocket Money concept and a Multi-Signature Vault owned by the DPN.
+* Reviews and Reputation concepts.
+
+
+#### 4. FERMAT should never loose a user's funds.
+
+
+* Transaction responsability transmission protocols.
+* Remote technical support by wallet and plugins developers.
+
+
+#### 5. FERMAT should be usefull to each segment of the world population.
+
+
+* Niche wallets concept.
+* Branded wallets concept.
+
+
+#### 6. FERMAT should be extensible and open to innovation.
+
+
+* Plugins architecture.
+* Multi dimensional layer architecture.
+
+
+#### 7. FERMAT should be open and inclusive.
+
+
+* Any developer could contribute to the shared infraestructure.
+* Any developer could write code for new plugins.
+* Any developer could write code for new niche wallets.
+* Any developer could fork an existing niche wallet to further specialize it.
+* Any graphic / UX designer could provide skins to existing wallets.
+* Anyone could provide language packs to existing wallets.
+
+
+#### 8. Each developer should be compesated by their contribution to FERMAT.
+
+
+* Micro license concept.
+* Micro license structure concept.
+* FERMAT automatically enforcing license agreements.
+* Plugin ownership concept.
+* Niche wallet ownership concept.
+* Branded wallet onwnership concept.
+* Master plan design comcept, wiht no overlaping functionality but shared ownership.
+
+
+#### 9. FERMAT user base should be a shared asset.
+
+
+* Any developer should be able to profit from the growing FERMAT user base by writing Plugins this user base could consume via the developers of the wallets they are using.
+
+
+#### 10. FERMAT should be inclusive with crypto currency industry members.
+
+* Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both FERMAT developers and the FERMAT user base.
+* Any alt-coin community could write plugins to enable their crypto currency within the FERMAT wallet ecosystem.
+
+
+#### 11. FERMAT should be inclusive with the current financial system.
+
+
+* Banks and financial institutions could write plugins to enable FERMAT wallets hold funds in banks and other financial institutions.
+
+* FERMAT allows it users to move money both through public value transport networks as crypto currency networks and also thwough private or legacy financial networks.
+
+
+#### 12. FERMAT should be unbanked-people friendly.
+
+
+* Multiple logins per device (Device user concept)
+* Crypto banking concept.
+
+
+#### 13. FERMAT should be OS agnostic.
+
+
+* OSA layer concept (Operative System API).
+* OS dependent UI on top of FERMAT concept.
+
+
+#### 14. FERMAT should learn from its user base.
+
+
+* Integrated feedback functionality.
+* Voting over feature wish-lists concept.
+
+
+#### 15. FERMAT should be the finacially most efficient way to move or spend the end user's money.
+
+
+* Crypto Vault for multiple wallets concept.
+* Financial AI Agents concept.
+
+
+#### 16. FERMAT should facilitate the regional distribution and access to crypto currencies.
+
+
+* Crypto Distribution Network concept.
+* Crypto Brokers concept.
+
+
+</code></pre>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_fermat_s_mission">FERMAT&#8217;s Mission:</h3>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.</p>
-</div>
-</blockquote>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_what_makes_fermat_different_from_other_wallet_platforms_or_services">What makes FERMAT different from other wallet platforms or services?</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>FERMAT is P2P.</strong> This makes it censorship resistent and difficult to be attacked.</p>
-</li>
-<li>
-<p><strong>FERMAT is built with plugins.</strong> This enables functionality to be reused and opens the door to any developer to participate.</p>
-</li>
-<li>
-<p><strong>FERMAT runs on end users' devices.</strong> This enables users to hold their own money eliminating the need to trust a third party.</p>
-</li>
-<li>
-<p><strong>FERMAT is inclusive.</strong> By creating their own plugins, current industry members can integrate with FERMAT to offer their services and products to FERMAT user base.</p>
-</li>
-<li>
-<p><strong>FERMAT segments the world population and offers a custom tailored solution for each segment.</strong> Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the FERMAT platform.</p>
-</li>
-<li>
-<p><strong>FERMAT guaratees plugins and wallet developers a revenue stream.</strong> FERMAT implements an innovative business model which allows plugins and wallet developers to define a use license, and FERMAT itself enforces this license on behalf of developers. )</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_fermat_s_principles">FERMAT&#8217;s Principles</h3>
-<div class="sect3">
-<h4 id="_1_fermat_should_not_allow_censorship">1. FERMAT should not allow censorship.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Open Source.</p>
-</li>
-<li>
-<p>P2P architecture.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_2_fermat_should_not_allow_spying_on_their_user_base">2. FERMAT should not allow spying on their user base.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Point to point encrypted communications.</p>
-</li>
-<li>
-<p>Geofenced P2P network enabling the shortest communication path between peers.</p>
-</li>
-<li>
-<p>Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, mesh, etc.).</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_3_fermat_should_be_secure_and_resistant_to_all_kind_of_attacks">3. FERMAT should be secure and resistant to all kind of attacks.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>No centralized point to be attacked.</p>
-</li>
-<li>
-<p>Multiple identities and roles per user.</p>
-</li>
-<li>
-<p>Device Private Network (DPN) concept.</p>
-</li>
-<li>
-<p>Pocket Money concept and a Multi-Signature Vault owned by the DPN.</p>
-</li>
-<li>
-<p>Reviews and Reputation concepts.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_4_fermat_should_never_loose_a_user_s_funds">4. FERMAT should never loose a user&#8217;s funds.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Transaction responsability transmission protocols.</p>
-</li>
-<li>
-<p>Remote technical support by wallet and plugins developers.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_5_fermat_should_be_usefull_to_each_segment_of_the_world_population">5. FERMAT should be usefull to each segment of the world population.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Niche wallets concept.</p>
-</li>
-<li>
-<p>Branded wallets concept.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_6_fermat_should_be_extensible_and_open_to_innovation">6. FERMAT should be extensible and open to innovation.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Plugins architecture.</p>
-</li>
-<li>
-<p>Multi dimensional layer architecture.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_7_fermat_should_be_open_and_inclusive">7. FERMAT should be open and inclusive.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Any developer could contribute to the shared infraestructure.</p>
-</li>
-<li>
-<p>Any developer could write code for new plugins.</p>
-</li>
-<li>
-<p>Any developer could write code for new niche wallets.</p>
-</li>
-<li>
-<p>Any developer could fork an existing niche wallet to further specialize it.</p>
-</li>
-<li>
-<p>Any graphic / UX designer could provide skins to existing wallets.</p>
-</li>
-<li>
-<p>Anyone could provide language packs to existing wallets.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_8_each_developer_should_be_compesated_by_their_contribution_to_fermat">8. Each developer should be compesated by their contribution to FERMAT.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Micro license concept.</p>
-</li>
-<li>
-<p>Micro license structure concept.</p>
-</li>
-<li>
-<p>FERMAT automatically enforcing license agreements.</p>
-</li>
-<li>
-<p>Plugin ownership concept.</p>
-</li>
-<li>
-<p>Niche wallet ownership concept.</p>
-</li>
-<li>
-<p>Branded wallet onwnership concept.</p>
-</li>
-<li>
-<p>Master plan design comcept, wiht no overlaping functionality but shared ownership.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_9_fermat_user_base_should_be_a_shared_asset">9. FERMAT user base should be a shared asset.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Any developer should be able to profit from the growing FERMAT user base by writing Plugins this user base could consume via the developers of the wallets they are using.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_10_fermat_should_be_inclusive_with_crypto_currency_industry_members">10. FERMAT should be inclusive with crypto currency industry members.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both FERMAT developers and the FERMAT user base.</p>
-</li>
-<li>
-<p>Any alt-coin community could write plugins to enable their crypto currency within the FERMAT wallet ecosystem.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_11_fermat_should_be_inclusive_with_the_current_financial_system">11. FERMAT should be inclusive with the current financial system.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Banks and financial institutions could write plugins to enable FERMAT wallets hold funds in banks and other financial institutions.</p>
-</li>
-<li>
-<p>FERMAT allows it users to move money both through public value transport networks as crypto currency networks and also thwough private or legacy financial networks.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_12_fermat_should_be_unbanked_people_friendly">12. FERMAT should be unbanked-people friendly.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Multiple logins per device (Device user concept)</p>
-</li>
-<li>
-<p>Crypto banking concept.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_13_fermat_should_be_os_agnostic">13. FERMAT should be OS agnostic.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>OSA layer concept (Operative System API).</p>
-</li>
-<li>
-<p>OS dependent UI on top of FERMAT concept.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_14_fermat_should_learn_from_its_user_base">14. FERMAT should learn from its user base.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Integrated feedback functionality.</p>
-</li>
-<li>
-<p>Voting over feature wish-lists concept.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_15_fermat_should_be_the_finacially_most_efficient_way_to_move_or_spend_the_end_user_s_money">15. FERMAT should be the finacially most efficient way to move or spend the end user&#8217;s money.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Crypto Vault for multiple wallets concept.</p>
-</li>
-<li>
-<p>Financial AI Agents concept.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_16_fermat_should_facilitate_the_regional_distribution_and_access_to_crypto_currencies">16. FERMAT should facilitate the regional distribution and access to crypto currencies.</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Crypto Distribution Network concept.</p>
-</li>
-<li>
-<p>Crypto Brokers concept.</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -6097,7 +5323,7 @@ The answers to each of these questions are addressed within the FERMAT platform.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-09-28 00:37:20 ART
+Last updated 2015-09-28 10:58:02 ART
 </div>
 </div>
 </body>
