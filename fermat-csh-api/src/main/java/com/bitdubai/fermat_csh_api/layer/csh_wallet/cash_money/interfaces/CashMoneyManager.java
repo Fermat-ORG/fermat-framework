@@ -14,17 +14,19 @@ public interface CashMoneyManager {
         List<CashMoney> getTransactionsCashMoney() throws CantTransactionCashMoneyException;
 
         CashMoney registerCashMoney(
-                 final String getCashTransactionId
-                ,final String getPublicKeyCustomer
-                ,final String getPublicKeyBroker
-                ,final String getStatus
-                ,final String getBalanceType
-                ,final String getTransactionType
-                ,final float getAmount
-                ,final String getCashCurrencyType
-                ,final String getCashReference
-                ,final long getTimestamp
-                ,final String getMemo
+                 final String cashTransactionId
+                ,final String publicKeyCustomer
+                ,final String publicKeyBroker
+                ,final String status
+                ,final String balanceType
+                ,final String transactionType
+                ,final float amount
+                ,final String cashCurrencyType
+                ,final String cashReference
+                ,final long runningBookBalance
+                ,final long runningAvailableBalance
+                ,final long timestamp
+                ,final String memo
         ) throws CantCreateCashMoneyException;
 
         CashMoney loadCashMoneyWallet(String walletPublicKey) throws CantLoadCashMoneyException;

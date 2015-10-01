@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces;
 
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCreateBankMoneyException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantTransactionBankMoneyException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyException;
 
 import java.util.List;
 
@@ -25,7 +26,13 @@ public interface BankMoneyManager {
         ,final String bankName
         ,final String bankAccountNumber
         ,final String bankAccountType
+        ,final long runningBookBalance
+        ,final long runningAvailableBalance
         ,final long timestamp
         ,final String getMemo
     ) throws CantCreateBankMoneyException;
+
+    BankMoney loadCashMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyException;
+
+    void createCashMoney (String walletPublicKey) throws CantCreateBankMoneyException;
 }
