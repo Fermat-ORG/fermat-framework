@@ -29,8 +29,8 @@ public class CryptoPaymentRequestDatabaseFactory {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    protected Database createDatabase(UUID   ownerId     ,
-                                      String databaseName) throws CantCreateDatabaseException {
+    protected Database createDatabase(final UUID   ownerId     ,
+                                      final String databaseName) throws CantCreateDatabaseException {
 
         try {
             Database database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);

@@ -71,7 +71,7 @@ public class CryptoPaymentRequestDeveloperDatabaseFactory {
     }
 
 
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+    public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
 
         List<DeveloperDatabase> databases = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class CryptoPaymentRequestDeveloperDatabaseFactory {
     }
 
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
+    public List<DeveloperDatabaseTable> getDatabaseTableList(final DeveloperObjectFactory developerObjectFactory) {
 
         List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
@@ -113,8 +113,8 @@ public class CryptoPaymentRequestDeveloperDatabaseFactory {
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory,
-                                                                      DeveloperDatabaseTable developerDatabaseTable) {
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabaseTable developerDatabaseTable) {
 
         try {
 
