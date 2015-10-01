@@ -143,11 +143,8 @@ public class AssetIssuerWalletDao {
     public List<AssetIssuerWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException{
         try {
             DatabaseTable databaseTableAssuerIssuerWallet = getBalancesTable();
-            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, "", DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
-
-
             databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
 
@@ -160,6 +157,56 @@ public class AssetIssuerWalletDao {
         catch (Exception exception){
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
         }
+    }
+
+    public List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey, BalanceType balanceType, int max, int offset) throws CantGetTransactionsException
+    {
+        try {
+            DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
+
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
+            databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
+
+            databaseTableAssuerIssuerWallet.loadToMemory();
+
+            return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
+        }
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        }
+        catch (Exception exception){
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+
+    }
+
+    public List<AssetIssuerWalletTransaction> getTransactionsByTransactionType(TransactionType transactionType, int max, int offset) throws CantGetTransactionsException
+    {
+        try {
+            DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
+
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
+            databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
+
+            databaseTableAssuerIssuerWallet.loadToMemory();
+
+            return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
+        }
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        }
+        catch (Exception exception){
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+
     }
 
     public void updateMemoField(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException{
