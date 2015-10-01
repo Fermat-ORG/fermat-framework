@@ -139,7 +139,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                 handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI) != ""){
 
             /*
-             * Get the temporal identity of the CommunicationsCloudClientConnection componet
+             * Get the temporal identity of the CommunicationsClientConnection componet
              */
             JsonParser parser = new JsonParser();
             JsonObject temporalIdentity = parser.parse(handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI)).getAsJsonObject();

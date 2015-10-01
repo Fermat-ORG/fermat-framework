@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.WsCommunicationsCloudClientConnection;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -66,7 +66,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the SERVER_IP
      */
-    private static final String SERVER_IP = "52.11.156.16"; //AWS
+    public static final String SERVER_IP = "52.11.156.16"; //AWS
     //private static final String SERVER_IP = "192.168.1.2";
 
     /**
@@ -134,8 +134,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
-        //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
-        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
+        //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
     }
 
 
@@ -411,7 +411,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * @see WsCommunicationsCloudClientManager#getCommunicationsCloudClientConnection()
      */
     @Override
-    public CommunicationsCloudClientConnection getCommunicationsCloudClientConnection() {
+    public CommunicationsClientConnection getCommunicationsCloudClientConnection() {
         return wsCommunicationsCloudClientConnection;
     }
 

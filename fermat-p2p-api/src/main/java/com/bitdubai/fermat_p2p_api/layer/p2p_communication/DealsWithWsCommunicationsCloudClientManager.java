@@ -6,8 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager</code>
  * <p/>
