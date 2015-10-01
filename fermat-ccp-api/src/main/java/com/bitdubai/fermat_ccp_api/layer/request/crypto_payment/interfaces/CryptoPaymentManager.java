@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentRequestState;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantApproveCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantSendCryptoPaymentRequestException;
@@ -62,25 +64,20 @@ public interface CryptoPaymentManager {
                                                CryptoPaymentRequestNotFoundException   ;
 
     /**
-     * Throw the method <code>listCryptoPaymentRequests</code> you can get the list of the requests related with a wallet.
+     * Throw the method <code>getRequestById</code> you can get a specific request.
      *
-     * @param walletPublicKey  public key of the wallet who needs to list the crypto payment requests.
-     * @param max              quantity of CryptoPaymentRequests you want to return.
-     * @param offset           the point of start in the list that you're trying to bring.
+     * @param requestId  uuid identifying the request to bring.
      *
-     * @return the list of requests.
-     *
-     * @throws CantListCryptoPaymentRequestsException if something goes wrong.
+     * @throws CantGetCryptoPaymentRequestException    if something goes wrong.
+     * @throws CryptoPaymentRequestNotFoundException   if we can't find the payment request.
      */
-    List<CryptoPaymentRequest> listCryptoPaymentRequests(String  walletPublicKey,
-                                                         Integer max            ,
-                                                         Integer offset         ) throws CantListCryptoPaymentRequestsException;
+    void getRequestById(UUID requestId) throws CantGetCryptoPaymentRequestException ,
+                                               CryptoPaymentRequestNotFoundException;
 
     /**
      * Throw the method <code>listCryptoPaymentRequests</code> you can get the list of the requests related with a wallet.
      *
      * @param walletPublicKey  public key of the wallet who needs to list the crypto payment requests.
-     * @param state            element of CryptoPaymentRequestState indicating the state of the requests that we need.
      * @param max              quantity of CryptoPaymentRequests you want to return.
      * @param offset           the point of start in the list that you're trying to bring.
      *
@@ -88,8 +85,65 @@ public interface CryptoPaymentManager {
      *
      * @throws CantListCryptoPaymentRequestsException if something goes wrong.
      */
-    List<CryptoPaymentRequest> listCryptoPaymentRequestsByState(String                    walletPublicKey,
-                                                                CryptoPaymentRequestState state          ,
-                                                                Integer                   max            ,
-                                                                Integer                   offset         ) throws CantListCryptoPaymentRequestsException;
+    List<CryptoPayment> listCryptoPaymentRequests(String  walletPublicKey,
+                                                         Integer max            ,
+                                                         Integer offset         ) throws CantListCryptoPaymentRequestsException;
+
+    /**
+     * Throw the method <code>listCryptoPaymentRequestsByState</code> you can get the list of the requests related with a wallet,
+     * having in count the state passed through parameters.
+     *
+     * @param walletPublicKey  public key of the wallet who needs to list the crypto payment requests.
+     * @param state            element of CryptoPaymentState indicating the state of the requests that you need.
+     * @param max              quantity of CryptoPaymentRequests you want to return.
+     * @param offset           the point of start in the list that you're trying to bring.
+     *
+     * @return the list of requests.
+     *
+     * @throws CantListCryptoPaymentRequestsException if something goes wrong.
+     */
+    List<CryptoPayment> listCryptoPaymentRequestsByState(String             walletPublicKey,
+                                                         CryptoPaymentState state          ,
+                                                         Integer            max            ,
+                                                         Integer            offset         ) throws CantListCryptoPaymentRequestsException;
+
+    /**
+     * Throw the method <code>listCryptoPaymentRequestsByState</code> you can get the list of the requests related with a wallet,
+     * having in count the state passed through parameters.
+     *
+     * @param walletPublicKey  public key of the wallet who needs to list the crypto payment requests.
+     * @param type             element of CryptoPaymentType indicating the type of the requests that you need.
+     * @param max              quantity of CryptoPaymentRequests you want to return.
+     * @param offset           the point of start in the list that you're trying to bring.
+     *
+     * @return the list of requests.
+     *
+     * @throws CantListCryptoPaymentRequestsException if something goes wrong.
+     */
+    List<CryptoPayment> listCryptoPaymentRequestsByType(String            walletPublicKey,
+                                                        CryptoPaymentType type           ,
+                                                        Integer           max            ,
+                                                        Integer           offset         ) throws CantListCryptoPaymentRequestsException;
+
+
+    /**
+     * Throw the method <code>listCryptoPaymentRequestsByTypeAndState</code> you can get the list of the requests related with a wallet.
+     * having in count the type and state passed through parameters.
+     *
+     * @param walletPublicKey  public key of the wallet who needs to list the crypto payment requests.
+     * @param state            element of CryptoPaymentState indicating the state of the requests that you need.
+     * @param type             element of CryptoPaymentType indicating the type of the requests that you need.
+     * @param max              quantity of CryptoPaymentRequests you want to return.
+     * @param offset           the point of start in the list that you're trying to bring.
+     *
+     * @return the list of requests.
+     *
+     * @throws CantListCryptoPaymentRequestsException if something goes wrong.
+     */
+    List<CryptoPayment> listCryptoPaymentRequestsByTypeAndState(String             walletPublicKey,
+                                                                CryptoPaymentState state          ,
+                                                                CryptoPaymentType  type           ,
+                                                                Integer            max            ,
+                                                                Integer            offset         ) throws CantListCryptoPaymentRequestsException;
+
 }
