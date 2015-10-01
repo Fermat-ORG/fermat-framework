@@ -5,12 +5,12 @@ import  com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantC
 import  com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterCreditException;
 import  com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
 
-
 import java.util.List;
 
 /**
  * Created by Yordin Alayn on 30.09.15.
  */
+
 public interface BankMoneyBalance {
 
     long getBalance()  throws CantCalculateBalanceException;
@@ -19,8 +19,8 @@ public interface BankMoneyBalance {
 
     List<BankMoney> getBankMoneyBalancesBook() throws CantCalculateBalanceException;
 
-    void debit(BankMoneyTransaction BankMoneyTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
+    void debit(BankMoneyTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
 
-    void credit(BankMoneyTransaction BankMoneyTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
+    void credit(BankMoneyTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
     
 }
