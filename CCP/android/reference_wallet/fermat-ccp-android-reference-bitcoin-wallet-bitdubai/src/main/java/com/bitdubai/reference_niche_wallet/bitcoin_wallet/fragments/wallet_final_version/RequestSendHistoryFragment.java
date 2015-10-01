@@ -13,14 +13,9 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -61,9 +56,9 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
      *
      * @return InstalledFragment instance object
      */
-    public static SendTransactionsFragment newInstance() {
-        SendTransactionsFragment requestPaymentFragment = new SendTransactionsFragment();
-        return new SendTransactionsFragment();
+    public static RequestSendHistoryFragment newInstance() {
+        RequestSendHistoryFragment requestPaymentFragment = new RequestSendHistoryFragment();
+        return new RequestSendHistoryFragment();
     }
 
     @Override

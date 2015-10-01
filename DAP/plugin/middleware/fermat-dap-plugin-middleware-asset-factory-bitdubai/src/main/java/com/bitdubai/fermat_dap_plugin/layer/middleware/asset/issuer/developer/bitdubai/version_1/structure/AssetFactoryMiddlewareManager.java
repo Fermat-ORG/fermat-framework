@@ -3,6 +3,8 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
@@ -85,7 +87,7 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
      */
     AssetIssuingManager assetIssuingManager;
 
-    WalletManagerModule walletManagerModule;
+    WalletManagerManager walletManagerManager;
 
     /**
      * Constructor
@@ -95,14 +97,14 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager, WalletManagerModule walletManagerModule) {
+    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager, WalletManagerManager walletManagerManager) {
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.assetIssuingManager = assetIssuingManager;
-        this.walletManagerModule = walletManagerModule;
+        this.walletManagerManager = walletManagerManager;
     }
 
     private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao()
@@ -190,12 +192,12 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    public List<InstalledWallet> getInstallWallets()  throws WalletsListFailedToLoadException{
+    public List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()  throws CantListWalletsException {
         try
         {
-            return walletManagerModule.getInstalledWallets();
-        }catch (WalletsListFailedToLoadException exception){
-            throw new WalletsListFailedToLoadException("Load Wallet installed", exception, null, null);
+            return walletManagerManager.getInstalledWallets();
+        }catch (CantListWalletsException exception){
+            throw new CantListWalletsException("Load Wallet installed", exception, null, null);
         }
 
     }

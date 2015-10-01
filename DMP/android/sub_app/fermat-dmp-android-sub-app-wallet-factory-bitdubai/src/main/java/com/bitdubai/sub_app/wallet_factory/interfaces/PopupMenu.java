@@ -12,6 +12,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.Wa
  */
 public interface PopupMenu {
 
-    void onMenuItemClickListener(View menuView, WalletFactoryProject project, int position);
+    void onMenuItemClickListener(View menuView, Object project, int position);
 
 }
