@@ -18,7 +18,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao</code>
+ * The class <code>com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.database.CryptoPaymentRequestDao</code>
  * haves all the methods with access to database.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
@@ -91,7 +91,7 @@ public class CryptoPaymentRequestDao {
         return record;
     }
 
-    private CryptoPayment buildAddressExchangeRequestRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private CryptoPayment buildCryptoPaymentRequestRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   requestId            = record.getUUIDValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME         );
         String walletPublicKey      = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME  );
