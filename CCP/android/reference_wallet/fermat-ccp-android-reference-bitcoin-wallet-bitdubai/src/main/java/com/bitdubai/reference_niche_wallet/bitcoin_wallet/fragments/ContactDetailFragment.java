@@ -29,6 +29,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
@@ -40,6 +41,9 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  */
 public class ContactDetailFragment extends FermatWalletFragment implements View.OnClickListener {
 
+
+    // TODO: preguntar de donde saco el user id
+    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
     /**
      * Root fragment view reference
      */
@@ -181,7 +185,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
 //                    .attach(fragment)
 //                    .show(fragment)
 //                    .commit();
-            ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(),cryptoWallet,errorManager,walletContact);
+            ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(),cryptoWallet,errorManager,walletContact,user_id,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
             receiveFragmentDialog.show();
 
             //CustomDialogClass cdd=new CustomDialogClass(getActivity(),item,item.pluginKey);
