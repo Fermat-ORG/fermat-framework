@@ -272,7 +272,7 @@ public class BitcoinWalletBasicWalletDao {
                     BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME +
                     " = '" +
                     actorPublicKey +
-                    ") GROUP BY " +
+                    "') GROUP BY " +
                     BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME;
 
             List<DatabaseTableRecord> records = bitcoinWalletTable.customQuery(query, true);

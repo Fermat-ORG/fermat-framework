@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_ccp_api.layer.network_service.CantStartSubsystemException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.NetworkServiceSubsystem;
 import com.bitdubai.fermat_core.layer.ccp.network_service.crypto_addresses.CryptoAddressesSubsystem;
+import com.bitdubai.fermat_core.layer.ccp.network_service.crypto_payment_request.CryptoPaymentRequestSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/2015.
@@ -15,11 +16,17 @@ import com.bitdubai.fermat_core.layer.ccp.network_service.crypto_addresses.Crypt
  */
 public class CCPNetworkServiceLayer implements PlatformLayer {
 
-    private Plugin mCryptoAddresses;
+    private Plugin mCryptoAddresses     ;
+
+    private Plugin mCryptoPaymentRequest;
 
     @Override
     public void start() throws CantStartLayerException {
-        mCryptoAddresses = getPlugin(new CryptoAddressesSubsystem());
+
+        mCryptoAddresses      = getPlugin(new CryptoAddressesSubsystem()     );
+
+        mCryptoPaymentRequest = getPlugin(new CryptoPaymentRequestSubsystem());
+
     }
 
     private Plugin getPlugin(NetworkServiceSubsystem networkServiceSubsystem) throws CantStartLayerException {
@@ -33,6 +40,10 @@ public class CCPNetworkServiceLayer implements PlatformLayer {
 
     public Plugin getCryptoAddressesPlugin() {
         return mCryptoAddresses;
+    }
+
+    public Plugin getCryptoPaymentRequestPlugin() {
+        return mCryptoPaymentRequest;
     }
 
 }
