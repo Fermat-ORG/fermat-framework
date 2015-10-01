@@ -2,15 +2,18 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
@@ -30,12 +33,21 @@ import java.util.List;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class MainFragment extends FermatListFragment<AssetFactory> {
+public class MainFragment extends FermatFragment implements FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener {
+
+    private final String TAG = "DapMain";
 
     private ArrayList<AssetFactory> dataSet;
-
-    private AssetFactoryAdapter adapter;
     private AssetFactoryModuleManager manager;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager layoutManager;
+    private AssetFactoryAdapter adapter;
+
+
+    private boolean isRefreshing;
+
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -52,6 +64,14 @@ public class MainFragment extends FermatListFragment<AssetFactory> {
 
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.main_fragment, container, false);
+        initViews(rootView);
+        return rootView;
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -59,51 +79,25 @@ public class MainFragment extends FermatListFragment<AssetFactory> {
         onRefresh();
     }
 
-    @Override
     protected void initViews(View layout) {
         Log.i(TAG, "recycler view setup");
         if (layout == null)
             return;
         recyclerView = (RecyclerView) layout.findViewById(R.id.recyclerView);
         if (recyclerView != null) {
-            recyclerView.setHasFixedSize(recyclerHasFixedSize());
+            recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             adapter = new AssetFactoryAdapter(getActivity());
             recyclerView.setAdapter(adapter);
         }
-        swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(getSwipeRefreshLayoutId());
+        swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe);
         if (swipeRefreshLayout != null) {
             isRefreshing = false;
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE);
             swipeRefreshLayout.setOnRefreshListener(this);
         }
-    }
-
-    @Override
-    protected boolean hasMenu() {
-        return false;
-    }
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.main_fragment;
-    }
-
-    @Override
-    protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe;
-    }
-
-    @Override
-    protected int getRecyclerLayoutId() {
-        return R.id.recyclerView;
-    }
-
-    @Override
-    protected boolean recyclerHasFixedSize() {
-        return true;
     }
 
     @SuppressWarnings("unchecked")
@@ -130,31 +124,22 @@ public class MainFragment extends FermatListFragment<AssetFactory> {
         }
     }
 
-    @Override
-    public FermatAdapter getAdapter() {
-        if (adapter == null) {
-            adapter = new AssetFactoryAdapter(getActivity());
-        }
-        return adapter;
+    public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException {
+        return manager.getAssetFactoryByState(State.DRAFT);
     }
 
     @Override
-    public RecyclerView.LayoutManager getLayoutManager() {
-        if (layoutManager == null) {
-            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+    public void onRefresh() {
+        if (!isRefreshing) {
+            isRefreshing = true;
+            FermatWorker worker = new FermatWorker(getActivity(), this) {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    return getMoreDataAsync();
+                }
+            };
+            worker.execute();
         }
-        return layoutManager;
-    }
 
-    @Override
-    public List<AssetFactory> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        try {
-            return manager.getAssetFactoryByState(State.DRAFT);
-        } catch (CantGetAssetFactoryException e) {
-            CommonLogger.exception(TAG, e.getMessage(), e);
-        } catch (CantCreateFileException e) {
-            CommonLogger.exception(TAG, e.getMessage(), e);
-        }
-        return null;
     }
 }
