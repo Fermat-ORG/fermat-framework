@@ -437,7 +437,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public void launchCompleteClientComponentRegistrationNotificationEvent() {
 
-        FermatEvent platformEvent = eventManager.getNewEvent(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
         CompleteClientComponentRegistrationNotificationEvent event =  (CompleteClientComponentRegistrationNotificationEvent) platformEvent;
         event.setSource(EventSource.INCOMING_EXTRA_USER);
         event.setMessage("Cloud client communication, registered and established connection.");
