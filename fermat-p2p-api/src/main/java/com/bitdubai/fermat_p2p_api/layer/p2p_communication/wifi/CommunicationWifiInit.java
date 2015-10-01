@@ -7,6 +7,6 @@ import java.util.List;
  */
 public interface CommunicationWifiInit {
 
-    //lista de neighbors
-    public List<String> lista_ipaddres_neighbors();
+
+     List<String> lista_ipaddres_neighbors();
 }

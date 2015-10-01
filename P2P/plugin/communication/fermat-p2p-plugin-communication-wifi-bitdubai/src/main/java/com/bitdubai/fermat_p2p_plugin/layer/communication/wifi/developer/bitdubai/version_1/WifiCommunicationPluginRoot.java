@@ -12,7 +12,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.wifi.CommunicationWifiInit;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.wifi.exceptions.WifiCommunicationException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -36,8 +38,6 @@ public class WifiCommunicationPluginRoot implements CommunicationWifiInit, Plugi
 
 	private static String direccion = null;
 	private static String maskara = null;
-
-
 
 
 	@Override
@@ -102,7 +102,6 @@ public class WifiCommunicationPluginRoot implements CommunicationWifiInit, Plugi
 
 
 						System.out.println(lectura);
-
 
 
 						JsonParser parser = new JsonParser();
@@ -475,6 +474,27 @@ public class WifiCommunicationPluginRoot implements CommunicationWifiInit, Plugi
 		return null;
 
 	}
+
+
+	private WifiCommunicationException wrapFMPException(final String sender, final String destination, final String type, final String messageHash, final String signature, final FMPException cause){
+
+		String message = WifiCommunicationException.DEFAULT_MESSAGE;
+		String context = "Sender: " + sender;
+		context += WifiCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Destination: " + destination;
+		context += WifiCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Type: " + type;
+		context += WifiCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "FermatMessage Hash: " + messageHash;
+		context += WifiCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Signature: " + signature;
+
+
+		String possibleReason = "The FMP FermatPacketCommunication construction failed, check the cause and the values in the context";
+
+		return new WifiCommunicationException(message, cause, context, possibleReason);
+	}
+
 
 
 		@Override
