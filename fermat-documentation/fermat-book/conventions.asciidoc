@@ -1,4 +1,4 @@
-=== Conventions Used in This Book
+= Conventions Used in This Book
 
 The following typographical conventions are used in this book:
 
