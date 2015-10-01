@@ -28,6 +28,10 @@ public interface CryptoBrokerManager {
         ,final Float basePriceMerchandiseCurrency
     ) throws CantCalculateSuggestedPriceSaleException;
 
+    Float suggestedPercentageSale();
+
+    Float suggestedPercentagePurchase();
+
     CryptoBroker suggestedPricePurchase(
          final Float percentagePurchase
         ,final Float basePriceMerchandiseCurrency

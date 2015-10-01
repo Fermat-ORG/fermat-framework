@@ -17,6 +17,4 @@ public interface BankMoneyManager {
          final String publicKeyBroker
         ,final String walletId
     ) throws CantCreateBankMoneyException;
-
-    void generateBankMoneyBalance() throws CantGenerateBalanceBankMoneyException;
 }
