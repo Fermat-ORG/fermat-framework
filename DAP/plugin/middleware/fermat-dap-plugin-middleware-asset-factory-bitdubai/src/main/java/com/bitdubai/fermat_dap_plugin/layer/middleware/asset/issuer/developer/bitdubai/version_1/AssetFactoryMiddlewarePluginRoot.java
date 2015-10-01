@@ -17,6 +17,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
@@ -69,7 +72,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 9/7/15.
  */
-public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerDesktopModule, DealsWithAssetIssuing, AssetFactoryManager, LogManagerForDevelopers,  DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
+public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager, DealsWithAssetIssuing, AssetFactoryManager, LogManagerForDevelopers,  DealsWithErrors, DealsWithLogger, DealsWithEvents, Plugin, DatabaseManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service {
     /**
      * DealsWithErrors interface member variables
      */
@@ -109,7 +112,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
 
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
 
-    WalletManagerModule walletManagerModule;
+    WalletManagerManager walletManagerManager;
 
     @Override
     public void setId(UUID pluginId) {
@@ -158,8 +161,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
 
 
     @Override
-    public void setWalletManagerModule(WalletManagerModule walletManagerModule) {
-        this.walletManagerModule = walletManagerModule;
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
+        this.walletManagerManager = walletManagerManager;
     }
 
     @Override
@@ -179,7 +182,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
 
     @Override
     public void start() throws CantStartPluginException {
-        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetIssuingManager, walletManagerModule) ;
+        assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(errorManager, logManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetIssuingManager, walletManagerManager) ;
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             //TODO: Borrar luego solo es para Test
@@ -415,7 +418,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
     }
 
     @Override
-    public List<InstalledWallet> getInstallWallets() throws WalletsListFailedToLoadException {
+    public List<com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException {
         return assetFactoryMiddlewareManager.getInstallWallets();
     }
 
@@ -428,5 +431,6 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManagerD
             throw new CantPublishAssetFactoy(exception, "Cant Publish Asset Factory", "Asset Factory incomplete");
         }
     }
+
 
 }

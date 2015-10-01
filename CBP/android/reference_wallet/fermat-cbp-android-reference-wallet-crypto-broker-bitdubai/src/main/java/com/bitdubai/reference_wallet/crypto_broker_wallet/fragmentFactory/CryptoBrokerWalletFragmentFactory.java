@@ -7,13 +7,33 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.ContractDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.DealDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts.ContractsActivityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.deals.DealsActivityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenContractsTabFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenDealsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.RequestTabFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.stock.StockPreferencesActivityFragment;
 
-import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.MAIN_FRAGMET;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_CONTRACTS;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_DEALS;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_SETTINGS;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS;
 
 /**
- * Created by Matias Furszyfer on 2015.19.22..
+ * Return new instances of the fragments for this wallet
+ *
+ * Created by Nelson Ramirez on 2015-09-30
  */
 public class CryptoBrokerWalletFragmentFactory implements WalletFragmentFactory {
 
@@ -21,9 +41,26 @@ public class CryptoBrokerWalletFragmentFactory implements WalletFragmentFactory 
     public Fragment getFragment(String code, WalletSession walletSession, WalletSettings WalletSettings, WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException {
         CryptoBrokerWalletFragmentsEnumType fragment = CryptoBrokerWalletFragmentsEnumType.getValue(code);
 
-        if (fragment == MAIN_FRAGMET) {
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB)
             return RequestTabFragment.newInstance();
-        }
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB)
+            return OpenDealsTabFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB)
+            return OpenContractsTabFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS)
+            return StockStatisticsFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS)
+            return DealDetailsFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS)
+            return ContractDetailsFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_DEALS)
+            return DealsActivityFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_CONTRACTS)
+            return ContractsActivityFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE)
+            return StockPreferencesActivityFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_SETTINGS)
+            return SettingsActivityFragment.newInstance();
 
         throw createFragmentNotFoundException(fragment);
     }
