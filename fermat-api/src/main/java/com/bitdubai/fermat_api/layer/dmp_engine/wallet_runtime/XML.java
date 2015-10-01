@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime;
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.exceptions.CantSetWalletFactoryProjectNavigationStructureException;
 
 /**
  * Created by Matias Furszyfer on 2015.07.29..

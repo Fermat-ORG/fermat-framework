@@ -369,10 +369,6 @@ project(':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai').projectDir = n
 include ':fermat-dmp-plugin-middleware-wallet-language-bitdubai'
 project(':fermat-dmp-plugin-middleware-wallet-language-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai')
 
-include ':fermat-dmp-plugin-middleware-wallet-publisher-bitdubai'
-project(':fermat-dmp-plugin-middleware-wallet-publisher-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-publisher-bitdubai')
-
-
 include ':fermat-pip-plugin-identity-developer-bitdubai'
 project(':fermat-pip-plugin-identity-developer-bitdubai').projectDir = new File('PIP/plugin/identity/fermat-pip-plugin-identity-developer-bitdubai')
 
@@ -572,6 +568,9 @@ project(':fermat-wpd-plugin-middleware-wallet-factory-bitdubai').projectDir = ne
 
 include ':fermat-wpd-plugin-middleware-wallet-manager-bitdubai'
 project(':fermat-wpd-plugin-middleware-wallet-manager-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-manager-bitdubai')
+
+include ':fermat-wpd-plugin-middleware-wallet-publisher-bitdubai'
+project(':fermat-wpd-plugin-middleware-wallet-publisher-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-publisher-bitdubai')
 
 include ':fermat-wpd-plugin-middleware-wallet-settings-bitdubai'
 project(':fermat-wpd-plugin-middleware-wallet-settings-bitdubai').projectDir = new File('WPD/plugin/middleware/fermat-wpd-plugin-middleware-wallet-settings-bitdubai')
