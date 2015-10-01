@@ -60,7 +60,7 @@ public interface CryptoDesktopSubAppInformation {
      * registers the SubApp)
      *
      * @return an string that is result of the method getCode of an enum that can be inferred by the
-     *         SubAppCategory of the wallet.
+     * SubAppCategory of the wallet.
      */
     public String getSubAppPlatformIdentifier();
 
@@ -70,7 +70,6 @@ public interface CryptoDesktopSubAppInformation {
      * @return the name of the said icon
      */
     public String getSubAppIcon();
-
 
 
     public SubAppType getSubAppType();

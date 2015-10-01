@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.WalletModule;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -122,13 +122,14 @@ public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager, 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation started...", null, null);
 
             CryptoWalletWalletModuleManager walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
-            walletModuleCryptoWallet.setBitcoinWalletManager(bitcoinWalletManager);
-            walletModuleCryptoWallet.setCryptoVaultManager(cryptoVaultManager);
-            walletModuleCryptoWallet.setExtraUserManager(extraUserManager);
-            walletModuleCryptoWallet.setErrorManager(errorManager);
+
+            walletModuleCryptoWallet.setBitcoinWalletManager    (bitcoinWalletManager);
+            walletModuleCryptoWallet.setCryptoVaultManager      (cryptoVaultManager);
+            walletModuleCryptoWallet.setExtraUserManager        (extraUserManager);
+            walletModuleCryptoWallet.setErrorManager            (errorManager);
             walletModuleCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
             walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
-            walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
+            walletModuleCryptoWallet.setWalletContactsManager   (walletContactsManager);
             walletModuleCryptoWallet.initialize();
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);

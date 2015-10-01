@@ -1,12 +1,15 @@
 package com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
@@ -31,7 +34,7 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
         this.assetFactoryManager = assetFactoryManager;
     }
 
-    public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException {
+    public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByPublicKey(assetPublicKey);
     }
 
@@ -47,16 +50,25 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
         assetFactoryManager.publishAsset(assetFactory, blockchainNetworkType);
     }
 
-    public List<AssetFactory> getAssetsFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
     }
 
-    public List<AssetFactory> getAssetsFactoryByState(State state) throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByState(state);
     }
 
-    public List<AssetFactory> getAssetsFactoryAll() throws CantGetAssetFactoryException {
+    public List<AssetFactory> getAssetsFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryAll();
+    }
+
+    public List<InstalledWallet> getInstallWallets() throws WalletsListFailedToLoadException{
+        return  assetFactoryManager.getInstallWallets();
+    }
+
+    public boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy
+    {
+        return assetFactoryManager.isReadyToPublish(assetPublicKey);
     }
 
 }

@@ -15,16 +15,17 @@ import java.util.UUID;
  */
 public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransaction {
 
-    BitcoinWalletTransaction bitcoinWalletTransaction;
+    private final BitcoinWalletTransaction bitcoinWalletTransaction;
+    private final UUID                     contactId;
+    private final Actor                    involvedActor;
 
-    Actor involvedActor;
+    public CryptoWalletWalletModuleTransaction(final BitcoinWalletTransaction bitcoinWalletTransaction,
+                                               final UUID                     contactId,
+                                               final Actor                    involvedActor) {
 
-    UUID contactId;
-
-    public CryptoWalletWalletModuleTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, Actor involvedActor, UUID contactId) {
         this.bitcoinWalletTransaction = bitcoinWalletTransaction;
-        this.involvedActor = involvedActor;
         this.contactId = contactId;
+        this.involvedActor = involvedActor;
     }
 
     @Override
@@ -33,12 +34,12 @@ public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransact
     }
 
     @Override
-    public Actor getInvolvedActor() {
-        return involvedActor;
+    public UUID getContactId() {
+        return contactId;
     }
 
     @Override
-    public UUID getContactId() {
-        return contactId;
+    public Actor getInvolvedActor() {
+        return involvedActor;
     }
 }

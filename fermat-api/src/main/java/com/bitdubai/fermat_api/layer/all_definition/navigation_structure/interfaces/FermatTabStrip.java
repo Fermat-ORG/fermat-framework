@@ -2,12 +2,13 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by rodrigo on 2015.07.20..
  */
-public interface FermatTabStrip {
+public interface FermatTabStrip  extends Serializable {
 
     List<Tab> getTabs();
 

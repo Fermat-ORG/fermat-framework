@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events;
 
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_ccp_api.all_definition.events.AbstractCCPEvent;
 
 import java.util.UUID;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * Created by  by Leon Acosta (laion.cj91@gmail.com) on 22/09/2015.
  */
-public class CryptoAddressReceivedEvent extends AbstractFermatEvent {
+public class CryptoAddressReceivedEvent extends AbstractCCPEvent {
 
     private Actors actorType;
 

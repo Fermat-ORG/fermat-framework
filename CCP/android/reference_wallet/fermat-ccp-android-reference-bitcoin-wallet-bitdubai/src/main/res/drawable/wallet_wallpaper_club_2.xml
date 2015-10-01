@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/wallpaper_club_2"
+    android:tileMode="disabled" android:gravity="center" >
+</bitmap><!-- From: file:/C:/bitDubai-system/fermat-dmp-android-wallet-store-bitdubai/src/main/res/drawable/wallet_wallpaper_club_2.xml --><!-- From: file:/C:/bitDubai-system/fermat-dmp-android-core/build/intermediates/exploded-aar/bitDubai-system/fermat-dmp-android-wallet-store-bitdubai/unspecified/res/drawable/wallet_wallpaper_club_2.xml --><!-- From: file:/home/mati/Escritorio/fermat-prototype/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/res/drawable/wallet_wallpaper_club_2.xml --><!-- From: file:/home/mati/Escritorio/fermat-prototype/fermat-android-core/build/intermediates/exploded-aar/fermat-prototype/fermat-dmp-android-sub-app-wallet-factory-bitdubai/unspecified/res/drawable/wallet_wallpaper_club_2.xml -->

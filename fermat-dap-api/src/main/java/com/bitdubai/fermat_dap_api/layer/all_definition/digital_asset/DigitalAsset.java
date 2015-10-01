@@ -24,11 +24,9 @@ public class DigitalAsset  implements Serializable{
     DigitalAssetContract contract;
     long genesisAmount;
 
-
     /**
      * Properties defined by the Asset Issuer Transaction
      */
-    String genesisTransaction;
     CryptoAddress genesisAddress;
 
     State state;
@@ -89,14 +87,6 @@ public class DigitalAsset  implements Serializable{
 
     public void setContract(DigitalAssetContract contract) {
         this.contract = contract;
-    }
-
-    public String getGenesisTransaction() {
-        return genesisTransaction;
-    }
-
-    public void setGenesisTransaction(String genesisTransaction) {
-        this.genesisTransaction = genesisTransaction;
     }
 
     public CryptoAddress getGenesisAddress() {

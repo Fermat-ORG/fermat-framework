@@ -69,13 +69,8 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
      */
     DeveloperSubAppSession developerSubAppSession;
 
-    public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
-        DatabaseToolsDatabaseTableRecordListFragment f = new DatabaseToolsDatabaseTableRecordListFragment();
-        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static DatabaseToolsDatabaseTableRecordListFragment newInstance() {
+        return new DatabaseToolsDatabaseTableRecordListFragment();
     }
 
     @Override

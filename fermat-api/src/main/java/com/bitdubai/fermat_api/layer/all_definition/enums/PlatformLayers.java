@@ -53,12 +53,21 @@ public enum PlatformLayers {
     BITDUBAI_DAP_ACTOR_LAYER("BDAPAL",Developers.BITDUBAI),
     BITDUBAI_DAP_IDENTITY_LAYER("BDAPIL", Developers.BITDUBAI),
     BITDUBAI_DAP_MODULE_LAYER("BDAPML", Developers.BITDUBAI),
+    BITDUBAI_DAP_WALLET_LAYER("BDAPWA", Developers.BITDUBAI),
     BITDUBAI_DIGITAL_ASSET_FACTORY("BDAF", Developers.BITDUBAI),
     BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI),
 
-    // CCP Layers
-    BITDUBAI_CCP_IDENTITY_LAYER("BCCPIDL", Developers.BITDUBAI),
-    BITDUBAI_CCP_NETWORK_SERVICE_LAYER("BCCPNSL", Developers.BITDUBAI)
+    BITDUBAI_WPD_NETWORK_SERVICE_LAYER("BWPDNSL", Developers.BITDUBAI),
+
+
+    // Init CCP Layers
+
+    BITDUBAI_CCP_IDENTITY_LAYER       ("BCCPIDL", Developers.BITDUBAI),
+    BITDUBAI_CCP_MIDDLEWARE_LAYER     ("BCCPMIL", Developers.BITDUBAI),
+    BITDUBAI_CCP_NETWORK_SERVICE_LAYER("BCCPNSL", Developers.BITDUBAI),
+    BITDUBAI_CCP_TRANSACTION_LAYER    ("BCCPTRL", Developers.BITDUBAI)
+
+    // End CCP Layers
 
     ;
 
@@ -173,14 +182,22 @@ public enum PlatformLayers {
                 return BITDUBAI_DIGITAL_ASSET_FACTORY;
             case "BDAPML":
                 return BITDUBAI_DAP_MODULE_LAYER;
+            case "BDAPWA":
+                return BITDUBAI_DAP_WALLET_LAYER;
             case "BEL":
                 return BITDUBAI_ENGINE_LAYER;
-
-            // CCP Layers
+            case "BWPDNSL":
+                return BITDUBAI_WPD_NETWORK_SERVICE_LAYER;
+            // Init CCP Layers
             case "BCCPIDL":
                 return BITDUBAI_CCP_IDENTITY_LAYER;
             case "BCCPNSL":
                 return BITDUBAI_CCP_NETWORK_SERVICE_LAYER;
+            case "BCCPMIL":
+                return BITDUBAI_CCP_MIDDLEWARE_LAYER;
+            case "BCCPTRL":
+                return BITDUBAI_CCP_TRANSACTION_LAYER;
+            // End  CCP Layers
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");
 

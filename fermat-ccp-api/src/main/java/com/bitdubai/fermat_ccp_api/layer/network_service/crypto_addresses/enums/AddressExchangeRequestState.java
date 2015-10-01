@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum AddressExchangeRequestState implements FermatEnum {
 
+    DENIED_FOR_INCOMPATIBILITY ("DFI"),
     PENDING_REMOTE_RESPONSE ("PRR"),
     PENDING_LOCAL_RESPONSE ("PLR"),
     RESPONDED ("RES");
@@ -21,9 +22,10 @@ public enum AddressExchangeRequestState implements FermatEnum {
         this.code = code;
     }
 
-    public static FermatEnum getByCode(String code) throws InvalidParameterException {
+    public static AddressExchangeRequestState getByCode(String code) throws InvalidParameterException {
 
         switch (code){
+            case "DFI": return DENIED_FOR_INCOMPATIBILITY;
             case "PRR": return PENDING_REMOTE_RESPONSE;
             case "PLR": return PENDING_LOCAL_RESPONSE;
             case "RES": return RESPONDED;
