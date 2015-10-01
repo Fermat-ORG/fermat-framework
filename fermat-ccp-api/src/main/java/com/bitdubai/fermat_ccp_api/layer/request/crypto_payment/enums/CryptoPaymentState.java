@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CryptoPaymentState implements FermatEnum {
 
+    APPROVED                  ("APR"),
     DENIED_BY_INCOMPATIBILITY ("DBI"),
     PAID                      ("PAI"),
     PENDING_RESPONSE          ("PEN"),
@@ -26,6 +27,7 @@ public enum CryptoPaymentState implements FermatEnum {
 
         switch (code){
 
+            case "APR": return APPROVED                 ;
             case "DBI": return DENIED_BY_INCOMPATIBILITY;
             case "PAI": return PAID                     ;
             case "PEN": return PENDING_RESPONSE         ;
