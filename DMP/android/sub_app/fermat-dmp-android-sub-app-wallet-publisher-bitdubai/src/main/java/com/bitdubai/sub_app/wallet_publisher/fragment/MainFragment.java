@@ -290,7 +290,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
                 }
 
                 @Override
-                public void setProjectPublickKey(String publickKey) {
+                public void setProjectPublicKey(String publickKey) {
 
                 }
 

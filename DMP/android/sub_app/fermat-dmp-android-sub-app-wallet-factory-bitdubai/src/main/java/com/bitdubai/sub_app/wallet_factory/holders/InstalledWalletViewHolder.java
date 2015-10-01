@@ -29,10 +29,10 @@ public class InstalledWalletViewHolder extends FermatViewHolder {
      */
     public InstalledWalletViewHolder(View itemView) {
         super(itemView);
-        title = (FermatTextView) itemView.findViewById(R.id.title);
-        description = (FermatTextView) itemView.findViewById(R.id.description);
-        type = (FermatTextView) itemView.findViewById(R.id.type);
-        menu = (ImageView) itemView.findViewById(R.id.options);
+        title = (FermatTextView) itemView.findViewById(R.id.title_installed_wallet);
+        description = (FermatTextView) itemView.findViewById(R.id.description_installed_wallet);
+        type = (FermatTextView) itemView.findViewById(R.id.type_installed_wallet);
+        menu = (ImageView) itemView.findViewById(R.id.options_installed_wallet);
 
     }
 }
