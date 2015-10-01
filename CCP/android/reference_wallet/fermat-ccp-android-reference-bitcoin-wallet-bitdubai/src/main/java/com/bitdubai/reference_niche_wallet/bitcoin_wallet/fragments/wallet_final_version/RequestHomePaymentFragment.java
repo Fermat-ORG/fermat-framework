@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHomeAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestPendingAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -83,7 +84,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
 
     @Override
     protected int getLayoutResource() {
-        return 0;//R.layout.wallet_store_fragment_main_activity;
+        return R.layout.transaction_main_fragment;
     }
 
     @Override
@@ -93,7 +94,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
 
     @Override
     protected int getRecyclerLayoutId() {
-        return 0;//R.id.recicler
+        return R.id.transactions_recycler_view;
     }
 
     @Override
@@ -107,7 +108,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = null;//new PaymentRequestPendingAdapter(getActivity(), lstPaymentRequest, viewInflater,(ReferenceWalletSession)walletSession);
+            adapter = new PaymentRequestHomeAdapter(getActivity(), lstPaymentRequest, cryptoWallet,(ReferenceWalletSession)walletSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
