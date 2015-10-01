@@ -41,14 +41,8 @@ public class ReceiveFragmentDialog extends Dialog implements
         View.OnClickListener {
 
 
-    /**
-     * Hardcoded walletPublicKey and user_id
-     */
-    String walletPublicKey = "reference_wallet";
-    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
-
-
-
+    private final String userId;
+    private final String walletPublicKey;
     public Activity activity;
     public Dialog d;
 
@@ -99,13 +93,15 @@ public class ReceiveFragmentDialog extends Dialog implements
      */
 
 
-    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,WalletContact walletContact) {
+    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,WalletContact walletContact,String userId,String walletPublcKey) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
         this.cryptoWallet=cryptoWallet;
         this.walletContact=walletContact;
         this.errorManager=errorManager;
+        this.userId = userId;
+        this.walletPublicKey = walletPublcKey;
     }
 
 
@@ -144,7 +140,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
             CryptoAddress cryptoAddress = cryptoWallet.requestAddressToKnownUser(
-                    user_id,
+                    userId,
                     Actors.INTRA_USER,
                     actorPublicKey,
                     Actors.EXTRA_USER,
