@@ -151,25 +151,34 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
      *  Called to retrieve per-instance state from an activity before being killed so that the state can be restored in onCreate(Bundle) or onRestoreInstanceState(Bundle)
      * @param outState
      */
-//
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//
-//    }
-//
-//
-//    /**
-//     * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
-//     * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
-//     * @param savedInstanceState
-//     */
-//
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//
-//    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
+
+    /**
+     * This method is called after onStart() when the activity is being re-initialized from a previously saved state, given here in savedInstanceState.
+     * Most implementations will simply use onCreate(Bundle) to restore their state, but it is sometimes convenient to do it here after all of the initialization has been done or to allow subclasses to decide whether to use your default implementation
+     * @param savedInstanceState
+     */
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        try{
+
+            if(savedInstanceState==null){
+                savedInstanceState=new Bundle();
+            }else
+            super.onRestoreInstanceState(savedInstanceState);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
 
 
     /**
