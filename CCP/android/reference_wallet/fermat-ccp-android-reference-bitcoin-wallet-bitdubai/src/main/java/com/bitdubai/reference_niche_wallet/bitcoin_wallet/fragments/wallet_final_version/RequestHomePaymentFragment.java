@@ -1,21 +1,23 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.MenuItem;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHomeAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestPendingAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -23,9 +25,10 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Created by mati on 2015.09.30..
+ * Created by mati on 2015.10.01..
  */
-public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest> {
+public class RequestHomePaymentFragment extends FermatWalletListFragment<PaymentRequest>
+        implements FermatListItemListeners<PaymentRequest> {
 
     /**
      * MANAGERS
@@ -48,50 +51,31 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
      */
     private ExecutorService executor;
 
-    private int MAX_TRANSACTIONS = 20;
-    private int offset = 0;
 
     /**
      * Create a new instance of this fragment
      *
      * @return InstalledFragment instance object
      */
-    public static RequestSendHistoryFragment newInstance() {
-        RequestSendHistoryFragment requestPaymentFragment = new RequestSendHistoryFragment();
-        return new RequestSendHistoryFragment();
+    public static RequestPaymentFragment newInstance() {
+        RequestPaymentFragment requestPaymentFragment = new RequestPaymentFragment();
+        return new RequestPaymentFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-
         referenceWalletSession = (ReferenceWalletSession)walletSession;
 
-        lstPaymentRequest = new ArrayList<PaymentRequest>();
+        super.onCreate(savedInstanceState);
         try {
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
             lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
         } catch (Exception ex) {
-            ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        lstPaymentRequest = new ArrayList<PaymentRequest>();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
 
     @Override
     protected boolean hasMenu() {
@@ -124,7 +108,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession);
+            adapter = new PaymentRequestHomeAdapter(getActivity(), lstPaymentRequest, cryptoWallet,(ReferenceWalletSession)walletSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -140,16 +124,17 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     @Override
     public List<PaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
+        List<PaymentRequest> lstPaymentRequest  = null;
 
-        //try {
-            lstPaymentRequest = cryptoWallet.listSentPaymentRequest();
-            offset+=MAX_TRANSACTIONS;
-//        } catch (Exception e) {
-//            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(e,
-//                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//            e.printStackTrace();
-//        }
+        try {
+            lstPaymentRequest = cryptoWallet.listPaymentRequestDatOrder();
+
+        } catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+
+            // data = RequestPaymentListItem.getTestData(getResources());
+        }
 
         return lstPaymentRequest;
     }
@@ -160,17 +145,10 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         //showDetailsActivityFragment(selectedItem);
     }
 
-    /**
-     * On Long item Click Listener
-     *
-     * @param data
-     * @param position
-     */
     @Override
     public void onLongItemClickListener(PaymentRequest data, int position) {
-
+        // do nothing
     }
-
 
     @Override
     public void onPostExecute(Object... result) {
@@ -196,7 +174,4 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
 
 
-    public void setReferenceWalletSession(ReferenceWalletSession referenceWalletSession) {
-        this.referenceWalletSession = referenceWalletSession;
-    }
 }
