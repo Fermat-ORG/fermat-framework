@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions;
+package com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions;
 
 /**
  * Created by loui on 05/02/15.

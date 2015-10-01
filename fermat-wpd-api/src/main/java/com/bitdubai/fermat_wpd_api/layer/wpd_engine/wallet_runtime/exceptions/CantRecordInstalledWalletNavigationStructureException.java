@@ -1,16 +1,15 @@
-package com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions;
+package com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions;
 
 /**
- * Created by Matias Furszyfer
+ * Created by loui on 05/02/15.
  */
-
-public class CantRemoveWalletNavigationStructureException extends WalletRuntimeExceptions {
+public class CantRecordInstalledWalletNavigationStructureException extends WalletRuntimeExceptions {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 3116091246281644240L;
 
-	public static final String DEFAULT_MESSAGE = "CAN'T REMOVE NAVIGATION STRUCTURE REQUESTED";
+	public static final String DEFAULT_MESSAGE = "CAN'T RECORD NAVIGATION STRUCTURE REQUESTED";
 
 	/**
 	 * This is the constructor that every inherited FermatException must implement
@@ -22,7 +21,7 @@ public class CantRemoveWalletNavigationStructureException extends WalletRuntimeE
 	 */
 
 
-	public CantRemoveWalletNavigationStructureException(final String message, final Exception cause, final String context, final String possibleReason) {
+	public CantRecordInstalledWalletNavigationStructureException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);
 	}
 
