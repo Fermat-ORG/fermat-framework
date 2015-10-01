@@ -15,7 +15,7 @@ import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager</code>
- * provide the methods to negotiate crypto payment requests.
+ * provide the methods to manage crypto payment requests.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/09/2015.
  */
