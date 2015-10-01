@@ -17,8 +17,8 @@ Instead of begginning a new project in this industry completley from zero point,
 
 ((("bitcoin","precursors to"))) 
 ---------------------
-As you may have noticed, the entire project has been named following the famous mathematical puzzle that haunted generations of mathemathicians until it was finally proven after 350 years. (if you are courious about the whole story, see http: ....    ).
-It is so because this project was born when trying to solve the new questions, issues and puzzles that the genious Sakamoto's solution to an old cryptographic called , which let him consolidet the foundation of Bitcoin, the first sucessfull cryptocurrency. (for a wonderful detailed introduction to Bitcoin's world, please refer to the "must read"excellent book of Antonio Papadopoulos "Mastering Bitcoin").
+As you may have noticed, the entire project has been named following the famous mathematical puzzle that haunted generations of mathemathicians until it was finally proven after 350 years. (if you are courious about the whole story, see #apx-01-story.asciidoc).
+It is so because this project was born when trying to solve the new questions, issues and puzzles that the genious Sakamoto's solution to an old cryptographic called , which let him consolidet the foundation of Bitcoin, the first sucessfull cryptocurrency. (for a wonderful detailed introduction to Bitcoin's world, please refer to the "must read"excellent book of Andreas M. Antonopoulos "Mastering Bitcoin" (http://bitcoinbook.info)).
 
 The "puzzle"to solve in the emerging field of blockchain tecnology is related to finding the answers to the following questions:
 
