@@ -27,17 +27,17 @@ public class CryptoPaymentRequestRecord implements CryptoPayment {
     private final CryptoPaymentType  type             ;
     private final CryptoPaymentState state            ;
 
-    public CryptoPaymentRequestRecord(UUID               requestId        ,
-                                      String             walletPublicKey  ,
-                                      String             identityPublicKey,
-                                      String             actorPublicKey   ,
-                                      String             description      ,
-                                      CryptoAddress      cryptoAddress    ,
-                                      long               amount           ,
-                                      long               startTimeStamp   ,
-                                      long               endTimeStamp     ,
-                                      CryptoPaymentType  type             ,
-                                      CryptoPaymentState state            ) {
+    public CryptoPaymentRequestRecord(final UUID               requestId        ,
+                                      final String             walletPublicKey  ,
+                                      final String             identityPublicKey,
+                                      final String             actorPublicKey   ,
+                                      final String             description      ,
+                                      final CryptoAddress      cryptoAddress    ,
+                                      final long               amount           ,
+                                      final long               startTimeStamp   ,
+                                      final long               endTimeStamp     ,
+                                      final CryptoPaymentType  type             ,
+                                      final CryptoPaymentState state            ) {
 
         this.requestId         = requestId        ;
         this.walletPublicKey   = walletPublicKey  ;
