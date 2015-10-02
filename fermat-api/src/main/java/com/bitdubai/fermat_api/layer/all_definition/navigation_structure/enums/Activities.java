@@ -81,29 +81,21 @@ public enum Activities {
     //Desktop
     CCP_DESKTOP("CCPD"),
     DAP_DESKTOP("DAPD"),
-    CBP_DESKTOP("CBPD"), 
+    CBP_DESKTOP("CBPD"),
     DAP_MAIN("DAPM"),
+    DAP_ASSET_EDITOR_ACTIVITY("DAEA"),
 
     // Crypto Broker Wallet
     CBP_CRYPTO_BROKER_WALLET_HOME("CBPCBWH"),
     CBP_CRYPTO_BROKER_WALLET_DEALS("CBPCBWD"),
     CBP_CRYPTO_BROKER_WALLET_CONTRACTS("CBPCBWC"),
     CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE("CBPCBWSP"),
-    CBP_CRYPTO_BROKER_WALLET_SETTINGS("CBPCBWS")
-    ;
+    CBP_CRYPTO_BROKER_WALLET_SETTINGS("CBPCBWS");
 
     private String code;
 
     Activities(String code) {
         this.code = code;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public String toString() {
-        return code;
     }
 
     public static Activities getValueFromString(String code) throws InvalidParameterException {
@@ -226,11 +218,21 @@ public enum Activities {
                 return CBP_DESKTOP;
             case "DAPM":
                 return DAP_MAIN;
+            case "DAEA":
+                return DAP_ASSET_EDITOR_ACTIVITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
         // throw an IllegalArgumentException or return null
         //throw new IllegalArgumentException("the given number doesn't match any Status.");
         // return null;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public String toString() {
+        return code;
     }
 }

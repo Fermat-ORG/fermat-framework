@@ -36,16 +36,16 @@ public abstract class FermatListFragment<M> extends FermatFragment
      */
     protected boolean isRefreshing;
     /**
-     * Executor
-     */
-    private ExecutorService _executor;
-    /**
      * UI
      */
     protected RecyclerView recyclerView;
     protected FermatAdapter adapter;
     protected RecyclerView.LayoutManager layoutManager;
     protected SwipeRefreshLayout swipeRefreshLayout;
+    /**
+     * Executor
+     */
+    private ExecutorService _executor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -152,8 +152,7 @@ public abstract class FermatListFragment<M> extends FermatFragment
                     return getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                 }
             };
-            if (getExecutor() != null)
-                getExecutor().execute(worker);
+            worker.execute(getExecutor());
         }
     }
 }
