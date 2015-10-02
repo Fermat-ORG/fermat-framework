@@ -57,6 +57,7 @@ class NetworkMonitorAgent implements Agent{
             peerGroup.addWallet(wallet);
             peerGroup.setUseLocalhostPeerWhenPossible(true);
 
+
             // If I'm connecting to RegTest, I will get the server information from the platform
             if (networkParameters == RegTestParams.get()){
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL__NODE_IP, BitcoinNetworkConfiguration.BITCOIN_FULL__NODE_PORT);
@@ -70,7 +71,7 @@ class NetworkMonitorAgent implements Agent{
             wallet.addEventListener(networkMonitoringAgentEvents);
             peerGroup.addEventListener(networkMonitoringAgentEvents);
 
-            peerGroup.start();
+            peerGroup.startAsync();
             peerGroup.downloadBlockChain();
         } catch (BlockStoreException e) {
             e.printStackTrace();

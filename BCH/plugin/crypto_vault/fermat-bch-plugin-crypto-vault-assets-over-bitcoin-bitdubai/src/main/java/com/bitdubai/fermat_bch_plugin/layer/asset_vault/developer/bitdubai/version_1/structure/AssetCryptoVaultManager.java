@@ -57,8 +57,9 @@ public class AssetCryptoVaultManager  {
                                    PluginDatabaseSystem pluginDatabaseSystem,
                                    String deviceUserLoggerPublicKey,
                                    BitcoinNetworkManager bitcoinNetworkManager) throws CantCreateAssetVaultSeed, CantLoadExistingVaultSeed, VaultKeyHierarchyException, CantMonitorBitcoinNetworkException {
+        //this will be used to set the owner of the files
         this.pluginId = pluginId;
-        // I'm defining the filename to be the publick key of the device used logged.
+        // I'm defining the filename to be the publick key of the device used logged. I will be saving the blockchain under this directory name
         ASSET_VAULT_SEED_FILENAME = deviceUserLoggerPublicKey;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -70,7 +71,8 @@ public class AssetCryptoVaultManager  {
          * Once the KeyHierarchy is created, I will request the Bitcoin Network to monitor the network using the seed I created.
          */
         // Todo I should check if I have already delivered address in more than one network type to generate more than one monitoring agent
-        bitcoinNetworkManager.monitorNetworkFromSeed(BlockchainNetworkType.DEFAULT, seed);
+        //bitcoinNetworkManager.monitorNetworkFromSeed(BlockchainNetworkType.DEFAULT, seed);
+        //bitcoinNetworkManager.monitorNetworkFromWatchingKey(BlockchainNetworkType.DEFAULT, vaultKeyHierarchy.getWatchingKey());
     }
 
     /**
