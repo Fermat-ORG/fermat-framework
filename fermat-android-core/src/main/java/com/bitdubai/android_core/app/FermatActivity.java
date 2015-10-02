@@ -503,9 +503,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             }
 
-            if(header!=null){
-                ((FrameLayout)findViewById(R.id.header_container)).setVisibility(View.VISIBLE);
-            }
+            ((FrameLayout)findViewById(R.id.header_container)).setVisibility((header!=null) ? View.VISIBLE : View.GONE);
+
 
             //RelativeLayout container_header_balance = getActivityHeader();
 
