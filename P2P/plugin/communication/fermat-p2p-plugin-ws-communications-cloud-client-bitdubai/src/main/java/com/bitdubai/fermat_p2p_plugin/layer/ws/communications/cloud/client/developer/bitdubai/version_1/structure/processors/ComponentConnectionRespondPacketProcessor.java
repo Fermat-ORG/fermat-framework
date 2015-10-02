@@ -12,12 +12,14 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.net.URI;
+import java.util.StringTokenizer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor</code> implement
@@ -63,6 +65,21 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             String vpnServerIdentity = respond.get(JsonAttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY).getAsString();
             String participantIdentity = respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+
+
+            /*
+             * TEMPORAL:
+             * Reconstruct the uri, for the configuration of the AWS. The internal ip is different to the public ip,
+             * when return the vpnServerUri the cloud server only know the internal ip and send this in the respond.
+             * Need to fix this situation in the future
+             */
+            StringTokenizer stringTokenizer = new StringTokenizer(vpnServerUri.toString(), ":");
+            stringTokenizer.nextElement();
+            stringTokenizer.nextElement();
+            String port = (String) stringTokenizer.nextElement();
+            vpnServerUri = new URI("ws://" + WsCommunicationsCloudClientPluginRoot.SERVER_IP  + ":" + port);
+
+            System.out.println("ComponentConnectionRespondPacketProcessor - reconstruct vpnServerUri = "+vpnServerUri);
 
             /*
              * Get the  wsCommunicationVPNClientManagerAgent

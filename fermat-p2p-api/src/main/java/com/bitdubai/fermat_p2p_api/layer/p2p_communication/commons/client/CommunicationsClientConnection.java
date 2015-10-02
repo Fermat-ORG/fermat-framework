@@ -1,5 +1,5 @@
 /*
- * @#CommunicationsCloudClientChannelManager.java - 2015
+ * @#CommunicationsClientConnection.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -14,15 +14,15 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 
 /**
- * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection</code> represent
- * a connection with the server
+ * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection</code> represent
+ * a connection client
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface CommunicationsCloudClientConnection {
+public interface CommunicationsClientConnection {
 
     /**
      * Construct a PlatformComponentProfile instance, for use in the process
@@ -47,21 +47,23 @@ public interface CommunicationsCloudClientConnection {
      * @param alias
      * @param identityPublicKey
      * @param location
+     * @param distance
      * @param name
      * @param extraData
      * @param firstRecord
      * @param numRegister
+     * @param fromOtherPlatformComponentType
+     * @param fromOtherNetworkServiceType
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, String name, String extraData, Integer firstRecord, Integer numRegister);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
     /**
-     * Method that register a platform component with the Communication Cloud Server
-     * like online
+     * Method that register a platform component with for Communication like online
      *
      * @param platformComponentProfile
      */
-    public void registerComponentInCommunicationCloudServer(PlatformComponentProfile platformComponentProfile);
+    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile);
 
     /**
      * Method that request to the communication cloud server the list of component registered that mathc
@@ -93,7 +95,6 @@ public interface CommunicationsCloudClientConnection {
      * @return boolean
      */
     public boolean isRegister();
-
 
     /**
      * Get the CommunicationsVPNConnection stablished

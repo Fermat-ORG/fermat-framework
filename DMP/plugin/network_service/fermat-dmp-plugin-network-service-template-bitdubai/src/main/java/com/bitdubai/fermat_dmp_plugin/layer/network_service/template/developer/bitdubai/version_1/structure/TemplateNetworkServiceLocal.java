@@ -122,7 +122,7 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
     private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
 
         System.out.println("TemplateNetworkServiceLocal - onMessageReceived ");
-        System.out.println(incomingTemplateNetworkServiceMessage);
+        System.out.println(incomingTemplateNetworkServiceMessage.getContent());
 
         /*
          * set the last message received

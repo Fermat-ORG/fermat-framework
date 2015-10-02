@@ -50,6 +50,13 @@ public interface DiscoveryQueryParameters {
     public Location getLocation();
 
     /**
+     * Get the distance from geo localization
+     *
+     * @return Double
+     */
+    public Double getDistance();
+
+    /**
      * Return the platform component type
      *
      * @return PlatformComponentType
@@ -83,6 +90,26 @@ public interface DiscoveryQueryParameters {
      * @return int
      */
     public Integer getNumberRegister();
+
+    /**
+     * Return the platform component type from other component type,
+     * this parameter indicate the filters are referent from other
+     * platform component type, and need to find the component that match
+     * with the PlatformComponentType specified in the other parameter
+     *
+     * @return PlatformComponentType
+     */
+    public PlatformComponentType getFromOtherPlatformComponentType();
+
+    /**
+     * Get the network service type of the packet from other component type,
+     * this parameter indicate the filters are referent from other
+     * platform component type and need to find the component that match
+     * with the NetworkServiceType specified in the other parameter
+     *
+     * @return NetworkServiceType
+     */
+    public NetworkServiceType getFromOtherNetworkServiceType();
 
     /**
      * Convert this object to json string
