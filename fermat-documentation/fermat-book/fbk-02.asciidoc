@@ -61,43 +61,55 @@ Can be freely adopted, implemented and extended.
 
 :numbered:
 === Segmentation and different levels of abstraction
-Cryptocurrencies are born into existent by a very specific mathemathical algorithym based on cryptographics rules run by a computer in a process called " mining". They are held and stored by their owners in specific applications called * wallets * that live in a certain device of the decentralized p2p network. To start using a cryptocurrency you have to download a client application ( full node or leightweight) to your device or use a cloud base application. The client application provides the basic functionalities to operate, i.e. usually one or a couple of "basic wallets" which generates an user unique identification and also a specific adress in the chosen cryptonetwork.
+Cryptocurrencies are born into existent by a very specific mathemathical algorithym based on cryptographics rules run by a computer in a process called " mining". They are held and stored by their owners in specific applications called *wallets* that live in a certain device of the decentralized p2p network. To start using a cryptocurrency you have to download a client application ( full node or leightweight) to your device or use a cloud base application. The client application provides the basic functionalities to operate, i.e. usually one or a couple of "basic wallets" which generates an user unique identification and also a specific adress in the chosen cryptonetwork.
 
-FERMAT understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is unique, and therefore there are potentially so many differents ways of shaping the accessibility, appearance and functionality of applications dealing with cryptocurrencies and blockchain technology to match very specific need and scalable demand of each consumer's niche. Here begins the huge differentation between FERMAT applications and the rest ! FERMAT takes very seriously into account the actor's profile to develop attractive application in each case.
+FERMAT understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is unique, and therefore there are potentially so many differents ways of shaping the accessibility, appearance and functionality of applications dealing with cryptocurrencies and blockchain technology to match very specific need and scalable demand of each consumer's niche. Here begins the huge differentation between FERMAT applications and the rest ! FERMAT takes very seriously into account the actor's profile to develop attractive applications in each case. Well, for some actor's with more complex relationships world, more complexity is also wanted in ther wallets and in the wallet of kindred actor's that interdepend and interact in the same *niche*. These alike functionalities are held together in specific *areas* within FERMAT platform stack system that build a one-on-one relationship with a real-world environment.
 
-# BitWa (Basic Bitcoin wallet)  ->> for those devoted "BTC-only" users!
-# Argentine Bitcoin wallet ->> for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady comparison between argentine$, USD (oficial and blue!) and even Eu$!)
-# Bitcoin Loss Protected Wallet --> for conservative user{s caring about never selling under the purchase price ! ( preserving value !)
-# Discount Wallet -> for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)
-
+.Wallets pret-a-porter 
+* FERMAT CCP (crypto currency platform)
+** BitWa (Basic Bitcoin Wallet)  -> for those devoted "BTC-only" users!
+** Argentine Bitcoin wallet ->> for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady comparison between argentine$, USD (oficial and blue!) and even Eu$!)
+** BLP (Bitcoin Loss Protected wallet) -> for conservative user{s caring about never selling under the purchase price ! (preserving value!)
+* FERMAT CCM (Crypto Currency Money)
+** CCM (Crypto Currency Money Wallet)
+** DiWa (Discount Wallet) -> for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)
+* FERMAT BNK (Bank Notes)
+** BaNo (Bank Notes Wallet) -> for those wanting to visualize their investment in "real money traditional bank notes" of their usual fiat/currency ( rest on FERMAT, we do the "dirty work" with all the crypto stuff!)
+* FERMAT SHP (Shop Platform)
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+* FERMAT DAP (digital assets platform)
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+* FERMAT MKT  (Market Platform)
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+** ShWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+* FERMAT CBP (Crypto Broker Platform)
+** CrBr (Crypto Broker Wallet)
+** CrCu (Crypto Broker Customer Wallet)
+* FERMAT CDN (Crypto Distribution Network)
+** CrWh (Crypto Wholesaler)
+** CrCu (Crypto Distributor)
+** TUP (Top Up Point)
+** COP (Cash Out Point)
 
 === Specific architecture 
 :numbered!:
 FERMAT consists of small applications called plug-ins that run a small and very specific set of rules to process certain input data and to get " its job done " by offering an output data with a well defined structure. Each plug-in is given certain responsability within the whole environment where it dwells and they are set to operate into different layers that stack one over the other building a hierachical structure where responsability is transfered from the lower layer onto the next upper one. The plug-ins sharing alike purposes live in the same layer but they also build a second array in columns if the depend one another to provide certain functionality. 
  
-==== General overview on layers and wallets
-
-
+.General overview on layers 
 * FERMAT CORE
-** FERMAT OSA (operating system )
-** FERMAT P2P ( network and communication layers)
+** FERMAT OSA (operating system)
+** FERMAT P2P (network and communication layers)
 ** FERMAT BCH (blockchain)
 ** FERMAT PIP
-* FERMAT WPD (wallet production)
-* FERMAT CCP (crypto currency platform)
-** BitWa ( Bitcoin Wallet)
-** BLP (Bitcoin Loss Protected wallet)
-* FERMAT CCM (Crypto Currency Money)
-** CCM (Crypto Currency Money)
-** DiWa (Discount Wallet)
+
+For a cool visualization of the constant growing system of layers & columns, platforms and wallets visit http://fermat.org
 
 
-**** FERMAT SHP (shop platform)
-**** FERMAT DAP (digital assets platform)
-
-
-
- 
 
 
 
