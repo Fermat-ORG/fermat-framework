@@ -361,7 +361,12 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
      * @throws CantInstallSubAppSkinException
      */
     @Override
-    public void installSkinForSubApp(String subAppType, String developer, String screenSize, String skinName, String navigationStructureVersion, String subAppPublicKey) throws CantInstallSubAppSkinException {
+    public void installSkinForSubApp(String subAppType,
+                                     String developer,
+                                     String screenSize,
+                                     String skinName,
+                                     String navigationStructureVersion,
+                                     String subAppPublicKey) throws CantInstallSubAppSkinException {
         try {
             String linkToRepo = "seed-resources/wallet_resources/" + developer  + "/" + subAppType + "/";
 
@@ -458,7 +463,14 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
      * @param subAppPublicKey
      */
     @Override
-    public void uninstallCompleteSubApp(String subAppType, String developer, String subAppName, UUID skinId, String screenSize, String navigationStructureVersion, boolean isLastWallet, String subAppPublicKey)  throws CantUninstallCompleteSubAppException {
+    public void uninstallCompleteSubApp(String subAppType,
+                                        String developer,
+                                        String subAppName,
+                                        UUID skinId,
+                                        String screenSize,
+                                        String navigationStructureVersion,
+                                        boolean isLastWallet,
+                                        String subAppPublicKey)  throws CantUninstallCompleteSubAppException {
         try
         {
             if(isLastWallet){

@@ -89,7 +89,6 @@ public class GetLayoutResourceTest extends TestCase {
         subAppResourcesInstallationNetworkServicePluginRoot.start();
     }
 
-
     @Test
     public void testgetImageResource_ReturnOk_ThrowsCantGetResourcesException() throws Exception {
         //catchException(subAppResourcesInstallationNetworkServicePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt", ScreenOrientation.LANDSCAPE, UUID.randomUUID(),subAppType);
