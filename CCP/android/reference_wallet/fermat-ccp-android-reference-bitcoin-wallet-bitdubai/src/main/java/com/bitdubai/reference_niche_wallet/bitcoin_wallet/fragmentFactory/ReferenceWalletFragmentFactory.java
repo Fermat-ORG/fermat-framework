@@ -10,6 +10,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFrag
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.CreateContactFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.ReceiveTransactionsFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestHomePaymentFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestPaymentFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionsFragment;
@@ -40,7 +41,8 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                    // currentFragment = HomeFragment.newInstance();
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);
                    //currentFragment = RequestPaymentFragment.newInstance();
-                    currentFragment = BalanceFragment.newInstance();
+                    //currentFragment = BalanceFragment.newInstance();
+                    currentFragment = RequestHomePaymentFragment.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);
