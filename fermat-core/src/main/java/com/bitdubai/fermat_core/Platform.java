@@ -22,6 +22,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
 import com.bitdubai.fermat_core.layer.ccp.request.CCPRequestLayer;
@@ -1506,7 +1507,7 @@ public class Platform implements Serializable {
                 ((DealsWithCryptoAddressesNetworkService) plugin).setCryptoAddressesManager((CryptoAddressesManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE));
 
             if (plugin instanceof DealsWithCryptoPayment)
-                ((DealsWithCryptoPayment) plugin).setCryptoPaymentManager((CryptoPaymentRegistry) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST));
+                ((DealsWithCryptoPayment) plugin).setCryptoPaymentManager((CryptoPaymentManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST));
 
             if (plugin instanceof DealsWithCryptoPaymentRequestNetworkService)
                 ((DealsWithCryptoPaymentRequestNetworkService) plugin).setCryptoPaymentRequestManager((CryptoPaymentRequestManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));

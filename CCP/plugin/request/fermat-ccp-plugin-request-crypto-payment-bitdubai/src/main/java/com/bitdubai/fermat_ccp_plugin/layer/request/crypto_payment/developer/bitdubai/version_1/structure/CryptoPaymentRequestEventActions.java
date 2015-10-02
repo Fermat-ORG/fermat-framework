@@ -15,17 +15,14 @@ import java.util.UUID;
 public class CryptoPaymentRequestEventActions {
 
     private final CryptoPaymentRequestManager cryptoPaymentRequestManager;
-    private final ErrorManager                errorManager               ;
     private final PluginDatabaseSystem        pluginDatabaseSystem       ;
     private final UUID                        pluginId                   ;
 
     public CryptoPaymentRequestEventActions(final CryptoPaymentRequestManager cryptoPaymentRequestManager,
-                                            final ErrorManager                errorManager               ,
                                             final PluginDatabaseSystem        pluginDatabaseSystem       ,
                                             final UUID                        pluginId                   ) {
 
         this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
-        this.errorManager                = errorManager               ;
         this.pluginDatabaseSystem        = pluginDatabaseSystem       ;
         this.pluginId                    = pluginId                   ;
     }
