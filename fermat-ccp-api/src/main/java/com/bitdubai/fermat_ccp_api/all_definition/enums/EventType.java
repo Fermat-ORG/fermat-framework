@@ -9,6 +9,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressReceivedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressRequestedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestApprovedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestDeniedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestRefusedEvent;
 
 /**
  * The enum <code>com.bitdubai.fermat_cry_api.layer.definition.enums.EventType</code>
@@ -25,13 +28,20 @@ public enum EventType implements FermatEventEnum {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
 
-    CRYPTO_ADDRESS_RECEIVED("CRYARVD") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
+    CRYPTO_ADDRESS_RECEIVED ("CRYARVD") {
         public FermatEvent getNewEvent() { return new CryptoAddressReceivedEvent(this); }
     },
     CRYPTO_ADDRESS_REQUESTED("CRYAREQ") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
         public FermatEvent getNewEvent() { return new CryptoAddressRequestedEvent(this); }
+    },
+    CRYPTO_PAYMENT_APPROVED ("CRYPAAP") {
+        public FermatEvent getNewEvent() { return new CryptoPaymentRequestApprovedEvent(this); }
+    },
+    CRYPTO_PAYMENT_DENIED   ("CRYPADE") {
+        public FermatEvent getNewEvent() { return new CryptoPaymentRequestDeniedEvent(this); }
+    },
+    CRYPTO_PAYMENT_REFUSED  ("CRYPARE") {
+        public FermatEvent getNewEvent() { return new CryptoPaymentRequestRefusedEvent(this); }
     };
 
     private final String code;
@@ -48,13 +58,28 @@ public enum EventType implements FermatEventEnum {
      * @throws InvalidParameterException error with is no a valid code
      */
     public static EventType getByCode(String code) throws InvalidParameterException {
-        for (EventType eventType : EventType.values()) {
-            if (eventType.code.equals(code)) {
-                return eventType;
-            }
+
+        switch (code){
+
+            case "CRYARVD": return CRYPTO_ADDRESS_RECEIVED ;
+            case "CRYAREQ": return CRYPTO_ADDRESS_REQUESTED;
+            case "CRYPAAP": return CRYPTO_PAYMENT_APPROVED ;
+            case "CRYPADE": return CRYPTO_PAYMENT_DENIED   ;
+            case "CRYPARE": return CRYPTO_PAYMENT_REFUSED  ;
+
+            default:
+                throw new InvalidParameterException(
+                        InvalidParameterException.DEFAULT_MESSAGE,
+                        null,
+                        "Code Received: " + code,
+                        "This code isn't valid for the EventType Enum"
+                );
+
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code isn't valid for the EventType Enum");
     }
+
+    @Override // by default
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
 
     @Override
     public String getCode() {

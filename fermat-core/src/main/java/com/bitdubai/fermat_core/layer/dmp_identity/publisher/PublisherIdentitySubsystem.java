@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.dmp_identity.publisher;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.dmp_identity.IdentitySubsystem;
 import com.bitdubai.fermat_api.layer.dmp_identity.CantStartSubsystemException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.publisher.publisher.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Nerio on 13/08/15.

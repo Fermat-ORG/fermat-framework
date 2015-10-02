@@ -100,12 +100,12 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Asset Distribution", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE, this.pluginId.toString()));
         return databases;
     }
 
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
+    public static List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
@@ -132,7 +132,7 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public static List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, Database database, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */

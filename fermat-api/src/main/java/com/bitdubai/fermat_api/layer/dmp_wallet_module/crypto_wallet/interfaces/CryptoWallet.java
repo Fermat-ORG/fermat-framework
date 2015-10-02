@@ -310,4 +310,6 @@ public interface CryptoWallet extends Serializable {
 
     List<PaymentRequest> listPaymentRequestDatOrder();
 
+    List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
+
 }

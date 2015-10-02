@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communication.IncomingMessageDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -35,9 +35,9 @@ import java.util.Map;
 public class TemplateNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
     /**
-     * Represent the communicationsCloudClientConnection
+     * Represent the communicationsClientConnection
      */
-    private CommunicationsCloudClientConnection communicationsCloudClientConnection;
+    private CommunicationsClientConnection communicationsClientConnection;
 
     /**
      * Represent the platformComponentProfile
@@ -83,14 +83,14 @@ public class TemplateNetworkServiceConnectionManager implements NetworkServiceCo
     /**
      * Constructor with parameters
      *
-     * @param communicationsCloudClientConnection a communicationLayerManager instance
+     * @param communicationsClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public TemplateNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsCloudClientConnection communicationsCloudClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public TemplateNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.platformComponentProfile = platformComponentProfile;
         this.identity = identity;
-        this.communicationsCloudClientConnection = communicationsCloudClientConnection;
+        this.communicationsClientConnection = communicationsClientConnection;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.incomingMessageDao = new IncomingMessageDao(dataBase);
@@ -111,7 +111,7 @@ public class TemplateNetworkServiceConnectionManager implements NetworkServiceCo
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-            communicationsCloudClientConnection.requestVpnConnection(platformComponentProfile, remotePlatformComponentProfile);
+            communicationsClientConnection.requestVpnConnection(platformComponentProfile, remotePlatformComponentProfile);
 
 
         } catch (Exception e) {
@@ -158,7 +158,7 @@ public class TemplateNetworkServiceConnectionManager implements NetworkServiceCo
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsCloudClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
 
             //Validate the connection
             if (communicationsVPNConnection != null &&

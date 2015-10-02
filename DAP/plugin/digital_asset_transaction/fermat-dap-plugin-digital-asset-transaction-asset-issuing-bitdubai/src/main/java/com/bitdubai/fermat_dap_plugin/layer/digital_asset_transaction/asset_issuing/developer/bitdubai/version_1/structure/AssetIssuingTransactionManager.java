@@ -110,6 +110,10 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.errorManager=errorManager;
     }
 
+    public void setDigitalAssetMetadataVault(DigitalAssetMetadataVault digitalAssetMetadataVault) throws CantSetObjectException {
+        this.digitalAssetCryptoTransactionFactory.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+    }
+
     public void setPluginId(UUID pluginId) throws CantSetObjectException{
         if(pluginId==null){
             throw new CantSetObjectException("PluginId is null");
