@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
 
 import java.util.List;
 import java.util.UUID;

@@ -46,7 +46,7 @@ public class gettersTest extends TestCase {
     @Mock
     LogManager logManager;
     @Mock
-    com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
+    com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.WalletStoreManager walletStoreManagerMiddleware;
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
     @Mock
