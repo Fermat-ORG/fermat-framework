@@ -91,17 +91,32 @@ public class CryptoPaymentRequestPluginRoot implements
 
         addCryptoPaymentRequestListener(
                 EventType.CRYPTO_PAYMENT_APPROVED,
-                new CryptoPaymentRequestApprovedEventHandler(this)
+                new CryptoPaymentRequestApprovedEventHandler(
+                        cryptoPaymentRequestManager,
+                        this,
+                        pluginDatabaseSystem,
+                        pluginId
+                )
         );
 
         addCryptoPaymentRequestListener(
                 EventType.CRYPTO_PAYMENT_DENIED,
-                new CryptoPaymentRequestDeniedEventHandler(this)
+                new CryptoPaymentRequestDeniedEventHandler(
+                        cryptoPaymentRequestManager,
+                        this,
+                        pluginDatabaseSystem,
+                        pluginId
+                )
         );
 
         addCryptoPaymentRequestListener(
                 EventType.CRYPTO_PAYMENT_REFUSED,
-                new CryptoPaymentRequestRefusedEventHandler(this)
+                new CryptoPaymentRequestRefusedEventHandler(
+                        cryptoPaymentRequestManager,
+                        this,
+                        pluginDatabaseSystem,
+                        pluginId
+                )
         );
 
         this.serviceStatus = ServiceStatus.STARTED;

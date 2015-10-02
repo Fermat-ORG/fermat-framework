@@ -29,19 +29,16 @@ public class CryptoPaymentRequestApprovedEventHandler implements FermatEventHand
 
     private final CryptoPaymentRequestManager    cryptoPaymentRequestManager   ;
     private final CryptoPaymentRequestPluginRoot cryptoPaymentRequestPluginRoot;
-    private final ErrorManager                   errorManager                  ;
     private final PluginDatabaseSystem           pluginDatabaseSystem          ;
     private final UUID                           pluginId                      ;
 
     public CryptoPaymentRequestApprovedEventHandler(final CryptoPaymentRequestManager    cryptoPaymentRequestManager   ,
                                                     final CryptoPaymentRequestPluginRoot cryptoPaymentRequestPluginRoot,
-                                                    final ErrorManager                   errorManager                  ,
                                                     final PluginDatabaseSystem           pluginDatabaseSystem          ,
                                                     final UUID                           pluginId                      ) {
 
         this.cryptoPaymentRequestManager    = cryptoPaymentRequestManager   ;
         this.cryptoPaymentRequestPluginRoot = cryptoPaymentRequestPluginRoot;
-        this.errorManager                   = errorManager                  ;
         this.pluginDatabaseSystem           = pluginDatabaseSystem          ;
         this.pluginId                       = pluginId                      ;
     }
@@ -58,7 +55,6 @@ public class CryptoPaymentRequestApprovedEventHandler implements FermatEventHand
 
                 new CryptoPaymentRequestEventActions(
                         cryptoPaymentRequestManager,
-                        errorManager,
                         pluginDatabaseSystem,
                         pluginId
                 ).handleCryptoPaymentRequestApproved(
