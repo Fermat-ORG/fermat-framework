@@ -32,6 +32,7 @@ import java.util.UUID;
 class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
     DeterministicSeed seed;
     DeterministicKey rootKey;
+    DeterministicKey watchingKey;
     DeterministicHierarchy masterHierarchy;
 
     UUID pluginId;
@@ -79,10 +80,6 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
     private void createMasterNode(){
         rootKey = HDKeyDerivation.createMasterPrivateKey(seed.getSeedBytes());
         masterHierarchy = new DeterministicHierarchy(rootKey);
-    }
-
-    public void addNewRedeemPoint(){
-
     }
 
     /**
@@ -181,6 +178,11 @@ class VaultKeyHierarchy implements DealsWithPluginDatabaseSystem{
     private AssetVaultCryptoVaultDao getAssetVaultCryptoVaultDao() {
         AssetVaultCryptoVaultDao assetVaultCryptoVaultDao = new AssetVaultCryptoVaultDao(this.pluginId, this.pluginDatabaseSystem);
         return assetVaultCryptoVaultDao;
+    }
+
+    public DeterministicKey getWatchingKey() {
+        List<ChildNumber> path = ImmutableList.of(new ChildNumber(0, false));
+        return masterHierarchy.deriveChild(path, false, false, ChildNumber.ZERO);
     }
 }
 

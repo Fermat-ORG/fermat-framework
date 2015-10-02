@@ -40,22 +40,22 @@ public class CryptoPaymentRequestDatabaseFactory {
             /**
              * Create Crypto Address Request table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME         , DatabaseDataType.STRING      ,  40, Boolean.TRUE );
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME  , DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME   , DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_DESCRIPTION_COLUMN_NAME        , DatabaseDataType.STRING      , 200, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     , DatabaseDataType.STRING      , 130, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_AMOUNT_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_START_TIME_STAMP_COLUMN_NAME   , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_END_TIME_STAMP_COLUMN_NAME     , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TYPE_COLUMN_NAME               , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
-            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME              , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME         , DatabaseDataType.STRING      ,  40, Boolean.TRUE );
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME  , DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME   , DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DESCRIPTION_COLUMN_NAME        , DatabaseDataType.STRING      , 200, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     , DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_AMOUNT_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME   , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_END_TIME_STAMP_COLUMN_NAME     , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME               , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME              , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
 
-            table.addIndex(CryptoPaymentRequestDatabaseConstants.CRYPTO_ADDRESS_REQUEST_FIRST_KEY_COLUMN);
+            table.addIndex(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

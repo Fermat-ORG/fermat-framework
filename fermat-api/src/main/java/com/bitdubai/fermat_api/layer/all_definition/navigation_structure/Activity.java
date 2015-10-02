@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,6 +54,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     Map<WizardTypes, Wizard> wizards;
 
     Activities backActivity;
+
+    Header header;
 
     public Activity() {
     }
@@ -146,6 +149,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     @Override
     public Activities getBackActivity() {
         return this.backActivity;
+    }
+
+    @Override
+    public FermatHeader getHeader() {
+        return header;
     }
 
     // TODO VER COMO HACER ESTO

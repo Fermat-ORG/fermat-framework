@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
 /**
@@ -34,9 +34,9 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
     private TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot;
 
     /**
-     * Represent the communicationsCloudClientConnection
+     * Represent the communicationsClientConnection
      */
-    private CommunicationsCloudClientConnection communicationsCloudClientConnection;
+    private CommunicationsClientConnection communicationsClientConnection;
 
     /**
      * Represent the active
@@ -46,11 +46,11 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
     /**
      * Constructor with parameters
      * @param templateNetworkServicePluginRoot
-     * @param communicationsCloudClientConnection
+     * @param communicationsClientConnection
      */
-    public RegistrationProcessNetworkServiceAgent(TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsCloudClientConnection communicationsCloudClientConnection) {
+    public RegistrationProcessNetworkServiceAgent(TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
         this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
-        this.communicationsCloudClientConnection = communicationsCloudClientConnection;
+        this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
     }
 
@@ -63,13 +63,13 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
 
         while (active){
 
-            if (communicationsCloudClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
+            if (communicationsClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
 
                 /*
                  * Construct my profile and register me
                  */
-                PlatformComponentProfile platformComponentProfile =  communicationsCloudClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service ("+templateNetworkServicePluginRoot.getId()+")", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
-                communicationsCloudClientConnection.registerComponentInCommunicationCloudServer(platformComponentProfile);
+                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service ("+templateNetworkServicePluginRoot.getId()+")", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
+                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
                 templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
                 templateNetworkServicePluginRoot.initializeTemplateNetworkServiceConnectionManager();
                 active = Boolean.FALSE;

@@ -20,4 +20,8 @@ public class CantListCryptoPaymentRequestsException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public CantListCryptoPaymentRequestsException(Exception cause) {
+        this(DEFAULT_MESSAGE, cause, null, null);
+    }
+
 }

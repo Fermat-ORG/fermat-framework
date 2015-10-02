@@ -90,6 +90,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     int assetsAmount;
     BlockchainNetworkType blockchainNetworkType;
     String walletPublicKey;
+    DigitalAssetMetadataVault digitalAssetMetadataVault;
     OutgoingIntraActorManager outgoingIntraActorManager;
     private final int MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT=1;
 
@@ -125,6 +126,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new ObjectNotSetException("The BlockchainNetworkType is null");
         }
         this.blockchainNetworkType=blockchainNetworkType;
+    }
+
+    public void setDigitalAssetMetadataVault(DigitalAssetMetadataVault digitalAssetMetadataVault)throws CantSetObjectException{
+        if(digitalAssetMetadataVault==null){
+            throw new CantSetObjectException("digitalAssetMetadataVault is null");
+        }
+        this.digitalAssetMetadataVault=digitalAssetMetadataVault;
     }
 
     private void setDigitalAssetGenesisAmount() throws CantSetObjectException{
@@ -172,7 +180,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         if(this.digitalAsset.getPublicKey()==null){
             throw new ObjectNotSetException("Digital Asset PublicKey is not set");
         }
-        isPublicKeyInDatabase(this.digitalAsset.getPublicKey());
+
         if(this.digitalAsset.getState()==null){
             digitalAsset.setState(State.DRAFT);
         }
@@ -267,7 +275,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         }catch(CantCreateFileException exception){
             throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Can't create '"+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
         } catch (CantPersistFileException exception) {
-            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Can't create '"+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
+            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Can't persist '"+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
         } /*catch (CantLoadFileException e) {
             throw new CantCreateDigitalAssetFileException(e,"TEST","Can't read '"+this.digitalAssetLocalFilePath+this.digitalAssetFileName+"' file");
         } catch (FileNotFoundException e) {
@@ -320,6 +328,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             }
             LOG.info("MAP_CHECK Objects");
             areObjectsSettled();
+            isPublicKeyInDatabase(this.digitalAsset.getPublicKey());
             //Persistimos el Asset en archivo
             LOG.info("MAP_persist: ");
             persistInLocalStorage();
@@ -462,7 +471,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
         try {
             if(!isDigitalAssetComplete(digitalAsset, digitalAssetMetadata)){
-                throw new CantDeliverDigitalAssetToAssetWalletException("Cannot deliver the digital asset:"+digitalAssetMetadata);
+                throw new CantDeliverDigitalAssetToAssetWalletException("Cannot deliver the digital asset - is not complete:"+digitalAssetMetadata);
             }
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Cannot deliver the digital asset:" + digitalAssetMetadata,"Unexpected result in database");
@@ -560,7 +569,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //LOG.info("MAP_DIGITAL ASSET FULL: "+this.digitalAsset);
             LOG.info("MAP_HASH DEL ASSET: " + digitalAssetHash);
             //envío de BTC
-            sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
+            String genesisTransaction=sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
+            digitalAssetMetadata.setGenesisTransaction(genesisTransaction);
             //Entregamos el digital asset a la AssetWallet
             deliverDigitalAssetToAssetWallet(transactionId, digitalAssetMetadata, this.digitalAsset);
 
