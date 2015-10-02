@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -68,6 +70,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
@@ -177,6 +180,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
+
+
     /**
      * Initialize the contents of the Activity's standard options menu
      *
@@ -275,7 +280,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             SideMenu sideMenu = activity.getSideMenu();
 
-            setMainLayout(sideMenu);
+            setMainLayout(sideMenu,activity.getHeader());
 
             setMainMenu(mainMenu);
 
@@ -490,14 +495,20 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Select the xml based on the activity type
      *
      * @param sidemenu
+     * @param header
      */
-    protected void setMainLayout(SideMenu sidemenu) {
+    protected void setMainLayout(SideMenu sidemenu,FermatHeader header) {
         if (sidemenu != null) {
             if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
                 setContentView(R.layout.runtime_app_activity_runtime_navigator);
             } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
 
                 setContentView(R.layout.runtime_app_wallet_runtime_navigator);
+
+            }
+
+            if(header!=null){
+                ((FrameLayout)findViewById(R.id.header_container)).setVisibility(View.VISIBLE);
             }
 
             //RelativeLayout container_header_balance = getActivityHeader();
@@ -511,6 +522,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //
 //                View balance_header = layoutInflater.inflate(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.balance_header, container_header_balance, true);
 //            }
+
+
+
 
 
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
