@@ -13,11 +13,9 @@ public interface CashMoney {
 
     CashMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionCashMoneyException;
 
-    List<CashMoneyTransaction> getTransactions(
-            BalanceType balanceType,
-            int max,
-            int offset
-    )throws CantTransactionCashMoneyException;
+    CashMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionCashMoneyException;
+
+    List<CashMoneyTransaction> getTransactions(BalanceType balanceType, int max, int offset )throws CantTransactionCashMoneyException;
 
     CashMoneyTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionSummaryCashMoneyException;
 }

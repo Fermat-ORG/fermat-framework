@@ -14,11 +14,10 @@ public interface BankMoney {
 
     BankMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionBankMoneyException;
 
-    List<BankMoneyTransaction> getTransactions(
-        BalanceType balanceType,
-        int max,
-        int offset
-    )throws CantTransactionBankMoneyException;
+    BankMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionBankMoneyException;
+
+    List<BankMoneyTransaction> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionBankMoneyException;
 
     BankMoneyTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionSummaryBankMoneyException;
+
 }
