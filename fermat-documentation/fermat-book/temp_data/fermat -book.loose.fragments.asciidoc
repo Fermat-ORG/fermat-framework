@@ -1,4 +1,41 @@
+book's key ideas:
+- no linear description
+ financial network
+__________________
+content fragments (mine) :
+
+platform stack -> reusable components -> sustainable
+
+CRYPTO CURENCY ///  DIGITAL ASSETS !
+
+MULTIPLE ACTORS !
+
+HIGH LEVEL COMPONENTS and its "descomposicion"
+
+core like adn que puede activarse segun necesidad y segun environment!
+(herramientas y servicios virtuales que CREAN y/o consolidad una red, un entrono de relaciones en el MUNDO REAL )
+
+world of transformations ocurring at global scale
+
+printing -> journalismo ( cfr Alana Turing)
+
+isolation -> network -> web -> cloud -> ? decentralized
+
+disconnected --> connencted worldview
+
+no stagnation - fluid 
+
+INFO TRANSPORT ( METADATA) /// VALUE  TRANSPORT (CRYPTO TRANSACTION)
+
+BLUE OCEAN STRATEGY : distributing others technology and services instead of competing
+
+inclusivenes
+	eg. fiat over crypto / discount wallet 
+
+
+_____________
 from lesson for a thriving world
+
 transparent
 
 decentralized
@@ -23,28 +60,6 @@ There is a whole class of possible contract-based systems that could be self-enf
 
 This is an exciting area of development to watch, as old and corrupt centralized systems are gradually obsoleted by new decentralized systems that honor the integrity of every participant and are provably fair and honest.
 
-bitdubai
-
-
-OPEN SOURCE
-
-The code can be reviewed and audited by anyone.
-DECENTRALIZED
-
-It runs on end users’ devices.
-PUBLIC
-
-Anybody can connect to the Fermat P2P network and use its services. Anybody can write plug-ins for the platform.
-OPEN
-
-Anybody can participate and innovate without requiring permission.
-INCLUSIVE
-
-Any existing crypto service running outside the Fermat network / platform can be integrated and consumed from within the network.
-OPEN STANDARD
-
-Can be freely adopted, implemented and extended.
-
 ____________
 Today's Copernican flip: How putting collaborative learning at the hub of human evolution improves our chances of survival
 
@@ -60,15 +75,6 @@ bitcoin book:
 
 As a developer, I see bitcoin as akin to the Internet of money, a network for propagating value and securing the ownership of digital assets via distributed computation.
 
-Bitcoin represents the culmination of decades of research in cryptography and distributed systems and includes four key innovations brought together in a unique and powerful combination. Bitcoin consists of:
-
-A decentralized peer-to-peer network (the bitcoin protocol)
-
-A public transaction ledger (the blockchain)
-
-A decentralized mathematical and deterministic currency issuance (distributed mining)
-
-A decentralized transaction verification system (transaction script)
 
 However, neither Satoshi Nakamoto nor anyone else exerts control over the bitcoin system, which operates based on fully transparent mathematical principles. The invention itself is groundbreaking and has already spawned new science in the fields of distributed computing, economics, and econometrics.
 
