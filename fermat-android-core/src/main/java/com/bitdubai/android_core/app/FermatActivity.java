@@ -507,7 +507,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             //((FrameLayout)findViewById(R.id.header_container)).setVisibility((header!=null) ? View.VISIBLE : View.GONE);
 
 
-            ((RelativeLayout)findViewById(R.id.container_header_balance)).setVisibility((header!=null) ? View.VISIBLE : View.GONE);
+            ((RelativeLayout)findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
 
 
             //RelativeLayout container_header_balance = getActivityHeader();
@@ -1360,6 +1360,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         break;
                     case MONEY_REQUEST:
                         break;
+                    case CLOUD_CONNECTED_NOTIFICATION:
+                        launchWalletNotification(null,notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
 
                 }
 
