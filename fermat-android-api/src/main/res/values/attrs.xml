@@ -24,4 +24,8 @@
         <attr name="typeface" />
     </declare-styleable>
 
+    <declare-styleable name="FermatCheckBox">
+        <attr name="typeface" />
+    </declare-styleable>
+
 </resources>

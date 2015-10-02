@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.enums.ShowMoneyType;
