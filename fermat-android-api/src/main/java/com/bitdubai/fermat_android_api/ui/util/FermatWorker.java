@@ -5,8 +5,6 @@ import android.util.Log;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 
-import java.lang.reflect.Method;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -99,6 +97,17 @@ public abstract class FermatWorker extends Thread {
     }
 
     /**
+     * Execute this thread with single thread executor service
+     *
+     * @param executor ExecutorService to run this thread instance
+     * @return ExecutorService Reference to handled this thread. <b>Use executor.shutDown for stop the current thread instance</b>
+     */
+    public ExecutorService execute(ExecutorService executor) {
+        executor.execute(this);
+        return executor;
+    }
+
+    /**
      * Set Context
      *
      * @param context Activity Context used for init the context field and be able to call delegates on the UI Thread.
@@ -108,21 +117,21 @@ public abstract class FermatWorker extends Thread {
     }
 
     /**
-     * Set CallBack
-     *
-     * @param callBack Instance of FermatWorkerCallBack to call functions over UI Thread and handle the result
-     */
-    public void setCallBack(FermatWorkerCallBack callBack) {
-        this.callBack = callBack;
-    }
-
-    /**
      * Get Worker CallBack
      *
      * @return FermatWorkerCallBack
      */
     public FermatWorkerCallBack getCallBack() {
         return this.callBack;
+    }
+
+    /**
+     * Set CallBack
+     *
+     * @param callBack Instance of FermatWorkerCallBack to call functions over UI Thread and handle the result
+     */
+    public void setCallBack(FermatWorkerCallBack callBack) {
+        this.callBack = callBack;
     }
 
     /**

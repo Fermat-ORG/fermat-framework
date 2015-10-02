@@ -99,7 +99,13 @@ public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithBitcoin
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
         }
 
-         /**
+        //Test
+        try {
+            System.out.println("Asset Vault Address Generator Test: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.DEFAULT).getAddress());
+        } catch (GetNewCryptoAddressException e) {
+            e.printStackTrace();
+        }
+        /**
          * Nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;

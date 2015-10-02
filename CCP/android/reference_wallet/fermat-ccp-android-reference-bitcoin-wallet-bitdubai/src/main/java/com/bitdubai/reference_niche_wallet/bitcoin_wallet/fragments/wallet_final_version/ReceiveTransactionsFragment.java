@@ -94,9 +94,13 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     private LinearLayout linear_layout_receive_form;
     private AutoCompleteTextView autocompleteContacts;
     private WalletContactListAdapter contactsAdapter;
-
+    private TextView txt_type_balance;
+    private TextView txt_balance_amount;
     private WalletContact walletContact;
     private String user_address_wallet="";
+
+    private long bookBalance;
+    private long balanceAvailable;
 
     /**
      * Create a new instance of this fragment
@@ -119,12 +123,17 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         try {
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
+            balanceAvailable = loadBalance(BalanceType.AVAILABLE);
+            bookBalance = loadBalance(BalanceType.BOOK);
+
             lstCryptoWalletTransactions = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
+
+
 
 
     @Override
@@ -148,19 +157,20 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
         View balance_header = inflater.inflate(R.layout.balance_header, container_header_balance, true);
 
-        final TextView txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
+         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
 
         TextView txt_touch_to_change = (TextView) balance_header.findViewById(R.id.txt_touch_to_change);
         txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-                txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
+                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+                changeBalanceType(txt_type_balance,txt_balance_amount);
             }
         });
 
-        TextView txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
+        txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
 
         try {
             long balance = cryptoWallet.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()),referenceWalletSession.getWalletSessionType().getWalletPublicKey());
@@ -404,7 +414,39 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
 
 
+    /**
+     * Method to change the balance type
+     */
+    private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
 
+        try {
+            if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+                balanceAvailable = loadBalance(BalanceType.AVAILABLE);
+                txt_balance_amount.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
+                txt_type_balance.setText(R.string.book_balance);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
+            } else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
+                bookBalance = loadBalance(BalanceType.BOOK);
+                txt_balance_amount.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
+                txt_type_balance.setText(R.string.available_balance);
+                referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+            }
+        } catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private long loadBalance(BalanceType balanceType){
+        long balance = 0;
+        try {
+            balance = cryptoWallet.getBalance(balanceType,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+        } catch (CantGetBalanceException e) {
+            e.printStackTrace();
+        }
+        return balance;
+    }
 
 
 

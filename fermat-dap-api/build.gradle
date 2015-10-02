@@ -8,4 +8,5 @@ dependencies {
     compile project(':fermat-cry-api')
     compile project(':fermat-bch-api')
     testCompile 'junit:junit:4.12'
+    compile project(':fermat-wpd-api')
 }

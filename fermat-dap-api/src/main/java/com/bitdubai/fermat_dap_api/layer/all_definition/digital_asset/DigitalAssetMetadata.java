@@ -16,6 +16,11 @@ public class DigitalAssetMetadata {
         this.digitalAsset = digitalAsset;
     }
 
+    //I'm gonna add this constructor for now, TODO: I need to make a test to get this object with this constructor and without it
+    public DigitalAssetMetadata(){
+        this.digitalAsset = null;
+    }
+
     private String  generateHash(){
         digitalAsset.setState(State.FINAL);
         return CryptoHasher.performSha256(digitalAsset.toString());
@@ -47,6 +52,9 @@ public class DigitalAssetMetadata {
 
     public DigitalAsset getDigitalAsset(){
         return this.digitalAsset;
+    }
+    public void setDigitalAsset(DigitalAsset digitalAsset){
+        this.digitalAsset=digitalAsset;
     }
 
 }

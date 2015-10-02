@@ -60,6 +60,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetMetadataVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
@@ -184,6 +185,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                 throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Issuing plugin - "+this.pluginId, "Cannot open or create the plugin database");
             }
         }try{
+            DigitalAssetMetadataVault digitalAssetMetadataVault=new DigitalAssetMetadataVault(this.pluginId, this.pluginFileSystem);
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
                     this.cryptoVaultManager,
                     this.cryptoWallet,
@@ -193,7 +195,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.assetVaultManager,
                     this.cryptoAddressBookManager,
                     this.outgoingIntraActorManager);
-
+            this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
             //Start the plugin event Recorder
             //I will comment the EventRecorderService start, because I don't need this right now, it starting without problems.
             /*this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
