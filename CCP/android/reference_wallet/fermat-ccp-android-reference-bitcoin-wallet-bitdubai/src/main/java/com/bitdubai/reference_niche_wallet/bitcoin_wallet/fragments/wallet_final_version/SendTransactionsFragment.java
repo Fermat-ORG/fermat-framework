@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -171,13 +172,13 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                         Fx.slide_up(getActivity(), linear_layout_send_form);
                         linear_layout_send_form.setVisibility(View.GONE);
                         if(lstCryptoWalletTransactions.isEmpty()){
-                            empty.setVisibility(View.VISIBLE);
+                            ((ImageView)rootView.findViewById(R.id.image_empty)).setVisibility(View.VISIBLE);
                         }
                         //showDialog();
                     } else {
                         linear_layout_send_form.setVisibility(View.VISIBLE);
                         Fx.slide_down(getActivity(), linear_layout_send_form);
-                        empty.setVisibility(View.GONE);
+                        ((ImageView)rootView.findViewById(R.id.image_empty)).setVisibility(View.GONE);
                     }
 
                 }
