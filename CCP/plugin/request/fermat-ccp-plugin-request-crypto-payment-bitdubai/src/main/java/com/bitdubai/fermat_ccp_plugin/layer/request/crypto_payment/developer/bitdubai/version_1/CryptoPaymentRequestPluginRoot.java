@@ -10,6 +10,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.DealsWithOutgoingIntraActor;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestApprovedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestDeniedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestRefusedEventHandler;
@@ -32,7 +36,19 @@ import java.util.UUID;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public class CryptoPaymentRequestPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class CryptoPaymentRequestPluginRoot implements
+        DealsWithCryptoPaymentRequestNetworkService,
+        DealsWithErrors,
+        DealsWithEvents,
+        DealsWithOutgoingIntraActor,
+        DealsWithPluginDatabaseSystem,
+        Plugin,
+        Service {
+
+    /**
+     * DealsWithCryptoPaymentRequestNetworkService Interface member variables
+     */
+    private CryptoPaymentRequestManager cryptoPaymentRequestManager;
 
     /*
      * DealsWithErrors Interface member variables.
@@ -44,6 +60,11 @@ public class CryptoPaymentRequestPluginRoot implements DealsWithErrors, DealsWit
      */
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
+
+    /**
+     * DealsWithOutgoingIntraActor Interface member variables
+     */
+    private OutgoingIntraActorManager outgoingIntraActorManager;
 
     /*
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -124,9 +145,14 @@ public class CryptoPaymentRequestPluginRoot implements DealsWithErrors, DealsWit
         this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
+    @Override
+    public void setCryptoPaymentRequestManager(CryptoPaymentRequestManager cryptoPaymentRequestManager) {
+        this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
+    }
+
     /*
-     * DealsWithErrors Interface implementation
-     */
+         * DealsWithErrors Interface implementation
+         */
     @Override
     public void setErrorManager(final ErrorManager errorManager) {
         this.errorManager = errorManager;
@@ -140,9 +166,14 @@ public class CryptoPaymentRequestPluginRoot implements DealsWithErrors, DealsWit
         this.eventManager = eventManager;
     }
 
+    @Override
+    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
+        this.outgoingIntraActorManager = outgoingIntraActorManager;
+    }
+
     /*
-     * DealsWithPluginDatabaseSystem Interface implementation
-     */
+         * DealsWithPluginDatabaseSystem Interface implementation
+         */
     @Override
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystemManager;
