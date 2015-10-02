@@ -39,7 +39,7 @@ TIP: Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need
 
 
 === FERMAT as a system of platforms
-FERMAT was originally conceived as a new platform for wallet production to reach end user's that were ready to adopt cryptocurrency but did not want to get involved in the technichal aspecting of programming or needing developer{ s skills to use them. The initial goal could be reached and at the same time the technology to be developed was thought to expand the possibilities of wallets to marketing agencies to rebrand wallets  for their customers and event reach to the retailers circuit in a very convinient way. After the first months of development where the team has rapidly grown to more than 20 people, the implications of FERMAT{ s conceptual framework led to the exploration and development of new applications, that reorganized, have turn FERMAT instead of a platform into a system of platforms ( a platform stack) based on a plug-in architecture to be implemented as a distributed system that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+FERMAT was originally conceived as a new platform for wallet production to reach end user's that were ready to adopt cryptocurrency but did not want to get involved in the technichal aspecting of programming or needing developer's skills to use them. The initial goal could be reached and at the same time the technology to be developed was thought to expand the possibilities of wallets to marketing agencies to rebrand wallets  for their customers and event reach to the retailers circuit in a very convinient way. After the first months of development where the team has rapidly grown to more than 20 people, the implications of FERMAT{ s conceptual framework led to the exploration and development of new applications, that reorganized, have turn FERMAT instead of a platform into a system of platforms ( a platform stack) based on a plug-in architecture to be implemented as a distributed system that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
 * OPEN SOURCE
 The code can be reviewed and audited by anyone.
@@ -65,21 +65,33 @@ Cryptocurrencies are born into existent by a very specific mathemathical algorit
 
 FERMAT understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is unique, and therefore there are potentially so many differents ways of shaping the accessibility, appearance and functionality of applications dealing with cryptocurrencies and blockchain technology to match very specific need and scalable demand of each consumer's niche. Here begins the huge differentation between FERMAT applications and the rest ! FERMAT takes very seriously into account the actor's profile to develop attractive application in each case.
 
+# BitWa (Basic Bitcoin wallet)  ->> for those devoted "BTC-only" users!
+# Argentine Bitcoin wallet ->> for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady comparison between argentine$, USD (oficial and blue!) and even Eu$!)
+# Bitcoin Loss Protected Wallet --> for conservative user{s caring about never selling under the purchase price ! ( preserving value !)
+# Discount Wallet -> for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)
+
 
 === Specific architecture 
 :numbered!:
 FERMAT consists of small applications called plug-ins that run a small and very specific set of rules to process certain input data and to get " its job done " by offering an output data with a well defined structure. Each plug-in is given certain responsability within the whole environment where it dwells and they are set to operate into different layers that stack one over the other building a hierachical structure where responsability is transfered from the lower layer onto the next upper one. The plug-ins sharing alike purposes live in the same layer but they also build a second array in columns if the depend one another to provide certain functionality. 
  
-==== General overview on layers
+==== General overview on layers and wallets
 
-* FERMAT OSA (operating system )
+
 * FERMAT CORE
-* FERMAT P2P ( network and communication layers)
-* FERMAT BCH (blockchain)
+** FERMAT OSA (operating system )
+** FERMAT P2P ( network and communication layers)
+** FERMAT BCH (blockchain)
 ** FERMAT PIP
-*** FERMAT WPD (wallet production)
-*** FERMAT DPN (digital privat network)
-**** FERMAT CCP (crypto currency platform)
+* FERMAT WPD (wallet production)
+* FERMAT CCP (crypto currency platform)
+** BitWa ( Bitcoin Wallet)
+** BLP (Bitcoin Loss Protected wallet)
+* FERMAT CCM (Crypto Currency Money)
+** CCM (Crypto Currency Money)
+** DiWa (Discount Wallet)
+
+
 **** FERMAT SHP (shop platform)
 **** FERMAT DAP (digital assets platform)
 
