@@ -249,12 +249,12 @@ public class BalanceFragment extends FermatWalletFragment {
                 )
             );
 
-//            for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
-//                if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
-//                    ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
-//                    lstData.add(listComponent);
-//                }
-//            }
+           for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
+               if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
+                   ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
+                   lstData.add(listComponent);
+                }
+            }
 
             Resources res = getResources();
 
