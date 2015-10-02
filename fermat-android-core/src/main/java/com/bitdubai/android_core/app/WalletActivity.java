@@ -6,15 +6,11 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -36,13 +32,10 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.C
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 
 /**
@@ -50,7 +43,7 @@ import java.lang.reflect.Method;
  */
 
 
-public class WalletActivity extends FermatActivity implements FermatScreenSwapper {
+public class WalletActivity extends FermatActivity implements FermatScreenSwapper,com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 
     public static final String INSTALLED_WALLET="installedWallet";
@@ -155,6 +148,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
     }
 
 
@@ -166,7 +160,17 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+        try{
+
+            if(savedInstanceState==null){
+                savedInstanceState=new Bundle();
+            }else
+            super.onRestoreInstanceState(savedInstanceState);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
 
@@ -322,7 +326,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                     walletSession = getWalletSessionManager().getWalletSession(lastWallet.getWalletPublicKey());
                 } else {
                     WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
-                    walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),walletSettings, getWalletResourcesProviderManager(), getErrorManager());
+                    walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),walletSettings, getWalletResourcesProviderManager(), getErrorManager(),getCryptoBrokerWalletModuleManager());
                 }
             }
         }catch (Exception e){
@@ -362,9 +366,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //        }
 
         try {
-            //resetThisActivity();
+            resetThisActivity();
 
-            getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
+            Activity activity = getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
 
 
 
@@ -399,10 +403,20 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
                 //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 //startActivity(intent);
+
+
+                for(int i=0;i<activity.getFragments().size();i++){
+                    getFragmentManager().popBackStack();
+                }
+
+                //NavigationDrawerFragment.onDetach();
+                //NavigationDrawerFragment = null;
+
                 recreate();
                 //finish();
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 //System.gc();
+
 
             }catch (Exception e){
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -501,5 +515,17 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     protected void onStop() {
         super.onStop();
 
+    }
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     * @param activityCode
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position, String activityCode) {
+        Toast.makeText(this,activityCode,Toast.LENGTH_LONG).show();
+        changeActivity(activityCode);
     }
 }

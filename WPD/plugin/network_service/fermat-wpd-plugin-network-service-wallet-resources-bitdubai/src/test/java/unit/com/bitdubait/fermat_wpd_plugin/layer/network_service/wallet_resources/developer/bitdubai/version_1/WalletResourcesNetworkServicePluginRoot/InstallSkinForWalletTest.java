@@ -2,7 +2,7 @@ package unit.com.bitdubait.fermat_wpd_plugin.layer.network_service.wallet_resour
 
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -108,7 +108,7 @@ public class InstallSkinForWalletTest extends TestCase {
     public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
 //TODO error parseando el skin, al parecer la estructura subida al repo no es correcta - se debe actualizar
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde",  "navigationStructureVersion");
+        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "mati_wallet_verde",  "navigationStructureVersion","walletPublicKey");
           assertThat(caughtException()).isNotNull();
 
     }
@@ -118,7 +118,7 @@ public class InstallSkinForWalletTest extends TestCase {
     public void testInstallCompleteWallet_FileNotFoundThrowsWalletResourcesInstalationException() throws Exception {
 
         walletResourcePluginRoot.start();
-        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "skin",  "navigationStructureVersion");
+        catchException(walletResourcePluginRoot).installSkinForWallet("reference_wallet", "bitcoin_wallet", "bitDubai", "medium", "skin",  "navigationStructureVersion","walletPublicKey");
         assertThat(caughtException()).isInstanceOf(WalletResourcesInstalationException.class);
 
     }
