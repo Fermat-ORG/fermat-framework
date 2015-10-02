@@ -2,7 +2,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bi
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.UUID;
 
@@ -27,15 +26,20 @@ public class CryptoPaymentRequestEventActions {
         this.pluginId                    = pluginId                   ;
     }
 
-    public void handleCryptoPaymentRequestApproved(UUID requestId){
+    public void executePendingRequestActions() {
 
     }
 
-    public void handleCryptoPaymentRequestDenied(UUID requestId){
+    public void handleCryptoPaymentRequestApproved(UUID requestId) {
 
     }
 
-    public void handleCryptoPaymentRequestRefused(UUID requestId){
+    public void handleCryptoPaymentRequestDenied(UUID requestId) {
 
     }
+
+    public void handleCryptoPaymentRequestRefused(UUID requestId) {
+
+    }
+
 }
