@@ -29,6 +29,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -503,7 +504,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             }
 
-            ((FrameLayout)findViewById(R.id.header_container)).setVisibility((header!=null) ? View.VISIBLE : View.GONE);
+            //((FrameLayout)findViewById(R.id.header_container)).setVisibility((header!=null) ? View.VISIBLE : View.GONE);
+
+
+            ((RelativeLayout)findViewById(R.id.container_header_balance)).setVisibility((header!=null) ? View.VISIBLE : View.GONE);
 
 
             //RelativeLayout container_header_balance = getActivityHeader();
