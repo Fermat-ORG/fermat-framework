@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
@@ -1552,6 +1553,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         MenuItem runtimeMenuItem;
         TabStrip runtimeTabStrip;
         StatusBar runtimeStatusBar;
+        Header runtimeHeader;
 
         Tab runtimeTab;
 
@@ -1570,6 +1572,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setColor("#8bba9e");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("Balance");
+
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");
@@ -1625,10 +1631,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         */
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Contacts");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
-        runtimeTabStrip.addTab(runtimeTab);
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Contacts");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+//        runtimeTabStrip.addTab(runtimeTab);
 
 
 
