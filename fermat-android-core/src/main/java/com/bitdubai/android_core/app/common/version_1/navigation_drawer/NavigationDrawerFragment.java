@@ -349,6 +349,7 @@ public class NavigationDrawerFragment extends Fragment {
         super.onDetach();
         mCallbacks = null;
         mFragmentContainerView = null;
+        onPause();
     }
 
 
