@@ -3,7 +3,7 @@ package com.bitdubai.sub_app.intra_user.common.models;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.intra_user_identity.R;
 
