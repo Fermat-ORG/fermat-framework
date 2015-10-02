@@ -15,6 +15,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheck
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
@@ -125,7 +126,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), "Asset deleted successfully", Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+                    changeActivity(Activities.DAP_MAIN.getCode());
                 }
             }
 
@@ -142,6 +143,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     }
 
     private void saveAsset() {
+        asset.setPublicKey("asset-factory-public-key");//// TODO: 02/10/15 set public key
         asset.setName(nameView.getText().toString().trim());
         asset.setDescription(descriptionView.getText().toString().trim());
         asset.setQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
@@ -174,7 +176,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     Toast.makeText(getActivity(), String.format("Asset %s has been created", asset.getName()), Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+                    changeActivity(Activities.DAP_MAIN.getCode());
                 }
             }
 
@@ -187,6 +189,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 }
             }
         });
+        worker.execute();
     }
 
     public void setIsEdit(boolean isEdit) {

@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_section"
+        android:elevation="2dp"
         android:ems="10"
         android:hint="Name"
         android:imeOptions="actionNext"
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/shape_section"
+        android:elevation="2dp"
         android:ems="10"
         android:hint="Description"
         android:imeOptions="actionNext"
@@ -41,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/shape_section"
+        android:elevation="2dp"
         android:ems="10"
         android:hint="Quantity"
         android:imeOptions="actionNext"
@@ -56,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/shape_section"
+        android:elevation="2dp"
         android:ems="10"
         android:hint="Bitcoins"
         android:imeOptions="actionNext"
@@ -71,8 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/shape_section"
+        android:elevation="2dp"
         android:ems="10"
-        android:enabled="false"
         android:hint="Expiration Date y/m/d h:m:s)"
         android:imeOptions="actionNext"
         android:inputType="datetime"
@@ -87,7 +91,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="This asset is redeemable" />
+        android:text="This asset is redeemable"
+        android:textColor="@color/black" />
 
 
     <LinearLayout
