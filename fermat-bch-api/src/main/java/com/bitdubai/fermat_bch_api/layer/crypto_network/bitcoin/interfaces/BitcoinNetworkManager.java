@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 
+import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.wallet.DeterministicSeed;
 
 /**
@@ -16,4 +17,6 @@ public interface BitcoinNetworkManager {
      * @throws CantMonitorBitcoinNetworkException
      */
         void monitorNetworkFromSeed(BlockchainNetworkType blockchainNetworkType, DeterministicSeed deterministicSeed) throws CantMonitorBitcoinNetworkException;
+
+        void monitorNetworkFromWatchingKey(BlockchainNetworkType blockchainNetworkType, DeterministicKey watchingKey) throws CantMonitorBitcoinNetworkException;
 }
