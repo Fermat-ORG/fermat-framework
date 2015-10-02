@@ -15,7 +15,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.AssetFactoryAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
@@ -23,7 +25,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
-import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +37,17 @@ import java.util.List;
  */
 public class MainFragment extends FermatFragment implements FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener {
 
+    /**
+     * asset to edit
+     */
+    private static AssetFactory selectedAsset;
     private final String TAG = "DapMain";
-
     private ArrayList<AssetFactory> dataSet;
     private AssetFactoryModuleManager manager;
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private AssetFactoryAdapter adapter;
-
     // custom inflater
     private ViewInflater viewInflater;
 
@@ -55,6 +57,10 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
 
     public static MainFragment newInstance() {
         return new MainFragment();
+    }
+
+    public static AssetFactory getAssetForEdit() {
+        return selectedAsset;
     }
 
     @Override
@@ -115,7 +121,8 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
                 dataSet = (ArrayList<AssetFactory>) result[0];
                 adapter.changeDataSet(dataSet);
                 if (dataSet == null || dataSet.isEmpty()) {
-                    //// TODO: 01/10/15 Change to Create new Asset Factory
+                    /* create new asset */
+                    changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
                 }
             }
         }
@@ -145,6 +152,5 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
             };
             worker.execute();
         }
-
     }
 }
