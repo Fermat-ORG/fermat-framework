@@ -524,7 +524,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }*/
 
     @Override
-    public void setOutgoingIntraUserManager(OutgoingIntraActorManager outgoingIntraActorManager) {
+    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
         this.outgoingIntraActorManager = outgoingIntraActorManager;
     }
 }
