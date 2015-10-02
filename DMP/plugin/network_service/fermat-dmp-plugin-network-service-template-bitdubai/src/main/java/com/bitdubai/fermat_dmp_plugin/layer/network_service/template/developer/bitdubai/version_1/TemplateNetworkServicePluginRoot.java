@@ -232,7 +232,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-
          /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
