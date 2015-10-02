@@ -246,7 +246,7 @@ public class CryptoPaymentRequestDao {
         record.setLongValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME   , cryptoPaymentRequestRecord.getStartTimeStamp()                                 );
 
         if(cryptoPaymentRequestRecord.getEndTimeStamp() != 0)
-            record.setLongValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_END_TIME_STAMP_COLUMN_NAME     , cryptoPaymentRequestRecord.getEndTimeStamp()                                   );
+            record.setLongValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_END_TIME_STAMP_COLUMN_NAME, cryptoPaymentRequestRecord.getEndTimeStamp());
 
         return record;
     }
