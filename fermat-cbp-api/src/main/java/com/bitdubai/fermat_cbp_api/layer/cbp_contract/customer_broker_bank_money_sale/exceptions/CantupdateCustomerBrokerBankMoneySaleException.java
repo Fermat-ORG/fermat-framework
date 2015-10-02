@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by angel on 18/9/15.
  */
-public class CantupdateStatusCustomerBrokerBankMoneySaleException extends FermatException {
+public class CantupdateCustomerBrokerBankMoneySaleException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE THE STATUS THE CONTRACT CUSTOMER BROKER BANK MONEY SALE";
+    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE THE CONTRACT CUSTOMER BROKER BANK MONEY SALE";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,8 @@ public class CantupdateStatusCustomerBrokerBankMoneySaleException extends Fermat
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantupdateStatusCustomerBrokerBankMoneySaleException(String message, Exception cause, String context, String possibleReason) {
+    public CantupdateCustomerBrokerBankMoneySaleException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
+
