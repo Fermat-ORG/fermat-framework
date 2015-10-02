@@ -1,0 +1,46 @@
+package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.digital_asset_distributor;
+
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetDistributor;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+/**
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/09/15.
+ */
+public class IsValidContractTest {
+
+    ContractProperty datePropertySetAsActual;
+    public IsValidContractTest(){
+
+        datePropertySetAsActual=new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE.toString(), null);
+        Date date= new java.util.Date();
+        datePropertySetAsActual.setValue(new Timestamp(date.getTime()));
+        System.out.println("Present time: " + datePropertySetAsActual.getValue());
+    }
+
+    @Test
+    public void getTheTimestampFromContractPropertyTest(){
+
+        Timestamp expirationDate= (Timestamp)datePropertySetAsActual.getValue();
+        System.out.println("Timestamp from ContractProperty: "+expirationDate);
+
+    }
+
+    @Test
+    public void afterTest(){
+        Timestamp expirationDate= (Timestamp)datePropertySetAsActual.getValue();
+        Date date= new java.util.Date();
+        Timestamp actualTime=new Timestamp(date.getTime());
+        System.out.println("Before Test - Timestamp from ContractProperty: " + expirationDate);
+        System.out.println("Before Test - Timestamp from ActualTime: " + actualTime);
+        Assert.assertTrue("Result:",expirationDate.after(actualTime));
+    }
+
+}

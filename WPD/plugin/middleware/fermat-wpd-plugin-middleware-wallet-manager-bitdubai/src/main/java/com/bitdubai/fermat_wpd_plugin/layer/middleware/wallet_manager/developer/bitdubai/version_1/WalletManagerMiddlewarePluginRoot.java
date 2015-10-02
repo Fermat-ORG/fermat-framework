@@ -39,11 +39,10 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.In
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletInstallationProcess;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.WalletManagerManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
-
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.DealsWithWalletResources;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesInstalationManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -397,11 +396,11 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             throw new CantListWalletsException("CAN'T INSTALL REQUESTED Language",FermatException.wrapException(exception), null, null);
         }
         //Voy a harcodear esto para tener la reference wallet instalada
-        return installedWallets;
+        //return installedWallets;
 
 
         // Harcoded para testear el circuito más arriba
-       /* InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.REFERENCE_WALLET,
+       InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.REFERENCE_WALLET,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",
@@ -412,14 +411,14 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
                 WalletType.REFERENCE,
                 "300",
                 "1",
-                "1",
+                UUID.randomUUID(),
                 "Natalia",
                 ""
                 );
 
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
         lstInstalledWallet.add(installedWallet);
-        return lstInstalledWallet;*/
+        return lstInstalledWallet;
 
     }
 

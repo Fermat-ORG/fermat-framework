@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
@@ -46,28 +47,22 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
 
-    /**
-     * BitcoinWalletBasicWallet member variables.
-     */
     private Database database;
 
-    private Map<String, UUID> walletIds = new HashMap<>();
+    private final ErrorManager         errorManager        ;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final PluginFileSystem     pluginFileSystem    ;
+    private final UUID                 pluginId            ;
 
-    private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
+    public BitcoinWalletBasicWallet(final ErrorManager         errorManager        ,
+                                    final PluginDatabaseSystem pluginDatabaseSystem,
+                                    final PluginFileSystem     pluginFileSystem    ,
+                                    final UUID                 pluginId            ) {
 
-    private ErrorManager errorManager;
-
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    private PluginFileSystem pluginFileSystem;
-
-    private UUID pluginId;
-
-    public BitcoinWalletBasicWallet(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.errorManager = errorManager;
+        this.errorManager         = errorManager        ;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
+        this.pluginFileSystem     = pluginFileSystem    ;
+        this.pluginId             = pluginId            ;
     }
 
     //metodo create para crear la base de datos
@@ -112,9 +107,9 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
             UUID internalWalletId = UUID.randomUUID();
             createWalletDatabase(internalWalletId);
             PluginTextFile walletIdsFile = createIdsFile();
-            loadWalletIdsMap(walletIdsFile);
-            walletIds.put(walletId, internalWalletId);
-            persistWalletIds(walletIdsFile);
+            Map<String, UUID> walletsIdMap = getWalletIdsMap(walletIdsFile);
+            walletsIdMap.put(walletId, internalWalletId);
+            persistWalletIds(walletIdsFile, walletsIdMap);
             return internalWalletId;
         } catch (CantCreateWalletException exception) {
             throw exception;
@@ -125,51 +120,71 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,
-                                                           int max,
-                                                           int offset) throws CantListTransactionsException {
-        try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            return bitcoinWalletBasicWalletDao.listTransactions(balanceType, max, offset);
-        } catch (CantListTransactionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw exception;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
-    @Override
-    public List<BitcoinWalletTransaction> listTransactionsByActor(String      actorPublicKey,
-                                                                  BalanceType balanceType,
-                                                                  int         max,
-                                                                  int         offset) throws CantListTransactionsException {
+    public List<BitcoinWalletTransaction> listTransactions(BalanceType     balanceType    ,
+                                                           TransactionType transactionType,
+                                                           int             max            ,
+                                                           int             offset         ) throws CantListTransactionsException {
 
         try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            return bitcoinWalletBasicWalletDao.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
-        } catch (CantListTransactionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw exception;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
 
-    @Override
-    public List<BitcoinWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
-                                                                                     TransactionType transactionType,
-                                                                                     int             max,
-                                                                                     int             offset) throws CantListTransactionsException {
-
-        try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            return bitcoinWalletBasicWalletDao.listLastActorTransactionsByTransactionType(
-                    balanceType,
+            return bitcoinWalletBasicWalletDao.listTransactions(
+                    balanceType    ,
                     transactionType,
-                    max,
+                    max            ,
+                    offset
+            );
+
+        } catch (CantListTransactionsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw exception;
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<BitcoinWalletTransaction> listTransactionsByActor(final String      actorPublicKey,
+                                                                  final BalanceType balanceType   ,
+                                                                  final int         max           ,
+                                                                  final int         offset        ) throws CantListTransactionsException {
+
+        try {
+
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+
+            return bitcoinWalletBasicWalletDao.listTransactionsByActor(
+                    actorPublicKey,
+                    balanceType   ,
+                    max           ,
+                    offset
+            );
+
+        } catch (CantListTransactionsException exception) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw exception;
+        } catch (Exception exception) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<BitcoinWalletTransaction> listLastActorTransactionsByTransactionType(final BalanceType     balanceType    ,
+                                                                                     final TransactionType transactionType,
+                                                                                     final int             max            ,
+                                                                                     final int             offset         ) throws CantListTransactionsException {
+
+        try {
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+
+            return bitcoinWalletBasicWalletDao.listLastActorTransactionsByTransactionType(
+                    balanceType    ,
+                    transactionType,
+                    max            ,
                     offset
             );
         } catch (CantListTransactionsException exception) {
@@ -182,10 +197,17 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public void setTransactionDescription(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException {
+    public void setTransactionDescription(final UUID   transactionID,
+                                          final String memo         ) throws CantStoreMemoException       ,
+                                                                       CantFindTransactionException {
         try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            bitcoinWalletBasicWalletDao.updateMemoFiled(transactionID, memo);
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+
+            bitcoinWalletBasicWalletDao.updateMemoFiled(
+                    transactionID,
+                    memo
+            );
+
         } catch (CantStoreMemoException | CantFindTransactionException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
@@ -196,26 +218,35 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     }
 
     @Override
-    public BitcoinWalletBalance getBalance(BalanceType balanceType) {
+    public BitcoinWalletBalance getBalance(final BalanceType balanceType) {
+
         switch (balanceType) {
             case AVAILABLE:
                 return new BitcoinWalletBasicWalletAvailableBalance(database);
             case BOOK:
-                return new BitcoinWalletBasicWalletBookBalance(database);
+                return new BitcoinWalletBasicWalletBookBalance     (database);
             default:
                 return new BitcoinWalletBasicWalletAvailableBalance(database);
         }
     }
 
     @Override
-    public BitcoinWalletTransactionSummary getActorTransactionSummary(String actorPublicKey, BalanceType balanceType) throws CantGetActorTransactionSummaryException {
+    public BitcoinWalletTransactionSummary getActorTransactionSummary(final String      actorPublicKey,
+                                                                      final BalanceType balanceType   ) throws CantGetActorTransactionSummaryException {
         try {
-            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
-            return bitcoinWalletBasicWalletDao.getActorTransactionSummary(actorPublicKey, balanceType);
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+
+            return bitcoinWalletBasicWalletDao.getActorTransactionSummary(
+                    actorPublicKey,
+                    balanceType
+            );
+
         } catch (CantGetActorTransactionSummaryException exception) {
+
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
+
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantGetActorTransactionSummaryException(CantGetActorTransactionSummaryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
@@ -233,7 +264,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
     private PluginTextFile createIdsFile() throws CantCreateWalletException {
         try {
-            return pluginFileSystem.getTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            return pluginFileSystem.getTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException cantCreateFileException) {
             throw new CantCreateWalletException("File could not be created (?)", cantCreateFileException, "File Name: " + WALLET_IDS_FILE_NAME, "");
         } catch (FileNotFoundException e) {
@@ -241,37 +272,40 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
         }
     }
 
-    private void loadWalletIdsMap(final PluginTextFile walletIdsFile) throws CantCreateWalletException {
+    private Map<String, UUID> getWalletIdsMap(final PluginTextFile walletIdsFile) throws CantCreateWalletException {
+
         try {
+
+            Map<String, UUID> walletIds = new HashMap<>();
             walletIdsFile.loadFromMedia();
-            String[] stringWalletIds = walletIdsFile.getContent().split(";", -1);
+            String[] stringWalletIds = walletIdsFile.getContent().split(";");
 
             for (String stringWalletId : stringWalletIds) {
 
                 if (!stringWalletId.equals("")) {
-                    String[] idPair = stringWalletId.split(",", -1);
+                    String[] idPair = stringWalletId.split(",");
                     walletIds.put(idPair[0], UUID.fromString(idPair[1]));
                 }
             }
+
+            return walletIds;
+
         } catch (CantLoadFileException exception) {
             throw new CantCreateWalletException("Can't load file content from media", exception, "", "");
         }
     }
 
-    private void persistWalletIds(final PluginTextFile walletIdsFile) throws CantCreateWalletException {
-        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
-        Iterator iterator = walletIds.entrySet().iterator();
+    private void persistWalletIds(final PluginTextFile    walletIdsFile,
+                                  final Map<String, UUID> walletsIdMap ) throws CantCreateWalletException {
 
-        while (iterator.hasNext()) {
-            Map.Entry pair = (Map.Entry) iterator.next();
+        StringBuilder stringBuilder = new StringBuilder();
 
+        for (Map.Entry pair : walletsIdMap.entrySet()) {
             stringBuilder
                     .append(pair.getKey().toString())
                     .append(",")
                     .append(pair.getValue().toString())
                     .append(";");
-
-            iterator.remove();
         }
 
         walletIdsFile.setContent(stringBuilder.toString());

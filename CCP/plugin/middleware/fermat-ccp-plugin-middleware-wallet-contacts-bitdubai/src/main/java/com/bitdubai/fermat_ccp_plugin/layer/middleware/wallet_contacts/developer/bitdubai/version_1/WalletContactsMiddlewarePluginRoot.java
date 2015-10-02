@@ -183,7 +183,7 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
 
         } catch (CantListPendingAddressExchangeRequestsException | CantHandleCryptoAddressReceivedEventException e) {
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

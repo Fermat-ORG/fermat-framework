@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdu
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -24,6 +25,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreate
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -46,8 +49,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     private Map<String, UUID> walletAssetIssuer = new HashMap<>();
 
     //TODO: Implementar clase DAO y los metodos de la interfaz manager y otros metodos.
-    //private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
-
+    private AssetIssuerWalletDao assetIssuerWalletDao;
     private ErrorManager errorManager;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -126,9 +128,15 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         }
     }
 
-    private void createWalletDatabase(final UUID internalWalleid) throws CantCreateWalletException
+    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException
     {
-
+        try {
+            AssetIssuerWalletDatabaseFactory databaseFactory = new AssetIssuerWalletDatabaseFactory();
+            databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
+            database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            throw new CantCreateWalletException("Database could not be created", cantCreateDatabaseException, "internalWalletId: " + internalWalletId.toString(), "");
+        }
     }
 
     private void persistAssetIssuerWallet(final PluginTextFile pluginTextFile) throws CantCreateWalletException
@@ -159,12 +167,13 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     @Override
     public AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
-        return null;
+        return new AssetIssuerWallletBalanceImpl(database);
     }
 
     @Override
-    public List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType, int max, int offset) throws CantGetTransactionsException {
-        return null;
+    public List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException {
+        assetIssuerWalletDao = new AssetIssuerWalletDao(database);
+        return assetIssuerWalletDao.listsTransactionsByAssets(balanceType, transactionType, max, offset, assetPublicKey);
     }
 
     @Override

@@ -27,15 +27,17 @@ public class AssetIssuingTransactionDatabaseConstants {
     public static final String DIGITAL_ASSET_TRANSACTION_FIRST_KEY_COLUMN = "digital_asset_public_key";
 
     /**
-     * Transition protocol status database table definition.
+     * Events recorded database table definition.
      */
-    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_NAME = "transition_protocol_status";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME = "issuing_events_recorded";
 
-    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_PROTOCOL_STATUS = "protocol_status";
-    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TIMESTAMP_COLUMN_NAME = "timestamp";
-    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_OCCURRENCES_COLUMN_NAME = "occurrences";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_ID_COLUMN = "event_id";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_EVENT_COLUMN = "event";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_SOURCE_COLUMN = "source";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_STATUS_COLUMN = "status";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN = "timestamp";
 
-    public static final String DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_FIRST_KEY_COLUMN = "protocol_status";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
 
     /**
      * Asset Issuing database table definition.

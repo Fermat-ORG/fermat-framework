@@ -24,9 +24,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.sub_app.wallet_factory.R;
-import com.bitdubai.sub_app.wallet_factory.models.Wallet;
 
 import java.util.ArrayList;
 
@@ -37,7 +37,7 @@ import java.util.ArrayList;
  * @author Matias Furszy
  * @version 1.0
  */
-public class AvailableProjectsFragmentOld extends FermatFragment {
+public class AvailableProjectsFragmentOld extends FermatFragment implements FermatCallback{
 
     /**
      * Views
@@ -54,6 +54,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
         wallets = new ArrayList<>();
         Wallet wallet = new Wallet();
         wallet.setNavigation(startWalletNavigationStructure());
@@ -65,14 +66,15 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         wallets.add(wallet);
         wallets.add(wallet);
         wallets.add(wallet);
+        */
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.factory_available_projects_fragment, container, false);
+        rootView = inflater.inflate(R.layout.factory_available_projects_old_fragment, container, false);
 
-        //listView = (ListView) rootView.findViewById(R.id.projects);
+        listView = (ListView) rootView.findViewById(R.id.projects);
         ArrayAdapter<InstalledWallet> adapter = new ArrayAdapter<InstalledWallet>(getActivity(), android.R.layout.simple_list_item_1, wallets);
         listView.setAdapter(adapter);
 
@@ -85,13 +87,19 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
                  * Usá el metodo ese de changeActivity, y pasale esos parametros, despues lo que va a hacer esto es pintarte en la pantalla toda la wallet con tu estructura de navegación
                  * y los fragmentos nuevos que acabas de poner
                  */
+//
 
                 Object[] o = new Object[2];
                 o[0] = (Object) startWalletNavigationStructure();
                 o[1] = (Object) wallets.get(i);
 
                 //TODO: Como tercer parametro me tenes que pasar el Skin de la wallet que vas a cambiar así lo pinto por pantalla y se va cambiando
+
+                //TODO: tenes que conseguir el skin desde el tu module o desde algún lado
                 //o[2] = (Object)
+
+
+                o[3] = this;
                 changeActivity(Activities.CWP_WALLET_FACTORY_EDIT_WALLET.getCode(), o);
             }
         });
@@ -124,7 +132,7 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        publicKey = "reference_wallet";
+        publicKey = "test_wallet";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
 
@@ -364,5 +372,15 @@ public class AvailableProjectsFragmentOld extends FermatFragment {
 
 
         return runtimeWalletNavigationStructure;
+    }
+
+    @Override
+    public void onTouchView(Object v) {
+
+    }
+
+    @Override
+    public int getCallBackId() {
+        return 0;
     }
 }

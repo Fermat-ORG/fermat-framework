@@ -4,10 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.ccp_identity.designer.exceptions.CantSingMessageException;
-import com.bitdubai.fermat_api.layer.ccp_identity.designer.interfaces.DesignerIdentity;
-import com.bitdubai.fermat_api.layer.ccp_network_service.wallet_store.interfaces.Designer;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,7 +24,7 @@ public class GenerateString {
         skin.setName("SkinTest");
         skin.setScreenSize(ScreenSize.MEDIUM);
 
-        skin.setDesigner(designerIdentity);
+        //skin.setDesigner(designerIdentity);
         skin.setSize(100);
         skin.setVersion(new Version("1.0.0"));
 

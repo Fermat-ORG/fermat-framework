@@ -41,7 +41,7 @@ public interface BitcoinWalletWallet {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,
+    List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,TransactionType transactionType,
                                                     int         max,
                                                     int         offset) throws CantListTransactionsException;
 

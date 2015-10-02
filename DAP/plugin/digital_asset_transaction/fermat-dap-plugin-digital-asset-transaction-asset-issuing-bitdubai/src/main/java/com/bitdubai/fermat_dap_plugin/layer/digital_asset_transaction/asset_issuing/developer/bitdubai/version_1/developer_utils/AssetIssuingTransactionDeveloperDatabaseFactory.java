@@ -107,7 +107,7 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Asset Issuing", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE, this.pluginId.toString()));
         return databases;
     }
 
@@ -136,11 +136,13 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
          * */
         List<String> transitionProtocolStatusColumns = new ArrayList<String>();
 
-        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_PROTOCOL_STATUS);
-        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TIMESTAMP_COLUMN_NAME);
-        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_OCCURRENCES_COLUMN_NAME);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_ID_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_EVENT_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_SOURCE_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_STATUS_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN);
 
-        DeveloperDatabaseTable transitionProtocolStatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TRANSITION_PROTOCOL_STATUS_TABLE_NAME, digitalAssetTransactionColumns);
+        DeveloperDatabaseTable transitionProtocolStatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME, digitalAssetTransactionColumns);
         tables.add(transitionProtocolStatusTable);
 
         /**

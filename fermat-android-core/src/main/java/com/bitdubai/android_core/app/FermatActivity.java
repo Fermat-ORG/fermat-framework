@@ -2,9 +2,11 @@ package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -26,13 +28,16 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.WalletFragmentFactory;
@@ -64,9 +69,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
-import com.bitdubai.fermat_android_api.engine.PaintActionBar;
+import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettingsManager;
@@ -76,10 +82,12 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.Wallet
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
@@ -105,7 +113,7 @@ import static java.lang.System.gc;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActionBar,Observer {
+public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures,Observer {
 
     private static final String TAG = "fermat-core";
     private MainMenu mainMenu;
@@ -113,7 +121,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     /**
      * Navigation menu
      */
-    private NavigationDrawerFragment NavigationDrawerFragment;
+    protected NavigationDrawerFragment NavigationDrawerFragment;
 
     /**
      * Screen adapters
@@ -130,6 +138,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Activity type
      */
     private ActivityType activityType;
+
 
     /**
      * Called when the activity is first created
@@ -442,7 +451,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         pagertabs.setVisibility(View.VISIBLE);
 
 
-        String subAppType = subApp.getType().getCode();
+        SubApps subAppType = subApp.getType();
 
         com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
 
@@ -491,15 +500,38 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 setContentView(R.layout.runtime_app_wallet_runtime_navigator);
             }
 
+            //RelativeLayout container_header_balance = getActivityHeader();
+
+//            if(container_header_balance!=null){
+//                LayoutInflater layoutInflater = getLayoutInflater();
+//                layoutInflater =
+//                        (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//
+//                container_header_balance.setVisibility(View.VISIBLE);
+//
+//                View balance_header = layoutInflater.inflate(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.balance_header, container_header_balance, true);
+//            }
+
+
             NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-            NavigationDrawerFragment.setMenuVisibility(true);
             /**
              * Set up the navigationDrawer
              */
             NavigationDrawerFragment.setUp(
                     R.id.navigation_drawer,
                     (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+
+            NavigationDrawerFragment.setMenuVisibility(true);
+
+           // NavigationDrawerFragment.getmAdapter().setValues(sidemenu.getMenuItems());
+
+//            FragmentTransaction ft = getFragmentManager().beginTransaction();
+//            ft.detach(NavigationDrawerFragment);
+//            ft.attach(NavigationDrawerFragment);
+//            ft.addToBackStack(NavigationDrawerFragment.class.getSimpleName());
+//            ft.commit();
+
         }
 
         /**
@@ -515,6 +547,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
+
+
     /**
      * Dispatch onResume() to fragments.  Note that for better inter-operation
      * with older versions of the platform, at the point of this call the
@@ -528,6 +562,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onResume() {
         super.onResume();
         getNotificationManager().addObserver(this);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -798,9 +837,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         fragments.add(subAppDesktopFragment);
                         break;
                     case "DDAP":
-                        com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment walletDesktopFragment1 = com.bitDubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
+                        com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment walletDesktopFragment1 = com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment.newInstance(0);
                         fragments.add(walletDesktopFragment1);
-                        com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitDubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
+                        com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
                         fragments.add(dapDesktopFragment);
                         break;
                     case "DCBP":
@@ -814,11 +853,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 }
             }
             //Activity activity =  desktopObject.getLastActivity();
-
-
-
-
-
 
             /*for (FermatFragments key : activity.getFragments().keySet()) {
                 Fragment fragment = activity.getFragments().get(key);
@@ -1187,8 +1221,19 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public DesktopRuntimeManager getDesktopRuntimeManager() {
         return (DesktopRuntimeManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DESKTOP_RUNTIME);
     }
-
-
+    /**
+     * DAP
+     */
+    public AssetFactoryModuleManager getAssetFactoryModuleManager() {
+        return (AssetFactoryModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
+    }
+    /**
+     * CBP
+     */
+    public CryptoBrokerWalletModuleManager getCryptoBrokerWalletModuleManager() {
+//        return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BRO);
+        return null;
+    }
 
     /**
      * Set up wizards to this activity can be more than one.
@@ -1312,4 +1357,26 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
 
     }
+    @Override
+    public RelativeLayout getActivityHeader(){
+        return (RelativeLayout) findViewById(R.id.container_header_balance);
+    }
+
+
+    @Override
+    public void invalidate() {
+        //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
+    }
+
+
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     */
+   // @Override
+   // public void onNavigationDrawerItemSelected(int position,String activityCode) {
+  //      Toast.makeText(this,"holas",LENGTH_SHORT).show();
+  //  }
+
 }

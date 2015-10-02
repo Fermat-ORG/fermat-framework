@@ -18,12 +18,15 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
 
     private int type;
 
-    public CryptoWalletWalletModulePaymentRequest(String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact, int type) {
+    private String state;
+
+    public CryptoWalletWalletModulePaymentRequest(String date, String reason, long amount, CryptoWalletWalletContact cryptoWalletWalletContact, int type,String state) {
         this.date = date;
         this.reason = reason;
         this.amount = amount;
         this.cryptoWalletWalletContact = cryptoWalletWalletContact;
         this.type=type;
+        this.state=state;
     }
 
     @Override
@@ -49,6 +52,11 @@ public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
     @Override
     public int getType() {
         return type;
+    }
+
+    @Override
+    public String getState() {
+        return state;
     }
 
 

@@ -27,7 +27,7 @@ public class BitcoinNetworkSelector {
     }
 
     /**
-     * For Asset Vault key hierarcht configuration, we need to for mthe correct Account Number
+     * For Asset Vault key hierarchy configuration, we need to provide the correct Account Number
      * @param blockchainNetworkType
      * @return
      */

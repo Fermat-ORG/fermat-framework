@@ -9,7 +9,6 @@ import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat.R;
@@ -20,20 +19,19 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
@@ -76,6 +74,8 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         Bundle bundle = getIntent().getExtras();
 
         walletNavigationStructure =(WalletNavigationStructure) bundle.getSerializable(WALLET_NAVIGATION_STRUCTURE);
+
+        lastWallet = (InstalledWallet) bundle.getSerializable(INSTALLED_WALLET);
 
 
         setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
@@ -299,7 +299,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         WalletSession walletSession = null;
         try {
             //WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
-            walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),null, getWalletResourcesProviderManager(), getErrorManager());
+            walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),null, getWalletResourcesProviderManager(), getErrorManager(),getCryptoBrokerWalletModuleManager());
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
@@ -429,11 +429,17 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     }
 
     @Override
-    public void changeScreen(String fragment, Object[] objects) {
-
+    public void onCallbackViewObserver(FermatCallback fermatCallback) {
 
     }
+
+
     private void loadFragment(String fragmentType){
+
+    }
+
+    @Override
+    public void changeScreen(String screen, int idContainer, Object[] objects) {
 
     }
 

@@ -29,7 +29,7 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
         this.context = context;
     }
 
-    protected FermatAdapter(Context context, ArrayList<M> dataSet) {
+    protected FermatAdapter(Context context, List<M> dataSet) {
         this.context = context;
         this.dataSet = dataSet;
     }
@@ -129,7 +129,6 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
      * @param position position to render
      */
     protected abstract void bindHolder(H holder, M data, int position);
-
 
 
 }

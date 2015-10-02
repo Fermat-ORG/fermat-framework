@@ -85,20 +85,18 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
      */
     private DeveloperSubAppSession developerSubAppSession;
 
-    public static LogToolsFragmentLevel2 newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
-        LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
-        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static LogToolsFragmentLevel2 newInstance() {
+        return new LogToolsFragmentLevel2();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession)super.subAppsSession;
+            lstLoggers = (ArrayListLoggers)developerSubAppSession.getData("list");
+        }
         errorManager = developerSubAppSession.getErrorManager();
         try {
             ToolManager toolManager = developerSubAppSession.getToolManager();
@@ -272,12 +270,10 @@ public class LogToolsFragmentLevel2 extends FermatFragment {
                         }
 
                         //set the next fragment and params
-                        Object[] params = new Object[2];
+                        developerSubAppSession.setData("list",lst);
+                        developerSubAppSession.setData("level",level);
 
-                        params[0] = lst;
-                        params[1] = level;
-
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(),params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(),R.id.logContainer,null);
 
 
                     }
