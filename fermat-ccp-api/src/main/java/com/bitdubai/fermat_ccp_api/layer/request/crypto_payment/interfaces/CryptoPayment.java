@@ -32,8 +32,8 @@ public interface CryptoPayment {
 
     long                      getEndTimeStamp()     ;
 
-    CryptoPaymentType getType()             ;
+    CryptoPaymentType         getType()             ;
 
-    CryptoPaymentState getState()            ;
+    CryptoPaymentState        getState()            ;
 
 }

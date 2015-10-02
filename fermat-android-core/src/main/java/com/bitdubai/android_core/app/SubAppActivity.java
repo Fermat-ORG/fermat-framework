@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
+import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
@@ -39,7 +40,7 @@ import com.bitdubai.fermat.R;
  */
 
 
-public class SubAppActivity extends FermatActivity implements FermatScreenSwapper {
+public class SubAppActivity extends FermatActivity implements FermatScreenSwapper, NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private static final String INSTALLED_SUB_APP = "sub_app";
     /**
@@ -482,4 +483,14 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         return subAppSession;
     }
 
+    /**
+     * Called when an item in the navigation drawer is selected.
+     *
+     * @param position
+     * @param activityCode
+     */
+    @Override
+    public void onNavigationDrawerItemSelected(int position, String activityCode) {
+        changeActivity(activityCode);
+    }
 }
