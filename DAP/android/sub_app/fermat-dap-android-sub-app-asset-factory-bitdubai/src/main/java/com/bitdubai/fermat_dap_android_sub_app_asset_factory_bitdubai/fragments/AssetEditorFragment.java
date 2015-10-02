@@ -151,7 +151,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         asset.setIsRedeemable(isRedeemableView.isChecked());
         if (!expirationView.getText().toString().trim().isEmpty()) {
             try {
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat();
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("mm/yyy/dd h:m:s");
                 asset.setExpirationDate(new java.sql.Timestamp(format.parse(expirationView.getText().toString().trim()).getTime()));
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
