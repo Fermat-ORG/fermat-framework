@@ -12,6 +12,7 @@ public enum IntraUserFragmentsEnumType implements FermatFragmentsEnumType<IntraU
     CWP_WALLET_STORE_MAIN_ACTIVITY("CWSMA"),
     CWP_WALLET_STORE_DETAIL_ACTIVITY("CWSDA"),
     CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWSMDA"),
+    CWP_WALLET_STORE_ALL_FRAGMENT("CWSAF"),
 
     /**
      * Va a ser eliminado. No se usa.
@@ -19,9 +20,6 @@ public enum IntraUserFragmentsEnumType implements FermatFragmentsEnumType<IntraU
     @Deprecated
     CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT("CWSANF"),
 
-
-    @Deprecated
-    CWP_WALLET_STORE_ALL_FRAGMENT("CWSAF"),
 
     @Deprecated
     CWP_WALLET_STORE_FREE_FRAGMENT("CWSFF"),
