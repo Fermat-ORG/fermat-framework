@@ -85,7 +85,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, TransactionProtocolManager {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     //CryptoAddressBookManager cryptoAddressBookManager;
@@ -211,13 +211,14 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             }*/
 
             //Start the plugin monitor agent
-            //I will comment tha MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
+            //I will comment the MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
             /*String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.assetIssuingTransactionMonitorAgent=new AssetIssuingTransactionMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,
                     this.pluginId,
                     userPublicKey);
+            this.assetIssuingTransactionMonitorAgent.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.assetIssuingTransactionMonitorAgent.start();*/
 
@@ -299,14 +300,14 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
-        this.assetIssuingTransactionManager.confirmReception(transactionID);
+    public void confirmReception(String genesisTransaction) throws CantConfirmTransactionException {
+        this.assetIssuingTransactionManager.confirmReception(genesisTransaction);
     }
 
-    @Override
+    /*@Override
     public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return this.assetIssuingTransactionManager.getPendingTransactions(specialist);
-    }
+    }*/
 
     /*@Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuingMonitorAgentException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetMetadataVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -52,6 +53,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
     UUID pluginId;
     //OutgoingIntraActorManager outgoingIntraActorManager;
     AssetVaultManager assetVaultManager;
+    DigitalAssetMetadataVault digitalAssetMetadataVault;
 
     public AssetIssuingTransactionMonitorAgent(EventManager eventManager,
                                                PluginDatabaseSystem pluginDatabaseSystem,
@@ -81,6 +83,13 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             throw new CantSetObjectException("AssetVaultManager is null");
         }
         this.assetVaultManager=assetVaultManager;
+    }
+
+    public void setDigitalAssetMetadataVault(DigitalAssetMetadataVault digitalAssetMetadataVault)throws CantSetObjectException{
+        if(digitalAssetMetadataVault==null){
+            throw new CantSetObjectException("DigitalAssetMetadataVault is null");
+        }
+        this.digitalAssetMetadataVault=digitalAssetMetadataVault;
     }
 
     @Override
