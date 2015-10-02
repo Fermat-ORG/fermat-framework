@@ -77,6 +77,7 @@ public enum Activities {
 
     // DAP
     DAP_SUB_APP_ASSET_FACTORY_MAIN("DSAAFM"),
+    DAP_ASSET_EDITOR_ACTIVITY("DAEA"),
 
     //Desktop
     CCP_DESKTOP("CCPD"),
@@ -224,6 +225,8 @@ public enum Activities {
                 return DAP_DESKTOP;
             case "CBPD":
                 return CBP_DESKTOP;
+            case "DAEA":
+                return DAP_ASSET_EDITOR_ACTIVITY;
             case "DAPM":
                 return DAP_MAIN;
             case "CWRWBWBV1C":
