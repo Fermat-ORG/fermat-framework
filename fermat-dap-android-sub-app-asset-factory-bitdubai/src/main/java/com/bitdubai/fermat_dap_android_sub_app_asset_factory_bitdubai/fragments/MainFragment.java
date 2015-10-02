@@ -72,7 +72,8 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.main_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.main_assets_draf_fragment, container, false);
+        int parentId = R.id.assets_parent;
         initViews(rootView);
         return rootView;
     }
@@ -88,7 +89,7 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
         Log.i(TAG, "recycler view setup");
         if (layout == null)
             return;
-        recyclerView = null;//(RecyclerView) layout.findViewById(R.id.assets);
+        recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_assets);
         if (recyclerView != null) {
             recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -96,7 +97,7 @@ public class MainFragment extends FermatFragment implements FermatWorkerCallBack
             adapter = new AssetFactoryAdapter(getActivity());
             recyclerView.setAdapter(adapter);
         }
-        swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.refreshLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_assets);
         if (swipeRefreshLayout != null) {
             isRefreshing = false;
             swipeRefreshLayout.setRefreshing(false);
