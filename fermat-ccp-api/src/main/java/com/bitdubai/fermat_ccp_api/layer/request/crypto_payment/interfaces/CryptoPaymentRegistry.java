@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
@@ -9,6 +10,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantL
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFoundsException;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,8 +29,10 @@ public interface CryptoPaymentRegistry {
      *
      * @param walletPublicKey     public key of the wallet sending the request.
      * @param identityPublicKey   public key of the identity sending the request.
-     * @param cryptoAddress       crypto address where the identity wants to receive the payment.
+     * @param identityType        type of actor that generates the request,
      * @param actorPublicKey      public key of the actor whom will receive the request.
+     * @param actorType           type of actor to whom is generated the request.
+     * @param cryptoAddress       crypto address where the identity wants to receive the payment.
      * @param description         text describing the crypto payment request.
      * @param amount              amount of crypto expected.
      *
@@ -36,8 +40,10 @@ public interface CryptoPaymentRegistry {
      */
     void generateCryptoPaymentRequest(String        walletPublicKey  ,
                                       String        identityPublicKey,
-                                      CryptoAddress cryptoAddress    ,
+                                      Actors        identityType     ,
                                       String        actorPublicKey   ,
+                                      Actors        actorType        ,
+                                      CryptoAddress cryptoAddress    ,
                                       String        description      ,
                                       long          amount           ) throws CantGenerateCryptoPaymentRequestException;
 
@@ -59,9 +65,11 @@ public interface CryptoPaymentRegistry {
      *
      * @throws CantApproveCryptoPaymentRequestException   if something goes wrong.
      * @throws CryptoPaymentRequestNotFoundException      if we can't find the payment request.
+     * @throws InsufficientFoundsException                if there's not the enough amount of crypto to complete the request.
      */
     void approveRequest(UUID requestId) throws CantApproveCryptoPaymentRequestException,
-                                               CryptoPaymentRequestNotFoundException   ;
+                                               CryptoPaymentRequestNotFoundException   ,
+                                               InsufficientFoundsException             ;
 
     /**
      * Throw the method <code>getRequestById</code> you can get a specific request.

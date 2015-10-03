@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 
 public class CantCreateBankMoneyException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "Falled To Create Bank Transaction Wallet Bank Money.";
+    public static final String DEFAULT_MESSAGE = "Falled To Create Bank Transaction Wallet.";
     public CantCreateBankMoneyException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

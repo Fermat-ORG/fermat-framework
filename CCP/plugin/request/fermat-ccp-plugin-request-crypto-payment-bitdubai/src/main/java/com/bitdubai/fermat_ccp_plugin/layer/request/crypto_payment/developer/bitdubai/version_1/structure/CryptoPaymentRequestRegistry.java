@@ -1,8 +1,13 @@
 package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformApprovalException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformRefusalException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantSendRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
@@ -12,11 +17,20 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantG
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFoundsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPayment;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.database.CryptoPaymentRequestDao;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestStateException;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestRegistryException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +50,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     private final PluginDatabaseSystem        pluginDatabaseSystem       ;
     private final UUID                        pluginId                   ;
 
+    private CryptoPaymentRequestDao cryptoPaymentRequestDao;
+
     public CryptoPaymentRequestRegistry(final CryptoPaymentRequestManager cryptoPaymentRequestManager,
                                         final ErrorManager                errorManager               ,
                                         final OutgoingIntraActorManager   outgoingIntraActorManager  ,
@@ -49,43 +65,395 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         this.pluginId                    = pluginId                   ;
     }
 
+    public void initialize() throws CantInitializeCryptoPaymentRequestRegistryException {
+
+        try {
+
+            cryptoPaymentRequestDao = new CryptoPaymentRequestDao(pluginDatabaseSystem, pluginId);
+            cryptoPaymentRequestDao.initialize();
+
+        } catch (CantInitializeCryptoPaymentRequestDatabaseException e) {
+
+            throw new CantInitializeCryptoPaymentRequestRegistryException(e);
+        }
+    }
+
     @Override
-    public void generateCryptoPaymentRequest(String walletPublicKey, String identityPublicKey, CryptoAddress cryptoAddress, String actorPublicKey, String description, long amount) throws CantGenerateCryptoPaymentRequestException {
+    public void generateCryptoPaymentRequest(String        walletPublicKey  ,
+                                             String        identityPublicKey,
+                                             Actors        identityType     ,
+                                             String        actorPublicKey   ,
+                                             Actors        actorType        ,
+                                             CryptoAddress cryptoAddress    ,
+                                             String        description      ,
+                                             long          amount           ) throws CantGenerateCryptoPaymentRequestException {
+
+
+
+        try {
+            /**
+             * i generate the crypto payment request setting:
+             *
+             * -requestId:   id for the request.
+             * -type:        own (sent by me).
+             * -state:       not sent yet (once i sent throw network service i will give the state pending response.
+             * -startTime    time when i generate the crypto request.
+             */
+
+            UUID requestId = UUID.randomUUID();
+
+            Long startTimeStamp = System.currentTimeMillis();
+
+            CryptoPaymentType  type  = CryptoPaymentType .OWN         ;
+            CryptoPaymentState state = CryptoPaymentState.NOT_SENT_YET;
+
+            // save the record in database
+
+            cryptoPaymentRequestDao.generateCryptoPaymentRequest(
+                    requestId        ,
+                    walletPublicKey  ,
+                    identityPublicKey,
+                    identityType     ,
+                    actorPublicKey   ,
+                    actorType        ,
+                    cryptoAddress    ,
+                    description      ,
+                    amount           ,
+                    startTimeStamp   ,
+                    type             ,
+                    state
+            );
+
+            // if i can save it, i send it to the network service.
+
+            cryptoPaymentRequestManager.sendCryptoPaymentRequest(
+                    walletPublicKey,
+                    identityPublicKey,
+                    cryptoAddress,
+                    actorPublicKey,
+                    description,
+                    amount
+            );
+
+            // change the state to pending response
+
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.PENDING_RESPONSE
+            );
+
+        } catch(CantGenerateCryptoPaymentRequestException e) {
+
+            reportUnexpectedException(e);
+            throw e;
+        } catch(CantSendRequestException e) {
+
+            reportUnexpectedException(e);
+            throw new CantGenerateCryptoPaymentRequestException(e, "", "Error sending the crypto request by the network service.");
+        } catch(CantChangeCryptoPaymentRequestStateException e) {
+
+            reportUnexpectedException(e);
+            throw new CantGenerateCryptoPaymentRequestException(e, "", "Can't change the crypto payment request state to PENDING_RESPONSE but already sent throw network service.");
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantGenerateCryptoPaymentRequestException(e, "", "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void refuseRequest(UUID requestId) throws CantRejectCryptoPaymentRequestException,
+                                                     CryptoPaymentRequestNotFoundException  {
+
+        try {
+
+            //i inform the refusal throw the network service and after that i change the state to refused.
+
+            try {
+
+                cryptoPaymentRequestManager.informRefusal(
+                        requestId
+                );
+
+            } catch(RequestNotFoundException e) {
+                // this should not happen, but if it happens i change the state of the request to error.
+
+                cryptoPaymentRequestDao.changeState(
+                        requestId,
+                        CryptoPaymentState.ERROR
+                );
+
+                throw new CantRejectCryptoPaymentRequestException(e, "requestId: " + requestId, "The network service cannot recognize the crypto payment request id.");
+            }
+
+            // if i can inform the refusal i change the state to refused
+
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.REFUSED
+            );
+
+        } catch(CantInformRefusalException e) {
+
+            reportUnexpectedException(e);
+            throw new CantRejectCryptoPaymentRequestException(e, "", "Error refusing the crypto request by the network service.");
+        } catch(CantChangeCryptoPaymentRequestStateException e) {
+
+            reportUnexpectedException(e);
+            throw new CantRejectCryptoPaymentRequestException(e, "", "Error changing the crypto request state to refused.");
+        } catch(CantRejectCryptoPaymentRequestException |
+                CryptoPaymentRequestNotFoundException   e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantRejectCryptoPaymentRequestException(e, "", "Unhandled Exception.");
+        }
 
     }
 
     @Override
-    public void refuseRequest(UUID requestId) throws CantRejectCryptoPaymentRequestException, CryptoPaymentRequestNotFoundException {
+    public void approveRequest(UUID requestId) throws CantApproveCryptoPaymentRequestException,
+                                                      CryptoPaymentRequestNotFoundException   ,
+                                                      InsufficientFoundsException             {
+
+        try {
+
+            /**
+             * i start the process changing the state to in approving process.
+             * next to it, i made the sending of crypto throw outgoing intra actor.
+             * later, i change the state to payment process started.
+             * i inform the approval throw network service, and after that i change the state to approved.
+             */
+
+            CryptoPayment cryptoPayment = cryptoPaymentRequestDao.getRequestById(requestId);
+
+            // change state to in approving process
+
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.IN_APPROVING_PROCESS
+            );
+
+            // send money throw outgoing intra actor
+            // if all ok i set the request in payment process started
+            // if not i set in pending response (initial state).
+            try {
+                IntraActorCryptoTransactionManager transactionManager = outgoingIntraActorManager.getTransactionManager();
+                transactionManager.payCryptoRequest(
+                        requestId,
+                        cryptoPayment.getWalletPublicKey(),
+                        cryptoPayment.getCryptoAddress(),
+                        cryptoPayment.getAmount(),
+                        cryptoPayment.getDescription(),
+                        cryptoPayment.getIdentityPublicKey(),
+                        cryptoPayment.getActorPublicKey(),
+                        cryptoPayment.getIdentityType(),
+                        cryptoPayment.getActorType()
+                );
+
+                cryptoPaymentRequestDao.changeState(
+                        requestId,
+                        CryptoPaymentState.PAYMENT_PROCESS_STARTED
+                );
+
+            } catch(OutgoingIntraActorCantSendFundsExceptions            |
+                    CantGetOutgoingIntraActorTransactionManagerException e) {
+                // if there's an error here we return to the initial state.
+                cryptoPaymentRequestDao.changeState(
+                        requestId,
+                        CryptoPaymentState.PENDING_RESPONSE
+                );
+                throw new CantApproveCryptoPaymentRequestException(e, "", "There's an error trying to send the crypto.");
+            } catch(OutgoingIntraActorInsufficientFundsException e) {
+                // this exception is controllable
+                // if there's not founds, we return to the initial state.
+                cryptoPaymentRequestDao.changeState(
+                        requestId,
+                        CryptoPaymentState.PENDING_RESPONSE
+                );
+                throw new InsufficientFoundsException(e);
+            }
+
+            //i inform the approval throw the network service and after that i change the state to refused.
+
+            try {
+
+                cryptoPaymentRequestManager.informApproval(
+                        requestId
+                );
+
+            } catch(RequestNotFoundException e) {
+                // this should not happen, but if it happens i change the state of the request to error.
+
+                cryptoPaymentRequestDao.changeState(
+                        requestId,
+                        CryptoPaymentState.ERROR
+                );
+
+                throw new CantApproveCryptoPaymentRequestException(e, "requestId: " + requestId, "The network service cannot recognize the crypto payment request id.");
+            }
+
+            // if i can inform the refusal i change the state to refused
+
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.APPROVED
+            );
+
+        } catch(CantInformApprovalException e) {
+
+            reportUnexpectedException(e);
+            throw new CantApproveCryptoPaymentRequestException(e, "", "Error aproving the crypto request by the network service.");
+        } catch(CantChangeCryptoPaymentRequestStateException e) {
+
+            reportUnexpectedException(e);
+            throw new CantApproveCryptoPaymentRequestException(e, "", "Error changing the crypto request state to approved.");
+        } catch(CantGetCryptoPaymentRequestException e) {
+
+            reportUnexpectedException(e);
+            throw new CantApproveCryptoPaymentRequestException(e, "", "Error trying to get the crypto request state.");
+        } catch(CantApproveCryptoPaymentRequestException |
+                CryptoPaymentRequestNotFoundException   e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } /*catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantApproveCryptoPaymentRequestException(e, "", "Unhandled Exception.");
+        }*/
 
     }
 
     @Override
-    public void approveRequest(UUID requestId) throws CantApproveCryptoPaymentRequestException, CryptoPaymentRequestNotFoundException {
+    public CryptoPayment getRequestById(UUID requestId) throws CantGetCryptoPaymentRequestException,
+                                                               CryptoPaymentRequestNotFoundException {
+
+        try {
+
+            return cryptoPaymentRequestDao.getRequestById(requestId);
+
+        } catch(CantGetCryptoPaymentRequestException |
+                CryptoPaymentRequestNotFoundException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantGetCryptoPaymentRequestException(e, "", "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public List<CryptoPayment> listCryptoPaymentRequests(String  walletPublicKey,
+                                                         Integer max            ,
+                                                         Integer offset         ) throws CantListCryptoPaymentRequestsException {
+        try {
+
+            return cryptoPaymentRequestDao.listCryptoPaymentRequests(
+                    walletPublicKey,
+                    max            ,
+                    offset
+            );
+
+        } catch(CantListCryptoPaymentRequestsException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantListCryptoPaymentRequestsException(e, "", "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public List<CryptoPayment> listCryptoPaymentRequestsByState(String             walletPublicKey,
+                                                                CryptoPaymentState state          ,
+                                                                Integer            max            ,
+                                                                Integer            offset         ) throws CantListCryptoPaymentRequestsException {
+
+        try {
+
+            return cryptoPaymentRequestDao.listCryptoPaymentRequestsByState(
+                    walletPublicKey,
+                    state          ,
+                    max            ,
+                    offset
+            );
+
+        } catch(CantListCryptoPaymentRequestsException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantListCryptoPaymentRequestsException(e, "", "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public List<CryptoPayment> listCryptoPaymentRequestsByType(String            walletPublicKey,
+                                                               CryptoPaymentType type           ,
+                                                               Integer           max            ,
+                                                               Integer           offset         ) throws CantListCryptoPaymentRequestsException {
+
+        try {
+
+            return cryptoPaymentRequestDao.listCryptoPaymentRequestsByType(
+                    walletPublicKey,
+                    type           ,
+                    max            ,
+                    offset
+            );
+
+        } catch(CantListCryptoPaymentRequestsException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantListCryptoPaymentRequestsException(e, "", "Unhandled Exception.");
+        }
 
     }
 
     @Override
-    public CryptoPayment getRequestById(UUID requestId) throws CantGetCryptoPaymentRequestException, CryptoPaymentRequestNotFoundException {
-        return null;
+    public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndState(String             walletPublicKey,
+                                                                       CryptoPaymentState state          ,
+                                                                       CryptoPaymentType  type           ,
+                                                                       Integer            max            ,
+                                                                       Integer            offset         ) throws CantListCryptoPaymentRequestsException {
+
+        try {
+
+            return cryptoPaymentRequestDao.listCryptoPaymentRequestsByStateAndType(
+                    walletPublicKey,
+                    state          ,
+                    type           ,
+                    max            ,
+                    offset
+            );
+
+        } catch(CantListCryptoPaymentRequestsException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantListCryptoPaymentRequestsException(e, "", "Unhandled Exception.");
+        }
     }
 
-    @Override
-    public List<CryptoPayment> listCryptoPaymentRequests(String walletPublicKey, Integer max, Integer offset) throws CantListCryptoPaymentRequestsException {
-        return new ArrayList<>();
+    private void reportUnexpectedException(Exception e) {
+        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
-    @Override
-    public List<CryptoPayment> listCryptoPaymentRequestsByState(String walletPublicKey, CryptoPaymentState state, Integer max, Integer offset) throws CantListCryptoPaymentRequestsException {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<CryptoPayment> listCryptoPaymentRequestsByType(String walletPublicKey, CryptoPaymentType type, Integer max, Integer offset) throws CantListCryptoPaymentRequestsException {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndState(String walletPublicKey, CryptoPaymentState state, CryptoPaymentType type, Integer max, Integer offset) throws CantListCryptoPaymentRequestsException {
-        return new ArrayList<>();
-    }
 }

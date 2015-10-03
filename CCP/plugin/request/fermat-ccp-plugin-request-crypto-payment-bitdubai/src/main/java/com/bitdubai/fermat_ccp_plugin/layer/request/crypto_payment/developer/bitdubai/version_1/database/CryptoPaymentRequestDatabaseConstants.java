@@ -20,7 +20,9 @@ public class CryptoPaymentRequestDatabaseConstants {
     public static final String CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME = "request_id"            ;
     public static final String CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key"     ;
     public static final String CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key"   ;
+    public static final String CRYPTO_PAYMENT_REQUEST_IDENTITY_TYPE_COLUMN_NAME = "identity_type"   ;
     public static final String CRYPTO_PAYMENT_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME = "actor_public_key"      ;
+    public static final String CRYPTO_PAYMENT_REQUEST_ACTOR_TYPE_COLUMN_NAME = "actor_type"      ;
     public static final String CRYPTO_PAYMENT_REQUEST_DESCRIPTION_COLUMN_NAME = "description"           ;
     public static final String CRYPTO_PAYMENT_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address"        ;
     public static final String CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency"       ;
