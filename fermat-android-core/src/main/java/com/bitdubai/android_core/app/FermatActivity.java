@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 
@@ -746,14 +747,43 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void resetThisActivity() {
 
         try {
+
+            RelativeLayout header_cotainer = (RelativeLayout) findViewById(R.id.container_header_balance);
+            if(header_cotainer!=null){
+                header_cotainer.removeAllViews();
+                header_cotainer.setVisibility(View.GONE);
+            }
+
             //clean page adapter
             ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
             if (adapter != null) pagertabs.removeAllViews();
 
             ViewPager viewpager = (ViewPager) super.findViewById(R.id.viewpager);
-            viewpager.setVisibility(View.INVISIBLE);
+            viewpager.removeAllViews();
+            viewpager.removeAllViewsInLayout();
+            viewpager.clearOnPageChangeListeners();
+            viewpager.setVisibility(View.GONE);
+            viewpager=null;
             ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
-            pager.setVisibility(View.INVISIBLE);
+            pager.removeAllViews();
+            pager.removeAllViewsInLayout();
+            pager.clearOnPageChangeListeners();
+            pager.setVisibility(View.GONE);
+            pager=null;
+
+            com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip pagerTabStrip = (com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+            pagerTabStrip.destroyDrawingCache();
+            pagerTabStrip.clearAnimation();
+            pagerTabStrip.removeAllViews();
+            pagerTabStrip.removeAllViewsInLayout();
+            pagerTabStrip.setOnPageChangeListener(null);
+            // todo: DEBERIA VER SI LO DESTRUÍ TODO O QUEDÓ ALGO FLOTANDO EN EL PAGERTABSTRIP
+            pagerTabStrip.setVisibility(View.GONE);
+            pagerTabStrip = null;
+
+            // hide actionBar
+            getActionBar().hide();
 
             if (NavigationDrawerFragment != null) {
 
