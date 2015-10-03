@@ -12,13 +12,13 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 30.09.15.
  */
-public interface BankMoneyTransactionRecord {
+public interface BankMoneyBalanceRecord {
 
     UUID getBankTransactionId();
 
-    String getPublicKeyCustomer();
+    String getPublicKeyActorFrom();
 
-    String getPublicKeyBroker();
+    String getPublicKeyActorTo();
 
     BankTransactionStatus getStatus();
 

@@ -15,7 +15,7 @@ public interface CryptoBrokerManager {
     List<CryptoBroker> getTransactionsBankMoney() throws CantTransactionCryptoBrokerException;
 
     CryptoBroker registerBankMoney(
-         final String bankTransactionId
+         final String transactionId
         ,final String publicKeyCustomer
         ,final String publicKeyBroker
         ,final String balanceType
