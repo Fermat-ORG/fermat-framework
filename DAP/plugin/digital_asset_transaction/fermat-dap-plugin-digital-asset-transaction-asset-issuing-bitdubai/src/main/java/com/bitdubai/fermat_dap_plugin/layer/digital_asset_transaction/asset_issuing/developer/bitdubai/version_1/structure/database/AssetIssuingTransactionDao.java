@@ -739,6 +739,10 @@ public class AssetIssuingTransactionDao {
         }
     }
 
+    public void updateAssetsGeneratedCounter(String assetPublicKey, int counter){
+        //TODO: implement this
+    }
+
     public int updateTransactionProtocolStatus(boolean occurrence) throws CantExecuteQueryException {
         //TODO: implement this method
         return 0;

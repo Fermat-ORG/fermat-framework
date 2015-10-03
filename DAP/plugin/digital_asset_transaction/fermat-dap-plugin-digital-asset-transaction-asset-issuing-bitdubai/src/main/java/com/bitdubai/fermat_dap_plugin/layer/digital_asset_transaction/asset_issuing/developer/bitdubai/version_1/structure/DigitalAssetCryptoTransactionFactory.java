@@ -348,6 +348,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 LOG.info("Asset número " + counter);
                 createDigitalAssetCryptoTransaction();
                 counter++;
+                this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(this.digitalAsset.getPublicKey(), counter);
             }
         } catch (ObjectNotSetException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","Digital Asset object is not complete");
