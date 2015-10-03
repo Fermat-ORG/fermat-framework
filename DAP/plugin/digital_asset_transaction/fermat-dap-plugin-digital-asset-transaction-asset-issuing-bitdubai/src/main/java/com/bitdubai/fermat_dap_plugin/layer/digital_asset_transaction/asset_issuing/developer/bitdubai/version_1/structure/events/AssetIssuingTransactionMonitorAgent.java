@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -15,10 +15,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.AssetIssuingTransactionMonitorAgentMaxIterationsReachedException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuingMonitorAgentException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -27,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -36,26 +43,44 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
     Database database;
     String userPublicKey;
-
     MonitorAgent monitorAgent;
     Thread agentThread;
-
     LogManager logManager;
-
     EventManager eventManager;
-
     ErrorManager errorManager;
-
     PluginDatabaseSystem pluginDatabaseSystem;
-
     UUID pluginId;
+    //OutgoingIntraActorManager outgoingIntraActorManager;
+    AssetVaultManager assetVaultManager;
 
-    public AssetIssuingTransactionMonitorAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, String userPublicKey){
+    public AssetIssuingTransactionMonitorAgent(EventManager eventManager,
+                                               PluginDatabaseSystem pluginDatabaseSystem,
+                                               ErrorManager errorManager,
+                                               UUID pluginId,
+                                               String userPublicKey,
+                                               AssetVaultManager assetVaultManager
+                                               /*OutgoingIntraActorManager outgoingIntraActorManager*/) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
         this.userPublicKey = userPublicKey;
+        setAssetVaultManager(assetVaultManager);
+        //setOutgoingIntraActorManager(outgoingIntraActorManager);
+    }
+
+    /*private void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager)throws CantSetObjectException{
+        if(outgoingIntraActorManager==null){
+            throw new CantSetObjectException("outgoingIntraActorManager is null");
+        }
+        this.outgoingIntraActorManager=outgoingIntraActorManager;
+    }*/
+
+    private void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException{
+        if(assetVaultManager==null){
+            throw new CantSetObjectException("AssetVaultManager is null");
+        }
+        this.assetVaultManager=assetVaultManager;
     }
 
     @Override
@@ -117,6 +142,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = AssetIssuingTransactionNotificationAgent.AGENT_SLEEP_TIME;
         int iterationNumber = 0;
+        AssetIssuingTransactionDao assetIssuingTransactionDao;
         @Override
         public void setErrorManager(ErrorManager errorManager) {
             this.errorManager = errorManager;
@@ -149,7 +175,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
                     logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                } catch (CantExecuteQueryException e) {
+                } catch (CantCheckAssetIssuingProgressException | AssetIssuingTransactionMonitorAgentMaxIterationsReachedException | CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
 
@@ -175,12 +201,107 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             }
         }
 
-        private void doTheMainTask()throws CantExecuteQueryException{
+        private void doTheMainTask() throws CantCheckAssetIssuingProgressException, CantExecuteQueryException, AssetIssuingTransactionMonitorAgentMaxIterationsReachedException {
 
             boolean found = false;
             try {
-                AssetIssuingTransactionDao assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
-//TODO:finish this method
+                assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
+/**
+ * If I found transactions on Crypto_Statuts  ON_CryptoNetwork and Protocol_Status PENDING_NOTIFIED, lanzo el evento
+ */
+
+                List<String> transactionHashList;
+                CryptoStatus transactionCryptoStatus;
+                if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)){
+                    found = true;
+                    //FermatEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+                    //event.setSource(EventSource.CRYPTO_VAULT);
+
+
+                    //logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in ON_CRYPTO_NETWORK Status! Raising INCOMING_CRYPTO_ON_CRYPTO_NETWORK event.", null, null);
+                    //eventManager.raiseEvent(event);
+
+
+                    //logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Asset Issuing transactions.", "Asset Issuing Transaction monitor Agent: iteration number " + this.iterationNumber+ " without other plugins consuming transaction.",null);
+                    transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+                    for(String transactionHash: transactionHashList){
+                        //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
+                        transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                        assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
+                        //TODO: get DigitalAssetMetadata from DigitalAssetMetadataVault and deliver to assetWallet
+                    }
+                    if (ITERATIONS_THRESHOLD < this.iterationNumber){
+                        throw new AssetIssuingTransactionMonitorAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached. Iteration Limit: " + ITERATIONS_THRESHOLD + "Please, notify developer.");
+                    }
+                }
+
+                if (isTransactionToBeNotified(CryptoStatus.ON_BLOCKCHAIN)){
+                    found = true;
+                    //FermatEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
+                    //event.setSource(EventSource.CRYPTO_VAULT);
+
+
+                    //logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in ON_BLOCKCHAIN Status! Raising INCOMING_CRYPTO_ON_BLOCKCHAIN event.", null, null);
+                    //eventManager.raiseEvent(event);
+
+
+                    //logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Asset Issuing transactions.", "Asset Issuing Transaction monitor Agent: iteration number " + this.iterationNumber+ " without other plugins consuming transaction.",null);
+                    transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+                    for(String transactionHash: transactionHashList){
+                        //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
+                        transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                        assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
+                    }
+                    if (ITERATIONS_THRESHOLD < this.iterationNumber){
+                        throw new AssetIssuingTransactionMonitorAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached. Iteration Limit: " + ITERATIONS_THRESHOLD + "Please, notify developer.");
+                    }
+                }
+
+                if (isTransactionToBeNotified(CryptoStatus.REVERSED_ON_CRYPTO_NETWORK)){
+                    found = true;
+                    //FermatEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+                    //event.setSource(EventSource.CRYPTO_VAULT);
+
+
+                    //logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in REVERSED_ON_CRYPTO_NETWORK Status! Raising INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK event.", null, null);
+                    //eventManager.raiseEvent(event);
+
+
+                    //logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Asset Issuing transactions.", "Asset Issuing Transaction monitor Agent: iteration number " + this.iterationNumber+ " without other plugins consuming transaction.",null);
+                    transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.REVERSED_ON_CRYPTO_NETWORK);
+                    for(String transactionHash: transactionHashList){
+                        //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
+                        transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                        assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
+                    }
+                    if (ITERATIONS_THRESHOLD < this.iterationNumber){
+                        throw new AssetIssuingTransactionMonitorAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached. Iteration Limit: " + ITERATIONS_THRESHOLD + "Please, notify developer.");
+                    }
+                }
+
+                if (isTransactionToBeNotified(CryptoStatus.REVERSED_ON_BLOCKCHAIN)){
+                    found = true;
+                    //FermatEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+                    //event.setSource(EventSource.CRYPTO_VAULT);
+
+
+                    //logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in REVERSED_ON_BLOCKCHAIN Status! Raising INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN event.", null, null);
+                    //eventManager.raiseEvent(event);
+
+
+                    //logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Asset Issuing transactions.", "Asset Issuing Transaction monitor Agent: iteration number " + this.iterationNumber+ " without other plugins consuming transaction.",null);
+                    transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.REVERSED_ON_BLOCKCHAIN);
+                    for(String transactionHash: transactionHashList){
+                        //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
+                        transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                        assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
+                    }
+                    if (ITERATIONS_THRESHOLD < this.iterationNumber){
+                        throw new AssetIssuingTransactionMonitorAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached. Iteration Limit: " + ITERATIONS_THRESHOLD + "Please, notify developer.");
+                    }
+                    //TODO: case IRREVERSIBLE
+                    //TODO: get DigitalAssetMetadata from DigitalAssetMetadataVault and deliver to assetWallet, delete this DigitalAssetMetadata from DAMVault
+                }
 
                 if (!found){
                     assetIssuingTransactionDao.updateTransactionProtocolStatus(false);
@@ -190,10 +311,30 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 }
 
 
-            } catch (CantExecuteDatabaseOperationException e) {
-                e.printStackTrace();
+            } catch (CantExecuteDatabaseOperationException exception) {
+                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset Issuing monitor agent","Cannot execute database operation");
+            } /*catch (OutgoingIntraActorCantGetCryptoStatusException exception) {
+                throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Exception in OutgoingIntraActor plugin");
+            }*/ catch (UnexpectedResultReturnedFromDatabaseException exception) {
+                throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Unexpected result in database query");
+            } catch (CantGetGenesisTransactionException exception){
+                throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get genesis transaction from asset vault");
             }
 
+        }
+
+        private boolean isTransactionToBeNotified(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
+            boolean isPending =assetIssuingTransactionDao.isPendingTransactions(cryptoStatus);
+            return isPending;
+        }
+
+        //I comment this method, now I'm gonna use the asset vault to check the transaction status.
+        /*private CryptoStatus getCryptoStatusFromOutgoingIntraActorPlugin(String transactionHash) throws OutgoingIntraActorCantGetCryptoStatusException {
+            return outgoingIntraActorManager.getTransactionStatus(transactionHash);
+        }*/
+        private CryptoStatus getCryptoStatusFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
+            CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
+            return cryptoTransaction.getCryptoStatus();
         }
 
     }

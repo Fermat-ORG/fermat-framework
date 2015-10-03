@@ -2,6 +2,8 @@ package com.bitdubai.android_core.app.common.version_1.FragmentFactory;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.factory.AssetFactoryFragmentFactory;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
 import com.bitdubai.sub_app.intra_user.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.wallet_factory.factory.WalletFactoryFragmentFactory;
@@ -14,22 +16,22 @@ import com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentFact
 
 public class SubAppFragmentFactory {
 
-    public static com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory getFragmentFactoryBySubAppType(String subAppType) throws InvalidParameterException {
+    public static com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory getFragmentFactoryBySubAppType(SubApps subAppType) throws InvalidParameterException {
         switch (subAppType) {
-            case "CWF":
+            case CWP_WALLET_FACTORY:
                 return new WalletFactoryFragmentFactory();
-            case "CWS":
+            case CWP_WALLET_STORE:
                 return new WalletStoreFragmentFactory();
-            case "CWP":
+            case CWP_WALLET_PUBLISHER:
                 return new WalletPublisherFragmentFactory();
-            case "CDA":
+            case CWP_DEVELOPER_APP:
                 return new DeveloperSubAppFragmentFactory();
-            case "CIU":
+            case CWP_INTRA_USER:
                 return new IntraUserFragmentFactory();
+            case DAP_ASSETS_FACTORY:
+                return new AssetFactoryFragmentFactory();
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + subAppType, "This Code Is Not Valid for the Plugins enum");
-
         }
-
     }
 }

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 
 
@@ -17,6 +18,8 @@ import java.util.UUID;
  * Created by franklin on 07/09/15.
  */
 public interface AssetFactory {
+    String getWalletPublicKey();
+    void setWalletPublicKey(String walletPublicKey);
 
     String getPublicKey();
     void setPublicKey(String publicKey);
@@ -33,8 +36,8 @@ public interface AssetFactory {
     DigitalAssetContract getContract();
     void setContract(DigitalAssetContract contract);
 
-    ContractProperty getContractProperty();
-    void setContractProperty(ContractProperty contractProperty);
+//    ContractProperty getContractProperty();
+//    void setContractProperty(ContractProperty contractProperty);
 
     List<ContractProperty> getContractProperties();
     void setContractProperties(List<ContractProperty> contractProperties);
@@ -66,6 +69,9 @@ public interface AssetFactory {
     Timestamp getLastModificationTimestamp();
     void setLastModificationTimeststamp(Timestamp timestamp);
 
-    String getAssetIssuerIdentityPublicKey();
-    void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
+//    String getAssetIssuerIdentityPublicKey();
+//    void setAssetUserIdentityPublicKey(String assetUserIdentityPublicKey);
+
+    IdentityAssetIssuer getIdentyAssetIssuer();
+    void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer);
 }

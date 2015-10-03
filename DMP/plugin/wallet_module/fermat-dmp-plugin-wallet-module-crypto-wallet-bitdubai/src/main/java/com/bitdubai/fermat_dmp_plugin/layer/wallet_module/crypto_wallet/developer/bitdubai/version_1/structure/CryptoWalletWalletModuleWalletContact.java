@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,57 +20,30 @@ import java.util.UUID;
  */
 public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWalletContact {
 
-    private UUID contactId;
+    private final String              actorName            ;
+    private final String              actorPublicKey       ;
+    private final Actors              actorType            ;
+    private final Compatibility       compatibility        ;
+    private final UUID                contactId            ;
+    private final List<CryptoAddress> receivedCryptoAddress;
+    private final byte[]              profilePicture       ;
+    private final String              walletPublicKey      ;
 
-    private String walletPublicKey;
+    public CryptoWalletWalletModuleWalletContact(final WalletContactRecord walletContactRecord,
+                                                 final byte[]              profilePicture     ) {
 
-    private Actors actorType;
-
-    private CryptoAddress receivedCryptoAddress;
-
-    private String actorPublicKey;
-
-    private String actorName;
-
-    private byte[] profilePicture;
-
-    public CryptoWalletWalletModuleWalletContact(WalletContactRecord walletContactRecord, byte[] profilePicture) {
-        this.contactId = walletContactRecord.getContactId();
-        this.walletPublicKey = walletContactRecord.getWalletPublicKey();
-        this.actorType = walletContactRecord.getActorType();
-        this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses().get(0);
-        this.actorPublicKey = walletContactRecord.getActorPublicKey();
-        this.actorName = walletContactRecord.getActorAlias();
-        this.profilePicture = profilePicture != null ? profilePicture.clone() : null;
+        this.contactId             = walletContactRecord.getContactId()                    ;
+        this.walletPublicKey       = walletContactRecord.getWalletPublicKey()              ;
+        this.actorType             = walletContactRecord.getActorType()                    ;
+        this.receivedCryptoAddress = walletContactRecord.getCryptoAddresses()              ;
+        this.actorPublicKey        = walletContactRecord.getActorPublicKey()               ;
+        this.actorName             = walletContactRecord.getActorAlias()                   ;
+        this.profilePicture        = profilePicture != null ? profilePicture.clone() : null;
+        this.compatibility         = walletContactRecord.getCompatibility()                ;
     }
 
     public CryptoWalletWalletModuleWalletContact(WalletContactRecord walletContactRecord) {
         this(walletContactRecord, null);
-    }
-
-    @Override
-    public UUID getContactId() {
-        return contactId;
-    }
-
-    @Override
-    public String getWalletPublicKey() {
-        return walletPublicKey;
-    }
-
-    @Override
-    public Actors getActorType() {
-        return actorType;
-    }
-
-    @Override
-    public CryptoAddress getReceivedCryptoAddress() {
-        return receivedCryptoAddress;
-    }
-
-    @Override
-    public String getActorPublicKey() {
-        return actorPublicKey;
     }
 
     @Override
@@ -77,7 +52,37 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     }
 
     @Override
+    public String getActorPublicKey() {
+        return actorPublicKey;
+    }
+
+    @Override
+    public Actors getActorType() {
+        return actorType;
+    }
+
+    @Override
+    public UUID getContactId() {
+        return contactId;
+    }
+
+    @Override
+    public List<CryptoAddress> getReceivedCryptoAddress() {
+        return receivedCryptoAddress;
+    }
+
+    @Override
     public byte[] getProfilePicture() {
         return profilePicture != null ? profilePicture.clone() : null;
+    }
+
+    @Override
+    public String getWalletPublicKey() {
+        return walletPublicKey;
+    }
+
+    @Override
+    public Compatibility getCompatibility() {
+        return compatibility;
     }
 }

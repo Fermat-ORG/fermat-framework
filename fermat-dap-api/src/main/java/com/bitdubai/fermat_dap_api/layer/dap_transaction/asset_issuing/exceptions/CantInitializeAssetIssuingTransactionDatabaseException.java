@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
  */
 public class CantInitializeAssetIssuingTransactionDatabaseException extends DAPException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE ASSET ISSUING TRANSACTION DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE ASSET ISSUING TRANSACTION DATABASE EXCEPTION";
 
     public CantInitializeAssetIssuingTransactionDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);

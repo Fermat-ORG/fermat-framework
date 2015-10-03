@@ -3,7 +3,6 @@ package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develop
 import android.app.Activity;
 import android.content.Context;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -33,6 +32,7 @@ import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develope
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
@@ -95,8 +95,8 @@ public class GetterTest {
     @Test
     public void getEmptyTableFilterGroupTest() throws Exception{
         testDatabaseTable = testDatabase.getTable(testDatabaseName);
-        assertThat(testDatabaseTable.getEmptyTableFilterGroup()).isInstanceOf(DatabaseTableFilterGroup.class);
-
+        //ssertThat(testDatabaseTable.getEmptyTableFilterGroup()).isInstanceOf(DatabaseTableFilterGroup.class);
+        fail("not sure why");
     }
 
     @Test
@@ -179,8 +179,8 @@ public class GetterTest {
     @Test
     public void setStateFilterTest() throws Exception{
         testDatabaseTable = testDatabase.getTable("otherTable");
-      testDatabaseTable.setStateFilter("testColum2", WalletFactoryProjectState.CLOSED, DatabaseFilterType.EQUAL);
-
+        //testDatabaseTable.setStateFilter("testColum2", WalletFactoryProjectState.CLOSED, DatabaseFilterType.EQUAL);
+        fail("not sure why");
     }
 
 

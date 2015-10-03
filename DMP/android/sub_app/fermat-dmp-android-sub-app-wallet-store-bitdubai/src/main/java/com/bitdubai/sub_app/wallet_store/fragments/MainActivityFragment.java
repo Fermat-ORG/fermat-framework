@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,13 +20,12 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogue;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreModuleManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogue;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogueItem;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
 import com.bitdubai.sub_app.wallet_store.common.interfaces.WalletStoreItemPopupMenuListener;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
@@ -34,6 +34,7 @@ import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorker;
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorkerCallback;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
+import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
@@ -65,6 +66,11 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
      * Executor Service
      */
     private ExecutorService executor;
+
+    /**
+     * UI
+     */
+    private ProgressDialog dialog;
 
     /**
      * Create a new instance of this fragment
@@ -218,9 +224,9 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         FermatWorkerCallBack callBack = new FermatWorkerCallBack() {
             @Override
             public void onPostExecute(Object... result) {
-                Toast.makeText(getActivity(), "Installing...", Toast.LENGTH_SHORT).show();
+                dialog = UtilsFuncs.INSTANCE.showProgressDialog(dialog, getActivity(), R.string.installing_message, R.string.wait_please_message);
 
-                InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(getActivity(), errorManager);
+                InstallWalletWorkerCallback callback = new InstallWalletWorkerCallback(getActivity(), errorManager, dialog);
                 InstallWalletWorker installWalletWorker = new InstallWalletWorker(getActivity(), callback, moduleManager, subAppsSession);
                 if (executor != null)
                     executor.shutdownNow();
@@ -233,7 +239,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 
-                Toast.makeText(activity, R.string.cannot_collect_wallet_details, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.cannot_collect_wallet_details_message, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -266,7 +272,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
                 errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 
-                Toast.makeText(activity, R.string.cannot_collect_wallet_details, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, R.string.cannot_collect_wallet_details_message, Toast.LENGTH_SHORT).show();
             }
         };
 

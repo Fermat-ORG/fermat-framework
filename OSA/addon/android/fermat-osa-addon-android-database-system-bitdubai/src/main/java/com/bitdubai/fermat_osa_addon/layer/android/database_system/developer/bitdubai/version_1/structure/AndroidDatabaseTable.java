@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -305,27 +304,46 @@ public class AndroidDatabaseTable implements DatabaseTable {
     }
 
     @Override
-    public List<DatabaseTableRecord> customQuery(String query) throws CantLoadTableToMemoryException {
+    public List<DatabaseTableRecord> customQuery(final String query, final boolean customResult) throws CantLoadTableToMemoryException {
         Cursor cursor = null;
         SQLiteDatabase database = null;
+        List<String> columns = null;
+
         List<DatabaseTableRecord> databaseTableRecords = new ArrayList<>();
         try {
             database = this.database.getReadableDatabase();
+
+            if (!customResult)
+                columns = getColumns(database);
+
             cursor = database.rawQuery(query, null);
             while (cursor.moveToNext()) {
                 DatabaseTableRecord tableRecord = new AndroidDatabaseRecord();
                 List<DatabaseRecord> recordValues = new ArrayList<>();
-                for (int i = 0 ; i < cursor.getColumnCount() ; i++) {
-                    DatabaseRecord recordValue = new AndroidRecord();
-                    recordValue.setName("Column"+i);
-                    recordValue.setValue(cursor.getString(i));
-                    recordValues.add(recordValue);
+
+                if (customResult) {
+                    for (int i = 0; i < cursor.getColumnCount(); i++) {
+                        DatabaseRecord recordValue = new AndroidRecord();
+                        recordValue.setName("Column" + i);
+                        recordValue.setValue(cursor.getString(i));
+                        recordValues.add(recordValue);
+                    }
+                } else {
+                    for (final String column : columns) {
+                        DatabaseRecord recordValue = new AndroidRecord();
+                        recordValue.setName(column);
+                        recordValue.setValue(cursor.getString(cursor.getColumnIndex(column)));
+                        recordValue.setChange(false);
+                        recordValue.setUseValueofVariable(false);
+                        recordValues.add(recordValue);
+                    }
                 }
 
                 tableRecord.setValues(recordValues);
                 databaseTableRecords.add(tableRecord);
             }
             cursor.close();
+
         } catch (Exception e) {
             if (cursor != null)
                 cursor.close();
@@ -534,24 +552,30 @@ public class AndroidDatabaseTable implements DatabaseTable {
             strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
 
             int ix = 0;
-            for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                if (subGroup.getFilters().size() > 0 || ix > 0) {
-                    switch (databaseTableFilterGroup.getOperator()) {
-                        case AND:
-                            strFilter.append(" AND ");
-                            break;
-                        case OR:
-                            strFilter.append(" OR ");
-                            break;
-                        default:
-                            strFilter.append(" ");
+
+            if (databaseTableFilterGroup.getSubGroups() != null){
+
+                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
+                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
                     }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
                 }
-                strFilter.append("(");
-                strFilter.append(makeGroupFilters(subGroup));
-                strFilter.append(")");
-                ix++;
+
             }
+
             strFilter.append(")");
         }
 

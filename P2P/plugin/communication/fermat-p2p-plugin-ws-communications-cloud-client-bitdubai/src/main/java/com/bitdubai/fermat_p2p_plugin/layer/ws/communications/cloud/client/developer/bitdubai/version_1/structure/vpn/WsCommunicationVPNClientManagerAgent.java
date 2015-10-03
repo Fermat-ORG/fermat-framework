@@ -6,11 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.google.gson.JsonObject;
 
 import java.net.URI;
@@ -61,11 +61,10 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * Create a new WsCommunicationVPNClient
      *
      * @param serverURI
-     * @param networkServiceType
      * @param vpnServerIdentity
-     * @param remotePlatformComponentProfileIdentity
+     * @param remotePlatformComponentProfile
      */
-    public void createNewWsCommunicationVPNServer(URI serverURI, NetworkServiceType networkServiceType, String vpnServerIdentity, String remotePlatformComponentProfileIdentity) {
+    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile) {
 
         /*
          * Create the identity
@@ -81,35 +80,35 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
          * Get json representation
          */
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(AttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, requestedVpnConnections.get(networkServiceType).get(remotePlatformComponentProfileIdentity).getIdentityPublicKey());
-        jsonObject.addProperty(AttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
+        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
 
         /*
          * Add the att to the header
          */
-        headers.put(AttNamesConstants.HEADER_ATT_NAME_TI,  AsymmectricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
+        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI,  AsymmectricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
 
         /*
          * Construct the vpn client
          */
-        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, requestedVpnConnections.get(networkServiceType).get(remotePlatformComponentProfileIdentity), vpnServerIdentity, headers);
+        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, remotePlatformComponentProfile, vpnServerIdentity, headers);
 
         /*
          * Add to the vpn client active
          */
-        if (vpnClientActiveCache.containsKey(networkServiceType)){
+        if (vpnClientActiveCache.containsKey(remotePlatformComponentProfile.getNetworkServiceType())){
 
-            vpnClientActiveCache.get(networkServiceType).put(remotePlatformComponentProfileIdentity, vpnClient);
+            vpnClientActiveCache.get(remotePlatformComponentProfile.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
 
         }else {
 
             Map<String, WsCommunicationVPNClient> newMap = new HashMap<>();
-            newMap.put(remotePlatformComponentProfileIdentity, vpnClient);
-            vpnClientActiveCache.put(networkServiceType, newMap);
+            newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
+            vpnClientActiveCache.put(remotePlatformComponentProfile.getNetworkServiceType(), newMap);
         }
 
         /*
-         * Construct the connect
+         * call the connect
          */
         vpnClient.connect();
     }
@@ -126,6 +125,8 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
             //While is running
             while (isRunning){
 
+                System.out.println(" WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.size() "+vpnClientActiveCache.size());
+
                 //If empty
                 if (vpnClientActiveCache.isEmpty()){
                     //Auto stop
@@ -136,15 +137,17 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
                     for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
 
-                        WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
+                        System.out.println(" WsCommunicationVPNClientManagerAgent - networkServiceType.size() "+vpnClientActiveCache.get(networkServiceType).size());
 
-                        //Verified is this vpn is register
+                       /* WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
+
+                        //Verified is this vpn is active
                         if (!wsCommunicationVPNServer.isActive()){
 
                             wsCommunicationVPNServer.getConnection().close();
                             vpnClientActiveCache.remove(wsCommunicationVPNServer);
 
-                        }
+                        } */
 
                     }
 

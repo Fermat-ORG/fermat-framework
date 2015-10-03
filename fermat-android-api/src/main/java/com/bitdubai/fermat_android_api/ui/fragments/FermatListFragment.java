@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_android_api.ui.fragments;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,10 +16,8 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragment;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,16 +36,16 @@ public abstract class FermatListFragment<M> extends FermatFragment
      */
     protected boolean isRefreshing;
     /**
-     * Executor
-     */
-    private ExecutorService _executor;
-    /**
      * UI
      */
     protected RecyclerView recyclerView;
     protected FermatAdapter adapter;
     protected RecyclerView.LayoutManager layoutManager;
     protected SwipeRefreshLayout swipeRefreshLayout;
+    /**
+     * Executor
+     */
+    private ExecutorService _executor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,7 +138,7 @@ public abstract class FermatListFragment<M> extends FermatFragment
      *
      * @param refreshType Fermat Refresh Enum Type
      */
-    public ArrayList<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+    public List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         return null;
     }
 
@@ -156,8 +152,7 @@ public abstract class FermatListFragment<M> extends FermatFragment
                     return getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                 }
             };
-            if (getExecutor() != null)
-                getExecutor().execute(worker);
+            worker.execute(getExecutor());
         }
     }
 }

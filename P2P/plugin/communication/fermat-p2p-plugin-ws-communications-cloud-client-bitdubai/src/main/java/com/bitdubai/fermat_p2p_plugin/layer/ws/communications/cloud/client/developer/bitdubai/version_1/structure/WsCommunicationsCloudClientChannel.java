@@ -6,13 +6,17 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.AttNamesConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -140,12 +144,12 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          * Get json representation
          */
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(AttNamesConstants.JSON_ATT_NAME_IDENTITY, tempIdentity.getPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_IDENTITY, tempIdentity.getPublicKey());
 
         /*
          * Add the att to the header
          */
-        headers.put(AttNamesConstants.HEADER_ATT_NAME_TI, jsonObject.toString());
+        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, jsonObject.toString());
 
         System.out.println(" WsCommunicationsCloudClientChannel - headers = "+headers);
 
@@ -211,16 +215,28 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + fermatPacketReceive);
 
 
-        /*
-         * Call the processors for this packet
-         */
-        for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
+        //verify is packet supported
+        if (packetProcessorsRegister.containsKey(fermatPacketReceive.getFermatPacketType())){
 
-        /*
-         * Processor make his job
-         */
-            fermatPacketProcessor.processingPackage(fermatPacketReceive);
+             /*
+             * Call the processors for this packet
+             */
+            for (FermatPacketProcessor fermatPacketProcessor :packetProcessorsRegister.get(fermatPacketReceive.getFermatPacketType())) {
+
+                /*
+                 * Processor make his job
+                 */
+                fermatPacketProcessor.processingPackage(fermatPacketReceive);
+            }
+
+        }else {
+
+            System.out.println(" WsCommunicationsCloudClientChannel - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+
         }
+
+
+
 
     }
 
@@ -271,7 +287,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          */
         boolean isValid =AsymmectricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), getServerIdentity());
 
-        System.out.println(" WsCommunicationsCloudClientChannel - isValid = "+isValid);
+        System.out.println(" WsCommunicationsCloudClientChannel - isValid = " + isValid);
 
         /*
          * if not valid signature
@@ -413,5 +429,18 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public EventManager getEventManager() {
         return eventManager;
+    }
+
+    /**
+     * Notify when cloud client component es registered,
+     * this event is raise to show the message in a popup of the UI
+     */
+    public void launchCompleteClientComponentRegistrationNotificationEvent() {
+
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
+        CompleteClientComponentRegistrationNotificationEvent event =  (CompleteClientComponentRegistrationNotificationEvent) platformEvent;
+        event.setSource(EventSource.INCOMING_EXTRA_USER);
+        event.setMessage("Cloud client communication, registered and established connection.");
+        eventManager.raiseEvent(platformEvent);
     }
 }

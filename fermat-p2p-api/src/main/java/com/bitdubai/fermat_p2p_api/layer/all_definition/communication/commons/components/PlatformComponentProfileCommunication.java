@@ -6,9 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -46,14 +48,9 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     private String name;
 
     /**
-     * Represent the latitude
+     * Represent the location
      */
-    private Double latitude;
-
-    /**
-     * Represent the longitude
-     */
-    private Double longitude;
+    private DeviceLocation location;
 
     /**
      * Represent the platformComponentType
@@ -71,6 +68,11 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     private String communicationCloudClientIdentity;
 
     /**
+     * Represent the extraData
+     */
+    private String extraData;
+
+    /**
      * Constructor
      */
     public PlatformComponentProfileCommunication() {
@@ -78,11 +80,11 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
         this.alias = null;
         this.communicationCloudClientIdentity = null;
         this.identityPublicKey = null;
-        this.latitude = null;
-        this.longitude = null;
+        this.location = null;
         this.name = null;
         this.networkServiceType = null;
         this.platformComponentType = null;
+        this.extraData = null;
     }
 
     /**
@@ -91,22 +93,20 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
      * @param alias
      * @param communicationCloudClientIdentity
      * @param identityPublicKey
-     * @param latitude
-     * @param longitude
      * @param name
      * @param networkServiceType
      * @param platformComponentType
      */
-    public PlatformComponentProfileCommunication(String alias, String communicationCloudClientIdentity, String identityPublicKey, Double latitude, Double longitude, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType) {
+    public PlatformComponentProfileCommunication(String alias, String communicationCloudClientIdentity, String identityPublicKey, Location location, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData) {
         super();
         this.alias = alias;
         this.communicationCloudClientIdentity = communicationCloudClientIdentity;
         this.identityPublicKey = identityPublicKey;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.location = (DeviceLocation) location;
         this.name = name;
         this.networkServiceType = networkServiceType;
         this.platformComponentType = platformComponentType;
+        this.extraData = extraData;
     }
 
     /**
@@ -138,20 +138,11 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
 
     /**
      * (non-javadoc)
-     * @see PlatformComponentProfile#getLatitude()
+     * @see PlatformComponentProfile#getLocation()
      */
     @Override
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    /**
-     * (non-javadoc)
-     * @see PlatformComponentProfile#getLongitude()
-     */
-    @Override
-    public Double getLongitude() {
-        return longitude;
+    public Location getLocation() {
+        return location;
     }
 
     /**
@@ -179,6 +170,15 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
     @Override
     public String getCommunicationCloudClientIdentity() {
         return communicationCloudClientIdentity;
+    }
+
+    /**
+     * (non-javadoc)
+     * @see PlatformComponentProfile#getExtraData()
+     */
+    @Override
+    public String getExtraData() {
+        return extraData;
     }
 
     /**
@@ -215,11 +215,11 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
         return Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
                 Objects.equals(getAlias(), that.getAlias()) &&
                 Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getLatitude(), that.getLatitude()) &&
-                Objects.equals(getLongitude(), that.getLongitude()) &&
+                Objects.equals(getLocation(), that.getLocation()) &&
                 Objects.equals(getPlatformComponentType(), that.getPlatformComponentType()) &&
                 Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
-                Objects.equals(getCommunicationCloudClientIdentity(), that.getCommunicationCloudClientIdentity());
+                Objects.equals(getCommunicationCloudClientIdentity(), that.getCommunicationCloudClientIdentity()) &&
+                Objects.equals(getExtraData(), that.getExtraData());
     }
 
     /**
@@ -228,7 +228,7 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLatitude(), getLongitude(), getPlatformComponentType(), getNetworkServiceType(), getCommunicationCloudClientIdentity());
+        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLocation(), getPlatformComponentType(), getNetworkServiceType(), getCommunicationCloudClientIdentity(), getExtraData());
     }
 
     /**
@@ -241,11 +241,10 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
                 "alias='" + alias + '\'' +
                 ", identityPublicKey='" + identityPublicKey + '\'' +
                 ", name='" + name + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
+                ", location =" + location +
                 ", platformComponentType=" + platformComponentType +
                 ", networkServiceType=" + networkServiceType +
                 ", communicationCloudClientIdentity='" + communicationCloudClientIdentity + '\'' +
-                '}';
+                ", extraData = "+extraData + '}';
     }
 }

@@ -10,6 +10,9 @@ public enum TransactionStatus {
     GENESIS_OBTAINED("OGEN"),
     GENESIS_SETTLED("SGEN"),
     HASH_SETTLED("SHASH"),
+    ISSUING("ISSUING"),
+    SENDING_BITCOINS("TXBTC"),
+    SENDING_BITCOINS_FAILED("FTXBTC"),
     ISSUED("ISSUED");
 
     private String code;
@@ -30,10 +33,16 @@ public enum TransactionStatus {
                 return TransactionStatus.GENESIS_SETTLED;
             case "SHASH":
                 return TransactionStatus.HASH_SETTLED;
+            case "ISSUING":
+                return TransactionStatus.ISSUING;
+            case "TXBTC":
+                return TransactionStatus.SENDING_BITCOINS;
+            case "FTXBTC":
+                return TransactionStatus.SENDING_BITCOINS_FAILED;
             case "ISSUED":
                 return TransactionStatus.ISSUED;
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the State enum.");
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionStatus enum.");
         }
     }
 }

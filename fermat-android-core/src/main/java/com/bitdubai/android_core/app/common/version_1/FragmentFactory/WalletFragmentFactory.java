@@ -3,9 +3,10 @@ package com.bitdubai.android_core.app.common.version_1.FragmentFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory.WalletAssetIssuerFragmentFactory;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.WalletAssetUserFragmentFactory;
+//import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory.WalletAssetIssuerFragmentFactory;
+//import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.WalletAssetUserFragmentFactory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceWalletFragmentFactory;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentFactory;
 
 
 /**
@@ -30,12 +31,18 @@ public class WalletFragmentFactory {
                             switch (walletPublicKey){
                                 case "reference_wallet":
                                     return new ReferenceWalletFragmentFactory();
-                                case "asset_issuer":
-                                    return new WalletAssetIssuerFragmentFactory();
-                                case "asset_user":
-                                    return new WalletAssetUserFragmentFactory();
+                                case "test_wallet":
+                                    return new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory.ReferenceWalletFragmentFactory();
+//                                case "asset_issuer":
+//                                    return new WalletAssetIssuerFragmentFactory();
+//                                case "asset_user":
+//                                    return new WalletAssetUserFragmentFactory();
+                                case "crypto_broker_wallet":
+                                    return new CryptoBrokerWalletFragmentFactory();
                                 case "redeem_point":
                                     break;
+                                default:
+                                    return new ReferenceWalletFragmentFactory();
                             }
 
                         default:

@@ -7,6 +7,7 @@
     android:fillViewport="false"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,13 +90,13 @@
                     android:id="@+id/wallet_developer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/wallet_publisher_name"
+                    android:layout_toEndOf="@+id/developer_icon"
+                    android:layout_toRightOf="@+id/developer_icon"
                     android:singleLine="true"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
-                    tools:text="Nombre del desarrollador"
-                    android:layout_below="@+id/wallet_publisher_name"
-                    android:layout_toRightOf="@+id/developer_icon"
-                    android:layout_toEndOf="@+id/developer_icon" />
+                    tools:text="Nombre del desarrollador" />
 
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
@@ -103,8 +104,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignEnd="@+id/wallet_name"
-                    android:layout_alignRight="@+id/wallet_name"
                     android:layout_alignParentBottom="true"
+                    android:layout_alignRight="@+id/wallet_name"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="16dp"
@@ -121,8 +122,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="16dp"
                     android:layout_alignTop="@+id/wallet_developer_name"
+                    android:layout_marginTop="16dp"
                     android:background="@color/wallet_install_background_button"
                     android:textColor="@color/wallet_install_text_button"
                     tools:text="INSTALL" />

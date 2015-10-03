@@ -29,7 +29,21 @@ public void getSomething() throws ObjectNotSetException {
 
 }
 ```
-El objetivo de esta técnica es evitar que los métodos getters devuelvan null, para ello se debe realizar una verificación previa antes de devolver algún objeto.
+El objetivo de esta técnica es evitar que los métodos getters devuelvan null, para ello se debe realizar una verificación previa antes de obtener algún objeto.
+
+En el caso de implementar un método get proveniente de una interfaz que no posea throws ObjectNotSetException, se recomienda usar el report manager para que quede registrada el intento de obtener un objeto que está null, por ejemplo:
+```java
+@Override
+public void getSomething(){
+    ...
+    try{
+        if(returningObject==null){
+            throw new ObjectNotSetException("The object to get is null")
+        }
+    } catch(ObjectNotSetException exception) {
+        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_PLUGIN, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+    }
+}
 
 
 == Refactor Pendientes por hacer:
