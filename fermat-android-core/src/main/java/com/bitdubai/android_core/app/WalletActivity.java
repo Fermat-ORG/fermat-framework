@@ -369,7 +369,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //        }
 
         try {
-            resetThisActivity();
+
 
             WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
 
@@ -423,6 +423,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 final ProgressDialog dialog = ProgressDialog.show(this, "", "Loading...",
                         true);
                 dialog.show();
+
+                resetThisActivity();
 
                 System.gc();
 

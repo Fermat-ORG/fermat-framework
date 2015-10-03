@@ -35,7 +35,7 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
                 //currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_ALL_FRAGMENT:
-                //currentFragment = HomeFragment.newInstance(1);
+                currentFragment = HomeFragment.newInstance(1);
                 //currentFragment = ConnectionsListFragment.newInstance();
                 break;
             case CWP_WALLET_STORE_FREE_FRAGMENT:
