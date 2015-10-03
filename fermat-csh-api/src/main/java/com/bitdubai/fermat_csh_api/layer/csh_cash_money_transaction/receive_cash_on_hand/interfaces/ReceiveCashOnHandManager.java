@@ -16,7 +16,9 @@ public interface ReceiveCashOnHandManager {
     ReceiveCashOnHand createReceiveCashOnHand(
              final String publicKeyCustomer
             ,final String publicKeyBroker
-            ,final Float merchandiseAmount
+            ,final String balanceType
+            ,final String transactionType
+            ,final float amount
             ,final String cashCurrencyType
             ,final String cashReference
     ) throws CantCreateReceiveCashOnHandException;
