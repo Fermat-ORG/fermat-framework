@@ -21,8 +21,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
 import com.bitdubai.fermat_core.layer.ccp.request.CCPRequestLayer;
 import com.bitdubai.fermat_core.layer.dap_wallet.DAPWalletLayer;
@@ -983,6 +984,12 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(incomingExtraUserTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
             //System.out.println("EXTRA USER START SUCCESS");
 
+            /*
+             * Plugin Intra User Identity
+             * -----------------------------
+             */
+            Plugin ccpIntraWalletUserIdentity = ((CCPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER)).getIntraWalletUserPlugin();
+            injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
 
             /*
              * Plugin Incoming Intra User Transaction
@@ -1041,7 +1048,7 @@ public class Platform implements Serializable {
             Plugin cryptoWalletWalletModule = ((WalletModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER)).getmCryptoWallet();
             injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
 
-            /*
+             /*
              * Plugin Discount Wallet Niche Type Wallet
              * ----------------------------------
              */
@@ -1159,12 +1166,6 @@ public class Platform implements Serializable {
             Plugin designerIdentity = ((IdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_IDENTITY_LAYER)).getDesignerIdentity();
             injectPluginReferencesAndStart(designerIdentity, Plugins.BITDUBAI_DESIGNER_IDENTITY);
 
-              /*
-             * Plugin Intra User Identity
-             * -----------------------------
-             */
-            Plugin ccpIntraWalletUserIdentity = ((CCPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER)).getIntraWalletUserPlugin();
-            injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
 
 
             /*
@@ -1264,6 +1265,7 @@ public class Platform implements Serializable {
             throw new CantStartPlatformException();
         }
 
+
         List<Map.Entry<Plugins, Long>> list = new LinkedList<>(pluginsStartUpTime.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<Plugins, Long>>() {
             public int compare(Map.Entry<Plugins, Long> o1, Map.Entry<Plugins, Long> o2) {
@@ -1278,6 +1280,7 @@ public class Platform implements Serializable {
             System.out.println(entry.getKey().toString() + " - Start-Up time: " + entry.getValue() / 1000 + " seconds.");
         }
         System.out.println("************************************************************************");
+
     }
 
     Map<Plugins, Long> pluginsStartUpTime = new HashMap<>();
@@ -1497,7 +1500,7 @@ public class Platform implements Serializable {
                 ((DealsWithWsCommunicationsCloudClientManager) plugin).setWsCommunicationsCloudClientConnectionManager((WsCommunicationsCloudClientManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL));
             }
             if (plugin instanceof DealsWithOutgoingIntraActor) {
-                ((DealsWithOutgoingIntraActor) plugin).setOutgoingIntraUserManager((OutgoingIntraActorManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION));
+                ((DealsWithOutgoingIntraActor) plugin).setOutgoingIntraActorManager((OutgoingIntraActorManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION));
             }
 
             if (plugin instanceof DealsWithCryptoAddressesNetworkService)
@@ -1506,8 +1509,8 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithCryptoPayment)
                 ((DealsWithCryptoPayment) plugin).setCryptoPaymentManager((CryptoPaymentManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST));
 
-            if (plugin instanceof DealsWithCryptoPaymentRequest)
-                ((DealsWithCryptoPaymentRequest) plugin).setCryptoPaymentRequestManager((CryptoPaymentRequestManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
+            if (plugin instanceof DealsWithCryptoPaymentRequestNetworkService)
+                ((DealsWithCryptoPaymentRequestNetworkService) plugin).setCryptoPaymentRequestManager((CryptoPaymentRequestManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
 
             /*
              * Register the plugin into the platform context

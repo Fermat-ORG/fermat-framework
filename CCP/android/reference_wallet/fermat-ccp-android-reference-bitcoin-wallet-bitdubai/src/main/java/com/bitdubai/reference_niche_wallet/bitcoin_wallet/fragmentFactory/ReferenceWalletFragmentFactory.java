@@ -8,15 +8,17 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragm
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.CreateContactFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.ReceiveTransactionsFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestHomePaymentFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestPaymentFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsReceivedHistory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.TransactionsSendHistory;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.HomeFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.RequestsReceivedFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
@@ -39,7 +41,8 @@ public class ReferenceWalletFragmentFactory extends FermatWalletFragmentFactory<
                    // currentFragment = HomeFragment.newInstance();
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);
                    //currentFragment = RequestPaymentFragment.newInstance();
-                    currentFragment = BalanceFragment.newInstance();
+                    //currentFragment = BalanceFragment.newInstance();
+                    currentFragment = RequestHomePaymentFragment.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                     //currentFragment = com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_v2.ReceiveFragment.newInstance(0);

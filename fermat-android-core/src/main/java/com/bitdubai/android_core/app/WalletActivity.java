@@ -369,7 +369,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //        }
 
         try {
-            resetThisActivity();
+
 
             WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
 
@@ -424,6 +424,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                         true);
                 dialog.show();
 
+
+                resetThisActivity();
+
                 System.gc();
 
                 // Execute some code after 2 seconds have passed
@@ -445,6 +448,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
             } catch (Throwable throwable) {
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error. Throwable", Toast.LENGTH_LONG).show();
                 throwable.printStackTrace();
             }
 

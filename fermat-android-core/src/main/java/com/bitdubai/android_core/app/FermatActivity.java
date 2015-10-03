@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -29,6 +30,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -220,6 +222,20 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return super.onCreateOptionsMenu(menu);
 
     }
+
+    /**
+     * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
+     */
+    @Override
+    protected void onStop() {
+        try{
+            super.onStop();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     /**
      * Dispatch onResume() to fragments.  Note that for better inter-operation
@@ -503,9 +519,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             }
 
-            if(header!=null){
-                ((FrameLayout)findViewById(R.id.header_container)).setVisibility(View.VISIBLE);
-            }
+            //((FrameLayout)findViewById(R.id.header_container)).setVisibility((header!=null) ? View.VISIBLE : View.GONE);
+
+
+            ((RelativeLayout)findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
+
 
             //RelativeLayout container_header_balance = getActivityHeader();
 
@@ -631,6 +649,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     protected void paintStatusBar(StatusBar statusBar) {
+
+
         if (statusBar != null) {
             if (statusBar.getColor() != null) {
                 if (Build.VERSION.SDK_INT > 20) {
@@ -1357,6 +1377,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         break;
                     case MONEY_REQUEST:
                         break;
+                    case CLOUD_CONNECTED_NOTIFICATION:
+                        launchWalletNotification(null,notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
 
                 }
 

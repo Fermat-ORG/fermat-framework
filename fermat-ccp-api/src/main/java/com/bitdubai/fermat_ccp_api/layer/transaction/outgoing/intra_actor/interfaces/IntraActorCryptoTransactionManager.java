@@ -40,7 +40,7 @@ public interface IntraActorCryptoTransactionManager {
                                  String receptorPublicKey,
                                  Actors senderActorType,
                                  Actors receptorActorType) throws OutgoingIntraActorCantSendFundsExceptions,
-            OutgoingIntraActorInsufficientFundsException;
+                                                                  OutgoingIntraActorInsufficientFundsException;
 
     /**
      * The method <code>sendCrypto</code> is used to send crypto currency to another intra user
