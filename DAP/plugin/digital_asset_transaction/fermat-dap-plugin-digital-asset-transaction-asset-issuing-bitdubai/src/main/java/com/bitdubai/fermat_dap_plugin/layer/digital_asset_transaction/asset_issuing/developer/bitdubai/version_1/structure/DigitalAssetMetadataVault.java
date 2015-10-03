@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
@@ -100,13 +101,12 @@ public class DigitalAssetMetadataVault {
         }
     }
 
-    public void deliverDigitalAssetMetadataToAssetWallet(String genesisTransaction)throws CantDeliverDigitalAssetToAssetWalletException{
+    public void deliverDigitalAssetMetadataToAssetWallet(String genesisTransaction, AssetBalanceType assetBalanceType)throws CantDeliverDigitalAssetToAssetWalletException{
         try{
             DigitalAssetMetadata digitalAssetMetadataToDeliver=getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
             //TODO:deliver
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         }
-
     }
 }

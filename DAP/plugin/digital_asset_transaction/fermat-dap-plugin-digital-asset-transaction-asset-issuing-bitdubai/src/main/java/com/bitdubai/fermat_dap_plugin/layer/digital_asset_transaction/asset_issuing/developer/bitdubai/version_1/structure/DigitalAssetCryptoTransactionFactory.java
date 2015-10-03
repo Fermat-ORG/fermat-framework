@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 //import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.CantGetOutgoingIntraUserTransactionManagerException;
@@ -499,6 +500,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     private String sendBitcoins(CryptoAddress genesisAddress, String digitalAssetHash, String transactionId) throws CantSendGenesisAmountException{
         try {
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_BITCOINS);
+            this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(digitalAssetHash, CryptoStatus.PENDING_SUBMIT);
             //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
             //TODO: Send btc through outgoing intra user
             //genesisTransaction.setOp_Return(digitalAssetHash);
@@ -532,6 +534,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Asset Issuing plugin cannot get the OutgoingIntraUserTransactionManager");
         } catch (OutgoingIntraActorCantSendFundsExceptions exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The sendToAddress is invalid: "+genesisAddress);
+        } catch (CantCheckAssetIssuingProgressException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the transaction CryptoStatus");
         }
     }
 

@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
@@ -69,6 +71,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
@@ -198,7 +201,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
             //Start the plugin event Recorder
             //I will comment the EventRecorderService start, because I don't need this right now, it starting without problems.
-            /*this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
+            this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
             this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao);
             ((DealsWithEvents) this.assetIssuingEventRecorderService).setEventManager(this.eventManager);
             try{
@@ -208,7 +211,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                 this.serviceStatus = ServiceStatus.STOPPED;
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION.getKey(), "The plugin event recorder is not started");
-            }*/
+            }
 
             //Start the plugin monitor agent
             //I will comment the MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
@@ -226,6 +229,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             //testIssueSingleAsset();
             //testIssueMultipleAssetsWithNoIdentity();
             //testIssueMultipleFullAssets();
+            //testRaiseEvent();
         }
         catch(CantSetObjectException exception){
             this.serviceStatus=ServiceStatus.STOPPED;
@@ -381,6 +385,14 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
              */
             return DEFAULT_LOG_LEVEL;
         }
+    }
+
+    private void testRaiseEvent(){
+        printSomething("Start event test");
+        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
+        eventToRaise.setSource(EventSource.CRYPTO_ROUTER);
+        eventManager.raiseEvent(eventToRaise);
+        printSomething("End event test");
     }
 
     private void testIssueSingleAsset() throws CantIssueDigitalAssetsException{
