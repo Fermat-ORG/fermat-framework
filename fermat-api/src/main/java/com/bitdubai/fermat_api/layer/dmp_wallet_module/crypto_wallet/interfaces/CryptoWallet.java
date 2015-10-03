@@ -230,7 +230,8 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,TransactionType transactionType,
+    List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
+                                                  TransactionType transactionType,
                                                   String      walletPublicKey,
                                                   int         max,
                                                   int         offset) throws CantListTransactionsException;
@@ -308,5 +309,7 @@ public interface CryptoWallet extends Serializable {
     List<PaymentRequest> listReceivedPaymentRequest();
 
     List<PaymentRequest> listPaymentRequestDatOrder();
+
+    List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
 
 }

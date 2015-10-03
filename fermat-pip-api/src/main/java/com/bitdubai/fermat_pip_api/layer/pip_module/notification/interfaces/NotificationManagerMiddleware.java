@@ -22,5 +22,7 @@ public interface NotificationManagerMiddleware {
 
     public void deleteObserver(Observer observer);
 
+    public void addPopUpNotification(EventSource source, String s);
+
 
 }

@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces;
 
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantCreateCashMoneyException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantGetCashMoneyException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantTransactionCashMoneyException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantLoadCashMoneyException;
 
 import java.util.List;
 
@@ -10,10 +11,25 @@ import java.util.List;
  */
 public interface CashMoneyManager {
 
-    List<CashMoney> getAllCashMoneyFromCurrentDeviceUser() throws CantGetCashMoneyException;
+        List<CashMoney> getTransactionsCashMoney() throws CantTransactionCashMoneyException;
 
-    CashMoney createCashMoney(
-         final String publicKeyBroker
-        ,final String walletId
-    ) throws CantCreateCashMoneyException;
+        CashMoney registerCashMoney(
+                 final String cashTransactionId
+                ,final String publicKeyCustomer
+                ,final String publicKeyBroker
+                ,final String status
+                ,final String balanceType
+                ,final String transactionType
+                ,final float amount
+                ,final String cashCurrencyType
+                ,final String cashReference
+                ,final long runningBookBalance
+                ,final long runningAvailableBalance
+                ,final long timestamp
+                ,final String memo
+        ) throws CantCreateCashMoneyException;
+
+        CashMoney loadCashMoneyWallet(String walletPublicKey) throws CantLoadCashMoneyException;
+
+        void createCashMoney (String walletPublicKey) throws CantCreateCashMoneyException;
 }

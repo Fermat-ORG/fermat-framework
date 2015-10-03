@@ -6,11 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -53,6 +53,11 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
     private DeviceLocation location;
 
     /**
+     * Represent the distance
+     */
+    private Double distance;
+
+    /**
      * Represent the platformComponentType
      */
     private PlatformComponentType platformComponentType;
@@ -77,6 +82,16 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
      */
     private Integer numberRegister;
 
+    /**
+     * Represent the fromOtherPlatformComponentType
+     */
+    private PlatformComponentType fromOtherPlatformComponentType;
+
+    /**
+     * Represent the fromOtherNetworkServiceType
+     */
+    private NetworkServiceType fromOtherNetworkServiceType;
+
 
     /**
      * Constructor
@@ -86,35 +101,47 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
         this.alias = null;
         this.identityPublicKey = null;
         this.location = null;
+        this.distance = null;
         this.name = null;
         this.networkServiceType = null;
         this.platformComponentType = null;
         this.extraData = null;
         this.firstRecord  = new Integer(0);
         this.numberRegister = new Integer(0);
+        this.fromOtherPlatformComponentType = null;
+        this.fromOtherNetworkServiceType = null;
     }
 
     /**
-     * Constructor whit parameters
+     * Constructor with parameters
      *
      * @param alias
      * @param identityPublicKey
      * @param location
+     * @param distance
      * @param name
      * @param networkServiceType
      * @param platformComponentType
+     * @param extraData
+     * @param firstRecord
+     * @param numberRegister
+     * @param fromOtherPlatformComponentType
+     * @param fromOtherNetworkServiceType
      */
-    public DiscoveryQueryParametersCommunication(String alias, String identityPublicKey, Location location, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer firstRecord, Integer numberRegister) {
+    public DiscoveryQueryParametersCommunication(String alias, String identityPublicKey, Location location, Double distance, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer firstRecord, Integer numberRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
         super();
         this.alias = alias;
         this.identityPublicKey = identityPublicKey;
         this.location = (DeviceLocation) location;
+        this.distance = distance;
         this.name = name;
         this.networkServiceType = networkServiceType;
         this.platformComponentType = platformComponentType;
         this.extraData = extraData;
         this.firstRecord = firstRecord;
         this.numberRegister = numberRegister;
+        this.fromOtherPlatformComponentType = fromOtherPlatformComponentType;
+        this.fromOtherNetworkServiceType = fromOtherNetworkServiceType;
     }
 
     /**
@@ -151,6 +178,15 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
     @Override
     public Location getLocation() {
         return location;
+    }
+
+    /**
+     * (non-javadoc)
+     * @see DiscoveryQueryParameters#getDistance()
+     */
+    @Override
+    public Double getDistance() {
+        return distance;
     }
 
     /**
@@ -198,6 +234,24 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
 
     /**
      * (non-javadoc)
+     * @see DiscoveryQueryParameters#getFromOtherPlatformComponentType()
+     */
+    @Override
+    public PlatformComponentType getFromOtherPlatformComponentType() {
+        return fromOtherPlatformComponentType;
+    }
+
+    /**
+     * (non-javadoc)
+     * @see DiscoveryQueryParameters#getFromOtherNetworkServiceType()
+     */
+    @Override
+    public NetworkServiceType getFromOtherNetworkServiceType() {
+        return fromOtherNetworkServiceType;
+    }
+
+    /**
+     * (non-javadoc)
      * @see DiscoveryQueryParameters#toJson()
      */
     @Override
@@ -231,11 +285,14 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
                 Objects.equals(getAlias(), that.getAlias()) &&
                 Objects.equals(getName(), that.getName()) &&
                 Objects.equals(getLocation(), that.getLocation()) &&
+                Objects.equals(getDistance(), that.getDistance()) &&
                 Objects.equals(getPlatformComponentType(), that.getPlatformComponentType()) &&
                 Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
                 Objects.equals(getExtraData(), that.getExtraData()) &&
                 Objects.equals(firstRecord, that.firstRecord) &&
-                Objects.equals(getNumberRegister(), that.getNumberRegister());
+                Objects.equals(getNumberRegister(), that.getNumberRegister()) &&
+                Objects.equals(getFromOtherPlatformComponentType(), that.getFromOtherPlatformComponentType()) &&
+                Objects.equals(getFromOtherNetworkServiceType(), that.getFromOtherNetworkServiceType());
     }
 
     /**
@@ -244,7 +301,7 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLocation(), getPlatformComponentType(), getNetworkServiceType(), getExtraData(), firstRecord, getNumberRegister());
+        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLocation(), getDistance(), getPlatformComponentType(), getNetworkServiceType(), getExtraData(), firstRecord, getNumberRegister(), getFromOtherPlatformComponentType(), getFromOtherNetworkServiceType());
     }
 
     /**
@@ -258,11 +315,15 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
                 ", identityPublicKey='" + identityPublicKey + '\'' +
                 ", name='" + name + '\'' +
                 ", location=" + location +
+                ", distance=" + distance +
                 ", platformComponentType=" + platformComponentType +
                 ", networkServiceType=" + networkServiceType +
                 ", extraData='" + extraData + '\'' +
                 ", firstRecord=" + firstRecord +
                 ", numberRegister=" + numberRegister +
+                ", fromOtherPlatformComponentType=" + fromOtherPlatformComponentType +
+                ", fromOtherNetworkServiceType=" + fromOtherNetworkServiceType +
                 '}';
     }
+
 }

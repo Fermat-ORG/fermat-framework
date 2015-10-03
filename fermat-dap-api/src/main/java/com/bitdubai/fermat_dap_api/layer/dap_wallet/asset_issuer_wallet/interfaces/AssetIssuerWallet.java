@@ -5,6 +5,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetAct
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,8 +20,9 @@ public interface AssetIssuerWallet {
     AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType,
+                                                        TransactionType transactionType,
                                                         int max,
-                                                        int offset) throws CantGetTransactionsException;
+                                                        int offset, String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                               BalanceType balanceType,
@@ -33,7 +35,7 @@ public interface AssetIssuerWallet {
                                                                                   int offset) throws CantGetTransactionsException;
 
     void setTransactionDescription(UUID transactionID,
-                                   String description) throws CantFindTransactionException;
+                                   String description) throws CantFindTransactionException, CantStoreMemoException;
 
     AssetIssuerWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
                                                                    BalanceType balanceType) throws CantGetActorTransactionSummaryException;

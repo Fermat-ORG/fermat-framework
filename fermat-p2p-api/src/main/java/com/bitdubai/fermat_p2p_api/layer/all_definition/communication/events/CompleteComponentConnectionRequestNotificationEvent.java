@@ -6,8 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent</code>
@@ -19,15 +19,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.Network
  */
 public class CompleteComponentConnectionRequestNotificationEvent extends AbstractP2PFermatEvent {
 
-    /**
-     * Represent the networkServiceType
-     */
-    private NetworkServiceType networkServiceType;
 
     /**
-     * Represent the remoteIdentity
+     * Represent the remoteComponent
      */
-    private String remoteIdentity;
+    private PlatformComponentProfile remoteComponent;
 
 
     /**
@@ -39,34 +35,18 @@ public class CompleteComponentConnectionRequestNotificationEvent extends Abstrac
     }
 
     /**
-     * Get the NetworkServiceType
-     * @return NetworkServiceType
+     * Get the RemoteComponent
+     * @return PlatformComponentProfile
      */
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
+    public PlatformComponentProfile getRemoteComponent() {
+        return remoteComponent;
     }
 
     /**
-     * Set the NetworkServiceType
-     * @param networkServiceType
+     * Set the RemoteComponent
+     * @param remoteComponent
      */
-    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
-        this.networkServiceType = networkServiceType;
-    }
-
-    /**
-     * Get the RemoteIdentity
-     * @return String
-     */
-    public String getRemoteIdentity() {
-        return remoteIdentity;
-    }
-
-    /**
-     * Set the RemoteIdentity
-     * @param remoteIdentity
-     */
-    public void setRemoteIdentity(String remoteIdentity) {
-        this.remoteIdentity = remoteIdentity;
+    public void setRemoteComponent(PlatformComponentProfile remoteComponent) {
+        this.remoteComponent = remoteComponent;
     }
 }

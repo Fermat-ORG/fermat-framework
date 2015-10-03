@@ -15,16 +15,20 @@ public interface MakeOfflineBankTransferManager {
     List<MakeOfflineBankTransfer> getAllMakeOfflineBankTransferFromCurrentDeviceUser() throws CantGetMakeOfflineBankTransferException;
 
     MakeOfflineBankTransfer createMakeOfflineBankTransfer(
-         final String publicKeyCustomer
-        ,final String publicKeyBroker
-        ,final String bankMoneyTransactionType
-        ,final float merchandiseAmount
+         final String publicKeyBroker
+        ,final String publicKeyCustomer
+        ,final String balanceType
+        ,final String transactionType
+        ,final float amount
         ,final String bankCurrencyType
         ,final String bankOperationType
-        ,final String getBankName
-        ,final String getBankAccountNumber
-        ,final String getBankAccountType
-        ,final String getBankDocumentReference
+        ,final String bankDocumentReference
+        ,final String bankToName
+        ,final String bankToAccountNumber
+        ,final String bankToAccountType
+        ,final String bnkFromName
+        ,final String bankFromAccountNumber
+        ,final String bankFromAccountType
     ) throws CantCreateMakeOfflineBankTransferException;
 
     void updateStatusMakeOfflineBankTransfer(final UUID bankTransactionId) throws CantUpdateStatusMakeOfflineBankTransferException;
