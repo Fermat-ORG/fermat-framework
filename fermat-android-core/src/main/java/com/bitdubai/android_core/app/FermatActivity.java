@@ -1140,7 +1140,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
 
     public WalletManager getWalletManager() {
-        return (WalletManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
+        return (WalletManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
     }
 
     /**
@@ -1160,14 +1160,14 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
 
     public WalletFactoryManager getWalletFactoryManager() {
-        return (WalletFactoryManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
+        return (WalletFactoryManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
     }
 
     /**
      * Get WalletSettingsManager
      */
     public WalletSettingsManager getWalletSettingsManager() {
-        return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE);
+        return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE);
     }
 
     /**
@@ -1202,7 +1202,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Get WalletStoreModuleManager
      */
     public WalletStoreModuleManager getWalletStoreModuleManager() {
-        return (WalletStoreModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_STORE_MODULE);
+        return (WalletStoreModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE);
     }
 
     /**
@@ -1216,7 +1216,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Get WalletStoreModuleManager
      */
     public WalletPublisherModuleManager getWalletPublisherManager() {
-        return (WalletPublisherModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WALLET_PUBLISHER_MODULE);
+        return (WalletPublisherModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE);
     }
     /**
      * Get NotificationManager
