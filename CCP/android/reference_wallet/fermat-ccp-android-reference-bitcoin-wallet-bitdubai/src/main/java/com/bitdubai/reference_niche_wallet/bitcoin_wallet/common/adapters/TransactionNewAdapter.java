@@ -134,7 +134,6 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
             holder.getImageView_see_all_transactions().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "estoy tocando esto", Toast.LENGTH_SHORT).show();
 
                     if (holder.getListView_transactions().getVisibility() == View.VISIBLE) {
                         holder.getListView_transactions().setVisibility(View.GONE);
