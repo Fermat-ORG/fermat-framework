@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 
@@ -31,15 +32,15 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
     /*
     * Represent the templateNetworkServicePluginRoot
     */
-    private TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot;
+    private CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
 
     /**
      * Constructor with parameter
      *
-     * @param templateNetworkServicePluginRoot
+     * @param cryptoTransmissionNetworkServicePluginRoot
      */
-    public CompleteComponentConnectionRequestNotificationEventHandler(TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot) {
-        this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
+    public CompleteComponentConnectionRequestNotificationEventHandler(CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot) {
+        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
     }
 
     /**
@@ -56,7 +57,7 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
         System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
 
-        if (((Service) this.templateNetworkServicePluginRoot).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.cryptoTransmissionNetworkServicePluginRoot).getStatus() == ServiceStatus.STARTED) {
 
             CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
 
@@ -66,7 +67,7 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
                  /*
                  *  TemplateManager make the job
                  */
-                this.templateNetworkServicePluginRoot.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
+                this.cryptoTransmissionNetworkServicePluginRoot.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
 
             }
 

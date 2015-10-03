@@ -31,7 +31,7 @@ import java.util.Map;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
+public class CryptoTransmissionNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
     /**
      * Represent the communicationsClientConnection
@@ -85,7 +85,7 @@ public class TemplateNetworkServiceConnectionManager implements NetworkServiceCo
      * @param communicationsClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public TemplateNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public CryptoTransmissionNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.platformComponentProfile = platformComponentProfile;
         this.identity = identity;

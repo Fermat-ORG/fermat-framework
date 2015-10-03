@@ -27,7 +27,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public class TemplateNetworkServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class CryptoTransmissionNetworkServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -40,7 +40,7 @@ public class TemplateNetworkServiceDatabaseFactory implements DealsWithPluginDat
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public TemplateNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public CryptoTransmissionNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 

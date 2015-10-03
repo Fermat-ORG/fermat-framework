@@ -38,7 +38,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class TemplateNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -59,7 +59,7 @@ public class TemplateNetworkServiceDeveloperDatabaseFactory implements DealsWith
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public TemplateNetworkServiceDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
