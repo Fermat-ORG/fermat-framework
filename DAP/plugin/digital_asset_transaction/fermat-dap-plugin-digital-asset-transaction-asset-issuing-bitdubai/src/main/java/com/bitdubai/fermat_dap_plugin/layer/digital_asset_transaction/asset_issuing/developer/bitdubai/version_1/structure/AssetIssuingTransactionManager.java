@@ -18,7 +18,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -38,7 +38,6 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     CryptoAddressBookManager cryptoAddressBookManager;
     CryptoVaultManager cryptoVaultManager;
     CryptoWallet cryptoWallet;
-    //DigitalAsset digitalAsset;
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -109,6 +108,10 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager=errorManager;
+    }
+
+    public void setDigitalAssetMetadataVault(DigitalAssetMetadataVault digitalAssetMetadataVault) throws CantSetObjectException {
+        this.digitalAssetCryptoTransactionFactory.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{

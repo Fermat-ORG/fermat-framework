@@ -180,16 +180,22 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         return listAllInState;
     }
 
-    public void cancelTransaction(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
+    public void cancelTransaction(TransactionWrapper bitcoinTransaction, String memo) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
 
         try {
-            setToState(bitcoinTransaction, TransactionStatus.CANCELED);
+            setToStateWithMemo(
+                    bitcoinTransaction,
+                    TransactionStatus.CANCELED,
+                    memo
+            );
+
         } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
+
             throw exception;
         } catch (Exception exception) {
+
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-
     }
 
     public void setToNew(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
@@ -237,7 +243,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-            DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
+            DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
 
             recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME, hash);
 
@@ -294,9 +300,25 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     private void setToState(TransactionWrapper bitcoinTransaction, TransactionStatus status) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
+        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
 
         recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
+
+        transactionTable.updateRecord(recordToUpdate);
+    }
+
+    private void setToStateWithMemo(TransactionWrapper bitcoinTransaction,
+                                    TransactionStatus  status            ,
+                                    String             memo              ) throws CantUpdateRecordException      ,
+                                                                                  InconsistentTableStateException,
+                                                                                  CantLoadTableToMemoryException {
+
+        DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
+
+        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
+
+        recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
+        recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME       , memo            );
 
         transactionTable.updateRecord(recordToUpdate);
     }
@@ -334,7 +356,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-            DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionWrapper.getIdTransaction());
+            DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionWrapper.getTransactionId());
 
             recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
 
@@ -361,7 +383,6 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     */
 
     private TransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
-        TransactionWrapper bitcoinTransaction = new TransactionWrapper();
 
         String walletPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME);
         UUID transactionId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME);
@@ -385,22 +406,22 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         String actorFromPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME);
         String actorToPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
 
-        bitcoinTransaction.setWalletPublicKey(walletPublicKey);
-        bitcoinTransaction.setIdTransaction(transactionId);
-        bitcoinTransaction.setTransactionHash(transactionHash);
-        bitcoinTransaction.setAddressFrom(addressFrom);
-        bitcoinTransaction.setAddressTo(addressTo);
-        bitcoinTransaction.setAmount(amount);
-        bitcoinTransaction.setState(state);
-        bitcoinTransaction.setTimestamp(timestamp);
-        bitcoinTransaction.setMemo(memo);
-        bitcoinTransaction.setCryptoStatus(cryptoStatus);
-        bitcoinTransaction.setActorFromPublicKey(actorFromPublicKey);
-        bitcoinTransaction.setActorFromType(actorFromType);
-        bitcoinTransaction.setActorToPublicKey(actorToPublicKey);
-        bitcoinTransaction.setActorToType(actorToType);
-
-        return bitcoinTransaction;
+        return new TransactionWrapper(
+                transactionId     ,
+                actorFromPublicKey,
+                actorToPublicKey  ,
+                actorFromType     ,
+                actorToType       ,
+                transactionHash   ,
+                addressFrom       ,
+                addressTo         ,
+                amount            ,
+                timestamp         ,
+                memo              ,
+                walletPublicKey   ,
+                state             ,
+                cryptoStatus
+        );
     }
 
     // Apply convertToBT to all the elements in a list

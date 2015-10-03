@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/22/15.
  */
-public class Language implements com.bitdubai.fermat_api.layer.dmp_network_service.wallet_store.interfaces.Language {
+public class Language implements com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language {
 
     UUID id;
     UUID walletId; //Todo: Refactor a String para que acepte PublicKey

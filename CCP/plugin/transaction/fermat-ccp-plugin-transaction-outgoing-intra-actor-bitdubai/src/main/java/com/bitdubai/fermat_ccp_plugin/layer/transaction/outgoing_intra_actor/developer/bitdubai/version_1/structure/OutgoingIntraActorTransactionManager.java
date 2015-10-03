@@ -96,26 +96,24 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
     @Override
     public void sendCrypto(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String op_Return, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType, ReferenceWallet referenceWallet) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
-        try {
-            BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            ;
-            long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+            //BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
 
-            if (cryptoAmount > funds)
-                throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
+            //long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+
+            //if (cryptoAmount > funds) {
+                //throw new OutgoingIntraActorInsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
+            //}
 
             OutgoingIntraActorDao dao = new OutgoingIntraActorDao(this.errorManager, this.pluginDatabaseSystem);
+        try {
             dao.initialize(this.pluginId);
             dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, op_Return, description, senderPublicKey, senderActorType, receptorPublicKey, receptorActorType, referenceWallet);
-        } catch (OutgoingIntraActorInsufficientFundsException e) {
-            throw e;
-        } catch (OutgoingIntraActorCantInsertRecordException | CantLoadWalletException | CantCalculateBalanceException | CantInitializeOutgoingIntraActorDaoException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-            throw new OutgoingIntraActorCantSendFundsExceptions("An exception happened",e,"","");
-        } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(e));
-            throw new OutgoingIntraActorCantSendFundsExceptions("An unexpected exception happened", FermatException.wrapException(e),"","");
+        } catch (CantInitializeOutgoingIntraActorDaoException e) {
+            e.printStackTrace();
+        } catch (OutgoingIntraActorCantInsertRecordException e) {
+            e.printStackTrace();
         }
+
 
     }
 }

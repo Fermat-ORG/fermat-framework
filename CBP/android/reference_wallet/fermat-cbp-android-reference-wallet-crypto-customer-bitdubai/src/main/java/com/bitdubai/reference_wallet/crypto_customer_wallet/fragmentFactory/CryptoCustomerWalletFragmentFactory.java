@@ -6,7 +6,7 @@
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
-//import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+//import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 //import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.MainFragment;
 //
 //import static com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentsEnumType.MAIN_FRAGMET;

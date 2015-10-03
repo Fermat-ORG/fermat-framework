@@ -4,7 +4,8 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankMoneyTransactionType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 
 import java.util.UUID;
 
@@ -16,26 +17,36 @@ public interface BankMoneyTransaction {
 
     UUID getBankTransactionId();
 
-    String getPublicKeyCustomer();
-
     String getPublicKeyBroker();
+
+    String getPublicKeyCustomer();
 
     BankTransactionStatus getStatus();
 
-    BankMoneyTransactionType getBankMoneyTransactionType();
+    BalanceType getBalanceType();
 
-    float getMerchandiseAmount();
+    TransactionType getTransactionType();
+
+    float getAmount();
 
     BankCurrencyType getBankCurrencyType();
 
     BankOperationType getBankOperationType();
 
-    String getBankName();
-
-    String getBankAccountNumber();
-
-    BankAccountType getBankAccountType();
-
     String getBankDocumentReference();
+
+    String getBankToName();
+
+    String getBankToAccountNumber();
+
+    BankAccountType getBankToAccountType();
+
+    String getBankFromName();
+
+    String getBankFromAccountNumber();
+
+    BankAccountType getBankFromAccountType();
+
+    long getTimestamp();
 
 }

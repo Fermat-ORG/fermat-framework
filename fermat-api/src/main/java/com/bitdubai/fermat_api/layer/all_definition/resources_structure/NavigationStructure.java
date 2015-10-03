@@ -15,6 +15,10 @@ public class NavigationStructure {
 
     private Version version;
 
+    public NavigationStructure(){
+
+    }
+
     public NavigationStructure(UUID id, String filename) {
         this.id = id;
         this.filename = filename;

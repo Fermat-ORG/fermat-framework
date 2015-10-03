@@ -12,7 +12,8 @@ public enum NotificationType {
      */
     INCOMING_MONEY   ("IM"),
     INCOMING_CONNECTION     ("IC"),
-    MONEY_REQUEST ("MR");
+    MONEY_REQUEST ("MR"),
+    CLOUD_CONNECTED_NOTIFICATION("CCN");
 
     /**
      * Represent the key
@@ -51,6 +52,8 @@ public enum NotificationType {
                 return INCOMING_CONNECTION;
             case"MR":
                 return MONEY_REQUEST;
+            case "CCN":
+                return CLOUD_CONNECTED_NOTIFICATION;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the FactoryProjectType enum");
 

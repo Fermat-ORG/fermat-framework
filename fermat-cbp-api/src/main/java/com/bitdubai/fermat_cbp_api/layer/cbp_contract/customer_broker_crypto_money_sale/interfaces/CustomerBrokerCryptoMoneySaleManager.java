@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_crypto_money_sale.interfaces;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_sale.interfaces.CustomerBrokerBankMoneySale;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_crypto_money_sale.exceptions.CantCreateCustomerBrokerCryptoMoneySaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_crypto_money_sale.exceptions.CantupdateStatusCustomerBrokerCryptoMoneySaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_crypto_money_sale.exceptions.CantDeleteCustomerBrokerCryptoMoneySaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_crypto_money_sale.exceptions.CantupdateCustomerBrokerCryptoMoneySaleException;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +15,7 @@ public interface CustomerBrokerCryptoMoneySaleManager {
 
     List<CustomerBrokerCryptoMoneySale> getAllCustomerBrokerCryptoMoneySaleFromCurrentDeviceUser();
 
-    CustomerBrokerBankMoneySale createCustomerBrokerCryptoMoneySale(
+    CustomerBrokerCryptoMoneySale createCustomerBrokerCryptoMoneySale(
             final String publicKeyCustomer,
             final String publicKeyBroker,
             final Float merchandiseAmount,
@@ -27,6 +28,9 @@ public interface CustomerBrokerCryptoMoneySaleManager {
             final long merchandiseDeliveryExpirationDate
     ) throws CantCreateCustomerBrokerCryptoMoneySaleException;
 
-    void updateStatusCustomerBrokerCryptoMoneySale(final UUID ContractId) throws CantupdateStatusCustomerBrokerCryptoMoneySaleException;
+    void updateStatusCustomerBrokerCryptoMoneySale(final UUID ContractId) throws CantupdateCustomerBrokerCryptoMoneySaleException;
 
+    void deleteCustomerBrokerCryptoMoneySale(UUID contractID) throws CantDeleteCustomerBrokerCryptoMoneySaleException;
+
+    DatabaseTableRecord getCustomerBrokerCryptoMoneySaleContractTable();
 }

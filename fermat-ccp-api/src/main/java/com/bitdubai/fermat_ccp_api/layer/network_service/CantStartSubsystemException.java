@@ -3,7 +3,7 @@ package com.bitdubai.fermat_ccp_api.layer.network_service;
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>CantStartSubsystemException</code>
+ * The exception <code>com.bitdubai.fermat_ccp_api.layer.network_service.CantStartSubsystemException</code>
  * is thrown when there is an error trying to start a network service of the CCP platform.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/2015.

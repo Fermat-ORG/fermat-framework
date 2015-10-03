@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.wallet_factory.ui.fragments;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,18 +8,24 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.sub_app.wallet_factory.R;
 import com.bitdubai.sub_app.wallet_factory.adapters.InstalledWalletsAdapter;
-import com.bitdubai.sub_app.wallet_factory.models.Wallet;
+import com.bitdubai.sub_app.wallet_factory.interfaces.PopupMenu;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
+import com.bitdubai.sub_app.wallet_factory.ui.dialogs.GetProjectNameDialog;
 import com.bitdubai.sub_app.wallet_factory.utils.CommonLogger;
 
 import java.util.ArrayList;
@@ -31,7 +38,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class AvailableProjectsFragment extends FermatFragment
-        implements SwipeRefreshLayout.OnRefreshListener {
+        implements SwipeRefreshLayout.OnRefreshListener, OnMenuItemClickListener {
 
     private final String TAG = "FactoryProjects";
 
@@ -54,7 +61,7 @@ public class AvailableProjectsFragment extends FermatFragment
     private RecyclerView.LayoutManager layoutManager;
     private InstalledWalletsAdapter adapter;
 
-    private ArrayList<Wallet> dataSet;
+    private ArrayList<InstalledWallet> dataSet;
 
     public static FermatFragment newInstance() {
         return new AvailableProjectsFragment();
@@ -73,10 +80,22 @@ public class AvailableProjectsFragment extends FermatFragment
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new InstalledWalletsAdapter(getActivity());
+        adapter.setMenuItemClickListener(new PopupMenu() {
+            @Override
+            public void onMenuItemClickListener(View menuView, Object project, int position) {
+                projectToClone = (InstalledWallet) project;
+                /*Showing up popup menu*/
+                android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.menu_installed_wallet, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(AvailableProjectsFragment.this);
+                popupMenu.show();
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         return rootView;
@@ -122,7 +141,7 @@ public class AvailableProjectsFragment extends FermatFragment
                     if (isAttached) {
                         swipeRefresh.setRefreshing(false);
                         if (result != null && result.length > 0) {
-                            dataSet = (ArrayList<Wallet>) result[0];
+                            dataSet = (ArrayList<InstalledWallet>) result[0];
                             adapter.changeDataSet(dataSet);
                             showEmpty();
                         }
@@ -156,5 +175,48 @@ public class AvailableProjectsFragment extends FermatFragment
             rootView.findViewById(R.id.empty).setAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
             rootView.findViewById(R.id.empty).setVisibility(View.GONE);
         }
+    }
+
+    private InstalledWallet projectToClone;
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.action_clone && projectToClone != null) {
+            final GetProjectNameDialog getProjectName = new GetProjectNameDialog();
+            getProjectName.setCancelable(true);
+            getProjectName.setCallBack(new GetProjectNameDialog.DialogChooseNameListener() {
+                @Override
+                public void onCompleteInfo(final String name) {
+                    getProjectName.dismiss();
+                    final ProgressDialog dialog = new ProgressDialog(getActivity());
+                    dialog.setCancelable(false);
+                    dialog.setMessage("Please wait...");
+                    dialog.show();
+                    new FermatWorker(getActivity(), new FermatWorkerCallBack() {
+                        @Override
+                        public void onPostExecute(Object... result) {
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "The current project has been cloned...", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onErrorOccurred(Exception ex) {
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), "Fermat has detected an exception", Toast.LENGTH_SHORT).show();
+                            CommonLogger.exception(TAG, ex.getMessage(), ex);
+                        }
+                    }) {
+                        @Override
+                        protected Object doInBackground() throws Exception {
+                            manager.cloneInstalledWallets(projectToClone, name);
+                            projectToClone = null;
+                            return true;
+                        }
+                    }.execute();
+                }
+            });
+            getProjectName.show(getActivity().getFragmentManager(), null);
+        }
+        return false;
     }
 }

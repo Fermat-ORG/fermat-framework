@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by eze on 2015.09.19..
  */
-public class OutgoingIntraActorTransactionProcessorAgent {
+public class OutgoingIntraActorTransactionProcessorAgent  {
 
     private ErrorManager                               errorManager;
     private CryptoVaultManager                         cryptoVaultManager;
@@ -178,6 +178,8 @@ public class OutgoingIntraActorTransactionProcessorAgent {
                             | CantRegisterDebitException | OutgoingIntraActorCantCancelTransactionException
                             | CantLoadWalletException e) {
                         reportUnexpectedException(e);
+                        // Todo: Rodrigo, since the wallet cant be loaded at this time, I'm still putting the transacction in PIA
+                        dao.setToPIA(transaction);
                     }
                 }
 
@@ -191,14 +193,14 @@ public class OutgoingIntraActorTransactionProcessorAgent {
                     try {
                         String hash;
                         if (transaction.getOp_Return() == null)
-                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getIdTransaction(), transaction.getAddressTo(), transaction.getAmount());
+                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount());
                         else
-                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getIdTransaction(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
+                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
 
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
                         //       we will just send the metadata in this place. This MUST be corrected.
-                        this.cryptoTransmissionManager.sendCrypto(transaction.getIdTransaction(),
+                        this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
                                 transaction.getAddressTo().getCryptoCurrency(),
                                 transaction.getAmount(),
                                 transaction.getActorFromPublicKey(),
@@ -245,7 +247,7 @@ public class OutgoingIntraActorTransactionProcessorAgent {
 
                 for (OutgoingIntraActorTransactionWrapper transaction : transactionList) {
                     try {
-                        CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getIdTransaction());
+                        CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionId());
                         this.transactionHandlerFactory.getHandler(transaction.getReferenceWallet()).handleTransaction(transaction, cryptoStatus);
                     } catch (CouldNotGetCryptoStatusException | OutgoingIntraActorCantFindHandlerException | OutgoingIntraActorCantHandleTransactionException e) {
                         reportUnexpectedException(e);
