@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterO
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -72,7 +71,6 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable=this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-            DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             if (databaseTableRecords.size() > 1){
@@ -82,7 +80,7 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.toString());
-            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
@@ -102,7 +100,6 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable=this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-            DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             if (databaseTableRecords.size() > 1){
@@ -112,7 +109,7 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, transactionStatus.toString());
-            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
@@ -132,7 +129,6 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable=this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, eventId, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-            DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             if (databaseTableRecords.size() > 1){
@@ -142,7 +138,7 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, EventStatus.NOTIFIED.toString());
-            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
@@ -162,7 +158,6 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable=this.database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-            DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             if (databaseTableRecords.size() > 1){
@@ -172,7 +167,7 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, transactionStatus.toString());
-            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
@@ -432,7 +427,6 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-            //DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             if (databaseTableRecords.size() > 1){
@@ -468,7 +462,6 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-            DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             if (databaseTableRecords.size() > 1){
@@ -479,7 +472,7 @@ public class AssetIssuingTransactionDao {
             }
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME, genesisAddress);
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.GENESIS_OBTAINED.getCode());
-            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
@@ -496,7 +489,6 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-            DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             if (databaseTableRecords.size() > 1){
@@ -507,7 +499,7 @@ public class AssetIssuingTransactionDao {
             }
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.HASH_SETTLED.toString());
-            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
@@ -527,7 +519,6 @@ public class AssetIssuingTransactionDao {
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionID, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
-            DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
             if (databaseTableRecords.size() > 1){
@@ -538,7 +529,7 @@ public class AssetIssuingTransactionDao {
             }
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetHash);
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.HASH_SETTLED.toString());
-            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
@@ -726,7 +717,6 @@ public class AssetIssuingTransactionDao {
             databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
-            DatabaseTransaction databaseTransaction=this.database.newTransaction();
             DatabaseTableRecord databaseTableRecord;
             if (databaseTableRecords.size() > 1){
                 this.database.closeDatabase();
@@ -735,17 +725,17 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.toString());
-            databaseTransaction.addRecordToUpdate(databaseTable, databaseTableRecord);
+            databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(exception, "Updating Crypto Status.", "Cannot open or find the Asset Issuing database");
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception, "Updating Crypto Status.", "Cannot load the table into memory");
+            throw new CantCheckAssetIssuingProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
         } catch(Exception exception){
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Unexpected exception");
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Unexpected exception - Transaction hash:" + transactionHash);
         }
     }
 

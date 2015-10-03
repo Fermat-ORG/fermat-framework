@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum AssetBalanceType {
     BOOK("BOOK"),
-    CREDIT("CREDIT");
+    AVAILABLE("AVAI");
 
     String code;
 
@@ -23,8 +23,8 @@ public enum AssetBalanceType {
         switch (code){
             case "BOOK":
                 return AssetBalanceType.BOOK;
-            case "CREDIT":
-                return AssetBalanceType.CREDIT;
+            case "AVAI":
+                return AssetBalanceType.AVAILABLE;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the AssetCreditType enum.");
         }
