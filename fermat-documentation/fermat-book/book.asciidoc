@@ -1,8 +1,7 @@
 :bookseries: animal
+:numbered:
 
-= Fermat 
-
-include::preface.asciidoc[]
+= FERMAT: expanding the cryptoworld
 
 include::fbk-01.asciidoc[]
 
