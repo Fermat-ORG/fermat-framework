@@ -45,22 +45,28 @@ Video Intro
 Platform Stack
 Fermat enables a stack of platforms to run on top of its base infrastructure. Each platform may reuse functionality from the previous one forming a rich ecosystem of reusable components.
 
+== Fermat P2P
+
 Fermat P2P network provides connectivity between devices.
 Fermat P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing.
 Fermat P2P provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as plug-ins.
 This ensures a rich set of abstractions for wallet applications running on top of the platform. For example in a transaction between users of any of Fermat DMP’s wallets, crypto networks are used for transporting value, while Fermat P2P is used for transporting the information associated with the transaction. That information can be the amount of fiat currency sent or received, confirmations, attached messages, etc.
 This means that wallets can easily isolate users from today’s tedious and complex tasks such as exchanging crypto addresses, payment requests, etc. It also enables abstractions like digital fiat currency over crypto currency, hiding from the end users’ eyes the low level negotiations between the local and the remote wallets. Finally it increases the interoperability between different wallet providers.
 
+== FERMAT PIP
+
 Fermat PIP is an open source platform running on end users’ devices. It features a plug-ins architecture that allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment.
 A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
 Through its plug-ins the platform connects to and reuses most of the infrastructure deployed by the industry.   At the same time it adds the necessary layers of abstraction on top of those services. In this way it amplifies their reach to every possible niche by allowing any of the segment specific wallets to consume those existing services directly or indirectly if they rely on the platform or its plug-ins to provide the necessary abstraction.
 Legacy financial institutions are also integrated in the platform allowing end users to access traditional financial products and financial institutions to extend their reach into segments and markets not currently served.
 
+== FERMAT DMP 
 It is a set of plug-ins and APPs running on top of Fermat PIP on end users’ devices and it allows third party developers to create segment specific wallets on top of the different layers of abstraction provided by Fermat DMP.
 The key functionality of the platform includes a decentralized wallet factory that allows marketers to re-brand any of the already existing segment specific wallets in a few steps without the need to deal with the source code of the base wallet selected, and  also a decentralized built-in wallet store where end users can download their favorite bank’s, brand’s and retailer’s wallets.
 A specialized functionality allows brands and retailers to manage the relationship with the user base of their wallet and  also with shops accepting the scrip (coupons, vouchers and discounts) they issue and distribute to the users of their wallet.
-Why Fermat?
-The story
+
+== Why Fermat?
+=== The story
 Pythagoras had to pay his first student to convince him to study with him. He gave him three oboli (about a penny) per lesson until one day he said there was no more money. The student replied that he preferred to pay, provided that they continued with the lessons. The rumor ran through the Greek islands and so the Pythagorean School, also known as the Secret Brotherhood, a philosophical / religious monastic order counting 300 members, was formed. By then counting and calculating had been widely practiced by the Babylonians and Egyptians but the Pythagoreans went far beyond that. “All is Number” was their motto attesting to their conviction that numbers were the key to life itself. Pythagoras strongly believed that relationships between numbers could reveal, through logical demonstration, all the secrets of the universe, hence he started producing his theorems. The Brotherhood walked briskly with his theorems but did nothing to share the secrets of the universe arousing the ire of the people who one day set the school on fire.
 Despite the desperate attempt of his students to save him Pythagoras himself died in the fire. The Brotherhood was dispersed until Alexander the Great founded Alexandria and in order to attract scholars to the new city he took the advice of his general, Ptolemy: “Gather the great books; great minds will follow.”
 Hence the Library of Alexandria was established with the overall aim of collecting every book ever written. Each traveler had their books confiscated upon arrival to Alexandria. They would be handed over to scribes, who made a copy for the owner and sent the original to the library. The extensive collection comprising 500,000 volumes made Alexandria the intellectual capital of the ancient world and as Ptolemy had envisaged attracted the most famous scholars of the era.

@@ -67,6 +67,11 @@ Cryptocurrencies are born into existent by a very specific mathemathical algorit
 FERMAT understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is unique, and therefore there are potentially so many differents ways of shaping the accessibility, appearance and functionality of applications dealing with cryptocurrencies and blockchain technology to match very specific need and scalable demand of each consumer's niche. Here begins the huge differentation between FERMAT applications and the rest ! FERMAT takes very seriously into account the actor's profile to develop attractive applications in each case. Well, for some actor's with more complex relationships world, more complexity is also wanted in ther wallets and in the wallet of kindred actor's that interdepend and interact in the same *niche*. These alike functionalities are held together in specific *areas* within FERMAT platform stack system that build a one-on-one relationship with a real-world environment.
 
 .Wallets pret-a-porter 
+* FERMAT WPD (Wallet Production & Distribution)
+** WaFa (Wallet Factory)  -> *for marketers to re-brand any of the already existing segment specific wallets in a few steps (without the need to deal with the source code of the base wallet selected!)*
+** WaPu (Wallet Publisher) -> *for wallet designers/marketing agency to offer their rebranded Wallet to the world !*
+** WaSt (Wallet Store) -> the store where available wallets live, ready to be adopted !
+** WaMa (Wallet Manager)  -> for everyone who uses more than one wallet, to manage them !
 * FERMAT CCP (crypto currency platform)
 ** BitWa (Basic Bitcoin Wallet)  -> *for those devoted "BTC-only" users!*
 ** Argentine Bitcoin wallet -> *for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady* comparison between argentine$, USD (oficial and blue!) and even Eu$!)
@@ -111,13 +116,21 @@ NOTE: *PLUG-INS* are very convienent bacause of its defyning feature: as long as
 
 
 Inside FERMAT, each plug-in is given certain responsability within the whole, they are organized in layers which collect plug-ins under a common shared task, and they are specific designed to communicate only to the adjacent layers, building a hierachical structure where responsability is transfered from the lower layer onto the next upper one. The broad scope of FERMAT's developing potential introduces also the idea of a second dimensional arragement of plug-ins into "columns" that join plug-ins that are interconnected to offer a specific functionality to a determined niche or segment.
+
+Through its plug-ins the platform connects to and reuses most of the infrastructure deployed by the industry.   At the same time it adds the necessary layers of abstraction on top of those services. In this way it amplifies their reach to every possible niche by allowing any of the segment specific wallets to consume those existing services directly or indirectly if they rely on the platform or its plug-ins to provide the necessary abstraction.
+
  
 .General overview on FERMAT'S platforms and product's families
 * FERMAT CORE
-** FERMAT OSA (operating system)
+** FERMAT OSA (operating system)8
 ** FERMAT P2P (network and communication layers)
-** FERMAT BCH (blockchain)
-** FERMAT PIP
+*** Fermat P2P network provides connectivity between devices. Fermat P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. Fermat P2P provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
+This ensures a rich *set of abstractions for wallet applications running on top of the platform*. Fermat P2P is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
+** FERMAT BCH (blockchain) 
+*** in a transaction between users of any of Fermat DMP’s wallets, crypto networks are used for transporting value *TRANSPORT OF VALUE* 
+** FERMAT PIP (Plug-ins Platform)
+***Fermat PIP is an open source platform running on end users’ devices. It features a plug-ins architecture that allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment.
+A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
 
 For a cool visualization of the constant growing system of layers & columns, platforms and wallets visit http://fermat.org
 
