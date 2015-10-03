@@ -153,7 +153,7 @@ project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai').projectDir
 include ':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai'
 project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
 
-<<<<<<< HEAD
+
 
 include ':fermat-p2p-plugin-communication-wifi-bitdubai'
 project(':fermat-p2p-plugin-communication-wifi-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-wifi-bitdubai')
@@ -164,8 +164,7 @@ project(':fermat-p2p-plugin-communication-wifi-bitdubai').projectDir = new File(
 
 include ':fermat-dmp-plugin-identity-intra-user-bitdubai'
 project(':fermat-dmp-plugin-identity-intra-user-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
-=======
->>>>>>> 80232a31037fd286487e5ce92b306871eb542cf8
+
 
 //CCM Projects
 
