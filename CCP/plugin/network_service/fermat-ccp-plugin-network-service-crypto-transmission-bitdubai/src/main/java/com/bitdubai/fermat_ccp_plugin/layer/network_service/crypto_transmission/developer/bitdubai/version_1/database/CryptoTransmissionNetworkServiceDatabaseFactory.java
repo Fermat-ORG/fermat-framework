@@ -27,7 +27,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public class TemplateNetworkServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class CryptoTransmissionNetworkServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -40,7 +40,7 @@ public class TemplateNetworkServiceDatabaseFactory implements DealsWithPluginDat
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public TemplateNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public CryptoTransmissionNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -77,18 +77,18 @@ public class TemplateNetworkServiceDatabaseFactory implements DealsWithPluginDat
             /**
              * Create incoming messages table.
              */
-            table = databaseFactory.newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(TemplateNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN);
+            table.addIndex(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -98,18 +98,18 @@ public class TemplateNetworkServiceDatabaseFactory implements DealsWithPluginDat
             }           /**
              * Create outgoing messages table.
              */
-            table = databaseFactory.newTableFactory(ownerId, TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FIRST_KEY_COLUMN);
+            table.addIndex(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

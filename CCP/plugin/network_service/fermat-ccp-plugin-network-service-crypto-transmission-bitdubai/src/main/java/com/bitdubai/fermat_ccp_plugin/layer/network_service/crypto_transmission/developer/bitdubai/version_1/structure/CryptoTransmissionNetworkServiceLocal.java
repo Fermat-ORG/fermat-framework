@@ -40,7 +40,7 @@ import java.util.Observer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLocal {
+public class CryptoTransmissionNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
     /**
      * Represent the profile of the remote network service
@@ -74,7 +74,7 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
      * @param errorManager                  instance
      * @param outgoingMessageDao            instance
      */
-    public TemplateNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
+    public CryptoTransmissionNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;

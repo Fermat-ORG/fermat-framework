@@ -9,7 +9,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
@@ -29,9 +29,9 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
     private static final long SLEEP_TIME = 5000;
 
     /**
-     * Represent the templateNetworkServicePluginRoot
+     * Represent the CryptoTransmissionNetworkServicePluginRoot
      */
-    private TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot;
+    private CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
 
     /**
      * Represent the communicationsClientConnection
@@ -45,11 +45,11 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
 
     /**
      * Constructor with parameters
-     * @param templateNetworkServicePluginRoot
+     * @param cryptoTransmissionNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
-    public RegistrationProcessNetworkServiceAgent(TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
-        this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
+    public RegistrationProcessNetworkServiceAgent(CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
     }
@@ -63,18 +63,18 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
 
         while (active){
 
-            if (communicationsClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
+            if (communicationsClientConnection.isRegister() && !cryptoTransmissionNetworkServicePluginRoot.isRegister()){
 
                 /*
                  * Construct my profile and register me
                  */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service ("+templateNetworkServicePluginRoot.getId()+")", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
+                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(cryptoTransmissionNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service ("+cryptoTransmissionNetworkServicePluginRoot.getId()+")", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-                templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
-                templateNetworkServicePluginRoot.initializeTemplateNetworkServiceConnectionManager();
+                cryptoTransmissionNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                cryptoTransmissionNetworkServicePluginRoot.initializeTemplateNetworkServiceConnectionManager();
                 active = Boolean.FALSE;
 
-            }else if (!templateNetworkServicePluginRoot.isRegister()){
+            }else if (!cryptoTransmissionNetworkServicePluginRoot.isRegister()){
                 try {
 
                     sleep(RegistrationProcessNetworkServiceAgent.SLEEP_TIME);
@@ -82,7 +82,7 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }else if (!templateNetworkServicePluginRoot.isRegister()){
+            }else if (!cryptoTransmissionNetworkServicePluginRoot.isRegister()){
                 active = Boolean.FALSE;
             }
 

@@ -20,17 +20,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/header_container"
-            android:visibility="gone">
-
-            <include layout="@layout/balance_header" />
-
-        </FrameLayout>
-
-
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
