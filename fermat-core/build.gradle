@@ -28,7 +28,7 @@ dependencies {
     compile project(':fermat-dmp-plugin-actor-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-identity-designer-bitdubai')
     compile project(':fermat-dmp-plugin-identity-translator-bitdubai')
-    compile project(':fermat-dmp-plugin-network-service-crypto-transmission-bitdubai')
+    compile project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
     compile project(':fermat-dmp-plugin-request-money-request-bitdubai')
     /*
      World layer projects on the pipeline:

@@ -35,7 +35,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
         txt_time = (TextView) itemView.findViewById(R.id.txt_time);
-        txt_state = (TextView) itemView.findViewById(R.id.state);
+        txt_state = (TextView) itemView.findViewById(R.id.txt_state);
 
 
 

@@ -119,14 +119,14 @@ public class CustomersMiddlewareDeveloperDatabaseFactory implements DealsWithPlu
          */
         List<String> walletIdentityColumns = new ArrayList<String>();
 
-        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_RELATIONSHIP_ID_COLUMN_NAME);
-        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_CUSTOMER_TYPE_COLUMN_NAME);
+        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.CUSTOMERS_RELATIONSHIP_ID_COLUMN_NAME);
+        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        walletIdentityColumns.add(CustomersMiddlewareDatabaseConstants.CUSTOMERS_CUSTOMER_TYPE_COLUMN_NAME);
         /**
          * Table Wallet Identity addition.
          */
-        DeveloperDatabaseTable walletIdentityTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomersMiddlewareDatabaseConstants.WALLET_IDENTITY_TABLE_NAME, walletIdentityColumns);
+        DeveloperDatabaseTable walletIdentityTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomersMiddlewareDatabaseConstants.CUSTOMERS_TABLE_NAME, walletIdentityColumns);
         tables.add(walletIdentityTable);
 
 

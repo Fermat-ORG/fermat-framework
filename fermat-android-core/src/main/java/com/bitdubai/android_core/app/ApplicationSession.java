@@ -128,4 +128,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         subAppsFragmentfFactories.put(subAppType,fermatSubAppFragmentFactory);
     }
 
+    @Override
+    public void onTerminate(){
+        super.onTerminate();
+    }
+
 }
