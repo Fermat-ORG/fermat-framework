@@ -46,16 +46,16 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.TemplateNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionNetworkServiceLocal;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.RegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.TemplateNetworkServiceConnectionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.TemplateNetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -134,7 +134,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     /**
      * Represent the templateNetworkServiceConnectionManager
      */
-    private TemplateNetworkServiceConnectionManager templateNetworkServiceConnectionManager;
+    private CryptoTransmissionNetworkServiceConnectionManager templateNetworkServiceConnectionManager;
 
     /**
      * Represent the dataBase
@@ -164,7 +164,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     /**
      *   Represent the templateNetworkServiceDeveloperDatabaseFactory
      */
-    private TemplateNetworkServiceDeveloperDatabaseFactory templateNetworkServiceDeveloperDatabaseFactory;
+    private CryptoTransmissionNetworkServiceDeveloperDatabaseFactory templateNetworkServiceDeveloperDatabaseFactory;
 
 
     /**
@@ -223,7 +223,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      * because at this moment, is create the platformComponentProfile for this component
      */
     public void initializeTemplateNetworkServiceConnectionManager(){
-        this.templateNetworkServiceConnectionManager = new TemplateNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        this.templateNetworkServiceConnectionManager = new CryptoTransmissionNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
 
     /**
@@ -269,7 +269,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -285,14 +285,14 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            TemplateNetworkServiceDatabaseFactory templateNetworkServiceDatabaseFactory = new TemplateNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CryptoTransmissionNetworkServiceDatabaseFactory templateNetworkServiceDatabaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBase = templateNetworkServiceDatabaseFactory.createDatabase(pluginId, TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = templateNetworkServiceDatabaseFactory.createDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -314,7 +314,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     @Override
     public void start() throws CantStartPluginException {
 
-        logManager.log(TemplateNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
+        logManager.log(CryptoTransmissionNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
 
         /*
          * Validate required resources
@@ -336,7 +336,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             /*
              * Initialize Developer Database Factory
              */
-            templateNetworkServiceDeveloperDatabaseFactory = new TemplateNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            templateNetworkServiceDeveloperDatabaseFactory = new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             templateNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             /*
@@ -368,7 +368,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + CryptoTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
@@ -503,7 +503,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return TemplateNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
@@ -553,11 +553,11 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             /*
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (TemplateNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                TemplateNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                TemplateNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                TemplateNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                CryptoTransmissionNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
@@ -686,7 +686,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              * This is for test and example of how to use
              * Get the local representation of the remote network service
              */
-            TemplateNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+            CryptoTransmissionNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
 
             /*
              * Get a remote network service registered from the list requested

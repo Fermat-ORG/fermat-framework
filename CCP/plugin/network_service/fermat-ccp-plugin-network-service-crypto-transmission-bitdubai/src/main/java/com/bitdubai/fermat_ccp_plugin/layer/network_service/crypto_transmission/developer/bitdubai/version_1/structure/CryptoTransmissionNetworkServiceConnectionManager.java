@@ -56,12 +56,12 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
     /**
      * Holds all references to the template network service locals
      */
-    private Map<String, TemplateNetworkServiceLocal> templateNetworkServiceLocalsCache;
+    private Map<String, CryptoTransmissionNetworkServiceLocal> templateNetworkServiceLocalsCache;
 
     /**
      * Holds all references to the template network service remote agents
      */
-    private Map<String, TemplateNetworkServiceRemoteAgent> templateNetworkServiceRemoteAgentsCache;
+    private Map<String, CryptoTransmissionNetworkServiceRemoteAgent> templateNetworkServiceRemoteAgentsCache;
 
     /**
      * Represent the incomingMessageDao
@@ -166,12 +166,12 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
                  /*
                  * Instantiate the local reference
                  */
-                TemplateNetworkServiceLocal templateNetworkServiceLocal = new TemplateNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
+                CryptoTransmissionNetworkServiceLocal templateNetworkServiceLocal = new CryptoTransmissionNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                TemplateNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new TemplateNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
+                CryptoTransmissionNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new CryptoTransmissionNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -201,7 +201,7 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
-    public TemplateNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
+    public CryptoTransmissionNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance
         return templateNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
