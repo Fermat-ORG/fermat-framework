@@ -1,0 +1,11 @@
+= FERMAT-DAP /actor
+
+:leveloffset: 1
+include::asset_issuer/version1.asciidoc[]
+
+:leveloffset: 1
+include::asset_user/version1.asciidoc[]
+                    
+:leveloffset: 1
+include::redeem_point/version1.asciidoc[]
+

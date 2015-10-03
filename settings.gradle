@@ -1,5 +1,5 @@
 
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-p2p-plugin-communication-wifi-bitdubai'
 include ':fermat-android-core'
 
 include ':fermat-api'
@@ -152,6 +152,18 @@ project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai').projectDir
 
 include ':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai'
 project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
+
+
+
+include ':fermat-p2p-plugin-communication-wifi-bitdubai'
+project(':fermat-p2p-plugin-communication-wifi-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-wifi-bitdubai')
+
+
+
+// DMP Projects (Plugins)
+
+include ':fermat-dmp-plugin-identity-intra-user-bitdubai'
+project(':fermat-dmp-plugin-identity-intra-user-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
 
 
 //CCM Projects
