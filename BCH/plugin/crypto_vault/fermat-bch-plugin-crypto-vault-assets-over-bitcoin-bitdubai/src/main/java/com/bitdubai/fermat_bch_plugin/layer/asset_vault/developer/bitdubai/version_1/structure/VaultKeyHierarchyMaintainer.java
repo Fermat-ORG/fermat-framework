@@ -70,11 +70,15 @@ class VaultKeyHierarchyMaintainer implements Agent {
          */
         int currentGeneratedKeys, currentUsedKeys, currentThreshold;
 
+        /**
+         * This will hold all the keys that I need to pass to bitcoin network for monitoring.
+         */
+        List<ECKey> allAccountsKeyList;
 
         /**
          * Sleep time of the agent between iterations
          */
-        final long AGENT_SLEEP_TIME = 10000;
+        final long AGENT_SLEEP_TIME = 300000; //default time is 5 minutes
 
 
         @Override
@@ -109,6 +113,8 @@ class VaultKeyHierarchyMaintainer implements Agent {
                  * I will calculate the current threshold to see if we need to create new keys
                  */
                 currentThreshold = 100 - ((currentUsedKeys * 100) / currentGeneratedKeys);
+
+                List<ECKey> publicKeys;
                 if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD){
                     /**
                      * The current threshold is lower than the limit imposed, we need to generate new keys
@@ -118,27 +124,15 @@ class VaultKeyHierarchyMaintainer implements Agent {
                     setGeneratedKeysValue(newGeneratedKeys);
 
                     /**
-                     * I will generate the list of keys from zero to the new value and pass that to the bitcoin network to resync.
+                     * I will generate the list of keys from zero to the new value
                      */
-                    DeterministicHierarchy pubKeyHierarchy = vaultKeyHierarchy.getAddressPublicHierarchyFromAccount(hierarchyAccount);
-
-                    List<ECKey> publicKeys = new ArrayList<>();
-                    for (int i=0; i < newGeneratedKeys; i++){
-                        // I derive the key at position i
-                        DeterministicKey derivedPubKey = pubKeyHierarchy.deriveChild(pubKeyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
-                        // I add this key to the ECKey list
-                        publicKeys.add(ECKey.fromPublicOnly(derivedPubKey.getPubKeyPoint()));
-                    }
-
+                    publicKeys = deriveChildPubKeys(hierarchyAccount, newGeneratedKeys);
+                } else {
                     /**
-                     * Once I derived all the keys, I'm passing these keys to the bitcoin network to start listening to them
+                     * There is no need to generate new keys, so I will re generate the ones I previously generated
+                     * to control them.
                      */
-                    try {
-                        bitcoinNetworkManager.monitorNetworkFromKeyList(publicKeys);
-                    } catch (CantMonitorBitcoinNetworkException e) {
-                        //todo handle
-                    }
-
+                    publicKeys = deriveChildPubKeys(hierarchyAccount, currentGeneratedKeys);
                 }
 
                 /**
@@ -149,7 +143,42 @@ class VaultKeyHierarchyMaintainer implements Agent {
                                     currentGeneratedKeys,
                                     currentUsedKeys,
                                     currentThreshold);
+
+                /**
+                 * At this point I have the list of keys for each account, so I will put them all together at allAccountsKeyList
+                 * so I can pass it later to the bitcoin network.
+                 */
+                allAccountsKeyList.addAll(publicKeys);
             }
+
+            /**
+             * Now that I have all the keys I need to monitor in the bitcoin network, I will pass it.
+             */
+            try {
+                bitcoinNetworkManager.monitorNetworkFromKeyList(allAccountsKeyList);
+            } catch (CantMonitorBitcoinNetworkException e) {
+                //todo handle
+            }
+
+        }
+
+        /**
+         * Will derive the amount specified of public keys for the passed account.
+         * @param hierarchyAccount
+         * @param amount
+         * @return
+         */
+        private List<ECKey> deriveChildPubKeys(HierarchyAccount hierarchyAccount, int amount) {
+            DeterministicHierarchy pubKeyHierarchy = vaultKeyHierarchy.getAddressPublicHierarchyFromAccount(hierarchyAccount);
+            List<ECKey> publicKeys = new ArrayList<>();
+            for (int i=0; i < amount; i++){
+                // I derive the key at position i
+                DeterministicKey derivedPubKey = pubKeyHierarchy.deriveChild(pubKeyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+                // I add this key to the ECKey list
+                publicKeys.add(ECKey.fromPublicOnly(derivedPubKey.getPubKeyPoint()));
+            }
+
+            return publicKeys;
         }
 
         private void setGeneratedKeysValue(int value) {
