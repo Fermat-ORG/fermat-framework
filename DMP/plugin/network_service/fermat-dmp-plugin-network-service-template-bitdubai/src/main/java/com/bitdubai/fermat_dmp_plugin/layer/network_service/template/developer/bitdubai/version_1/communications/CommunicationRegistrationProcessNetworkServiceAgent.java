@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -14,14 +14,14 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.RegistrationProcessNetworkServiceAgent</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 22/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RegistrationProcessNetworkServiceAgent extends Thread {
+public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
 
     /*
      * Represent the sleep time for the read or send (5000 milliseconds)
@@ -48,7 +48,7 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
      * @param templateNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
-    public RegistrationProcessNetworkServiceAgent(TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
         this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
@@ -77,7 +77,7 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
             }else if (!templateNetworkServicePluginRoot.isRegister()){
                 try {
 
-                    sleep(RegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
 
                 } catch (InterruptedException e) {
                     e.printStackTrace();

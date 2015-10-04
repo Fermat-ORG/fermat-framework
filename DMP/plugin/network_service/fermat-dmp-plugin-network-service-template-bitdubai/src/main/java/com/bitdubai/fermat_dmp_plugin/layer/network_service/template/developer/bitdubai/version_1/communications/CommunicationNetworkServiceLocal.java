@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -28,7 +28,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
@@ -40,7 +40,7 @@ import java.util.Observer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLocal {
+public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
     /**
      * Represent the profile of the remote network service
@@ -74,7 +74,7 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
      * @param errorManager                  instance
      * @param outgoingMessageDao            instance
      */
-    public TemplateNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
@@ -121,7 +121,7 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
      */
     private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
 
-        System.out.println("TemplateNetworkServiceLocal - onMessageReceived ");
+        System.out.println("CommunicationNetworkServiceLocal - onMessageReceived ");
         System.out.println(incomingTemplateNetworkServiceMessage.getContent());
 
         /*
@@ -140,7 +140,7 @@ public class TemplateNetworkServiceLocal implements Observer, NetworkServiceLoca
     }
 
     /**
-     * This method is called automatically when TemplateNetworkServiceRemoteAgent (Observable object) update the database
+     * This method is called automatically when CommunicationNetworkServiceRemoteAgent (Observable object) update the database
      * when new message is received
      *
      * @param observable the observable object

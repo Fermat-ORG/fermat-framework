@@ -59,8 +59,7 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
 
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
 
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE_COMPONENT &&
-                    completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE) {
+            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE) {
 
                 /*
                  *  TemplateManager make the job
