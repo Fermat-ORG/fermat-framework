@@ -343,7 +343,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
              * o un método que se encargue de generar los Assets pendientes. Me inclino por la primera opción.
              * Sería bueno preguntarlo en una reunión con el equipo. Mientras tanto, lo voy a implementar en un while
              * */
-
             while(counter<assetsAmount){
                 LOG.info("Asset número " + counter);
                 createDigitalAssetCryptoTransaction();
@@ -360,8 +359,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Creating the Digital Asset transaction");
         } catch (CantIssueDigitalAssetException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"The public key is already used");
+        } catch (CantCheckAssetIssuingProgressException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
         }
-
     }
 
     public void issuePendingDigitalAssets(String publicKey){

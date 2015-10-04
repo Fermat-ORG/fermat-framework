@@ -127,15 +127,12 @@ public class DigitalAssetMetadataVault {
                     break;
                 case "AVAI":
                     //TODO: deliver to available credit
-                    deleteDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                     break;
                 default:
                     throw new CantDeliverDigitalAssetToAssetWalletException("Incorrect AssetBalanceType");
             }
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
-        } catch (CantDeleteDigitalAssetFromLocalStorageException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
     public void setAssetIssuerWalletManager(AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {

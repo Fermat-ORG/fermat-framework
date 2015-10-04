@@ -16,7 +16,8 @@ public enum TransactionStatus {
     ISSUED("ISSUED"),
     TO_DELIVER("TDEL"),
     DELIVERING("DELG"),
-    DELIVERED("DELD");
+    DELIVERED("DELD"),
+    RECEIVED("RX";
 
     private String code;
 
@@ -50,6 +51,8 @@ public enum TransactionStatus {
                 return TransactionStatus.DELIVERING;
             case "DELD":
                 return TransactionStatus.DELIVERED;
+            case "RX":
+                return TransactionStatus.RECEIVED;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionStatus enum.");
         }
