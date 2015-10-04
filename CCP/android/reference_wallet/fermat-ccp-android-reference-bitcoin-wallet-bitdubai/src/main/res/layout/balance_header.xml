@@ -13,8 +13,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_weight="1"
+            android:layout_weight="0.2"
             android:paddingLeft="15dp"
+            android:id="@+id/linear_type_container"
             >
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -41,13 +42,14 @@
             android:orientation="horizontal"
             android:layout_weight="1"
             android:paddingRight="15dp"
+            android:id="@+id/linear_amount_container"
             >
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/txt_balance_amount"
-                android:textSize="27dp"
+                android:textSize="25dp"
                 android:layout_toLeftOf="@+id/txt_amount_type"
                 android:paddingRight="7dp"
                 android:textColor="#FFF"

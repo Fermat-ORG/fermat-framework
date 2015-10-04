@@ -81,6 +81,7 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
     @Override
     protected void bindHolder(PaymentHomeItemViewHolder holder, PaymentRequest data, int position) {
 
+        holder.getTxt_color_type().setBackgroundColor(paintColorRequestType(data.getType()));
 
         holder.getContactIcon().setImageBitmap(ImagesUtils.getRoundedShape(BitmapFactory.decodeResource(context.getResources(), R.drawable.mati_profile)));
         //imageView_Item.setImageBitmap(getRoundedShape(BitmapFactory.decodeByteArray(checkBoxListItem.getIntraUserIdentity().getProfileImage(), 0, checkBoxListItem.getIntraUserIdentity().getProfileImage().length)));
@@ -103,6 +104,10 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
         holder.getBtn_refuse_request().setOnClickListener(this);
 
 
+    }
+
+    private int paintColorRequestType(int type){
+        return Color.parseColor((type==PaymentRequest.RECEIVE_PAYMENT) ? "#6563a4" : "#6563a4");
     }
 
     @Override

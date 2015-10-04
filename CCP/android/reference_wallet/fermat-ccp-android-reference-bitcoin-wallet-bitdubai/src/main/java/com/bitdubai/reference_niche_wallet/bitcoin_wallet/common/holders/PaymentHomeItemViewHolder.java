@@ -15,10 +15,13 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 
 
 public class PaymentHomeItemViewHolder extends FermatViewHolder {
+
+    private TextView txt_color_type;
     private ImageView contactIcon;
     private TextView txt_contactName;
     private TextView txt_amount;
     private TextView txt_notes;
+
     private TextView txt_time;
 
     private Button btn_accept_request;
@@ -26,10 +29,10 @@ public class PaymentHomeItemViewHolder extends FermatViewHolder {
 
 
 
-
     public PaymentHomeItemViewHolder(View itemView) {
         super(itemView);
 
+        txt_color_type = (TextView) itemView.findViewById(R.id.txt_color_type);
         contactIcon = (ImageView) itemView.findViewById(R.id.contactIcon);
         txt_contactName = (TextView) itemView.findViewById(R.id.txt_contactName);
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
@@ -45,6 +48,10 @@ public class PaymentHomeItemViewHolder extends FermatViewHolder {
 
 
 
+    }
+
+    public TextView getTxt_color_type() {
+        return txt_color_type;
     }
 
     public ImageView getContactIcon() {
