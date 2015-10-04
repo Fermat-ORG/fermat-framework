@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.ActorTransactionSummary;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.TransactionHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.TransactionItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -26,7 +27,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  *
  * @author Matias Furszyfer
  */
-public class TransactionHistoryAdapter extends FermatAdapter<CryptoWalletTransaction, TransactionItemViewHolder> {
+public class TransactionHistoryAdapter extends FermatAdapter<CryptoWalletTransaction, TransactionHistoryItemViewHolder> {
 
 
     CryptoWallet cryptoWallet;
@@ -58,8 +59,8 @@ public class TransactionHistoryAdapter extends FermatAdapter<CryptoWalletTransac
      * @return ViewHolder
      */
     @Override
-    protected TransactionItemViewHolder createHolder(View itemView, int type) {
-        return new TransactionItemViewHolder(itemView);
+    protected TransactionHistoryItemViewHolder createHolder(View itemView, int type) {
+        return new TransactionHistoryItemViewHolder(itemView);
     }
 
     /**
@@ -80,38 +81,37 @@ public class TransactionHistoryAdapter extends FermatAdapter<CryptoWalletTransac
      * @param position position to render
      */
     @Override
-    protected void bindHolder(TransactionItemViewHolder holder, CryptoWalletTransaction data, int position) {
+    protected void bindHolder(TransactionHistoryItemViewHolder holder, CryptoWalletTransaction data, int position) {
 
-        holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+        try
+        {
+            holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+            holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
 
-        holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
+            holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
 
-        holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
+            holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
 
-        ActorTransactionSummary actorTransactionSummary = null;
+            ActorTransactionSummary actorTransactionSummary = null;
 
-        try{
-            actorTransactionSummary = cryptoWallet.getActorTransactionHistory(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey(), data.getInvolvedActor().getActorPublicKey());
+            try{
+                actorTransactionSummary = cryptoWallet.getActorTransactionHistory(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey(), data.getInvolvedActor().getActorPublicKey());
 
-        } catch (CantGetActorTransactionHistoryException e) {
-            e.printStackTrace();
-        }
-
-        holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
-
-        holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
-
-        holder.getImageView_see_all_transactions().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context,"estoy tocando esto",Toast.LENGTH_SHORT).show();
+            } catch (CantGetActorTransactionHistoryException e) {
+                e.printStackTrace();
             }
-        });
+
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            Toast.makeText(context,"Error en Adapter bindHolder",Toast.LENGTH_LONG).show();
+        }
 
     }
 }

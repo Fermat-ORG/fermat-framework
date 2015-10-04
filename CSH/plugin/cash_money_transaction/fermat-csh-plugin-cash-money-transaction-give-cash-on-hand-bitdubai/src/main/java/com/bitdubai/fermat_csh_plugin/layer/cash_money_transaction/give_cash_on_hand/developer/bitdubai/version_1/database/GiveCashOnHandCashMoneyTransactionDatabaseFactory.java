@@ -17,7 +17,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 29/09/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 01/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -78,7 +78,9 @@ public class GiveCashOnHandCashMoneyTransactionDatabaseFactory implements DealsW
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_REFERENCE_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
 

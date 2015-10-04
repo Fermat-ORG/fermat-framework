@@ -518,7 +518,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt));
+                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey));
             }
 
             return cryptoWalletTransactionList;
@@ -541,7 +541,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt));
+                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey));
             }
 
             return cryptoWalletTransactionList;
@@ -585,7 +585,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
             );
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt));
+                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey));
             }
 
             return cryptoWalletTransactionList;
@@ -766,7 +766,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
         }
     }
 
-    private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction) throws CantEnrichTransactionException {
+    private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, String walletPublicKey) throws CantEnrichTransactionException {
         try {
             Actor involvedActor = null;
             UUID contactId = null;
@@ -774,7 +774,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
                 case CREDIT:
                     try {
                         involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType());
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), null);
+                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(),walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
@@ -787,7 +787,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
                 case DEBIT:
                     try {
                         involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType());
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), null);
+                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 

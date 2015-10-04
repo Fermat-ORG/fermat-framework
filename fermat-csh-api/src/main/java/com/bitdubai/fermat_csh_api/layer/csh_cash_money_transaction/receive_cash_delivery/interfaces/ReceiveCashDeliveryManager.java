@@ -16,7 +16,9 @@ public interface ReceiveCashDeliveryManager {
     ReceiveCashDelivery createReceiveCashDelivery(
          final String publicKeyCustomer
         ,final String publicKeyBroker
-        ,final Float merchandiseAmount
+        ,final String balanceType
+        ,final String transactionType
+        ,final float amount
         ,final String cashCurrencyType
         ,final String cashReference
         ,final String infoDelivery

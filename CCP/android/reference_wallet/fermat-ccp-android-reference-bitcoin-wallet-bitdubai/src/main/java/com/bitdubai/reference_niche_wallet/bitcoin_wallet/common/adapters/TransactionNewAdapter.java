@@ -92,74 +92,80 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
     @Override
     protected void bindHolder(final TransactionItemViewHolder holder, final CryptoWalletTransaction data, int position) {
 
-        holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+        try {
+            holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
-        holder.getTxt_amount().setTextColor(Color.BLACK);
+            holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+            holder.getTxt_amount().setTextColor(Color.BLACK);
 
-        holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
-        holder.getTxt_contactName().setTextColor(Color.BLACK);
+            holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
+            holder.getTxt_contactName().setTextColor(Color.BLACK);
 
-        holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
-        holder.getTxt_notes().setTextColor(Color.BLACK);
+            holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
+            holder.getTxt_notes().setTextColor(Color.BLACK);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
-        holder.getTxt_time().setTextColor(Color.BLACK);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
+            holder.getTxt_time().setTextColor(Color.BLACK);
 
-        ActorTransactionSummary actorTransactionSummary = null;
+            ActorTransactionSummary actorTransactionSummary = null;
 
-        try{
-            actorTransactionSummary = cryptoWallet.getActorTransactionHistory(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey(), data.getInvolvedActor().getActorPublicKey());
+            try{
+                actorTransactionSummary = cryptoWallet.getActorTransactionHistory(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey(), data.getInvolvedActor().getActorPublicKey());
 
-        } catch (CantGetActorTransactionHistoryException e) {
+            } catch (CantGetActorTransactionHistoryException e) {
+                e.printStackTrace();
+            }
+
+            if(actorTransactionSummary!=null){
+                holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
+
+                holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
+            }else{
+                holder.getTxt_total_number_transactions().setText("16");
+                holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
+
+                holder.getTxt_total_balance().setText("19 BTC");
+                holder.getTxt_total_balance().setTextColor(Color.BLACK);
+            }
+
+
+
+            holder.getImageView_see_all_transactions().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "estoy tocando esto", Toast.LENGTH_SHORT).show();
+
+                    if (holder.getListView_transactions().getVisibility() == View.VISIBLE) {
+                        holder.getListView_transactions().setVisibility(View.GONE);
+                    } else {
+                        holder.getListView_transactions().setVisibility(View.VISIBLE);
+                        holder.getListView_transactions().setBackgroundColor(Color.BLUE);
+                        List<CryptoWalletTransaction> lstCryptoTransactions = new ArrayList<CryptoWalletTransaction>();
+                        try {
+                            lstCryptoTransactions = cryptoWallet.listTransactionsByActor(
+                                    BalanceType.valueOf(referenceWalletSession.getBalanceTypeSelected()),
+                                    referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                                    data.getInvolvedActor().getActorPublicKey(),
+                                    50, 0
+                            );
+                            lstCryptoTransactions.add(data);
+                        } catch (CantListTransactionsException e) {
+                            e.printStackTrace();
+                        }
+                        TransactionAdapter transactionAdapter = new TransactionAdapter(context, lstCryptoTransactions);
+                        holder.getListView_transactions().setAdapter(transactionAdapter);
+                        transactionAdapter.notifyDataSetChanged();
+                    }
+
+
+                }
+            });
+
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
-
-        if(actorTransactionSummary!=null){
-            holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
-
-            holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
-        }else{
-            holder.getTxt_total_number_transactions().setText("16");
-            holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
-
-            holder.getTxt_total_balance().setText("19 BTC");
-            holder.getTxt_total_balance().setTextColor(Color.BLACK);
-        }
-
-
-
-        holder.getImageView_see_all_transactions().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "estoy tocando esto", Toast.LENGTH_SHORT).show();
-
-                if (holder.getListView_transactions().getVisibility() == View.VISIBLE) {
-                    holder.getListView_transactions().setVisibility(View.GONE);
-                } else {
-                    holder.getListView_transactions().setVisibility(View.VISIBLE);
-                    holder.getListView_transactions().setBackgroundColor(Color.BLUE);
-                    List<CryptoWalletTransaction> lstCryptoTransactions = null;
-                    try {
-                        lstCryptoTransactions = cryptoWallet.listTransactionsByActor(
-                                BalanceType.valueOf(referenceWalletSession.getBalanceTypeSelected()),
-                                referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
-                                data.getInvolvedActor().getActorPublicKey(),
-                                50, 0
-                        );
-                        lstCryptoTransactions.add(data);
-                    } catch (CantListTransactionsException e) {
-                        e.printStackTrace();
-                    }
-                    TransactionAdapter transactionAdapter = new TransactionAdapter(context, lstCryptoTransactions);
-                    holder.getListView_transactions().setAdapter(transactionAdapter);
-                    transactionAdapter.notifyDataSetChanged();
-                }
-
-
-            }
-        });
 
 
 
