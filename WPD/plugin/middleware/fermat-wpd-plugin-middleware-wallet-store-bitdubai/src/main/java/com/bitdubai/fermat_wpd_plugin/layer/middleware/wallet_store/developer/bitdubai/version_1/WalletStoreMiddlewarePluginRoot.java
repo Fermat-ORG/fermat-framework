@@ -120,7 +120,7 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
             try {
                 createWalletStoreMiddlewareDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start WalletStoreNetworkService plugin.", FermatException.wrapException(exception), null, null);
@@ -132,7 +132,7 @@ public class WalletStoreMiddlewarePluginRoot implements DatabaseManagerForDevelo
             try {
                 createWalletStoreMiddlewareDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_STORE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             }
         } catch (Exception exception) {
