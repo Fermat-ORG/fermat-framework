@@ -53,11 +53,15 @@ public class CryptoPaymentRequestApprovedEventHandler implements FermatEventHand
 
             if (fermatEvent instanceof CryptoPaymentRequestApprovedEvent) {
 
-                new CryptoPaymentRequestEventActions(
+                CryptoPaymentRequestEventActions cryptoPaymentRequestEventActions = new CryptoPaymentRequestEventActions(
                         cryptoPaymentRequestManager,
                         pluginDatabaseSystem,
                         pluginId
-                ).handleCryptoPaymentRequestApproved(
+                );
+
+                cryptoPaymentRequestEventActions.initialize();
+
+                cryptoPaymentRequestEventActions.handleCryptoPaymentRequestApproved(
                         ((CryptoPaymentRequestApprovedEvent) fermatEvent).getRequestId()
                 );
 

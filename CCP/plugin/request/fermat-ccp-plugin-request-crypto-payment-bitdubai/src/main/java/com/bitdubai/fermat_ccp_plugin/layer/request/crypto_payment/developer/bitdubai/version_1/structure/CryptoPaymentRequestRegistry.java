@@ -17,7 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantG
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFoundsException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPayment;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.exceptions.CantGetOutgoingIntraActorTransactionManagerException;
@@ -32,7 +32,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -217,91 +216,24 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     @Override
     public void approveRequest(UUID requestId) throws CantApproveCryptoPaymentRequestException,
                                                       CryptoPaymentRequestNotFoundException   ,
-                                                      InsufficientFoundsException             {
+                                                      InsufficientFundsException              {
 
         try {
 
             /**
              * i start the process changing the state to in approving process.
              * next to it, i made the sending of crypto throw outgoing intra actor.
-             * later, i change the state to payment process started.
+             * if its all ok, i change the state to payment process started, else, i return to the initial pending_response state
              * i inform the approval throw network service, and after that i change the state to approved.
              */
 
             CryptoPayment cryptoPayment = cryptoPaymentRequestDao.getRequestById(requestId);
 
-            // change state to in approving process
+            cryptoPaymentRequestDao.changeState(requestId, CryptoPaymentState.IN_APPROVING_PROCESS);
 
-            cryptoPaymentRequestDao.changeState(
-                    requestId,
-                    CryptoPaymentState.IN_APPROVING_PROCESS
-            );
+            fromInApprovingProcessToPaymentProcessStarted(requestId, cryptoPayment);
 
-            // send money throw outgoing intra actor
-            // if all ok i set the request in payment process started
-            // if not i set in pending response (initial state).
-            try {
-                IntraActorCryptoTransactionManager transactionManager = outgoingIntraActorManager.getTransactionManager();
-                transactionManager.payCryptoRequest(
-                        requestId,
-                        cryptoPayment.getWalletPublicKey(),
-                        cryptoPayment.getCryptoAddress(),
-                        cryptoPayment.getAmount(),
-                        cryptoPayment.getDescription(),
-                        cryptoPayment.getIdentityPublicKey(),
-                        cryptoPayment.getActorPublicKey(),
-                        cryptoPayment.getIdentityType(),
-                        cryptoPayment.getActorType()
-                );
-
-                cryptoPaymentRequestDao.changeState(
-                        requestId,
-                        CryptoPaymentState.PAYMENT_PROCESS_STARTED
-                );
-
-            } catch(OutgoingIntraActorCantSendFundsExceptions            |
-                    CantGetOutgoingIntraActorTransactionManagerException e) {
-                // if there's an error here we return to the initial state.
-                cryptoPaymentRequestDao.changeState(
-                        requestId,
-                        CryptoPaymentState.PENDING_RESPONSE
-                );
-                throw new CantApproveCryptoPaymentRequestException(e, "", "There's an error trying to send the crypto.");
-            } catch(OutgoingIntraActorInsufficientFundsException e) {
-                // this exception is controllable
-                // if there's not founds, we return to the initial state.
-                cryptoPaymentRequestDao.changeState(
-                        requestId,
-                        CryptoPaymentState.PENDING_RESPONSE
-                );
-                throw new InsufficientFoundsException(e);
-            }
-
-            //i inform the approval throw the network service and after that i change the state to refused.
-
-            try {
-
-                cryptoPaymentRequestManager.informApproval(
-                        requestId
-                );
-
-            } catch(RequestNotFoundException e) {
-                // this should not happen, but if it happens i change the state of the request to error.
-
-                cryptoPaymentRequestDao.changeState(
-                        requestId,
-                        CryptoPaymentState.ERROR
-                );
-
-                throw new CantApproveCryptoPaymentRequestException(e, "requestId: " + requestId, "The network service cannot recognize the crypto payment request id.");
-            }
-
-            // if i can inform the refusal i change the state to refused
-
-            cryptoPaymentRequestDao.changeState(
-                    requestId,
-                    CryptoPaymentState.APPROVED
-            );
+            fromPaymentProcessStartedToApproved(requestId);
 
         } catch(CantInformApprovalException e) {
 
@@ -320,12 +252,96 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
             // i inform to error manager the error.
             reportUnexpectedException(e);
             throw e;
+        } catch(InsufficientFundsException e) {
+            // i just throw the exception
+            throw e;
         } catch(Exception e) {
 
             reportUnexpectedException(e);
             throw new CantApproveCryptoPaymentRequestException(e, "", "Unhandled Exception.");
         }
 
+    }
+
+    /**
+     * send money throw outgoing intra actor
+     * if all ok i set the request in payment process started
+     * if not i set in pending response (initial state).
+     */
+    private void fromInApprovingProcessToPaymentProcessStarted(UUID          requestId    ,
+                                                               CryptoPayment cryptoPayment) throws CantChangeCryptoPaymentRequestStateException,
+            CryptoPaymentRequestNotFoundException       ,
+            CantApproveCryptoPaymentRequestException    ,
+            InsufficientFundsException                  {
+
+        try {
+            IntraActorCryptoTransactionManager transactionManager = outgoingIntraActorManager.getTransactionManager();
+            transactionManager.payCryptoRequest(
+                    requestId,
+                    cryptoPayment.getWalletPublicKey(),
+                    cryptoPayment.getCryptoAddress(),
+                    cryptoPayment.getAmount(),
+                    cryptoPayment.getDescription(),
+                    cryptoPayment.getIdentityPublicKey(),
+                    cryptoPayment.getActorPublicKey(),
+                    cryptoPayment.getIdentityType(),
+                    cryptoPayment.getActorType()
+            );
+
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.PAYMENT_PROCESS_STARTED
+            );
+
+        } catch(OutgoingIntraActorCantSendFundsExceptions            |
+                CantGetOutgoingIntraActorTransactionManagerException e) {
+            // if there's an error here we return to the initial state.
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.PENDING_RESPONSE
+            );
+            throw new CantApproveCryptoPaymentRequestException(e, "", "There's an error trying to send the crypto.");
+        } catch(OutgoingIntraActorInsufficientFundsException e) {
+            // this exception is controllable
+            // if there's not founds, we return to the initial state.
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.PENDING_RESPONSE
+            );
+            throw new InsufficientFundsException(e);
+        }
+    }
+
+    /**
+     * i inform the approval throw the network service and after that i change the state to approved.
+     */
+    private void fromPaymentProcessStartedToApproved(UUID requestId) throws CantInformApprovalException                 ,
+                                                                        CantApproveCryptoPaymentRequestException    ,
+                                                                        CantChangeCryptoPaymentRequestStateException,
+                                                                        CryptoPaymentRequestNotFoundException {
+        try {
+
+            cryptoPaymentRequestManager.informApproval(
+                    requestId
+            );
+
+        } catch(RequestNotFoundException e) {
+            // this should not happen, but if it happens i change the state of the request to error.
+
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.ERROR
+            );
+
+            throw new CantApproveCryptoPaymentRequestException(e, "requestId: " + requestId, "The network service cannot recognize the crypto payment request id.");
+        }
+
+        // if i can inform the refusal i change the state to refused
+
+        cryptoPaymentRequestDao.changeState(
+                requestId,
+                CryptoPaymentState.APPROVED
+        );
     }
 
     @Override
