@@ -35,11 +35,7 @@ public class WalletUtils {
             String BTCFormat = df.format(balance / 100000000.0);
             stringBalance = BTCFormat + " BTC";
         }else if(typeAmount== ShowMoneyType.BITS.getCode()){
-            DecimalFormat df1 = new DecimalFormat();
-            df1.setMaximumFractionDigits(2);
-            df1.setMinimumFractionDigits(2);
-            String BTCFormat1 = df1.format(balance / 100000000.0);
-            stringBalance = BTCFormat1 + " BTC";
+            stringBalance = (int) (balance / 100) + " bits";
         }
         showMoneyType=!showMoneyType;
 
