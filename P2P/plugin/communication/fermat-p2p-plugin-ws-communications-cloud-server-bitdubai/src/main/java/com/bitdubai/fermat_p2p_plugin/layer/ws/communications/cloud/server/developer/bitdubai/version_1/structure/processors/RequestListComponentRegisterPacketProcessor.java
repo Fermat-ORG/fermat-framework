@@ -232,16 +232,16 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         }
 
-        if ((discoveryQueryParameters.getNumberRegister() != 0) && (discoveryQueryParameters.firstRecord() != 0)){
+        if ((discoveryQueryParameters.getMax() != 0) && (discoveryQueryParameters.getOffset() != 0)){
 
             /*
              * Apply pagination
              */
-            if (filteredLis.size() > discoveryQueryParameters.getNumberRegister() &&
-                    filteredLis.size() > discoveryQueryParameters.firstRecord()){
-                filteredLis =  filteredLis.subList(discoveryQueryParameters.firstRecord(), discoveryQueryParameters.getNumberRegister());
+            if (filteredLis.size() > discoveryQueryParameters.getMax() &&
+                    filteredLis.size() > discoveryQueryParameters.getOffset()){
+                filteredLis =  filteredLis.subList(discoveryQueryParameters.getOffset(), discoveryQueryParameters.getMax());
             }else if (filteredLis.size() > 100) {
-                filteredLis = filteredLis.subList(discoveryQueryParameters.firstRecord(), 100);
+                filteredLis = filteredLis.subList(discoveryQueryParameters.getOffset(), 100);
             }
 
         }else if (filteredLis.size() > 100) {
