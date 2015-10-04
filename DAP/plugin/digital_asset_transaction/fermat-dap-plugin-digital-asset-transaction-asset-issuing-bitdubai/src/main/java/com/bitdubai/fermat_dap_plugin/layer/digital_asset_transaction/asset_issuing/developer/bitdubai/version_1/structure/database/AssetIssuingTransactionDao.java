@@ -182,7 +182,6 @@ public class AssetIssuingTransactionDao {
         }
     }
     public void confirmReception(String genesisTransaction) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        //TODO: change for transactionHash
         updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.RECEPTION_NOTIFIED);
         updateDigitalAssetTransactionStatusByGenesisTransaction(genesisTransaction, TransactionStatus.DELIVERED);
     }
@@ -243,33 +242,22 @@ public class AssetIssuingTransactionDao {
 
     public String getDigitalAssetPublicKeyById(String transactionId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
 
-        try {
-            this.database=openDatabase();
-            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
-            databaseTable.loadToMemory();
-            DatabaseTableRecord databaseTableRecord;
-            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
-            if (databaseTableRecords.size() > 1){
-                this.database.closeDatabase();
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Transaction Id:" + transactionId);
-            } else {
-                databaseTableRecord = databaseTableRecords.get(0);
-            }
-            this.database.closeDatabase();
-            String digitalAssetTransactionPublicKey=databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME);
-            return digitalAssetTransactionPublicKey;
-        } catch (CantExecuteDatabaseOperationException exception) {
-            this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception, "Trying to get Digital Asset public Key","Cannot find or open the database");
-        } catch (CantLoadTableToMemoryException exception) {
-            this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception, "Trying to get Digital Asset public Key","Cannot load the database into memory");
-        }
+        return getStringFieldFromAssetIssuingTableById(transactionId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME);
     }
 
     public String getDigitalAssetGenesisAddressById(String transactionId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringFieldFromAssetIssuingTableById(transactionId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME);
+    }
 
+    public String getDigitalAssetGenesisTransactionById(String transactionId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringFieldFromAssetIssuingTableById(transactionId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    public String getDigitalAssetHashById(String transactionId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringFieldFromAssetIssuingTableById(transactionId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME);
+    }
+
+    private String getStringFieldFromAssetIssuingTableById(String transactionId, String fieldCode) throws UnexpectedResultReturnedFromDatabaseException, CantCheckAssetIssuingProgressException {
         try {
             this.database=openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
@@ -284,14 +272,14 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             this.database.closeDatabase();
-            String digitalAssetTransactionGenesisAddress=databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_ADDRESS_COLUMN_NAME);
+            String digitalAssetTransactionGenesisAddress=databaseTableRecord.getStringValue(fieldCode);
             return digitalAssetTransactionGenesisAddress;
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception, "Trying to get Digital Asset public Key","Cannot find or open the database");
+            throw new CantCheckAssetIssuingProgressException(exception, "Trying to get the "+fieldCode+" field","Cannot find or open the database");
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception, "Trying to get Digital Asset public Key","Cannot load the database into memory");
+            throw new CantCheckAssetIssuingProgressException(exception, "Trying to get the "+fieldCode+" field","Cannot load the database into memory");
         }
     }
 
