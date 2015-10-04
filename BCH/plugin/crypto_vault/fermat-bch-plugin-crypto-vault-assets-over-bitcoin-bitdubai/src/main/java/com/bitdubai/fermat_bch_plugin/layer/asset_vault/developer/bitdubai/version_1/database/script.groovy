@@ -30,6 +30,19 @@ databaseTables << [
 ]
 
 [
+        name: "key_Maintenance_Monitor",
+        columns: [
+                ["execution_Number", "INT", "10", "true"],
+                ["account_id", "INT", "10", "false"],
+                ["execution_date", "STRING", "50", "false"],
+                ["generated_keys", "INT", "100", "false"],
+                ["used_keys", "INT", "100", "false"],
+                ["threshold", "INT", "100", "false"]
+        ],
+        firstKey:"execution_Number"
+]
+
+[
         name: "active_Networks",
         columns: [
                 ["networkType", "STRING", "50'", "true"],

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.google.common.collect.ImmutableList;
 
 import org.bitcoinj.crypto.ChildNumber;
@@ -37,16 +38,17 @@ public class VaultKeyHierarchyGenerator implements Runnable{
      * Platform services
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-
+    private BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
      * Constructor
      * @param seed
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem) {
+    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager) {
         this.seed = seed;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
     @Override
@@ -79,7 +81,7 @@ public class VaultKeyHierarchyGenerator implements Runnable{
         /**
          * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
          */
-        VaultKeyHierarchyMaintainer vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem);
+        VaultKeyHierarchyMaintainer vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager);
         try {
             vaultKeyHierarchyMaintainer.start();
         } catch (CantStartAgentException e) {

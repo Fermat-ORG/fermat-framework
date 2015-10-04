@@ -4,6 +4,11 @@ import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.VaultKeyMaintenanceParameters;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by rodrigo on 10/4/15.
@@ -54,6 +59,12 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
     private class VaultKeyHierarchyMaintainerAgent implements Runnable{
         /**
+         * current key usage from the database
+         */
+        int currentGeneratedKeys, currentUsedKeys, currentThreshold;
+
+
+        /**
          * Sleep time of the agent between iterations
          */
         final long AGENT_SLEEP_TIME = 10000;
@@ -71,8 +82,84 @@ class VaultKeyHierarchyMaintainer implements Agent {
             }
         }
 
+        /**
+         * main executor of the agent
+         */
         private void doTheMainTask(){
+            /**
+             * I get all the accounts that are available from the database
+             */
+            for (HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
+                /**
+                 * for each account, I will get the currentGeneratedKeys value
+                 */
+                currentGeneratedKeys = getCurrentGeneratedKeys(hierarchyAccount);
+                /**
+                 * now I will get the currentUsedKeys from the database
+                 */
+                currentUsedKeys = getCurrentUsedKeys(hierarchyAccount);
+                /**
+                 * I will calculate the current threshold to see if we need to create new keys
+                 */
+                currentThreshold = 100 - ((currentUsedKeys * 100) / currentGeneratedKeys);
+                if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD){
+                    /**
+                     * The current threshold is lower than the limit imposed, we need to generate new keys
+                     */
 
+
+
+                }
+
+                /**
+                 * I will update the stats of the Hierarchy Maintainer in the database
+                 */
+                updateMaintainerStats(hierarchyAccount.getId(),
+                                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
+                                    currentGeneratedKeys,
+                                    currentUsedKeys,
+                                    currentThreshold);
+            }
+        }
+
+        /**
+         * Will update the statistics of the maintainer execution
+         * @param hierarchyAccountId
+         * @param date
+         * @param currentGeneratedKeys
+         * @param currentUsedKeys
+         * @param currentThreshold
+         */
+        private void updateMaintainerStats(int hierarchyAccountId, String date, int currentGeneratedKeys, int currentUsedKeys, int currentThreshold) {
+            //todo complete maintainer update stats
+        }
+
+        /**
+         * Gets the actual amount of used keys for the specified account.
+         * Keys used are the ones that where used to generate addresses
+         * @param hierarchyAccount
+         * @return
+         */
+        private int getCurrentUsedKeys(HierarchyAccount hierarchyAccount) {
+            return 0;
+        }
+
+        /**
+         * get the amount of how many keys have been generated for the specified amount
+         * @param hierarchyAccount
+         * @return
+         */
+        private int getCurrentGeneratedKeys(HierarchyAccount hierarchyAccount) {
+            return 0;
+        }
+
+        /**
+         * Gets the available Accounts from the database
+         * @return
+         */
+        private List<HierarchyAccount> getHierarchyAccounts() {
+
+            return null;
         }
     }
 

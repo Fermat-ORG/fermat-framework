@@ -11,9 +11,11 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.wallet.DeterministicSeed;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -83,5 +85,10 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, De
     @Override
     public void monitorNetworkFromWatchingKey(BlockchainNetworkType blockchainNetworkType, DeterministicKey watchingKey) throws CantMonitorBitcoinNetworkException {
         this.bitcoinCryptoNetworkManager.monitorNetworkFromWatchingKey(blockchainNetworkType, watchingKey);
+    }
+
+    @Override
+    public void monitorNetworkFromKeyList(BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList) throws CantMonitorBitcoinNetworkException {
+
     }
 }

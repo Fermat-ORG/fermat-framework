@@ -65,7 +65,7 @@ public class AssetCryptoVaultManager  {
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        VaultKeyHierarchyGenerator vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem);
+        VaultKeyHierarchyGenerator vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager);
         new Thread(vaultKeyHierarchyGenerator).start();
     }
 
