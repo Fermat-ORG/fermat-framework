@@ -15,6 +15,7 @@
             android:orientation="vertical"
             android:layout_weight="0.2"
             android:paddingLeft="15dp"
+            android:paddingTop="5dp"
             android:id="@+id/linear_type_container"
             >
 
@@ -22,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Available balance"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:id="@+id/txt_type_balance" />
 
 
@@ -31,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:text="Touch to change"
                 android:id="@+id/txt_touch_to_change"
-                android:textColor="#FFF"/>
+                android:textColor="#FFF"
+                android:textSize="12dp"/>
 
         </LinearLayout>
 
@@ -42,6 +44,7 @@
             android:orientation="horizontal"
             android:layout_weight="1"
             android:paddingRight="15dp"
+            android:paddingTop="5dp"
             android:id="@+id/linear_amount_container"
             >
 
@@ -49,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/txt_balance_amount"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:layout_toLeftOf="@+id/txt_amount_type"
                 android:paddingRight="7dp"
                 android:textColor="#FFF"

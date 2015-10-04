@@ -128,6 +128,8 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
                 holder.getTxt_total_balance().setText("19 BTC");
                 holder.getTxt_total_balance().setTextColor(Color.BLACK);
             }
+            holder.getTxt_total_balance().setTextColor(Color.BLACK);
+            holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
 
 
 
