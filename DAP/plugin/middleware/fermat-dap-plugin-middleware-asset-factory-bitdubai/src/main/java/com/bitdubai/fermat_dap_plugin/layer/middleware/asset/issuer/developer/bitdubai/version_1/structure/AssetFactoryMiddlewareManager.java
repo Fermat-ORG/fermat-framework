@@ -142,13 +142,20 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             contractProperties.add(redeemable);
             contractProperties.add(expirationDate);
             assetFactory.setContractProperties(contractProperties);
+            //TODO: Borrar luego cuado funcione el Identity debe venir desde el dispositivo
+            AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
+            assetIssuerIdentity.setAlias("Franklin Marcano");
+            assetIssuerIdentity.setPublicKey("ASDS-10087982");
+            assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
-            for (Resource resource : assetFactory.getResources()) {
-                //if (resource.getResourceBinayData() != null) {
-                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-                    imageFile.setContent(resource.getResourceBinayData());
-                    imageFile.persistToMedia();
-                //}
+            if (assetFactory.getResources() != null){
+                for (Resource resource : assetFactory.getResources()) {
+                    //if (resource.getResourceBinayData() != null) {
+                        PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                        imageFile.setContent(resource.getResourceBinayData());
+                        imageFile.persistToMedia();
+                    //}
+                }
             }
         }catch (CantCreateFileException cantCreateFileException)
         {
