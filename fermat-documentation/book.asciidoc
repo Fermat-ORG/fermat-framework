@@ -6,21 +6,23 @@ include::documentationOrganization.asciidoc[]
 :leveloffset: 0
 include::platform/platformDescription.asciidoc[]
 
-:leveloffset: 2
-include::fermat_pip/fermatPIPLayersIndex.asciidoc[]
-
-:leveloffset: 3
-include::fermat_p2p/fermatP2PLayersIndex.asciidoc[]
+:leveloffset: 1
+include::fermat-pip/fermatPIPLayersIndex.asciidoc[]
+                    
+:leveloffset: 1
+include::fermat-p2p/fermatP2PLayersIndex.asciidoc[]
 
 :leveloffset: 1
-include::fermat_dmp/fermatDMPLayersIndex.asciidoc[]
+include::fermat-dmp/fermatDMPLayersIndex.asciidoc[]
 
 :leveloffset: 1
-include::fermat_dap/fermatDAPLayersIndex.asciidoc[]
+include::fermat-dap/fermatDAPLayersIndex.asciidoc[]
 
 :leveloffset: 0
 include::android/Iniciacion_android.asciidoc[]
 
-:leveloffset: 4
-include::fermat-book/FBK_Introduction.asciidoc[]
+= FERMAT: expanding the cryptoworld (the official book)
+
+:leveloffset: 0
+include::fermat-book/fbk-01.asciidoc[]
 
