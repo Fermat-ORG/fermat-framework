@@ -53,11 +53,15 @@ public class CryptoPaymentRequestDeniedEventHandler implements FermatEventHandle
 
             if (fermatEvent instanceof CryptoPaymentRequestDeniedEvent) {
 
-                new CryptoPaymentRequestEventActions(
+                CryptoPaymentRequestEventActions cryptoPaymentRequestEventActions = new CryptoPaymentRequestEventActions(
                         cryptoPaymentRequestManager,
                         pluginDatabaseSystem,
                         pluginId
-                ).handleCryptoPaymentRequestDenied(
+                );
+
+                cryptoPaymentRequestEventActions.initialize();
+
+                cryptoPaymentRequestEventActions.handleCryptoPaymentRequestDenied(
                         ((CryptoPaymentRequestDeniedEvent) fermatEvent).getRequestId()
                 );
 

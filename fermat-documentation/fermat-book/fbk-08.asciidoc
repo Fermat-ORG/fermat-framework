@@ -1,8 +1,7 @@
-== Developing regional crypto ecosystems: FERMAT CBP & FERMAT CDN 
+== Including legacy institutions and the traditional financial system
 
-=== 8.1 
-=== 8.2
-=== 8.3
+=== FERMAT CCM ( Crypto Commodity Money)
+=== FERMAT BNP (Bank Note Platform)
 
 
 
