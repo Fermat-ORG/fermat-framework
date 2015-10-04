@@ -320,11 +320,11 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
             // i inform to error manager the error.
             reportUnexpectedException(e);
             throw e;
-        } /*catch(Exception e) {
+        } catch(Exception e) {
 
             reportUnexpectedException(e);
             throw new CantApproveCryptoPaymentRequestException(e, "", "Unhandled Exception.");
-        }*/
+        }
 
     }
 
