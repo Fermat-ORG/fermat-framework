@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 //import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.CantGetOutgoingIntraUserTransactionManagerException;
@@ -347,6 +348,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 LOG.info("Asset número " + counter);
                 createDigitalAssetCryptoTransaction();
                 counter++;
+                this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(this.digitalAsset.getPublicKey(), counter);
             }
         } catch (ObjectNotSetException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","Digital Asset object is not complete");
@@ -467,17 +469,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         persistsGenesisAddress(transactionId, genesisAddress.getAddress());
     }
 
-    private void deliverDigitalAssetToAssetWallet(String transactionId, DigitalAssetMetadata digitalAssetMetadata, DigitalAsset digitalAsset) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantDeliverDigitalAssetToAssetWalletException {
-        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
-        try {
-            if(!isDigitalAssetComplete(digitalAsset, digitalAssetMetadata)){
-                throw new CantDeliverDigitalAssetToAssetWalletException("Cannot deliver the digital asset - is not complete:"+digitalAssetMetadata);
-            }
-        } catch (CantCheckAssetIssuingProgressException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Cannot deliver the digital asset:" + digitalAssetMetadata,"Unexpected result in database");
+    private void saveDigitalAssetMetadataInVault(DigitalAssetMetadata digitalAssetMetadata, String transactionId) throws CantCheckAssetIssuingProgressException, CantDeliverDigitalAssetToAssetWalletException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCreateDigitalAssetFileException {
+        if(!isDigitalAssetComplete(digitalAsset, digitalAssetMetadata)){
+            throw new CantDeliverDigitalAssetToAssetWalletException("Cannot deliver the digital asset - is not complete:"+digitalAssetMetadata);
         }
-        //Todo: por definir con Franklin que hacer aca
-        //Establecer protocolo de traspaso de responsabilidad
+        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
+        this.digitalAssetMetadataVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata);
     }
 
     private void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException{
@@ -504,6 +501,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     private String sendBitcoins(CryptoAddress genesisAddress, String digitalAssetHash, String transactionId) throws CantSendGenesisAmountException{
         try {
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_BITCOINS);
+            this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(digitalAssetHash, CryptoStatus.PENDING_SUBMIT);
             //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
             //TODO: Send btc through outgoing intra user
             //genesisTransaction.setOp_Return(digitalAssetHash);
@@ -537,6 +535,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Asset Issuing plugin cannot get the OutgoingIntraUserTransactionManager");
         } catch (OutgoingIntraActorCantSendFundsExceptions exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The sendToAddress is invalid: "+genesisAddress);
+        } catch (CantCheckAssetIssuingProgressException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the transaction CryptoStatus");
         }
     }
 
@@ -547,6 +547,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          * Este método lo usaré para pedir las transacciones de cada digital asset, mucho de lo que estaba en este método ahora pertenece al
          * método issueDigitalAssets.
          */
+        DigitalAssetMetadata digitalAssetMetadata=null;
         try{
             //Primero, asigno un UUID interno
             UUID transactionUUID=generateTransactionUUID();
@@ -560,7 +561,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //Le asigno al Digital Asset la genesisAddress
             setDigitalAssetGenesisAddress(transactionId,genesisAddress);
             //Creo el digitalAssetMetadata
-            DigitalAssetMetadata digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
+            digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
             //Creo la genesisTransaction y se lo asigno al digitalAsset
             //CryptoTransaction genesisTransaction=requestGenesisTransaction(genesisAddress);
             //setDigitalAssetGenesisTransaction(transactionId, genesisTransaction);
@@ -571,8 +572,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //envío de BTC
             String genesisTransaction=sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
             digitalAssetMetadata.setGenesisTransaction(genesisTransaction);
+            //We kept the DigitalAssetMetadata in DAMVault
+            saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
             //Entregamos el digital asset a la AssetWallet
-            deliverDigitalAssetToAssetWallet(transactionId, digitalAssetMetadata, this.digitalAsset);
+            //deliverDigitalAssetToAssetWallet(transactionId, digitalAssetMetadata, this.digitalAsset);
 
         } catch (CantPersistsGenesisAddressException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis Address in database");
@@ -590,6 +593,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis transaction id in database");
         } catch (CantSendGenesisAmountException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot send the Digital Asset genesis amount");
+        } catch (CantCreateDigitalAssetFileException exception) {
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Issuing a new Digital Asset", "Cannot kept the DigitalAssetMetadata in DigitalAssetMetadataVault");
+        } catch (CantCheckAssetIssuingProgressException exception) {
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Cannot deliver the digital asset:" + digitalAssetMetadata,"Unexpected result in database");
         }
 
     }

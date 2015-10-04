@@ -13,7 +13,11 @@ public enum CryptoPaymentState implements FermatEnum {
 
     APPROVED                  ("APR"),
     DENIED_BY_INCOMPATIBILITY ("DBI"),
+    ERROR                     ("ERR"),
+    IN_APPROVING_PROCESS      ("IAP"),
+    NOT_SENT_YET              ("NSY"),
     PAID                      ("PAI"),
+    PAYMENT_PROCESS_STARTED   ("PPS"),
     PENDING_RESPONSE          ("PEN"),
     REFUSED                   ("REF");
 
@@ -29,7 +33,11 @@ public enum CryptoPaymentState implements FermatEnum {
 
             case "APR": return APPROVED                 ;
             case "DBI": return DENIED_BY_INCOMPATIBILITY;
+            case "ERR": return ERROR                    ;
+            case "IAP": return IN_APPROVING_PROCESS     ;
+            case "NSY": return NOT_SENT_YET             ;
             case "PAI": return PAID                     ;
+            case "PPS": return PAYMENT_PROCESS_STARTED                     ;
             case "PEN": return PENDING_RESPONSE         ;
             case "REF": return REFUSED                  ;
 

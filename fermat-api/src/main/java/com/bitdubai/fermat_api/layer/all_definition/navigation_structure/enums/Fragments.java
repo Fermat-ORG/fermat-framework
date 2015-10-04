@@ -2,7 +2,6 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 
 /**
  * Created by rodrigo on 2015.07.20..
@@ -26,6 +25,7 @@ public enum Fragments implements FermatFragments {
     CWP_WALLET_STORE_SEARCH_MODE("CWSSM"),
 
     DAP_SUB_APP_ASSET_FACTORY_MAIN_ACTIVITY("DSAAFMA"),
+    DAP_SUB_APP_ASSET_EDITOR_ACTIVITY("DSAAEA"),
 
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT("CWDTDLF"),
     CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT("CWDTDTLF"),
@@ -144,18 +144,6 @@ public enum Fragments implements FermatFragments {
 
     Fragments(String code) {
         this.code = code;
-    }
-
-    public String getKey() {
-        return this.code;
-    }
-
-    public String getStringValue() {
-        return this.code;
-    }
-
-    public String toString() {
-        return code;
     }
 
     public static Fragments getValueFromString(String code) throws InvalidParameterException {
@@ -328,5 +316,17 @@ public enum Fragments implements FermatFragments {
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
         //return null;
+    }
+
+    public String getKey() {
+        return this.code;
+    }
+
+    public String getStringValue() {
+        return this.code;
+    }
+
+    public String toString() {
+        return code;
     }
 }

@@ -3,9 +3,12 @@ package com.bitdubai.android_core.app;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,12 +29,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.WalletRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.WalletSettings;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantLoadWalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -366,9 +369,11 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 //        }
 
         try {
-            resetThisActivity();
 
-            Activity activity = getWalletRuntimeManager().getLastWallet().getActivity(Activities.getValueFromString(activityName));
+
+            WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+
+            Activity activity = walletNavigationStructure.getActivity(Activities.getValueFromString(activityName));
 
 
 
@@ -396,7 +401,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
 
                 //finalize();
-                //System.gc();
+                System.gc();
                 //overridePendingTransition(0, 0);
                 //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 //this.finalize();
@@ -410,9 +415,30 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 }
 
                 //NavigationDrawerFragment.onDetach();
-                //NavigationDrawerFragment = null;
+                NavigationDrawerFragment = null;
 
-                recreate();
+
+
+
+                final ProgressDialog dialog = ProgressDialog.show(this, "", "Loading...",
+                        true);
+                dialog.show();
+
+
+                resetThisActivity();
+
+                System.gc();
+
+                // Execute some code after 2 seconds have passed
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        dialog.dismiss();
+                        recreate();
+                    }
+                }, 2000);
+
+
                 //finish();
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 //System.gc();
@@ -422,6 +448,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
             } catch (Throwable throwable) {
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error. Throwable", Toast.LENGTH_LONG).show();
                 throwable.printStackTrace();
             }
 
@@ -436,6 +463,14 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
 
     }
+
+    @Override
+    protected void onNewIntent(Intent intent){
+        super.onNewIntent(intent);
+        Log.i("FERMAT MATI", "New intent with flags " + intent.getFlags());
+        Log.i("FERMAT MATI", "New intent with flags " + intent.getFlags());
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -525,7 +560,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
      */
     @Override
     public void onNavigationDrawerItemSelected(int position, String activityCode) {
-        Toast.makeText(this,activityCode,Toast.LENGTH_LONG).show();
         changeActivity(activityCode);
     }
 }

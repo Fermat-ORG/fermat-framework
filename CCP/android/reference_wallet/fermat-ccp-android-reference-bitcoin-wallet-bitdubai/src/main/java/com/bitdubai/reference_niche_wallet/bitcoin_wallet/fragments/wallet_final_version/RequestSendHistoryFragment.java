@@ -56,9 +56,9 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
      *
      * @return InstalledFragment instance object
      */
-    public static SendTransactionsFragment newInstance() {
-        SendTransactionsFragment requestPaymentFragment = new SendTransactionsFragment();
-        return new SendTransactionsFragment();
+    public static RequestSendHistoryFragment newInstance() {
+        RequestSendHistoryFragment requestPaymentFragment = new RequestSendHistoryFragment();
+        return new RequestSendHistoryFragment();
     }
 
     @Override
@@ -100,7 +100,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_main_fragment_send;
+        return R.layout.transaction_main_fragment;
     }
 
     @Override

@@ -58,7 +58,7 @@ android {
 
 dependencies {
 
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.1'
 
     compile project(':fermat-api')
 

@@ -20,4 +20,8 @@ public class CantGetCryptoPaymentRequestException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public CantGetCryptoPaymentRequestException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
 }

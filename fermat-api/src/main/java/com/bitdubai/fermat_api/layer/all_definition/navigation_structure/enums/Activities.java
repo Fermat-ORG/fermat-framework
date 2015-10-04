@@ -77,6 +77,7 @@ public enum Activities {
 
     // DAP
     DAP_SUB_APP_ASSET_FACTORY_MAIN("DSAAFM"),
+    DAP_ASSET_EDITOR_ACTIVITY("DAEA"),
 
     //Desktop
     CCP_DESKTOP("CCPD"),
@@ -224,8 +225,14 @@ public enum Activities {
                 return DAP_DESKTOP;
             case "CBPD":
                 return CBP_DESKTOP;
+            case "DAEA":
+                return DAP_ASSET_EDITOR_ACTIVITY;
             case "DAPM":
                 return DAP_MAIN;
+            case "CWRWBWBV1C":
+                return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
+            case "CWRWBWBV1M":
+                return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

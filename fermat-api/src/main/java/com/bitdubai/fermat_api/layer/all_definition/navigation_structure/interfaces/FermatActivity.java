@@ -42,4 +42,6 @@ public interface FermatActivity extends Serializable{
     public StatusBar getStatusBar();
 
     public Activities getBackActivity();
+
+    public FermatHeader getHeader();
 }

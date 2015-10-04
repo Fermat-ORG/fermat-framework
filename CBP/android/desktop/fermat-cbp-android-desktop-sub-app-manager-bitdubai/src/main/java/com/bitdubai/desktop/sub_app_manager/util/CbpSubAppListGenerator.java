@@ -3,7 +3,7 @@ package com.bitdubai.desktop.sub_app_manager.util;
 import com.bitdubai.desktop.sub_app_manager.provisory_classes.CbpInstalledSubApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 
 import java.util.ArrayList;
 import java.util.List;
