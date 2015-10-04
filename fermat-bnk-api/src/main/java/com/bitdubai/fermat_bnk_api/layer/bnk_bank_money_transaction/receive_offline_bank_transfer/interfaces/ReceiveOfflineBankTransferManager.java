@@ -15,15 +15,20 @@ public interface ReceiveOfflineBankTransferManager {
     List<ReceiveOfflineBankTransfer> getAllReceiveOfflineBankTransferFromCurrentDeviceUser() throws CantGetReceiveOfflineBankTransferException;
 
     ReceiveOfflineBankTransfer createReceiveOfflineBankTransfer(
-         final String publicKeyCustomer
-        ,final String publicKeyBroker
-        ,final float merchandiseAmount
+         final String publicKeyBroker
+        ,final String publicKeyCustomer
+        ,final String balanceType
+        ,final String transactionType
+        ,final float amount
         ,final String bankCurrencyType
         ,final String bankOperationType
-        ,final String bankName
-        ,final String bankAccountNumber
-        ,final String bankAccountType
         ,final String bankDocumentReference
+        ,final String bankToName
+        ,final String bankToAccountNumber
+        ,final String bankToAccountType
+        ,final String bnkFromName
+        ,final String bankFromAccountNumber
+        ,final String bankFromAccountType
     ) throws CantCreateReceiveOfflineBankTransferException;
 
     void updateStatusReceiveOfflineBankTransfer(final UUID bankTransactionId) throws CantUpdateStatusReceiveOfflineBankTransferException;

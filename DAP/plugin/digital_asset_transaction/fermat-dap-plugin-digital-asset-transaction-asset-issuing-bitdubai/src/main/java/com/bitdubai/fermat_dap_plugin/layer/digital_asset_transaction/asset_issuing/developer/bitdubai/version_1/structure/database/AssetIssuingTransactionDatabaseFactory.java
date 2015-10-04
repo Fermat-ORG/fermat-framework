@@ -91,11 +91,11 @@ public class AssetIssuingTransactionDatabaseFactory implements DealsWithPluginDa
 
             DatabaseTableFactory transitionProtocolTable = databaseFactory.newTableFactory(ownerId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
 
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_ID_COLUMN, DatabaseDataType.STRING,36, Boolean.TRUE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_EVENT_COLUMN, DatabaseDataType.STRING,10, Boolean.FALSE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_SOURCE_COLUMN,DatabaseDataType.STRING,10, Boolean.FALSE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_STATUS_COLUMN, DatabaseDataType.STRING,10, Boolean.FALSE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN,DatabaseDataType.LONG_INTEGER,100, Boolean.FALSE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, DatabaseDataType.STRING,36, Boolean.TRUE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN, DatabaseDataType.STRING,10, Boolean.FALSE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN,DatabaseDataType.STRING,10, Boolean.FALSE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, DatabaseDataType.STRING,10, Boolean.FALSE);
+            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN,DatabaseDataType.LONG_INTEGER,100, Boolean.FALSE);
 
             transitionProtocolTable.addIndex(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
 

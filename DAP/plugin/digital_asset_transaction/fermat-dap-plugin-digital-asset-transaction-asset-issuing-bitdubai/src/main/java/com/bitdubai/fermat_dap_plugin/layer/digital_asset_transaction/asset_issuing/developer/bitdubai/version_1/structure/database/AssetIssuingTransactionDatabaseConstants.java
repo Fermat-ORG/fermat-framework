@@ -31,11 +31,11 @@ public class AssetIssuingTransactionDatabaseConstants {
      */
     public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME = "issuing_events_recorded";
 
-    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_ID_COLUMN = "event_id";
-    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_EVENT_COLUMN = "event";
-    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_SOURCE_COLUMN = "source";
-    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_STATUS_COLUMN = "status";
-    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN = "timestamp";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN = "event_id";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN = "event";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN = "source";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN = "status";
+    public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN = "timestamp";
 
     public static final String DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
 
