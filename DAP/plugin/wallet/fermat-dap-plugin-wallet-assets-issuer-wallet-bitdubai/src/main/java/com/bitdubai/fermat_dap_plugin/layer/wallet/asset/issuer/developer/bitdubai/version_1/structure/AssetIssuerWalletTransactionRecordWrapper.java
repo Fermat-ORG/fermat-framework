@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 
 import java.util.UUID;
 
@@ -11,39 +12,83 @@ import java.util.UUID;
  * Created by franklin on 01/10/15.
  */
 public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWalletTransactionRecord {
+    private final DigitalAsset digitalAsset;
+    private final String assetIssuingPublicKey;
+    private final String name;
+    private final String description;
+    private final CryptoAddress addressFrom;
+    private final CryptoAddress addressTo;
+    private final String actorFromPublicKey;
+    private final String actorToPublicKey;
+    private final Actors actorFromType;
+    private final Actors actorToType;
+    private final long amount;
+    private final long timeStamp;
+    private final String memo;
+    private final String digitalAssetMetadataHash;
+
+    AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
+                                              String assetIssuingPublicKey,
+                                              String name,
+                                              String description,
+                                              CryptoAddress addressFrom,
+                                              CryptoAddress addressTo,
+                                              String actorFromPublicKey,
+                                              String actorToPublicKey,
+                                              Actors actorFromType,
+                                              Actors actorToType,
+                                              long amount,
+                                              long timeStamp,
+                                              String memo,
+                                              String digitalAssetMetadataHash){
+        this.digitalAsset = digitalAsset;
+        this.assetIssuingPublicKey = assetIssuingPublicKey;
+        this.name = name;
+        this.description = description;
+        this.addressFrom = addressFrom;
+        this.addressTo = addressTo;
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey =actorToPublicKey;
+        this.actorFromType = actorFromType;
+        this.actorToType = actorToType;
+        this.amount = amount;
+        this.timeStamp = timeStamp;
+        this.memo = memo;
+        this.digitalAssetMetadataHash = digitalAssetMetadataHash;
+    }
     @Override
     public DigitalAsset getDigitalAsset() {
-        return null;
+        return digitalAsset;
     }
 
     @Override
     public String getAssetIssuingPublicKey() {
-        return null;
+        return assetIssuingPublicKey;
     }
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 
     @Override
     public CryptoAddress getAddressFrom() {
-        return null;
+        return addressFrom;
     }
 
     @Override
     public String getActorFromPublicKey() {
-        return null;
+        return actorFromPublicKey;
     }
 
     @Override
     public Actors getActorFromType() {
-        return null;
+        return actorFromType;
     }
 
     @Override
@@ -58,7 +103,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
 
     @Override
     public Actors getActorToType() {
-        return null;
+        return actorToType;
     }
 
     @Override
@@ -68,21 +113,21 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
 
     @Override
     public long getAmount() {
-        return 0;
+        return amount;
     }
 
     @Override
     public long getTimestamp() {
-        return 0;
+        return timeStamp;
     }
 
     @Override
     public String getMemo() {
-        return null;
+        return memo;
     }
 
     @Override
     public String getDigitalAssetMetadataHash() {
-        return null;
+        return digitalAssetMetadataHash;
     }
 }
