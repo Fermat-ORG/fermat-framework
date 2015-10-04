@@ -96,7 +96,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
     }
 
     private int getNextAvailablePublicKeyDepth(HierarchyAccount hierarchyAccount) {
-        //todo get current value
+        //todo get current value from table key_Maintenance column usedKeys
         //todo increase value
         return 3;
     }

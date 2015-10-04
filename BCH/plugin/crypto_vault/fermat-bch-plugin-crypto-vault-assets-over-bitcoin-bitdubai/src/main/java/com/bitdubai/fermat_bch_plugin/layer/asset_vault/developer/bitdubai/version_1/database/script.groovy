@@ -19,6 +19,25 @@ databaseTables << [
         firstKey:"id"
 ]
 
+[
+        name: "key_Maintenance",
+        columns: [
+                ["account_id", "INT", "10", "true"],
+                ["generatedKeys", "INT", "100", "false"],
+                ["usedKeys", "INT", "100", "false"]
+        ],
+        firstKey:"account_id"
+]
+
+[
+        name: "active_Networks",
+        columns: [
+                ["networkType", "STRING", "50'", "true"],
+                ["activation_date", "STRING", "50'", "false"]
+        ],
+        firstKey:"networkType"
+]
+
 /**
  * No more changes from here.
  */
