@@ -1,6 +1,6 @@
 package com.bitdubai.desktop.sub_app_manager.util;
 
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 
 import java.util.List;
 

@@ -6,8 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
+
 
 import java.util.List;
 
@@ -25,7 +28,17 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
     /**
      * Represent the list of registered components
      */
-    List<PlatformComponentProfile> registeredComponentList;
+    private List<PlatformComponentProfile> registeredComponentList;
+
+    /**
+     * Represent the networkServiceType
+     */
+    private NetworkServiceType networkServiceType;
+
+    /**
+     * Represent the platformComponentType
+     */
+    private PlatformComponentType platformComponentType;
 
     /**
      * Constructor with parameter
@@ -50,5 +63,37 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
      */
     public void setRegisteredComponentList(List<PlatformComponentProfile> registeredComponentList) {
         this.registeredComponentList = registeredComponentList;
+    }
+
+    /**
+     * Get the NetworkServiceType
+     * @return NetworkServiceType
+     */
+    public NetworkServiceType getNetworkServiceType() {
+        return networkServiceType;
+    }
+
+    /**
+     * Set the NetworkServiceType
+     * @param networkServiceType
+     */
+    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
+        this.networkServiceType = networkServiceType;
+    }
+
+    /**
+     * Get the PlatformComponentType
+     * @return PlatformComponentType
+     */
+    public PlatformComponentType getPlatformComponentType() {
+        return platformComponentType;
+    }
+
+    /**
+     * Set the platformComponentType
+     * @param platformComponentType
+     */
+    public void setPlatformComponentType(PlatformComponentType platformComponentType) {
+        this.platformComponentType = platformComponentType;
     }
 }

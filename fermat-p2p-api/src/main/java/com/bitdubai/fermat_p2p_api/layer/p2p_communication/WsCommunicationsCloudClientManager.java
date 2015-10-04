@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager</code>
@@ -19,10 +19,18 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 public interface WsCommunicationsCloudClientManager {
 
     /**
-     * Get the CommunicationsCloudClientConnection
+     * Get the CommunicationsClientConnection
      *
-     * @return CommunicationsCloudClientConnection
+     * @return CommunicationsClientConnection
      */
-    public CommunicationsCloudClientConnection getCommunicationsCloudClientConnection();
+    public CommunicationsClientConnection getCommunicationsCloudClientConnection();
+
+
+    /**
+     * Get the disable server flag
+     *
+     * @return Boolean
+     */
+    public Boolean isDisable();
 
 }

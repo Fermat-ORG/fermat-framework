@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.event_handlers.CloudClietNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.event_handlers.IncomingMoneyNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.exceptions.CantCreateNotification;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.structure.Notification;
@@ -207,6 +208,13 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         eventManager.addListener(fermatEventListenerNewNotification);
         listenersAdded.add(fermatEventListenerNewNotification);
 
+        FermatEventListener fermatEventListenerCloudClientConnectedNotification = eventManager.getNewListener(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
+        FermatEventHandler CloudClietNotificationHandler = new CloudClietNotificationHandler(this);
+        fermatEventListenerCloudClientConnectedNotification.setEventHandler(CloudClietNotificationHandler);
+        eventManager.addListener(fermatEventListenerCloudClientConnectedNotification);
+        listenersAdded.add(fermatEventListenerCloudClientConnectedNotification);
+
+
 
     }
 
@@ -261,8 +269,37 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         throw new CantCreateNotification();
     }
 
+    private Notification createNotification(EventSource eventSource,String text) throws CantCreateNotification {
+
+            Notification notification = new Notification();
+            notification.setAlertTitle(getSourceString(eventSource));
+
+            notification.setTextTitle(getTextTitleBySource(eventSource));
+
+            notification.setTextBody(text);
+
+            return notification;
+
+    }
+
+
     public void deleteObserver(Observer observer){
         this.flagNotification.deleteObservers();
+    }
+
+    @Override
+    public void addPopUpNotification(EventSource source, String text) {
+        try {
+            Notification notification = createNotification(source,text);
+            notification.setNotificationType(NotificationType.CLOUD_CONNECTED_NOTIFICATION.getCode());
+            poolNotification.add(notification);
+        } catch (CantCreateNotification cantCreateNotification) {
+            cantCreateNotification.printStackTrace();
+        }
+
+        // notify observers
+        notifyNotificationArrived();
+
     }
 
     private void notifyNotificationArrived(){

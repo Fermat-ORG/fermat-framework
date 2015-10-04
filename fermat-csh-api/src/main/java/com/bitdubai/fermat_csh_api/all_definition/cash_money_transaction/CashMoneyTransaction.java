@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_api.all_definition.cash_money_transaction;
 
-
+import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 
@@ -20,7 +21,11 @@ public interface CashMoneyTransaction {
 
     CashTransactionStatus getStatus();
 
-    Float getAmount();
+    BalanceType getBalanceType();
+
+    TransactionType getTransactionType();
+
+    float getAmount();
 
     CashCurrencyType getCashCurrencyType();
 

@@ -14,13 +14,15 @@ public interface SendCashDeliveryManager {
     List<SendCashDelivery> getAllSendCashDeliveryFromCurrentDeviceUser() throws CantGetSendCashDeliveryException;
 
     SendCashDelivery createSendCashDelivery(
-            final String publicKeyCustomer
+             final String publicKeyCustomer
             ,final String publicKeyBroker
-            ,final Float amount
+            ,final String balanceType
+            ,final String transactionType
+            ,final float amount
             ,final String cashCurrencyType
             ,final String cashReference
             ,final String infoDelivery
     ) throws CantCreateSendCashDeliveryException;
 
-    void updateStatusSendCashDelivery(final UUID cashtransactionId) throws CantUpdateStatusSendCashDeliveryException;
+    void updateStatusSendCashDelivery(final UUID cashTransactionId) throws CantUpdateStatusSendCashDeliveryException;
 }

@@ -10,25 +10,26 @@ import java.util.UUID;
  */
 public interface BitcoinWalletTransactionRecord {
 
-    public CryptoAddress getAddressFrom();
+    CryptoAddress getAddressFrom();
 
-    public UUID getIdTransaction();
+    UUID getTransactionId();
 
-    public CryptoAddress getAddressTo();
+    CryptoAddress getAddressTo();
 
-    public long getAmount();
+    long getAmount();
 
-    public long getTimestamp();
+    long getTimestamp();
 
-    public String getMemo();
+    String getMemo();
 
-    public String getTransactionHash();
+    String getTransactionHash();
 
-    public String getActorToPublicKey();
+    String getActorToPublicKey();
 
-    public String getActorFromPublicKey();
+    String getActorFromPublicKey();
 
-    public Actors getActorToType();
+    Actors getActorToType();
 
-    public Actors getActorFromType();
+    Actors getActorFromType();
+
 }

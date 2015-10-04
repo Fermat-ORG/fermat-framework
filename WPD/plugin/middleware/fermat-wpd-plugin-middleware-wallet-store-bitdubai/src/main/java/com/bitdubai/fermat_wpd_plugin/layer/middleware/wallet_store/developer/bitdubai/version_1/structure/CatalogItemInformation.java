@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.CatalogItems;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.CatalogItems;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 7/25/15.
  */
-public class CatalogItemInformation implements com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.interfaces.CatalogItemInformation {
+public class CatalogItemInformation implements com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.interfaces.CatalogItemInformation {
     private HashMap<CatalogItems, UUID> itemIds = new HashMap<CatalogItems, UUID>();
     private HashMap<UUID, InstallationStatus> itemInstallationStatus = new HashMap<UUID, InstallationStatus>();
 

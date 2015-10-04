@@ -19,9 +19,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -371,7 +370,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                loadNewTransactions();
+                //loadNewTransactions();
                 //transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTransactions);
                 //listViewTransactions.setAdapter(transactionArrayAdapter);
                 swipeRefreshLayout.setRefreshing(false);
@@ -383,44 +382,44 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
     /**
      *  Update transaction list
      */
-    private void loadNewTransactions(){
-        try {
-            if (lstTransactions.isEmpty()){
-
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
-
-                for (CryptoWalletTransaction transaction : lst) {
-                    lstTransactions.add(0, transaction);
-                }
-            }
-            else{
-
-                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
-                for (CryptoWalletTransaction transaction : lst) {
-                    lstTransactions.add(0, transaction);
-
-
-                }
-                pointerOffset = lstTransactions.size();
-
-                lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
-                adapter.notifyDataSetChanged();
-            }
-        }
-
-        catch (CantListTransactionsException e)
-        {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        }
-        catch(Exception ex)
-        {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
+//    private void loadNewTransactions(){
+//        try {
+//            if (lstTransactions.isEmpty()){
+//
+//                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
+//
+//                for (CryptoWalletTransaction transaction : lst) {
+//                    lstTransactions.add(0, transaction);
+//                }
+//            }
+//            else{
+//
+//                List<CryptoWalletTransaction> lst = cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions, pointerOffset);
+//                for (CryptoWalletTransaction transaction : lst) {
+//                    lstTransactions.add(0, transaction);
+//
+//
+//                }
+//                pointerOffset = lstTransactions.size();
+//
+//                lstTransactions=showTransactionListSelected(lstTransactions, BalanceType.getByCode(walletSession.getBalanceTypeSelected()));
+//                adapter.notifyDataSetChanged();
+//            }
+//        }
+//
+//        catch (CantListTransactionsException e)
+//        {
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+//            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+//        }
+//        catch(Exception ex)
+//        {
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+//            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+//        }
+//
+//
+//    }
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
         this.walletResourcesProviderManager = walletResourcesProviderManager;
@@ -467,17 +466,16 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         if (adapter == null) {
             //ErrorManager errorManager = subAppsSession.getErrorManager();
             //ArrayList<Item> data = CatalogueItemDao.getTestData(getResources());
-            try {
-                lstTransactions=cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions,pointerOffset);
-                BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
-                lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
+            // lstTransactions=cryptoWallet.getTransactions(BalanceType.AVAILABLE, walletPublicKey, cantTransactions,pointerOffset);
+            BalanceType balanceType =BalanceType.getByCode(walletSession.getBalanceTypeSelected());
+            lstTransactions=showTransactionListSelected(lstTransactions,balanceType);
 
-                /**
-                 * Load transactions
-                 */
-                loadTransactionMap(lstTransactions);
+            /**
+             * Load transactions
+             */
+            loadTransactionMap(lstTransactions);
 
-                convertToUIList();
+            convertToUIList();
 
 
 //                for (Date date: mapTransactionPerDate.keySet()){
@@ -488,9 +486,6 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
 //                    }
 //                }
 
-            } catch (CantListTransactionsException e) {
-                e.printStackTrace();
-            }
             adapter = new TransactionAdapter(getActivity(), items);
             ((TransactionAdapter) adapter).setFermatListEventListener(this); // setting up event listeners
 

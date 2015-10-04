@@ -8,21 +8,27 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by yordin on 25/09/15.
+ * Created by Yordin Alayn on 25,09,15.
  */
 public interface MakeOfflineBankTransferManager {
 
     List<MakeOfflineBankTransfer> getAllMakeOfflineBankTransferFromCurrentDeviceUser() throws CantGetMakeOfflineBankTransferException;
 
     MakeOfflineBankTransfer createMakeOfflineBankTransfer(
-         final String publicKeyCustomer
-        ,final String publicKeyBroker
-        ,final Float amount
+         final String publicKeyBroker
+        ,final String publicKeyCustomer
+        ,final String balanceType
+        ,final String transactionType
+        ,final float amount
         ,final String bankCurrencyType
-        ,final String bankName
-        ,final String bankAccountNumber
-        ,final String bankAccountType
+        ,final String bankOperationType
         ,final String bankDocumentReference
+        ,final String bankToName
+        ,final String bankToAccountNumber
+        ,final String bankToAccountType
+        ,final String bnkFromName
+        ,final String bankFromAccountNumber
+        ,final String bankFromAccountType
     ) throws CantCreateMakeOfflineBankTransferException;
 
     void updateStatusMakeOfflineBankTransfer(final UUID bankTransactionId) throws CantUpdateStatusMakeOfflineBankTransferException;

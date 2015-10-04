@@ -6,25 +6,26 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsCloudClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.DiscoveryQueryParameters;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.components.PlatformComponentProfile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientPingAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
@@ -46,7 +47,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WsCommunicationsCloudClientConnection implements CommunicationsCloudClientConnection {
+public class WsCommunicationsCloudClientConnection implements CommunicationsClientConnection {
 
     /**
      * Represent the wsCommunicationsCloudClientChannel
@@ -104,7 +105,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new ServerHandshakeRespondPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new CompleteRegistrationComponentPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
-        //wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new MessageTransmitPacketProcessor());
+        wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new ComponentConnectionRespondPacketProcessor());
+        wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new CompleteComponentConnectionRequestPacketProcessor());
+
     }
 
     /**
@@ -130,7 +133,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#constructPlatformComponentProfileFactory(String, String, String, NetworkServiceType, PlatformComponentType, String)
+     * @see CommunicationsClientConnection#constructPlatformComponentProfileFactory(String, String, String, NetworkServiceType, PlatformComponentType, String)
      */
     @Override
     public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData){
@@ -148,34 +151,15 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
             }
 
-            Location pointOne = new Location() {
-                @Override
-                public Double getLatitude() {
-                    return 32.9697;
-                }
+            Location location = null;
 
-                @Override
-                public Double getLongitude() {
-                    return -96.80322;
-                }
+            try {
 
-                @Override
-                public Double getAltitude() {
-                    return 0.0;
-                }
+                location = locationManager.getLocation();
 
-                @Override
-                public Long getTime() {
-                    return new Long(0);
-                }
-
-                @Override
-                public LocationProvider getProvider() {
-                    return null;
-                }
-            };
-
-
+            }catch (CantGetDeviceLocationException e){
+                e.printStackTrace();
+            }
 
             /*
              * Construct a PlatformComponentProfile instance
@@ -183,15 +167,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
             return new PlatformComponentProfileCommunication(alias,
                                                              wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
                                                              identityPublicKey,
-                                                             //pointOne,
-                                                             locationManager.getLocation(),
+                                                             location,
                                                              name,
                                                              networkServiceType,
                                                              platformComponentType,
                                                              extraData);
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new IllegalArgumentException(e);
         }
 
@@ -200,9 +182,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, String, String, Integer, Integer)
+     * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, String name, String extraData, Integer firstRecord, Integer numberRegister){
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numberRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
 
         //Validate parameters
         if (applicant == null){
@@ -212,18 +194,18 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
         /*
          * Construct a PlatformComponentProfile instance
          */
-        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, name, applicant.getNetworkServiceType(), applicant.getPlatformComponentType(), extraData, firstRecord, numberRegister);
+        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, distance, name, applicant.getNetworkServiceType(), applicant.getPlatformComponentType(), extraData, firstRecord, numberRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
 
     }
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#registerComponentInCommunicationCloudServer(PlatformComponentProfile)
+     * @see CommunicationsClientConnection#registerComponentForCommunication(PlatformComponentProfile)
      */
     @Override
-    public void registerComponentInCommunicationCloudServer(PlatformComponentProfile platformComponentProfile){
+    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile){
 
-        System.out.println("WsCommunicationsCloudClientConnection - registerComponentInCommunicationCloudServer");
+        System.out.println("WsCommunicationsCloudClientConnection - registerComponentForCommunication");
 
         /*
          * Validate parameter
@@ -251,7 +233,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#requestListComponentRegistered(DiscoveryQueryParameters)
+     * @see CommunicationsClientConnection#requestListComponentRegistered(DiscoveryQueryParameters)
      */
     @Override
     public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters){
@@ -284,13 +266,13 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#requestVpnConnection(PlatformComponentProfile, PlatformComponentProfile)
+     * @see CommunicationsClientConnection#requestVpnConnection(PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
     public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination){
 
 
-        System.out.println("WsCommunicationsCloudClientConnection - requestListComponentRegistered");
+        System.out.println("WsCommunicationsCloudClientConnection - requestVpnConnection");
 
         /*
          * Validate parameter
@@ -350,7 +332,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#isConnected()
+     * @see CommunicationsClientConnection#isConnected()
      */
     @Override
     public boolean isConnected(){
@@ -359,7 +341,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#getCommunicationsVPNConnectionStablished(PlatformComponentProfile, String)
+     * @see CommunicationsClientConnection#getCommunicationsVPNConnectionStablished(PlatformComponentProfile, String)
      */
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile) {
@@ -394,7 +376,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClou
 
     /**
      * (non-javadoc)
-     * @see CommunicationsCloudClientConnection#isRegister()
+     * @see CommunicationsClientConnection#isRegister()
      */
     public boolean isRegister() {
         return wsCommunicationsCloudClientChannel.isRegister();
