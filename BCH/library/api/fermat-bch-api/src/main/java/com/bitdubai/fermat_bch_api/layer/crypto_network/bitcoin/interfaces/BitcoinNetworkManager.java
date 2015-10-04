@@ -23,7 +23,7 @@ public interface BitcoinNetworkManager {
 
     void monitorNetworkFromWatchingKey(BlockchainNetworkType blockchainNetworkType, DeterministicKey watchingKey) throws CantMonitorBitcoinNetworkException;
 
-    void monitorNetworkFromKeyList(BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList) throws CantMonitorBitcoinNetworkException;
+    void monitorNetworkFromKeyList(List<ECKey> keyList) throws CantMonitorBitcoinNetworkException;
 
 
 }

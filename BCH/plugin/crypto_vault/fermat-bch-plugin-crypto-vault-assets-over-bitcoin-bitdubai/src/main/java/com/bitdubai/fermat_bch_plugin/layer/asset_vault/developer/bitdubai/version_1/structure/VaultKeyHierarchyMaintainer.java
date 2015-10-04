@@ -3,10 +3,17 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.VaultKeyMaintenanceParameters;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.crypto.ChildNumber;
+import org.bitcoinj.crypto.DeterministicHierarchy;
+import org.bitcoinj.crypto.DeterministicKey;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -105,9 +112,32 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD){
                     /**
                      * The current threshold is lower than the limit imposed, we need to generate new keys
+                     * I start by updating the database and defining the new GeneratedKeys values
                      */
+                    int newGeneratedKeys = currentGeneratedKeys + VaultKeyMaintenanceParameters.KEY_GENERATION_BLOCK;
+                    setGeneratedKeysValue(newGeneratedKeys);
 
+                    /**
+                     * I will generate the list of keys from zero to the new value and pass that to the bitcoin network to resync.
+                     */
+                    DeterministicHierarchy pubKeyHierarchy = vaultKeyHierarchy.getAddressPublicHierarchyFromAccount(hierarchyAccount);
 
+                    List<ECKey> publicKeys = new ArrayList<>();
+                    for (int i=0; i < newGeneratedKeys; i++){
+                        // I derive the key at position i
+                        DeterministicKey derivedPubKey = pubKeyHierarchy.deriveChild(pubKeyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+                        // I add this key to the ECKey list
+                        publicKeys.add(ECKey.fromPublicOnly(derivedPubKey.getPubKeyPoint()));
+                    }
+
+                    /**
+                     * Once I derived all the keys, I'm passing these keys to the bitcoin network to start listening to them
+                     */
+                    try {
+                        bitcoinNetworkManager.monitorNetworkFromKeyList(publicKeys);
+                    } catch (CantMonitorBitcoinNetworkException e) {
+                        //todo handle
+                    }
 
                 }
 
@@ -120,6 +150,10 @@ class VaultKeyHierarchyMaintainer implements Agent {
                                     currentUsedKeys,
                                     currentThreshold);
             }
+        }
+
+        private void setGeneratedKeysValue(int value) {
+            //todo update the table key_Maintenance column generatedKeys with the passed value
         }
 
         /**
