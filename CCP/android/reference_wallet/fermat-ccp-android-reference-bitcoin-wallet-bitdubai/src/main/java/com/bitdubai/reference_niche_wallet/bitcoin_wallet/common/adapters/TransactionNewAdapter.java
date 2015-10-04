@@ -141,7 +141,7 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
                     } else {
                         holder.getListView_transactions().setVisibility(View.VISIBLE);
                         holder.getListView_transactions().setBackgroundColor(Color.BLUE);
-                        List<CryptoWalletTransaction> lstCryptoTransactions = null;
+                        List<CryptoWalletTransaction> lstCryptoTransactions = new ArrayList<CryptoWalletTransaction>();
                         try {
                             lstCryptoTransactions = cryptoWallet.listTransactionsByActor(
                                     BalanceType.valueOf(referenceWalletSession.getBalanceTypeSelected()),

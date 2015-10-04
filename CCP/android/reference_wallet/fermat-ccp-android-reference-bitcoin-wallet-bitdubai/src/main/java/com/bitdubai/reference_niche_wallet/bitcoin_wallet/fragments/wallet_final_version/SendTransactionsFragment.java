@@ -34,9 +34,11 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
@@ -453,15 +455,14 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
             if(!amount.getText().toString().equals("") && amount.getText()!=null) {
                 try {
-                    //TODO que pasa si no puedo crear el user?
-                    //CryptoWalletWalletContact walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
-                    //CryptoWalletWalletContact walletContactRecord = cryptoWallet.
-                    // TODO harcoded deliveredbyactorid
                     String notes=null;
                     if(txt_notes.getText().toString().length()!=0){
                         notes = txt_notes.getText().toString();
                     }
 
+                    CryptoWalletWalletContact cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId);
+
+                    //TODO: ver que mas puedo usar del cryptoWalletWalletContact
 
                     cryptoWallet.send(
                             Long.parseLong(amount.getText().toString()),
@@ -471,7 +472,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             user_id,
                             Actors.INTRA_USER,
                             walletContact.actorPublicKey,
-                            Actors.EXTRA_USER
+                            cryptoWalletWalletContact.getActorType()
                     );
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
@@ -480,6 +481,10 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 } catch (CantSendCryptoException e) {
                     referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "Error send satoshis - " + e.getMessage());
+                } catch (WalletContactNotFoundException e) {
+                    e.printStackTrace();
+                } catch (CantFindWalletContactException e) {
+                    e.printStackTrace();
                 }
             }
         } else {

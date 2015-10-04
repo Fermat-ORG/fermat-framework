@@ -10,7 +10,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseConstants;
+
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communication.IncomingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
@@ -43,7 +44,7 @@ import java.util.Observable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TemplateNetworkServiceRemoteAgent extends Observable {
+public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
 
     /*
      * Represent the sleep time for the read or send (2000 milliseconds)
@@ -104,7 +105,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
      * @param incomingMessageDao instance
      * @param outgoingMessageDao instance
      */
-    public TemplateNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public CryptoTransmissionNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
         this.eccKeyPair                          = eccKeyPair;
@@ -244,7 +245,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
             }
 
             //Sleep for a time
-            toReceive.sleep(TemplateNetworkServiceRemoteAgent.SLEEP_TIME);
+            toReceive.sleep(CryptoTransmissionNetworkServiceRemoteAgent.SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
@@ -267,8 +268,8 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                 try {
 
                     Map<String, Object> filters = new HashMap<>();
-                    filters.put(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-                    filters.put(TemplateNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
+                    filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+                    filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
 
                     /*
                      * Read all pending message from database
@@ -313,7 +314,7 @@ public class TemplateNetworkServiceRemoteAgent extends Observable {
                 }
 
             //Sleep for a time
-            toSend.sleep(TemplateNetworkServiceRemoteAgent.SLEEP_TIME);
+            toSend.sleep(CryptoTransmissionNetworkServiceRemoteAgent.SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
