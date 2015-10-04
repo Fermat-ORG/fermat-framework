@@ -28,6 +28,7 @@ public class AssetCryptoVaultManager  {
      * AssetVaultManager variables
      */
     UUID pluginId;
+    VaultKeyHierarchyGenerator vaultKeyHierarchyGenerator;
 
 
     /**
@@ -65,7 +66,7 @@ public class AssetCryptoVaultManager  {
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        VaultKeyHierarchyGenerator vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager);
+        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager);
         new Thread(vaultKeyHierarchyGenerator).start();
     }
 
@@ -104,7 +105,8 @@ public class AssetCryptoVaultManager  {
      */
 
     public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
-          return null;
+        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset vault");
+        return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
     }
 
 
