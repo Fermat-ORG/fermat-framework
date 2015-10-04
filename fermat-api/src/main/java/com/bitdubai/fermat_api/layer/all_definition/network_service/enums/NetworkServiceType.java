@@ -21,7 +21,8 @@ public enum NetworkServiceType {
 
     UNDEFINED                       ("UNDEF"),
     NETWORK_SERVICE_TEMPLATE_TYPE   ("NS_TEMP_TYP"),
-    NETWORK_SERVICE_INTRA_USER_TYPE ("NS_INT_USR_TYP");
+    NETWORK_SERVICE_INTRA_USER_TYPE ("NS_INT_USR_TYP"),
+    NETWORK_SERVICE_ASSET_TRANSMISSION_TYPE ("NS_ASS_TRANS_TYP");
 
     /**
      * Represent the code
@@ -59,6 +60,8 @@ public enum NetworkServiceType {
             case "UNDEF"          : return NetworkServiceType.UNDEFINED;
             case "NS_TEMP_TYP"    : return NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE;
             case "NS_INT_USR_TYP" : return NetworkServiceType.NETWORK_SERVICE_INTRA_USER_TYPE;
+            case "NS_ASS_TRANS_TYP" : return NetworkServiceType.NETWORK_SERVICE_ASSET_TRANSMISSION_TYPE;
+
             default: throw new IllegalArgumentException();
         }
     }
