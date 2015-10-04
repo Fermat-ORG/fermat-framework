@@ -13,8 +13,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="implementation" percentage="80"></author>
-							<author name="lnacosta" scope="implementation" percentage="20"></author>
+							<author name="Luis-Fernando-Molina" scope="implementation" percentage="70"></author>
+							<author name="lnacosta" scope="implementation" percentage="30"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="lnacosta"></mantainer>
@@ -274,9 +274,9 @@
 						code-level="development"
 						>
 						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="furszy" percentage="100"></author>
+							<author name="furszy" scope="architecture" percentage="100"></author>
+							<author name="furszy" scope="design" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -1110,8 +1110,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="lnacosta" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -1491,7 +1493,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="acostarodrigo" scope="implementation" percentage="100"></author>
+							<author name="acostarodrigo" scope="implementation" percentage="85"></author>
+							<author name="lnacosta" scope="implementation" percentage="15"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="acostarodrigo"></mantainer>
@@ -1735,7 +1738,7 @@
 					<plugin
 						name="Crypto Wallet"
 						description=""
-						difficulty="3"
+						difficulty="6"
 						code-level="development"
 						>
 						<authors>
@@ -1905,7 +1908,7 @@
 							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="EzequielPostan"></mantainer>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
@@ -1923,7 +1926,7 @@
 							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="EzequielPostan"></mantainer>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
@@ -1971,7 +1974,7 @@
 							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="EzequielPostan"></mantainer>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
@@ -1989,7 +1992,7 @@
 							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="EzequielPostan"></mantainer>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
@@ -2044,10 +2047,12 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="60"></author>
+							<author name="jorgegonzalez" scope="implementation" percentage="10"></author>
+							<author name="lnacosta" scope="implementation" percentage="30"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="EzequielPostan"></mantainer>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 							<certification signed-by="EzequielPostan" type="implementation"></certification>
@@ -2166,7 +2171,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="100"></author>
+							<author name="nattyco" scope="implementation" percentage="70"></author>
+							<author name="lnacosta" scope="implementation" percentage="30"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="nattyco"></mantainer>
@@ -2214,7 +2220,6 @@
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 							<author name="lnacosta" scope="implementation" percentage="100"></author>
-							<author name="lnacosta" scope="unit-tests" percentage="100"></author>
 						</authors>
 						<mantainers>
 							<mantainer name="lnacosta"></mantainer>
@@ -2248,10 +2253,10 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="EzequielPostan" scope="implementation" percentage="100"></author>
+							<author name="furszy" scope="implementation" percentage="100"></author>
 						</authors>
 						<mantainers>
-							<mantainer name="EzequielPostan"></mantainer>
+							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
 						</certifications>
@@ -5209,6 +5214,26 @@
 				</plugins>
 			</layer>
 
+			<layer name="Wallet" language="java">
+				<plugins>
+					<plugin name="Crypto Broker"
+						description=""
+						difficulty="2"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
 			<layer name="Identity" language="java">
 				<plugins>
 					<plugin
@@ -6829,8 +6854,8 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="nattyco" scope="implementation" percentage="85"></author>
-							<author name="lnacosta" scope="implementation" percentage="15"></author>
+							<author name="nattyco" scope="implementation" percentage="75"></author>
+							<author name="lnacosta" scope="implementation" percentage="25"></author>
 							<author name="laderuner" scope="unit-tests" percentage="100"></author>
 						</authors>
 						<mantainers>

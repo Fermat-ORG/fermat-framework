@@ -10,7 +10,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantL
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGenerateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFoundsException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.InsufficientFundsException;
 
 import java.util.List;
 import java.util.UUID;
@@ -65,11 +65,11 @@ public interface CryptoPaymentRegistry {
      *
      * @throws CantApproveCryptoPaymentRequestException   if something goes wrong.
      * @throws CryptoPaymentRequestNotFoundException      if we can't find the payment request.
-     * @throws InsufficientFoundsException                if there's not the enough amount of crypto to complete the request.
+     * @throws InsufficientFundsException                if there's not the enough amount of crypto to complete the request.
      */
     void approveRequest(UUID requestId) throws CantApproveCryptoPaymentRequestException,
                                                CryptoPaymentRequestNotFoundException   ,
-                                               InsufficientFoundsException             ;
+            InsufficientFundsException;
 
     /**
      * Throw the method <code>getRequestById</code> you can get a specific request.
