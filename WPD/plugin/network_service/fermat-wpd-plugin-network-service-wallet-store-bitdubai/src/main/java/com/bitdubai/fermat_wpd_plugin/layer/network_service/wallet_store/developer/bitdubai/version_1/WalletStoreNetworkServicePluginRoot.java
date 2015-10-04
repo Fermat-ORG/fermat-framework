@@ -431,6 +431,33 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         return null;
     }
 
+    /**
+     * Handles the events CompleteComponentRegistrationNotification
+     * @param platformComponentProfileRegistered
+     */
+    @Override
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+    }
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param platformComponentProfileRegisteredList
+     */
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+
+    }
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param remoteComponentProfile
+     */
+    @Override
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+
+    }
+
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
