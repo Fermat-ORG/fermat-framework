@@ -76,19 +76,8 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, De
         return this.serviceStatus;
     }
 
-
     @Override
-    public void monitorNetworkFromSeed(BlockchainNetworkType blockchainNetworkType, DeterministicSeed deterministicSeed) throws CantMonitorBitcoinNetworkException {
-        this.bitcoinCryptoNetworkManager.monitorNetworkFromSeed(blockchainNetworkType, deterministicSeed);
-    }
-
-    @Override
-    public void monitorNetworkFromWatchingKey(BlockchainNetworkType blockchainNetworkType, DeterministicKey watchingKey) throws CantMonitorBitcoinNetworkException {
-        this.bitcoinCryptoNetworkManager.monitorNetworkFromWatchingKey(blockchainNetworkType, watchingKey);
-    }
-
-    @Override
-    public void monitorNetworkFromKeyList(List<ECKey> keyList) throws CantMonitorBitcoinNetworkException {
+    public void monitorNetworkFromKeyList(List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorBitcoinNetworkException {
 
     }
 }

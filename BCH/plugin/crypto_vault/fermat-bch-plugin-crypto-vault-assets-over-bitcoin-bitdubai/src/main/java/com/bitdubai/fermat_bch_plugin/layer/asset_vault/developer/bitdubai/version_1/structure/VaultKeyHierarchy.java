@@ -92,7 +92,24 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         String address = pubKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
         CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
 
+        /**
+         * I need to make the network that I used to generate the address active, if it is different than the default network.
+         * BlockchainNetworkType has MainNet, RegTest and TestNet. The default value is the one used for the platform.
+         * If the address generated is for a network different than default, I need to update the database so we start monitoring this network
+         */
+        if (blockchainNetworkType != BlockchainNetworkType.DEFAULT){
+            setActiveNetwork(blockchainNetworkType);
+        }
+
         return cryptoAddress;
+    }
+
+    /**
+     * Updates the database to active a new network
+     * @param blockchainNetworkType
+     */
+    private void setActiveNetwork(BlockchainNetworkType blockchainNetworkType) {
+        //todo update table active_Networks and add (if missing) this blockchainNetworkType
     }
 
     private int getNextAvailablePublicKeyDepth(HierarchyAccount hierarchyAccount) {

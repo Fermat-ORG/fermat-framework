@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -152,14 +153,32 @@ class VaultKeyHierarchyMaintainer implements Agent {
             }
 
             /**
-             * Now that I have all the keys I need to monitor in the bitcoin network, I will pass it.
+             * Now that I have all the keys I need to monitor in the bitcoin network. First I need to know which networks are active.
+             * A network becomes active when it generated address for an specified network (MainNet, RegTest or TestNet)
              */
             try {
-                bitcoinNetworkManager.monitorNetworkFromKeyList(allAccountsKeyList);
+                bitcoinNetworkManager.monitorNetworkFromKeyList(getActiveNetworks(), allAccountsKeyList);
             } catch (CantMonitorBitcoinNetworkException e) {
                 //todo handle
             }
 
+        }
+
+        /**
+         * Gets the list of active networks on this platform.
+         * @return
+         */
+        private List<BlockchainNetworkType> getActiveNetworks() {
+            List<BlockchainNetworkType> blockchainNetworkTypes = new ArrayList<>();
+            /**
+             * I get this information from the active_Networks table on the networkType column
+             */
+
+            /**
+             * the default network is always active, so I will add this.
+             */
+            blockchainNetworkTypes.add(BlockchainNetworkType.DEFAULT);
+            return blockchainNetworkTypes;
         }
 
         /**
