@@ -66,6 +66,23 @@ public interface NetworkService {
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
 
+    /**
+     * Handles the events CompleteComponentRegistrationNotification
+     * @param platformComponentProfileRegistered
+     */
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered);
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param platformComponentProfileRegisteredList
+     */
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList);
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param remoteComponentProfile
+     */
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile);
 
 
 }

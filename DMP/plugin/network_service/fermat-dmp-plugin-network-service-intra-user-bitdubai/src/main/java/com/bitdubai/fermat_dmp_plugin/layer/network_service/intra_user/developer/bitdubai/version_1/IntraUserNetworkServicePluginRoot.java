@@ -92,6 +92,21 @@ import java.util.UUID;
  */
 public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDevelopers, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, IntraUserManager, NetworkService, Service, Plugin {
 
+    @Override
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+    }
+
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+
+    }
+
+    @Override
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+
+    }
+
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
      */
