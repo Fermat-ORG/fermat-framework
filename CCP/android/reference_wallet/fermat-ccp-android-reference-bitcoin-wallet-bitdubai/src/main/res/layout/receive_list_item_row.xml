@@ -14,6 +14,7 @@
         android:paddingTop="15dp"
         >
 
+
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -117,11 +118,19 @@
             android:src="@drawable/ic_home_arrow_down"/>
 
     </LinearLayout>
-
-    <ListView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView_transactions"
-        android:visibility="gone"></ListView>
+        android:layout_height="fill_parent">
+
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/listView_transactions"
+            android:visibility="gone"></ListView>
+
+
+    </FrameLayout>
+
 
 </LinearLayout>

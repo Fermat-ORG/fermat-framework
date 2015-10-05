@@ -5,22 +5,28 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
-import org.bitcoinj.crypto.DeterministicKey;
-import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.core.ECKey;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 9/23/15.
  */
-public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, DealsWithEvents, Plugin, Service {
+public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, DealsWithEvents, DealsWithPluginDatabaseSystem, Plugin, Service {
+    /**
+     * BitcoinNetworkManager variable
+     */
     BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+
     /**
      * DealsWithEvents interface variable and implementation
      */
@@ -41,13 +47,23 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, De
     }
 
     /**
+     * DealsWithPluginDatabaseSystem interface variable and implementation
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
      *Service interface variable and implementation
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     @Override
     public void start() throws CantStartPluginException {
-         bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager);
+        bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager, this.pluginDatabaseSystem);
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -74,14 +90,8 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, De
         return this.serviceStatus;
     }
 
-
     @Override
-    public void monitorNetworkFromSeed(BlockchainNetworkType blockchainNetworkType, DeterministicSeed deterministicSeed) throws CantMonitorBitcoinNetworkException {
-        this.bitcoinCryptoNetworkManager.monitorNetworkFromSeed(blockchainNetworkType, deterministicSeed);
-    }
-
-    @Override
-    public void monitorNetworkFromWatchingKey(BlockchainNetworkType blockchainNetworkType, DeterministicKey watchingKey) throws CantMonitorBitcoinNetworkException {
-        this.bitcoinCryptoNetworkManager.monitorNetworkFromWatchingKey(blockchainNetworkType, watchingKey);
+    public void monitorNetworkFromKeyList(List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorBitcoinNetworkException {
+        bitcoinCryptoNetworkManager.monitorNetworkFromKeyList(blockchainNetworkTypes, keyList);
     }
 }

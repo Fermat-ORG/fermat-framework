@@ -85,26 +85,27 @@ public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithBitcoin
     public void start() throws CantStartPluginException {
 
         /**
-         * I create the VaultManager that will load or create the seed and recreate the key hierarchy.
-         * The seed created belongs only to the currently device user Logged.
+         * The Asset vault works by creating a HD tree of keys.
+         * 1) A seed is generated, or loaded by the VaultSeedGenerator class. If the device User logged is new then it will create it
+         * or loaded if it exists from before.
+         * 2) The AssetCryptoVaultManager will create a Master key (m) with that seed and will create key hierarchies (VaultKeyHierarchy)
+         * with the VaultKeyHierarchyGenerator in a separate thread to reduce start time of the platform.
+         * 3) for all the accounts that I have configued on this device (Account zero is the vault, but I may have many redeem points) I generate keys
+         * for each of them
+         * 4) I pass the entire set of keys to the bitcoin network so we start lintening the network with those keys.
          */
         try{
-            String deviceUserLoggerPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            // the DeviceUserLogged
+            String deviceUserLoggedPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId,
                     pluginFileSystem,
                     pluginDatabaseSystem,
-                    deviceUserLoggerPublicKey,
+                    deviceUserLoggedPublicKey,
                     bitcoinNetworkManager);
         } catch (Exception e){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
         }
 
-        //Test
-        try {
-            System.out.println("Asset Vault Address Generator Test: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.DEFAULT).getAddress());
-        } catch (GetNewCryptoAddressException e) {
-            e.printStackTrace();
-        }
         /**
          * Nothing left to do.
          */
