@@ -687,7 +687,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
 
         } catch (CantGetRepositoryPathRecordException e) {
 
-            throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error get repository from database ", "");
+                throw new CantGetLanguageFileException("CAN'T GET LANGUAGE FILE:", e, "Error get repository from database ", "");
 
         } catch (CantCreateFileException e) {
             /**

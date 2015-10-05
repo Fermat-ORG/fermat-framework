@@ -110,7 +110,7 @@ public class UninstallCompleteSubAppTest extends TestCase {
 
 
     @Test
-    public void testUninstallCompleteWallet() throws Exception {
+    public void testUninstallCompleteSubApp() throws Exception {
         subAppResourcesInstallationNetworkServicePluginRoot.start();
         catchException(subAppResourcesInstallationNetworkServicePluginRoot).uninstallCompleteSubApp("reference_wallet",
                 "bitDubai",

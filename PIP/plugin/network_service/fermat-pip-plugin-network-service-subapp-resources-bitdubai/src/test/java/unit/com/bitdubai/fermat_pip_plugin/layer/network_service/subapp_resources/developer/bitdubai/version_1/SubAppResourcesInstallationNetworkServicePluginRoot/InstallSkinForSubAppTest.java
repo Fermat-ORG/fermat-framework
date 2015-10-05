@@ -106,7 +106,7 @@ public class InstallSkinForSubAppTest extends TestCase {
 
 //
     @Test
-    public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
+    public void testInstallInstallSkinForSubApp_ThrowsSubAppInstalationException() throws Exception {
 
         subAppResourcesInstallationNetworkServicePluginRoot.start();
         catchException(subAppResourcesInstallationNetworkServicePluginRoot).installSkinForSubApp("reference_wallet",
@@ -121,7 +121,7 @@ public class InstallSkinForSubAppTest extends TestCase {
 
 
     @Test
-    public void testInstallCompleteWallet_FileNotFoundThrowsWalletResourcesInstalationException() throws Exception {
+    public void testInstallInstallSkinForSubApp_FileNotFoundThrowsSubAppInstalationException() throws Exception {
 
         subAppResourcesInstallationNetworkServicePluginRoot.start();
         catchException(subAppResourcesInstallationNetworkServicePluginRoot).installSkinForSubApp("reference_wallet",
