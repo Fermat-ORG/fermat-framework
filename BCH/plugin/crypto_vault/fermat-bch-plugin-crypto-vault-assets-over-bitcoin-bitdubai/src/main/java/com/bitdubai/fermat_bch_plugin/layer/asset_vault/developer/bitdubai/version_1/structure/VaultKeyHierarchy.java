@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by rodrigo on 10/4/15.
  */
 class VaultKeyHierarchy extends DeterministicHierarchy {
-    private Map<HierarchyAccount, DeterministicKey> accountsMasterKeys;
+    private Map<Integer, DeterministicKey> accountsMasterKeys;
 
     /**
      * Constructor
@@ -35,7 +35,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      */
     public void addVaultAccount(HierarchyAccount account){
         DeterministicKey accountMasterKey = this.deriveChild(account.getAccountPath(), false, true, ChildNumber.ZERO);
-        accountsMasterKeys.put(account, accountMasterKey);
+        accountsMasterKeys.put(account.getId(), accountMasterKey);
     }
 
     /**
@@ -47,7 +47,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         /**
          * gets the masterKey for this account
          */
-        DeterministicKey masterKey = accountsMasterKeys.get(hierarchyAccount);
+        DeterministicKey masterKey = accountsMasterKeys.get(hierarchyAccount.getId());
 
         /**
          * Serialize the pubkey of the master key

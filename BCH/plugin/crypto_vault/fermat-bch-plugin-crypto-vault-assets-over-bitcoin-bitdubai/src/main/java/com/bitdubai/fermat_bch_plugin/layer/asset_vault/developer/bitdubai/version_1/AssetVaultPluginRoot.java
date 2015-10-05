@@ -89,7 +89,10 @@ public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithBitcoin
          * 1) A seed is generated, or loaded by the VaultSeedGenerator class. If the device User logged is new then it will create it
          * or loaded if it exists from before.
          * 2) The AssetCryptoVaultManager will create a Master key (m) with that seed and will create key hierarchies (VaultKeyHierarchy)
-         * with the VaultKeyHierarchyGenerator in a separate thread to ruduce start time of the platform.
+         * with the VaultKeyHierarchyGenerator in a separate thread to reduce start time of the platform.
+         * 3) for all the accounts that I have configued on this device (Account zero is the vault, but I may have many redeem points) I generate keys
+         * for each of them
+         * 4) I pass the entire set of keys to the bitcoin network so we start lintening the network with those keys.
          */
         try{
             // the DeviceUserLogged
