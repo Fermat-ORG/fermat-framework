@@ -284,6 +284,13 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         digitalAssetMetadataVault.deleteDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                     }
                 }
+                if (isDeliveredDigitalAssets()){
+                    List<String> genesisTransactionFromAssetsDelivered=assetIssuingTransactionDao.getGenesisTransactionByDeliveredStatus();
+                    for(String genesisTransaction: genesisTransactionFromAssetsDelivered){
+                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(genesisTransaction, AssetBalanceType.BOOK);
+                    }
+                }
+
 
             } catch (CantExecuteDatabaseOperationException exception) {
                 throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset Issuing monitor agent","Cannot execute database operation");
@@ -315,6 +322,11 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         private boolean isReceivedDigitalAssets() throws CantExecuteQueryException {
             boolean isPending=assetIssuingTransactionDao.isReceivedDigitalAssets();
+            return isPending;
+        }
+
+        private boolean isDeliveredDigitalAssets() throws CantExecuteQueryException {
+            boolean isPending=assetIssuingTransactionDao.isDeliveredDigitalAssets();
             return isPending;
         }
 
