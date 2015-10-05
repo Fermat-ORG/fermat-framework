@@ -1,10 +1,4 @@
-/*
- * @#TemplateNetworkServiceDeveloperDatabaseFactory.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -19,20 +13,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantInitializeCryptoTransmissionNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.cryptotransmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Roberto Requena - (rart3001@gmail.com) on 04/08/15.
+ * Created by Matias Furszyfer - (matiasfurszyfer@gmail.com) on 05/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -67,9 +61,9 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     * @throws CantInitializeCryptoTransmissionNetworkServiceDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    public void initializeDatabase() throws CantInitializeCryptoTransmissionNetworkServiceDatabaseException {
         try {
 
              /*
@@ -82,7 +76,7 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeCryptoTransmissionNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -90,18 +84,18 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            CryptoTransmissionNetworkServiceDatabaseFactory templateNetworkServiceDatabaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CryptoTransmissionNetworkServiceDatabaseFactory cryptoTransmissionNetworkServiceDatabaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = templateNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeCryptoTransmissionNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -112,7 +106,7 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Template", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("CryptoTransmission", this.pluginId.toString()));
         return databases;
     }
 
@@ -120,43 +114,40 @@ public class CryptoTransmissionNetworkServiceDeveloperDatabaseFactory implements
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
-        /**
-         * Table incoming messages columns.
-         */
-        List<String> incomingmessagesColumns = new ArrayList<String>();
+           /**
+            * Table CRYPTO TRANSMISSION METADATA columns.
+            */
+           List<String> cRYPTOTRANSMISSIONMETADATAColumns = new ArrayList<String>();
 
-        incomingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME);
-        incomingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
-        incomingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
-        incomingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
-        incomingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME);
-        incomingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
-        incomingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
-        incomingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME);
-        /**
-         * Table incoming messages addition.
-         */
-        DeveloperDatabaseTable incomingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incomingmessagesColumns);
-        tables.add(incomingmessagesTable);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_CURRENCY_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_AMOUNT_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLICK_KEY_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME);
+              cRYPTOTRANSMISSIONMETADATAColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME);
+           /**
+            * Table CRYPTO TRANSMISSION METADATA addition.
+            */
+                   DeveloperDatabaseTable cRYPTOTRANSMISSIONMETADATATable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME, cRYPTOTRANSMISSIONMETADATAColumns);
+                   tables.add(cRYPTOTRANSMISSIONMETADATATable);
 
-        /**
-         * Table outgoing messages columns.
-         */
-        List<String> outgoingmessagesColumns = new ArrayList<String>();
+           /**
+            * Table COMPONENT VERSIONS DETAILS columns.
+            */
+           List<String> cOMPONENTVERSIONSDETAILSColumns = new ArrayList<String>();
 
-        outgoingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME);
-        outgoingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
-        outgoingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
-        outgoingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
-        outgoingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME);
-        outgoingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
-        outgoingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
-        outgoingmessagesColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
-        /**
-         * Table outgoing messages addition.
-         */
-        DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingmessagesColumns);
-        tables.add(outgoingmessagesTable);
+              cOMPONENTVERSIONSDETAILSColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME);
+              cOMPONENTVERSIONSDETAILSColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
+              cOMPONENTVERSIONSDETAILSColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME);
+              cOMPONENTVERSIONSDETAILSColumns.add(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME);
+           /**
+            * Table COMPONENT VERSIONS DETAILS addition.
+            */
+                   DeveloperDatabaseTable cOMPONENTVERSIONSDETAILSTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME, cOMPONENTVERSIONSDETAILSColumns);
+                   tables.add(cOMPONENTVERSIONSDETAILSTable);
 
 
 
