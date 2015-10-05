@@ -46,7 +46,7 @@ public class SetLoggingLevelPerClassTest {
     private ErrorManager errorManager;
 
     private SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
-
+//
     @Test
     public void setLoggingLevelPerClassTest() throws CantOpenDatabaseException, DatabaseNotFoundException {
         UUID testOwnerId = UUID.randomUUID();

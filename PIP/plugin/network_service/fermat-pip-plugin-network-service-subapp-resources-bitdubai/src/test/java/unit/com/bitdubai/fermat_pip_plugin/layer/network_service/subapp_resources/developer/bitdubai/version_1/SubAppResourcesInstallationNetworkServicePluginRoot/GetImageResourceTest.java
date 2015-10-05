@@ -92,7 +92,7 @@ public class GetImageResourceTest extends TestCase {
         subAppResourcesInstallationNetworkServicePluginRoot.start();
     }
 
-
+//
     @Test
     public void testgetImageResource_TheResourcesHasAlreadyBeenReturn_ThrowsCantGetResourcesException() throws Exception {
 

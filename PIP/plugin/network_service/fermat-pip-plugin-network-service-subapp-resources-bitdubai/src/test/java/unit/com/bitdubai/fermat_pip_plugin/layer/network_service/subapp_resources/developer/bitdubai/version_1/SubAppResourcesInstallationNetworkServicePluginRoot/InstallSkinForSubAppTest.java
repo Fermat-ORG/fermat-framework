@@ -104,7 +104,7 @@ public class InstallSkinForSubAppTest extends TestCase {
 
     }
 
-
+//
     @Test
     public void testInstallCompleteWallet_ThrowsWalletResourcesInstalationException() throws Exception {
 

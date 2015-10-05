@@ -82,7 +82,7 @@ public class InstallCompleteSubAppTest extends TestCase {
     String repoManifest = "<skin ></skin >";
 
     SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
-
+//
     @Before
     public void setUp() throws Exception {
 

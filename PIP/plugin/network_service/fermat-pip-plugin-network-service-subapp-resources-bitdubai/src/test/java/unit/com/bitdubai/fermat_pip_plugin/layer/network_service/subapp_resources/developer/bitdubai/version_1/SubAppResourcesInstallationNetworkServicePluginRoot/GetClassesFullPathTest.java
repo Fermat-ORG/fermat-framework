@@ -13,7 +13,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * Created by francisco on 30/09/15.
  */
 public class GetClassesFullPathTest {
-
+//
     private SubAppResourcesInstallationNetworkServicePluginRoot pluginRoot;
 
     @Test

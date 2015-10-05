@@ -69,7 +69,7 @@ public class GetLayoutResourceTest extends TestCase {
     private String subAppType;
 
     SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
-
+//
     @Before
     public void setUp() throws Exception {
         subAppResourcesInstallationNetworkServicePluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();

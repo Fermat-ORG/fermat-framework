@@ -83,7 +83,7 @@ public class InstallLanguageForSubAppTest extends TestCase {
     String repoManifest = "<skin ></skin >";
     String walletPublicKey;
     SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
-
+//
     @Before
     public void setUp() throws Exception {
 

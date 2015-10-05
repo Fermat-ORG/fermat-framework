@@ -15,6 +15,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.Repository;
+import com.googlecode.catchexception.CatchException;
 
 import junit.framework.TestCase;
 
@@ -27,7 +28,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
-import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -121,7 +121,7 @@ public class UninstallCompleteSubAppTest extends TestCase {
                 true,
                 "subAppPublicKey"
                 );
-        assertThat(caughtException()).isNotNull();
+        assertThat(CatchException.<Exception>caughtException()).isNotNull();
 
     }
 
