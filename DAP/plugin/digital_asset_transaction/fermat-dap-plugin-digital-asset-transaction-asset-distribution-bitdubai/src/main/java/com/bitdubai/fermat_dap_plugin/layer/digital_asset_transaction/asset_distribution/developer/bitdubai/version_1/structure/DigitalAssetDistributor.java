@@ -10,11 +10,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
@@ -47,6 +49,7 @@ public class DigitalAssetDistributor {
     AssetDistributionDao assetDistributionDao;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
+    DigitalAssetTransmissionVault digitalAssetTransmissionVault;
 
     public DigitalAssetDistributor(AssetVaultManager assetVaultManager,
                                    ErrorManager errorManager,
@@ -60,23 +63,31 @@ public class DigitalAssetDistributor {
         assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem,pluginId);
     }
 
+    public void setDigitalAssetTransmissionVault(DigitalAssetTransmissionVault digitalAssetTransmissionVault) throws CantSetObjectException {
+        if(digitalAssetTransmissionVault==null){
+            throw new CantSetObjectException("digitalAssetTransmissionVault is null");
+        }
+        this.digitalAssetTransmissionVault=digitalAssetTransmissionVault;
+    }
 
     /**
      * This method check if the DigitalAssetMetadata remains with not modifications
      * */
     private void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws CantDeliverDigitalAssetException {
-        //TODO: get transactionHash from AssetVault
-        CryptoTransaction cryptoTransaction = null;
-        //This won't work until I can get the CryptoTransaction from AssetVault
-        String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
-        String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-        if(!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)){
-            throw new CantDeliverDigitalAssetException("Cannot deliver Digital Asset because the " +
-                    "Hash was modified:\n" +
-                    "Op_return:"+op_ReturnFromAssetVault+"\n" +
-                    "digitalAssetMetadata:"+digitalAssetMetadata);
+        try{
+            String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
+            CryptoTransaction cryptoTransaction = this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash);
+            //This won't work until I can get the CryptoTransaction from AssetVault
+            String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
+            if(!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)){
+                throw new CantDeliverDigitalAssetException("Cannot deliver Digital Asset because the " +
+                        "Hash was modified:\n" +
+                        "Op_return:"+op_ReturnFromAssetVault+"\n" +
+                        "digitalAssetMetadata:"+digitalAssetMetadata);
+            }
+        } catch (CantGetGenesisTransactionException e) {
+            e.printStackTrace();
         }
-
     }
 
     /**
@@ -94,6 +105,7 @@ public class DigitalAssetDistributor {
             if(!isValidContract(digitalAssetContract)){
                 throw new CantDeliverDigitalAssetException("The DigitalAssetContract is not valid, the expiration date has passed");
             }
+            //TODO: finish this
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
         } catch (CantCreateDigitalAssetFileException exception) {
@@ -126,28 +138,14 @@ public class DigitalAssetDistributor {
     private void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
         //DigitalAsset Path structure: digital-asset-distribution/hash/digital-asset.xml
         //DigitalAssetMetadata Path structure: digital-asset-distribution/hash/digital-asset-metadata.xml
-        DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
-        try{
-            String digitalAssetInnerXML=digitalAsset.toString();
-            persistXMLStringInLocalStorage(digitalAssetInnerXML,digitalAssetFileName);
-            String digitalAssetMetadataInnerXML=digitalAssetMetadata.toString();
-            persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML,digitalAssetMetadataFileName);
-        } catch (CantPersistFileException | CantCreateFileException exception) {
-            throw new CantCreateDigitalAssetFileException(exception, "Persisting the digital asset objects in local storage", "Cannot create or persist the file");
-        }
+        this.digitalAssetTransmissionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata);
 
-    }
-
-    private void persistXMLStringInLocalStorage(String innerXML, String fileName) throws CantCreateFileException, CantPersistFileException {
-        //TODO: for testing the FilePrivacy is public, change to private in production
-        PluginTextFile digitalAssetFile=this.pluginFileSystem.createTextFile(this.pluginId, this.digitalAssetFileStoragePath, fileName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-        digitalAssetFile.setContent(innerXML);
-        digitalAssetFile.persistToMedia();
     }
 
     private void setDigitalAssetLocalFilePath(DigitalAssetMetadata digitalAssetMetadata){
         //this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
         this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetMetadata.getDigitalAssetHash();
+        this.digitalAssetTransmissionVault.setDigitalAssetLocalFilePath(this.digitalAssetFileStoragePath);
         //this.digitalAssetFileName=digitalAssetMetadata.getDigitalAssetHash()+".xml";
         //this.digitalAssetFileStoragePath=this.LOCAL_STORAGE_PATH+"/"+digitalAssetFileName;
     }
