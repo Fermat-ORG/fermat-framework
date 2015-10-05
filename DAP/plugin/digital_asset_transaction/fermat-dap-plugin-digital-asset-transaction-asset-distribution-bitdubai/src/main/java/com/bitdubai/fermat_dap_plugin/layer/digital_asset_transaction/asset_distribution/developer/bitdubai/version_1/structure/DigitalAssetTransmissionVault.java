@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -8,35 +8,31 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.DigitalAssetVault;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantDeleteDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.DigitalAssetVault;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.UUID;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/10/15.
- * This class must be started with the AssetIssuing Plugin
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/10/15.
  */
-public class DigitalAssetMetadataVault implements DigitalAssetVault {
+public class DigitalAssetTransmissionVault implements DigitalAssetVault {
 
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
-    //private final String LOCAL_STORAGE_PATH="digital-asset-metadata/";
-    //private final FileLifeSpan FILE_LIFE_SPAN=FileLifeSpan.PERMANENT;
-    AssetIssuerWalletManager assetIssuerWalletManager;
     ErrorManager errorManager;
-    //For testing I'm gonna use this type of privacy, change to PRIVATE in production release
-    //private final FilePrivacy FILE_PRIVACY=FilePrivacy.PUBLIC;
+    private final String LOCAL_STORAGE_PATH="digital-asset-transmission/";
+    private final String digitalAssetFileName="digital-asset.xml";
+    private final String digitalAssetMetadataFileName="digital-asset-metadata.xml";
+    String digitalAssetFileStoragePath;
 
-    public DigitalAssetMetadataVault(UUID pluginId, PluginFileSystem pluginFileSystem, ErrorManager errorManager) throws CantSetObjectException {
+    public DigitalAssetTransmissionVault(UUID pluginId, PluginFileSystem pluginFileSystem, ErrorManager errorManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
         setErrorManager(errorManager);
@@ -67,22 +63,26 @@ public class DigitalAssetMetadataVault implements DigitalAssetVault {
 
     @Override
     public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata)throws CantCreateDigitalAssetFileException {
-        String digitalAssetMetadataFileName="no-file-name-assigned";
+        DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
         try{
-            String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
+            String digitalAssetInnerXML=digitalAsset.toString();
+            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAssetFileName);
             String digitalAssetMetadataInnerXML=digitalAssetMetadata.toString();
-            digitalAssetMetadataFileName=genesisTransaction+".xml";
-            PluginTextFile digitalAssetMetadataFile=this.pluginFileSystem.createTextFile(this.pluginId, this.LOCAL_STORAGE_PATH, digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
-            digitalAssetMetadataFile.setContent(digitalAssetMetadataInnerXML);
-            digitalAssetMetadataFile.persistToMedia();
-        } catch(CantCreateFileException exception){
-            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Can't create '"+this.LOCAL_STORAGE_PATH+digitalAssetMetadataFileName+"' file");
-        } catch (CantPersistFileException exception) {
-            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Can't persist '"+this.LOCAL_STORAGE_PATH+digitalAssetMetadataFileName+"' file");
-        } catch (Exception exception){
-            throw new CantCreateDigitalAssetFileException(exception,"Persisting Digital Asset in local storage","Unexpected exception creating '"+this.LOCAL_STORAGE_PATH+digitalAssetMetadataFileName+"' file");
+            persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, digitalAssetMetadataFileName);
+        } catch (CantPersistFileException | CantCreateFileException exception) {
+            throw new CantCreateDigitalAssetFileException(exception, "Persisting the digital asset objects in local storage", "Cannot create or persist the file");
         }
 
+    }
+
+    private void persistXMLStringInLocalStorage(String innerXML, String fileName) throws CantCreateFileException, CantPersistFileException {
+        PluginTextFile digitalAssetFile=this.pluginFileSystem.createTextFile(this.pluginId, this.digitalAssetFileStoragePath, fileName, this.FILE_PRIVACY, this.FILE_LIFE_SPAN);
+        digitalAssetFile.setContent(innerXML);
+        digitalAssetFile.persistToMedia();
+    }
+
+    public void setDigitalAssetLocalFilePath(String digitalAssetFileStoragePath){
+        this.digitalAssetFileStoragePath=digitalAssetFileStoragePath;
     }
 
     @Override
@@ -120,31 +120,4 @@ public class DigitalAssetMetadataVault implements DigitalAssetVault {
             throw new CantDeleteDigitalAssetFromLocalStorageException(exception, "Deleting Digital Asset file from local storage","Unexpected exception getting '"+this.LOCAL_STORAGE_PATH+digitalAssetMetadataFileName+"' file");
         }
     }
-
-    public void deliverDigitalAssetMetadataToAssetWallet(String genesisTransaction, AssetBalanceType assetBalanceType)throws CantDeliverDigitalAssetToAssetWalletException{
-        try{
-            DigitalAssetMetadata digitalAssetMetadataToDeliver=getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
-            //TODO:deliver
-            switch (assetBalanceType.getCode()){
-                case "BOOK":
-                    //TODO: deliver to book credit
-                    break;
-                case "AVAI":
-                    //TODO: deliver to available credit
-                    break;
-                default:
-                    throw new CantDeliverDigitalAssetToAssetWalletException("Incorrect AssetBalanceType");
-            }
-        } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
-        }
-    }
-
-    public void setAssetIssuerWalletManager(AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {
-        if(assetIssuerWalletManager==null){
-            throw new CantSetObjectException("assetIssuerWalletManager is null");
-        }
-        this.assetIssuerWalletManager=assetIssuerWalletManager;
-    }
-
 }
