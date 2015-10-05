@@ -193,18 +193,18 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
                     try {
                         this.persistWallet(walletPublicKey);
                     } catch (CantPersistWalletException cantPersistWalletException) {
-                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
 
                     }
 
                 } catch (CantCreateWalletException cantCreateWalletException) {
-                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
 
                 }
             }
 
         } catch (Exception cantLoadWalletsException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
             throw new CantStartPluginException();
         }
 
@@ -426,7 +426,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
             /**
              * If I can not save this file, then this plugin shouldn't be running at all.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
 
             throw new CantPersistWalletException();
         }
@@ -455,7 +455,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
             /**
              * If I can not save the id of the new wallet created, then this method fails.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
             throw new CantPersistWalletException();
         }
 
