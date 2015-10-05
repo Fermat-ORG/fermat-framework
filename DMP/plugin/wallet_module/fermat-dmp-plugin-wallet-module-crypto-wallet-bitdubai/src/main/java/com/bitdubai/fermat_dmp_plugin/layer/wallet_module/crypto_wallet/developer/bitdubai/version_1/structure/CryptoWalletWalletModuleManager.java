@@ -9,7 +9,9 @@ import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateE
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSetPhotoException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
@@ -25,6 +27,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantFind
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
@@ -99,7 +102,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithCCPIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithIntraUsersActor, DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook {
+public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithCCPIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithIntraUsersActor,DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook {
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -124,6 +127,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
     /**
      * DealsWithIntraUsersActor Interface member variables.
      */
+
     private ActorIntraUserManager intraUserManager;
 
 
@@ -814,6 +818,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
                 } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
                     throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, null);
                 }
+            case INTRA_USER:
+                try {
+                   return actor = intraUserManager.getActorByPublicKey(actorPublicKey);
+                } catch (CantGetIntraUserException | IntraUserNotFoundException e) {
+                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, null);
+                }
+
             default:
                 throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, null, null, null);
         }

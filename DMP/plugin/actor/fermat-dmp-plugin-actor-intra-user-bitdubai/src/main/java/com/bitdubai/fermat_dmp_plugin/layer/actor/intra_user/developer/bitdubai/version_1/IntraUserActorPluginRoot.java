@@ -14,6 +14,12 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
@@ -247,6 +253,31 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
             throw new CantGetIntraUsersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
         } catch (Exception e) {
             throw new CantGetIntraUsersException("CAN'T LIST INTRA USER CONNECTIONS", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public Actor getActorByPublicKey(String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException {
+
+        try {
+             /* String privateKey = getPrivateKey(actorPublicKey);
+            byte[] image;
+          try {
+                image = loadPhoto(actorPublicKey);
+            } catch(FileNotFoundException e) {
+                image = new  byte[0];
+            }
+            Actor actor = intraUserActorDao.get(actorPublicKey);
+
+            return new IntraUserActorRecord(actorPublicKey, privateKey,actor.getName(), image);*/
+
+            return null;
+
+       // } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
+          //  errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+          //  throw e;
+         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetIntraUserException("", e, "There is a problem I can't identify.", null);
         }
     }
 

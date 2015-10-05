@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
 
 import java.util.List;
 
@@ -105,5 +108,13 @@ public interface ActorIntraUserManager {
      * @throws CantGetIntraUsersException
      */
     List<ActorIntraUser> getWaitingTheirAcceptanceIntraUsers(String intraUserLoggedInPublicKey,int max,int offset) throws CantGetIntraUsersException;
-    
+
+    /**
+     * The method <code>getActorByPublicKey</code> get a specific Actor by public key .
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetIntraUserException
+     * @throws IntraUserNotFoundException
+     */
+    Actor getActorByPublicKey(String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException;
 }
