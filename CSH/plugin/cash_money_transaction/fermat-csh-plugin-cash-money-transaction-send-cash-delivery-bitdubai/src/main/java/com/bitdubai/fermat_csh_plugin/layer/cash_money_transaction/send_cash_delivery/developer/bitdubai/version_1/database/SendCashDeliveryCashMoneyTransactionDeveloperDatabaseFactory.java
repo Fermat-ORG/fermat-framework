@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 29/09/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 01/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -123,7 +123,9 @@ public class SendCashDeliveryCashMoneyTransactionDeveloperDatabaseFactory implem
         sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_STATUS_COLUMN_NAME);
         sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_PUBLIC_KEY_BROKER_COLUMN_NAME);
         sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_MERCHANDISE_AMOUNT_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_BALANCE_TYPE_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_TRANSACTION_TYPE_COLUMN_NAME);
+        sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_AMOUNT_COLUMN_NAME);
         sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_CASH_CURRENCY_TYPE_COLUMN_NAME);
         sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_CASH_REFERENCE_COLUMN_NAME);
         sendCashDeliveryColumns.add(SendCashDeliveryCashMoneyTransactionDatabaseConstants.SEND_CASH_DELIVERY_INFO_DELIVERY_COLUMN_NAME);

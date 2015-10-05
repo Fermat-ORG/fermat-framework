@@ -5214,6 +5214,26 @@
 				</plugins>
 			</layer>
 
+			<layer name="Wallet" language="java">
+				<plugins>
+					<plugin name="Crypto Broker"
+						description=""
+						difficulty="2"
+						code-level="development"
+						>
+						<authors>
+							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+							<author name="yalayn" scope="implementation" percentage="10"></author>
+						</authors>
+						<mantainers>
+						</mantainers>
+						<certifications>
+						</certifications>
+					</plugin>
+				</plugins>
+			</layer>
+
 			<layer name="Identity" language="java">
 				<plugins>
 					<plugin

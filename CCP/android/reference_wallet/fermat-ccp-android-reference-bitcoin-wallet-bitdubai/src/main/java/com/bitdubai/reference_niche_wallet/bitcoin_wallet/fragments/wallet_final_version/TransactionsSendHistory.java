@@ -21,6 +21,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
@@ -40,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
@@ -72,8 +76,7 @@ public class TransactionsSendHistory extends FermatWalletListFragment<CryptoWall
     private int MAX_TRANSACTIONS = 20;
     private int offset = 0;
 
-
-
+    private View rootView;
 
 
     /**
@@ -91,15 +94,42 @@ public class TransactionsSendHistory extends FermatWalletListFragment<CryptoWall
 
         referenceWalletSession = (ReferenceWalletSession)walletSession;
 
-        super.onCreate(savedInstanceState);
         try {
+
+            super.onCreate(savedInstanceState);
+
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
             lstCryptoWalletTransactions = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
         } catch (Exception ex) {
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH,ex);
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
         }
     }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        try {
+            rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+            if (lstCryptoWalletTransactions.isEmpty()) {
+                ((LinearLayout) rootView.findViewById(R.id.empty)).setVisibility(View.VISIBLE);
+            }
+
+            return rootView;
+
+        }catch (Exception e){
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH,e);
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return null;
+    }
+
 
 
 

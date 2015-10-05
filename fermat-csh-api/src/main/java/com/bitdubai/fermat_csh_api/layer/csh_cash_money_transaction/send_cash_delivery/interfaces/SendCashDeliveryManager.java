@@ -14,9 +14,11 @@ public interface SendCashDeliveryManager {
     List<SendCashDelivery> getAllSendCashDeliveryFromCurrentDeviceUser() throws CantGetSendCashDeliveryException;
 
     SendCashDelivery createSendCashDelivery(
-            final String publicKeyCustomer
+             final String publicKeyCustomer
             ,final String publicKeyBroker
-            ,final Float merchandiseAmount
+            ,final String balanceType
+            ,final String transactionType
+            ,final float amount
             ,final String cashCurrencyType
             ,final String cashReference
             ,final String infoDelivery

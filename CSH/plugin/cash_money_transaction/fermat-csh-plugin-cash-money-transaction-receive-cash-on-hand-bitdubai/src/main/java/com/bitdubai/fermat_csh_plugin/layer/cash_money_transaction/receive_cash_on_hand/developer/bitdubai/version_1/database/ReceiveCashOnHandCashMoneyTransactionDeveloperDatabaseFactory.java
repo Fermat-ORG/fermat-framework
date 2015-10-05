@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 29/09/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 01/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -123,7 +123,9 @@ public class ReceiveCashOnHandCashMoneyTransactionDeveloperDatabaseFactory imple
         receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_STATUS_COLUMN_NAME);
         receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_PUBLIC_KEY_BROKER_COLUMN_NAME);
         receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-        receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_MERCHANDISE_AMOUNT_COLUMN_NAME);
+        receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_BALANCE_TYPE_COLUMN_NAME);
+        receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_TRANSACTION_TYPE_COLUMN_NAME);
+        receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_AMOUNT_COLUMN_NAME);
         receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_CASH_CURRENCY_TYPE_COLUMN_NAME);
         receiveCashOnHandColumns.add(ReceiveCashOnHandCashMoneyTransactionDatabaseConstants.RECEIVE_CASH_ON_HAND_CASH_REFERENCE_COLUMN_NAME);
         /**

@@ -1,9 +1,11 @@
-:numbered:
-== First run on FERMAT 
+:numbered: 
+== FERMAT WPD: Wallet Factory & Wallet Production Line
 
-=== Fermat Reference Distribution
-==== Downloading and installing
-==== Fermat Basic Wallet creation 
+=== FERMAT Wallet Factory
+=== FERMAT Wallet Publisher
+=== FERMAT Wallet Store
+=== FERMAT wallet Manager
+
 
 
 

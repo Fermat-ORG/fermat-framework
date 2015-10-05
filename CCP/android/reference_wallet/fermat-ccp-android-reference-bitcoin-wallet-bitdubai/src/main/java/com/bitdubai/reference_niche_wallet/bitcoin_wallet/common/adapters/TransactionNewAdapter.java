@@ -2,13 +2,12 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.Toast;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -92,105 +91,229 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
     @Override
     protected void bindHolder(final TransactionItemViewHolder holder, final CryptoWalletTransaction data, int position) {
 
-        holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+        try {
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
-        holder.getTxt_amount().setTextColor(Color.BLACK);
+            holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
-        holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
-        holder.getTxt_contactName().setTextColor(Color.BLACK);
+            holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+            holder.getTxt_amount().setTextColor(Color.BLACK);
 
-        holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
-        holder.getTxt_notes().setTextColor(Color.BLACK);
+            holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
+            holder.getTxt_contactName().setTextColor(Color.BLACK);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
-        holder.getTxt_time().setTextColor(Color.BLACK);
+            holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
+            holder.getTxt_notes().setTextColor(Color.BLACK);
 
-        ActorTransactionSummary actorTransactionSummary = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
+            holder.getTxt_time().setTextColor(Color.BLACK);
 
-        try{
-            actorTransactionSummary = cryptoWallet.getActorTransactionHistory(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey(), data.getInvolvedActor().getActorPublicKey());
+            ActorTransactionSummary actorTransactionSummary = null;
 
-        } catch (CantGetActorTransactionHistoryException e) {
-            e.printStackTrace();
-        }
+            try{
+                actorTransactionSummary = cryptoWallet.getActorTransactionHistory(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey(), data.getInvolvedActor().getActorPublicKey());
 
-        if(actorTransactionSummary!=null){
-            holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
+            } catch (CantGetActorTransactionHistoryException e) {
+                e.printStackTrace();
+            }
 
-            holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
-        }else{
-            holder.getTxt_total_number_transactions().setText("16");
+            if(actorTransactionSummary!=null){
+                holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
+
+                holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
+            }else{
+                holder.getTxt_total_number_transactions().setText("16");
+                holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
+
+                holder.getTxt_total_balance().setText("19 BTC");
+                holder.getTxt_total_balance().setTextColor(Color.BLACK);
+            }
+            holder.getTxt_total_balance().setTextColor(Color.BLACK);
             holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
 
-            holder.getTxt_total_balance().setText("19 BTC");
-            holder.getTxt_total_balance().setTextColor(Color.BLACK);
-        }
 
 
+            holder.getImageView_see_all_transactions().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-        holder.getImageView_see_all_transactions().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "estoy tocando esto", Toast.LENGTH_SHORT).show();
-
-                if (holder.getListView_transactions().getVisibility() == View.VISIBLE) {
-                    holder.getListView_transactions().setVisibility(View.GONE);
-                } else {
-                    holder.getListView_transactions().setVisibility(View.VISIBLE);
-                    holder.getListView_transactions().setBackgroundColor(Color.BLUE);
-                    List<CryptoWalletTransaction> lstCryptoTransactions = null;
-                    try {
-                        lstCryptoTransactions = cryptoWallet.listTransactionsByActor(
-                                BalanceType.valueOf(referenceWalletSession.getBalanceTypeSelected()),
-                                referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
-                                data.getInvolvedActor().getActorPublicKey(),
-                                50, 0
-                        );
-                        lstCryptoTransactions.add(data);
-                    } catch (CantListTransactionsException e) {
-                        e.printStackTrace();
+                    if (holder.getListView_transactions().getVisibility() == View.VISIBLE) {
+                        holder.getListView_transactions().setVisibility(View.GONE);
+                    } else {
+                        holder.getListView_transactions().setVisibility(View.VISIBLE);
+                        List<CryptoWalletTransaction> lstCryptoTransactions = new ArrayList<CryptoWalletTransaction>();
+                        try {
+                            lstCryptoTransactions = cryptoWallet.listTransactionsByActor(
+                                    BalanceType.valueOf(referenceWalletSession.getBalanceTypeSelected()),
+                                    referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                                    data.getInvolvedActor().getActorPublicKey(),
+                                    50, 0
+                            );
+                            lstCryptoTransactions.add(data);
+                        } catch (CantListTransactionsException e) {
+                            e.printStackTrace();
+                        }
+                        TransactionAdapter transactionAdapter = new TransactionAdapter(context, lstCryptoTransactions);
+                        holder.getListView_transactions().setAdapter(transactionAdapter);
+                        transactionAdapter.notifyDataSetChanged();
                     }
-                    TransactionAdapter transactionAdapter = new TransactionAdapter(context, lstCryptoTransactions);
-                    holder.getListView_transactions().setAdapter(transactionAdapter);
-                    transactionAdapter.notifyDataSetChanged();
+
+
                 }
+            });
 
-
-            }
-        });
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 
     }
 
-    public class TransactionAdapter extends ArrayAdapter<CryptoWalletTransaction> {
+//    public class TransactionAdapter extends ArrayAdapter<CryptoWalletTransaction> {
+//
+//        public TransactionAdapter(Context context, List<CryptoWalletTransaction> lstTransactions) {
+//            super(context, 0, lstTransactions);
+//
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            // Get the data item for this position
+//            CryptoWalletTransaction cryptoWalletTransaction = getItem(position);
+//            // Check if an existing view is being reused, otherwise inflate the view
+//            if (convertView == null) {
+//                convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_view_transactions_expandable_list_row, parent, false);
+//            }
+//
+//            FermatTextView txt_amount = (FermatTextView) convertView.findViewById( R.id.txt_amount);
+//
+//            txt_amount.setText(formatBalanceString(getItem(position).getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+//
+//            FermatTextView txt_date = (FermatTextView) convertView.findViewById(R.id.txt_date);
+//
+//            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+//            txt_date.setText(sdf.format(getItem(position).getBitcoinWalletTransaction().getTimestamp()));
+//
+//            return convertView;
+//        }
+//    }
 
-        public TransactionAdapter(Context context, List<CryptoWalletTransaction> lstTransactions) {
-            super(context, 0, lstTransactions);
 
+    public class TransactionAdapter extends BaseAdapter {
+
+        private final Context context;
+        /**
+         * Aquí guardaremos todos los rectángulos que queremos
+         * representar en nuestro ListView. Es recomendable usar sistemas
+         * con acceso directo por posición, como el ArrayList, un Vector, un Array...
+         */
+        private List<CryptoWalletTransaction> lstTransactions;
+
+        private int position;
+
+        /**
+         * El constructor
+         * @param lstTransactions
+         */
+        public TransactionAdapter(Context context,List<CryptoWalletTransaction> lstTransactions) {
+            super();
+            this.lstTransactions = lstTransactions;
+            this.context=context;
+
+            //Cada vez que cambiamos los elementos debemos noficarlo
+           // notifyDataSetChanged();
         }
 
+        /**
+         * Este método simplemente nos devuelve el número de
+         * elementos de nuestro ListView. Evidentemente es el tamaño del arraylist
+         */
+        @Override
+        public int getCount() {
+            return lstTransactions.size();
+        }
+
+        /**
+         * Este método nos devuele el elemento de una posición determinada.
+         * El elemento es el Rectángulo, así que...
+         */
+        @Override
+        public Object getItem(int position) {
+            return lstTransactions.get(position);
+        }
+
+        /**
+         * Aquí tenemos que devolver el ID del elemento. Del ELEMENTO, no del View.
+         * Por lo general esto no se usa, así que return 0 y listo.
+         */
+        @Override
+        public long getItemId(int arg0)
+        {
+            return arg0;
+        }
+
+        /**
+         * El método más complicado. Aquí tenemos que devolver el View a representar.
+         * En este método nos pasan 3 valores. El primero es la posición del elemento,
+         * el segundo es el View a utilizar que será uno que ya no esté visible y que
+         * lo reutilizaremos, y el último es el ViewGroup, es en nuestro caso, el ListView.
+         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // Get the data item for this position
-            CryptoWalletTransaction cryptoWalletTransaction = getItem(position);
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_view_transactions_expandable_list_row, parent, false);
+
+//            CryptoWalletTransaction cryptoWalletTransaction = (CryptoWalletTransaction)this.getItem(position);
+//            // Check if an existing view is being reused, otherwise inflate the view
+//            if (convertView == null) {
+//                convertView = LayoutInflater.from(context).inflate(R.layout.list_view_transactions_expandable_list_row, parent, false);
+//            }
+//
+//                FermatTextView txt_amount = (FermatTextView) convertView.findViewById(R.id.txt_amount);
+//
+//                txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+//
+//                FermatTextView txt_date = (FermatTextView) convertView.findViewById(R.id.txt_date);
+//
+//                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+//                txt_date.setText(sdf.format(cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+//
+//
+//            return convertView;
+
+            ViewHolder holder;
+            if(convertView==null){
+                convertView = LayoutInflater.from(context).inflate(R.layout.list_view_transactions_expandable_list_row, parent, false);
+                holder = new ViewHolder();
+                holder.txt_amount = (FermatTextView) convertView.findViewById(R.id.txt_amount);
+                holder.txt_date = (FermatTextView) convertView.findViewById(R.id.txt_date);
+                convertView.setTag(holder);
+            }else{
+                holder = (ViewHolder)  convertView.getTag();
             }
 
-            FermatTextView txt_amount = (FermatTextView) convertView.findViewById( R.id.txt_amount);
+            //holder.txt_amount.setTypeface(font);
+            //holder.txt_date.setTypeface(font);
 
-            txt_amount.setText(formatBalanceString(getItem(position).getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
-
-            FermatTextView txt_date = (FermatTextView) convertView.findViewById(R.id.txt_date);
-
+            CryptoWalletTransaction cryptoWalletTransaction = (CryptoWalletTransaction)this.getItem(position);
+            holder.txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            txt_date.setText(sdf.format(getItem(position).getBitcoinWalletTransaction().getTimestamp()));
+            holder.txt_date.setText(sdf.format(cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+
+            convertView.setTag(holder);
 
             return convertView;
+
+
+
         }
+
+        private class ViewHolder{
+            FermatTextView txt_amount;
+            FermatTextView txt_date;
+
+            public ViewHolder(){}
+        }
+
     }
 }

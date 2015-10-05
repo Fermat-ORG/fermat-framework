@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_cash_money_purchase.interfaces;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_sale.interfaces.CustomerBrokerBankMoneySale;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_cash_money_purchase.exceptions.CantCreateCustomerBrokerCashMoneyPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_cash_money_purchase.exceptions.CantupdateStatusCustomerBrokerCashMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_cash_money_purchase.exceptions.CantDeleteCustomerBrokerCashMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_cash_money_purchase.exceptions.CantupdateCustomerBrokerCashMoneyPurchaseException;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +15,7 @@ public interface CustomerBrokerCashMoneyPurchaseManager {
 
     List<CustomerBrokerCashMoneyPurchase> getAllCustomerBrokerCashMoneyPurchaseFromCurrentDeviceUser();
 
-    CustomerBrokerBankMoneySale createCustomerBrokerCashMoneyPurchase(
+    CustomerBrokerCashMoneyPurchase createCustomerBrokerCashMoneyPurchase(
             final String publicKeyCustomer,
             final String publicKeyBroker,
             final Float merchandiseAmount,
@@ -27,6 +28,9 @@ public interface CustomerBrokerCashMoneyPurchaseManager {
             final long merchandiseDeliveryExpirationDate
     ) throws CantCreateCustomerBrokerCashMoneyPurchaseException;
 
-    void updateStatusCustomerBrokerCashMoneyPurchase(final UUID ContractId) throws CantupdateStatusCustomerBrokerCashMoneyPurchaseException;
+    void updateStatusCustomerBrokerCashMoneyPurchase(final UUID ContractId) throws CantupdateCustomerBrokerCashMoneyPurchaseException;
 
+    void deleteCustomerBrokerCashMoneyPurchase(UUID contractID) throws CantDeleteCustomerBrokerCashMoneyPurchaseException;
+
+    DatabaseTableRecord getCustomerBrokerCashMoneyPurchaseContractTable();
 }
