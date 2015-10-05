@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
@@ -19,7 +20,13 @@ import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtr
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
@@ -259,24 +266,16 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
     public Actor getActorByPublicKey(String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException {
 
         try {
-             /* String privateKey = getPrivateKey(actorPublicKey);
-            byte[] image;
-          try {
-                image = loadPhoto(actorPublicKey);
-            } catch(FileNotFoundException e) {
-                image = new  byte[0];
-            }
-            Actor actor = intraUserActorDao.get(actorPublicKey);
 
-            return new IntraUserActorRecord(actorPublicKey, privateKey,actor.getName(), image);*/
 
-            return null;
+            ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
 
-       // } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-          //  errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-          //  throw e;
+            return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
+
+
+        } catch (com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserException  e) {
+            throw new CantGetIntraUserException("", e, ".","Cant Get Intra USer from Data Base");
          } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetIntraUserException("", e, "There is a problem I can't identify.", null);
         }
     }

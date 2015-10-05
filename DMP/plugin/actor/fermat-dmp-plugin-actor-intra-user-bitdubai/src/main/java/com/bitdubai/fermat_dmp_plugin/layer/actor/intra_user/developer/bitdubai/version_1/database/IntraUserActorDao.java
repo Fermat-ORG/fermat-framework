@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserActorProfileImageException;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraUserActorDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
@@ -377,7 +378,69 @@ public class IntraUserActorDao implements Serializable{
         return list;
     }
 
-     /**
+
+    public ActorIntraUser getIntraUser (String intraUserPublicKey) throws CantGetIntraUserException {
+
+        ActorIntraUser actorIntraUser = null;
+
+        DatabaseTable table;
+
+        // Get Intra Users identities list.
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable (IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get intra user identity list, table not found.", "Plugin Identity", "Cant get Intra User identity list, table not found.");
+            }
+
+
+            // 2) Find  Intra Users by state.
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserPublicKey, DatabaseFilterType.EQUAL);
+             table.loadToMemory();
+
+
+            // 3) Get Intra Users Recorod.
+            for (DatabaseTableRecord record : table.getRecords ()) {
+
+                // Add records to list.
+                actorIntraUser =  new IntraUserActorActor(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_NAME_COLUMN_NAME),
+                        record.getStringValue (IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME),
+                        getIntraUserProfileImagePrivateKey(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getLongValue(IntraUserActorDatabaseConstants.INTRA_USER_REGISTRATION_DATE_COLUMN_NAME),
+                        ContactState.valueOf(record.getStringValue(IntraUserActorDatabaseConstants.INTRA_USER_CONTACT_STATE_COLUMN_NAME)));
+            }
+
+            database.closeDatabase();
+
+            return actorIntraUser;
+        }
+        catch (CantLoadTableToMemoryException e) {
+            database.closeDatabase();
+            throw new CantGetIntraUserException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraUserActorDatabaseConstants.INTRA_USER_TABLE_NAME + " table in memory.");
+        }
+        catch (CantGetIntraUserActorProfileImageException e) {
+            database.closeDatabase();
+            // Failure unknown.
+            throw new CantGetIntraUserException (e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
+
+        } catch (Exception e) {
+            database.closeDatabase();
+            throw new CantGetIntraUserException (e.getMessage(), FermatException.wrapException(e), "Intra User Actor", "Cant get Intra User Actor, unknown failure.");
+        }
+
+
+    }
+
+
+
+    /**
      * Private Methods
      */
 
