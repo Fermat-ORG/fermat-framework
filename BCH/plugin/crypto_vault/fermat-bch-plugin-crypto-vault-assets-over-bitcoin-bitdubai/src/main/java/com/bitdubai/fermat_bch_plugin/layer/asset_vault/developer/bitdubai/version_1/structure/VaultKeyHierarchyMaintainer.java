@@ -98,6 +98,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * main executor of the agent
          */
         private void doTheMainTask(){
+            allAccountsKeyList = new ArrayList<>();
             /**
              * I get all the accounts that are available from the database
              */
@@ -116,7 +117,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 currentThreshold =  (int) Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
 
                 List<ECKey> publicKeys;
-                if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD){
+                if (currentThreshold >= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD){
                     /**
                      * The current threshold is lower than the limit imposed, we need to generate new keys
                      * I start by updating the database and defining the new GeneratedKeys values
@@ -232,7 +233,10 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @return
          */
         private int getCurrentGeneratedKeys(HierarchyAccount hierarchyAccount) {
-            return 0;
+            /**
+             * I can never return 0 or it will fail by dividing by 0
+             */
+            return 1;
         }
 
         /**

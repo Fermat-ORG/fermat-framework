@@ -92,6 +92,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, De
 
     @Override
     public void monitorNetworkFromKeyList(List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorBitcoinNetworkException {
-
+        bitcoinCryptoNetworkManager.monitorNetworkFromKeyList(blockchainNetworkTypes, keyList);
     }
 }
