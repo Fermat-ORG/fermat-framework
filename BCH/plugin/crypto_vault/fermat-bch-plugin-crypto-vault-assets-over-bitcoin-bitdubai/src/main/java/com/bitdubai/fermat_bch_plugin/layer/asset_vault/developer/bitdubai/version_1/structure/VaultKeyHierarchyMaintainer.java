@@ -113,7 +113,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 /**
                  * I will calculate the current threshold to see if we need to create new keys
                  */
-                currentThreshold = 100 - ((currentUsedKeys * 100) / currentGeneratedKeys);
+                currentThreshold =  (int) Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
 
                 List<ECKey> publicKeys;
                 if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD){
@@ -240,8 +240,20 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @return
          */
         private List<HierarchyAccount> getHierarchyAccounts() {
+            List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
+            //todo add DAO logic to get the value from the database and form the accounts object
 
-            return null;
+
+            /**
+             * If there are no accounts in the database, these means is the first time the plugin runs, so I will create
+             * the account 0 that will be used by the asset vault.
+             */
+            if (hierarchyAccounts.size() == 0){
+                HierarchyAccount accountZero = new HierarchyAccount(0, "Asset vault account");
+                hierarchyAccounts.add(accountZero);
+                //todo Add this account to database
+            }
+            return hierarchyAccounts;
         }
     }
 
