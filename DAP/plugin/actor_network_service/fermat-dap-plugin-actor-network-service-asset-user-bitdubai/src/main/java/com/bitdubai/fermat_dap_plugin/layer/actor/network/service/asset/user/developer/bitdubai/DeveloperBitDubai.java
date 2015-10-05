@@ -21,28 +21,37 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.dev
 * @version 1.0
 */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-Plugin plugin;
-public DeveloperBitDubai() {
-plugin = new AssetUserPluginRoot();
-}
-@Override
-public Plugin getPlugin() {
-return plugin;
-}
-@Override
-public int getAmountToPay() {
-return 100;
-}
-@Override
-public CryptoCurrency getCryptoCurrency() {
-return CryptoCurrency.BITCOIN;
-}
-@Override
-public String getAddress() {
-return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
-}
-@Override
-public TimeFrequency getTimePeriod() {
-return TimeFrequency.MONTHLY;
-}
+
+    Plugin plugin;
+
+    public DeveloperBitDubai() {
+    plugin = new AssetUserPluginRoot();
+    }
+
+    @Override
+    public Plugin getPlugin() {
+    return plugin;
+    }
+
+    @Override
+    public int getAmountToPay() {
+    return 100;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+    return CryptoCurrency.BITCOIN;
+    }
+
+    @Override
+    public String getAddress() {
+    return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+    }
+
+    @Override
+    public TimeFrequency getTimePeriod() {
+    return TimeFrequency.MONTHLY;
+    }
+
+
 }
