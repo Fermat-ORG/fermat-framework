@@ -14,7 +14,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRequest {
+public class CryptoPaymentRequestNetworkServiceRecord {
 
     private final UUID                 requestId        ;
     private final String               walletPublicKey  ;
@@ -56,62 +56,62 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
         this.protocolState     = protocolState    ;
     }
 
-    @Override
+   
     public UUID getRequestId() {
         return requestId;
     }
 
-    @Override
+   
     public String getWalletPublicKey() {
         return walletPublicKey;
     }
 
-    @Override
+   
     public String getIdentityPublicKey() {
         return identityPublicKey;
     }
 
-    @Override
+   
     public String getActorPublicKey() {
         return actorPublicKey;
     }
 
-    @Override
+   
     public String getDescription() {
         return description;
     }
 
-    @Override
+   
     public CryptoAddress getCryptoAddress() {
         return cryptoAddress;
     }
 
-    @Override
+   
     public long getAmount() {
         return amount;
     }
 
-    @Override
+   
     public long getStartTimeStamp() {
         return startTimeStamp;
     }
 
-    @Override
+   
     public long getEndTimeStamp() {
         return endTimeStamp;
     }
 
-    @Override
+   
     public CryptoPaymentType getType() {
         return type;
     }
 
-    @Override
+   
     public CryptoPaymentState getState() {
         return state;
     }
 
-    @Override
+   
     public RequestProtocolState getProtocolState() {
         return protocolState;
     }

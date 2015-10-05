@@ -116,20 +116,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
         CryptoPaymentState   state         = CryptoPaymentState  .getByCode(stateString)        ;
         RequestProtocolState protocolState = RequestProtocolState.getByCode(protocolStateString);
 
-        return new CryptoPaymentRequestNetworkServiceRecord(
-                requestId        ,
-                walletPublicKey  ,
-                identityPublicKey,
-                actorPublicKey   ,
-                description      ,
-                cryptoAddress    ,
-                amount           ,
-                startTimeStamp   ,
-                endTimeStamp     ,
-                type             ,
-                state            ,
-                protocolState
-        );
+        return null;
     }
 
 }

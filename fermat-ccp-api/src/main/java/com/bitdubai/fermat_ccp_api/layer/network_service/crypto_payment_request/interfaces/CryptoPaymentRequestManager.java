@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantConfirmRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantGetRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformDenialException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformReceptionException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantListPendingRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantSendRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
@@ -27,19 +30,25 @@ public interface CryptoPaymentRequestManager {
      *
      * @param walletPublicKey     public key of the wallet sending the request.
      * @param identityPublicKey   public key of the identity sending the request.
-     * @param cryptoAddress       crypto address where the identity wants to receive the payment.
+     * @param identityType        type of actor that generates the request,
      * @param actorPublicKey      public key of the actor whom will receive the request.
+     * @param actorType           type of actor to whom is generated the request.
+     * @param cryptoAddress       crypto address where the identity wants to receive the payment.
      * @param description         text describing the crypto payment request.
      * @param amount              amount of crypto expected.
+     * @param networkType         blockchain network type where we will work.
      *
      * @throws CantSendRequestException if something goes wrong.
      */
-    void sendCryptoPaymentRequest(String        walletPublicKey  ,
-                                  String        identityPublicKey,
-                                  CryptoAddress cryptoAddress    ,
-                                  String        actorPublicKey   ,
-                                  String        description      ,
-                                  long          amount           ) throws CantSendRequestException;
+    void sendCryptoPaymentRequest(String                walletPublicKey  ,
+                                  String                identityPublicKey,
+                                  Actors                identityType     ,
+                                  String                actorPublicKey   ,
+                                  Actors                actorType        ,
+                                  CryptoAddress         cryptoAddress    ,
+                                  String                description      ,
+                                  long                  amount           ,
+                                  BlockchainNetworkType networkType      ) throws CantSendRequestException;
 
     /**
      * Throw the method <code>informRefusal</code> you can inform the rejection of a request to its requester.
@@ -73,6 +82,17 @@ public interface CryptoPaymentRequestManager {
      */
     void informApproval(UUID requestId) throws CantInformApprovalException,
                                                RequestNotFoundException   ;
+
+    /**
+     * Throw the method <code>informReception</code> you can inform the reception of a request to its requester.
+     *
+     * @param requestId  uuid identifying the request to reception.
+     *
+     * @throws CantInformReceptionException  if something goes wrong.
+     * @throws RequestNotFoundException      if we can't find the payment request.
+     */
+    void informReception(UUID requestId) throws CantInformReceptionException,
+                                                RequestNotFoundException    ;
 
     /**
      * Throw the method <code>confirmRequest</code> you can confirm and delete the request.
