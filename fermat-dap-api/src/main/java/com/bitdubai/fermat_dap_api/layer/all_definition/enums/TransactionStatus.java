@@ -13,7 +13,10 @@ public enum TransactionStatus {
     ISSUING("ISSUING"),
     SENDING_BITCOINS("TXBTC"),
     SENDING_BITCOINS_FAILED("FTXBTC"),
-    ISSUED("ISSUED");
+    ISSUED("ISSUED"),
+    TO_DELIVER("TDEL"),
+    DELIVERING("DELG"),
+    DELIVERED("DELD");
 
     private String code;
 
@@ -41,6 +44,12 @@ public enum TransactionStatus {
                 return TransactionStatus.SENDING_BITCOINS_FAILED;
             case "ISSUED":
                 return TransactionStatus.ISSUED;
+            case "TDEL":
+                return TransactionStatus.TO_DELIVER;
+            case "DELG":
+                return TransactionStatus.DELIVERING;
+            case "DELD":
+                return TransactionStatus.DELIVERED;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the TransactionStatus enum.");
         }

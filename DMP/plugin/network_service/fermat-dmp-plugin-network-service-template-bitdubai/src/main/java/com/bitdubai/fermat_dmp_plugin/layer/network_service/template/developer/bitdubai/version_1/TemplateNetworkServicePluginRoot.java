@@ -604,7 +604,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE &&
-                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
+                   platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
              * Mark as register
@@ -633,7 +633,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Request the list of component registers
              */
-            requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
+           // requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         }
 

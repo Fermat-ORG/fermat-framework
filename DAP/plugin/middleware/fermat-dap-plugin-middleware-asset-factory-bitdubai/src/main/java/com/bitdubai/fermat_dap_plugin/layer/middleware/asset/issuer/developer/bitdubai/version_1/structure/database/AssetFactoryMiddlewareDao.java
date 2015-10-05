@@ -543,9 +543,11 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
             // I wil add the Contracts to the transaction if there are any
             transaction = addContractRecordsToTransaction(transaction, assetFactory);
             // I wil add the resources to the transaction if there are any
-            transaction = addResourceRecordsToTransaction(transaction, assetFactory);
+            if(assetFactory.getResources() != null)
+                transaction = addResourceRecordsToTransaction(transaction, assetFactory);
             // I wil add the identity issuer to the transaction if there are any
-            transaction = addIdentityIssuerRecordsToTransaction(transaction, assetFactory);
+            if (assetFactory.getIdentyAssetIssuer() != null)
+                transaction = addIdentityIssuerRecordsToTransaction(transaction, assetFactory);
 
             //I execute the transaction and persist the database side of the asset.
             database.executeTransaction(transaction);
