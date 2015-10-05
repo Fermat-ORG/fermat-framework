@@ -133,6 +133,11 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
         test(WalletFactoryProjectState.CLOSED);
         test(WalletFactoryProjectState.IN_PROGRESS);
 
+        /**
+         * Test para subir a github
+         */
+
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
     @Override
