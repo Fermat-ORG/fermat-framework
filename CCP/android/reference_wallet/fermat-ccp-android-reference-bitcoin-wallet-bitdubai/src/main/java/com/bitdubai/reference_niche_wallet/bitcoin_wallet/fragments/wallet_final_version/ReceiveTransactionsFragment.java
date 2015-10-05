@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -41,13 +43,17 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ReceiveFragmentDialog;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.util.ArrayList;
@@ -55,6 +61,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.formatBalanceString;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
@@ -120,13 +128,14 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         referenceWalletSession = (ReferenceWalletSession)walletSession;
 
         lstCryptoWalletTransactions = new ArrayList<CryptoWalletTransaction>();
+
         try {
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
             balanceAvailable = loadBalance(BalanceType.AVAILABLE);
             bookBalance = loadBalance(BalanceType.BOOK);
 
-            lstCryptoWalletTransactions = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            lstCryptoWalletTransactions.addAll(getMoreDataAsync(FermatRefreshTypes.NEW, 0)); // get init data
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -139,108 +148,143 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        lstCryptoWalletTransactions = new ArrayList<CryptoWalletTransaction>();
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = super.onCreateView(inflater,container, savedInstanceState);
+        try {
+
+            rootView = super.onCreateView(inflater, container, savedInstanceState);
 //
+
+            setUp(inflater);
+            //container_header_balance.invalidate();
+
+            //((PaintActivtyFeactures)getActivity()).invalidate();
+
+            //rootView    = inflater.inflate(R.layout.receive_button, container, false);
+
+
+            linear_layout_receive_form = (LinearLayout) rootView.findViewById(R.id.receive_form);
+
+            ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean isShow = linear_layout_receive_form.isShown();
+                    //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+                    if (isShow) {
+                        Fx.slide_up(getActivity(), linear_layout_receive_form);
+                        linear_layout_receive_form.setVisibility(View.GONE);
+                    } else {
+                        linear_layout_receive_form.setVisibility(View.VISIBLE);
+                        Fx.slide_down(getActivity(), linear_layout_receive_form);
+                    }
+
+                }
+            });
+
+            autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
+
+            contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
+
+            autocompleteContacts.setAdapter(contactsAdapter);
+            //autocompleteContacts.setTypeface(tf);
+            autocompleteContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                    walletContact = (WalletContact) arg0.getItemAtPosition(position);
+                    //editTextAddress.setText(walletContact.address);
+                }
+            });
+
+            Button btn_share = (Button) rootView.findViewById(R.id.btn_share);
+            btn_share.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    shareAddress();
+                }
+            });
+
+
+            ((Button) rootView.findViewById(R.id.btn_address)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (walletContact != null) {
+                        ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(), cryptoWallet, referenceWalletSession.getErrorManager(), walletContact, user_id, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+                        receiveFragmentDialog.show();
+                    } else {
+                        Toast.makeText(getActivity(), "Acá deberia salir para agregar contacto", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+
+            if (lstCryptoWalletTransactions.isEmpty()) {
+                ((LinearLayout) rootView.findViewById(R.id.empty)).setVisibility(View.VISIBLE);
+            }
+
+
+            return rootView;
+
+        }catch (Exception e){
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
+        return null;
+    }
+    private void setUp(LayoutInflater inflater){
+        setUpHeader(inflater);
+    }
+
+    private void setUpHeader(LayoutInflater inflater){
         RelativeLayout container_header_balance = getActivityHeader();
 
+
         inflater =
-                (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         container_header_balance.setVisibility(View.VISIBLE);
 
         View balance_header = inflater.inflate(R.layout.balance_header, container_header_balance, true);
 
-         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
+        txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
+        txt_type_balance.setTextColor(Color.parseColor("#a8a5ff"));
 
 
-        TextView txt_touch_to_change = (TextView) balance_header.findViewById(R.id.txt_touch_to_change);
-        txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
+        LinearLayout linear_type_container = (LinearLayout) balance_header.findViewById(R.id.linear_type_container);
+        linear_type_container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
                 //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-                changeBalanceType(txt_type_balance,txt_balance_amount);
+                changeBalanceType(txt_type_balance, txt_balance_amount);
+            }
+        });
+
+        LinearLayout linear_amount_container = (LinearLayout) balance_header.findViewById(R.id.linear_amount_container);
+        linear_amount_container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
+                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+                changeAmountType(txt_balance_amount);
             }
         });
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
+        txt_balance_amount.setTextColor(Color.WHITE);
+
 
         try {
-            long balance = cryptoWallet.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()),referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            long balance = cryptoWallet.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey());
             txt_balance_amount.setText(formatBalanceString(balance, referenceWalletSession.getTypeAmount()));
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         }
 
-        //container_header_balance.invalidate();
-
-        //((PaintActivtyFeactures)getActivity()).invalidate();
-
-        //rootView    = inflater.inflate(R.layout.receive_button, container, false);
-
-
-        linear_layout_receive_form = (LinearLayout) rootView.findViewById(R.id.receive_form);
-
-        ((com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_action)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean isShow = linear_layout_receive_form.isShown();
-                //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
-                if (isShow) {
-                    Fx.slide_up(getActivity(), linear_layout_receive_form);
-                    linear_layout_receive_form.setVisibility(View.GONE);
-                } else {
-                    linear_layout_receive_form.setVisibility(View.VISIBLE);
-                    Fx.slide_down(getActivity(), linear_layout_receive_form);
-                }
-
-            }
-        });
-
-        autocompleteContacts = (AutoCompleteTextView)rootView.findViewById(R.id.contact_name);
-
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
-
-        autocompleteContacts.setAdapter(contactsAdapter);
-        //autocompleteContacts.setTypeface(tf);
-        autocompleteContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                walletContact = (WalletContact) arg0.getItemAtPosition(position);
-                //editTextAddress.setText(walletContact.address);
-            }
-        });
-
-        Button btn_share = (Button) rootView.findViewById(R.id.btn_share);
-        btn_share.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                shareAddress();
-            }
-        });
-
-
-        ((Button)rootView.findViewById(R.id.btn_address)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (walletContact != null) {
-                    ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(),cryptoWallet,referenceWalletSession.getErrorManager(),walletContact,user_id,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                    receiveFragmentDialog.show();
-                } else {
-                    Toast.makeText(getActivity(),"Acá deberia salir para agregar contacto",Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-
-        return rootView;
     }
 
 
@@ -293,21 +337,22 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public List<CryptoWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoWalletTransaction> lstTransactions  = new ArrayList<CryptoWalletTransaction>();
 
-//        try {
-//            lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
-//            offset+=MAX_TRANSACTIONS;
-//        } catch (Exception e) {
-//            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(e,
-//                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        //    e.printStackTrace();
+        try {
+            lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
+            offset+=lstTransactions.size();
+        }
+        catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+                    UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            e.printStackTrace();
             // data = RequestPaymentListItem.getTestData(getResources());
-        //}
-        CryptoWalletTransactionsTest cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
+        }
+        /*CryptoWalletTransactionsTest cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
         lstTransactions.add(cryptoWalletTransactionsTest);
          cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
         lstTransactions.add(cryptoWalletTransactionsTest);
          cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
-        lstTransactions.add(cryptoWalletTransactionsTest);
+        lstTransactions.add(cryptoWalletTransactionsTest);*/
         return lstTransactions;
     }
 
@@ -335,7 +380,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                lstCryptoWalletTransactions = (ArrayList) result[0];
+                lstCryptoWalletTransactions.addAll((ArrayList) result[0]);
                 if (adapter != null)
                     adapter.changeDataSet(lstCryptoWalletTransactions);
             }
@@ -347,6 +392,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
+            referenceWalletSession.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,ex);
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
@@ -411,6 +457,10 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     }
 
 
+    private void changeAmountType(TextView txt_balance_amount){
+        referenceWalletSession.setTypeAmount((referenceWalletSession.getTypeAmount()==ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN);
+        updateBalances();
+    }
 
 
 
@@ -449,6 +499,16 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     }
 
 
+    private void updateBalances(){
+        bookBalance = loadBalance(BalanceType.BOOK);
+        balanceAvailable = loadBalance(BalanceType.AVAILABLE);
+        txt_balance_amount.setText(
+                WalletUtils.formatBalanceString(
+                        (referenceWalletSession.getBalanceTypeSelected() == BalanceType.AVAILABLE.getCode())
+                                ? balanceAvailable : bookBalance,
+                        referenceWalletSession.getTypeAmount())
+        );
+    }
 
     public void shareAddress() {
         Intent intent2 = new Intent();

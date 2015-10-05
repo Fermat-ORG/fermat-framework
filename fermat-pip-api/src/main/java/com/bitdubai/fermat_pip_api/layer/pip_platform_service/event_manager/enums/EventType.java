@@ -161,17 +161,9 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    //Modified by Manuel Perez on 02/10/2015
+    //Fix returning IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener
     INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICOCNWTIU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEvent();
-        }
-    },
-
-    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOCNWTAI") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
         }
@@ -181,6 +173,16 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOCNWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+    //End of fix
     INCOMING_CRYPTO_RECEIVED("ICR") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new IncomingCryptoReceivedEventListener(this, fermatEventMonitor);

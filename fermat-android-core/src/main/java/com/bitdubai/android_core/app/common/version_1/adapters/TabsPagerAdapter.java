@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -189,5 +190,9 @@ import java.util.List;
         }
 
 
+    @Override
+    public Parcelable saveState() {
+        return null;
+    }
 
 }

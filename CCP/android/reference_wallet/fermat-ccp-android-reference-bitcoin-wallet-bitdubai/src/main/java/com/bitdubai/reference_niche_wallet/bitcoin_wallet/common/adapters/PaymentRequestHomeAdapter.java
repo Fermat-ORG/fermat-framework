@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Toast;
@@ -9,9 +10,12 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentHomeItemViewHolder;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.ImagesUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -77,9 +81,10 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
     @Override
     protected void bindHolder(PaymentHomeItemViewHolder holder, PaymentRequest data, int position) {
 
-        holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+        holder.getTxt_color_type().setBackgroundColor(paintColorRequestType(data.getType()));
 
-
+        holder.getContactIcon().setImageBitmap(ImagesUtils.getRoundedShape(BitmapFactory.decodeResource(context.getResources(), R.drawable.mati_profile)));
+        //imageView_Item.setImageBitmap(getRoundedShape(BitmapFactory.decodeByteArray(checkBoxListItem.getIntraUserIdentity().getProfileImage(), 0, checkBoxListItem.getIntraUserIdentity().getProfileImage().length)));
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
         holder.getTxt_amount().setTextColor(Color.BLACK);
@@ -99,6 +104,10 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
         holder.getBtn_refuse_request().setOnClickListener(this);
 
 
+    }
+
+    private int paintColorRequestType(int type){
+        return Color.parseColor((type==PaymentRequest.RECEIVE_PAYMENT) ? "#6563a4" : "#6563a4");
     }
 
     @Override

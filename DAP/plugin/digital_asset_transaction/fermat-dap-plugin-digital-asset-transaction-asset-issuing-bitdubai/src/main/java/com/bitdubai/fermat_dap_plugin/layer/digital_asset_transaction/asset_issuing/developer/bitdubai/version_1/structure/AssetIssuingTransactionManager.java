@@ -33,7 +33,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/09/15.
  */
-public class AssetIssuingTransactionManager implements AssetIssuingManager, DealsWithErrors, TransactionProtocolManager {
+public class AssetIssuingTransactionManager implements AssetIssuingManager, DealsWithErrors/*, TransactionProtocolManager*/ {
 
     CryptoAddressBookManager cryptoAddressBookManager;
     CryptoVaultManager cryptoVaultManager;
@@ -164,10 +164,10 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     }
 
     @Override
-    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
+    public void confirmReception(/*UUID transactionID*/String genesisTransaction) throws CantConfirmTransactionException {
         try {
             AssetIssuingTransactionDao assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
-            assetIssuingTransactionDao.updateTransactionProtocolStatus(transactionID.toString(), ProtocolStatus.RECEPTION_NOTIFIED);
+            assetIssuingTransactionDao.confirmReception(genesisTransaction);
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantConfirmTransactionException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, "Confirming Reception", "Cannot update the plugin database");
         } catch (CantExecuteQueryException exception) {
@@ -179,10 +179,11 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         }
     }
 
+    /**
     @Override
     public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
 return null;
-        /**
+
         try{
             List<Transaction> txs = new ArrayList<Transaction>();
             AssetIssuingTransactionDao assetIssuingTransactionDao= new AssetIssuingTransactionDao(this.pluginDatabaseSystem, this.pluginId);
@@ -212,6 +213,6 @@ return null;
             return txs;
         } catch (Exception e){
             throw new CantDeliverPendingTransactionsException("I couldn't deliver pending transactions",e,null,null);
-        }*/
-    }
+        }
+    }*/
 }

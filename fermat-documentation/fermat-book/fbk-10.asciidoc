@@ -1,9 +1,6 @@
-== FERMAT for developers
-=== FERMAT CORE 
-=== FERMAT P2P
-=== FERMAT BCH
+== FERMAT DPN: Digital Private Network
+Securing your funds 
 
-
-
+=== 
 
 

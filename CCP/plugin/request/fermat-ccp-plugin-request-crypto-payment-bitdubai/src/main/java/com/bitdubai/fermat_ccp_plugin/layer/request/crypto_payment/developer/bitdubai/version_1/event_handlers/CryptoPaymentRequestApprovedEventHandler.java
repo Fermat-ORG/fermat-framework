@@ -5,10 +5,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.UnexpectedEventException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestApprovedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.CryptoPaymentRequestPluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CryptoPaymentRequestPluginNotStartedException;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure.CryptoPaymentRequestEventActions;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+
+import java.util.UUID;
 
 /**
  * Throw the event handler <code>CryptoPaymentRequestApprovedEventHandler</code> we can handle
@@ -21,11 +27,20 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
  */
 public class CryptoPaymentRequestApprovedEventHandler implements FermatEventHandler {
 
+    private final CryptoPaymentRequestManager    cryptoPaymentRequestManager   ;
     private final CryptoPaymentRequestPluginRoot cryptoPaymentRequestPluginRoot;
+    private final PluginDatabaseSystem           pluginDatabaseSystem          ;
+    private final UUID                           pluginId                      ;
 
-    public CryptoPaymentRequestApprovedEventHandler(final CryptoPaymentRequestPluginRoot cryptoPaymentRequestPluginRoot) {
+    public CryptoPaymentRequestApprovedEventHandler(final CryptoPaymentRequestManager    cryptoPaymentRequestManager   ,
+                                                    final CryptoPaymentRequestPluginRoot cryptoPaymentRequestPluginRoot,
+                                                    final PluginDatabaseSystem           pluginDatabaseSystem          ,
+                                                    final UUID                           pluginId                      ) {
 
-        this.cryptoPaymentRequestPluginRoot    = cryptoPaymentRequestPluginRoot;
+        this.cryptoPaymentRequestManager    = cryptoPaymentRequestManager   ;
+        this.cryptoPaymentRequestPluginRoot = cryptoPaymentRequestPluginRoot;
+        this.pluginDatabaseSystem           = pluginDatabaseSystem          ;
+        this.pluginId                       = pluginId                      ;
     }
 
     /**
@@ -37,7 +52,19 @@ public class CryptoPaymentRequestApprovedEventHandler implements FermatEventHand
         if (this.cryptoPaymentRequestPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
             if (fermatEvent instanceof CryptoPaymentRequestApprovedEvent) {
-                // DO SOMETHING
+
+                CryptoPaymentRequestEventActions cryptoPaymentRequestEventActions = new CryptoPaymentRequestEventActions(
+                        cryptoPaymentRequestManager,
+                        pluginDatabaseSystem,
+                        pluginId
+                );
+
+                cryptoPaymentRequestEventActions.initialize();
+
+                cryptoPaymentRequestEventActions.handleCryptoPaymentRequestApproved(
+                        ((CryptoPaymentRequestApprovedEvent) fermatEvent).getRequestId()
+                );
+
             } else {
                 EventType eventExpected = EventType.CRYPTO_PAYMENT_APPROVED;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
@@ -48,4 +75,5 @@ public class CryptoPaymentRequestApprovedEventHandler implements FermatEventHand
             throw new CryptoPaymentRequestPluginNotStartedException(null, "Plugin is not started.", "");
         }
     }
+
 }
