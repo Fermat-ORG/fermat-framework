@@ -103,16 +103,29 @@ public class DigitalAssetDistributor {
             checkAvailableBalanceInAssetVault(digitalAsset.getGenesisAmount());
             DigitalAssetContract digitalAssetContract=digitalAsset.getContract();
             if(!isValidContract(digitalAssetContract)){
-                throw new CantDeliverDigitalAssetException("The DigitalAssetContract is not valid, the expiration date has passed");
+                throw new CantDeliverDigitalAssetException("The DigitalAsset Contract is not valid, the expiration date has passed");
+            }
+            if(!isDigitalAssetHashValid(digitalAssetMetadata)){
+                throw new CantDeliverDigitalAssetException("The DigitalAsset hash is not valid");
             }
             //TODO: finish this
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
         } catch (CantCreateDigitalAssetFileException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into local storage");
+        } catch (CantGetGenesisTransactionException exception) {
+            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
         }
     }
 
+    private boolean isDigitalAssetHashValid(DigitalAssetMetadata digitalAssetMetadata) throws CantGetGenesisTransactionException {
+        String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
+        CryptoTransaction cryptoTransaction=this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash);
+        String hashFromCryptoTransaction=cryptoTransaction.getOp_Return();
+        return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
+    }
+
+    private void deliverToRemoteActor(){}
     //TODO: create a method that delete the digital asset from local storage.
 
     private void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
