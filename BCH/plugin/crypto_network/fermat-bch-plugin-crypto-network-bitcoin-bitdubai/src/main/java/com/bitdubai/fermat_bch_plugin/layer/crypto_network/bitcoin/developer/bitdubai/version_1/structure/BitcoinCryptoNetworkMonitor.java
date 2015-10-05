@@ -76,6 +76,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
          * Agent main method
          */
         private void doTheMainTask(){
+            System.out.println("Crypto Network starting and connecting...");
             //todo this won't be the final implementation of the network monitor. I will be using for now a simplified version.
             BlockStore memoryBlockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
             try {

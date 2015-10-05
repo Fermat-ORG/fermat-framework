@@ -110,6 +110,7 @@ public class VaultKeyHierarchyGenerator implements Runnable{
         if (hierarchyAccounts.size() == 0){
             HierarchyAccount accountZero = new HierarchyAccount(0, "Asset vault account");
             hierarchyAccounts.add(accountZero);
+            //todo Add this account to database
         }
         return hierarchyAccounts;
     }
