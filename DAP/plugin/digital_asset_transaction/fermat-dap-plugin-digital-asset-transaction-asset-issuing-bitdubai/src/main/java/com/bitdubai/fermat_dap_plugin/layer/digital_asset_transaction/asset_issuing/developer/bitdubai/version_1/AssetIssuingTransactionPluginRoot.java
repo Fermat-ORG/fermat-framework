@@ -61,7 +61,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interface
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantDeliverDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetMetadataVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
@@ -216,15 +216,16 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
             //Start the plugin monitor agent
             //I will comment the MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
-            /*String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.assetIssuingTransactionMonitorAgent=new AssetIssuingTransactionMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,
                     this.pluginId,
-                    userPublicKey);
+                    userPublicKey,
+                    this.assetVaultManager);
             this.assetIssuingTransactionMonitorAgent.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
-            this.assetIssuingTransactionMonitorAgent.start();*/
+            this.assetIssuingTransactionMonitorAgent.start();
 
             //For testing, please, clean up your database or change the asset public key
             //testIssueSingleAsset();
@@ -334,7 +335,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         returnedClasses.add("com.bitdubai.fermat_dap_api.layer.dap_transaction.CantCreateDigitalAssetFileException");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException");
         returnedClasses.add("com.bitdubai.fermat_dap_api.layer.dap_transaction.CantDeliverDatabaseException");
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantGetDigitalAssetFromLocalStorageException");
+        returnedClasses.add("com.bitdubai.fermat_dap_api.layer.dap_transaction.CantGetDigitalAssetFromLocalStorageException");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantGetGenesisAddressException");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuingMonitorAgentException");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantIssueDigitalAssetException");
