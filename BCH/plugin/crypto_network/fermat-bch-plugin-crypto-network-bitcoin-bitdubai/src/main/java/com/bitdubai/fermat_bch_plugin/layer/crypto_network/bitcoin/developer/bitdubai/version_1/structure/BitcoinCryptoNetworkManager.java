@@ -15,7 +15,7 @@ import java.util.List;
  * Created by rodrigo on 10/4/15.
  */
 public class BitcoinCryptoNetworkManager {
-    Wallet wallet;
+    Wallet wallet=null;
 
     /**
      * Platform variables
@@ -52,6 +52,7 @@ public class BitcoinCryptoNetworkManager {
             else{
                 //this means new keys been added, I probably have to reset the network. I need to investigate this more.
             }
+        } else {
             /**
              * I have never been called before, I will start the agent for all networks passed with the list of keys
              */
@@ -65,6 +66,5 @@ public class BitcoinCryptoNetworkManager {
                 }
             }
         }
-
     }
 }
