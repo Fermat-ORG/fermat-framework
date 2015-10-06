@@ -279,6 +279,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                         assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByTransactionHash(transactionHash, TransactionStatus.DELIVERING);
                         String genesisTransaction=assetIssuingTransactionDao.getDigitalAssetGenesisTransactionByHash(transactionHash);
+                        String publicKey=this.assetIssuingTransactionDao.getPublicKeyByTransactionHash(transactionHash);
+                        this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
                         digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(genesisTransaction, AssetBalanceType.AVAILABLE);
                     }
                 }
@@ -289,6 +291,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         digitalAssetMetadataVault.deleteDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                     }
                 }
+
                 if (isDeliveredDigitalAssets()){
                     List<String> genesisTransactionFromAssetsDelivered=assetIssuingTransactionDao.getGenesisTransactionByDeliveredStatus();
                     for(String genesisTransaction: genesisTransactionFromAssetsDelivered){
