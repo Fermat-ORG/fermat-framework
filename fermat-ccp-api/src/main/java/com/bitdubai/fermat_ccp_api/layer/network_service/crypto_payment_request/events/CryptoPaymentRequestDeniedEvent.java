@@ -9,7 +9,7 @@ import java.util.UUID;
  * The event <code>com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestDeniedEvent</code>
  * is raised when one of our requests is denied by incompatibility.
  *
- * Created by by Leon Acosta (laion.cj91@gmail.com) on 01/30/2015.
+ * Created by by Leon Acosta (laion.cj91@gmail.com) on 01/10/2015.
  */
 public class CryptoPaymentRequestDeniedEvent extends AbstractCCPEvent {
 

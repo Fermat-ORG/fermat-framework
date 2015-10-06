@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOn
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
@@ -70,13 +71,12 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
         try {
 
-            InstalledWallet wallet = walletManagerManager.getDefaultWallet(
-                    request.getCryptoAddressFromRequest().getCryptoCurrency(),
-                    actorType,
-                    request.getBlockchainNetworkType()
-            );
-
-            if (wallet != null) {
+            try {
+                InstalledWallet wallet = walletManagerManager.getDefaultWallet(
+                        request.getCryptoAddressFromRequest().getCryptoCurrency(),
+                        actorType,
+                        request.getBlockchainNetworkType()
+                );
 
                 CryptoCurrencyVault cryptoCurrencyVault = CryptoCurrencyVault.getByCryptoCurrency(request.getCryptoAddressFromRequest().getCryptoCurrency());
 
@@ -103,7 +103,9 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
                         request.getRequestId(),
                         cryptoAddress
                 );
-            } else {
+
+            } catch(DefaultWalletNotFoundException z) {
+
                 cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
             }
 
