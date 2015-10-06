@@ -142,7 +142,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     private UUID pluginId;
 
     /**
-     * DealsWithWalletManager Interface member variables.
+     * DealsWithCCPWalletManager Interface member variables.
      */
     private WalletManagerManager walletManagerManager;
 

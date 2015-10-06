@@ -79,8 +79,10 @@ public interface AssetFactoryManager {
     /**
      * TThis method list all wallet installed in device, start the transaction
      */
-
     List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()  throws CantListWalletsException;
 
+    /**
+     * TThis method check what all information is complete the Asset Factory
+     */
     boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy;
 }

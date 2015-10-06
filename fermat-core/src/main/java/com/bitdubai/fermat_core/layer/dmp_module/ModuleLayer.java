@@ -7,11 +7,10 @@ import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.notification.NotificationSubSystem;
-import com.bitdubai.fermat_core.layer.dmp_module.wallet_factory.WalletFactorySubsystem;
-import com.bitdubai.fermat_core.layer.dmp_module.wallet_manager.WalletManagerSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_module.wallet_publisher.WalletPublisherSubsystem;
+//import WalletFactorySubsystem;
+//import WalletPublisherSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_runtime.WalletRuntimeSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_module.wallet_store.WalletStoreSubsystem;
+//import WalletStoreSubsystem;
 
 /**
  * Created by ciencias on 03.01.15.
@@ -22,15 +21,8 @@ public class ModuleLayer implements PlatformLayer {
 
     Plugin mIntraUser;
 
-    Plugin mWalletFactory;
-
-    Plugin mWalletManager;
-
-    Plugin mWalletPublisher;
 
     Plugin mWalletRuntime;
-
-    Plugin mWalletStore;
 
     Plugin mNotification;
 
@@ -39,15 +31,7 @@ public class ModuleLayer implements PlatformLayer {
 
         mIntraUser = getPlugin(new IntraUserSubsystem());
 
-        mWalletFactory = getPlugin(new WalletFactorySubsystem());
-
-        mWalletManager = getPlugin(new WalletManagerSubsystem());
-
-        mWalletPublisher = getPlugin(new WalletPublisherSubsystem());
-
         mWalletRuntime = getPlugin(new WalletRuntimeSubsystem());
-
-        mWalletStore = getPlugin(new WalletStoreSubsystem());
 
         mNotification = getPlugin(new NotificationSubSystem());
 
@@ -66,24 +50,8 @@ public class ModuleLayer implements PlatformLayer {
         return mIntraUser;
     }
 
-    public Plugin getWalletFactory() {
-        return mWalletFactory;
-    }
-
-    public Plugin getWalletManager() {
-        return mWalletManager;
-    }
-
-    public Plugin getWalletPublisher() {
-        return mWalletPublisher;
-    }
-
     public Plugin getWalletRuntime() {
         return mWalletRuntime;
-    }
-
-    public Plugin getWalletStore() {
-        return mWalletStore;
     }
 
     public Plugin getNotification() {

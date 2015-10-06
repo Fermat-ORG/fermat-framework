@@ -55,8 +55,9 @@ public class CryptoPaymentRequestApprovedEventHandler implements FermatEventHand
 
                 CryptoPaymentRequestEventActions cryptoPaymentRequestEventActions = new CryptoPaymentRequestEventActions(
                         cryptoPaymentRequestManager,
-                        pluginDatabaseSystem,
-                        pluginId
+                        pluginDatabaseSystem       ,
+                        pluginId                   ,
+                        null
                 );
 
                 cryptoPaymentRequestEventActions.initialize();
