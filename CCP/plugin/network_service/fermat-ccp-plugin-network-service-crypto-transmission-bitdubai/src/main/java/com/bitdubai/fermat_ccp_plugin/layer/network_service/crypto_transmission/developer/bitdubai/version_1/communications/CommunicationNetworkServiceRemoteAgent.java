@@ -4,16 +4,15 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.ComunicationLayerNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communication.IncomingMessageDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -31,7 +30,7 @@ import java.util.Map;
 import java.util.Observable;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceRemoteAgent</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent</code>
  * is the service toRead that maintaining the communication channel, read and wait for new message.
  *
  * This class extend of the <code>java.util.Observable</code> class,  its used on the software design pattern called: The observer pattern,
@@ -44,7 +43,7 @@ import java.util.Observable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
+public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
      * Represent the sleep time for the read or send (2000 milliseconds)
@@ -77,12 +76,12 @@ public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
     private Boolean running;
 
     /**
-     * Represent the read messages tread of this TemplateNetworkServiceRemoteAgent
+     * Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
      */
     private Thread toReceive;
 
     /**
-     * Represent the send messages tread of this TemplateNetworkServiceRemoteAgent
+     * Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
      */
     private Thread toSend;
 
@@ -105,7 +104,7 @@ public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
      * @param incomingMessageDao instance
      * @param outgoingMessageDao instance
      */
-    public CryptoTransmissionNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
         this.eccKeyPair                          = eccKeyPair;
@@ -149,7 +148,7 @@ public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
         toReceive.start();
         toSend.start();
 
-        System.out.println("TemplateNetworkServiceRemoteAgent - started ");
+        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
 
     }
 
@@ -189,14 +188,14 @@ public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            System.out.println("TemplateNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+            System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                System.out.println("TemplateNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -245,13 +244,12 @@ public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
             }
 
             //Sleep for a time
-            toReceive.sleep(CryptoTransmissionNetworkServiceRemoteAgent.SLEEP_TIME);
+            toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
 
     }
@@ -268,8 +266,8 @@ public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
                 try {
 
                     Map<String, Object> filters = new HashMap<>();
-                    filters.put(ComunicationLayerNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-                    filters.put(ComunicationLayerNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
+                    filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+                    filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
 
                     /*
                      * Read all pending message from database
@@ -314,7 +312,7 @@ public class CryptoTransmissionNetworkServiceRemoteAgent extends Observable {
                 }
 
             //Sleep for a time
-            toSend.sleep(CryptoTransmissionNetworkServiceRemoteAgent.SLEEP_TIME);
+            toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));

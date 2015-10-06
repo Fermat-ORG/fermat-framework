@@ -7,8 +7,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
@@ -68,20 +66,42 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                 /*
                  * Construct my profile and register me
                  */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service ("+templateNetworkServicePluginRoot.getId()+")", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
+                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(),
+                                                                                                                                            (templateNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+templateNetworkServicePluginRoot.getId().toString()),
+                                                                                                                                            (templateNetworkServicePluginRoot.getName()+" ("+templateNetworkServicePluginRoot.getId()+")"),
+                                                                                                                                             templateNetworkServicePluginRoot.getNetworkServiceType(),
+                                                                                                                                             templateNetworkServicePluginRoot.getPlatformComponentType(),
+                                                                                                                                             templateNetworkServicePluginRoot.getExtraData());
+
+                /*
+                 * Register me
+                 */
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+
+                /*
+                 * Configure my new profile
+                 */
                 templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
-                templateNetworkServicePluginRoot.initializeTemplateNetworkServiceConnectionManager();
+
+                /*
+                 * Initialize the connection manager
+                 */
+                templateNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+
+                /*
+                 * Stop the agent
+                 */
                 active = Boolean.FALSE;
 
             }else if (!templateNetworkServicePluginRoot.isRegister()){
+
                 try {
-
                     sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    active = Boolean.FALSE;
                 }
+
             }else if (!templateNetworkServicePluginRoot.isRegister()){
                 active = Boolean.FALSE;
             }

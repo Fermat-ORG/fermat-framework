@@ -38,9 +38,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.TemplateNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -74,6 +74,7 @@ import java.util.regex.Pattern;
  */
 public class TemplateNetworkServicePluginRoot implements TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
 
+
     /**
      * Represent the logManager
      */
@@ -88,6 +89,31 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * Represent the platformComponentProfile
      */
     private PlatformComponentProfile platformComponentProfile;
+
+    /**
+     * Represent the platformComponentType
+     */
+    private PlatformComponentType platformComponentType;
+
+    /**
+     * Represent the networkServiceType
+     */
+    private NetworkServiceType networkServiceType;
+
+    /**
+     * Represent the name
+     */
+    private String name;
+
+    /**
+     * Represent the alias
+     */
+    private String alias;
+
+    /**
+     * Represent the extraData
+     */
+    private String extraData;
 
     /**
      * Represent the wsCommunicationsCloudClientManager
@@ -155,9 +181,9 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
     /**
-     *   Represent the templateNetworkServiceDeveloperDatabaseFactory
+     *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private TemplateNetworkServiceDeveloperDatabaseFactory templateNetworkServiceDeveloperDatabaseFactory;
+    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
 
     /**
@@ -166,6 +192,15 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     public TemplateNetworkServicePluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
+
+        /******************************************************************
+         * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
+         ******************************************************************/
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+        this.networkServiceType    = NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE;
+        this.name                  = "Template Network Service";
+        this.alias                 = "TemplateNetworkService";
+        this.extraData             = null;
     }
 
 
@@ -215,7 +250,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * IMPORTANT: Call this method only in the CommunicationRegistrationProcessNetworkServiceAgent, when execute the registration process
      * because at this moment, is create the platformComponentProfile for this component
      */
-    public void initializeTemplateNetworkServiceConnectionManager(){
+    public void initializeCommunicationNetworkServiceConnectionManager(){
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
 
@@ -261,7 +296,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -277,14 +312,14 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            TemplateNetworkServiceDatabaseFactory templateNetworkServiceDatabaseFactory = new TemplateNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBase = templateNetworkServiceDatabaseFactory.createDatabase(pluginId, TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -328,8 +363,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Initialize Developer Database Factory
              */
-            templateNetworkServiceDeveloperDatabaseFactory = new TemplateNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            templateNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             /*
              * Initialize listeners
@@ -360,7 +395,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " + TemplateNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
@@ -574,30 +609,12 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Handles the events CompleteComponentRegistrationNotification
+     * (non-Javadoc)
+     * @see NetworkService#handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile)
      */
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
-
-        /*
-         * If the communication cloud client is registered
-         */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT){
-
-            /*
-             * Is not register
-             */
-            if (!isRegister()){
-                /*
-                 * Construct my profile and register me
-                 */
-                platformComponentProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(), "TemplateNetworkService", "Template Network Service", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(platformComponentProfile);
-
-            }
-
-        }
 
         /*
          * If the component registered have my profile and my identity public key
@@ -633,7 +650,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Request the list of component registers
              */
-           // requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
+             requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         }
 
@@ -641,7 +658,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * (non-Javadoc)
+     * @see NetworkService#handleCompleteRequestListComponentRegisteredNotificationEvent(List)
      */
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
 
@@ -673,7 +691,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * (non-Javadoc)
+     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile)
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
 
@@ -725,12 +744,29 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     }
 
     /**
-     * Get the PlatformComponentProfile
-     *
-     * @return PlatformComponentProfile
+     * (non-Javadoc)
+     * @see NetworkService#getPlatformComponentProfile()
      */
     public PlatformComponentProfile getPlatformComponentProfile() {
         return platformComponentProfile;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see NetworkService#getPlatformComponentType()
+     */
+    @Override
+    public PlatformComponentType getPlatformComponentType() {
+        return platformComponentType;
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see NetworkService#getNetworkServiceType()
+     */
+    @Override
+    public NetworkServiceType getNetworkServiceType() {
+        return networkServiceType;
     }
 
     /**
@@ -756,7 +792,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return templateNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     /**
@@ -765,7 +801,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return templateNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     /**
@@ -774,7 +810,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return templateNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     /**
@@ -817,9 +853,27 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
+    /**
+     * Get the Name
+     * @return String
+     */
+    public String getName() {
+        return name;
+    }
 
+    /**
+     * Get the Alias
+     * @return String
+     */
+    public String getAlias() {
+        return alias;
+    }
 
-
-
-
+    /**
+     * Get the ExtraData
+     * @return String
+     */
+    public String getExtraData() {
+        return extraData;
+    }
 }

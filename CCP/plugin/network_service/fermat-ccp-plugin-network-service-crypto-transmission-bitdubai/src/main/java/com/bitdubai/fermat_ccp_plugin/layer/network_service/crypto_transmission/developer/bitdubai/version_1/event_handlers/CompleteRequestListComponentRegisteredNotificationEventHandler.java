@@ -8,13 +8,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 
 /**
@@ -29,17 +26,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 public class CompleteRequestListComponentRegisteredNotificationEventHandler implements FermatEventHandler {
 
     /*
-    * Represent the templateNetworkServicePluginRoot
+    * Represent the networkService
     */
-    private CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
+    private NetworkService networkService;
 
     /**
      * Constructor with parameter
      *
-     * @param cryptoTransmissionNetworkServicePluginRoot
+     * @param networkService
      */
-    public CompleteRequestListComponentRegisteredNotificationEventHandler(CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot) {
-        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
+    public CompleteRequestListComponentRegisteredNotificationEventHandler(NetworkService networkService) {
+        this.networkService = networkService;
     }
 
     /**
@@ -56,18 +53,18 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
         System.out.println("CompleteRequestListComponentRegisteredNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
 
-        if (((Service) this.cryptoTransmissionNetworkServicePluginRoot).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
             CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) platformEvent;
 
 
-            if (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT &&
-                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceType() == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE){
+            if (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == networkService.getPlatformComponentType() &&
+                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceType() == networkService.getNetworkServiceType()){
 
                  /*
-                 *  TemplateManager make the job
+                 *  networkService make the job
                  */
-                this.cryptoTransmissionNetworkServicePluginRoot.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList());
+                this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList());
 
             }
 
