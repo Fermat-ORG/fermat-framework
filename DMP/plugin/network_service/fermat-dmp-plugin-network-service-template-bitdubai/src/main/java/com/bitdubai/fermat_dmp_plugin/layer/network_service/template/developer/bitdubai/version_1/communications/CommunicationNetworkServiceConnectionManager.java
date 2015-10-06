@@ -122,7 +122,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceConnectionManager# closeConnection(PlatformComponentProfile)
+     * @see NetworkServiceConnectionManager#closeConnection(String)
      */
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
@@ -172,7 +172,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -234,4 +234,19 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     }
 
+    /**
+     * Get the OutgoingMessageDao
+     * @return OutgoingMessageDao
+     */
+    public OutgoingMessageDao getOutgoingMessageDao() {
+        return outgoingMessageDao;
+    }
+
+    /**
+     * Get the IncomingMessageDao
+     * @return IncomingMessageDao
+     */
+    public IncomingMessageDao getIncomingMessageDao() {
+        return incomingMessageDao;
+    }
 }
