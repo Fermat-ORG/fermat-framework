@@ -61,7 +61,7 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
 
 
             if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT &&
-                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE){
+                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == NetworkServiceType.TEMPLATE){
                  /*
                  *  TemplateManager make the job
                  */
