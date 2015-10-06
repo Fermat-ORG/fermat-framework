@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 8/31/15.
  */
-public class AssetVaultPluginRoot implements AssetVaultManager, DealsWithBitcoinNetwork, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager, DealsWithBitcoinNetwork, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
     AssetCryptoVaultManager assetCryptoVaultManager;
 
