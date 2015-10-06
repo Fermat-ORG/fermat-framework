@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -41,14 +43,17 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetDistributionPluginRoot implements AssetDistributionManager, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Plugin, Service {
+public class AssetDistributionPluginRoot implements AssetDistributionManager, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetDistributionTransactionManager assetDistributionTransactionManager;
     Database assetDistributionDatabase;
     AssetVaultManager assetVaultManager;
@@ -68,6 +73,22 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
     private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
         AssetDistributionDatabaseFactory databaseFactory = new AssetDistributionDatabaseFactory(this.pluginDatabaseSystem);
         assetDistributionDatabase = databaseFactory.createDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE);
+    }
+
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return AssetDistributionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
     }
 
     @Override
@@ -92,6 +113,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem);
             this.assetDistributionTransactionManager.setAssetVaultManager(assetVaultManager);
+            this.assetDistributionTransactionManager.setDigitalAssetTransmissionVault(digitalAssetTransmissionVault);
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -184,5 +206,15 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem=pluginFileSystem;
+    }
+
+    @Override
+    public List<String> getClassesFullPath() {
+        return null;
+    }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+
     }
 }

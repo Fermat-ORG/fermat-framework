@@ -26,10 +26,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interface
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantDeleteDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuingMonitorAgentException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetMetadataVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -39,6 +40,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/09/15.
@@ -105,7 +107,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         try {
             ((MonitorAgent) this.monitorAgent).Initialize();
-        } catch (CantInitializeAssetIssuingMonitorAgentException exception) {
+        } catch (CantInitializeAssetMonitorAgentException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
@@ -148,11 +150,11 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements AssetIssuingTransactionNotificationAgent, DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
+    private class MonitorAgent implements /*AssetIssuingTransactionNotificationAgent,*/ DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = AssetIssuingTransactionNotificationAgent.AGENT_SLEEP_TIME;
+        public final int SLEEP_TIME = /*AssetIssuingTransactionNotificationAgent.AGENT_SLEEP_TIME*/5000;
         int iterationNumber = 0;
         AssetIssuingTransactionDao assetIssuingTransactionDao;
         @Override
@@ -193,22 +195,25 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             }
 
         }
-        public void Initialize() throws CantInitializeAssetIssuingMonitorAgentException {
+        public void Initialize() throws CantInitializeAssetMonitorAgentException {
             try {
 
-                database = this.pluginDatabaseSystem.openDatabase(pluginId, userPublicKey);
+                database = this.pluginDatabaseSystem.openDatabase(pluginId,  AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
+
+                Logger LOG = Logger.getGlobal();
+                LOG.info("Database in issuing monitor agent doesn't exists");
                 AssetIssuingTransactionDatabaseFactory assetIssuingTransactionDatabaseFactory=new AssetIssuingTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
                     database = assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, userPublicKey);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
-                    throw new CantInitializeAssetIssuingMonitorAgentException(cantCreateDatabaseException,"Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
+                    throw new CantInitializeAssetMonitorAgentException(cantCreateDatabaseException,"Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantInitializeAssetIssuingMonitorAgentException(exception,"Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
+                throw new CantInitializeAssetMonitorAgentException(exception,"Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
             }
         }
 
