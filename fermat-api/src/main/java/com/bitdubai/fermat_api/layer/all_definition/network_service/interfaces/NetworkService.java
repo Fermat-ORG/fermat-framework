@@ -22,6 +22,24 @@ public interface NetworkService {
      */
     public UUID getId();
 
+    /**
+     * Get the PlatformComponentProfile for this network service
+     * @return PlatformComponentProfile
+     */
+    public PlatformComponentProfile getPlatformComponentProfile();
+
+    /**
+     * Get the PlatformComponentType for this network service
+     * @return PlatformComponentType
+     */
+    public PlatformComponentType getPlatformComponentType();
+
+    /**
+     * Get the NetworkServiceType for this network service
+     * @return NetworkServiceType
+     */
+    public NetworkServiceType getNetworkServiceType();
+
     /*
      * Get the RemoteNetworkServicesRegisteredList, this method may be called after
      * the <code>requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters</code> and the

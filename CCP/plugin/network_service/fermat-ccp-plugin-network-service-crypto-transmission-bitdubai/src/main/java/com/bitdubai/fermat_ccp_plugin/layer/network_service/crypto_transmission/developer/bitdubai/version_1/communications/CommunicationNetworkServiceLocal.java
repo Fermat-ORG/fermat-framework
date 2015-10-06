@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -28,7 +28,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
@@ -40,7 +40,7 @@ import java.util.Observer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoTransmissionNetworkServiceLocal implements Observer, NetworkServiceLocal {
+public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
     /**
      * Represent the profile of the remote network service
@@ -74,7 +74,7 @@ public class CryptoTransmissionNetworkServiceLocal implements Observer, NetworkS
      * @param errorManager                  instance
      * @param outgoingMessageDao            instance
      */
-    public CryptoTransmissionNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
@@ -121,7 +121,7 @@ public class CryptoTransmissionNetworkServiceLocal implements Observer, NetworkS
      */
     private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
 
-        System.out.println("TemplateNetworkServiceLocal - onMessageReceived ");
+        System.out.println("CommunicationNetworkServiceLocal - onMessageReceived ");
         System.out.println(incomingTemplateNetworkServiceMessage.getContent());
 
         /*
@@ -140,7 +140,7 @@ public class CryptoTransmissionNetworkServiceLocal implements Observer, NetworkS
     }
 
     /**
-     * This method is called automatically when TemplateNetworkServiceRemoteAgent (Observable object) update the database
+     * This method is called automatically when CommunicationNetworkServiceRemoteAgent (Observable object) update the database
      * when new message is received
      *
      * @param observable the observable object

@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -12,26 +12,27 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communication.IncomingMessageDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+
 import java.util.HashMap;
 import java.util.Map;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceConnectionManager</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoTransmissionNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
+public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
     /**
      * Represent the communicationsClientConnection
@@ -54,14 +55,14 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
     private EventManager eventManager;
 
     /**
-     * Holds all references to the template network service locals
+     * Holds all references to the communication network service locals
      */
-    private Map<String, CryptoTransmissionNetworkServiceLocal> templateNetworkServiceLocalsCache;
+    private Map<String, CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
 
     /**
-     * Holds all references to the template network service remote agents
+     * Holds all references to the communication network service remote agents
      */
-    private Map<String, CryptoTransmissionNetworkServiceRemoteAgent> templateNetworkServiceRemoteAgentsCache;
+    private Map<String, CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
      * Represent the incomingMessageDao
@@ -85,7 +86,7 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
      * @param communicationsClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public CryptoTransmissionNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public CommunicationNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.platformComponentProfile = platformComponentProfile;
         this.identity = identity;
@@ -94,8 +95,8 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
         this.eventManager = eventManager;
         this.incomingMessageDao = new IncomingMessageDao(dataBase);
         this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
-        this.templateNetworkServiceLocalsCache = new HashMap<>();
-        this.templateNetworkServiceRemoteAgentsCache = new HashMap<>();
+        this.communicationNetworkServiceLocalsCache = new HashMap<>();
+        this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
 
 
@@ -126,7 +127,7 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
         //Remove the instance and stop his threads
-        templateNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+        communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
 
@@ -136,10 +137,10 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
      */
     public void closeAllConnection() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.remove(key).stop();
+            communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
         }
 
     }
@@ -166,28 +167,28 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
                  /*
                  * Instantiate the local reference
                  */
-                CryptoTransmissionNetworkServiceLocal templateNetworkServiceLocal = new CryptoTransmissionNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CryptoTransmissionNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new CryptoTransmissionNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
                  */
-                templateNetworkServiceRemoteAgent.addObserver(templateNetworkServiceLocal);
+                communicationNetworkServiceRemoteAgent.addObserver(communicationNetworkServiceLocal);
 
                 /*
                  * Start the service thread
                  */
-                templateNetworkServiceRemoteAgent.start();
+                communicationNetworkServiceRemoteAgent.start();
 
                 /*
                  * Add to the cache
                  */
-                templateNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), templateNetworkServiceLocal);
-                templateNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), templateNetworkServiceRemoteAgent);
+                communicationNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceLocal);
+                communicationNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceRemoteAgent);
 
             }
 
@@ -201,10 +202,10 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
-    public CryptoTransmissionNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
+    public CommunicationNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance
-        return templateNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
+        return communicationNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
     }
 
     /**
@@ -212,10 +213,10 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
      */
     public void pause() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.get(key).pause();
+            communicationNetworkServiceRemoteAgentsCache.get(key).pause();
         }
 
     }
@@ -225,10 +226,10 @@ public class CryptoTransmissionNetworkServiceConnectionManager implements Networ
      */
     public void resume() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.get(key).resume();
+            communicationNetworkServiceRemoteAgentsCache.get(key).resume();
         }
 
     }

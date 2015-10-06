@@ -4,10 +4,10 @@
   * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.template.developer.bitdubai.version_1.structure.TemplateNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.template.developer.bitdubai.version_1.structure.CommunicationNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
@@ -15,7 +15,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ComunicationLayerNetworkServiceDatabaseConstants {
+public class CommunicationNetworkServiceDatabaseConstants {
 
     public static final String DATA_BASE_NAME  = "template_network_service_data_base";
 
