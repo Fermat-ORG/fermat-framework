@@ -1,13 +1,11 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao;
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 
 /**
- * Created by mati on 2015.10.05..
+ * Created by mati on 2015.10.04..
  */
-public class CantSaveCryptoTransmissionMetadatatException extends FermatException {
-
+public class CantGetCryptoTransmissionMetadataException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -16,7 +14,7 @@ public class CantSaveCryptoTransmissionMetadatatException extends FermatExceptio
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantSaveCryptoTransmissionMetadatatException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetCryptoTransmissionMetadataException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
