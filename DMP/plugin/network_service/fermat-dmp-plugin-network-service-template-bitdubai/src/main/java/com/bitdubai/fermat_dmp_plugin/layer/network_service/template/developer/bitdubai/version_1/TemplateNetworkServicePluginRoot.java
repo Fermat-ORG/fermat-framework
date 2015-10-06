@@ -202,17 +202,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
-     * Represent the incomingMessageDao
-     */
-    private IncomingMessageDao incomingMessageDao;
-
-    /**
-     * Represent the outgoingMessageDao
-     */
-    private OutgoingMessageDao outgoingMessageDao;
-
-
-    /**
      * Constructor
      */
     public TemplateNetworkServicePluginRoot() {
@@ -659,16 +648,16 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                                                                 getCommunicationsCloudClientConnection().
                                                                 constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
-                                                                                                     null,                     // alias
-                                                                                                     null,                     // identityPublicKey
-                                                                                                     null,                     // location
-                                                                                                     null,                     // distance
-                                                                                                     null,                     // name
-                                                                                                     null,                     // extraData
-                                                                                                     null,                     // offset
-                                                                                                     null,                     // max
-                                                                                                     null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                                                     null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+                                                                        null,                     // alias
+                                                                        null,                     // identityPublicKey
+                                                                        null,                     // location
+                                                                        null,                     // distance
+                                                                        null,                     // name
+                                                                        null,                     // extraData
+                                                                        null,                     // offset
+                                                                        null,                     // max
+                                                                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                        null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
             /*
              * Request the list of component registers
@@ -910,7 +899,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         Map<String, Object> filters = new HashMap<>();
         filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
 
-        return incomingMessageDao.findAll(filters);
+        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
     }
 
     /**
@@ -920,7 +909,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
 
         ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-        incomingMessageDao.update(fermatMessage);
+        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
     }
 
 }
