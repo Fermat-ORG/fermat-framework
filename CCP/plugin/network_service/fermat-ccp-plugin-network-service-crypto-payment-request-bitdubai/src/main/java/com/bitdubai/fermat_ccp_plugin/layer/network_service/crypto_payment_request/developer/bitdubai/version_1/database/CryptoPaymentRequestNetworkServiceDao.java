@@ -27,8 +27,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantCreateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantDeleteRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestNetworkServiceRecord;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -230,6 +232,38 @@ public class CryptoPaymentRequestNetworkServiceDao {
         } catch (CantUpdateRecordException exception) {
 
             throw new CantChangeCryptoPaymentRequestProtocolStateException(exception, "", "Cant update record exception.");
+        }
+    }
+
+    public List<CryptoPaymentRequest> listRequestsByProtocolState(RequestProtocolState protocolState  ,
+                                                                  Integer              max            ,
+                                                                  Integer              offset         ) throws CantListRequestsException {
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.setFilterTop   (max   .toString());
+            cryptoPaymentRequestTable.setFilterOffSet(offset.toString());
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<CryptoPaymentRequest> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildCryptoPaymentRequestRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListRequestsException(exception);
         }
     }
 
