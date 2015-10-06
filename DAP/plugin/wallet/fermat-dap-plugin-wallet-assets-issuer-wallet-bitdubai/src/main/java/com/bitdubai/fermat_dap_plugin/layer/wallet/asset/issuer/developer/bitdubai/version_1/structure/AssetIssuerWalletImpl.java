@@ -45,7 +45,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     private static final String ASSET_ISSUER_WALLET_FILE_NAME = "walletsIds";
 
     /**
-     * BitcoinWalletBasicWallet member variables.
+     * AssetIssuerWallet member variables.
      */
     private Database database;
 
