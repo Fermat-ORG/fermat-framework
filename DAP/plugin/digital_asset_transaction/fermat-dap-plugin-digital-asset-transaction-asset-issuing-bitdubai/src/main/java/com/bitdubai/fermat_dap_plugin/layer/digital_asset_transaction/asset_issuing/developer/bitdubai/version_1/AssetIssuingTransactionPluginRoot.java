@@ -311,6 +311,11 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         this.assetIssuingTransactionManager.confirmReception(genesisTransaction);
     }
 
+    @Override
+    public int getNumberOfIssuedAssets(String assetPublicKey) throws CantExecuteDatabaseOperationException {
+        return this.assetIssuingTransactionManager.getNumberOfIssuedAssets(assetPublicKey);
+    }
+
     /*@Override
     public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         return this.assetIssuingTransactionManager.getPendingTransactions(specialist);

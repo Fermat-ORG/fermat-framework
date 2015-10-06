@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 
 /**
@@ -32,6 +33,14 @@ public interface AssetIssuingManager /*extends TransactionProtocolManager<Crypto
      * @throws CantConfirmTransactionException
      */
     void confirmReception(String  genesisTransaction)throws CantConfirmTransactionException;
+
+    /**
+     * This method return the number of issued assets
+     * @param assetPublicKey
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    int getNumberOfIssuedAssets(String assetPublicKey) throws CantExecuteDatabaseOperationException;
     /*void setActors(String deliveredByActorPublicKey,
                         Actors deliveredByType,
                         String deliveredToActorPublicKey,
