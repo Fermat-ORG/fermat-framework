@@ -26,6 +26,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.Ass
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -67,11 +68,38 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
             manager = ((AssetFactorySession) subAppsSession).getManager();
             errorManager = subAppsSession.getErrorManager();
             if (!isEdit) {
-                asset = manager.newAssetFactoryEmpty();
-                List<InstalledWallet> installedWallets = manager.getInstallWallets();
-                if (installedWallets != null && installedWallets.size() > 0) {
-                    asset.setPublicKey(installedWallets.get(0).getWalletPublicKey());
-                }
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setTitle("Asset Editor");
+                dialog.setMessage("Creating new empty asset project, please wait...");
+                dialog.setCancelable(false);
+                dialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        asset = manager.newAssetFactoryEmpty();
+                        List<InstalledWallet> installedWallets = manager.getInstallWallets();
+                        if (installedWallets != null && installedWallets.size() > 0) {
+                            asset.setWalletPublicKey(installedWallets.get(0).getWalletPublicKey());
+                        }
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dialog.dismiss();
+                        // do nothing... continue with the form data
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), "Some error occurred while creating a new asset empty project", Toast.LENGTH_SHORT).show();
+                        ex.printStackTrace();
+                    }
+                });
+                worker.execute();
             }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -93,6 +121,18 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         bitcoinsView = (FermatEditText) rootView.findViewById(R.id.bitcoins);
         expirationView = (FermatEditText) rootView.findViewById(R.id.expiration_date);
         isRedeemableView = (FermatCheckBox) rootView.findViewById(R.id.isRedeemable);
+
+        nameView.setText(isEdit ? asset.getName() != null ? asset.getName() : "" : "");
+        descriptionView.setText(isEdit ? asset.getDescription() != null ? asset.getDescription() : "" : "");
+        quantityView.setText(isEdit ? String.valueOf(asset.getQuantity()) : "");
+        bitcoinsView.setText(isEdit ? String.valueOf(asset.getAmount()) : "");
+        if (isEdit && asset.getExpirationDate() != null) {
+            DateFormat format = DateFormat.getDateInstance();
+            Date date = new Date(asset.getExpirationDate().getTime());
+            expirationView.setText(format.format(date));
+        }
+        if (isEdit)
+            isRedeemableView.setChecked(asset.getIsRedeemable());
 
         return rootView;
     }
@@ -166,7 +206,8 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         asset.setResources(null);
         if (!expirationView.getText().toString().trim().isEmpty()) {
             try {
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("mm/yyy/dd h:m:s");
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 asset.setExpirationDate(new java.sql.Timestamp(format.parse(expirationView.getText().toString().trim()).getTime()));
                 long now = new Date().getTime();
                 asset.setCreationTimestamp(new java.sql.Timestamp(now));
