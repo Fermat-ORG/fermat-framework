@@ -18,7 +18,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class HierarchyAccount {
+public class HierarchyAccount {
     private int id;
     private String description;
     private String pathAsString;

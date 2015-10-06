@@ -113,7 +113,11 @@ public class AssetCryptoVaultManager  {
      */
 
     public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
-        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset vault");
+        /**
+         * I create the account manually instead of getting it from the database because this method always returns addresses
+         * from the asset vault account with Id 0.
+         */
+        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
         return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
     }
 
