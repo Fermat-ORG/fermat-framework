@@ -3,12 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
@@ -41,9 +36,6 @@ public class DigitalAssetDistributor {
     AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH="digital-asset-distribution/";
-    //String digitalAssetLocalFilePath;
-    private final String digitalAssetFileName="digital-asset.xml";
-    private final String digitalAssetMetadataFileName="digital-asset-metadata.xml";
     String digitalAssetFileStoragePath;
     //String digitalAssetMetadataFileStoragePath;
     AssetDistributionDao assetDistributionDao;
@@ -100,20 +92,36 @@ public class DigitalAssetDistributor {
             //Now, I going to persist in database the basic information about digitalAssetMetadata
             persistDigitalAsset(digitalAssetMetadata, actorAssetUser);
             DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
-            checkAvailableBalanceInAssetVault(digitalAsset.getGenesisAmount());
+            if(!isAvailableBalanceInAssetVault(digitalAsset.getGenesisAmount(), digitalAssetMetadata.getGenesisTransaction())){
+                throw new CantDeliverDigitalAssetException("The Available balance ins asset vault is incorrect");
+            }
             DigitalAssetContract digitalAssetContract=digitalAsset.getContract();
             if(!isValidContract(digitalAssetContract)){
-                throw new CantDeliverDigitalAssetException("The DigitalAssetContract is not valid, the expiration date has passed");
+                throw new CantDeliverDigitalAssetException("The DigitalAsset Contract is not valid, the expiration date has passed");
             }
-            //TODO: finish this
+            if(!isDigitalAssetHashValid(digitalAssetMetadata)){
+                throw new CantDeliverDigitalAssetException("The DigitalAsset hash is not valid");
+            }
+            deliverToRemoteActor(digitalAssetMetadata, actorAssetUser.getPublicKey());
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
         } catch (CantCreateDigitalAssetFileException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into local storage");
+        } catch (CantGetGenesisTransactionException exception) {
+            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
         }
     }
 
-    //TODO: create a method that delete the digital asset from local storage.
+    private boolean isDigitalAssetHashValid(DigitalAssetMetadata digitalAssetMetadata) throws CantGetGenesisTransactionException {
+        String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
+        CryptoTransaction cryptoTransaction=this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash);
+        String hashFromCryptoTransaction=cryptoTransaction.getOp_Return();
+        return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
+    }
+
+    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, String remoteActorPublicKey){
+        //TODO: send through Asset Transmission plugin
+    }
 
     private void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
         setDigitalAssetLocalFilePath(digitalAssetMetadata);
@@ -121,9 +129,9 @@ public class DigitalAssetDistributor {
         persistInLocalStorage(digitalAssetMetadata);
     }
 
-    private boolean checkAvailableBalanceInAssetVault(long genesisAmount){
-        //TODO: implement this
-        return true;
+    private boolean isAvailableBalanceInAssetVault(long genesisAmount, String genesisTransaction){
+        long availableBalanceForTransaction=this.assetVaultManager.getAvailableBalanceForTransaction(genesisTransaction);
+        return availableBalanceForTransaction<genesisAmount;
     }
 
     private boolean isValidContract(DigitalAssetContract digitalAssetContract){
@@ -152,7 +160,6 @@ public class DigitalAssetDistributor {
 
 
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException {
-        //TODO: implement this
         try{
             for(Map.Entry<DigitalAssetMetadata, ActorAssetUser> entry: digitalAssetsToDistribute.entrySet()){
                 DigitalAssetMetadata digitalAssetMetadata=entry.getKey();

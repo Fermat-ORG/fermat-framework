@@ -6,7 +6,6 @@ include ':fermat-api'
 include ':fermat-core'
 include ':fermat-bnk-api'
 include ':fermat-ccm-api'
-include ':fermat-ccp-api'
 include ':fermat-cbp-api'
 include ':fermat-ccp-api'
 include ':fermat-cry-api'
@@ -26,6 +25,9 @@ include ':fermat-bnp-plugin-network-service-bank-notes-bitdubai'
 project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('BNP/plugin/network_service/fermat-bnp-plugin-network-service-bank-notes-bitdubai')
 
 // Init CCP Projects
+
+include ':fermat-ccp-api'
+project(':fermat-ccp-api').projectDir = new File('CCP/library/api/fermat-ccp-api')
 
 include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
