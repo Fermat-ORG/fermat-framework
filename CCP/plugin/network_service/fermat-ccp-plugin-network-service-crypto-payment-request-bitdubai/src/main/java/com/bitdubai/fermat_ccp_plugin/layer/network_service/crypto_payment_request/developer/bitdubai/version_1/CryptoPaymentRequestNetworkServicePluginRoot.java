@@ -89,23 +89,94 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     }
 
     @Override
-    public void informRefusal(UUID requestId) throws RequestNotFoundException, CantInformRefusalException {
+    public void informRefusal(UUID requestId) throws RequestNotFoundException   ,
+                                                     CantInformRefusalException {
 
+        try {
+
+            // TODO SEND MESSAGE WITH REFUSAL.
+            // TODO AFTER THAT, IF SUCCESSFUL, DELETE THE REQUEST.
+
+            cryptoPaymentRequestNetworkServiceDao.deleteRequest(requestId);
+
+        } catch(CantDeleteRequestException |
+                RequestNotFoundException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw new CantInformRefusalException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantInformRefusalException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
-    public void informDenial(UUID requestId) throws RequestNotFoundException, CantInformDenialException {
+    public void informDenial(UUID requestId) throws RequestNotFoundException  ,
+                                                    CantInformDenialException {
 
+        try {
+
+            // TODO SEND MESSAGE WITH DENIAL.
+            // TODO AFTER THAT, IF SUCCESSFUL, DELETE THE REQUEST.
+
+            cryptoPaymentRequestNetworkServiceDao.deleteRequest(requestId);
+
+        } catch(CantDeleteRequestException |
+                RequestNotFoundException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw new CantInformDenialException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantInformDenialException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
-    public void informApproval(UUID requestId) throws CantInformApprovalException, RequestNotFoundException {
+    public void informApproval(UUID requestId) throws CantInformApprovalException,
+                                                      RequestNotFoundException   {
 
+        try {
+
+            // TODO SEND MESSAGE WITH APPROVAL.
+            // TODO AFTER THAT, IF SUCCESSFUL, DELETE THE REQUEST.
+
+            cryptoPaymentRequestNetworkServiceDao.deleteRequest(requestId);
+
+        } catch(CantDeleteRequestException |
+                RequestNotFoundException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw new CantInformApprovalException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantInformApprovalException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
     public void informReception(UUID requestId) throws CantInformReceptionException, RequestNotFoundException {
 
+        try {
+
+            // TODO SEND MESSAGE WITH RECEPTION CONFIRMATION.
+            // TODO AFTER THAT, IF SUCCESSFUL, DELETE THE REQUEST.
+
+            cryptoPaymentRequestNetworkServiceDao.deleteRequest(requestId);
+
+        } catch(CantDeleteRequestException |
+                RequestNotFoundException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw new CantInformReceptionException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantInformReceptionException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
