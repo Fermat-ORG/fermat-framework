@@ -569,11 +569,11 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                     contractProperty.setName(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN));
                     contractProperty.setValue(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN));
 
-                    if (contractProperty.getName() == "redeemable") {
+                    if (contractProperty.getName().equalsIgnoreCase("redeemable")) {
                         assetFactory.setIsRedeemable(Boolean.valueOf(contractProperty.getValue().toString()));
                     }
 
-                    if (contractProperty.getName() == "expiration_date") {
+                    if (contractProperty.getName().equalsIgnoreCase("expiration_date")) {
                         assetFactory.setExpirationDate(Timestamp.valueOf(contractProperty.getValue().toString()));
                     }
                     contractProperties.add(contractProperty);
