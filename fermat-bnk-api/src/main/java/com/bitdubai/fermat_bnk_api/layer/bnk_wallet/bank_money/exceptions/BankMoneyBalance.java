@@ -9,12 +9,12 @@ public interface BankMoneyBalance {
 
     long getBalance()  throws CantCalculateBalanceException;
 
-    List<BankMoneyList> getBankMoneyBalancesAvailable() throws CantCalculateBalanceException;
+   // List<BankMoneyList> getBankMoneyBalancesAvailable() throws CantCalculateBalanceException;
 
-    List<BankMoneyList> getBankMoneyBalancesBook() throws CantCalculateBalanceException;
+   // List<BankMoneyList> getBankMoneyBalancesBook() throws CantCalculateBalanceException;
 
-    void debit(BankMoneyTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
+   // void debit(BankMoneyTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
 
-    void credit(BankMoneyTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
+    //void credit(BankMoneyTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
     
 }

@@ -35,7 +35,6 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exc
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantSetToSeenByCryptoVaultException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -46,16 +45,16 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CryptoTransmissionNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.CommunicationLayerNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.ComunicationLayerNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.ComunicationLayerNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionNetworkServiceConnectionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.CryptoTransmissionNetworkServiceLocal;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.RegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CryptoTransmissionNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CryptoTransmissionNetworkServiceLocal;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.RegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -79,7 +78,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmissionNetworkServiceManager,TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmissionNetworkServiceManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
 
     /**
      * Represent the logManager
@@ -164,7 +163,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     /**
      *   Represent the templateNetworkServiceDeveloperDatabaseFactory
      */
-    private CryptoTransmissionNetworkServiceDeveloperDatabaseFactory templateNetworkServiceDeveloperDatabaseFactory;
+    private ComunicationLayerNetworkServiceDeveloperDatabaseFactory templateNetworkServiceDeveloperDatabaseFactory;
 
 
     /**
@@ -269,7 +268,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, ComunicationLayerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -285,14 +284,14 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            CryptoTransmissionNetworkServiceDatabaseFactory templateNetworkServiceDatabaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CommunicationLayerNetworkServiceDatabaseFactory templateNetworkServiceDatabaseFactory = new CommunicationLayerNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
                 /*
                  * We create the new database
                  */
-                this.dataBase = templateNetworkServiceDatabaseFactory.createDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = templateNetworkServiceDatabaseFactory.createDatabase(pluginId, ComunicationLayerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -336,7 +335,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             /*
              * Initialize Developer Database Factory
              */
-            templateNetworkServiceDeveloperDatabaseFactory = new CryptoTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            templateNetworkServiceDeveloperDatabaseFactory = new ComunicationLayerNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             templateNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             /*
@@ -368,7 +367,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " + CryptoTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + ComunicationLayerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";

@@ -548,19 +548,19 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         activity.setColor("#03A9F4");
 
 
-         titleBar = new TitleBar();
+        titleBar = new TitleBar();
         titleBar.setLabel("Contracts History");
         titleBar.setColor("#FFFFFF");
         titleBar.setLabelSize(16);
         activity.setTitleBar(titleBar);
 
 
-         statusBar = new StatusBar();
+        statusBar = new StatusBar();
         statusBar.setColor("#0288D1");
         activity.setStatusBar(statusBar);
 
 
-         fragment = new Fragment();
+        fragment = new Fragment();
         fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getKey(), fragment);
 
@@ -595,25 +595,25 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         activity.setSideMenu(sideMenu);
         navigationStructure.addActivity(activity);
 
-         activity = new Activity();
+        activity = new Activity();
         activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
         activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getCode());
         activity.setColor("#03A9F4");
 
 
-         titleBar = new TitleBar();
+        titleBar = new TitleBar();
         titleBar.setLabel("Settings");
         titleBar.setColor("#FFFFFF");
         titleBar.setLabelSize(16);
         activity.setTitleBar(titleBar);
 
 
-         statusBar = new StatusBar();
+        statusBar = new StatusBar();
         statusBar.setColor("#0288D1");
         activity.setStatusBar(statusBar);
 
 
-         fragment = new Fragment();
+        fragment = new Fragment();
         fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey(), fragment);
         activity.setSideMenu(sideMenu);
@@ -1593,11 +1593,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#8bba9e");
+        runtimeTabStrip.setTabsColor("#5b5993");
 
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
-        runtimeTabStrip.setTabsIndicateColor("#72af9c");
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
 
 
 

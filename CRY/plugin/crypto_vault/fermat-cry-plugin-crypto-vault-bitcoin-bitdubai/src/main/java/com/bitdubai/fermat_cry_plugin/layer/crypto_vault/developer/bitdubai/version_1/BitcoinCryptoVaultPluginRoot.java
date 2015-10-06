@@ -418,6 +418,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             }
 
 
+        System.out.println("Bitcoin crypto vault address: " + this.getAddress().getAddress());
+
             /**
              * the service is started.
              */

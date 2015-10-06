@@ -146,7 +146,7 @@ public class AssetIssuerWalletDao {
         try {
             DatabaseTable databaseTableAssuerIssuerWallet = getBalancesTable();
             databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
             databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
 
@@ -166,10 +166,10 @@ public class AssetIssuerWalletDao {
         try {
             DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
 
-            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
@@ -192,8 +192,8 @@ public class AssetIssuerWalletDao {
         try {
             DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
 
-            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setFilterOrder(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
             databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
@@ -224,7 +224,7 @@ public class AssetIssuerWalletDao {
 
             databaseTableAssuerIssuerWalletBalance.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
             for(DatabaseTableRecord record : databaseTableAssuerIssuerWalletBalance.getRecords()){
-                record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__MEMO_COLUMN_NAME,memo);
+                record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME,memo);
                 databaseTableAssuerIssuerWalletBalance.updateRecord(record);
             }
         databaseTableAssuerIssuerWalletBalance.loadToMemory();
@@ -254,22 +254,22 @@ public class AssetIssuerWalletDao {
 
         UUID transactionId              = record.getUUIDValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME);
         String assetPublicKey           = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME);
-        String transactionHash          = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TRANSACTION_HASH_COLUMN_NAME);
-        TransactionType transactionType = TransactionType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME));
+        String transactionHash          = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TRANSACTION_HASH_COLUMN_NAME);
+        TransactionType transactionType = TransactionType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME));
         CryptoAddress addressFrom       = new CryptoAddress();
-        addressFrom.setAddress(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ADDRESS_FROM_COLUMN_NAME));
+        addressFrom.setAddress(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_FROM_COLUMN_NAME));
         CryptoAddress addressTo         = new CryptoAddress();
-        addressTo.setAddress(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ADDRESS_TO_COLUMN_NAME));
-        String actorFromPublicKey       = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_COLUMN_NAME);
-        String actorToPublicKey         = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_COLUMN_NAME);
-        Actors actorFromType            = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_TYPE_COLUMN_NAME));
-        Actors actorToType              = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_TYPE_COLUMN_NAME));
-        BalanceType balanceType         = BalanceType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME));
-        long amount                     = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__AMOUNT_COLUMN_NAME);
-        long runningBookBalance         = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__RUNNING_BOOK_BALANCE_COLUMN_NAME);
-        long runningAvailableBalance    = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
-        long timeStamp                  = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME);
-        String memo                     = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__MEMO_COLUMN_NAME);
+        addressTo.setAddress(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_TO_COLUMN_NAME));
+        String actorFromPublicKey       = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_COLUMN_NAME);
+        String actorToPublicKey         = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_COLUMN_NAME);
+        Actors actorFromType            = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_TYPE_COLUMN_NAME));
+        Actors actorToType              = Actors.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_TYPE_COLUMN_NAME));
+        BalanceType balanceType         = BalanceType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME));
+        long amount                     = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_AMOUNT_COLUMN_NAME);
+        long runningBookBalance         = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+        long runningAvailableBalance    = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+        long timeStamp                  = record.getLongValue(  AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME);
+        String memo                     = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME);
         return new AssetIssuerWalletTransactionWrapper(transactionId, transactionHash, assetPublicKey, transactionType, addressFrom, addressTo,
                 actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
     }
@@ -311,21 +311,21 @@ public class AssetIssuerWalletDao {
         DatabaseTableRecord record = getAssetIssuerWalletTable().getEmptyRecord();
         record.setUUIDValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME                   , UUID.randomUUID());
         record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME           , assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
-        record.setUUIDValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__VERIFICATION_ID_COLUMN_NAME           , assetIssuerWalletTransactionRecord.getIdTransaction());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TYPE_COLUMN_NAME                      , transactionType.getCode());
-        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__AMOUNT_COLUMN_NAME                    , assetIssuerWalletTransactionRecord.getAmount());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__MEMO_COLUMN_NAME                      , assetIssuerWalletTransactionRecord.getMemo());
-        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME                , assetIssuerWalletTransactionRecord.getTimestamp());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TRANSACTION_HASH_COLUMN_NAME          , assetIssuerWalletTransactionRecord.getDigitalAssetMetadataHash());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ADDRESS_FROM_COLUMN_NAME              , assetIssuerWalletTransactionRecord.getAddressFrom().getAddress());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ADDRESS_TO_COLUMN_NAME                , assetIssuerWalletTransactionRecord.getAddressTo().getAddress());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME              , balanceType.getCode());
-        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__RUNNING_AVAILABLE_BALANCE_COLUMN_NAME , availableRunningBalance);
-        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__RUNNING_BOOK_BALANCE_COLUMN_NAME      , bookRunningBalance);
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_COLUMN_NAME                , assetIssuerWalletTransactionRecord.getActorFromPublicKey());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_COLUMN_NAME                  , assetIssuerWalletTransactionRecord.getActorToPublicKey());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_TYPE_COLUMN_NAME           , assetIssuerWalletTransactionRecord.getActorFromType().getCode());
-        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_TYPE_COLUMN_NAME             , assetIssuerWalletTransactionRecord.getActorToType().getCode());
+        record.setUUIDValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME           , assetIssuerWalletTransactionRecord.getIdTransaction());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME                      , transactionType.getCode());
+        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_AMOUNT_COLUMN_NAME                    , assetIssuerWalletTransactionRecord.getAmount());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME                      , assetIssuerWalletTransactionRecord.getMemo());
+        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME                , assetIssuerWalletTransactionRecord.getTimestamp());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TRANSACTION_HASH_COLUMN_NAME          , assetIssuerWalletTransactionRecord.getDigitalAssetMetadataHash());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_FROM_COLUMN_NAME              , assetIssuerWalletTransactionRecord.getAddressFrom().getAddress());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_TO_COLUMN_NAME                , assetIssuerWalletTransactionRecord.getAddressTo().getAddress());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME              , balanceType.getCode());
+        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME , availableRunningBalance);
+        record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_BOOK_BALANCE_COLUMN_NAME      , bookRunningBalance);
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_COLUMN_NAME                , assetIssuerWalletTransactionRecord.getActorFromPublicKey());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_COLUMN_NAME                  , assetIssuerWalletTransactionRecord.getActorToPublicKey());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_TYPE_COLUMN_NAME           , assetIssuerWalletTransactionRecord.getActorFromType().getCode());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_TYPE_COLUMN_NAME             , assetIssuerWalletTransactionRecord.getActorToType().getCode());
         return record;
     }
 
@@ -344,9 +344,9 @@ public class AssetIssuerWalletDao {
 
     private boolean isTransactionInTable(final UUID transactionId, final TransactionType transactionType, final BalanceType balanceType) throws CantLoadTableToMemoryException {
         DatabaseTable assetIssuerWalletTable = getAssetIssuerWalletTable();
-        assetIssuerWalletTable.setUUIDFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
-        assetIssuerWalletTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
-        assetIssuerWalletTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+        assetIssuerWalletTable.setUUIDFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        assetIssuerWalletTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        assetIssuerWalletTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
         assetIssuerWalletTable.loadToMemory();
         return !assetIssuerWalletTable.getRecords().isEmpty();
     }
@@ -416,7 +416,7 @@ public class AssetIssuerWalletDao {
                 assetIssuerWalletBalance.setName(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME_COLUMN_NAME));
                 assetIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
                 assetIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
-                assetIssuerWalletBalance.setBookBalance(0);
+                assetIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
                 assetIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
                 issuerWalletBalances.add(assetIssuerWalletBalance);
             }
@@ -428,7 +428,7 @@ public class AssetIssuerWalletDao {
                 assetIssuerWalletBalance.setName(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME_COLUMN_NAME));
                 assetIssuerWalletBalance.setDescription(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME));
                 assetIssuerWalletBalance.setAssetPublicKey(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME));
-                assetIssuerWalletBalance.setAvailableBalance(0);
+                assetIssuerWalletBalance.setAvailableBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME));
                 assetIssuerWalletBalance.setBookBalance(record.getLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
                 issuerWalletBalances.add(assetIssuerWalletBalance);
             }

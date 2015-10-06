@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -13,12 +12,12 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.DigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantDeleteDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantDeleteDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.UUID;
 
@@ -26,16 +25,16 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/10/15.
  * This class must be started with the AssetIssuing Plugin
  */
-public class DigitalAssetMetadataVault {
+public class DigitalAssetMetadataVault implements DigitalAssetVault {
 
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
-    private final String LOCAL_STORAGE_PATH="digital-asset-metadata/";
-    private final FileLifeSpan FILE_LIFE_SPAN=FileLifeSpan.PERMANENT;
+    //private final String LOCAL_STORAGE_PATH="digital-asset-metadata/";
+    //private final FileLifeSpan FILE_LIFE_SPAN=FileLifeSpan.PERMANENT;
     AssetIssuerWalletManager assetIssuerWalletManager;
     ErrorManager errorManager;
     //For testing I'm gonna use this type of privacy, change to PRIVATE in production release
-    private final FilePrivacy FILE_PRIVACY=FilePrivacy.PUBLIC;
+    //private final FilePrivacy FILE_PRIVACY=FilePrivacy.PUBLIC;
 
     public DigitalAssetMetadataVault(UUID pluginId, PluginFileSystem pluginFileSystem, ErrorManager errorManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
@@ -43,27 +42,30 @@ public class DigitalAssetMetadataVault {
         setErrorManager(errorManager);
     }
 
-    private void setPluginId(UUID pluginId) throws CantSetObjectException{
+    @Override
+    public void setPluginId(UUID pluginId) throws CantSetObjectException{
         if(pluginId==null){
             throw new CantSetObjectException("pluginId is null");
         }
         this.pluginId=pluginId;
     }
 
-    private void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException{
         if(pluginFileSystem==null){
             throw new CantSetObjectException("pluginFileSystem is null");
         }
         this.pluginFileSystem=pluginFileSystem;
     }
 
-    private void setErrorManager(ErrorManager errorManager) throws CantSetObjectException{
+    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException{
         if(errorManager==null){
             throw new CantSetObjectException("ErrorManager is null");
         }
         this.errorManager=errorManager;
     }
 
+    @Override
     public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata)throws CantCreateDigitalAssetFileException {
         String digitalAssetMetadataFileName="no-file-name-assigned";
         try{
@@ -83,6 +85,7 @@ public class DigitalAssetMetadataVault {
 
     }
 
+    @Override
     public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String genesisTransaction) throws CantGetDigitalAssetFromLocalStorageException {
         String digitalAssetMetadataFileName = "no-file-name-assigned";
         try {
@@ -102,6 +105,7 @@ public class DigitalAssetMetadataVault {
 
     }
 
+    @Override
     public void deleteDigitalAssetMetadataFromLocalStorage(String genesisTransaction) throws CantDeleteDigitalAssetFromLocalStorageException {
         String digitalAssetMetadataFileName = "no-file-name-assigned";
         try{
@@ -127,17 +131,15 @@ public class DigitalAssetMetadataVault {
                     break;
                 case "AVAI":
                     //TODO: deliver to available credit
-                    deleteDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                     break;
                 default:
                     throw new CantDeliverDigitalAssetToAssetWalletException("Incorrect AssetBalanceType");
             }
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
-        } catch (CantDeleteDigitalAssetFromLocalStorageException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
+
     public void setAssetIssuerWalletManager(AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {
         if(assetIssuerWalletManager==null){
             throw new CantSetObjectException("assetIssuerWalletManager is null");
