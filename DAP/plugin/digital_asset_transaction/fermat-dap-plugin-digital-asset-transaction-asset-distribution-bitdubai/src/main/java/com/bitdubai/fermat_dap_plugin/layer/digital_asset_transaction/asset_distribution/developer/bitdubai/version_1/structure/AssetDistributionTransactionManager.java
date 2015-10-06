@@ -25,6 +25,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
+    DigitalAssetTransmissionVault digitalAssetTransmissionVault;
 
     public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager,
                                                ErrorManager errorManager,
@@ -40,6 +41,10 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
                 pluginId,
                 pluginDatabaseSystem,
                 pluginFileSystem);
+    }
+
+    public void setDigitalAssetTransmissionVault(DigitalAssetTransmissionVault digitalAssetTransmissionVault) throws CantSetObjectException{
+        this.digitalAssetDistributor.setDigitalAssetTransmissionVault(digitalAssetTransmissionVault);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{

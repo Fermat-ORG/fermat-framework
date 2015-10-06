@@ -10,6 +10,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
@@ -23,6 +26,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +65,11 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
      * DealsWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
 
     /**
      * Represent the incomingMessageDao
@@ -104,12 +115,13 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
      * @param incomingMessageDao instance
      * @param outgoingMessageDao instance
      */
-    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
         this.eccKeyPair                          = eccKeyPair;
         this.remoteNetworkServicePublicKey       = remoteNetworkServicePublicKey;
         this.errorManager                        = errorManager;
+        this.eventManager                        = eventManager;
         this.running                             = Boolean.FALSE;
         this.incomingMessageDao                  = incomingMessageDao;
         this.outgoingMessageDao                  = outgoingMessageDao;
@@ -176,7 +188,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         toSend.interrupt();
 
         //Disconnect from the service
-        //serviceToServiceOnlineConnection.disconnect();
+        communicationsVPNConnection.close();
     }
 
     /**
@@ -302,6 +314,15 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                              */
                             ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                             outgoingMessageDao.update(message);
+
+
+                            /*
+                             * Put the message on a event and fire new event
+                             */
+                            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+                            fermatEvent.setSource(TemplateNetworkServicePluginRoot.EVENT_SOURCE);
+                            ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(message);
+                            eventManager.raiseEvent(fermatEvent);
                         }
                     }
 

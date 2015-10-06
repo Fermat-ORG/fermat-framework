@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -27,6 +28,8 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interf
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.database.CryptoPaymentRequestDao;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestStateException;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteCryptoPaymentRequestPendingEventActionsException;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteUnfinishedActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestRegistryException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -78,14 +81,15 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     }
 
     @Override
-    public void generateCryptoPaymentRequest(String        walletPublicKey  ,
-                                             String        identityPublicKey,
-                                             Actors        identityType     ,
-                                             String        actorPublicKey   ,
-                                             Actors        actorType        ,
-                                             CryptoAddress cryptoAddress    ,
-                                             String        description      ,
-                                             long          amount           ) throws CantGenerateCryptoPaymentRequestException {
+    public void generateCryptoPaymentRequest(String                walletPublicKey  ,
+                                             String                identityPublicKey,
+                                             Actors                identityType     ,
+                                             String                actorPublicKey   ,
+                                             Actors                actorType        ,
+                                             CryptoAddress         cryptoAddress    ,
+                                             String                description      ,
+                                             long                  amount           ,
+                                             BlockchainNetworkType networkType      ) throws CantGenerateCryptoPaymentRequestException {
 
 
 
@@ -109,6 +113,24 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
             // save the record in database
 
             cryptoPaymentRequestDao.generateCryptoPaymentRequest(
+                    requestId,
+                    walletPublicKey,
+                    identityPublicKey,
+                    identityType,
+                    actorPublicKey,
+                    actorType,
+                    cryptoAddress,
+                    description,
+                    amount,
+                    startTimeStamp,
+                    type,
+                    state,
+                    networkType
+            );
+
+            // if i can save it, i send it to the network service.
+
+            fromNotSentYetToPendingResponse(
                     requestId        ,
                     walletPublicKey  ,
                     identityPublicKey,
@@ -118,27 +140,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     cryptoAddress    ,
                     description      ,
                     amount           ,
-                    startTimeStamp   ,
-                    type             ,
-                    state
-            );
-
-            // if i can save it, i send it to the network service.
-
-            cryptoPaymentRequestManager.sendCryptoPaymentRequest(
-                    walletPublicKey,
-                    identityPublicKey,
-                    cryptoAddress,
-                    actorPublicKey,
-                    description,
-                    amount
-            );
-
-            // change the state to pending response
-
-            cryptoPaymentRequestDao.changeState(
-                    requestId,
-                    CryptoPaymentState.PENDING_RESPONSE
+                    networkType
             );
 
         } catch(CantGenerateCryptoPaymentRequestException e) {
@@ -158,6 +160,41 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
             reportUnexpectedException(e);
             throw new CantGenerateCryptoPaymentRequestException(e, "", "Unhandled Exception.");
         }
+    }
+
+    private void fromNotSentYetToPendingResponse(UUID                  requestId        ,
+                                                 String                walletPublicKey  ,
+                                                 String                identityPublicKey,
+                                                 Actors                identityType     ,
+                                                 String                actorPublicKey   ,
+                                                 Actors                actorType        ,
+                                                 CryptoAddress         cryptoAddress    ,
+                                                 String                description      ,
+                                                 long                  amount           ,
+                                                 BlockchainNetworkType networkType      ) throws CantSendRequestException                     ,
+                                                                                                 CantChangeCryptoPaymentRequestStateException ,
+                                                                                                 CryptoPaymentRequestNotFoundException        {
+
+        // if i can save it, i send it to the network service.
+
+        cryptoPaymentRequestManager.sendCryptoPaymentRequest(
+                walletPublicKey,
+                identityPublicKey,
+                identityType,
+                actorPublicKey,
+                actorType,
+                cryptoAddress,
+                description,
+                amount,
+                networkType
+        );
+
+        // change the state to pending response
+
+        cryptoPaymentRequestDao.changeState(
+                requestId,
+                CryptoPaymentState.PENDING_RESPONSE
+        );
     }
 
     @Override
@@ -372,7 +409,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             return cryptoPaymentRequestDao.listCryptoPaymentRequests(
                     walletPublicKey,
-                    max            ,
+                    max,
                     offset
             );
 
@@ -397,8 +434,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             return cryptoPaymentRequestDao.listCryptoPaymentRequestsByState(
                     walletPublicKey,
-                    state          ,
-                    max            ,
+                    state,
+                    max,
                     offset
             );
 
@@ -423,8 +460,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             return cryptoPaymentRequestDao.listCryptoPaymentRequestsByType(
                     walletPublicKey,
-                    type           ,
-                    max            ,
+                    type,
+                    max,
                     offset
             );
 
@@ -451,9 +488,9 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             return cryptoPaymentRequestDao.listCryptoPaymentRequestsByStateAndType(
                     walletPublicKey,
-                    state          ,
-                    type           ,
-                    max            ,
+                    state,
+                    type,
+                    max,
                     offset
             );
 
@@ -466,6 +503,82 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
             reportUnexpectedException(e);
             throw new CantListCryptoPaymentRequestsException(e, "", "Unhandled Exception.");
         }
+    }
+
+    public void executeUnfinishedActions() throws CantExecuteUnfinishedActionsException {
+
+        String  errorString   = ""   ;
+        boolean errorHandlingEvents = false;
+
+        try {
+            List<CryptoPayment> cryptoPaymentList = cryptoPaymentRequestDao.listUnfinishedActions();
+
+            for(CryptoPayment cryptoPayment : cryptoPaymentList) {
+
+                switch (cryptoPayment.getState()) {
+                    case NOT_SENT_YET:
+
+                        try {
+
+                            fromNotSentYetToPendingResponse(
+                                    cryptoPayment.getRequestId(),
+                                    cryptoPayment.getWalletPublicKey(),
+                                    cryptoPayment.getIdentityPublicKey(),
+                                    cryptoPayment.getIdentityType(),
+                                    cryptoPayment.getActorPublicKey(),
+                                    cryptoPayment.getActorType(),
+                                    cryptoPayment.getCryptoAddress(),
+                                    cryptoPayment.getDescription(),
+                                    cryptoPayment.getAmount(),
+                                    cryptoPayment.getNetworkType()
+                            );
+
+                        } catch(CantSendRequestException                     |
+                                CantChangeCryptoPaymentRequestStateException |
+                                CryptoPaymentRequestNotFoundException        e) {
+
+                            errorHandlingEvents = true;
+                            errorString += cryptoPayment.getState()+" ERROR for REQUEST ID "+ cryptoPayment.getRequestId() + "\n"+e.getMessage()+"\n";
+                        }
+                    case IN_APPROVING_PROCESS:
+                        try {
+
+                            fromInApprovingProcessToPaymentProcessStarted(cryptoPayment.getRequestId(), cryptoPayment);
+
+                        } catch(InsufficientFundsException                   |
+                                CantChangeCryptoPaymentRequestStateException |
+                                CantApproveCryptoPaymentRequestException     |
+                                CryptoPaymentRequestNotFoundException        e) {
+
+                            errorHandlingEvents = true;
+                            errorString += cryptoPayment.getState()+" ERROR for REQUEST ID "+ cryptoPayment.getRequestId() + "\n"+e.getMessage()+"\n";
+                        }
+                        break;
+                    case PAYMENT_PROCESS_STARTED:
+                        try {
+
+                            fromPaymentProcessStartedToApproved(cryptoPayment.getRequestId());
+
+                        } catch(CantInformApprovalException                  |
+                                CantChangeCryptoPaymentRequestStateException |
+                                CantApproveCryptoPaymentRequestException     |
+                                CryptoPaymentRequestNotFoundException        e) {
+
+                            errorHandlingEvents = true;
+                            errorString += cryptoPayment.getState()+" ERROR for REQUEST ID "+ cryptoPayment.getRequestId() + "\n"+e.getMessage()+"\n";
+                        }
+                        break;
+
+                }
+            }
+
+        } catch(CantListCryptoPaymentRequestsException e){
+
+            throw new CantExecuteUnfinishedActionsException(e, "", "Error trying to get unfinished actions.");
+        }
+
+        if(errorHandlingEvents)
+            throw new CantExecuteUnfinishedActionsException(errorString, "Error trying to execute a pending action.");
     }
 
     private void reportUnexpectedException(Exception e) {

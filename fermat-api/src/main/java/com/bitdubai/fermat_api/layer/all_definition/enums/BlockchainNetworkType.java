@@ -24,13 +24,13 @@ public enum BlockchainNetworkType {
 
         switch (code) {
             case "PRD":
-                return BlockchainNetworkType.PRODUCTION;
+                return PRODUCTION;
             case "TEST":
-                return BlockchainNetworkType.TEST;
+                return TEST;
             case "RTEST":
-                return BlockchainNetworkType.REG_TEST;
+                return REG_TEST;
             default:
-                return BlockchainNetworkType.DEFAULT;
+                return DEFAULT;
         }
     }
 }

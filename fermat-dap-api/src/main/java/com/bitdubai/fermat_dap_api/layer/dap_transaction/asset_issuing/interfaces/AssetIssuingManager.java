@@ -31,7 +31,7 @@ public interface AssetIssuingManager /*extends TransactionProtocolManager<Crypto
      * @param genesisTransaction is a DigitalAssetMetadata parameter.
      * @throws CantConfirmTransactionException
      */
-    void confirmReception(String genesisTransaction)throws CantConfirmTransactionException;
+    void confirmReception(String  genesisTransaction)throws CantConfirmTransactionException;
     /*void setActors(String deliveredByActorPublicKey,
                         Actors deliveredByType,
                         String deliveredToActorPublicKey,

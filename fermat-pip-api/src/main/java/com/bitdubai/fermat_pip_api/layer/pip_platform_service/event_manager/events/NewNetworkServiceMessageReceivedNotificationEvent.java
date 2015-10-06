@@ -9,7 +9,7 @@ package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.eve
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events.NewNetworkServiceMessageReceivedEvent</code> represent the event
+ * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedNotificationEvent</code> represent the event
  * when a new Network Service Message is received
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 26/06/15.
@@ -17,7 +17,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NewNetworkServiceMessageReceivedEvent extends AbstractFermatEvent {
+public class NewNetworkServiceMessageReceivedNotificationEvent extends AbstractFermatEvent {
 
     /**
      *  Represent the data
@@ -29,10 +29,9 @@ public class NewNetworkServiceMessageReceivedEvent extends AbstractFermatEvent {
      *
      * @param eventType type of the event
      */
-    public NewNetworkServiceMessageReceivedEvent(EventType eventType){
+    public NewNetworkServiceMessageReceivedNotificationEvent(EventType eventType){
         super(eventType);
     }
-
 
     /**
      * Return the data object that contains message received
