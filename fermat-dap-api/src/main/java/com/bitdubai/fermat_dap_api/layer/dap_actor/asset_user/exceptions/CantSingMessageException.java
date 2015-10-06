@@ -12,4 +12,5 @@ public class CantSingMessageException extends DAPException {
     public CantSingMessageException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
 }
