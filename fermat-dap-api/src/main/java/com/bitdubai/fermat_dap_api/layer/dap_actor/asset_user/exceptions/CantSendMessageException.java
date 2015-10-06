@@ -10,6 +10,7 @@ public class CantSendMessageException extends DAPException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T SEND MESSAGE";
 
+
     public CantSendMessageException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }

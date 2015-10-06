@@ -8,4 +8,5 @@ public interface DealsWithActorAssetUser {
 
     public void setAssetUserActorNetworkServiceManager(ActorAssetUserManager actorAssetUserManager);
 
+
 }

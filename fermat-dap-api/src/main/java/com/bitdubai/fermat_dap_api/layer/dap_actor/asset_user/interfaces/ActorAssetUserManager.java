@@ -15,6 +15,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantSen
  */
 public interface ActorAssetUserManager {
 
+
     public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
 
     public void requestListActorAssetUserRegistered()  throws CantRequestListActorAssetUserRegisteredException;

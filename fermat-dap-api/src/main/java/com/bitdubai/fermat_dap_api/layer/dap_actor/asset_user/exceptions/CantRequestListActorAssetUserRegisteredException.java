@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
  */
 public class CantRequestListActorAssetUserRegisteredException extends DAPException {
 
+
     public static final String DEFAULT_MESSAGE = "CAN'T REQUEST LIST ACTOR ASSET USER REGISTERED";
 
 

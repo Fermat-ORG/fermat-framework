@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
  */
 public interface ActorAssetUser {
 
+
     /**
      * The metho <code>getPublicKey</code> gives us the public key of the represented intra user
      *

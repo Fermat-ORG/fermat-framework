@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
  */
 public class CantRegisterActorAssetUserException extends DAPException {
 
+
     public static final String DEFAULT_MESSAGE = "CAN'T REGISTER NEW USER";
 
     public CantRegisterActorAssetUserException(final String message, final Exception cause, final String context, final String possibleReason) {
