@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
@@ -396,6 +397,18 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         }
     }
 
+    public void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException
+    {
+        try {
+            if (assetFactory.getState().getCode() != State.DRAFT.getCode())
+                throw new CantDeleteAsserFactoryException(null, "Error delete Asset FAcotry", "Asset Factory in DRAFT");
+            else
+                getAssetFactoryMiddlewareDao().removeAssetFactory(assetFactory);
+        }catch (Exception exception){
+            throw new CantDeleteAsserFactoryException(exception, "Error delete Asset FAcotry", "Asset Factory - Delete");
+        }
+    }
+
     public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException
     {
         try {
@@ -435,13 +448,14 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
                 aseetIssuerIdentity = (AssetIssuerIdentity)assetFactory.getIdentyAssetIssuer();
                 digitalAsset.setIdentityAssetIssuer(aseetIssuerIdentity);
                 digitalAsset.setResources(assetFactory.getResources());
+                //TODO: La transaccion es que quien debe marcar los estados del AssetFactory llamando al metodo markAssetFactoryState()
                 //Actualiza el State a Pending_Final del objeto assetFactory
-                assetFactory.setState(State.PENDING_FINAL);
-                saveAssetFactory(assetFactory);
+                //assetFactory.setState(State.PENDING_FINAL);
+                //saveAssetFactory(assetFactory);
                 //Llama al metodo AssetIssuer de la transaction
                 assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), blockchainNetworkType);
-                assetFactory.setState(State.FINAL);
-                saveAssetFactory(assetFactory);
+                //assetFactory.setState(State.FINAL);
+                //saveAssetFactory(assetFactory);
             }
             else
             {
@@ -452,10 +466,10 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: issueAssets");
         }
-        catch (CantSaveAssetFactoryException exception)
-        {
-            throw new CantSaveAssetFactoryException(exception, "Cant Save Asset Factory", "Method: publishAsset");
-        }
+//        catch (CantSaveAssetFactoryException exception)
+//        {
+//            throw new CantSaveAssetFactoryException(exception, "Cant Save Asset Factory", "Method: publishAsset");
+//        }
         catch (Exception e){
             e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: publishAsset");
