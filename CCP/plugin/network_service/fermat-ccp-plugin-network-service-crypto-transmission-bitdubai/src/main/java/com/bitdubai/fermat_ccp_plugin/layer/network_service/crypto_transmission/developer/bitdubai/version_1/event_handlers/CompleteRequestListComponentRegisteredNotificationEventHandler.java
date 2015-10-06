@@ -62,7 +62,7 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
 
 
             if (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT &&
-                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceType() == NetworkServiceType.NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE){
+                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceType() == NetworkServiceType.CRYPTO_TRANSMISSION){
 
                  /*
                  *  TemplateManager make the job
