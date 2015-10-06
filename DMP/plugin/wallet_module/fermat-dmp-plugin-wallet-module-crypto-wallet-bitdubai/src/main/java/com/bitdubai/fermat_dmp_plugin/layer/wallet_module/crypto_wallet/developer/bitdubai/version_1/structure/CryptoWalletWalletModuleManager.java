@@ -820,6 +820,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
                 }
             case INTRA_USER:
                 try {
+                    //TODO Harcoder en el metodo porque no esta creado el actor para la wallet
                     actor = intraUserManager.getActorByPublicKey(actorPublicKey);
                     return actor;
                 } catch (CantGetIntraUserException | IntraUserNotFoundException e) {
