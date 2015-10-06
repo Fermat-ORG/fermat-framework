@@ -20,4 +20,8 @@ public class RequestNotFoundException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public RequestNotFoundException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
 }
