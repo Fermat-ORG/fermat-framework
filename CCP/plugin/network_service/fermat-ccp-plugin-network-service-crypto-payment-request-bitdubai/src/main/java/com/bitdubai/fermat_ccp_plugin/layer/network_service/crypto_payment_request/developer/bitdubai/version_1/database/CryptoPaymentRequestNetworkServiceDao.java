@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantGetRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestProtocolStateException;
@@ -82,9 +83,41 @@ public class CryptoPaymentRequestNetworkServiceDao {
         }
     }
 
+    public CryptoPaymentRequest getRequestById(UUID requestId) throws CantGetRequestException  ,
+                                                                      RequestNotFoundException {
+
+        if (requestId == null)
+            throw new CantGetRequestException("", "requestId, can not be null");
+
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.setUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return buildCryptoPaymentRequestRecord(records.get(0));
+            else
+                throw new RequestNotFoundException(null, "RequestID: "+requestId, "Can not find an crypto payment request with the given request id.");
+
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+
+            throw new CantGetRequestException(exception, "", "Check the cause."                                                                                );
+        }
+    }
+
     public void changeProtocolState(UUID                 requestId    ,
                                     RequestProtocolState protocolState) throws CantChangeCryptoPaymentRequestProtocolStateException,
-                                                                       RequestNotFoundException                            {
+                                                                               RequestNotFoundException                            {
 
         if (requestId == null)
             throw new CantChangeCryptoPaymentRequestProtocolStateException("requestId null "   , "The requestId is required, can not be null"    );
@@ -142,7 +175,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
         return record;
     }
 
-    private CryptoPaymentRequest buildAddressExchangeRequestRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private CryptoPaymentRequest buildCryptoPaymentRequestRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   requestId            = record.getUUIDValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME         );
         String identityPublicKey    = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
