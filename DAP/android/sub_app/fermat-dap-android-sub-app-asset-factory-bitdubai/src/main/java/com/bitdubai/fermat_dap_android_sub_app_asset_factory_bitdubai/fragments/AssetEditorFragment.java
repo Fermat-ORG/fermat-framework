@@ -26,6 +26,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.Ass
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -121,6 +122,18 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         expirationView = (FermatEditText) rootView.findViewById(R.id.expiration_date);
         isRedeemableView = (FermatCheckBox) rootView.findViewById(R.id.isRedeemable);
 
+        nameView.setText(isEdit ? asset.getName() != null ? asset.getName() : "" : "");
+        descriptionView.setText(isEdit ? asset.getDescription() != null ? asset.getDescription() : "" : "");
+        quantityView.setText(isEdit ? String.valueOf(asset.getQuantity()) : "");
+        bitcoinsView.setText(isEdit ? String.valueOf(asset.getAmount()) : "");
+        if (isEdit && asset.getExpirationDate() != null) {
+            DateFormat format = DateFormat.getDateInstance();
+            Date date = new Date(asset.getExpirationDate().getTime());
+            expirationView.setText(format.format(date));
+        }
+        if (isEdit)
+            isRedeemableView.setChecked(asset.getIsRedeemable());
+
         return rootView;
     }
 
@@ -193,7 +206,8 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         asset.setResources(null);
         if (!expirationView.getText().toString().trim().isEmpty()) {
             try {
-                @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("mm/yyy/dd h:m:s");
+                @SuppressLint("SimpleDateFormat")
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 asset.setExpirationDate(new java.sql.Timestamp(format.parse(expirationView.getText().toString().trim()).getTime()));
                 long now = new Date().getTime();
                 asset.setCreationTimestamp(new java.sql.Timestamp(now));
