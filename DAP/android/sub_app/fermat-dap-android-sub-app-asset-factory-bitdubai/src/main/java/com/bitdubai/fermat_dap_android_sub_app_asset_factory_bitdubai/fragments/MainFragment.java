@@ -217,6 +217,7 @@ public class MainFragment extends FermatFragment implements
                             ex.printStackTrace();
                         }
                     });
+                    worker.execute();
                 }
             } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
                 cantPublishAssetFactoy.printStackTrace();
