@@ -11,10 +11,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
  */
 public interface AssetTransmissionNetworkServiceManager {
 
+
     public void requestListAssetTransmissionNetworkService(PlatformComponentProfile actorAssetUser) throws CantRequestListAssetTransmissionNetworkServiceException;
 
     public void connectTo(PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantConnectToAssetTransmissionNetworkServiceException;
 
     public void sendDigitalAssetMetadata(DigitalAssetMetadata toSend, PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantSendDigitalAssetMetadataException;
+
 
 }

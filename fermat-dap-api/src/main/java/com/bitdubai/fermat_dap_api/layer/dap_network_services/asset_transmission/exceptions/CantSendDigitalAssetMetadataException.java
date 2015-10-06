@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
 public class CantSendDigitalAssetMetadataException  extends DAPException {
 
 
+
     public static final String DEFAULT_MESSAGE = "CAN'T SEND DIGITAL ASSET METADATA";
 
     public CantSendDigitalAssetMetadataException(final String message, final Exception cause, final String context, final String possibleReason) {

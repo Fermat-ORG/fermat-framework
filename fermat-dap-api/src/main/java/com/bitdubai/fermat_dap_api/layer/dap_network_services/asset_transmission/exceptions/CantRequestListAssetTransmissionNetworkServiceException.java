@@ -29,4 +29,5 @@ public class CantRequestListAssetTransmissionNetworkServiceException  extends DA
     public CantRequestListAssetTransmissionNetworkServiceException() {
         this(DEFAULT_MESSAGE);
     }
+
 }

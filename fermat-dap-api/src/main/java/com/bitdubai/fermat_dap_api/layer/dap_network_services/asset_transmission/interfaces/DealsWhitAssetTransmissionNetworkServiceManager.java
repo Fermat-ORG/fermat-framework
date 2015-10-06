@@ -6,4 +6,5 @@ package com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmissio
 public interface DealsWhitAssetTransmissionNetworkServiceManager {
 
     public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager);
+
 }
