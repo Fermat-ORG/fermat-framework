@@ -39,11 +39,13 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.CommunicationLayerNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.CommunicationLayerNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.CommunicationLayerNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CryptoPaymentRequestNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.RegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantDeleteRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
@@ -118,6 +120,11 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     private CryptoPaymentRequestNetworkServiceConnectionManager cryptoPaymentRequestNetworkServiceConnectionManager;
 
     /**
+     *   Represent the templateNetworkServiceDeveloperDatabaseFactory
+     */
+    private CommunicationLayerNetworkServiceDeveloperDatabaseFactory communicationLayerNetworkServiceDeveloperDatabaseFactory;
+
+    /**
      * Represent the platformComponentProfile
      */
     private PlatformComponentProfile platformComponentProfile;
@@ -137,6 +144,10 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      */
     private boolean register;
 
+    /**
+     * Represent the registrationProcessNetworkServiceAgent
+     */
+    private RegistrationProcessNetworkServiceAgent registrationProcessNetworkServiceAgent;
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
@@ -316,12 +327,51 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
          */
         validateInjectedResources();
 
-        // adding communication network service common events listeners
-        addCryptoPaymentRequestListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION           , new CompleteComponentRegistrationNotificationEventHandler(this));
-        addCryptoPaymentRequestListener(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION, new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
-        addCryptoPaymentRequestListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION     , new CompleteComponentConnectionRequestNotificationEventHandler(this));
+        try {
 
-        this.serviceStatus = ServiceStatus.STARTED;
+            /*
+             * Create a new key pair for this execution
+             */
+            identity = new ECCKeyPair();
+
+            /*
+             * Initialize the data base
+             */
+            initializeCommunicationDb();
+
+            /*
+             * Verify if the communication cloud client is active
+             */
+            if (!wsCommunicationsCloudClientManager.isDisable()){
+
+                /*
+                 * Initialize the agent and start
+                 */
+                registrationProcessNetworkServiceAgent = new RegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                registrationProcessNetworkServiceAgent.start();
+            }
+
+            // adding communication network service common events listeners
+            addCryptoPaymentRequestListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION           , new CompleteComponentRegistrationNotificationEventHandler(this));
+            addCryptoPaymentRequestListener(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION, new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
+            addCryptoPaymentRequestListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION     , new CompleteComponentConnectionRequestNotificationEventHandler(this));
+
+            this.serviceStatus = ServiceStatus.STARTED;
+
+        } catch (CantInitializeNetworkServiceDatabaseException exception) {
+
+            String context =
+                        "Plugin ID:     " + pluginId + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                        "Database Name: " + CommunicationLayerNetworkServiceDatabaseConstants.DATA_BASE_NAME;
+
+            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+        }
+
+
     }
 
     private void addCryptoPaymentRequestListener(final FermatEventEnum fermatEventEnum,
@@ -552,22 +602,58 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered){
 
+        System.out.println(" CryptoPaymentRequestNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+
+        /*
+         * If the component registered have my profile and my identity public key
+         */
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_PAYMENT_REQUEST &&
+                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
+
+            /*
+             * Mark as register
+             */
+            this.register = Boolean.TRUE;
+            System.out.println("Estoy re registrado.");
+        }
     }
 
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(final List<PlatformComponentProfile> platformComponentProfileRegisteredList){
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(final List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
         System.out.println(" CryptoPaymentRequestNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
+        /*
+         * save into the cache
+         */
+        remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+
     }
 
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile){
+    public void handleCompleteComponentConnectionRequestNotificationEvent(final PlatformComponentProfile remoteComponentProfile) {
 
+
+        System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+
+        /*
+         * Tell the manager to handler the new connection stablished
+         */
+         cryptoPaymentRequestNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+
+
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+
+            /**
+             * what to do here?
+             */
+
+        }
     }
 
     private void reportUnexpectedException(final Exception e) {

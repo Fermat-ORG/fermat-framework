@@ -54,6 +54,7 @@ public enum PlatformLayers {
     BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI),
 
     // Init CCP Layers
+    BITDUBAI_CCP_ACTOR_LAYER          ("BCCPACL", Developers.BITDUBAI),
     BITDUBAI_CCP_IDENTITY_LAYER       ("BCCPIDL", Developers.BITDUBAI),
     BITDUBAI_CCP_MIDDLEWARE_LAYER     ("BCCPMIL", Developers.BITDUBAI),
     BITDUBAI_CCP_NETWORK_SERVICE_LAYER("BCCPNSL", Developers.BITDUBAI),
@@ -187,6 +188,7 @@ public enum PlatformLayers {
                 return BITDUBAI_ENGINE_LAYER;
 
             // Init CCP Layers
+            case "BCCPACL":  return BITDUBAI_CCP_ACTOR_LAYER;
             case "BCCPIDL":  return BITDUBAI_CCP_IDENTITY_LAYER;
             case "BCCPNSL":  return BITDUBAI_CCP_NETWORK_SERVICE_LAYER;
             case "BCCPMIL":  return BITDUBAI_CCP_MIDDLEWARE_LAYER;
