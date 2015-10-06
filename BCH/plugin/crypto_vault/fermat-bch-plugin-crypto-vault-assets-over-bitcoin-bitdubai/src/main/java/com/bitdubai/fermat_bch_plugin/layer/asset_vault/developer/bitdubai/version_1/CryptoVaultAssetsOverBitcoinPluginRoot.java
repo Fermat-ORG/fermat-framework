@@ -24,7 +24,14 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 import java.util.UUID;
 
 /**
- * Created by rodrigo on 8/31/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot</code>
+ * is the root plugin of the Assets over bitcoin Crypto Vault.
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager, DealsWithBitcoinNetwork, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
@@ -90,13 +97,15 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
          * or loaded if it exists from before.
          * 2) The AssetCryptoVaultManager will create a Master key (m) with that seed and will create key hierarchies (VaultKeyHierarchy)
          * with the VaultKeyHierarchyGenerator in a separate thread to reduce start time of the platform.
-         * 3) for all the accounts that I have configued on this device (Account zero is the vault, but I may have many redeem points) I generate keys
+         * 3) for all the accounts that I have configured on this device (Account zero is the vault, but I may have many redeem points) I generate keys
          * for each of them
-         * 4) I pass the entire set of keys to the bitcoin network so we start lintening the network with those keys.
+         * 4) I pass the entire set of keys to the bitcoin network so we start listening the network with those keys.
+         * 5) An Agent (VaultKeyhierarchyMaintainer) will monitor the usage of keys to generate new ones when needed.
          */
         try{
             // the DeviceUserLogged
             String deviceUserLoggedPublicKey = deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+
             assetCryptoVaultManager= new AssetCryptoVaultManager(this.pluginId,
                     pluginFileSystem,
                     pluginDatabaseSystem,
