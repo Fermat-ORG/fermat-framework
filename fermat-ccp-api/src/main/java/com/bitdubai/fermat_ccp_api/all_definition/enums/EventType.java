@@ -40,6 +40,9 @@ public enum EventType implements FermatEventEnum {
     CRYPTO_PAYMENT_DENIED   ("CRYPADE") {
         public FermatEvent getNewEvent() { return new CryptoPaymentRequestDeniedEvent(this); }
     },
+    CRYPTO_PAYMENT_RECEIVED ("CRYPARV") {
+        public FermatEvent getNewEvent() { return new CryptoPaymentRequestRefusedEvent(this); }
+    },
     CRYPTO_PAYMENT_REFUSED  ("CRYPARE") {
         public FermatEvent getNewEvent() { return new CryptoPaymentRequestRefusedEvent(this); }
     };
@@ -65,6 +68,7 @@ public enum EventType implements FermatEventEnum {
             case "CRYAREQ": return CRYPTO_ADDRESS_REQUESTED;
             case "CRYPAAP": return CRYPTO_PAYMENT_APPROVED ;
             case "CRYPADE": return CRYPTO_PAYMENT_DENIED   ;
+            case "CRYPARV": return CRYPTO_ADDRESS_RECEIVED ;
             case "CRYPARE": return CRYPTO_PAYMENT_REFUSED  ;
 
             default:
@@ -72,7 +76,7 @@ public enum EventType implements FermatEventEnum {
                         InvalidParameterException.DEFAULT_MESSAGE,
                         null,
                         "Code Received: " + code,
-                        "This code isn't valid for the EventType Enum"
+                        "This code isn't valid for the CCP EventType Enum"
                 );
 
         }

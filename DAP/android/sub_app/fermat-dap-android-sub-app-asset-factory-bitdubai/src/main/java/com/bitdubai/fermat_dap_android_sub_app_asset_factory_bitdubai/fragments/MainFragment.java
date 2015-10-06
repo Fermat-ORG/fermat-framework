@@ -35,7 +35,8 @@ import java.util.List;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class MainFragment extends FermatFragment implements FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener {
+public class MainFragment extends FermatFragment implements
+        FermatWorkerCallBack, SwipeRefreshLayout.OnRefreshListener {
 
     /**
      * asset to edit
