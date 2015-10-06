@@ -397,9 +397,10 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         }
     }
 
-    public void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException
+    public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException
     {
         try {
+            AssetFactory assetFactory = getAssetFactory(publicKey);
             if (assetFactory.getState().getCode() != State.DRAFT.getCode())
                 throw new CantDeleteAsserFactoryException(null, "Error delete Asset FAcotry", "Asset Factory in DRAFT");
             else
@@ -448,14 +449,10 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
                 aseetIssuerIdentity = (AssetIssuerIdentity)assetFactory.getIdentyAssetIssuer();
                 digitalAsset.setIdentityAssetIssuer(aseetIssuerIdentity);
                 digitalAsset.setResources(assetFactory.getResources());
-                //TODO: La transaccion es que quien debe marcar los estados del AssetFactory llamando al metodo markAssetFactoryState()
+                markAssetFactoryState(State.PENDING_FINAL, assetFactory.getPublicKey());
                 //Actualiza el State a Pending_Final del objeto assetFactory
-                //assetFactory.setState(State.PENDING_FINAL);
-                //saveAssetFactory(assetFactory);
                 //Llama al metodo AssetIssuer de la transaction
                 assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), blockchainNetworkType);
-                //assetFactory.setState(State.FINAL);
-                //saveAssetFactory(assetFactory);
             }
             else
             {
