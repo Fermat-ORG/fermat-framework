@@ -67,11 +67,38 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
             manager = ((AssetFactorySession) subAppsSession).getManager();
             errorManager = subAppsSession.getErrorManager();
             if (!isEdit) {
-                asset = manager.newAssetFactoryEmpty();
-                List<InstalledWallet> installedWallets = manager.getInstallWallets();
-                if (installedWallets != null && installedWallets.size() > 0) {
-                    asset.setPublicKey(installedWallets.get(0).getWalletPublicKey());
-                }
+                final ProgressDialog dialog = new ProgressDialog(getActivity());
+                dialog.setTitle("Asset Editor");
+                dialog.setMessage("Creating new empty asset project, please wait...");
+                dialog.setCancelable(false);
+                dialog.show();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        asset = manager.newAssetFactoryEmpty();
+                        List<InstalledWallet> installedWallets = manager.getInstallWallets();
+                        if (installedWallets != null && installedWallets.size() > 0) {
+                            asset.setWalletPublicKey(installedWallets.get(0).getWalletPublicKey());
+                        }
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dialog.dismiss();
+                        // do nothing... continue with the form data
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dialog.dismiss();
+                        Toast.makeText(getActivity(), "Some error occurred while creating a new asset empty project", Toast.LENGTH_SHORT).show();
+                        ex.printStackTrace();
+                    }
+                });
+                worker.execute();
             }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
