@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -9,6 +11,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
@@ -61,7 +65,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
                 throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
 
-                throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(z, "", "Generic Exception.");
+                throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(z, "", "Unhandled Exception.");
             }
 
         } catch (CantOpenDatabaseException e) {
@@ -69,7 +73,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
             throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
 
-            throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(e, "", "Generic Exception.");
+            throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(e, "", "Unhandled Exception.");
         }
     }
 
@@ -77,18 +81,19 @@ public class CryptoPaymentRequestNetworkServiceDao {
                                                     CryptoPaymentRequestNetworkServiceRecord cryptoPaymentRequestRecord) {
 
         record.setUUIDValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME         , cryptoPaymentRequestRecord.getRequestId()                                      );
-        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME  , cryptoPaymentRequestRecord.getWalletPublicKey()                                );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, cryptoPaymentRequestRecord.getIdentityPublicKey()                              );
+        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_TYPE_COLUMN_NAME      , cryptoPaymentRequestRecord.getIdentityType()     .getCode()                    );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME   , cryptoPaymentRequestRecord.getActorPublicKey()                                 );
+        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_TYPE_COLUMN_NAME         , cryptoPaymentRequestRecord.getActorType()        .getCode()                    );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_DESCRIPTION_COLUMN_NAME        , cryptoPaymentRequestRecord.getDescription()                                    );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     , cryptoPaymentRequestRecord.getCryptoAddress()    .getAddress()                 );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    , cryptoPaymentRequestRecord.getCryptoAddress()    .getCryptoCurrency().getCode());
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TYPE_COLUMN_NAME               , cryptoPaymentRequestRecord.getType()             .getCode()                    );
-        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME              , cryptoPaymentRequestRecord.getState()            .getCode()                    );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_PROTOCOL_STATE_COLUMN_NAME     , cryptoPaymentRequestRecord.getProtocolState()    .getCode()                    );
+        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTION_COLUMN_NAME             , cryptoPaymentRequestRecord.getAction()           .getCode()                    );
         record.setLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_AMOUNT_COLUMN_NAME             , cryptoPaymentRequestRecord.getAmount()                                         );
         record.setLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_START_TIME_STAMP_COLUMN_NAME   , cryptoPaymentRequestRecord.getStartTimeStamp()                                 );
-        record.setLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_END_TIME_STAMP_COLUMN_NAME     , cryptoPaymentRequestRecord.getEndTimeStamp()                                   );
+        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_NETWORK_TYPE_COLUMN_NAME       , cryptoPaymentRequestRecord.getNetworkType()      .getCode()                    );
 
         return record;
     }
@@ -96,27 +101,46 @@ public class CryptoPaymentRequestNetworkServiceDao {
     private CryptoPaymentRequest buildAddressExchangeRequestRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   requestId            = record.getUUIDValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME         );
-        String walletPublicKey      = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME  );
         String identityPublicKey    = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        String identityTypeString   = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_TYPE_COLUMN_NAME      );
         String actorPublicKey       = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME   );
+        String actorTypeString      = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_TYPE_COLUMN_NAME         );
         String description          = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_DESCRIPTION_COLUMN_NAME        );
         String cryptoAddressString  = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     );
         String cryptoCurrencyString = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    );
         String typeString           = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TYPE_COLUMN_NAME               );
-        String stateString          = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME              );
+        String actionString         = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTION_COLUMN_NAME             );
         String protocolStateString  = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_PROTOCOL_STATE_COLUMN_NAME     );
+        String networkTypeString    = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_NETWORK_TYPE_COLUMN_NAME       );
 
         long   amount               = record.getLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_AMOUNT_COLUMN_NAME             );
         long   startTimeStamp       = record.getLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_START_TIME_STAMP_COLUMN_NAME   );
-        long   endTimeStamp         = record.getLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_END_TIME_STAMP_COLUMN_NAME     );
 
         CryptoAddress        cryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.getByCode(cryptoCurrencyString));
 
-        CryptoPaymentType    type          = CryptoPaymentType   .getByCode(typeString)         ;
-        CryptoPaymentState   state         = CryptoPaymentState  .getByCode(stateString)        ;
-        RequestProtocolState protocolState = RequestProtocolState.getByCode(protocolStateString);
+        CryptoPaymentRequestType     type          = CryptoPaymentRequestType  .getByCode(typeString)         ;
+        CryptoPaymentRequestAction   action        = CryptoPaymentRequestAction.getByCode(actionString)       ;
+        RequestProtocolState         protocolState = RequestProtocolState      .getByCode(protocolStateString);
+        BlockchainNetworkType        networkType   = BlockchainNetworkType     .getByCode(networkTypeString)  ;
 
-        return null;
+        Actors identityType = Actors.getByCode(identityTypeString);
+        Actors actorType    = Actors.getByCode(actorTypeString   );
+
+        return new CryptoPaymentRequestNetworkServiceRecord(
+                requestId        ,
+                identityPublicKey,
+                identityType     ,
+                actorPublicKey   ,
+                actorType        ,
+                description      ,
+                cryptoAddress    ,
+                amount           ,
+                startTimeStamp   ,
+                type             ,
+                action           ,
+                protocolState    ,
+                networkType
+        );
     }
 
 }

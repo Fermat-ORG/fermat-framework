@@ -52,38 +52,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements DealsWithEr
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /*
-     * DealsWithErrors Interface implementation
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /*
-     * DealsWithEvents Interface implementation
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /*
-     * DealsWithPluginDatabaseSystem Interface implementation
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystemManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystemManager;
-    }
-
-    /**
-     * Plugin Interface implementation.
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    /*
      * Service Interface implementation
      */
     @Override
@@ -114,4 +82,38 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements DealsWithEr
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
+
+
+    /**
+     * DealsWithErrors Interface implementation
+     */
+    @Override
+    public void setErrorManager(final ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithEvents Interface implementation
+     */
+    @Override
+    public void setEventManager(final EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation
+     */
+    @Override
+    public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
+        this.pluginDatabaseSystem = pluginDatabaseSystemManager;
+    }
+
+    /**
+     * Plugin Interface implementation.
+     */
+    @Override
+    public void setId(final UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
 }
