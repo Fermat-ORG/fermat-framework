@@ -12,6 +12,9 @@ public class WalletContact {
 
     public String address;
 
+    public WalletContact() {
+    }
+
     public WalletContact(UUID contactId, String actorPublicKey, String name, String address) {
         this.contactId = contactId;
         this.actorPublicKey = actorPublicKey;
@@ -22,5 +25,22 @@ public class WalletContact {
     @Override
     public String toString() {
         return name;
+    }
+
+
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setContactId(UUID contactId) {
+        this.contactId = contactId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
