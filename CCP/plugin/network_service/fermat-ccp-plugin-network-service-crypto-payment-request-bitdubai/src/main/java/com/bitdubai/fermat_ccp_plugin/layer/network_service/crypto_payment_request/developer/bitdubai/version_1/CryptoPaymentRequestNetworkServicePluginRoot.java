@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -240,9 +241,9 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
     }
 
-    /*
-         * Service Interface implementation
-         */
+    /**
+     * Service Interface implementation
+     */
     @Override
     public void start() {
         this.serviceStatus = ServiceStatus.STARTED;
@@ -272,6 +273,28 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         return this.serviceStatus;
     }
 
+    /**
+     * Handles the events CompleteComponentRegistrationNotification
+     */
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
+
+    }
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     */
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
+
+        System.out.println(" CryptoTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+
+    }
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     */
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
+
+    }
 
     /**
      * DealsWithErrors Interface implementation
