@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestProtocolStateException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantCreateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantDeleteRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestNetworkServiceRecord;
@@ -85,6 +87,49 @@ public class CryptoPaymentRequestNetworkServiceDao {
         }
     }
 
+    public void createCryptoPaymentRequest(UUID                        requestId        ,
+                                           String                      identityPublicKey,
+                                           Actors                      identityType     ,
+                                           String                      actorPublicKey   ,
+                                           Actors                      actorType        ,
+                                           CryptoAddress               cryptoAddress    ,
+                                           String                      description      ,
+                                           long                        amount           ,
+                                           long                        startTimeStamp   ,
+                                           CryptoPaymentRequestType    type             ,
+                                           CryptoPaymentRequestAction  action           ,
+                                           RequestProtocolState        protocolState    ,
+                                           BlockchainNetworkType       networkType      ) throws CantCreateCryptoPaymentRequestException {
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
+
+            CryptoPaymentRequestNetworkServiceRecord cryptoPaymentRequestRecord = new CryptoPaymentRequestNetworkServiceRecord(
+                    requestId        ,
+                    identityPublicKey,
+                    identityType     ,
+                    actorPublicKey   ,
+                    actorType        ,
+                    description      ,
+                    cryptoAddress    ,
+                    amount           ,
+                    startTimeStamp   ,
+                    type             ,
+                    action           ,
+                    protocolState    ,
+                    networkType
+            );
+
+            cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
+
+        } catch (CantInsertRecordException e) {
+
+            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        }
+    }
+
     public CryptoPaymentRequest getRequestById(UUID requestId) throws CantGetRequestException  ,
                                                                       RequestNotFoundException {
 
@@ -117,7 +162,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
         }
     }
 
-    public void deleteCryptoPayment(UUID requestId) throws CantDeleteRequestException,
+    public void deleteRequest(UUID requestId) throws CantDeleteRequestException,
                                                            RequestNotFoundException  {
 
         if (requestId == null)
