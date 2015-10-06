@@ -163,7 +163,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     private RegistrationProcessNetworkServiceAgent registrationProcessNetworkServiceAgent;
 
     /**
-     *  Represent the remoteNetworkServicesRegisteredList
+     *  Represent the getIdentityPublicKey
      */
     private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
