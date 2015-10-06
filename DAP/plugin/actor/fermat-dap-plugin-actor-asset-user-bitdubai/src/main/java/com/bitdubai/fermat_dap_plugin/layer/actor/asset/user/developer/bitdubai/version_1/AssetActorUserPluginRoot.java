@@ -141,8 +141,8 @@ public class AssetActorUserPluginRoot implements DealsWithErrors, DealsWithEvent
         try {
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception e) {
-            // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            // throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
+            // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            // throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
         }
     }
 

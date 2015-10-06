@@ -9,10 +9,10 @@ import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateE
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSetPhotoException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
@@ -30,8 +30,6 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
 
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsSearch;
@@ -99,7 +97,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithCCPIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithIntraUsersActor, DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook {
+public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithCCPIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithCCPIntraWalletUsers, DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook {
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -122,16 +120,16 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
     private ExtraUserManager extraUserManager;
 
     /**
-     * DealsWithIntraUsersActor Interface member variables.
+     * DealsWithCCPIntraWalletUsers Interface member variables.
      */
-    private ActorIntraUserManager intraUserManager;
+    private IntraWalletUserManager intraUserManager;
 
 
     /**
      * DealsWithCCPIntraWalletUser Interface member variables.
      */
 
-    private IntraWalletUserManager intraWalletUserManager;
+    private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager;
 
     /**
      * DealsWithOutgoingExtraUser Interface member variables.
@@ -224,13 +222,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
         try {
             List<CryptoWalletIntraUserActor> intraUserActorList = new ArrayList<>();
 
-            List<ActorIntraUser> intraUserList = intraUserManager.getAllIntraUsers(intraUserSelectedPublicKey, max, offset);
+            List<IntraWalletUser> intraUserList = intraUserManager.getAllIntraWalletUsers(intraUserSelectedPublicKey, max, offset);
 
-            for(ActorIntraUser intraUser : intraUserList)
+            for(IntraWalletUser intraUser : intraUserList)
                 intraUserActorList.add(enrichIntraUser(intraUser, walletPublicKey));
 
             return intraUserActorList;
-        } catch (CantGetIntraUsersException e) {
+        } catch (CantGetIntraWalletUsersException e) {
             throw new CantGetAllIntraUserConnectionsException(CantGetAllIntraUserConnectionsException.DEFAULT_MESSAGE, e, "", "Problem trying yo get actors from Intra-User Actor plugin.");
         } catch (CantEnrichIntraUserException e) {
             throw new CantGetAllIntraUserConnectionsException(CantGetAllIntraUserConnectionsException.DEFAULT_MESSAGE, e, "", "Problem trying to enrich Intra-Users.");
@@ -239,23 +237,23 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
         }
     }
 
-    private CryptoWalletIntraUserActor enrichIntraUser(ActorIntraUser actorIntraUser,
+    private CryptoWalletIntraUserActor enrichIntraUser(IntraWalletUser intraWalletUser,
                                                        String walletPublicKey) throws CantEnrichIntraUserException {
         try {
-            walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(actorIntraUser.getPublicKey(), walletPublicKey);
+            walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(intraWalletUser.getPublicKey(), walletPublicKey);
 
             return new CryptoWalletWalletModuleIntraUserActor(
-                    actorIntraUser.getName(),
+                    intraWalletUser.getName(),
                     true,
-                    actorIntraUser.getProfileImage(),
-                    actorIntraUser.getPublicKey()
+                    intraWalletUser.getProfileImage(),
+                    intraWalletUser.getPublicKey()
             );
         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
             return new CryptoWalletWalletModuleIntraUserActor(
-                    actorIntraUser.getName(),
+                    intraWalletUser.getName(),
                     false,
-                    actorIntraUser.getProfileImage(),
-                    actorIntraUser.getPublicKey()
+                    intraWalletUser.getProfileImage(),
+                    intraWalletUser.getPublicKey()
                     );
         } catch (CantGetWalletContactException e) {
             throw new CantEnrichIntraUserException(CantEnrichIntraUserException.DEFAULT_MESSAGE, e, "", "There was a problem trying to enrich the intra user record.");
@@ -701,7 +699,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
 
             List<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new  ArrayList<CryptoWalletIntraUserIdentity>();
 
-            for (IntraWalletUser  intraWalletUser : this.intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
+            for (com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser intraWalletUser : this.intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
 
                 CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = new CryptoWalletWalletIntraUserIdentity(intraWalletUser.getPublicKey(),intraWalletUser.getAlias(),intraWalletUser.getProfileImage());
 
@@ -853,8 +851,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
     }
 
     @Override
-    public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager) {
-        this.intraUserManager = actorIntraUserManager;
+    public void setIntraWalletUserManager(IntraWalletUserManager intraWalletUserManager) {
+        this.intraUserManager = intraWalletUserManager;
     }
 
     /**
@@ -882,7 +880,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
     }
 
     @Override
-    public void setIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
+    public void setIntraUserManager(com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager) {
         this.intraWalletUserManager = intraWalletUserManager;
     }
 }

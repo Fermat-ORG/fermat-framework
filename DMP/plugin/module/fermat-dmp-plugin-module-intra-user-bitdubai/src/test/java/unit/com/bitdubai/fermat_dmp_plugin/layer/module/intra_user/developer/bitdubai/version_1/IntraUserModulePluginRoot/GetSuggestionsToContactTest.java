@@ -2,7 +2,7 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
@@ -55,7 +55,7 @@ public class GetSuggestionsToContactTest extends TestCase {
      * DealWithActorIntraUserManager Interface member variables.
      */
     @Mock
-    private ActorIntraUserManager mockActorIntraUserManager;
+    private IntraWalletUserManager mockIntraWalletUserManager;
 
 
     /**
@@ -90,7 +90,7 @@ public class GetSuggestionsToContactTest extends TestCase {
         testIntraUserModulePluginRoot = new IntraWalletUserModulePluginRoot();
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
-        testIntraUserModulePluginRoot.setActorIntraUserManager(mockActorIntraUserManager);
+        testIntraUserModulePluginRoot.setIntraWalletUserManager(mockIntraWalletUserManager);
         testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(mockIntraUserNetworkServiceManager);
 
         setUpMockitoRules();
