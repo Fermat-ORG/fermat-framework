@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetuserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUser;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -32,11 +34,19 @@ import java.util.UUID;
 *
 * @version 1.0
 */
-public class AssetUserPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class AssetUserPluginRoot implements AssetuserManager, DealsWithAssetUser, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
+    /**
+     * Represent the AssetuserManager
+     */
+    private AssetuserManager assetuserManager;
+
+
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
      */
@@ -164,5 +174,13 @@ public class AssetUserPluginRoot implements DealsWithErrors, DealsWithEvents, De
         return serviceStatus;
     }
 
+
+
+    @Override
+    public void setAssetUserManager(AssetuserManager assetuserManager) {
+
+        this.assetuserManager=assetuserManager;
+
+    }
 }
 

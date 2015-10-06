@@ -720,6 +720,16 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
         return platformComponentProfile;
     }
 
+    @Override
+    public PlatformComponentType getPlatformComponentType() {
+        return null;
+    }
+
+    @Override
+    public NetworkServiceType getNetworkServiceType() {
+        return null;
+    }
+
     /**
      * Set the PlatformComponentProfile
      *
