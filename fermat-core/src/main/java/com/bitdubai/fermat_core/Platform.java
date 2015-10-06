@@ -972,6 +972,14 @@ public class Platform implements Serializable {
 
 
             /*
+             * Plugin Intra User Actor
+             * -----------------------------
+             */
+            Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
+            injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_INTRA_USER_ACTOR);
+
+
+            /*
              * Plugin Bitcoin Crypto Vault
              * ----------------------------------
              */
@@ -1139,12 +1147,6 @@ public class Platform implements Serializable {
 
 
 
-            /*
-             * Plugin Intra User Actor
-             * -----------------------------
-             */
-            Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
-            injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_INTRA_USER_ACTOR);
 
             /*
              * Plugin Developer Identity

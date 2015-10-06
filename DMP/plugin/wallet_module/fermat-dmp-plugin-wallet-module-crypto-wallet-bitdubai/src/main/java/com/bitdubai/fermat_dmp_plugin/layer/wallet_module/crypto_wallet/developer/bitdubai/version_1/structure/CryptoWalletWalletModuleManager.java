@@ -102,7 +102,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithCCPIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithIntraUsersActor,DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook {
+public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithCCPIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithIntraUsersActor,DealsWithOutgoingExtraUser,DealsWithWalletContacts, DealsWithCryptoAddressBook {
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -816,13 +816,14 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
                     actor = extraUserManager.getActorByPublicKey(actorPublicKey);
                     return actor;
                 } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, null);
+                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Extra User on DataBase");
                 }
             case INTRA_USER:
                 try {
-                   return actor = intraUserManager.getActorByPublicKey(actorPublicKey);
+                    actor = intraUserManager.getActorByPublicKey(actorPublicKey);
+                    return actor;
                 } catch (CantGetIntraUserException | IntraUserNotFoundException e) {
-                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, null);
+                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");
                 }
 
             default:

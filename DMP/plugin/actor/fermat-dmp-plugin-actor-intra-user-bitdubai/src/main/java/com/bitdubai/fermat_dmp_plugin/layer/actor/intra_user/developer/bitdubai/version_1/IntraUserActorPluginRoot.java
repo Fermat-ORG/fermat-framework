@@ -270,6 +270,10 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
 
             ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
 
+            //not found actor
+            if(actor == null)
+                throw new IntraUserNotFoundException("", null, ".","Intra User not found");
+
             return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
 
 
