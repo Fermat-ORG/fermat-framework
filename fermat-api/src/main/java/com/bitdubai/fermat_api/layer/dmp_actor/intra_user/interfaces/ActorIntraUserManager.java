@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCancelIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraWalletUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDisconnectIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
@@ -17,6 +18,16 @@ import java.util.List;
  * defines the methods to administrate the intra users,
  */
 public interface ActorIntraUserManager {
+
+    /**
+     *  The method <code>createNewIntraWalletUser</code> registers a new intra user associated to bitcoin wallet
+     *
+     * @param alias
+     * @param profileImage
+     * @return
+     * @throws CantCreateIntraWalletUserException
+     */
+    Actor createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateIntraWalletUserException;
 
     /**
      * The method <code>askIntraUserForAcceptance</code> registers a new intra user in the list

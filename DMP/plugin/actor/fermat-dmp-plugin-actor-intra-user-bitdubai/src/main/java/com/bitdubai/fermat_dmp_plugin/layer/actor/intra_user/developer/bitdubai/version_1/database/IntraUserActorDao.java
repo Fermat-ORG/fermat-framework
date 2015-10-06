@@ -402,7 +402,7 @@ public class IntraUserActorDao implements Serializable{
 
 
             // 2) Find  Intra Users by state.
-            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_PUBLIC_KEY_COLUMN_NAME, intraUserPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(IntraUserActorDatabaseConstants.INTRA_USER_INTRA_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, intraUserPublicKey, DatabaseFilterType.EQUAL);
              table.loadToMemory();
 
 

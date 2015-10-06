@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraWalletUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -26,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.structure.IntraUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
@@ -66,6 +69,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 
 import java.io.Serializable;
@@ -88,7 +95,7 @@ import java.util.UUID;
  */
 
 
-public class IntraUserActorPluginRoot implements ActorIntraUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service, Serializable {
+public class IntraUserActorPluginRoot implements ActorIntraUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents,DealsWithDeviceUser, DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service, Serializable {
 
     private IntraUserActorDao intraUserActorDao;
 
@@ -101,6 +108,12 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
      * DealsWithEvents Interface member variables.
      */
     EventManager eventManager;
+
+    /**
+     * DealsWithDeviceUsers Interface member variables.
+     */
+    private DeviceUserManager deviceUserManager;
+
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -141,6 +154,29 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
     /**
      * ActorIntraUserManager interface implementation.
      */
+
+
+    @Override
+    public Actor createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateIntraWalletUserException {
+        try {
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+
+
+            this.intraUserActorDao.createNewIntraUser(loggedUser.getPublicKey(), alias, "", profileImage, ContactState.CONNECTED);
+
+            return new IntraUserActorRecord(loggedUser.getPublicKey(), "",alias,profileImage);
+        }
+        catch(CantGetLoggedInDeviceUserException e)
+        {
+            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", e, "Error getting current logged in device user", "");
+        }
+        catch (CantAddPendingIntraUserException e) {
+            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", e, "Error add intra user on database", "");
+        }  catch (Exception e) {
+            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", FermatException.wrapException(e), "", "");
+        }
+
+    }
 
 
     /**
@@ -280,7 +316,7 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
         } catch (com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserException  e) {
             throw new CantGetIntraUserException("", e, ".","Cant Get Intra USer from Data Base");
          } catch (Exception e) {
-            throw new CantGetIntraUserException("", e, "There is a problem I can't identify.", null);
+            throw new CantGetIntraUserException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
     }
 
@@ -669,4 +705,8 @@ public class IntraUserActorPluginRoot implements ActorIntraUserManager, Database
         }
     }
 
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
+    }
 }
