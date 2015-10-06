@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
@@ -35,17 +36,19 @@ public interface CryptoPaymentRegistry {
      * @param cryptoAddress       crypto address where the identity wants to receive the payment.
      * @param description         text describing the crypto payment request.
      * @param amount              amount of crypto expected.
+     * @param networkType         blockchain network type where we will work.
      *
      * @throws CantGenerateCryptoPaymentRequestException if something goes wrong.
      */
-    void generateCryptoPaymentRequest(String        walletPublicKey  ,
-                                      String        identityPublicKey,
-                                      Actors        identityType     ,
-                                      String        actorPublicKey   ,
-                                      Actors        actorType        ,
-                                      CryptoAddress cryptoAddress    ,
-                                      String        description      ,
-                                      long          amount           ) throws CantGenerateCryptoPaymentRequestException;
+    void generateCryptoPaymentRequest(String                walletPublicKey  ,
+                                      String                identityPublicKey,
+                                      Actors                identityType     ,
+                                      String                actorPublicKey   ,
+                                      Actors                actorType        ,
+                                      CryptoAddress         cryptoAddress    ,
+                                      String                description      ,
+                                      long                  amount           ,
+                                      BlockchainNetworkType networkType      ) throws CantGenerateCryptoPaymentRequestException;
 
     /**
      * Throw the method <code>refuseRequest</code> you can refuse a request.
