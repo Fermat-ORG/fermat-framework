@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +77,7 @@ public class MainFragment extends FermatFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            selectedAsset = null;
             manager = ((AssetFactorySession) subAppsSession).getManager();
             //viewInflater = new ViewInflater(getActivity(), subAppResourcesProviderManager);
         } catch (Exception ex) {
@@ -137,6 +140,19 @@ public class MainFragment extends FermatFragment implements
             swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE);
             swipeRefreshLayout.setOnRefreshListener(this);
         }
+
+        // fab action button create
+        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /* create new asset factory project */
+                selectedAsset = null;
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+            }
+        });
+        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
+        create.setVisibility(View.VISIBLE);
     }
 
     @SuppressWarnings("unchecked")
@@ -206,14 +222,19 @@ public class MainFragment extends FermatFragment implements
                         @Override
                         public void onPostExecute(Object... result) {
                             dialog.dismiss();
+                            if (getActivity() != null) {
+                                onRefresh();
+                            }
                             Toast.makeText(getActivity(), "The asset was successfully published.", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onErrorOccurred(Exception ex) {
                             dialog.dismiss();
-                            if (getActivity() != null)
+                            if (getActivity() != null) {
                                 Toast.makeText(getActivity(), "Ups, some error occurred publishing this asset", Toast.LENGTH_SHORT).show();
+                                onRefresh();
+                            }
                             ex.printStackTrace();
                         }
                     });
