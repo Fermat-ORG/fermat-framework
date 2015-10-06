@@ -134,6 +134,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.digitalAssetMetadataVault=digitalAssetMetadataVault;
     }
 
+    public int getNumberOfIssuedAssets(String digitalAssetPublicKey) throws CantCheckAssetIssuingProgressException {
+        return this.assetIssuingTransactionDao.getNumberOfIssuedAssets(digitalAssetPublicKey);
+    }
 
     public void setWalletPublicKey(String walletPublicKey)throws ObjectNotSetException{
         if(walletPublicKey==null){
@@ -308,7 +311,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 LOG.info("Asset número " + counter);
                 createDigitalAssetCryptoTransaction();
                 counter++;
-                this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(this.digitalAsset.getPublicKey(), counter);
+                //this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(this.digitalAsset.getPublicKey(), counter);
             }
         } catch (ObjectNotSetException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets","Digital Asset object is not complete");
@@ -320,9 +323,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"Creating the Digital Asset transaction");
         } catch (CantIssueDigitalAssetException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Issuing "+assetsAmount+" Digital Assets - Asset number "+counter,"The public key is already used");
-        } catch (CantCheckAssetIssuingProgressException exception) {
+        } /*catch (CantCheckAssetIssuingProgressException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
-        }
+        }*/
     }
 
     public void issuePendingDigitalAssets(String publicKey){
