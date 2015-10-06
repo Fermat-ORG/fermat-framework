@@ -68,7 +68,7 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
                 /*
                  * Construct my profile and register me
                  */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service ("+templateNetworkServicePluginRoot.getId()+")", NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
+                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(), "TemplateNetworkService", "Template Network Service ("+templateNetworkServicePluginRoot.getId()+")", NetworkServiceType.TEMPLATE, PlatformComponentType.NETWORK_SERVICE_COMPONENT, null);
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
                 templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
                 templateNetworkServicePluginRoot.initializeTemplateNetworkServiceConnectionManager();
