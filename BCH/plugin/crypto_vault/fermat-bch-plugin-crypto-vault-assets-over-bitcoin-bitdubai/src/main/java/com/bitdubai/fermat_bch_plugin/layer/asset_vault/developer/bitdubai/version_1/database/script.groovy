@@ -1,7 +1,7 @@
 String developerName = "Rodrigo Acosta"
 String developerMail = "acosta_rodrigo@hotmail.com"
-String pluginName = "AssetVault"
-String layerName = "crypto_Vault"
+String pluginName = "AssetsOverBitcoin"
+String layerName = "CryptoVault"
 String packageRoot = "com.bitdubai.fermat_bch_plugin"
 String jdkVersion = "1.7"
 
@@ -10,43 +10,39 @@ List databaseTables = []
 
 // Table Definition Example
 databaseTables << [
-        name: "accounts",
+        name: "key_accounts",
         columns: [
-                ["id", "INT", "10", "true"],
-                ["description", "STRING", "100", "false"],
-                ["path", "STRING", "100", "false"]
+                ["id", "INTEGER", "10", "true"],
+                ["description", "STRING", "100", "false"]
         ],
         firstKey:"id"
 ]
-
-[
+databaseTables << [
         name: "key_Maintenance",
         columns: [
-                ["account_id", "INT", "10", "true"],
-                ["generatedKeys", "INT", "100", "false"],
-                ["usedKeys", "INT", "100", "false"]
+                ["account_id", "INTEGER", "10", "true"],
+                ["generated_Keys", "INTEGER", "100", "false"],
+                ["used_Keys", "INTEGER", "100", "false"]
         ],
         firstKey:"account_id"
 ]
-
-[
+databaseTables << [
         name: "key_Maintenance_Monitor",
         columns: [
-                ["execution_Number", "INT", "10", "true"],
-                ["account_id", "INT", "10", "false"],
+                ["execution_Number", "INTEGER", "10", "true"],
+                ["account_id", "INTEGER", "10", "false"],
                 ["execution_date", "STRING", "50", "false"],
-                ["generated_keys", "INT", "100", "false"],
-                ["used_keys", "INT", "100", "false"],
-                ["threshold", "INT", "100", "false"]
+                ["generated_keys", "INTEGER", "100", "false"],
+                ["used_keys", "INTEGER", "100", "false"],
+                ["threshold", "INTEGER", "100", "false"]
         ],
         firstKey:"execution_Number"
 ]
-
-[
+databaseTables << [
         name: "active_Networks",
         columns: [
-                ["networkType", "STRING", "50'", "true"],
-                ["activation_date", "STRING", "50'", "false"]
+                ["networkType", "STRING", "50", "true"],
+                ["activation_date", "STRING", "50", "false"]
         ],
         firstKey:"networkType"
 ]
