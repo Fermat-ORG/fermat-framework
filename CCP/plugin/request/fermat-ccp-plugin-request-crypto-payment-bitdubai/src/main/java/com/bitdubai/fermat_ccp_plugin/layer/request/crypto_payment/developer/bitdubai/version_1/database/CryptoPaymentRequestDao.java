@@ -1,12 +1,16 @@
 package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -87,18 +91,19 @@ public class CryptoPaymentRequestDao {
         }
     }
 
-    public void generateCryptoPaymentRequest(UUID               requestId        ,
-                                             String             walletPublicKey  ,
-                                             String             identityPublicKey,
-                                             Actors             identityType     ,
-                                             String             actorPublicKey   ,
-                                             Actors             actorType        ,
-                                             CryptoAddress      cryptoAddress    ,
-                                             String             description      ,
-                                             long               amount           ,
-                                             long               startTimeStamp   ,
-                                             CryptoPaymentType  type             ,
-                                             CryptoPaymentState state            ) throws CantGenerateCryptoPaymentRequestException {
+    public void generateCryptoPaymentRequest(UUID                  requestId        ,
+                                             String                walletPublicKey  ,
+                                             String                identityPublicKey,
+                                             Actors                identityType     ,
+                                             String                actorPublicKey   ,
+                                             Actors                actorType        ,
+                                             CryptoAddress         cryptoAddress    ,
+                                             String                description      ,
+                                             long                  amount           ,
+                                             long                  startTimeStamp   ,
+                                             CryptoPaymentType     type             ,
+                                             CryptoPaymentState    state            ,
+                                             BlockchainNetworkType networkType      ) throws CantGenerateCryptoPaymentRequestException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
@@ -118,7 +123,8 @@ public class CryptoPaymentRequestDao {
                     startTimeStamp   ,
                     0                ,
                     type             ,
-                    state
+                    state            ,
+                    networkType
             );
 
             cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
@@ -368,6 +374,40 @@ public class CryptoPaymentRequestDao {
         }
     }
 
+    public List<CryptoPayment> listUnfinishedActions() throws CantListCryptoPaymentRequestsException {
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+            tableFilters.add(cryptoPaymentRequestTable.getNewFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME, DatabaseFilterType.EQUAL, CryptoPaymentState.NOT_SENT_YET           .getCode()));
+            tableFilters.add(cryptoPaymentRequestTable.getNewFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME, DatabaseFilterType.EQUAL, CryptoPaymentState.IN_APPROVING_PROCESS   .getCode()));
+            tableFilters.add(cryptoPaymentRequestTable.getNewFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME, DatabaseFilterType.EQUAL, CryptoPaymentState.PAYMENT_PROCESS_STARTED.getCode()));
+
+            DatabaseTableFilterGroup filterGroup = cryptoPaymentRequestTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
+
+            cryptoPaymentRequestTable.setFilterGroup(filterGroup);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<CryptoPayment> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildCryptoPaymentRequestRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListCryptoPaymentRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListCryptoPaymentRequestsException(exception);
+        }
+    }
+
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord        record                    ,
                                                     CryptoPaymentRequestRecord cryptoPaymentRequestRecord) {
 
@@ -380,6 +420,7 @@ public class CryptoPaymentRequestDao {
         record.setStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    , cryptoPaymentRequestRecord.getCryptoAddress()    .getCryptoCurrency().getCode());
         record.setStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME               , cryptoPaymentRequestRecord.getType()             .getCode()                    );
         record.setStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME              , cryptoPaymentRequestRecord.getState()            .getCode()                    );
+        record.setStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME       , cryptoPaymentRequestRecord.getNetworkType()      .getCode()                    );
         record.setLongValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_AMOUNT_COLUMN_NAME             , cryptoPaymentRequestRecord.getAmount()                                         );
         record.setLongValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME   , cryptoPaymentRequestRecord.getStartTimeStamp()                                 );
 
@@ -391,7 +432,7 @@ public class CryptoPaymentRequestDao {
 
     private CryptoPayment buildCryptoPaymentRequestRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID   requestId            = record.getUUIDValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME           );
+        UUID   requestId            = record.getUUIDValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME         );
         String walletPublicKey      = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME);
         String identityPublicKey    = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         String identityTypeString   = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_TYPE_COLUMN_NAME      );
@@ -401,10 +442,11 @@ public class CryptoPaymentRequestDao {
         String cryptoAddressString  = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     );
         String cryptoCurrencyString = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    );
         String typeString           = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME               );
-        String stateString          = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME);
+        String stateString          = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_STATE_COLUMN_NAME              );
+        String networkTypeString    = record.getStringValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME       );
 
         long   amount               = record.getLongValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_AMOUNT_COLUMN_NAME);
-        long   startTimeStamp       = record.getLongValue(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME);
+        long   startTimeStamp       = record.getLongValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME   );
         long   endTimeStamp         = record.getLongValue  (CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_END_TIME_STAMP_COLUMN_NAME     );
 
         CryptoAddress cryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.getByCode(cryptoCurrencyString));
@@ -412,8 +454,9 @@ public class CryptoPaymentRequestDao {
         Actors identityType = Actors.getByCode(identityTypeString);
         Actors actorType    = Actors.getByCode(actorTypeString   );
 
-        CryptoPaymentType  type  = CryptoPaymentType   .getByCode(typeString) ;
-        CryptoPaymentState state = CryptoPaymentState  .getByCode(stateString);
+        CryptoPaymentType     type        = CryptoPaymentType    .getByCode(typeString)       ;
+        CryptoPaymentState    state       = CryptoPaymentState   .getByCode(stateString)      ;
+        BlockchainNetworkType networkType = BlockchainNetworkType.getByCode(networkTypeString);
 
         return new CryptoPaymentRequestRecord(
                 requestId        ,
@@ -428,7 +471,8 @@ public class CryptoPaymentRequestDao {
                 startTimeStamp   ,
                 endTimeStamp     ,
                 type             ,
-                state
+                state            ,
+                networkType
         );
     }
 

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantUninstallLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantUninstallSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantUninstallWalletException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -146,8 +147,10 @@ public interface WalletManagerManager {
      * @return an instance of InstalledWallet with the values of the specific wallet.
      *
      * @throws CantGetInstalledWalletException if something goes wrong
+     * @throws DefaultWalletNotFoundException  if cannot find a default installed wallet.
      */
     InstalledWallet getDefaultWallet(CryptoCurrency        cryptoCurrency,
                                      Actors                actorType,
-                                     BlockchainNetworkType blockchainNetworkType) throws CantGetInstalledWalletException;
+                                     BlockchainNetworkType blockchainNetworkType) throws CantGetInstalledWalletException,
+                                                                                         DefaultWalletNotFoundException ;
 }

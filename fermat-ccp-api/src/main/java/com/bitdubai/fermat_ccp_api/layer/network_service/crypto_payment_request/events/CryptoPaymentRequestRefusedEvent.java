@@ -9,7 +9,7 @@ import java.util.UUID;
  * The event <code>com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestRefusedEvent</code>
  * is raised when an actor refuses one of our requests.
  *
- * Created by by Leon Acosta (laion.cj91@gmail.com) on 01/30/2015.
+ * Created by by Leon Acosta (laion.cj91@gmail.com) on 01/10/2015.
  */
 public class CryptoPaymentRequestRefusedEvent extends AbstractCCPEvent {
 
