@@ -6974,3 +6974,94 @@
 	</super_layers>
 
 </fermat>
+
+<processes>
+    <process name="process unique name"
+             description="process description">
+        <steps>
+            <step id="0"
+                  type="start"
+                  title="Inicio"
+                  description="Paso inicial del flujo"
+                  platform="name of platform"
+                  superlayer="name of superlayer"
+                  layer="name of layer"
+                  component="name of component">
+                <next>
+                    <step id="1"></step>
+                </next>
+            </step>
+            <step id="1"
+                  type="preparation"
+                  title="Cargar datos"
+                  description="Cargar datos de base de datos o servidor"
+                  platform="name of platform"
+                  superlayer="name of superlayer"
+                  layer="name of layer"
+                  component="name of component">
+                <next>
+                    <step id="2"></step>
+                </next>
+            </step>
+            <step id="2"
+                  type="activity"
+                  title="Procesamiento de datos"
+                  description="Se procesan los datos obtenidos y se relizan un calculo"
+                  platform="name of platform"
+                  superlayer="name of superlayer"
+                  layer="name of layer"
+                  component="name of component">
+                <next>
+                    <step id="3"></step>
+                </next>
+            </step>
+            <step id="3"
+                  type="activity"
+                  title="Procesamiento de datos"
+                  description="Se procesan los datos obtenidos y se relizan un calculo"
+                  platform="name of platform"
+                  superlayer="name of superlayer"
+                  layer="name of layer"
+                  component="name of component">
+                <next>
+                    <step id="4"></step>
+                </next>
+            </step>
+            <step id="4"
+                  type="decision"
+                  title="Condicional"
+                  description="Dependiendo del resultado se toma un camino"
+                  platform="name of platform"
+                  superlayer="name of superlayer"
+                  layer="name of layer"
+                  component="name of component">
+                <next>
+                    <step id="5"></step>
+                    <step id="6"></step>
+                </next>
+            </step>
+            <step id="5"
+                  type="activity"
+                  title="Volver al inicio"
+                  description="Paso inicial del flujo"
+                  platform="name of platform"
+                  superlayer="name of superlayer"
+                  layer="name of layer"
+                  component="name of component">
+                <next>
+                    <step id="0"></step>
+                </next>
+            </step>
+            <step id="6"
+                  type="end"
+                  title="Fin del proceso"
+                  description="Paso final del flujo"
+                  platform="name of platform"
+                  superlayer="name of superlayer"
+                  layer="name of layer"
+                  component="name of component">
+                <next></next>
+            </step>
+        </steps>
+    </process>
+</processes>
