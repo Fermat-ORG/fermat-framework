@@ -19,11 +19,16 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Asset Editor Fragment
@@ -61,8 +66,13 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         try {
             manager = ((AssetFactorySession) subAppsSession).getManager();
             errorManager = subAppsSession.getErrorManager();
-            if (!isEdit)
+            if (!isEdit) {
                 asset = manager.newAssetFactoryEmpty();
+                List<InstalledWallet> installedWallets = manager.getInstallWallets();
+                if (installedWallets != null && installedWallets.size() > 0) {
+                    asset.setPublicKey(installedWallets.get(0).getWalletPublicKey());
+                }
+            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -143,16 +153,23 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     }
 
     private void saveAsset() {
-        asset.setPublicKey("asset-factory-public-key");//// TODO: 02/10/15 set public key
+        //asset.setPublicKey("asset-factory-public-key");//// TODO: 02/10/15 set public key
         asset.setName(nameView.getText().toString().trim());
         asset.setDescription(descriptionView.getText().toString().trim());
         asset.setQuantity(Integer.parseInt(quantityView.getText().toString().trim().isEmpty() ? "0" : quantityView.getText().toString().trim()));
         asset.setAmount(Long.parseLong(bitcoinsView.getText().toString().trim().isEmpty() ? "0" : bitcoinsView.getText().toString().trim()));
         asset.setIsRedeemable(isRedeemableView.isChecked());
+        asset.setState(State.DRAFT);
+        //// TODO: 02/10/15 Asset behaviour is given from the final user through dropdown control list
+        asset.setAssetBehavior(AssetBehavior.REGENERATION_ASSET);
+        //// TODO: 02/10/15 Get at least one resource with one image byte[] (Choose from gallery or take a picture)
+        asset.setResources(null);
         if (!expirationView.getText().toString().trim().isEmpty()) {
             try {
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("mm/yyy/dd h:m:s");
                 asset.setExpirationDate(new java.sql.Timestamp(format.parse(expirationView.getText().toString().trim()).getTime()));
+                long now = new Date().getTime();
+                asset.setCreationTimestamp(new java.sql.Timestamp(now));
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
             }

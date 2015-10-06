@@ -56,8 +56,10 @@ public class AssetIssuingRecorderService implements DealsWithEvents, AssetTransa
 
     public void incomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent(IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent event) throws CantSaveEventException {
         //TODO: SaveEventMethod in database
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.assetIssuingTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
+        //LOG.info("CHECK THE DATABASE");
     }
 
     @Override
@@ -77,6 +79,7 @@ public class AssetIssuingRecorderService implements DealsWithEvents, AssetTransa
             listenersAdded.add(fermatEventListener);
             //Logger LOG = Logger.getGlobal();
             //LOG.info("ASSET ISSUING EVENT RECORDER STARTED");
+            this.serviceStatus=ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
             throw new CantStartServiceException(exception,"Starting the AssetIssuingRecorderService", "The AssetIssuingRecorderService is probably null");
         }

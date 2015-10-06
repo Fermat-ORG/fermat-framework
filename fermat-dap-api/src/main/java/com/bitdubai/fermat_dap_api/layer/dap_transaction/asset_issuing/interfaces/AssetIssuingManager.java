@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -25,6 +26,12 @@ public interface AssetIssuingManager /*extends TransactionProtocolManager<Crypto
                      BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException;
     void issuePendingDigitalAssets(String assetPublicKey);
     void setCryptoWallet(CryptoWallet cryptoWallet);
+    /**
+     * This method must be used from the Asset Wallet to confirm the DigitalAssetMetadata reception.
+     * @param genesisTransaction is a DigitalAssetMetadata parameter.
+     * @throws CantConfirmTransactionException
+     */
+    void confirmReception(String  genesisTransaction)throws CantConfirmTransactionException;
     /*void setActors(String deliveredByActorPublicKey,
                         Actors deliveredByType,
                         String deliveredToActorPublicKey,

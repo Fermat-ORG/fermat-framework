@@ -83,6 +83,7 @@ public class CryptoTransmissionNetworkServiceDatabaseFactory implements DealsWit
             table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME,DatabaseDataType.STRING, 50, Boolean.TRUE);
 
              table.addIndex(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_FIRST_KEY_COLUMN);
 

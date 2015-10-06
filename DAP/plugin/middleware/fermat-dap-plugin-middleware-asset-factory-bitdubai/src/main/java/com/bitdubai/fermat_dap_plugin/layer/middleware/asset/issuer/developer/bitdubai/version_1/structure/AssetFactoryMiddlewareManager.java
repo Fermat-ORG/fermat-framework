@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
@@ -141,13 +142,20 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             contractProperties.add(redeemable);
             contractProperties.add(expirationDate);
             assetFactory.setContractProperties(contractProperties);
+            //TODO: Borrar luego cuado funcione el Identity debe venir desde el dispositivo
+            AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
+            assetIssuerIdentity.setAlias("Franklin Marcano");
+            assetIssuerIdentity.setPublicKey("ASDS-10087982");
+            assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
-            for (Resource resource : assetFactory.getResources()) {
-                //if (resource.getResourceBinayData() != null) {
-                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-                    imageFile.setContent(resource.getResourceBinayData());
-                    imageFile.persistToMedia();
-                //}
+            if (assetFactory.getResources() != null){
+                for (Resource resource : assetFactory.getResources()) {
+                    //if (resource.getResourceBinayData() != null) {
+                        PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                        imageFile.setContent(resource.getResourceBinayData());
+                        imageFile.persistToMedia();
+                    //}
+                }
             }
         }catch (CantCreateFileException cantCreateFileException)
         {
@@ -464,7 +472,7 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
     {
             AssetFactory assetFactory = new AssetFactory() {
                 String walletPublicKey;
-                String publicKey;
+                String publicKey = new ECCKeyPair().getPublicKey();
                 String name;
                 String description;
                 List<Resource> resources;
