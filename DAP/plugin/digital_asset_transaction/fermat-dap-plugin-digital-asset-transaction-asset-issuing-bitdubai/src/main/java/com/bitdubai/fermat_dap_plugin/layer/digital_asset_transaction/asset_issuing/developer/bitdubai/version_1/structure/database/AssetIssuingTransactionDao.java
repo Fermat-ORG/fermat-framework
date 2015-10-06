@@ -675,11 +675,19 @@ public class AssetIssuingTransactionDao {
     }
 
     public boolean isReceivedDigitalAssets() throws CantExecuteQueryException {
+        return isFieldValueInAssetIssuingTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.RECEIVED.getCode());
+    }
+
+    public boolean isDeliveredDigitalAssets() throws CantExecuteQueryException {
+        return isFieldValueInAssetIssuingTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
+    }
+
+    private boolean isFieldValueInAssetIssuingTable(String fieldCode, String value) throws CantExecuteQueryException {
         try {
             this.database=openDatabase();
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
-            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME, TransactionStatus.RECEIVED.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(fieldCode, value, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             this.database.closeDatabase();
             return !databaseTable.getRecords().isEmpty();
@@ -691,7 +699,6 @@ public class AssetIssuingTransactionDao {
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Getting received digital assets.", "Unexpected exception");
         }
     }
-
 
     public List<String> getGenesisTransactionsFromDigitalAssetsReceived() throws CantCheckAssetIssuingProgressException {
         try{
@@ -722,6 +729,39 @@ public class AssetIssuingTransactionDao {
         } catch(Exception exception){
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Trying to get received digital assets.", "Unexpected exception");
+        }
+    }
+
+    public List<String> getGenesisTransactionByDeliveredStatus() throws CantCheckAssetIssuingProgressException {
+        return getValueListFromAssetIssuingTableByFiledCode(
+                AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME,
+                TransactionStatus.DELIVERED.getCode(),
+                AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    private List<String> getValueListFromAssetIssuingTableByFiledCode(String fieldCode, String valueAsked, String columnToReturn) throws CantCheckAssetIssuingProgressException {
+        try{
+            this.database=openDatabase();
+            List<String> resultList=new ArrayList<>();
+            DatabaseTable databaseTable =getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setStringFilter(fieldCode, valueAsked, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            for(DatabaseTableRecord databaseTableRecord : databaseTableRecords){
+                String valueReturned=databaseTableRecord.getStringValue(columnToReturn);
+                resultList.add(valueReturned);
+            }
+            this.database.closeDatabase();
+            return resultList;
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Trying to get "+fieldCode,"Cannot find or open the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Trying to get "+fieldCode,"Cannot load the database into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Trying to get "+fieldCode, "Unexpected exception");
         }
     }
 
