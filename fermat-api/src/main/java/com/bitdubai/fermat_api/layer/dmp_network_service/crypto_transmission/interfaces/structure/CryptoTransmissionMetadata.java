@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
 
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
  */
 public interface CryptoTransmissionMetadata {
 
-    public UUID getTransmissionId();
+    public UUID getTransactionId();
 
     public UUID getRequestId();
 
@@ -24,4 +25,14 @@ public interface CryptoTransmissionMetadata {
     public String getAssociatedCryptoTransactionHash();
 
     public String getPaymentDescription();
+
+    public CryptoTransmissionStates getCryptoTransmissionStates();
+
+    public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType();
+
+    public void changeState(CryptoTransmissionStates cryptoTransmissionStates);
+
+    public void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType);
+
+
 }
