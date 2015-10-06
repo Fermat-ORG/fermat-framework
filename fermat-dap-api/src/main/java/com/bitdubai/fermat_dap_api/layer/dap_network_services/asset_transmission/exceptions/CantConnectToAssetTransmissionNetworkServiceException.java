@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.DAPException;
  */
 public class CantConnectToAssetTransmissionNetworkServiceException  extends DAPException {
 
-
     public static final String DEFAULT_MESSAGE = "CAN'T CONNECT TO ASSET TRANSMISSION NETWORK SERVICE";
 
     public CantConnectToAssetTransmissionNetworkServiceException(final String message, final Exception cause, final String context, final String possibleReason) {

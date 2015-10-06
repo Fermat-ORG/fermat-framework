@@ -30,4 +30,5 @@ public class CantRequestListAssetTransmissionNetworkServiceException  extends DA
         this(DEFAULT_MESSAGE);
     }
 
+
 }

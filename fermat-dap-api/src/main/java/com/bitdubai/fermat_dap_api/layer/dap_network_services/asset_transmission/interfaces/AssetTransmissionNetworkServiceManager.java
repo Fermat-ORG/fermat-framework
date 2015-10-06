@@ -18,5 +18,4 @@ public interface AssetTransmissionNetworkServiceManager {
 
     public void sendDigitalAssetMetadata(DigitalAssetMetadata toSend, PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantSendDigitalAssetMetadataException;
 
-
 }
