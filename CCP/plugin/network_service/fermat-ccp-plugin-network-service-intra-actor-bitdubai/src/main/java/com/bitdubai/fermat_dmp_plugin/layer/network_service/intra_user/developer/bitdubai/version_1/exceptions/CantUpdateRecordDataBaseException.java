@@ -1,5 +1,5 @@
 /*
- * @#CantReadRecordDataBaseException.java - 2015
+ * @#CantUpdateRecordDataBaseException.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -10,20 +10,20 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException</code> is
- * throw when error occurred reading a record in a table of the data base
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException</code> is
+ * throw when error occurred updating new record in a table of the data base
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 26/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantReadRecordDataBaseException extends FermatException {
+public class CantUpdateRecordDataBaseException extends FermatException {
 
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CAN'T READ RECORD ON DATABASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE RECORD ON DATABASE";
 
     /**
      * Constructor with parameters
@@ -33,7 +33,7 @@ public class CantReadRecordDataBaseException extends FermatException {
      * @param context
      * @param possibleReason
      */
-    public CantReadRecordDataBaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantUpdateRecordDataBaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -43,7 +43,7 @@ public class CantReadRecordDataBaseException extends FermatException {
      * @param message
      * @param cause
      */
-    public CantReadRecordDataBaseException(final String message, final Exception cause) {
+    public CantUpdateRecordDataBaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -52,7 +52,7 @@ public class CantReadRecordDataBaseException extends FermatException {
      *
      * @param message
      */
-    public CantReadRecordDataBaseException(final String message) {
+    public CantUpdateRecordDataBaseException(final String message) {
         this(message, null);
     }
 
@@ -61,7 +61,7 @@ public class CantReadRecordDataBaseException extends FermatException {
      *
      * @param exception
      */
-    public CantReadRecordDataBaseException(final Exception exception) {
+    public CantUpdateRecordDataBaseException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -69,7 +69,7 @@ public class CantReadRecordDataBaseException extends FermatException {
     /**
      * Constructor
      */
-    public CantReadRecordDataBaseException() {
+    public CantUpdateRecordDataBaseException() {
         this(DEFAULT_MESSAGE);
     }
 }
