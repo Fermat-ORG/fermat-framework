@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+
+
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.DealsWithIntraUsersModule;
@@ -43,7 +45,7 @@ import java.util.regex.Pattern;
 /**
  * Created by loui on 27/05/15.a
  */
-public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,DealsWithCCPIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers, DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook, WalletModule, Plugin, Service {
+public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,DealsWithCCPIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers/*, DealsWithIntraUsersActor,*/,DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook, WalletModule, Plugin, Service {
 
     /**
      * Service Interface member variables.
@@ -75,6 +77,14 @@ public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,D
      * DealsWithExtraUsers Interface member variables.
      */
     private ExtraUserManager extraUserManager;
+
+
+    /**
+     * DealsWithIntraUsersActor Interface member variables.
+     */
+
+//    private ActorIntraUserManager intraUserManager;
+
 
     /**
      * DealsWithCCPIntraWalletUser Interface member variables.
@@ -142,6 +152,7 @@ public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,D
             walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
             walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
             walletModuleCryptoWallet.setIntraUserManager(intraWalletUserManager);
+//            walletModuleCryptoWallet.setActorIntraUserManager(this.intraUserManager);
             walletModuleCryptoWallet.initialize();
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
@@ -254,4 +265,9 @@ public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,D
     public void setIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
         this.intraWalletUserManager = intraWalletUserManager;
     }
+
+//    @Override
+//    public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager) {
+//        this.intraUserManager = actorIntraUserManager;
+//    }
 }

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 
@@ -48,6 +49,10 @@ public class AssetFactorySupAppModuleManager implements DealsWithAssetFactory {
 
     public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException {
         assetFactoryManager.saveAssetFactory(assetFactory);
+    }
+
+    public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException {
+        assetFactoryManager.removeAssetFactory(publicKey);
     }
 
     public void publishAssetFactory(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType)  throws CantSaveAssetFactoryException {

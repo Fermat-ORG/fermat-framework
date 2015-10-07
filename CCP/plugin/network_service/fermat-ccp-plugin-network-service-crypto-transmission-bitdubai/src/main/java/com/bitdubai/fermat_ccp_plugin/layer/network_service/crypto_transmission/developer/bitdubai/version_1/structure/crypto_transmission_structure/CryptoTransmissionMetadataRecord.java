@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
-
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
  */
 public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetadata {
 
-    private UUID transmissionId;
+    private UUID transactionId;
     private UUID requestId;
     private CryptoCurrency cryptoCurrency;
     private long cryptoAmount;
@@ -19,6 +20,8 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     private String destinationPublicKey;
     private String associatedCryptoTransactionHash;
     private String paymentDescription;
+    private CryptoTransmissionStates cryptoTransmissionState;
+    private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
 
 
     public CryptoTransmissionMetadataRecord(String associatedCryptoTransactionHash,
@@ -28,7 +31,9 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
                                             String paymentDescription,
                                             UUID requestId,
                                             String senderPublicKey,
-                                            UUID transmissionId) {
+                                            UUID transactionId,
+                                            CryptoTransmissionStates cryptoTransmissionState,
+                                            CryptoTransmissionMetadataType cryptoTransmissionMetadataType) {
 
         this.associatedCryptoTransactionHash    = associatedCryptoTransactionHash;
         this.cryptoAmount                       = cryptoAmount;
@@ -37,12 +42,14 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
         this.paymentDescription                 = paymentDescription;
         this.requestId                          = requestId;
         this.senderPublicKey                    = senderPublicKey;
-        this.transmissionId                     = transmissionId;
+        this.transactionId = transactionId;
+        this.cryptoTransmissionState = cryptoTransmissionState;
+        this.cryptoTransmissionMetadataType = cryptoTransmissionMetadataType;
     }
 
     @Override
-    public UUID getTransmissionId() {
-        return transmissionId;
+    public UUID getTransactionId() {
+        return transactionId;
     }
 
     @Override
@@ -78,5 +85,25 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     @Override
     public String getPaymentDescription() {
         return paymentDescription;
+    }
+
+    public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType() {
+        return cryptoTransmissionMetadataType;
+    }
+
+
+    @Override
+    public CryptoTransmissionStates getCryptoTransmissionStates() {
+        return cryptoTransmissionState;
+    }
+
+    @Override
+    public void changeState(CryptoTransmissionStates cryptoTransmissionStates) {
+        cryptoTransmissionState = cryptoTransmissionStates;
+    }
+
+    @Override
+    public void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType) {
+        this.cryptoTransmissionMetadataType =cryptoTransmissionMetadataType;
     }
 }

@@ -21,7 +21,10 @@ public enum PlatformComponentType {
 
     COMMUNICATION_CLOUD_CLIENT_COMPONENT ("COM_CLD_CLI_COMP"),
     COMMUNICATION_CLOUD_SERVER_COMPONENT ("COM_CLD_SER_COMP"),
-    NETWORK_SERVICE_COMPONENT            ("NS_COMP");
+    NETWORK_SERVICE_COMPONENT            ("NS_COMP"),
+    ACTOR_COMPONENT                      ("A_COMP"),
+    ACTOR_NETWORK_SERVICE_COMPONENT      ("ANS_COMP");
+
 
     /**
      * Represent the code
@@ -59,6 +62,8 @@ public enum PlatformComponentType {
             case "COM_CLD_CLI_COMP" : return PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT;
             case "COM_CLD_SER_COMP" : return PlatformComponentType.COMMUNICATION_CLOUD_SERVER_COMPONENT;
             case "NS_COMP"          : return PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+            case "ANSC" : return ACTOR_NETWORK_SERVICE_COMPONENT;
+            case "ANS_COMP"         : return PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT;
             default: throw new IllegalArgumentException();
         }
     }
