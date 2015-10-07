@@ -86,7 +86,7 @@ public enum EventSource implements FermatEnum {
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,
-                    "This Code Is Not Valid for the Addons enum"
+                    "The code received is not valid for EventSource enum."
             );
 
         }
