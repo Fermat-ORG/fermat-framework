@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 
@@ -28,17 +29,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 public class CompleteComponentConnectionRequestNotificationEventHandler implements FermatEventHandler {
 
     /*
-    * Represent the templateNetworkServicePluginRoot
+    * Represent the networkService
     */
-    private TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot;
+    private NetworkService networkService;
 
     /**
      * Constructor with parameter
      *
-     * @param templateNetworkServicePluginRoot
+     * @param networkService
      */
-    public CompleteComponentConnectionRequestNotificationEventHandler(TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot) {
-        this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
+    public CompleteComponentConnectionRequestNotificationEventHandler(NetworkService networkService) {
+        this.networkService = networkService;
     }
 
     /**
@@ -55,17 +56,18 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
         System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
 
-        if (((Service) this.templateNetworkServicePluginRoot).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
             CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
 
 
-            if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT &&
-                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == NetworkServiceType.TEMPLATE){
-                 /*
-                 *  TemplateManager make the job
+            if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == networkService.getPlatformComponentType() &&
+                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == networkService.getNetworkServiceType()){
+
+                /*
+                 *  networkService make the job
                  */
-                this.templateNetworkServicePluginRoot.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
+                this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
 
             }
 

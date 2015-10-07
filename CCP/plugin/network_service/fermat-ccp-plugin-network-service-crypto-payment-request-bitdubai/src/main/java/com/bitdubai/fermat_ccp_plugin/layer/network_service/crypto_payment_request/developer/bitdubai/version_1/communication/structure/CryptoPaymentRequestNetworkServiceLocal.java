@@ -15,7 +15,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Observable;
@@ -132,7 +131,7 @@ public class CryptoPaymentRequestNetworkServiceLocal implements Observer, Networ
          */
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
         fermatEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
-        ((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage);
+        //((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage);
         eventManager.raiseEvent(fermatEvent);
 
     }

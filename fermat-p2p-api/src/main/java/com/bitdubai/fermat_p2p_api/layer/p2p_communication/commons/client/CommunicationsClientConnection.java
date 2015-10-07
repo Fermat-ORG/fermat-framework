@@ -50,13 +50,13 @@ public interface CommunicationsClientConnection {
      * @param distance
      * @param name
      * @param extraData
-     * @param firstRecord
-     * @param numRegister
+     * @param offset
+     * @param max
      * @param fromOtherPlatformComponentType
      * @param fromOtherNetworkServiceType
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
     /**
      * Method that register a platform component with for Communication like online

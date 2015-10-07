@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactState;
 
 /**
  * Created by Nerio on 10/09/15.
  */
 public interface ActorAssetUser {
+
 
     /**
      * The metho <code>getPublicKey</code> gives us the public key of the represented intra user
