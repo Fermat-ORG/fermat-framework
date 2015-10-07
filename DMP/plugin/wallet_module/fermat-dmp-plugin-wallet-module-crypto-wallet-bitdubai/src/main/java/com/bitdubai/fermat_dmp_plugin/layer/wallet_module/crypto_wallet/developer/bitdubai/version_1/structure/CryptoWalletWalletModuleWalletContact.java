@@ -85,4 +85,11 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     public Compatibility getCompatibility() {
         return compatibility;
     }
+
+    @Override
+    public String toString() {
+        return "CryptoWalletWalletModuleWalletContact{" +
+                "actorName='" + actorName + '\'' +
+                '}';
+    }
 }

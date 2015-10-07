@@ -22,6 +22,24 @@ public interface NetworkService {
      */
     public UUID getId();
 
+    /**
+     * Get the PlatformComponentProfile for this network service
+     * @return PlatformComponentProfile
+     */
+    public PlatformComponentProfile getPlatformComponentProfile();
+
+    /**
+     * Get the PlatformComponentType for this network service
+     * @return PlatformComponentType
+     */
+    public PlatformComponentType getPlatformComponentType();
+
+    /**
+     * Get the NetworkServiceType for this network service
+     * @return NetworkServiceType
+     */
+    public NetworkServiceType getNetworkServiceType();
+
     /*
      * Get the RemoteNetworkServicesRegisteredList, this method may be called after
      * the <code>requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters</code> and the
@@ -66,6 +84,23 @@ public interface NetworkService {
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
 
+    /**
+     * Handles the events CompleteComponentRegistrationNotification
+     * @param platformComponentProfileRegistered
+     */
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered);
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param platformComponentProfileRegisteredList
+     */
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList,DiscoveryQueryParameters discoveryQueryParameters);
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param remoteComponentProfile
+     */
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile);
 
 
 }

@@ -73,14 +73,14 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
     private String extraData;
 
     /**
-     * Represent the firstRecord
+     * Represent the offset
      */
-    private Integer firstRecord;
+    private Integer offset;
 
     /**
-     * Represent the numberRegister
+     * Represent the max
      */
-    private Integer numberRegister;
+    private Integer max;
 
     /**
      * Represent the fromOtherPlatformComponentType
@@ -106,8 +106,8 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
         this.networkServiceType = null;
         this.platformComponentType = null;
         this.extraData = null;
-        this.firstRecord  = new Integer(0);
-        this.numberRegister = new Integer(0);
+        this.offset = new Integer(0);
+        this.max = new Integer(0);
         this.fromOtherPlatformComponentType = null;
         this.fromOtherNetworkServiceType = null;
     }
@@ -123,12 +123,12 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
      * @param networkServiceType
      * @param platformComponentType
      * @param extraData
-     * @param firstRecord
-     * @param numberRegister
+     * @param offset
+     * @param max
      * @param fromOtherPlatformComponentType
      * @param fromOtherNetworkServiceType
      */
-    public DiscoveryQueryParametersCommunication(String alias, String identityPublicKey, Location location, Double distance, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer firstRecord, Integer numberRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+    public DiscoveryQueryParametersCommunication(String alias, String identityPublicKey, Location location, Double distance, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
         super();
         this.alias = alias;
         this.identityPublicKey = identityPublicKey;
@@ -138,8 +138,8 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
         this.networkServiceType = networkServiceType;
         this.platformComponentType = platformComponentType;
         this.extraData = extraData;
-        this.firstRecord = firstRecord;
-        this.numberRegister = numberRegister;
+        this.offset = offset;
+        this.max = max;
         this.fromOtherPlatformComponentType = fromOtherPlatformComponentType;
         this.fromOtherNetworkServiceType = fromOtherNetworkServiceType;
     }
@@ -218,18 +218,18 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
 
     /**
      * (non-javadoc)
-     * @see DiscoveryQueryParameters#firstRecord()
+     * @see DiscoveryQueryParameters#getOffset()
      */
-    public Integer firstRecord(){
-        return firstRecord;
+    public Integer getOffset(){
+        return offset;
     }
 
     /**
      * (non-javadoc)
-     * @see DiscoveryQueryParameters#getNumberRegister()
+     * @see DiscoveryQueryParameters#getMax()
      */
-    public Integer getNumberRegister(){
-        return numberRegister;
+    public Integer getMax(){
+        return max;
     }
 
     /**
@@ -289,8 +289,8 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
                 Objects.equals(getPlatformComponentType(), that.getPlatformComponentType()) &&
                 Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
                 Objects.equals(getExtraData(), that.getExtraData()) &&
-                Objects.equals(firstRecord, that.firstRecord) &&
-                Objects.equals(getNumberRegister(), that.getNumberRegister()) &&
+                Objects.equals(offset, that.offset) &&
+                Objects.equals(getMax(), that.getMax()) &&
                 Objects.equals(getFromOtherPlatformComponentType(), that.getFromOtherPlatformComponentType()) &&
                 Objects.equals(getFromOtherNetworkServiceType(), that.getFromOtherNetworkServiceType());
     }
@@ -301,7 +301,7 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
      */
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLocation(), getDistance(), getPlatformComponentType(), getNetworkServiceType(), getExtraData(), firstRecord, getNumberRegister(), getFromOtherPlatformComponentType(), getFromOtherNetworkServiceType());
+        return Objects.hash(getIdentityPublicKey(), getAlias(), getName(), getLocation(), getDistance(), getPlatformComponentType(), getNetworkServiceType(), getExtraData(), offset, getMax(), getFromOtherPlatformComponentType(), getFromOtherNetworkServiceType());
     }
 
     /**
@@ -319,8 +319,8 @@ public class DiscoveryQueryParametersCommunication implements DiscoveryQueryPara
                 ", platformComponentType=" + platformComponentType +
                 ", networkServiceType=" + networkServiceType +
                 ", extraData='" + extraData + '\'' +
-                ", firstRecord=" + firstRecord +
-                ", numberRegister=" + numberRegister +
+                ", offset=" + offset +
+                ", max=" + max +
                 ", fromOtherPlatformComponentType=" + fromOtherPlatformComponentType +
                 ", fromOtherNetworkServiceType=" + fromOtherNetworkServiceType +
                 '}';

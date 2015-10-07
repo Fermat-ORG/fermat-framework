@@ -1568,7 +1568,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeActivity.setColor("#8bba9e");
+        runtimeActivity.setColor("#12aca1");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
 
@@ -1581,19 +1581,19 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar.setLabelSize(16);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
+        runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        runtimeStatusBar.setColor("#72af9c");
+        runtimeStatusBar.setColor("#12aca1");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#5b5993");
+        runtimeTabStrip.setTabsColor("#1173aa");
 
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 

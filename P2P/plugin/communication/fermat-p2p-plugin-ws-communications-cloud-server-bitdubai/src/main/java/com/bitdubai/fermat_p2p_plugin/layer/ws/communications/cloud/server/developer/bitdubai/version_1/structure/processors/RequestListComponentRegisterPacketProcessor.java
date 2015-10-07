@@ -152,6 +152,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          */
         for (PlatformComponentProfile platformComponentProfileRegistered: list) {
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
+                System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
                 list.remove(platformComponentProfileRegistered);
                 break;
             }
@@ -187,25 +188,25 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
             for (PlatformComponentProfile platformComponentProfile: list) {
 
                 if (discoveryQueryParameters.getIdentityPublicKey() != null && discoveryQueryParameters.getIdentityPublicKey() != ""){
-                    if (platformComponentProfile.getIdentityPublicKey() == discoveryQueryParameters.getIdentityPublicKey()){
+                    if (platformComponentProfile.getIdentityPublicKey().equals(discoveryQueryParameters.getIdentityPublicKey())){
                         filterMatched += 1;
                     }
                 }
 
                 if (discoveryQueryParameters.getAlias() != null && discoveryQueryParameters.getAlias() != ""){
-                    if (platformComponentProfile.getAlias() == discoveryQueryParameters.getAlias()){
+                    if (discoveryQueryParameters.getAlias().toLowerCase().contains(platformComponentProfile.getAlias().toLowerCase())){
                         filterMatched += 1;
                     }
                 }
 
                 if (discoveryQueryParameters.getName() != null && discoveryQueryParameters.getName() != ""){
-                    if (platformComponentProfile.getName() == discoveryQueryParameters.getName()){
+                    if (discoveryQueryParameters.getName().toLowerCase().contains(platformComponentProfile.getName().toLowerCase())){
                         filterMatched += 1;
                     }
                 }
 
                 if (discoveryQueryParameters.getExtraData() != null && discoveryQueryParameters.getExtraData() != ""){
-                    if (platformComponentProfile.getExtraData() == discoveryQueryParameters.getExtraData()){
+                    if (discoveryQueryParameters.getExtraData().toLowerCase().contains(platformComponentProfile.getExtraData().toLowerCase())){
                         filterMatched += 1;
                     }
                 }
@@ -232,16 +233,16 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         }
 
-        if ((discoveryQueryParameters.getNumberRegister() != 0) && (discoveryQueryParameters.firstRecord() != 0)){
+        if ((discoveryQueryParameters.getMax() != 0) && (discoveryQueryParameters.getOffset() != 0)){
 
             /*
              * Apply pagination
              */
-            if (filteredLis.size() > discoveryQueryParameters.getNumberRegister() &&
-                    filteredLis.size() > discoveryQueryParameters.firstRecord()){
-                filteredLis =  filteredLis.subList(discoveryQueryParameters.firstRecord(), discoveryQueryParameters.getNumberRegister());
+            if (filteredLis.size() > discoveryQueryParameters.getMax() &&
+                    filteredLis.size() > discoveryQueryParameters.getOffset()){
+                filteredLis =  filteredLis.subList(discoveryQueryParameters.getOffset(), discoveryQueryParameters.getMax());
             }else if (filteredLis.size() > 100) {
-                filteredLis = filteredLis.subList(discoveryQueryParameters.firstRecord(), 100);
+                filteredLis = filteredLis.subList(discoveryQueryParameters.getOffset(), 100);
             }
 
         }else if (filteredLis.size() > 100) {

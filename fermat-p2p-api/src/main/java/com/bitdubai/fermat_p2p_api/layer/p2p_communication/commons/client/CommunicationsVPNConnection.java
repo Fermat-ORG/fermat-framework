@@ -52,4 +52,9 @@ public interface CommunicationsVPNConnection {
      * @return boolean
      */
     public boolean isActive();
+
+    /**
+     * Close the connection
+     */
+    public void close();
 }

@@ -89,7 +89,7 @@ public class WsCommunicationsCloudClientAgent extends Thread {
                         /**
                          * Sleep for the next try connection
                          */
-                        sleep(WsCommunicationsCloudClientAgent.SLEEP_TIME);
+                       // sleep(WsCommunicationsCloudClientAgent.SLEEP_TIME);
 
                     }
 
