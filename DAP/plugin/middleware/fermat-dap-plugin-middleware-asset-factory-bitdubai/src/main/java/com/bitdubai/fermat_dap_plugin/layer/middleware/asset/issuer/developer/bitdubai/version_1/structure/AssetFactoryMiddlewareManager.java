@@ -126,7 +126,6 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         if (assetFactory.getDescription() == null) isBoolean = false;
         if (assetFactory.getQuantity() == 0) isBoolean = false;
         if (assetFactory.getAmount() == 0) isBoolean = false;
-        //if (assetFactory.getExpirationDate() == null) isBoolean = false;
         if (assetFactory.getAssetBehavior() == null) isBoolean = false;
         return isBoolean;
     }
