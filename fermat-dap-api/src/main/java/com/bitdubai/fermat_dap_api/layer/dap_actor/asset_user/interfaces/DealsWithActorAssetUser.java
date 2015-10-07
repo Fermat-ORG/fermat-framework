@@ -6,7 +6,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
  */
 public interface DealsWithActorAssetUser {
 
-    public void setAssetUserActorNetworkServiceManager(ActorAssetUserManager actorAssetUserManager);
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager);
 
 
 }
