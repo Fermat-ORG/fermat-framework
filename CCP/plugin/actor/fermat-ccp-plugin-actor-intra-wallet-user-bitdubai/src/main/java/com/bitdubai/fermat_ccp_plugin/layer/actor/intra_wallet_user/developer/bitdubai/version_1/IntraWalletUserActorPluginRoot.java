@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraWalletUserException;
@@ -58,9 +58,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 
@@ -183,7 +180,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     @Override
     public void askIntraWalletUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ContactState.PENDING_REMOTELY_ACCEPTANCE);
+            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
         } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -205,7 +202,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     @Override
     public void acceptIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws CantAcceptIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ContactState.CONNECTED);
+            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
         } catch (CantUpdateIntraWalletUserConnectionException e) {
             throw new CantAcceptIntraWalletUserException("CAN'T ACCEPT INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -225,7 +222,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws CantDenyConnectionException {
 
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ContactState.DENIED_LOCALLY);
+            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
         } catch (CantUpdateIntraWalletUserConnectionException e) {
             throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -243,7 +240,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     @Override
     public void disconnectIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ContactState.DISCONNECTED_REMOTELY);
+            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
         } catch (CantUpdateIntraWalletUserConnectionException e) {
             throw new CantDisconnectIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -262,7 +259,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     @Override
     public void cancelIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws CantCancelIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToCancelPublicKey, ContactState.CANCELLED);
+            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToCancelPublicKey, ConnectionState.CANCELLED);
         } catch (CantUpdateIntraWalletUserConnectionException e) {
             throw new CantCancelIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -324,7 +321,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     @Override
     public List<IntraWalletUser> getWaitingYourAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException {
         try {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, ContactState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
+            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -345,7 +342,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     @Override
     public List<IntraWalletUser> getWaitingTheirAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException {
         try {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, ContactState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
+            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -355,7 +352,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
 
     public void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ContactState.PENDING_LOCALLY_ACCEPTANCE);
+            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
         } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", e, "", "");
         } catch (Exception e) {

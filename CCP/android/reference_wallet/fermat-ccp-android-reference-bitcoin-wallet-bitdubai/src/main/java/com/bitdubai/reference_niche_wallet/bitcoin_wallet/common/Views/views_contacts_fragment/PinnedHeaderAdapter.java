@@ -2,6 +2,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -19,11 +20,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.ImagesUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 // Customized adaptor to populate data in PinnedHeaderListView
 public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener, IPinnedHeader, Filterable {
@@ -43,10 +50,13 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     ArrayList<Integer> mListSectionPos;
 
     // array list to store list view data
-    ArrayList<String> mListItems;
+    ArrayList<Object> mListItems;
 
     // context object
     Context mContext;
+
+    // posiscionamiento de los contactos
+    private Map<Integer,CryptoWalletWalletContact> contactPositionItem;
 
     /**
      * @param context          Context
@@ -55,7 +65,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
      * @param constrainStr     The string that is being searching
      * @param contactsFragment ContactsFragment who is calling
      */
-    public PinnedHeaderAdapter(Context context, ArrayList<String> listItems, ArrayList<Integer> listSectionPos,
+    public PinnedHeaderAdapter(Context context, ArrayList<Object> listItems, ArrayList<Integer> listSectionPos,
                                String constrainStr, FermatListViewFragment contactsFragment) {
         this.mContext = context;
         this.mListItems = listItems;
@@ -67,6 +77,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 this.constrainStr = constrainStr;
             }
         }
+
+        contactPositionItem = new HashMap<>();
 
 
         mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -117,6 +129,10 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
+        CryptoWalletWalletContact walletContact = null;
+        String text = "";
+
+        mListSectionPos = mListSectionPos;
 
         int type = getItemViewType(position);
         if (convertView == null) {
@@ -125,9 +141,23 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
             switch (type) {
                 case TYPE_ITEM:
                     convertView = mLayoutInflater.inflate(R.layout.row_view, null);
+                    walletContact = (CryptoWalletWalletContact) mListItems.get(position);
+
+                    //guardo el contacto
+                    contactPositionItem.put(position,walletContact);
+
+                    if(walletContact.getProfilePicture()!=null){
+                        //holder.imageView.setImageBitmap(ImagesUtils.getRoundedShape(BitmapFactory.decodeByteArray(walletContact.getProfilePicture(),0,walletContact.getProfilePicture().length)));
+                    }
+                    else{
+                        Picasso.with(mContext).load(R.drawable.person1).into(holder.imageView);
+                    }
+                    text = walletContact.getActorName();
+
                     break;
                 case TYPE_SECTION:
                     convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
+                    text = (String) mListItems.get(position);
                     break;
             }
 
@@ -136,10 +166,22 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        if(text.equals("")) {
+            Object o = mListItems.get(0);
+            if (o instanceof CryptoWalletWalletContact) {
+                text =((CryptoWalletWalletContact) o).getActorName();
+            } else {
+                o = mListItems.get(1);
+                if (o instanceof CryptoWalletWalletContact) {
+                   text =((CryptoWalletWalletContact) o).getActorName();
+                }
 
-        final String text = mListItems.get(position);
+            }
+        }
+
+//        final String text = mListItems.get(position);
         final SpannableString textToShow = getSpannedText(text, constrainStr, type);
-        holder.textView.setText(textToShow);
+        holder.textView.setText(text);
 
         return convertView;
     }
@@ -148,9 +190,9 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     @Override
     public int getPinnedHeaderState(int position) {
         // hide pinned header when items count is zero OR position is less than zero OR there is already a header in list view
-        if (getCount() == 0 || position < 0 || mListSectionPos.indexOf(position) != -1) {
-            return PINNED_HEADER_GONE;
-        }
+//        if (getCount() == 0 || position < 0 || mListSectionPos.indexOf(position) != -1) {
+//            return PINNED_HEADER_GONE;
+//        }
 
         // the header should get pushed up if the top item shown is the last item in a section for a particular letter.
         mCurrentSectionPosition = getCurrentSectionPosition(position);
@@ -163,12 +205,13 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     }
 
 
+    //TODO: ver si lo que cambie aca del toString está bien, estoy casao
     @Override
     public void configurePinnedHeader(View v, int position) {
         // set text in pinned header
         TextView header = (TextView) v;
         mCurrentSectionPosition = getCurrentSectionPosition(position);
-        header.setText(mListItems.get(mCurrentSectionPosition));
+        header.setText(mListItems.get(mCurrentSectionPosition).toString());
     }
 
     @Override
@@ -222,7 +265,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
             return TOTAL_CONTACTS_SECTION_POSITION;
         }
 
-        String listChar = mListItems.get(position).substring(0, 1).toUpperCase(Locale.getDefault());
+        String listChar = ((String)mListItems.get(position)).substring(0, 1).toUpperCase(Locale.getDefault());
 
         if (listChar.matches(HeaderTypes.LETTER.getRegex())) {
             return mListItems.indexOf(listChar);

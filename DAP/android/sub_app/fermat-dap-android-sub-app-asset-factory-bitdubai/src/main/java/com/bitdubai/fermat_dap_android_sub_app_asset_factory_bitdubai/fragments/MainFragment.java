@@ -101,6 +101,12 @@ public class MainFragment extends FermatFragment implements
         onRefresh();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        selectedAsset = null;
+    }
+
     protected void initViews(View layout) {
         Log.i(TAG, "recycler view setup");
         if (layout == null)
@@ -168,6 +174,9 @@ public class MainFragment extends FermatFragment implements
                     /* create new asset */
                     changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
                 }
+            } else if (result != null) {
+                dataSet = new ArrayList<>();
+                adapter.changeDataSet(dataSet);
             }
         }
     }
