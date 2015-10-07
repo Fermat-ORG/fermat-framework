@@ -1,6 +1,5 @@
 == Developing regional crypto ecosystems: FERMAT CBP & FERMAT CDN 
 
-=== FERMAT CCP: the foundations
 === FERMAT CBP
 === FERMAT CDN
 

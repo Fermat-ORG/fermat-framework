@@ -1131,8 +1131,17 @@ All this different * abstraction levels* are possible within FERMAT, and FERMAT&
 <p>BrWa (Brand Wallet) &#8594; <strong>for brands owners who accept cryptocurrency in their retailers network.</strong></p>
 </li>
 <li>
-<p>ReWa (Retail wallet) &#8594; <strong>for</strong>
-ated</p>
+<p>ReWa (Retail wallet) &#8594; <strong>for</strong></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>FERMAT DAP (Digital Asset Platform)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>AsIs (Asset Issuer Wallet) &#8594; for company or brand that issues a Digital Assets to offer to their customers*</p>
 </li>
 <li>
 <p>AsUs (Shop wallet) &#8594; for <strong>the customer who accepts/obtain some Digital Assets according to his interests</strong></p>
@@ -1268,11 +1277,20 @@ gatherings of the components of a certain wallet:<br>
 <h3 id="_fermat_wallet_factory">3.1. FERMAT Wallet Factory</h3>
 <div class="paragraph">
 <p>Once we have at least one <strong>Niche Reference Wallet</strong> (e.g.<strong>Bitcoin Reference Wallet</strong>), we can realize that in the <strong>front-end</strong> there are two disctint tasks taking place: on one hand, there exist a <strong>navigation structure</strong> (available menus, tabs, buttons, etc) that provides the means by which the user operates the wallet, an on the other hand, there exists a set of <strong>resources</strong> (multimedia files, images, etc) used for the visualization of each element of the wallet.
-At the
-En el <strong>back-end</strong> , where the really action is occuring, we have a lot of modules acting to provide the necessary functions, like:<br>
-* sending and receiving the cryptocurrency
-* keeping track of the balance of the wallet
-* managing the contacts ( register, identification, etc)</p>
+At the <strong>back-end</strong> , where the really action is occuring, we have a lot of modules acting to provide the necessary functions, like:<br></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>sending and receiving the cryptocurrency</p>
+</li>
+<li>
+<p>keeping track of the balance of the wallet</p>
+</li>
+<li>
+<p>managing the contacts ( register, identification, etc)</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>If someone having the required programmer&#8217;s skills wants to build a Wallet, he would necessary have to build every and each one of the modules needed for the wallet to run begin to write the code from zero. However, if you remember that FERMAT is an open system allowing third part developers and actors in general to form part, developers of new wallet can use any of the available <strong>reference niche wallet</strong> to reutilize the COMPLETE back-end ( all the programming code stuff!), and concentrate his endeavour only to the *front-end*making his job a lot easier and allowing all his creativity to be channeled in a better and more attractive result for the end user. ( not only for a nice look but also for improved and more efficient functionalities!).</p>
@@ -1299,66 +1317,33 @@ This module also has the responsability of notifying the release of new updates 
 <div class="sect2">
 <h3 id="_fermat_wallet_store">3.3. FERMAT Wallet Store</h3>
 <div class="paragraph">
-<p>The Wa-St module (Wallet Store) es dentro del sistema fermat una DAPP (Distributed Application).
-Es decir que es una aplicación formada por un número indeterminado de nodos que colaboran entre si
-para manejar la funcionalidad de la DAPP a nivel del sistema completo.<br>
-Su función es mostrarle al usuario wallets que pueden serle de interés y si el usuario decide
-instalar una wallet comunica la acción al Wallet Manager.<br>
-La Wallet Store debe manejar además de la identidad de la Wallet y del Developer que la publica.
-Además debe almacenar el Hash de la información correspondiente a la estructura de navegación y
-por otro lado el hash correspondiente a los recursos que esa wallet utiliza.<br></p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-Quizás no sea necesario lo de almacenamiento de arriba
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Luego el Wallet Manager en el dispositivo del usuario que finalmente instala la nueva wallet,
-se encargará de validar que la estructura de navegación obtenida de algún peer, tenga el mismo hash.
-Lo mismo con los recursos.</p>
-</div>
-<div class="sect3">
-<h4 id="_cat_logo_distribu_do">3.3.1. Catálogo Distribuído</h4>
-<div class="paragraph">
-<p>Cada nodo de la Wallet Store mantiene una parte del catálogo distribuído de wallets disponibles.
-En principio querríamos que estos nodos muestren información relevante al usuario.
-La información que da este network service debe poder contrastarse con la versión de la plataforma
-que tenemos instalada  (plug-ins instalados) para poder comunicarle al usuario qué cosas
-puede instalar sin actualizar la plataforma y qué cosas podría instalar de hacer un upgrade.</p>
-</div>
-<div class="paragraph">
-<p>Criterios para determinar relevancia de una wallet para un usuario: localización del usuario,
-rango de acción, tipo de compras, etc.</p>
-</div>
+<p>The Wa-St module (Wallet Store) is inside FERMAT  a DAPP (Distributed Application), i.e. and undetermined amount of nodes collaborate bewteen them to provide the functionality of the app inside the whole system.<br>
+The Wallet Store functions in a similar way of known app-stores, and it serves to show the user the wallet that may be attractive to him. Itis a <strong>distributed catalog</strong> of wallets.<br>
+When one new wallet is chosen, the Wallet Store notifies the Wa-Ma (Wallet Manager) app to make it available to the user.<br>
+Internally, the Wa-St module keeps the identity of the wallet, of its developer, and of the ressources used by it.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fermat_wallet_manager">3.4. FERMAT wallet Manager</h3>
-
+<h3 id="_fermat_wallet_manager">3.4. FERMAT Wallet Manager</h3>
+<div class="paragraph">
+<p>The Wa-Ma module ( Wallet Manager) lets install the chosen wallet in the user&#8217;s device, collecting from the distributed network, the necessary components: te walletś navigation structure and the wallet&#8217;s ressources.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_shp_making_it_easy_for_shop_owners">4. FERMAT SHP : Making it easy for shop owners</h2>
+<h2 id="_fermat_ccp_crypto_currency_platform">4. FERMAT CCP (crypto currency platform)</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_shop_owners">4.1. Shop Owners</h3>
+<h3 id="_bitwa_basic_bitcoin_wallet_strong_for_those_devoted_btc_only_users_strong">4.1. BitWa (Basic Bitcoin Wallet)  &#8594; <strong>for those devoted "BTC-only" users!</strong></h3>
 
 </div>
 <div class="sect2">
-<h3 id="_brands">4.2. Brands</h3>
+<h3 id="_argentine_bitcoin_wallet_strong_for_citizen_s_of_the_nr_1_potential_mass_market_for_btc_designed_to_match_argentine_culture_of_steady_strong_comparison_between_argentine_usd_oficial_and_blue_and_even_eu">4.2. Argentine Bitcoin wallet &#8594; <strong>for citizen&#8217;s of the nr.1 potential mass market for BTC (designed to match argentine culture of steady</strong> comparison between argentine$, USD (oficial and blue!) and even Eu$!)</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_retailers">4.3. Retailers</h3>
+<h3 id="_blp_bitcoin_loss_protected_wallet_strong_for_conservative_user_s_caring_about_never_selling_under_the_purchase_price_preserving_value_strong">4.3. BLP (Bitcoin Loss Protected wallet) &#8594; <strong>for conservative user&#8217;s caring about never selling under the purchase price ! (preserving value!)</strong></h3>
 
 </div>
 </div>
@@ -1367,15 +1352,11 @@ rango de acción, tipo de compras, etc.</p>
 <h2 id="_developing_regional_crypto_ecosystems_fermat_cbp_fermat_cdn">5. Developing regional crypto ecosystems: FERMAT CBP &amp; FERMAT CDN</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_fermat_ccp_the_foundations">5.1. FERMAT CCP: the foundations</h3>
+<h3 id="_fermat_cbp">5.1. FERMAT CBP</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_fermat_cbp">5.2. FERMAT CBP</h3>
-
-</div>
-<div class="sect2">
-<h3 id="_fermat_cdn">5.3. FERMAT CDN</h3>
+<h3 id="_fermat_cdn">5.2. FERMAT CDN</h3>
 
 </div>
 </div>
@@ -1456,7 +1437,7 @@ rango de acción, tipo de compras, etc.</p>
 
 </div>
 <div class="sect4">
-<h5 id="_fermat_ccp_crypto_currency_platform">FERMAT CCP - Crypto Currency Platform</h5>
+<h5 id="_fermat_ccp_crypto_currency_platform_2">FERMAT CCP - Crypto Currency Platform</h5>
 
 </div>
 </div>

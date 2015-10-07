@@ -131,7 +131,8 @@ A visible way of grasping all the complexity of FERMAT as well as all its potent
 ** ShWa (Shop Wallet) -> *for shop owners who accept cryptocurrency in payment of their products !*
 ** BrWa (Brand Wallet) -> *for brands owners who accept cryptocurrency in their retailers network.*
 ** ReWa (Retail wallet) -> *for* 
-ated
+* FERMAT DAP (Digital Asset Platform)
+** AsIs (Asset Issuer Wallet) -> for company or brand that issues a Digital Assets to offer to their customers*
 ** AsUs (Shop wallet) -> for *the customer who accepts/obtain some Digital Assets according to his interests*
 ** RePo (Shop wallet) -> for the place/shop/person that exchanges the Asset for a certain service or product (redeems it).*
 * FERMAT MKT  (Market Platform)
