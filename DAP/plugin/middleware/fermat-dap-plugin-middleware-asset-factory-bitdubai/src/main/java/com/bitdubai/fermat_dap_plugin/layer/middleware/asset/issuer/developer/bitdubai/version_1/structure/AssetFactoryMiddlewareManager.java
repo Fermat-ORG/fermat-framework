@@ -438,17 +438,17 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             if(assetFactory.getState() == State.DRAFT) {
                 DigitalAsset digitalAsset = new DigitalAsset();
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
-                ContractProperty redeemable;
-                ContractProperty expirationDate;
-                redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-                expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-                ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
-                ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
-                redeemable1.setValue(assetFactory.getIsRedeemable());
-                expirationDate1.setValue(assetFactory.getExpirationDate());
                 //TODO: Revisar porque la asignacion del value al property no la asigna
-                digitalAssetContract.setContractProperty(redeemable1);
-                digitalAssetContract.setContractProperty(expirationDate1);
+//                ContractProperty redeemable;
+//                ContractProperty expirationDate;
+//                redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+//                expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+//                ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+//                ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+//                redeemable1.setValue(assetFactory.getIsRedeemable());
+//                expirationDate1.setValue(assetFactory.getExpirationDate());
+//                digitalAssetContract.setContractProperty(redeemable1);
+//                digitalAssetContract.setContractProperty(expirationDate1);
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());
@@ -462,9 +462,9 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
                 digitalAsset.setIdentityAssetIssuer(aseetIssuerIdentity);
                 digitalAsset.setResources(assetFactory.getResources());
                 markAssetFactoryState(State.PENDING_FINAL, assetFactory.getPublicKey());
-                //Actualiza el State a Pending_Final del objeto assetFactory
-                //Llama al metodo AssetIssuer de la transaction
+                //Method the DealsWithAssetIssuing
                 assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), blockchainNetworkType);
+
             }
             else
             {
@@ -475,10 +475,6 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: issueAssets");
         }
-//        catch (CantSaveAssetFactoryException exception)
-//        {
-//            throw new CantSaveAssetFactoryException(exception, "Cant Save Asset Factory", "Method: publishAsset");
-//        }
         catch (Exception e){
             e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: publishAsset");
