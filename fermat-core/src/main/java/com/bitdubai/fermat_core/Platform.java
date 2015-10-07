@@ -1490,7 +1490,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithActorAssetUser) {
-                ((DealsWithActorAssetUser) plugin).setActorAssetUserManager((ActorAssetUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR));
+                ((DealsWithActorAssetUser) plugin).setAssetUserActorNetworkServiceManager((ActorAssetUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR));
             }
 
             if (plugin instanceof DealsWithActorAssetRedeemPoint) {
