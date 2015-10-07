@@ -42,8 +42,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -212,7 +210,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
          ******************************************************************/
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
-        this.networkServiceType    = NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE;
+        this.networkServiceType    = NetworkServiceType.TEMPLATE;
         this.name                  = "Template Network Service";
         this.alias                 = "TemplateNetworkService";
         this.extraData             = null;
@@ -632,7 +630,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
