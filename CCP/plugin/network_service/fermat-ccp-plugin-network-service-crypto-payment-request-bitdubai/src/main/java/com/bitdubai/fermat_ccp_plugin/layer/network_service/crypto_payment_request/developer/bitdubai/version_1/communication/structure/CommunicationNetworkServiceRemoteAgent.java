@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure;
 
+
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.CommunicationLayerNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.IncomingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.OutgoingMessageDao;
@@ -16,6 +19,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +29,7 @@ import java.util.Map;
 import java.util.Observable;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CryptoPaymentRequestNetworkServiceRemoteAgent</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceRemoteAgent</code>
  * is the service toRead that maintaining the communication channel, read and wait for new message.
  *
  * This class extend of the <code>java.util.Observable</code> class,  its used on the software design pattern called: The observer pattern,
@@ -36,32 +42,21 @@ import java.util.Observable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoPaymentRequestNetworkServiceRemoteAgent extends Observable {
+public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
      * Represent the sleep time for the read or send (2000 milliseconds)
      */
     private static final long SLEEP_TIME = 2000;
 
-    /**
-     * Represent the communicationsVPNConnection
-     */
-    CommunicationsVPNConnection communicationsVPNConnection;
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * Represent the incomingMessageDao
-     */
-    private IncomingMessageDao incomingMessageDao;
-
-    /**
-     * Represent the outgoingMessageDao
-     */
-    private OutgoingMessageDao outgoingMessageDao;
+    private final CommunicationsVPNConnection communicationsVPNConnection  ;
+    private final ErrorManager                errorManager                 ;
+    private final EventManager                eventManager                 ;
+    private final IncomingMessageDao          incomingMessageDao           ;
+    private final OutgoingMessageDao          outgoingMessageDao           ;
+    private final ECCKeyPair                  eccKeyPair                   ;
+    private final String                      remoteNetworkServicePublicKey;
 
     /**
      * Represent is the tread is running
@@ -69,40 +64,32 @@ public class CryptoPaymentRequestNetworkServiceRemoteAgent extends Observable {
     private Boolean running;
 
     /**
-     * Represent the read messages tread of this TemplateNetworkServiceRemoteAgent
+     * Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
      */
     private Thread toReceive;
 
     /**
-     * Represent the send messages tread of this TemplateNetworkServiceRemoteAgent
+     * Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
      */
     private Thread toSend;
 
-    /**
-     * Represent the eccKeyPair
-     */
-    private ECCKeyPair eccKeyPair;
 
     /**
-     * Represent the public key of the remote network service
+     * Constructor with parameters.
      */
-    private String remoteNetworkServicePublicKey;
-
-    /**
-     * Constructor with parameters
-     *
-     * @param eccKeyPair from the plugin root
-     * @param remoteNetworkServicePublicKey the public key
-     * @param errorManager  instance
-     * @param incomingMessageDao instance
-     * @param outgoingMessageDao instance
-     */
-    public CryptoPaymentRequestNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceRemoteAgent(final ECCKeyPair                  eccKeyPair                   ,
+                                                  final CommunicationsVPNConnection communicationsVPNConnection  ,
+                                                  final String                      remoteNetworkServicePublicKey,
+                                                  final ErrorManager                errorManager                 ,
+                                                  final EventManager                eventManager                 ,
+                                                  final IncomingMessageDao          incomingMessageDao           ,
+                                                  final OutgoingMessageDao          outgoingMessageDao           ) {
 
         super();
         this.eccKeyPair                          = eccKeyPair;
         this.remoteNetworkServicePublicKey       = remoteNetworkServicePublicKey;
         this.errorManager                        = errorManager;
+        this.eventManager                        = eventManager;
         this.running                             = Boolean.FALSE;
         this.incomingMessageDao                  = incomingMessageDao;
         this.outgoingMessageDao                  = outgoingMessageDao;
@@ -141,7 +128,7 @@ public class CryptoPaymentRequestNetworkServiceRemoteAgent extends Observable {
         toReceive.start();
         toSend.start();
 
-        System.out.println("TemplateNetworkServiceRemoteAgent - started ");
+        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
 
     }
 
@@ -169,7 +156,7 @@ public class CryptoPaymentRequestNetworkServiceRemoteAgent extends Observable {
         toSend.interrupt();
 
         //Disconnect from the service
-        //serviceToServiceOnlineConnection.disconnect();
+        communicationsVPNConnection.close();
     }
 
     /**
@@ -181,14 +168,14 @@ public class CryptoPaymentRequestNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            System.out.println("TemplateNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+            System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                System.out.println("TemplateNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -237,13 +224,12 @@ public class CryptoPaymentRequestNetworkServiceRemoteAgent extends Observable {
             }
 
             //Sleep for a time
-            toReceive.sleep(CryptoPaymentRequestNetworkServiceRemoteAgent.SLEEP_TIME);
+            toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
 
     }
@@ -296,6 +282,15 @@ public class CryptoPaymentRequestNetworkServiceRemoteAgent extends Observable {
                              */
                             ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                             outgoingMessageDao.update(message);
+
+                            /*
+                             * Put the message on a event and fire new event
+                             */
+                            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+                            fermatEvent.setSource(CryptoPaymentRequestNetworkServicePluginRoot.EVENT_SOURCE);
+                            ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(message);
+                            eventManager.raiseEvent(fermatEvent);
+
                         }
                     }
 
@@ -306,7 +301,7 @@ public class CryptoPaymentRequestNetworkServiceRemoteAgent extends Observable {
                 }
 
             //Sleep for a time
-            toSend.sleep(CryptoPaymentRequestNetworkServiceRemoteAgent.SLEEP_TIME);
+            toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
