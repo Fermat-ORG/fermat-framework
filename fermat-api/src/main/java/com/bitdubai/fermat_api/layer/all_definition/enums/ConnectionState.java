@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums;
+package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The enum <code>ContactState</code>
- * list the states an intra wallet user can be assigned.
+ * The enum <code>ConnectionState</code>
+ * list the states for intra User Wllet and Aseet Issuer, User, Redeem Point can be assigned.
  */
-public enum ContactState implements FermatEnum {
+public enum ConnectionState implements FermatEnum {
 
     PENDING_LOCALLY_ACCEPTANCE  ("PYA"),
     BLOCKED                     ("BCK"),
@@ -20,11 +20,11 @@ public enum ContactState implements FermatEnum {
 
     private String code;
 
-    ContactState(String code) {
+    ConnectionState(String code) {
         this.code = code;
     }
 
-    public static ContactState getByCode(String code) throws InvalidParameterException {
+    public static ConnectionState getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
 
