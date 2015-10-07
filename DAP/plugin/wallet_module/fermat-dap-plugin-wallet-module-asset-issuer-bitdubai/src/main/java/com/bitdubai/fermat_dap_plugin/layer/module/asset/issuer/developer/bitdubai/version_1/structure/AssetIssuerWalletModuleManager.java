@@ -5,55 +5,46 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.util.List;
 
 /**
  * Created by franklin on 06/10/15.
  */
-public class AssetIssuerWalletModuleManager {
+public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWallet {
     //TODO: Excepciones y documentar
-    private AssetIssuerWallet assetIssuerWallet;
-    AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager;
-
-
-    private AssetIssuerWalletBalance getAssetIssuerWalletBalancesAvailable(){
-        try{
-            return assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE);
-        }catch (Exception e){
-            return null;
-        }
+    AssetIssuerWalletManager assetIssuerWalletManager;
+    @Override
+    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
+        this.assetIssuerWalletManager = assetIssuerWalletManager;
     }
 
-    private AssetIssuerWalletBalance getAssetIssuerWalletBalancesBook(){
-        try{
-            return assetIssuerWallet.getBookBalance(BalanceType.BOOK);
-        }catch (Exception e){
-            return null;
-        }
+    /**
+     * constructor
+     * @param assetIssuerWalletManager
+     */
+    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager) {
+        this.assetIssuerWalletManager = assetIssuerWalletManager;
     }
 
-    public List<AssetIssuerWalletList>  listAssetIssuerWalletBalancesAvailable(){
-
+    public List<AssetIssuerWalletList>  getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException{
         try{
-            return getAssetIssuerWalletBalancesAvailable().getAssetIssuerWalletBalancesAvailable();
+            return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey).getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
         }catch (Exception exception){
-            return null;
+            throw new CantLoadWalletException("Error load Wallet Balances Available", exception, "Method: getAssetIssuerWalletBalancesAvailable", "");
         }
     }
 
-    public List<AssetIssuerWalletList>  listAssetIssuerWalletBalancesBook(){
-
+    public List<AssetIssuerWalletList>  getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException{
         try{
-            return getAssetIssuerWalletBalancesAvailable().getAssetIssuerWalletBalancesBook();
+            return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey).getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalancesBook();
         }catch (Exception exception){
-            return null;
+            throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: ", "getAssetIssuerWalletBalancesBook");
         }
-    }
-
-    AssetIssuerWalletModuleManager(AssetIssuerWallet assetIssuerWallet){
-        this.assetIssuerWallet = assetIssuerWallet;
     }
 }

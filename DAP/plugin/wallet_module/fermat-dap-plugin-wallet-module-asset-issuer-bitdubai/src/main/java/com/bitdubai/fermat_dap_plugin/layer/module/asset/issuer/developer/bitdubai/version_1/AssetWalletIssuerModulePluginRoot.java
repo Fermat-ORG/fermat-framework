@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
@@ -18,8 +19,8 @@ import java.util.UUID;
  */
 public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service{
     //TODO: Implementar
-
     AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+    AssetIssuerWalletManager assetIssuerWalletManager;
 
     UUID pluginId;
 
@@ -30,19 +31,14 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
         this.pluginId = pluginId;
     }
 
-    @Override
-    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
-        try {
-            assetIssuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet("");
-        }
-        catch (Exception exception){
 
-        }
-    }
-
+    /**
+     * (non-Javadoc)
+     * @see Service#start()
+     */
     @Override
     public void start() throws CantStartPluginException {
-        //assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager();
+        assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager);
     }
 
     @Override
@@ -63,5 +59,11 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     @Override
     public ServiceStatus getStatus() {
         return null;
+    }
+
+
+    @Override
+    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
+        this.assetIssuerWalletManager = assetIssuerWalletManager;
     }
 }
