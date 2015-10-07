@@ -11,6 +11,7 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantLoadHierarchyAccountsException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.KeyMaintainerStatisticException;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
@@ -40,6 +41,11 @@ class VaultKeyHierarchyMaintainer implements Agent {
      * controller of the agent execution thread
      */
     private boolean isSupposedToRun;
+
+    /**
+     * the DAO object to access the database
+     */
+    AssetsOverBitcoinCryptoVaultDao dao;
 
     /**
      * The vault complete key hierarchy
@@ -105,6 +111,8 @@ class VaultKeyHierarchyMaintainer implements Agent {
                     e.printStackTrace();
                 } catch (CantLoadHierarchyAccountsException e) {
                     e.printStackTrace();
+                } catch (KeyMaintainerStatisticException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -112,7 +120,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * main executor of the agent
          */
-        private void doTheMainTask() throws CantLoadHierarchyAccountsException {
+        private void doTheMainTask() throws CantLoadHierarchyAccountsException, KeyMaintainerStatisticException {
             allAccountsKeyList = new ArrayList<>();
             /**
              * I get all the accounts that are available from the database
@@ -132,13 +140,13 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 currentThreshold = (int) Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
 
                 List<ECKey> publicKeys;
-                if (currentThreshold >= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD) {
+                if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD) {
                     /**
                      * The current threshold is lower than the limit imposed, we need to generate new keys
                      * I start by updating the database and defining the new GeneratedKeys values
                      */
                     int newGeneratedKeys = currentGeneratedKeys + VaultKeyMaintenanceParameters.KEY_GENERATION_BLOCK;
-                    setGeneratedKeysValue(newGeneratedKeys);
+                    setGeneratedKeysValue(hierarchyAccount.getId(), newGeneratedKeys);
 
                     /**
                      * I will generate the list of keys from zero to the new value
@@ -190,7 +198,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
             /**
              * I get this information from the active_Networks table on the networkType column
              */
-
+                //todo complete this
             /**
              * the default network is always active, so I will add this.
              */
@@ -218,8 +226,18 @@ class VaultKeyHierarchyMaintainer implements Agent {
             return publicKeys;
         }
 
-        private void setGeneratedKeysValue(int value) {
-            //todo update the table key_Maintenance column generatedKeys with the passed value
+        /**
+         * updates the generateKey values
+         * @param accountId
+         * @param value
+         * @throws KeyMaintainerStatisticException
+         */
+        private void setGeneratedKeysValue(int accountId, int value) throws KeyMaintainerStatisticException {
+            try {
+                getDao().setGeneratedKeysValue(accountId, value);
+            } catch (CantExecuteDatabaseOperationException  e) {
+                throw new KeyMaintainerStatisticException(KeyMaintainerStatisticException.DEFAULT_MESSAGE, e, "there was an error updateing the Generated Key value", "database error.");
+            }
         }
 
         /**
@@ -231,8 +249,28 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @param currentUsedKeys
          * @param currentThreshold
          */
-        private void updateMaintainerStats(int hierarchyAccountId, String date, int currentGeneratedKeys, int currentUsedKeys, int currentThreshold) {
-            //todo complete maintainer update stats
+        private void updateMaintainerStats(int hierarchyAccountId, String date, int currentGeneratedKeys, int currentUsedKeys, int currentThreshold) throws KeyMaintainerStatisticException {
+            try {
+                getDao().updateMaintainerStatistics(hierarchyAccountId,date, currentGeneratedKeys, currentUsedKeys, currentThreshold);
+            } catch (CantExecuteDatabaseOperationException e) {
+                throw new KeyMaintainerStatisticException(KeyMaintainerStatisticException.DEFAULT_MESSAGE, e, "I was unable to update the execution statistics into the database.", "database issue");
+            }
+        }
+
+        /**
+         * Gets and instance of the AssetsOverBitcoinCryptoVaultDao class used to access database objects.
+         * @return
+         * @throws CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException
+         */
+        private AssetsOverBitcoinCryptoVaultDao getDao() {
+            if (dao == null){
+                try {
+                    dao = new AssetsOverBitcoinCryptoVaultDao(pluginDatabaseSystem, pluginId);
+                } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException e) {
+                    e.printStackTrace();
+                }
+            }
+            return dao;
         }
 
         /**
@@ -243,7 +281,11 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @return
          */
         private int getCurrentUsedKeys(HierarchyAccount hierarchyAccount) {
-            return 0;
+            try {
+                return getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+            } catch (CantExecuteDatabaseOperationException e) {
+                return 0;
+            }
         }
 
         /**
@@ -256,7 +298,11 @@ class VaultKeyHierarchyMaintainer implements Agent {
             /**
              * I can never return 0 or it will fail by dividing by 0
              */
-            return 1;
+            try {
+                return getDao().getCurrentGeneratedKeys(hierarchyAccount.getId());
+            } catch (CantExecuteDatabaseOperationException e) {
+                return 1;
+            }
         }
 
         /**
@@ -270,13 +316,11 @@ class VaultKeyHierarchyMaintainer implements Agent {
             /**
              * The DAO object used to access the database.
              */
-            AssetsOverBitcoinCryptoVaultDao dao = null;
+
 
             try {
-                dao = new AssetsOverBitcoinCryptoVaultDao(pluginDatabaseSystem, pluginId);
-                hierarchyAccounts = dao.getHierarchyAccounts();
-            } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException |
-                    CantExecuteDatabaseOperationException e) {
+                hierarchyAccounts = getDao().getHierarchyAccounts();
+            } catch (CantExecuteDatabaseOperationException e) {
                 /**
                  * If there was an error creating or loading the database, or getting the list of accounts, I can't go on.
                  */
@@ -299,7 +343,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                  * And I will also try to add this to the database so I can load it the next time.
                  */
                 try {
-                    dao.addNewHierarchyAccount(accountZero);
+                    getDao().addNewHierarchyAccount(accountZero);
                 } catch (CantExecuteDatabaseOperationException e) {
                     // I don't need to handle this error.
                 }
