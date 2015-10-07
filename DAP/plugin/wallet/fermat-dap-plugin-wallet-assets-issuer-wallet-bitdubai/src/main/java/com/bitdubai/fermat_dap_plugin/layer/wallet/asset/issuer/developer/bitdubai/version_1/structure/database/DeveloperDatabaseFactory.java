@@ -46,21 +46,21 @@ public class DeveloperDatabaseFactory {
         List<String> assetWalletIssuerColumns = new ArrayList<>();
         assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME);
         assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_FROM_TYPE_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ACTOR_TO_TYPE_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ADDRESS_FROM_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__ADDRESS_TO_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__AMOUNT_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__BALANCE_TYPE_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__RUNNING_BOOK_BALANCE_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TIME_STAMP_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TRANSACTION_HASH_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__TYPE_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__MEMO_COLUMN_NAME);
-        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER__VERIFICATION_ID_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_FROM_TYPE_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ACTOR_TO_TYPE_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_FROM_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ADDRESS_TO_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_AMOUNT_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TIME_STAMP_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TRANSACTION_HASH_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME);
 
         /**
          * assetIssuerWalletColumns table

@@ -409,8 +409,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
     }
 
     @Override
-    public void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException {
-
+    public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException {
+        assetFactoryMiddlewareManager.removeAssetFactory(publicKey);
     }
 
     @Override

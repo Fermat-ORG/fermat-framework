@@ -683,10 +683,19 @@ public class Platform implements Serializable {
             Plugin wsCommunicationCloudClient = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getWsCommunicationCloudClientPlugin();
             injectPluginReferencesAndStart(wsCommunicationCloudClient, Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL);
 
+
+             /*
+             * Plugin CCP Crypto Payment Request Network Service
+             * -----------------------------
+             */
+            Plugin cryptoPaymentRequestNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoPaymentRequestPlugin();
+            injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
+
              /*
              * Plugin Template Network Service
              * -----------------------------
              */
+
             Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
             injectLayerReferences(templateNetworkService);
             injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
@@ -843,13 +852,6 @@ public class Platform implements Serializable {
              */
             Plugin cryptoTransmissionNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getCryptoTransmission();
             injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
-
-             /*
-             * Plugin CCP Crypto Payment Request Network Service
-             * -----------------------------
-             */
-            Plugin cryptoPaymentRequestNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoPaymentRequestPlugin();
-            injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
 
 
             /*

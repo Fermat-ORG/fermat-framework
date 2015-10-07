@@ -67,4 +67,6 @@ public interface CryptoWalletWalletContact {
      */
     byte[] getProfilePicture();
 
+    String toString();
+
 }
