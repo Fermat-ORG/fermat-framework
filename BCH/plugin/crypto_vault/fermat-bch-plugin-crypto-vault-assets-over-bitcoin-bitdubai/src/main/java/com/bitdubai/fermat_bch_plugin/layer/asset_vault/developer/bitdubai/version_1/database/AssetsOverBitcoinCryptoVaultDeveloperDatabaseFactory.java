@@ -57,6 +57,15 @@ public class AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory implements Dea
     public AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+
+        try {
+            initializeDatabase();
+        } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException e) {
+            /**
+             * If there is an error, I just will log it.
+             */
+            e.printStackTrace();
+        }
     }
 
     /**

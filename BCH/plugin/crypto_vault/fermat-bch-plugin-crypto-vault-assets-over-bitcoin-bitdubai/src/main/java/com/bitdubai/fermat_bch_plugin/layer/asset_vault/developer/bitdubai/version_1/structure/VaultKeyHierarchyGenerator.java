@@ -103,11 +103,12 @@ class VaultKeyHierarchyGenerator implements Runnable{
         /**
          * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
          */
-        VaultKeyHierarchyMaintainer vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager);
+        VaultKeyHierarchyMaintainer vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         try {
             vaultKeyHierarchyMaintainer.start();
         } catch (CantStartAgentException e) {
-            //todo handle
+            // I will log this error for now.
+            e.printStackTrace();
         }
     }
 
@@ -158,12 +159,9 @@ class VaultKeyHierarchyGenerator implements Runnable{
             /**
              * And I will also try to add this to the database so I can load it the next time.
              */
-            if (dao == null)
                 try {
-                    dao = new AssetsOverBitcoinCryptoVaultDao(this.pluginDatabaseSystem, this.pluginId);
                     dao.addNewHierarchyAccount(accountZero);
-                } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException |
-                        CantExecuteDatabaseOperationException e) {
+                } catch (CantExecuteDatabaseOperationException e) {
                     // I don't need to handle this error.
                 }
         }

@@ -7,6 +7,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.VaultKeyMaintenanceParameters;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantLoadHierarchyAccountsException;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
@@ -17,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchyMaintainer</code>
@@ -47,16 +52,18 @@ class VaultKeyHierarchyMaintainer implements Agent {
      */
     PluginDatabaseSystem pluginDatabaseSystem;
     BitcoinNetworkManager bitcoinNetworkManager;
+    UUID pluginId;
 
     /**
      * Constructor
      * @param vaultKeyHierarchy
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyMaintainer(VaultKeyHierarchy vaultKeyHierarchy, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager) {
+    public VaultKeyHierarchyMaintainer(VaultKeyHierarchy vaultKeyHierarchy, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
         this.vaultKeyHierarchy = vaultKeyHierarchy;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -71,7 +78,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         isSupposedToRun = false;
     }
 
-    private class VaultKeyHierarchyMaintainerAgent implements Runnable{
+    private class VaultKeyHierarchyMaintainerAgent implements Runnable {
         /**
          * current key usage from the database
          */
@@ -90,11 +97,13 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
         @Override
         public void run() {
-            while (isSupposedToRun){
-                doTheMainTask();
+            while (isSupposedToRun) {
                 try {
+                    doTheMainTask();
                     Thread.sleep(AGENT_SLEEP_TIME);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (CantLoadHierarchyAccountsException e) {
                     e.printStackTrace();
                 }
             }
@@ -103,12 +112,12 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * main executor of the agent
          */
-        private void doTheMainTask(){
+        private void doTheMainTask() throws CantLoadHierarchyAccountsException {
             allAccountsKeyList = new ArrayList<>();
             /**
              * I get all the accounts that are available from the database
              */
-            for (HierarchyAccount hierarchyAccount : getHierarchyAccounts()){
+            for (HierarchyAccount hierarchyAccount : getHierarchyAccounts()) {
                 /**
                  * for each account, I will get the currentGeneratedKeys value
                  */
@@ -120,10 +129,10 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 /**
                  * I will calculate the current threshold to see if we need to create new keys
                  */
-                currentThreshold =  (int) Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
+                currentThreshold = (int) Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
 
                 List<ECKey> publicKeys;
-                if (currentThreshold >= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD){
+                if (currentThreshold >= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD) {
                     /**
                      * The current threshold is lower than the limit imposed, we need to generate new keys
                      * I start by updating the database and defining the new GeneratedKeys values
@@ -147,10 +156,10 @@ class VaultKeyHierarchyMaintainer implements Agent {
                  * I will update the stats of the Hierarchy Maintainer in the database
                  */
                 updateMaintainerStats(hierarchyAccount.getId(),
-                                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
-                                    currentGeneratedKeys,
-                                    currentUsedKeys,
-                                    currentThreshold);
+                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
+                        currentGeneratedKeys,
+                        currentUsedKeys,
+                        currentThreshold);
 
                 /**
                  * At this point I have the list of keys for each account, so I will put them all together at allAccountsKeyList
@@ -173,6 +182,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
         /**
          * Gets the list of active networks on this platform.
+         *
          * @return
          */
         private List<BlockchainNetworkType> getActiveNetworks() {
@@ -190,6 +200,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
         /**
          * Will derive the amount specified of public keys for the passed account.
+         *
          * @param hierarchyAccount
          * @param amount
          * @return
@@ -197,7 +208,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         private List<ECKey> deriveChildPubKeys(HierarchyAccount hierarchyAccount, int amount) {
             DeterministicHierarchy pubKeyHierarchy = vaultKeyHierarchy.getAddressPublicHierarchyFromAccount(hierarchyAccount);
             List<ECKey> publicKeys = new ArrayList<>();
-            for (int i=0; i < amount; i++){
+            for (int i = 0; i < amount; i++) {
                 // I derive the key at position i
                 DeterministicKey derivedPubKey = pubKeyHierarchy.deriveChild(pubKeyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
                 // I add this key to the ECKey list
@@ -213,6 +224,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
         /**
          * Will update the statistics of the maintainer execution
+         *
          * @param hierarchyAccountId
          * @param date
          * @param currentGeneratedKeys
@@ -226,6 +238,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * Gets the actual amount of used keys for the specified account.
          * Keys used are the ones that where used to generate addresses
+         *
          * @param hierarchyAccount
          * @return
          */
@@ -235,6 +248,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
         /**
          * get the amount of how many keys have been generated for the specified amount
+         *
          * @param hierarchyAccount
          * @return
          */
@@ -247,21 +261,48 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
         /**
          * Gets the available Accounts from the database
+         *
          * @return
          */
-        private List<HierarchyAccount> getHierarchyAccounts() {
+        private List<HierarchyAccount> getHierarchyAccounts() throws CantLoadHierarchyAccountsException {
             List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
-            //todo add DAO logic to get the value from the database and form the accounts object
+
+            /**
+             * The DAO object used to access the database.
+             */
+            AssetsOverBitcoinCryptoVaultDao dao = null;
+
+            try {
+                dao = new AssetsOverBitcoinCryptoVaultDao(pluginDatabaseSystem, pluginId);
+                hierarchyAccounts = dao.getHierarchyAccounts();
+            } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException |
+                    CantExecuteDatabaseOperationException e) {
+                /**
+                 * If there was an error creating or loading the database, or getting the list of accounts, I can't go on.
+                 */
+                throw new CantLoadHierarchyAccountsException(
+                        CantLoadHierarchyAccountsException.DEFAULT_MESSAGE,
+                        e,
+                        "Error trying to load the Hierarchy Accounts from the database.", "database issue");
+            }
 
 
             /**
              * If there are no accounts in the database, these means is the first time the plugin runs, so I will create
              * the account 0 that will be used by the asset vault.
              */
-            if (hierarchyAccounts.size() == 0){
-                HierarchyAccount accountZero = new HierarchyAccount(0, "Asset vault account");
+            if (hierarchyAccounts.size() == 0) {
+                HierarchyAccount accountZero = new HierarchyAccount(0, "Asset Vault account");
                 hierarchyAccounts.add(accountZero);
-                //todo Add this account to database
+
+                /**
+                 * And I will also try to add this to the database so I can load it the next time.
+                 */
+                try {
+                    dao.addNewHierarchyAccount(accountZero);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    // I don't need to handle this error.
+                }
             }
             return hierarchyAccounts;
         }
