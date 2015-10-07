@@ -273,6 +273,22 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
                     sendCrypto();
+
+                    //testing
+
+//                    EditText amount = (EditText) rootView.findViewById(R.id.amount);
+//
+//
+//                    String notes = txt_notes.getText().toString();
+//
+//                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong(amount.getText().toString()),
+//                            null,
+//                            notes,
+//                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+//                            user_id,
+//                            Actors.INTRA_USER,
+//                            walletContact.actorPublicKey,
+//                            Actors.INTRA_USER);
                 }
             });
 
@@ -477,6 +493,9 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             walletContact.actorPublicKey,
                             cryptoWalletWalletContact.getActorType()
                     );
+
+
+
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {
