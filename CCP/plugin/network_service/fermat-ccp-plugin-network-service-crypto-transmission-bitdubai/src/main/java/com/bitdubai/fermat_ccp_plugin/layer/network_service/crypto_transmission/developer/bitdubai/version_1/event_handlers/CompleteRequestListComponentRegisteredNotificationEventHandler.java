@@ -65,7 +65,7 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
                  /*
                  *  networkService make the job
                  */
-                this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList());
+                this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList(),completeRequestListComponentRegisteredNotificationEvent.getDiscoveryQueryPerams());
 
             }
 
