@@ -1,12 +1,16 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
@@ -28,6 +32,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +55,8 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     private FermatEditText descriptionView;
     private FermatEditText quantityView;
     private FermatEditText bitcoinsView;
-    private FermatEditText expirationView;
+    private FermatButton expirationDate;
+    private FermatButton expirationTime;
     private FermatCheckBox isRedeemableView;
 
 
@@ -119,20 +125,65 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         descriptionView = (FermatEditText) rootView.findViewById(R.id.description);
         quantityView = (FermatEditText) rootView.findViewById(R.id.quantity);
         bitcoinsView = (FermatEditText) rootView.findViewById(R.id.bitcoins);
-        expirationView = (FermatEditText) rootView.findViewById(R.id.expiration_date);
+        expirationDate = (FermatButton) rootView.findViewById(R.id.expiration_date);
+        expirationTime = (FermatButton) rootView.findViewById(R.id.expiration_time);
         isRedeemableView = (FermatCheckBox) rootView.findViewById(R.id.isRedeemable);
 
         nameView.setText(isEdit ? asset.getName() != null ? asset.getName() : "" : "");
         descriptionView.setText(isEdit ? asset.getDescription() != null ? asset.getDescription() : "" : "");
         quantityView.setText(isEdit ? String.valueOf(asset.getQuantity()) : "");
         bitcoinsView.setText(isEdit ? String.valueOf(asset.getAmount()) : "");
-        if (isEdit && asset.getExpirationDate() != null) {
-            DateFormat format = DateFormat.getDateInstance();
-            Date date = new Date(asset.getExpirationDate().getTime());
-            expirationView.setText(format.format(date));
-        }
+
         if (isEdit)
             isRedeemableView.setChecked(asset.getIsRedeemable());
+
+        Calendar calendar = Calendar.getInstance();
+        expirationDate.setText(String.format("%d/%d/%d", calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+        expirationTime.setText(String.format("%d:%d", calendar.get(Calendar.HOUR),
+                calendar.get(Calendar.MINUTE)));
+        expirationDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+                DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        expirationDate.setText(String.format("%d/%d/%d", day, month + 1, year));
+                    }
+                }, year, month, day);
+                pickerDialog.show();
+                CommonLogger.debug("DatePickerDialog", "Showing DatePickerDialog...");
+            }
+        });
+        expirationTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.DAY_OF_MONTH);
+                int minute = calendar.get(Calendar.MONTH);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        expirationTime.setText(String.format("%d:%d", hour, minute));
+                    }
+                }, hour, minute, true);
+                timePickerDialog.show();
+                CommonLogger.debug("DatePickerDialog", "Showing TimerPickerDialog...");
+            }
+        });
+
+        if (isEdit && asset.getExpirationDate() != null) {
+            calendar.setTime(asset.getExpirationDate());
+            expirationDate.setText(String.format("%d/%d/%d", calendar.get(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+            expirationTime.setText(String.format("%d/%d", calendar.get(Calendar.HOUR),
+                    calendar.get(Calendar.MINUTE)));
+        }
 
         return rootView;
     }
@@ -204,11 +255,12 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         asset.setAssetBehavior(AssetBehavior.REGENERATION_ASSET);
         //// TODO: 02/10/15 Get at least one resource with one image byte[] (Choose from gallery or take a picture)
         asset.setResources(null);
-        if (!expirationView.getText().toString().trim().isEmpty()) {
+        if (!expirationDate.getText().toString().trim().isEmpty()) {
             try {
                 @SuppressLint("SimpleDateFormat")
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                asset.setExpirationDate(new java.sql.Timestamp(format.parse(expirationView.getText().toString().trim()).getTime()));
+                String dateTime = expirationDate.getText().toString().trim() + expirationTime.getText().toString().trim();
+                asset.setExpirationDate(new java.sql.Timestamp(format.parse(dateTime).getTime()));
                 long now = new Date().getTime();
                 asset.setCreationTimestamp(new java.sql.Timestamp(now));
             } catch (Exception ex) {
