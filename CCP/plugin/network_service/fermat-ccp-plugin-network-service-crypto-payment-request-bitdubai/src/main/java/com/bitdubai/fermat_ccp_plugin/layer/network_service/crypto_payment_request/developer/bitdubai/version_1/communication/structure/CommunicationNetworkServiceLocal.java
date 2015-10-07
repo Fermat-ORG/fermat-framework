@@ -3,9 +3,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
@@ -15,13 +15,14 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CryptoPaymentRequestNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
@@ -33,26 +34,11 @@ import java.util.Observer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoPaymentRequestNetworkServiceLocal implements Observer, NetworkServiceLocal {
+public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
-    /**
-     * Represent the profile of the remote network service
-     */
     private final PlatformComponentProfile remoteNetworkServiceProfile;
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
     private final ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
     private final EventManager eventManager;
-
-    /**
-     * Represent the outgoingMessageDao
-     */
     private final OutgoingMessageDao outgoingMessageDao;
 
     /**
@@ -61,16 +47,12 @@ public class CryptoPaymentRequestNetworkServiceLocal implements Observer, Networ
     private FermatMessage lastMessageReceived;
 
     /**
-     * Constructor with parameters
-     *
-     * @param remoteNetworkServiceProfile
-     * @param errorManager                  instance
-     * @param outgoingMessageDao            instance
+     * Constructor with parameters.
      */
-    public CryptoPaymentRequestNetworkServiceLocal(final PlatformComponentProfile remoteNetworkServiceProfile,
-                                                   final ErrorManager             errorManager               ,
-                                                   final EventManager             eventManager               ,
-                                                   final OutgoingMessageDao       outgoingMessageDao         ) {
+    public CommunicationNetworkServiceLocal(final PlatformComponentProfile remoteNetworkServiceProfile,
+                                            final ErrorManager             errorManager               ,
+                                            final EventManager             eventManager               ,
+                                            final OutgoingMessageDao       outgoingMessageDao         ) {
 
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager                = errorManager               ;
@@ -114,30 +96,30 @@ public class CryptoPaymentRequestNetworkServiceLocal implements Observer, Networ
      * Notify the client when a incoming message is receive by the incomingTemplateNetworkServiceMessage
      * ant fire a new event
      *
-     * @param incomingTemplateNetworkServiceMessage received
+     * @param incomingMessage received
      */
-    private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
+    private void onMessageReceived(FermatMessage incomingMessage) {
 
-        System.out.println("TemplateNetworkServiceLocal - onMessageReceived ");
-        System.out.println(incomingTemplateNetworkServiceMessage.getContent());
+        System.out.println("CommunicationNetworkServiceLocal - onMessageReceived ");
+        System.out.println(incomingMessage.getContent());
 
         /*
          * set the last message received
          */
-        this.lastMessageReceived = incomingTemplateNetworkServiceMessage;
+        this.lastMessageReceived = incomingMessage;
 
         /**
          * Put the message on a event and fire new event
          */
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
-        fermatEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
-        //((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEvent.setSource(CryptoPaymentRequestNetworkServicePluginRoot.EVENT_SOURCE);
+        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         eventManager.raiseEvent(fermatEvent);
 
     }
 
     /**
-     * This method is called automatically when TemplateNetworkServiceRemoteAgent (Observable object) update the database
+     * This method is called automatically when CommunicationNetworkServiceRemoteAgent (Observable object) update the database
      * when new message is received
      *
      * @param observable the observable object
