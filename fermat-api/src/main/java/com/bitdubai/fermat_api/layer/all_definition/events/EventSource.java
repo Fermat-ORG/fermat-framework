@@ -30,7 +30,9 @@ public enum EventSource {
     CRYPTO_VAULT ("CCV"),
     INCOMING_EXTRA_USER("IEU"),
     INCOMING_INTRA_USER("IIU"),
-    WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN ("WSCCLCL");
+    WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN ("WSCCLCL"),
+
+    ACTOR_NETWORK_SERVICE_INTRA_ACTOR ("ANSIA");
 
     private final String code;
 
@@ -91,6 +93,8 @@ public enum EventSource {
                 return INCOMING_INTRA_USER;
             case "WSCCLCL" :
                 return WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN;
+            case "ANSIA":
+                return ACTOR_NETWORK_SERVICE_INTRA_ACTOR;
             //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Addons enum");
 

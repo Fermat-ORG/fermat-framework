@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
@@ -94,4 +95,10 @@ public interface IntraUserManager {
      * @param intraUserInvolvedPublicKey
      */
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException;
+
+    /**
+     * Regist
+     */
+    public void registrateActors(List<Actor> actor);
+
 }

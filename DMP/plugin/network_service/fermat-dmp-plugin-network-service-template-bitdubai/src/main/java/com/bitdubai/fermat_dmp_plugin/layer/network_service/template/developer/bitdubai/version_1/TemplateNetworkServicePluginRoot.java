@@ -669,11 +669,15 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
+
+
+
     /**
      * (non-Javadoc)
-     * @see NetworkService#handleCompleteRequestListComponentRegisteredNotificationEvent(List)
+     * @see NetworkService#
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
