@@ -222,7 +222,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         /******************************************************************
          * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
          ******************************************************************/
-        this.platformComponentType = PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT;
+        this.platformComponentType = PlatformComponentType.ACTOR_NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.INTRA_USER;
         this.name                  = "Intra actor Network Service";
         this.alias                 = "IntraActorNetworkService";
@@ -642,7 +642,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
@@ -666,7 +666,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                         ("alias"),
                         ("name+algo mas"),
                         NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                        PlatformComponentType.ACTOR_COMPONENT, // actor.INTRA_USER
+                        PlatformComponentType.ACTOR, // actor.INTRA_USER
                         getExtraData());
 
                 /*
@@ -1007,7 +1007,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     (actor.getName().toLowerCase()),
                     (actor.getName().toLowerCase() + "_" + this.getName()),
                     NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_COMPONENT, // actor.INTRA_USER
+                    PlatformComponentType.ACTOR, // actor.INTRA_USER
                     getExtraData());
 
                 /*

@@ -42,15 +42,15 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent+ " | NetworkServiceType: "+NetworkServiceType.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST_TYPE);
+        System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent+ " | NetworkServiceType: "+NetworkServiceType.CRYPTO_PAYMENT_REQUEST);
 
         if (this.cryptoPaymentRequestNetworkServicePluginRoot.getStatus() == ServiceStatus.STARTED) {
 
 
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
 
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE_COMPONENT &&
-                    completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == NetworkServiceType.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST_TYPE) {
+            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
+                    completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == NetworkServiceType.CRYPTO_PAYMENT_REQUEST) {
 
                 /*
                  *  TemplateManager make the job

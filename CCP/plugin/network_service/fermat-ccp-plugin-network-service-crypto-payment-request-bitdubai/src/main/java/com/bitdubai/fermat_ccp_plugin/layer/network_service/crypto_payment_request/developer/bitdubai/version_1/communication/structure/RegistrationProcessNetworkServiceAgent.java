@@ -67,8 +67,8 @@ public class RegistrationProcessNetworkServiceAgent extends Thread {
                         cryptoPaymentRequestNetworkServicePluginRoot.getIdentityPublicKey(),
                         "CryptoPaymentRequestNetworkService",
                         "Crypto Payment Request Network Service ("+cryptoPaymentRequestNetworkServicePluginRoot.getId()+")",
-                        NetworkServiceType.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST_TYPE,
-                        PlatformComponentType.NETWORK_SERVICE_COMPONENT,
+                        NetworkServiceType.CRYPTO_PAYMENT_REQUEST,
+                        PlatformComponentType.NETWORK_SERVICE,
                         null
                 );
 

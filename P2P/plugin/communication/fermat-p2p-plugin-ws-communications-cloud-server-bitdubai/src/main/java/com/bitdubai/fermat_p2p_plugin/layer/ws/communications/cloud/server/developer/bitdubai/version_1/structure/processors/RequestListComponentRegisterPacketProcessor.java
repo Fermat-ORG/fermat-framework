@@ -123,20 +123,17 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          /*
          * Switch between platform component type
          */
-        switch (platformComponentType.getCode()){
+        switch (platformComponentType){
 
-            //COMMUNICATION_CLOUD_SERVER_COMPONENT;
-            case "COM_CLD_SER_COMP" :
+            case COMMUNICATION_CLOUD_SERVER :
                 list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
                 break;
 
-            //COMMUNICATION_CLOUD_CLIENT_COMPONENT
-            case "COM_CLD_CLI_COMP" :
+            case COMMUNICATION_CLOUD_CLIENT :
                 list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
                 break;
 
-            //NETWORK_SERVICE_COMPONENT
-            case "NS_COMP" :
+            case NETWORK_SERVICE :
                 list = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
                 break;
 
