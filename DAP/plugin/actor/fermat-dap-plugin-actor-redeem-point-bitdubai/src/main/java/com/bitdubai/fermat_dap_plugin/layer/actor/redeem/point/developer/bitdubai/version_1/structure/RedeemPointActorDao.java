@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdub
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -118,7 +118,7 @@ public class RedeemPointActorDao implements Serializable {
     }
 
 
-    public void createNewRedeemPoint(String redeemPointLoggedInPublicKey, String redeemPointToAddName, String redeemPointToAddPublicKey, byte[] profileImage, ContactState contactState) throws CantAddPendingRedeemPointException {
+    public void createNewRedeemPoint(String redeemPointLoggedInPublicKey, String redeemPointToAddName, String redeemPointToAddPublicKey, byte[] profileImage, ConnectionState connectionState) throws CantAddPendingRedeemPointException {
 
         try {
             /**
@@ -127,7 +127,7 @@ public class RedeemPointActorDao implements Serializable {
              */
             if (redeemPointExists(redeemPointToAddPublicKey)) {
 
-                this.updateRedeemPointConnectionState(redeemPointLoggedInPublicKey, redeemPointToAddPublicKey, contactState);
+                this.updateRedeemPointConnectionState(redeemPointLoggedInPublicKey, redeemPointToAddPublicKey, connectionState);
 
             } else {
                 /**
@@ -141,7 +141,7 @@ public class RedeemPointActorDao implements Serializable {
 
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointToAddPublicKey);
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME, redeemPointToAddName);
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, contactState.getCode());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, connectionState.getCode());
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey);
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, milliseconds);
@@ -170,7 +170,7 @@ public class RedeemPointActorDao implements Serializable {
     }
 
 
-    public void updateRedeemPointConnectionState(String redeemPointLoggedInPublicKey, String redeemPointToAddPublicKey, ContactState contactState) throws CantUpdateRedeemPointConnectionException {
+    public void updateRedeemPointConnectionState(String redeemPointLoggedInPublicKey, String redeemPointToAddPublicKey, ConnectionState connectionState) throws CantUpdateRedeemPointConnectionException {
 
         DatabaseTable table;
 
@@ -201,7 +201,7 @@ public class RedeemPointActorDao implements Serializable {
 
             // 3) Get Redeem Point record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, contactState.getCode());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, connectionState.getCode());
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, milliseconds);
                 table.updateRecord(record);
             }
@@ -245,7 +245,7 @@ public class RedeemPointActorDao implements Serializable {
 
             // 2) Find all Redeem Points.
             table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, ContactState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -257,7 +257,7 @@ public class RedeemPointActorDao implements Serializable {
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME),
                         getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME),
-                        ContactState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME))));
+                        ConnectionState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME))));
             }
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
@@ -275,7 +275,7 @@ public class RedeemPointActorDao implements Serializable {
         return list;
     }
 
-    public List<ActorAssetRedeemPoint> getRedeemPoints(String redeemPointLoggedInPublicKey, ContactState contactState, int max, int offset) throws CantGetRedeemPointsListException {
+    public List<ActorAssetRedeemPoint> getRedeemPoints(String redeemPointLoggedInPublicKey, ConnectionState connectionState, int max, int offset) throws CantGetRedeemPointsListException {
 
         // Setup method.
         List<ActorAssetRedeemPoint> list = new ArrayList<ActorAssetRedeemPoint>(); // Redeem Point Actor list.
@@ -297,7 +297,7 @@ public class RedeemPointActorDao implements Serializable {
             }
             // 2) Find  Redeem Points by state.
             table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, contactState.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -310,7 +310,7 @@ public class RedeemPointActorDao implements Serializable {
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME),
                         getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME),
-                        ContactState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME))));
+                        ConnectionState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME))));
             }
 
             database.closeDatabase();

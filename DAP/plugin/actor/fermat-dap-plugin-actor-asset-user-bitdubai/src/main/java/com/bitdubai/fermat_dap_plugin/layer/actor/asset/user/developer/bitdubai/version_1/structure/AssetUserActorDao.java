@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -117,7 +117,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void createNewAssetUser(String assetUserLoggedInPublicKey, String assetUserToAddName, String assetUserToAddPublicKey, byte[] profileImage, ContactState contactState) throws CantAddPendingAssetUserException {
+    public void createNewAssetUser(String assetUserLoggedInPublicKey, String assetUserToAddName, String assetUserToAddPublicKey, byte[] profileImage, ConnectionState connectionState) throws CantAddPendingAssetUserException {
 
         try {
 
@@ -127,7 +127,7 @@ public class AssetUserActorDao implements Serializable {
              */
             if (assetUserExists(assetUserToAddPublicKey)) {
 
-                this.updateAssetUserConnectionState(assetUserLoggedInPublicKey, assetUserToAddPublicKey, contactState);
+                this.updateAssetUserConnectionState(assetUserLoggedInPublicKey, assetUserToAddPublicKey, connectionState);
 
             } else {
                 /**
@@ -141,7 +141,7 @@ public class AssetUserActorDao implements Serializable {
 
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME, assetUserToAddName);
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, contactState.getCode());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, connectionState.getCode());
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey);
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
@@ -170,7 +170,7 @@ public class AssetUserActorDao implements Serializable {
     }
 
 
-    public void updateAssetUserConnectionState(String assetUserLoggedInPublicKey, String assetUserToAddPublicKey, ContactState contactState) throws CantUpdateAssetUserConnectionException {
+    public void updateAssetUserConnectionState(String assetUserLoggedInPublicKey, String assetUserToAddPublicKey, ConnectionState connectionState) throws CantUpdateAssetUserConnectionException {
 
         DatabaseTable table;
 
@@ -201,7 +201,7 @@ public class AssetUserActorDao implements Serializable {
 
             // 3) Get Asset User record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, contactState.getCode());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, connectionState.getCode());
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
                 table.updateRecord(record);
             }
@@ -245,7 +245,7 @@ public class AssetUserActorDao implements Serializable {
 
             // 2) Find all Asset Users.
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, ContactState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -257,7 +257,7 @@ public class AssetUserActorDao implements Serializable {
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ContactState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
+                        ConnectionState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
             }
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
@@ -275,7 +275,7 @@ public class AssetUserActorDao implements Serializable {
         return list;
     }
 
-    public List<ActorAssetUser> getAssetUsers(String assetUserLoggedInPublicKey, ContactState contactState, int max, int offset) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAssetUsers(String assetUserLoggedInPublicKey, ConnectionState connectionState, int max, int offset) throws CantGetAssetUsersListException {
 
         // Setup method.
         List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
@@ -297,7 +297,7 @@ public class AssetUserActorDao implements Serializable {
             }
             // 2) Find  Asset Users by state.
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, contactState.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -310,7 +310,7 @@ public class AssetUserActorDao implements Serializable {
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ContactState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
+                        ConnectionState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
             }
 
             database.closeDatabase();

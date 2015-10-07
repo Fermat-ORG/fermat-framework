@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 
 /**
  * Created by Nerio on 10/09/15.
@@ -42,6 +42,6 @@ public interface ActorAssetIssuer {
      *
      * @return the contact state
      */
-    public ContactState getContactState();
+    public ConnectionState getContactState();
 
 }
