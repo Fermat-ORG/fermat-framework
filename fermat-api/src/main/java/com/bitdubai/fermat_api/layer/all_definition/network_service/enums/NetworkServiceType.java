@@ -1,70 +1,62 @@
-/*
- * @#NetworkServiceType.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_api.layer.all_definition.network_service.enums;
+
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType</code> represent
- * all types that a network service cam be.
+ * all the types that a network service can be.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 01/09/15.
+ * Modified by Leon Acosta - (laion.cj91@gmail.com) on 07/10/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum NetworkServiceType {
+public enum NetworkServiceType implements FermatEnum {
 
-    // Definition types
-
-    UNDEFINED                                 ("UNDEF"),
-    NETWORK_SERVICE_TEMPLATE_TYPE             ("NS_TEMP_TYP"),
-    NETWORK_SERVICE_INTRA_USER_TYPE           ("NS_INT_USR_TYP"),
-    NETWORK_SERVICE_ASSET_TRANSMISSION_TYPE   ("NS_ASS_TRANS_TYP"),
-    NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE  ("NS_CRY_TRANS_TYP");
-
-    /**
-     * Represent the code
+    /*
+     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     * Network Service prefix or Type sufix are not necessary having in count that the name of the plugin is NETWORK SERVICE TYPE.,
      */
+
+    ASSET_TRANSMISSION       ("ASS_TRANS"),
+    CRYPTO_PAYMENT_REQUEST   ("CPR"),
+    CRYPTO_TRANSMISSION      ("CRY_TRANS"),
+    INTRA_USER               ("INT_USR"),
+    TEMPLATE                 ("TEMP"),
+    UNDEFINED                ("UNDEF"),
+
+    ;
+
     private String code;
 
-    /**
-     * Constructor whit parameter
-     *
-     * @param code
-     */
-    private NetworkServiceType(String code){
+    NetworkServiceType(String code){
         this.code = code;
     }
 
-    /**
-     * Return the code representation
-     *
-     * @return String
-     */
+    public static NetworkServiceType getByCode(final String code) throws InvalidParameterException {
+
+        switch (code){
+
+            case "ASS_TRANS" : return ASSET_TRANSMISSION;
+            case "CPR"       : return CRYPTO_PAYMENT_REQUEST;
+            case "CRY_TRANS" : return CRYPTO_TRANSMISSION;
+            case "INT_USR"   : return INTRA_USER;
+            case "TEMP"      : return TEMPLATE;
+            case "UNDEF"     : return UNDEFINED;
+
+            default: throw new InvalidParameterException(
+                    "Code received: "+code,
+                    "The code received is not valid for NetworkServiceType enum."
+            );
+        }
+
+    }
+
+    @Override
     public String getCode() {
         return this.code;
     }
 
-    /**
-     * Return the NetworkServiceType represented by the code pass as parameter
-     *
-     * @param code
-     * @return PlatformComponentType
-     */
-    public static NetworkServiceType getByCode(final String code){
-
-        switch (code){
-
-            case "UNDEF"            : return NetworkServiceType.UNDEFINED;
-            case "NS_TEMP_TYP"      : return NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE;
-            case "NS_INT_USR_TYP"   : return NetworkServiceType.NETWORK_SERVICE_INTRA_USER_TYPE;
-            case "NS_ASS_TRANS_TYP" : return NetworkServiceType.NETWORK_SERVICE_ASSET_TRANSMISSION_TYPE;
-            case "NS_CRY_TRANS_TYP" : return NetworkServiceType.NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE;
-
-            default: throw new IllegalArgumentException();
-        }
-    }
 }

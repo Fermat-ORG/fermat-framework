@@ -9,9 +9,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
@@ -117,24 +117,24 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      * Notify the client when a incoming message is receive by the incomingTemplateNetworkServiceMessage
      * ant fire a new event
      *
-     * @param incomingTemplateNetworkServiceMessage received
+     * @param incomingMessage received
      */
-    private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
+    private void onMessageReceived(FermatMessage incomingMessage) {
 
         System.out.println("CommunicationNetworkServiceLocal - onMessageReceived ");
-        System.out.println(incomingTemplateNetworkServiceMessage.getContent());
+        System.out.println(incomingMessage.getContent());
 
         /*
          * set the last message received
          */
-        this.lastMessageReceived = incomingTemplateNetworkServiceMessage;
+        this.lastMessageReceived = incomingMessage;
 
         /**
          * Put the message on a event and fire new event
          */
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
-        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage);
+        fermatEvent.setSource(CryptoTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
+        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         eventManager.raiseEvent(fermatEvent);
 
     }

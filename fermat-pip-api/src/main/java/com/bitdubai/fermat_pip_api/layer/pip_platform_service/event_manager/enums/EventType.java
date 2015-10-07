@@ -672,6 +672,17 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new IncomingMoneyNotificationEvent(this);
         }
+    },
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
+        }
     };
 
 

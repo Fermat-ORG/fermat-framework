@@ -6,12 +6,15 @@ include ':fermat-api'
 include ':fermat-core'
 include ':fermat-bnk-api'
 include ':fermat-ccm-api'
-include ':fermat-ccp-api'
 include ':fermat-cbp-api'
 include ':fermat-ccp-api'
 include ':fermat-cry-api'
 include ':fermat-csh-api'
+
 include ':fermat-dap-api'
+project(':fermat-dap-api').projectDir = new File('DAP/library/api/fermat-dap-api')
+
+
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
 
@@ -26,6 +29,12 @@ include ':fermat-bnp-plugin-network-service-bank-notes-bitdubai'
 project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('BNP/plugin/network_service/fermat-bnp-plugin-network-service-bank-notes-bitdubai')
 
 // Init CCP Projects
+
+include ':fermat-ccp-api'
+project(':fermat-ccp-api').projectDir = new File('CCP/library/api/fermat-ccp-api')
+
+include ':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai'
+project(':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai').projectDir = new File('CCP/plugin/actor/fermat-ccp-plugin-actor-intra-wallet-user-bitdubai')
 
 include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
@@ -181,9 +190,6 @@ project(':fermat-ccm-plugin-network-service-money-transmission-bitdubai').projec
 include ':fermat-dmp-plugin-actor-extra-user-bitdubai'
 project(':fermat-dmp-plugin-actor-extra-user-bitdubai').projectDir = new File('DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai')
 
-include ':fermat-dmp-plugin-actor-intra-user-bitdubai'
-project(':fermat-dmp-plugin-actor-intra-user-bitdubai').projectDir = new File('DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai')
-
 include ':fermat-dmp-plugin-identity-translator-bitdubai'
 project(':fermat-dmp-plugin-identity-translator-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-translator-bitdubai')
 
@@ -270,8 +276,8 @@ include ':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
 
 
-include ':fermat-dmp-plugin-network-service-intra-user-bitdubai'
-project(':fermat-dmp-plugin-network-service-intra-user-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai')
+include ':fermat-ccp-plugin-network-service-intra-actor-bitdubai'
+project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-intra-actor-bitdubai')
 
 include ':fermat-dmp-plugin-network-service-template-bitdubai'
 project(':fermat-dmp-plugin-network-service-template-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-template-bitdubai')

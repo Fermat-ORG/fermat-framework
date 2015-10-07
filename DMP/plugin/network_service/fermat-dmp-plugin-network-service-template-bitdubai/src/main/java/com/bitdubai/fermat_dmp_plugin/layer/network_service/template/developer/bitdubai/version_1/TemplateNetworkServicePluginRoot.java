@@ -42,8 +42,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -202,17 +200,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
-     * Represent the incomingMessageDao
-     */
-    private IncomingMessageDao incomingMessageDao;
-
-    /**
-     * Represent the outgoingMessageDao
-     */
-    private OutgoingMessageDao outgoingMessageDao;
-
-
-    /**
      * Constructor
      */
     public TemplateNetworkServicePluginRoot() {
@@ -222,8 +209,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /******************************************************************
          * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
          ******************************************************************/
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
-        this.networkServiceType    = NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE;
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
+        this.networkServiceType    = NetworkServiceType.TEMPLATE;
         this.name                  = "Template Network Service";
         this.alias                 = "TemplateNetworkService";
         this.extraData             = null;
@@ -642,8 +629,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -659,16 +646,16 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                                                                 getCommunicationsCloudClientConnection().
                                                                 constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
-                                                                                                     null,                     // alias
-                                                                                                     null,                     // identityPublicKey
-                                                                                                     null,                     // location
-                                                                                                     null,                     // distance
-                                                                                                     null,                     // name
-                                                                                                     null,                     // extraData
-                                                                                                     null,                     // offset
-                                                                                                     null,                     // max
-                                                                                                     null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                                                     null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+                                                                        null,                     // alias
+                                                                        null,                     // identityPublicKey
+                                                                        null,                     // location
+                                                                        null,                     // distance
+                                                                        null,                     // name
+                                                                        null,                     // extraData
+                                                                        null,                     // offset
+                                                                        null,                     // max
+                                                                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                        null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
             /*
              * Request the list of component registers
@@ -680,11 +667,15 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
+
+
+
     /**
      * (non-Javadoc)
-     * @see NetworkService#handleCompleteRequestListComponentRegisteredNotificationEvent(List)
+     * @see NetworkService#
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
@@ -910,7 +901,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         Map<String, Object> filters = new HashMap<>();
         filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
 
-        return incomingMessageDao.findAll(filters);
+        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
     }
 
     /**
@@ -920,7 +911,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
     public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
 
         ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-        incomingMessageDao.update(fermatMessage);
+        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
     }
 
 }
