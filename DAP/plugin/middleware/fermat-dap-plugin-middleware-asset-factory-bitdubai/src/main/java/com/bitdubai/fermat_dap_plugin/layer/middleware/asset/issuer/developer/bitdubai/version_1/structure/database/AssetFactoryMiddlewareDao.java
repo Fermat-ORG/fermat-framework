@@ -603,6 +603,37 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         }
     }
 
+    public void markAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException {
+
+
+        try {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
+
+            DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
+            DatabaseTableRecord assetFactoryRecord = getAssetFactoryProjectRecord(assetFactory);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(assetFactory.getPublicKey());
+            filter.setColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, assetFactoryRecord);
+            else {
+                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, assetFactoryRecord);
+            }
+
+            //I execute the transaction and persist the database side of the asset.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+        } catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Asset Factory in the database.", null);
+        }
+    }
+
     public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantCreateFileException {
         Database database = null;
         try {

@@ -130,9 +130,6 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         return isBoolean;
     }
 
-    //De esa forma poder almacenarlo en la tabla de contract seteando la variable assetFactory.setContractProperties
-    //Asi mismo cuando se vaya a enviar el DigitalAsset a la transaccion traer el objeto AssetFactory lleno, y las propiedades del contrato
-    //asignarselas mas adelante al objeto DigitalAssetContract, que a su vez sera seteado a ala propiedad setContract del DigitalAsset
     private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantCreateFileException, CantPersistFileException{
         try {
             List<ContractProperty> contractProperties = new ArrayList<>();
@@ -167,6 +164,16 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
 
     }
 
+    private void saveMarkFactoryInDatabase(AssetFactory assetFactory) throws CantSaveAssetFactoryException, DatabaseOperationException, MissingAssetDataException{
+        try {
+            getAssetFactoryMiddlewareDao().markAssetFactoryData(assetFactory);
+        }
+        catch (DatabaseOperationException | MissingAssetDataException e)
+        {
+            throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Mark Save Asset Factory");
+        }
+    }
+
     private List<AssetFactory> getAssetFactories(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException, CantCreateFileException
     {
         List<AssetFactory> assetFactories = new ArrayList<>();
@@ -177,6 +184,18 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         }
 
         return assetFactories;
+    }
+
+
+    private void markAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException
+    {
+        try {
+            saveMarkFactoryInDatabase(assetFactory);
+        }
+        catch (DatabaseOperationException | MissingAssetDataException e)
+        {
+            throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Save Asset Factory");
+        }
     }
 
 
@@ -469,7 +488,8 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
     public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException, CantCreateFileException, CantPersistFileException{
         AssetFactory assetFactory = getAssetFactory(assetPublicKey);
         assetFactory.setState(state);
-        saveAssetFactory(assetFactory);
+        markAssetFactory(assetFactory);
+        //saveAssetFactory(assetFactory);
     }
 
     public AssetFactory getNewAssetFactory() throws  CantCreateAssetFactoryException, CantCreateEmptyAssetFactoryException
