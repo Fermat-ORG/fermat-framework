@@ -59,11 +59,22 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     private FermatButton expirationTime;
     private FermatCheckBox isRedeemableView;
 
+    private int year = 0;
+    private int month = 0;
+    private int day = 0;
+
+    private int hour = 0;
+    private int minutes = 0;
+
+
+    private boolean initializingDate = false;
+    private boolean initializingTime = false;
 
     public static AssetEditorFragment newInstance(AssetFactory asset) {
         AssetEditorFragment fragment = new AssetEditorFragment();
         fragment.setAsset(asset);
         fragment.setIsEdit(asset != null);
+        fragment.setInitializing(true);
         return fragment;
     }
 
@@ -145,13 +156,19 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         expirationDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-                int month = calendar.get(Calendar.MONTH);
-                int year = calendar.get(Calendar.YEAR);
+                if (initializingDate) {
+                    Calendar calendar = Calendar.getInstance();
+                    day = calendar.get(Calendar.DAY_OF_MONTH);
+                    month = calendar.get(Calendar.MONTH);
+                    year = calendar.get(Calendar.YEAR);
+                    initializingDate = false;
+                }
                 DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        AssetEditorFragment.this.year = year;
+                        AssetEditorFragment.this.month = month + 1;
+                        AssetEditorFragment.this.day = day;
                         expirationDate.setText(String.format("%d/%d/%d", day, month + 1, year));
                     }
                 }, year, month, day);
@@ -162,16 +179,21 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         expirationTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                int hour = calendar.get(Calendar.DAY_OF_MONTH);
-                int minute = calendar.get(Calendar.MONTH);
+                if (initializingTime) {
+                    Calendar calendar = Calendar.getInstance();
+                    hour = calendar.get(Calendar.HOUR);
+                    minutes = calendar.get(Calendar.MINUTE);
+                    initializingTime = false;
+                }
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                        AssetEditorFragment.this.hour = hour;
+                        AssetEditorFragment.this.minutes = minute;
                         expirationTime.setText(String.format("%d:%d", hour, minute));
                     }
-                }, hour, minute, true);
+                }, hour, minutes, true);
                 timePickerDialog.show();
                 CommonLogger.debug("DatePickerDialog", "Showing TimerPickerDialog...");
             }
@@ -304,5 +326,10 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
 
     public void setIsEdit(boolean isEdit) {
         this.isEdit = isEdit;
+    }
+
+    public void setInitializing(boolean initializing) {
+        this.initializingDate = initializing;
+        this.initializingTime = initializing;
     }
 }
