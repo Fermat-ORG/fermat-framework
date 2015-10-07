@@ -9,4 +9,5 @@ public interface DealsWithActorAssetUser {
     public void setAssetUserActorNetworkServiceManager(ActorAssetUserManager actorAssetUserManager);
 
 
+    void setActorAssetUserManager(ActorAssetUserManager plugin);
 }
