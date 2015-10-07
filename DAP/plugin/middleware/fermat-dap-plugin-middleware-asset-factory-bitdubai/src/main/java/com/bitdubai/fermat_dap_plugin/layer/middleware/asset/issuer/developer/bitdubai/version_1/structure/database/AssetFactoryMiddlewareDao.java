@@ -192,7 +192,8 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
 
         if (assetFactory.getContractProperties() != null) {
             for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
-                DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(), contractProperties.getValue().toString());
+                DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(),
+                        contractProperties.getValue() != null ? contractProperties.getValue().toString() : null);
                 DatabaseTableFilter filter = getContractFilter(contractProperties.getName());
                 filter.setValue(contractProperties.getName());
                 if (isNewRecord(table, filter))
