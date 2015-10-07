@@ -3,7 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.b
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -95,7 +95,7 @@ public class IntraWalletUserActorDao implements Serializable {
         }
     }
 
-    public void createNewIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ContactState contactState) throws CantAddPendingIntraWalletUserException {
+    public void createNewIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, ConnectionState contactState) throws CantAddPendingIntraWalletUserException {
 
         try {
 
@@ -155,7 +155,7 @@ public class IntraWalletUserActorDao implements Serializable {
 
     }
 
-    public void updateIntraWalletUserConnectionState(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey, ContactState contactState) throws CantUpdateIntraWalletUserConnectionException {
+    public void updateIntraWalletUserConnectionState(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey, ConnectionState contactState) throws CantUpdateIntraWalletUserConnectionException {
 
 
         DatabaseTable table;
@@ -238,7 +238,7 @@ public class IntraWalletUserActorDao implements Serializable {
 
             // 2) Find all Intra Users.
             table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, intraUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, ContactState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -252,7 +252,7 @@ public class IntraWalletUserActorDao implements Serializable {
                         record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
                         getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ContactState.valueOf(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME))));
+                        ConnectionState.valueOf(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME))));
             }
 
         } catch (CantLoadTableToMemoryException e) {
@@ -273,7 +273,7 @@ public class IntraWalletUserActorDao implements Serializable {
     }
 
 
-    public List<IntraWalletUser> getAllIntraWalletUsers(String intraUserLoggedInPublicKey, ContactState contactState, int max, int offset) throws CantGetIntraWalletUsersListException {
+    public List<IntraWalletUser> getAllIntraWalletUsers(String intraUserLoggedInPublicKey, ConnectionState contactState, int max, int offset) throws CantGetIntraWalletUsersListException {
 
 
         // Setup method.
@@ -312,7 +312,7 @@ public class IntraWalletUserActorDao implements Serializable {
                         record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
                         getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ContactState.valueOf(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME))));
+                        ConnectionState.valueOf(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME))));
             }
 
         } catch (CantLoadTableToMemoryException e) {

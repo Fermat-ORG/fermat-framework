@@ -111,7 +111,8 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         List<String> redeemPointActorColumns = new ArrayList<String>();
 
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
-        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ISSUER_NAME_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME);
@@ -124,52 +125,52 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         /**
          * Redeem Point Relation Issuer database columns.
          */
-        List<String> redeemPointRelationAssetIssuerColumns = new ArrayList<String>();
-
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_NAME_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_STATUS_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_ASSETS_COUNT_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REGISTRATION_DATE_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_NAME_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_STATUS_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME);
-        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME);
+//        List<String> redeemPointRelationAssetIssuerColumns = new ArrayList<String>();
+//
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_NAME_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_STATUS_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_ASSETS_COUNT_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REGISTRATION_DATE_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_NAME_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_STATUS_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME);
+//        redeemPointRelationAssetIssuerColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME);
         /**
          * Redeem Point Relation Issuer database addition.
          */
-        DeveloperDatabaseTable redeemPointRelationAssetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_TABLE_NAME, redeemPointRelationAssetIssuerColumns);
-        tables.add(redeemPointRelationAssetIssuerTable);
+//        DeveloperDatabaseTable redeemPointRelationAssetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_TABLE_NAME, redeemPointRelationAssetIssuerColumns);
+//        tables.add(redeemPointRelationAssetIssuerTable);
 
         /**
          * Redeem Point Relation Aseet User database columns.
          */
-        List<String> redeemPointRelationAssetUserColumns = new ArrayList<String>();
-
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ISSUER_IDENTITY_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_NAME_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_SEX_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_UBICACION_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_AGE_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_DESCRIPTION_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_NAME_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_ID_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_HASH_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_STATUS_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_RESOURCES_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_AMOUNT_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_CURRENCY_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_EXPIRATION_DATE_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_TIMESTAMP_COLUMN_NAME);
-        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_DATE_COLUMN_NAME);
+//        List<String> redeemPointRelationAssetUserColumns = new ArrayList<String>();
+//
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ISSUER_IDENTITY_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_NAME_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_SEX_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_UBICACION_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_AGE_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_DESCRIPTION_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_NAME_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_ID_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_HASH_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_STATUS_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_RESOURCES_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_AMOUNT_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_CURRENCY_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_EXPIRATION_DATE_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_TIMESTAMP_COLUMN_NAME);
+//        redeemPointRelationAssetUserColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_DATE_COLUMN_NAME);
         /**
          * Redeem Point Relation Aseet User database addition.
          */
-        DeveloperDatabaseTable redeemPointRelationAssetUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_TABLE_NAME, redeemPointRelationAssetUserColumns);
-        tables.add(redeemPointRelationAssetUserTable);
+//        DeveloperDatabaseTable redeemPointRelationAssetUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_TABLE_NAME, redeemPointRelationAssetUserColumns);
+//        tables.add(redeemPointRelationAssetUserTable);
 
         return tables;
     }

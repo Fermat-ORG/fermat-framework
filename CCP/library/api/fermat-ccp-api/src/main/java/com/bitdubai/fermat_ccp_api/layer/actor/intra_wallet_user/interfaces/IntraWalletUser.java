@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces;
 
 
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 
 /**
  * The interface <code>IntraWalletUser</code>
@@ -44,6 +44,6 @@ public interface IntraWalletUser {
      *
      * @return the contact state
      */
-    ContactState getContactState();
+    ConnectionState getContactState();
 
 }

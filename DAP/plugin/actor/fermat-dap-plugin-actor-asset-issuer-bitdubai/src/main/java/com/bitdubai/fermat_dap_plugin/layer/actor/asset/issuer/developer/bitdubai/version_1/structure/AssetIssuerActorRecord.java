@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 /**
@@ -12,12 +12,12 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private String publicKey;
     private byte[] profileImage ;
     private long registrationDate;
-    private ContactState contactState;
+    private ConnectionState contactState;
 
     /**
      * Constructor
      */
-    public AssetIssuerActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ContactState contactState){
+    public AssetIssuerActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
 
         this.name = name;
         this.publicKey = publicKey;
@@ -74,7 +74,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
      * @return the contact state
      */
     @Override
-    public ContactState getContactState() {
+    public ConnectionState getContactState() {
         return this.contactState;
     }
 }
