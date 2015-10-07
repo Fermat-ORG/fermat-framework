@@ -646,6 +646,11 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         }
     }
 
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+
+    }
+
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      */
