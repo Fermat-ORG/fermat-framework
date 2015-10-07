@@ -807,7 +807,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
         }
     }
 
-    private Actor getActorByActorPublicKeyAndType(String actorPublicKey, Actors actorType) throws CantGetActorException {
+    private Actor getActorByActorPublicKeyAndType(String actorPublicKey, Actors actorType) throws CantGetActorException, CantGetIntraUserException, IntraUserNotFoundException {
         Actor actor;
         switch (actorType) {
             case EXTRA_USER:
