@@ -17,83 +17,56 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CryptoPaymentRequestNetworkServiceConnectionManager</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager</code>
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/10/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoPaymentRequestNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
+public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
-    /**
-     * Represent the communicationsClientConnection
-     */
     private final CommunicationsClientConnection communicationsClientConnection;
+    private final ErrorManager                   errorManager                  ;
+    private final EventManager                   eventManager                  ;
+
+    private final PlatformComponentProfile       platformComponentProfile      ;
+    private final ECCKeyPair                     identity                      ;
+
+    private final IncomingMessageDao             incomingMessageDao            ;
+    private final OutgoingMessageDao             outgoingMessageDao            ;
 
     /**
-     * Represent the platformComponentProfile
+     * Holds all references to the communication network service locals
      */
-    private final PlatformComponentProfile platformComponentProfile;
+    private Map<String, CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
 
     /**
-     * DealsWithErrors Interface member variables.
+     * Holds all references to the communication network service remote agents
      */
-    private final ErrorManager errorManager;
+    private Map<String, CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
-     * DealWithEvents Interface member variables.
+     * Constructor of Connection Manager.
      */
-    private final EventManager eventManager;
+    public CommunicationNetworkServiceConnectionManager(final PlatformComponentProfile       platformComponentProfile      ,
+                                                        final ECCKeyPair                     identity                      ,
+                                                        final CommunicationsClientConnection communicationsClientConnection,
+                                                        final Database                       dataBase                      ,
+                                                        final ErrorManager                   errorManager                  ,
+                                                        final EventManager                   eventManager                  ) {
 
-    /**
-     * Holds all references to the template network service locals
-     */
-    private Map<String, CryptoPaymentRequestNetworkServiceLocal> templateNetworkServiceLocalsCache;
-
-    /**
-     * Holds all references to the template network service remote agents
-     */
-    private Map<String, CryptoPaymentRequestNetworkServiceRemoteAgent> templateNetworkServiceRemoteAgentsCache;
-
-    /**
-     * Represent the incomingMessageDao
-     */
-    private final IncomingMessageDao incomingMessageDao;
-
-    /**
-     * Represent the outgoingMessageDao
-     */
-    private final OutgoingMessageDao outgoingMessageDao;
-
-    /**
-     * Represent the identity
-     */
-    private final ECCKeyPair identity;
-
-
-    /**
-     * Constructor with parameters
-     *
-     * @param communicationsClientConnection a communicationLayerManager instance
-     * @param errorManager              a errorManager instance
-     */
-    public CryptoPaymentRequestNetworkServiceConnectionManager(final PlatformComponentProfile       platformComponentProfile      ,
-                                                               final ECCKeyPair                     identity                      ,
-                                                               final CommunicationsClientConnection communicationsClientConnection,
-                                                               final Database                       dataBase                      ,
-                                                               final ErrorManager                   errorManager                  ,
-                                                               final EventManager                   eventManager                  ) {
         super();
-        this.platformComponentProfile = platformComponentProfile;
-        this.identity = identity;
-        this.communicationsClientConnection = communicationsClientConnection;
-        this.errorManager = errorManager;
-        this.eventManager = eventManager;
-        this.incomingMessageDao = new IncomingMessageDao(dataBase);
-        this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
-        this.templateNetworkServiceLocalsCache = new HashMap<>();
-        this.templateNetworkServiceRemoteAgentsCache = new HashMap<>();
+
+        this.platformComponentProfile                     = platformComponentProfile        ;
+        this.identity                                     = identity                        ;
+        this.communicationsClientConnection               = communicationsClientConnection  ;
+        this.errorManager                                 = errorManager                    ;
+        this.eventManager                                 = eventManager                    ;
+        this.incomingMessageDao                           = new IncomingMessageDao(dataBase);
+        this.outgoingMessageDao                           = new OutgoingMessageDao(dataBase);
+        this.communicationNetworkServiceLocalsCache       = new HashMap<>()                 ;
+        this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>()                 ;
     }
 
 
@@ -124,7 +97,7 @@ public class CryptoPaymentRequestNetworkServiceConnectionManager implements Netw
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
         //Remove the instance and stop his threads
-        templateNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+        communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
 
@@ -134,10 +107,10 @@ public class CryptoPaymentRequestNetworkServiceConnectionManager implements Netw
      */
     public void closeAllConnection() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.remove(key).stop();
+            communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
         }
 
     }
@@ -164,28 +137,28 @@ public class CryptoPaymentRequestNetworkServiceConnectionManager implements Netw
                  /*
                  * Instantiate the local reference
                  */
-                CryptoPaymentRequestNetworkServiceLocal templateNetworkServiceLocal = new CryptoPaymentRequestNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CryptoPaymentRequestNetworkServiceRemoteAgent templateNetworkServiceRemoteAgent = new CryptoPaymentRequestNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
                  */
-                templateNetworkServiceRemoteAgent.addObserver(templateNetworkServiceLocal);
+                communicationNetworkServiceRemoteAgent.addObserver(communicationNetworkServiceLocal);
 
                 /*
                  * Start the service thread
                  */
-                templateNetworkServiceRemoteAgent.start();
+                communicationNetworkServiceRemoteAgent.start();
 
                 /*
                  * Add to the cache
                  */
-                templateNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), templateNetworkServiceLocal);
-                templateNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), templateNetworkServiceRemoteAgent);
+                communicationNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceLocal);
+                communicationNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceRemoteAgent);
 
             }
 
@@ -199,10 +172,10 @@ public class CryptoPaymentRequestNetworkServiceConnectionManager implements Netw
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
-    public CryptoPaymentRequestNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
+    public CommunicationNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance
-        return templateNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
+        return communicationNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
     }
 
     /**
@@ -210,10 +183,10 @@ public class CryptoPaymentRequestNetworkServiceConnectionManager implements Netw
      */
     public void pause() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.get(key).pause();
+            communicationNetworkServiceRemoteAgentsCache.get(key).pause();
         }
 
     }
@@ -223,12 +196,29 @@ public class CryptoPaymentRequestNetworkServiceConnectionManager implements Netw
      */
     public void resume() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.get(key).resume();
+            communicationNetworkServiceRemoteAgentsCache.get(key).resume();
         }
 
     }
+
+    /**
+     * Get the OutgoingMessageDao
+     * @return OutgoingMessageDao
+     */
+    public OutgoingMessageDao getOutgoingMessageDao() {
+        return outgoingMessageDao;
+    }
+
+    /**
+     * Get the IncomingMessageDao
+     * @return IncomingMessageDao
+     */
+    public IncomingMessageDao getIncomingMessageDao() {
+        return incomingMessageDao;
+    }
+
 
 }
