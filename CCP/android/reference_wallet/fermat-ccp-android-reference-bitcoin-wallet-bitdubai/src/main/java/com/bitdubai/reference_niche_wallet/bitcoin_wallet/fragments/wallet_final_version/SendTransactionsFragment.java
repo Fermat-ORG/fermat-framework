@@ -162,7 +162,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         try {
 
             rootView = super.onCreateView(inflater, container, savedInstanceState);
-
+            empty = (LinearLayout)rootView.findViewById(R.id.empty);
 
             linear_layout_send_form = (LinearLayout) rootView.findViewById(R.id.send_form);
 
