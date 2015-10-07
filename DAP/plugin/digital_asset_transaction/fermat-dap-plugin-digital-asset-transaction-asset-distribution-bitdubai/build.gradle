@@ -8,6 +8,6 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-dap-api')
     compile project(':fermat-bch-api')
-    compile project(':fermat-ccp-api')
+    compile project(':fermat-ccp-api')   
     testCompile 'junit:junit:4.12'
 }

@@ -323,16 +323,19 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 //                                    //TODO COMMENTED FOR ERROR WHEN TRYING TO GET CONTACT DETAIL
 //                                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
 //                            .add(R.id.fragment_container2, fragment)
-//                            .attach(fragment)
+//                            .attach(fragment)sta
 //                            .show(fragment)
 //                            .commit();
                     referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
                     CryptoWalletWalletContact cryptoWalletWalletContact;
 
-                    //TODO hay que ver el tema del position porque toma las divisiones entre cada item como un position y no recupera correctamente los contactos
-                    referenceWalletSession.setLastContactSelected(walletContactRecords.get(position-1));
 
-                    referenceWalletSession.setLastContactSelected(walletContactRecords.get(position));
+                    if(position == 1)
+                        referenceWalletSession.setLastContactSelected(walletContactRecords.get(position-1));
+                    else
+                        referenceWalletSession.setLastContactSelected(walletContactRecords.get(position-2));
+
+
                     InstalledWallet installedWallet = walletSession.getWalletSessionType();
 
                     ((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());

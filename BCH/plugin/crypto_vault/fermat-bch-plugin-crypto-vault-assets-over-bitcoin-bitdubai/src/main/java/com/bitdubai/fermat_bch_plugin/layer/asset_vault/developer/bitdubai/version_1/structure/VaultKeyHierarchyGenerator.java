@@ -15,9 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by rodrigo on 10/4/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchyGenerator</code>
+ * Is in charge of creating the Vault Key hierarchy from the master seed passed. It will get all the accounts created on this device
+ * and generate the key hierarchy for all of them.
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class VaultKeyHierarchyGenerator implements Runnable{
+class VaultKeyHierarchyGenerator implements Runnable{
     /**
      * Unique seed used to generate all the hierarchies
      */
@@ -108,7 +116,7 @@ public class VaultKeyHierarchyGenerator implements Runnable{
          * the account 0 that will be used by the asset vault.
          */
         if (hierarchyAccounts.size() == 0){
-            HierarchyAccount accountZero = new HierarchyAccount(0, "Asset vault account");
+            HierarchyAccount accountZero = new HierarchyAccount(0, "Asset Vault account");
             hierarchyAccounts.add(accountZero);
             //todo Add this account to database
         }

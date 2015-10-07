@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 
@@ -28,17 +29,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 public class CompleteComponentRegistrationNotificationEventHandler implements FermatEventHandler {
 
     /*
-    * Represent the templateNetworkServicePluginRoot
+    * Represent the networkService
     */
-    private TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot;
+    private NetworkService networkService;
 
     /**
      * Constructor with parameter
      *
-     * @param templateNetworkServicePluginRoot
+     * @param networkService
      */
-    public CompleteComponentRegistrationNotificationEventHandler(TemplateNetworkServicePluginRoot templateNetworkServicePluginRoot) {
-        this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
+    public CompleteComponentRegistrationNotificationEventHandler(NetworkService networkService) {
+        this.networkService = networkService;
     }
 
     /**
@@ -54,18 +55,17 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
 
         System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
-        if (((Service) this.templateNetworkServicePluginRoot).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
 
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
 
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE_COMPONENT &&
-                    completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == NetworkServiceType.TEMPLATE) {
+            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType()) {
 
                 /*
-                 *  TemplateManager make the job
+                 *  networkService make the job
                  */
-                 this.templateNetworkServicePluginRoot.handleCompleteComponentRegistrationNotificationEvent(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
+                 this.networkService.handleCompleteComponentRegistrationNotificationEvent(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
 
             }
         }

@@ -1,5 +1,5 @@
 
-include ':fermat-android-api'
+include ':fermat-android-api', ':fermat-p2p-plugin-communication-wifi-bitdubai'
 include ':fermat-android-core'
 
 include ':fermat-api'
@@ -10,7 +10,11 @@ include ':fermat-cbp-api'
 include ':fermat-ccp-api'
 include ':fermat-cry-api'
 include ':fermat-csh-api'
+
 include ':fermat-dap-api'
+project(':fermat-dap-api').projectDir = new File('DAP/library/api/fermat-dap-api')
+
+
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
 
@@ -28,6 +32,9 @@ project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai').projectDir = n
 
 include ':fermat-ccp-api'
 project(':fermat-ccp-api').projectDir = new File('CCP/library/api/fermat-ccp-api')
+
+include ':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai'
+project(':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai').projectDir = new File('CCP/plugin/actor/fermat-ccp-plugin-actor-intra-wallet-user-bitdubai')
 
 include ':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai'
 project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('CCP/plugin/network_service/fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
@@ -159,6 +166,18 @@ include ':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai'
 project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
 
 
+
+include ':fermat-p2p-plugin-communication-wifi-bitdubai'
+project(':fermat-p2p-plugin-communication-wifi-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-wifi-bitdubai')
+
+
+
+// DMP Projects (Plugins)
+
+include ':fermat-dmp-plugin-identity-intra-user-bitdubai'
+project(':fermat-dmp-plugin-identity-intra-user-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
+
+
 //CCM Projects
 
 include ':fermat-ccm-plugin-network-service-money-request-bitdubai'
@@ -170,9 +189,6 @@ project(':fermat-ccm-plugin-network-service-money-transmission-bitdubai').projec
 // DMP Projects (Plugins)
 include ':fermat-dmp-plugin-actor-extra-user-bitdubai'
 project(':fermat-dmp-plugin-actor-extra-user-bitdubai').projectDir = new File('DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai')
-
-include ':fermat-dmp-plugin-actor-intra-user-bitdubai'
-project(':fermat-dmp-plugin-actor-intra-user-bitdubai').projectDir = new File('DMP/plugin/actor/fermat-dmp-plugin-actor-intra-user-bitdubai')
 
 include ':fermat-dmp-plugin-identity-translator-bitdubai'
 project(':fermat-dmp-plugin-identity-translator-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-translator-bitdubai')
@@ -480,6 +496,9 @@ project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('D
 include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
 
+
+
+
 // identity
 include ':fermat-dap-plugin-identity-asset-issuer-bitdubai'
 project(':fermat-dap-plugin-identity-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/identity/fermat-dap-plugin-identity-asset-issuer-bitdubai')
@@ -507,6 +526,14 @@ project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai').projectD
 
 include ':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai'
 project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-redeem-point-bitdubai')
+
+include ':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-redeem-point-bitdubai')
+
+include ':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
+
+
 
 // actor
 include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
