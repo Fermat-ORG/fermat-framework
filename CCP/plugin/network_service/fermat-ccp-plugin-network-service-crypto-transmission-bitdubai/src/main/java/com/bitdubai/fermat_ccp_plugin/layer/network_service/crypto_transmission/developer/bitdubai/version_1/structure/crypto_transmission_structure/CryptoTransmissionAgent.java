@@ -260,7 +260,7 @@ public class CryptoTransmissionAgent {
                                 null,                     // offset
                                 null,                     // max
                                 PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                NetworkServiceType.NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+                                NetworkServiceType.CRYPTO_TRANSMISSION); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
