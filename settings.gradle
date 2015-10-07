@@ -10,7 +10,11 @@ include ':fermat-cbp-api'
 include ':fermat-ccp-api'
 include ':fermat-cry-api'
 include ':fermat-csh-api'
+
 include ':fermat-dap-api'
+project(':fermat-dap-api').projectDir = new File('DAP/library/api/fermat-dap-api')
+
+
 include ':fermat-pip-api'
 include ':fermat-p2p-api'
 

@@ -19,16 +19,22 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by rodrigo on 10/4/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchyMaintainer</code>
  * Maintains the list of keys generated for each account. The list of keys are used to generate crypto address.
- * This agent takes care to validate we always have enought keys to pass to the crypto network.
+ * This agent takes care to validate we always have enough keys to pass to the crypto network.
  * Its goal is to pass the list of ECKeys to the bitcoin Network so we are monitoring all the ever created keys plus a bag of un used keys
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 class VaultKeyHierarchyMaintainer implements Agent {
     /**
      * controller of the agent execution thread
      */
-    boolean isSupposedToRun;
+    private boolean isSupposedToRun;
 
     /**
      * The vault complete key hierarchy
