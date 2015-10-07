@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.ContactIndexStrucs;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class IndexBarView extends View {
     public ArrayList<Integer> mListSections;
 
     // array list to store listView data
-    ArrayList<String> mListItems;
+    ArrayList<Object> mListItems;
 
     // paint object
     Paint mIndexPaint;
@@ -63,7 +64,7 @@ public class IndexBarView extends View {
     }
 
 
-    private static void updateIndexTable(ArrayList<String> listItems, ArrayList<Integer> listSections) {
+    private static void updateIndexTable(ArrayList<Object> listItems, ArrayList<Integer> listSections) {
         if (contactIndexTable == null) {
             contactIndexTable = new LinkedHashMap<String, Integer>(ContactIndexStrucs.getContactIndexTable());
         } else {
@@ -71,13 +72,21 @@ public class IndexBarView extends View {
         }
 
         for (int secIndex : listSections) {
-            String section = listItems.get(secIndex);
+            Object object = listItems.get(secIndex);
+            String section = null;
+            if(object instanceof String){
+                section = (String) listItems.get(secIndex);
+            }else if( object instanceof CryptoWalletWalletContact){
+                section = ((CryptoWalletWalletContact) listItems.get(secIndex)).getActorName();
+            }else{
+                section = "algo malo pasó";
+            }
             contactIndexTable.put(section, secIndex);
         }
     }
 
 
-    public void setData(PinnedHeaderListView listView, ArrayList<String> listItems, ArrayList<Integer> listSections) {
+    public void setData(PinnedHeaderListView listView, ArrayList<Object> listItems, ArrayList<Integer> listSections) {
         this.mListItems = listItems;
         this.mListSections = listSections;
         updateIndexTable(listItems, listSections);
