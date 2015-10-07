@@ -583,7 +583,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                     }
 
                     if (contractProperty.getName().equalsIgnoreCase("expiration_date")) {
-                        assetFactory.setExpirationDate(Timestamp.valueOf(contractProperty.getValue().toString()));
+                        assetFactory.setExpirationDate(contractProperty.getValue() != null ? Timestamp.valueOf(contractProperty.getValue().toString()) : null);
                     }
                     contractProperties.add(contractProperty);
                 }
