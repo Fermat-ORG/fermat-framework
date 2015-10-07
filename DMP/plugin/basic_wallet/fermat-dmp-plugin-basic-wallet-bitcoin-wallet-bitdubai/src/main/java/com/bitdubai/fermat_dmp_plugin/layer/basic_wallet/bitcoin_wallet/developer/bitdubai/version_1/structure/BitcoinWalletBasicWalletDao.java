@@ -290,12 +290,13 @@ public class BitcoinWalletBasicWalletDao {
 
                 switch (transactionType) {
                     case CREDIT:
-                        sentTransactionsNumber = record.getIntegerValue("Column0");
-                        sentAmount = record.getLongValue("Column2");
-                        break;
-                    case DEBIT:
                         receivedTransactionsNumber = record.getIntegerValue("Column0");
                         receivedAmount = record.getLongValue("Column2");
+                        break;
+                    case DEBIT:
+                        sentTransactionsNumber = record.getIntegerValue("Column0");
+                        sentAmount = record.getLongValue("Column2");
+
                         break;
                 }
             }

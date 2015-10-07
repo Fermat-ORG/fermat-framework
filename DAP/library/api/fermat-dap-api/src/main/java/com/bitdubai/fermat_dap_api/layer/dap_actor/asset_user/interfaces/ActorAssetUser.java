@@ -7,6 +7,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactSt
  */
 public interface ActorAssetUser {
 
+
     /**
      * The metho <code>getPublicKey</code> gives us the public key of the represented intra user
      *

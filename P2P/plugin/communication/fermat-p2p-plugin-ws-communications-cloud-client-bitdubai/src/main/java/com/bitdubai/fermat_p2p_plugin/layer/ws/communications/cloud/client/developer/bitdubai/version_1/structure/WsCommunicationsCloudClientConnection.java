@@ -184,7 +184,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
      * (non-javadoc)
      * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numberRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
 
         //Validate parameters
         if (applicant == null){
@@ -194,7 +194,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         /*
          * Construct a PlatformComponentProfile instance
          */
-        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, distance, name, applicant.getNetworkServiceType(), applicant.getPlatformComponentType(), extraData, firstRecord, numberRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, distance, name, applicant.getNetworkServiceType(), applicant.getPlatformComponentType(), extraData, offset, max, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
 
     }
 

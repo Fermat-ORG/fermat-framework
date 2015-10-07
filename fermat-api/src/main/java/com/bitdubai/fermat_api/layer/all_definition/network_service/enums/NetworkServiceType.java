@@ -6,8 +6,6 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.network_service.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType</code> represent
  * all types that a network service cam be.
@@ -17,17 +15,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum NetworkServiceType implements FermatEnum {
+public enum NetworkServiceType {
 
-    /**
-     * Please keep the elements sorted alphabetically.
-     */
+    // Definition types
 
-    CRYPTO_PAYMENT_REQUEST("CRY_PAY_REQ"),
-    CRYPTO_TRANSMISSION   ("CRY_TRAN"   ),
-    INTRA_USER            ("INT_USR"    ),
-    TEMPLATE              ("TEMP"       ),
-    UNDEFINED             ("UNDEF"      );
+
+    UNDEFINED                                 ("UNDEF"),
+    NETWORK_SERVICE_TEMPLATE_TYPE             ("NS_TEMP_TYP"),
+    NETWORK_SERVICE_INTRA_USER_TYPE           ("NS_INT_USR_TYP"),
+    NETWORK_SERVICE_ASSET_TRANSMISSION_TYPE   ("NS_ASS_TRANS_TYP"),
+    NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE  ("NS_CRY_TRANS_TYP"), CRYPTO_PAYMENT_REQUEST("CPR");
+
 
     /**
      * Represent the code
@@ -39,8 +37,17 @@ public enum NetworkServiceType implements FermatEnum {
      *
      * @param code
      */
-    NetworkServiceType(String code){
+    private NetworkServiceType(String code){
         this.code = code;
+    }
+
+    /**
+     * Return the code representation
+     *
+     * @return String
+     */
+    public String getCode() {
+        return this.code;
     }
 
     /**
@@ -53,25 +60,14 @@ public enum NetworkServiceType implements FermatEnum {
 
         switch (code){
 
-            case "CRY_PAY_REQ": return CRYPTO_PAYMENT_REQUEST;
-            case "CRY_TRAN"   : return CRYPTO_TRANSMISSION   ;
-            case "INT_USR"    : return INTRA_USER            ;
-            case "TEMP"       : return TEMPLATE              ;
-            case "UNDEF"      : return UNDEFINED             ;
+
+            case "UNDEF"            : return NetworkServiceType.UNDEFINED;
+            case "NS_TEMP_TYP"      : return NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE;
+            case "NS_INT_USR_TYP"   : return NetworkServiceType.NETWORK_SERVICE_INTRA_USER_TYPE;
+            case "NS_ASS_TRANS_TYP" : return NetworkServiceType.NETWORK_SERVICE_ASSET_TRANSMISSION_TYPE;
+            case "NS_CRY_TRANS_TYP" : return NetworkServiceType.NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE;
 
             default: throw new IllegalArgumentException();
         }
-
     }
-
-    /**
-     * Return the code representation
-     *
-     * @return String
-     */
-    @Override
-    public String getCode() {
-        return this.code;
-    }
-
 }
