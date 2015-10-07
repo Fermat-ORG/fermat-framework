@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -12,6 +13,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnecToException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantRegisterActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetuserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUser;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
@@ -34,7 +42,7 @@ import java.util.UUID;
 *
 * @version 1.0
 */
-public class AssetUserPluginRoot implements AssetuserManager, DealsWithAssetUser, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class AssetUserPluginRoot implements ActorAssetUserManager, DealsWithActorAssetUser, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
     /**
      * Service Interface member variables.
      */
@@ -44,7 +52,7 @@ public class AssetUserPluginRoot implements AssetuserManager, DealsWithAssetUser
     /**
      * Represent the AssetuserManager
      */
-    private AssetuserManager assetuserManager;
+    private ActorAssetUserManager actorAssetUserManager;
 
 
     /**
@@ -176,10 +184,31 @@ public class AssetUserPluginRoot implements AssetuserManager, DealsWithAssetUser
 
 
 
-    @Override
-    public void setAssetUserManager(AssetuserManager assetuserManager) {
 
-        this.assetuserManager=assetuserManager;
+
+
+    @Override
+    public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
+        this.actorAssetUserManager  =actorAssetUserManager;
+    }
+
+    @Override
+    public void requestListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
+
+    }
+
+    @Override
+    public void connectTo(PlatformComponentProfile actorAssetUser) throws CantConnecToException {
+
+    }
+
+    @Override
+    public void sendMessage(PlatformComponentProfile actorAssetUser, String msjContent) throws CantSendMessageException {
+
+    }
+
+    @Override
+    public void setAssetUserActorNetworkServiceManager(ActorAssetUserManager actorAssetUserManager) {
 
     }
 }
