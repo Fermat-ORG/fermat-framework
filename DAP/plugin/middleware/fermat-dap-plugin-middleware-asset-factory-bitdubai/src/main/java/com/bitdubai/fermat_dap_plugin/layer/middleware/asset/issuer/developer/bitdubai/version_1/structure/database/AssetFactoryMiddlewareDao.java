@@ -24,6 +24,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
@@ -101,7 +102,6 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, assetFactory.getAmount());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, assetFactory.getQuantity());
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, assetFactory.getCreationTimestamp().toString());
-        //// TODO: 05/10/15 Modificar por frankling
         if (assetFactory.getLastModificationTimestamp() == null) {
             Date date = new Date();
             assetFactory.setLastModificationTimeststamp(new Timestamp(date.getTime()));
@@ -510,7 +510,51 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         return assetFactory;
     }
 
+    public void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException{
+       try {
+            database = openDatabase();
+
+           DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
+           DatabaseTable tableContracts = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
+           DatabaseTable tableResources = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME);
+           DatabaseTable tableIdentityUser = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
+            DatabaseTableRecord databaseTablerecord =  getAssetFactoryProjectRecord(assetFactory);
+            table.setStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN, assetFactory.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+           if (assetFactory.getResources() != null) {
+               for (Resource resources : assetFactory.getResources()) {
+                   DatabaseTableRecord record = getResourceDataRecord(assetFactory.getPublicKey(), resources);
+                   //tableResources.setStringFilter(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN, record.getUUIDValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN).toString(), DatabaseFilterType.EQUAL);
+                   tableResources.deleteRecord(record);
+               }
+           }
+
+           if (assetFactory.getContractProperties() != null) {
+               for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
+                   DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(), contractProperties.getValue().toString());
+                   tableContracts.deleteRecord(record);
+               }
+           }
+
+           DatabaseTableRecord record = getIdentityIssuerDataRecord(assetFactory.getPublicKey(), assetFactory.getIdentyAssetIssuer().getPublicKey(), assetFactory.getIdentyAssetIssuer().getAlias(), "signature");
+           DatabaseTableFilter filter = getIdentityIssuerFilter(assetFactory.getIdentyAssetIssuer().getPublicKey());
+           filter.setValue(assetFactory.getIdentyAssetIssuer().getPublicKey());
+           tableIdentityUser.deleteRecord(record);
+
+           table.deleteRecord(databaseTablerecord);
+
+            database.closeDatabase();
+        }catch (Exception exception){
+           if (database != null)
+               database.closeDatabase();
+            throw new CantDeleteAsserFactoryException(exception, "Error delete Asset Factory", "Asset Factory - Delete");
+        }
+    }
+
+
     public void saveAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException {
+
 
         try {
             database = openDatabase();
@@ -531,7 +575,8 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
             }
 
             // I wil add the Contracts to the transaction if there are any
-            transaction = addContractRecordsToTransaction(transaction, assetFactory);
+            if (assetFactory.getContractProperties() != null)
+                transaction = addContractRecordsToTransaction(transaction, assetFactory);
             // I wil add the resources to the transaction if there are any
             if (assetFactory.getResources() != null)
                 transaction = addResourceRecordsToTransaction(transaction, assetFactory);

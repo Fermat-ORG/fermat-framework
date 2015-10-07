@@ -64,7 +64,7 @@ public interface AssetFactoryManager {
     /**
      * This method remove object AssetFactory in database
      */
-    void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException;
+    void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException;
 
     /**
      * This method retrieves the bitcoin wallet and check if you have available balance
