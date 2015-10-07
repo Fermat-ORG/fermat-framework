@@ -230,14 +230,11 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
 
     }
 
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     * @param platformComponentProfileRegisteredList
-     */
     @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
     }
+
 
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent

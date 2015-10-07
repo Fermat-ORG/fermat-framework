@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -88,7 +89,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * DealsWithEvents Interface member variables
      */
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded;
+    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -126,11 +128,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     private CommunicationLayerNetworkServiceDeveloperDatabaseFactory communicationLayerNetworkServiceDeveloperDatabaseFactory;
 
     /**
-     * Represent the platformComponentProfile
-     */
-    private PlatformComponentProfile platformComponentProfile;
-
-    /**
      * Represent the dataBase
      */
     private Database dataBase;
@@ -139,6 +136,20 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * Represent the identity
      */
     private ECCKeyPair identity;
+
+    /**
+     * Represent the platformComponentProfile
+     */
+    private PlatformComponentProfile platformComponentProfile;
+
+    /**
+     * Crypto Payment Request Network Service details.
+     */
+    private final PlatformComponentType platformComponentType;
+    private final NetworkServiceType networkServiceType;
+    private final String name;
+    private final String alias;
+    private final String extraData;
 
     /**
      * Represent the register
@@ -151,6 +162,19 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     private RegistrationProcessNetworkServiceAgent registrationProcessNetworkServiceAgent;
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
+
+    /**
+     * Constructor
+     */
+    public CryptoPaymentRequestNetworkServicePluginRoot() {
+        super();
+        this.listenersAdded = new ArrayList<>();
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+        this.networkServiceType    = NetworkServiceType.CRYPTO_PAYMENT_REQUEST;
+        this.name                  = "Crypto Payment Request Network Service";
+        this.alias                 = "CryptoPaymentRequestNetworkService";
+        this.extraData             = null;
+    }
 
     @Override
     public void sendCryptoPaymentRequest(String                walletPublicKey  ,
@@ -383,7 +407,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
             
             CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
         
@@ -480,6 +504,12 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
     @Override
     public void stop() {
+
+        for (FermatEventListener listener: listenersAdded)
+            eventManager.removeListener(listener);
+
+        listenersAdded.clear();
+
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -644,6 +674,11 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             this.register = Boolean.TRUE;
             System.out.println("Estoy re registrado.");
         }
+    }
+
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+
     }
 
     /**

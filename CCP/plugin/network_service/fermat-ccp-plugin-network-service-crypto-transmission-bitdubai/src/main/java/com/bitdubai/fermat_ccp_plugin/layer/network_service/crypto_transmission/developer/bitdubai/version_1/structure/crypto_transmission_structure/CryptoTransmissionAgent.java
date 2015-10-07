@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
@@ -66,6 +67,10 @@ public class CryptoTransmissionAgent {
      */
     WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
+    /**
+     * plugin root
+     */
+    CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
 
     /**
      * DAO CryptoTransmission
@@ -100,6 +105,18 @@ public class CryptoTransmissionAgent {
      */
     Map<String, CryptoTransmissionStates> cacheResponseMetadataFromRemotes;
 
+    /**
+     * Mapa con el publicKey del componentProfile al cual me quiero conectar
+     *  y las veces que intenté conectarme para saltearlo si no está conectado
+     */
+    Map<String,Integer> connectionsCounters;
+
+    /**
+     * Cola de espera, a la cual van pasando las conecciones que no se pudieron conectar para que se hagan con más tiempo y no saturen el server
+     */
+    Map<String, CryptoTransmissionPlatformComponentProfilePlusWaitTime> waitingPlatformComponentProfile;
+
+
 
     /**
      *  Constructor
@@ -130,6 +147,7 @@ public class CryptoTransmissionAgent {
 
 
         cacheResponseMetadataFromRemotes = new HashMap<String, CryptoTransmissionStates>();
+        waitingPlatformComponentProfile = new HashMap<>();
 
         //Create a thread to send the messages
         this.toSend = new Thread(new Runnable() {
@@ -212,8 +230,11 @@ public class CryptoTransmissionAgent {
             processMetadata();
 
             // this function read the active conections waiting for response that the events not catch
-            readResponseFromRemote();
+            //readResponseFromRemote();
 
+
+            //Discount from the the waiting list
+            discountWaitTime();
 
             //Sleep for a time
             toSend.sleep(CryptoTransmissionAgent.SLEEP_TIME);
@@ -228,7 +249,7 @@ public class CryptoTransmissionAgent {
 
         try {
             Map<String, Object> filters = new HashMap<>();
-            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.PROCESSING_SEND.getCode());
+            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.PRE_PROCESSING_SEND.getCode());
             //filters.put(ComunicationLayerNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
 
          /*
@@ -248,6 +269,7 @@ public class CryptoTransmissionAgent {
 //                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory()
 //                PlatformComponentProfile platformComponentProfile = new Pl
 
+
                 DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                         getCommunicationsCloudClientConnection().
                         constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
@@ -260,7 +282,7 @@ public class CryptoTransmissionAgent {
                                 null,                     // offset
                                 null,                     // max
                                 PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                NetworkServiceType.NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+                                NetworkServiceType.CRYPTO_TRANSMISSION); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
@@ -284,7 +306,9 @@ public class CryptoTransmissionAgent {
 
                     //TODO: chequear si el componente proviene de ese actor, si proviene y no está conectado tengo que hacer la conexión, si está conectado tengo que hacer el send
                     //TODO: estoy tomando el getIdentityPublicKey como si fuera la key del actor, cuando Robert lo tenga lo cambió
-                    if(remoteComponentProfile.getIdentityPublicKey().equals(cryptoTransmissionMetadata.getDestinationPublicKey())){
+
+                    //TODO: LISTO
+                    if(remoteComponentProfile.getIdentityPublicKey().equals(cryptoTransmissionNetworkServicePluginRoot.isRegisteredConnectionForActorPK(cryptoTransmissionMetadata.getDestinationPublicKey()))){
                         /*
                         * Get the local representation of the remote network service
                         *
@@ -294,8 +318,35 @@ public class CryptoTransmissionAgent {
 
                         if(communicationNetworkServiceLocal==null){
 
+                            if(!connectionsCounters.containsKey(remoteComponentProfile.getIdentityPublicKey())){
+                                connectionsCounters.put(remoteComponentProfile.getIdentityPublicKey(),0);
+                            }else{
+
+                                int connectionCounter = connectionsCounters.get(remoteComponentProfile.getIdentityPublicKey());
+
+                                if(connectionCounter>5 && connectionCounter<10){
+                                    connectionCounter++;
+                                    continue;
+                                }else if(connectionCounter>10){
+                                    connectionCounter++;
+                                    // lo paso a los de espera
+                                    CryptoTransmissionPlatformComponentProfilePlusWaitTime cryptoTransmissionPlatformComponentProfilePlusWaitTime = new CryptoTransmissionPlatformComponentProfilePlusWaitTime(
+                                            remoteComponentProfile,
+                                            CryptoTransmissionPlatformComponentProfilePlusWaitTime.WAIT_TIME_MIN);
+
+                                    waitingPlatformComponentProfile.put(cryptoTransmissionMetadata.getDestinationPublicKey(),cryptoTransmissionPlatformComponentProfilePlusWaitTime);
+                                    remoteNetworkServicesRegisteredList.remove(remoteComponentProfile);
+
+                                }
+                            }
+                            // Contador de intentos por componentes profile para subir el tiempo de espera del hilo
+
+
                             // Establezco la conexion
                             communicationNetworkServiceConnectionManager.connectTo(remoteComponentProfile);
+
+
+
 
 
                         }else{
@@ -309,7 +360,7 @@ public class CryptoTransmissionAgent {
                                 communicationNetworkServiceLocal.sendMessage(jsonMetadata,identity);
 
                             //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
-                            cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_DATABASE);
+                            cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
 
 
                                 cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
@@ -332,48 +383,17 @@ public class CryptoTransmissionAgent {
         }
     }
 
-    private void readResponseFromRemote() {
+    private void discountWaitTime(){
+        if(!waitingPlatformComponentProfile.isEmpty()) {
+            for (CryptoTransmissionPlatformComponentProfilePlusWaitTime cryptoTransmissionPlatformComponentProfilePlusWaitTime : waitingPlatformComponentProfile.values()) {
+                cryptoTransmissionPlatformComponentProfilePlusWaitTime.WaitTimeDown();
+                if (cryptoTransmissionPlatformComponentProfilePlusWaitTime.getWaitTime() <= 0) {
+                    remoteNetworkServicesRegisteredList.add(cryptoTransmissionPlatformComponentProfilePlusWaitTime.getPlatformComponentProfile());
+                    waitingPlatformComponentProfile.remove(cryptoTransmissionPlatformComponentProfilePlusWaitTime);
 
-        for (PlatformComponentProfile remoteComponentProfile:remoteNetworkServicesRegisteredList){
-            //Me fijo cuales estan conectados
-            //TODO: iba a hacer dos listas para los que se enceuntran conectados y estan esperando conectarse
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-            if(communicationNetworkServiceLocal!=null){
-                FermatMessage fermatMessage =  communicationNetworkServiceLocal.getLastMessageReceived();
-                String messageContent = fermatMessage.getContent();
-                Gson gson = new Gson();
-                CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(messageContent, CryptoTransmissionMetadata.class);
-                // si no contiene la metadata, la tengo que guardar en la bd y notificar que llegó, tambien debería cargar ese caché cuando se lanza el evento de que llega la metadata de respuesta
-                if( ! cacheResponseMetadataFromRemotes.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())){
-
-                    try {
-                        // lo cambio directo porque la metadata viene con un mensaje de estado distinto, actualizado
-                        cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
-                        switch (cryptoTransmissionMetadata.getCryptoTransmissionStates()) {
-                            case SEEN_BY_DESTINATION_NETWORK_SERVICE:
-                                // deberia ver si tengo que lanzar un evento acá
-                                break;
-                            case SEEN_BY_DESTINATION_VAULT:
-                                // deberia ver si tengo que lanzar un evento acá
-                                break;
-                            case CREDITED_IN_DESTINATION_WALLET:
-                                // deberia ver si tengo que lanzar un evento acá
-                                break;
-                            default:
-                                //lanzar excepcion mia por pelotudo
-                                break;
-                        }
-                        cacheResponseMetadataFromRemotes.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata.getCryptoTransmissionStates());
-
-                    } catch (CantUpdateRecordDataBaseException e) {
-                        e.printStackTrace();
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
                 }
             }
         }
-
     }
 
 
@@ -432,12 +452,15 @@ public class CryptoTransmissionAgent {
                         switch (cryptoTransmissionMetadata.getCryptoTransmissionStates()) {
                             case SEEN_BY_DESTINATION_NETWORK_SERVICE:
                                 // deberia ver si tengo que lanzar un evento acá
+                                System.out.print("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
                                 break;
                             case SEEN_BY_DESTINATION_VAULT:
                                 // deberia ver si tengo que lanzar un evento acá
+                                System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
                                 break;
                             case CREDITED_IN_DESTINATION_WALLET:
                                 // deberia ver si tengo que lanzar un evento acá
+                                System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
                                 break;
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                             case SENT:

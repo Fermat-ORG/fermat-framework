@@ -51,7 +51,7 @@ dependencies {
     compile project(':fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-wallet-module-multi-account-wallet-bitdubai')
     //compile project(':fermat-dmp-plugin-wallet-module-fiat-over-crypto-bitdubai')
-    compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
+    compile project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-template-bitdubai')
     compile project(':fermat-dmp-plugin-module-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')

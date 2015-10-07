@@ -214,6 +214,11 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
+     *  Active connectionss
+     */
+    private Map<String,PlatformComponentProfile> cacheConnections;
+
+    /**
      * CryptoTransmission DAO
      */
     CryptoTransmissionMetadataDAO cryptoTransmissionMetadataDAO;
@@ -231,7 +236,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         super();
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
-        this.networkServiceType    = NetworkServiceType.NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE;
+        this.networkServiceType    = NetworkServiceType.CRYPTO_TRANSMISSION;
         this.name                  = "Crypto Transmission Network Service";
         this.alias                 = "CryptoTransmissionNetworkService";
         this.extraData             = null;
@@ -683,7 +688,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -696,10 +701,10 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     }
 
     /**
-     * (non-Javadoc)
-     * @see NetworkService#handleCompleteRequestListComponentRegisteredNotificationEvent(List)
+     * (non-Javadoc
+     * @see NetworkService#
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList,DiscoveryQueryParameters discoveryQueryParameters){
 
         System.out.println(" CryptoTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
@@ -709,7 +714,12 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
          */
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
 
+
+
         cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
+
+        // por ahora guardo solo el primero para saber cuales estan conectados
+        cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(),platformComponentProfileRegisteredList.get(0));
 
     }
 
@@ -760,6 +770,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 //=======
 //        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 //>>>>>>> f91b418ff30cb95d25cd3d3ea2c17212e4fc851f
+
+        System.out.println("NETWORK SERVICE CRYPTO TRANSMISSION, Estoy conectado Roberto ;) ");
 
     }
 
@@ -950,7 +962,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
                 null,
                 senderPublicKey
                 ,transactionId,
-                CryptoTransmissionStates.PROCESSING_SEND,
+                CryptoTransmissionStates.PRE_PROCESSING_SEND,
                 CryptoTransmissionMetadataType.METADATA_SEND
         );
 
@@ -989,5 +1001,9 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
         communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
+    }
+
+    public PlatformComponentProfile isRegisteredConnectionForActorPK(String actorPublicKey){
+        return cacheConnections.get(actorPublicKey);
     }
 }
