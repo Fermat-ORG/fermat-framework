@@ -13,7 +13,6 @@ public class CantSendDigitalAssetMetadataException  extends DAPException {
     public CantSendDigitalAssetMetadataException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
     public CantSendDigitalAssetMetadataException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }

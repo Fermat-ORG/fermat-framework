@@ -8,6 +8,4 @@ public interface DealsWithActorAssetUser {
 
     public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager);
 
-
-    void setActorAssetUserManager(ActorAssetUserManager plugin);
 }
