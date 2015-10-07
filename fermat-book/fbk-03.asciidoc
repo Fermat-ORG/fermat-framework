@@ -18,8 +18,9 @@ These reference wallets allow the basic functiones of any wallet:
  
 .Reference Wallets included in version 1.0
 * *BitWa (Basic Bitcoin Wallet)*
-*
-*
+* *BLP (Bitcoin Loss Protected wallet)*
+* *DiWa (Discount Wallet)*
+
 
 The first service, really an innovation introduced by FERMAT, is the FERMAT WPD, FERMAT' S Wallet Factory and Production Line.
 
@@ -40,9 +41,49 @@ En el *back-end* , where the really action is occuring, we have a lot of modules
 
 If someone having the required programmer's skills wants to build a Wallet, he would necessary have to build every and each one of the modules needed for the wallet to run begin to write the code from zero. However, if you remember that FERMAT is an open system allowing third part developers and actors in general to form part, developers of new wallet can use any of the available *reference niche wallet* to reutilize the COMPLETE back-end ( all the programming code stuff!), and concentrate his endeavour only to the *front-end*making his job a lot easier and allowing all his creativity to be channeled in a better and more attractive result for the end user. ( not only for a nice look but also for improved and more efficient functionalities!).
 
+==== Inside the Wallet Factory
+
+The first step to create a wallet is to join FERMAT an get an identification as DEVELOPER. 
+Then, the new registered *developer* installs the WaFa-module (Wallet Factory) and logs-in. + 
+After entering, he choses a *reference niche wallet* to import, gives his walletś project a new name and saves it as a new WFP-file (WALLET FACTORY PROJECT FILE). +
+Once he has his *own project* he will re-define the *navigation structure* (functionalities of the wallet) and then he will assign which *wallet ressources* he will choose to give his wallet an unique appearance. +
+The last step is to runthe project and test how it works until he is satisfied with the result. + 
+To give birth the new wallet into the world, he will have to *publish* it using FERMAT WALLET PUBLISHER.
+
 
 === FERMAT Wallet Publisher
+
+The main task of the WaPu-module (WALLET PUBLISHER) is to make the new wallet designed and held into a WFP-file to be *published* in the Wa-Sto ( WALLET STORE) and therefore become available to the rest of the FERMAT community to use it. +
+This module also has the responsability of notifying the release of new updates for each version or upgrades to new versions of the existing wallets.
+ 
 === FERMAT Wallet Store
+
+The Wa-St module (Wallet Store) es dentro del sistema fermat una DAPP (Distributed Application).
+Es decir que es una aplicación formada por un número indeterminado de nodos que colaboran entre si
+para manejar la funcionalidad de la DAPP a nivel del sistema completo. +
+Su función es mostrarle al usuario wallets que pueden serle de interés y si el usuario decide
+instalar una wallet comunica la acción al Wallet Manager. +
+La Wallet Store debe manejar además de la identidad de la Wallet y del Developer que la publica.
+Además debe almacenar el Hash de la información correspondiente a la estructura de navegación y
+por otro lado el hash correspondiente a los recursos que esa wallet utiliza. +
+
+NOTE: Quizás no sea necesario lo de almacenamiento de arriba
+
+Luego el Wallet Manager en el dispositivo del usuario que finalmente instala la nueva wallet,
+se encargará de validar que la estructura de navegación obtenida de algún peer, tenga el mismo hash.
+Lo mismo con los recursos.
+
+==== Catálogo Distribuído
+
+Cada nodo de la Wallet Store mantiene una parte del catálogo distribuído de wallets disponibles.
+En principio querríamos que estos nodos muestren información relevante al usuario.
+La información que da este network service debe poder contrastarse con la versión de la plataforma
+que tenemos instalada  (plug-ins instalados) para poder comunicarle al usuario qué cosas
+puede instalar sin actualizar la plataforma y qué cosas podría instalar de hacer un upgrade.
+
+Criterios para determinar relevancia de una wallet para un usuario: localización del usuario,
+rango de acción, tipo de compras, etc.
+
 === FERMAT wallet Manager
 
 
