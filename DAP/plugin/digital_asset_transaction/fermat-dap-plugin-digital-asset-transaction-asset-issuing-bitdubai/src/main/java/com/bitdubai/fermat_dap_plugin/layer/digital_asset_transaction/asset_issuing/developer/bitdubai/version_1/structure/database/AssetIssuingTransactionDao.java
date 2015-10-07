@@ -209,7 +209,10 @@ public class AssetIssuingTransactionDao {
         }
 
     }
-    public void persistDigitalAsset(String digitalAssetPublicKey, String digitalAssetLocalStoragePath, int assetsAmount, BlockchainNetworkType blockchainNetworkType)throws CantPersistDigitalAssetException{
+    public void persistDigitalAsset(String digitalAssetPublicKey,
+                                    String digitalAssetLocalStoragePath,
+                                    int assetsAmount, BlockchainNetworkType blockchainNetworkType,
+                                    String walletPublickey)throws CantPersistDigitalAssetException{
 
         try{
             this.database=openDatabase();
@@ -220,6 +223,7 @@ public class AssetIssuingTransactionDao {
             record.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE_COLUMN_NAME, assetsAmount);
             record.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME, INITIAL_DIGITAL_ASSET_GENERATED_AMOUNT);
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
+            record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublickey);
             databaseTable.insertRecord(record);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -263,6 +267,10 @@ public class AssetIssuingTransactionDao {
 
     private String getStringFieldFromAssetIssuingTableById(String transactionId, String fieldCode) throws UnexpectedResultReturnedFromDatabaseException, CantCheckAssetIssuingProgressException {
         return getStringValueFromAssetIssuingTableByFieldCode(transactionId, fieldCode, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME);
+    }
+
+    private String getWalletPublicKeyByDigitalAssetPublicKey(String digitalAssetPublicKey) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromAssetIssuingTableByFieldCode(digitalAssetPublicKey, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_WALLET_PUBLIC_KEY_COLUMN_NAME, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME);
     }
 
     private String getStringValueFromAssetIssuingTableByFieldCode(String value, String fieldCode, String indexColumn) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {

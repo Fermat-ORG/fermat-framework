@@ -14,9 +14,12 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.DigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantDeleteDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.UUID;
@@ -33,6 +36,7 @@ public class DigitalAssetMetadataVault implements DigitalAssetVault {
     //private final FileLifeSpan FILE_LIFE_SPAN=FileLifeSpan.PERMANENT;
     AssetIssuerWalletManager assetIssuerWalletManager;
     ErrorManager errorManager;
+    String walletPublicKey;
     //For testing I'm gonna use this type of privacy, change to PRIVATE in production release
     //private final FilePrivacy FILE_PRIVACY=FilePrivacy.PUBLIC;
 
@@ -138,6 +142,20 @@ public class DigitalAssetMetadataVault implements DigitalAssetVault {
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         }
+    }
+
+    //Test method
+    /*private void preparingWallet(){
+        AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+        AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE);
+        assetIssuerWalletBalance.credit();
+    }*/
+
+    public void setWalletPublicKey(String walletPublicKey) throws CantSetObjectException {
+        if(walletPublicKey==null){
+            throw new CantSetObjectException("walletPublicKey is null");
+        }
+        this.walletPublicKey=walletPublicKey;
     }
 
     public void setAssetIssuerWalletManager(AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {

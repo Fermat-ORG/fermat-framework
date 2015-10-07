@@ -111,7 +111,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.assetVaultManager=assetVaultManager;
         this.cryptoAddressBookManager=cryptoAddressBookManager;
         this.outgoingIntraActorManager = outgoingIntraActorManager;
-        assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
+        //assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 
     }
 
@@ -132,6 +132,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSetObjectException("digitalAssetMetadataVault is null");
         }
         this.digitalAssetMetadataVault=digitalAssetMetadataVault;
+    }
+
+    public void setAssetIssuingTransactionDao(AssetIssuingTransactionDao assetIssuingTransactionDao) throws CantSetObjectException {
+        this.assetIssuingTransactionDao=assetIssuingTransactionDao;
     }
 
     public int getNumberOfIssuedAssets(String digitalAssetPublicKey) throws CantCheckAssetIssuingProgressException {
@@ -190,7 +194,12 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     }
 
     private void persistFormingGenesisDigitalAsset() throws CantPersistDigitalAssetException {
-        this.assetIssuingTransactionDao.persistDigitalAsset(digitalAsset.getPublicKey(), this.digitalAssetFileStoragePath, this.assetsAmount, this.blockchainNetworkType);
+        this.assetIssuingTransactionDao.persistDigitalAsset(
+                digitalAsset.getPublicKey(),
+                this.digitalAssetFileStoragePath,
+                this.assetsAmount,
+                this.blockchainNetworkType,
+                this.walletPublicKey);
     }
 
     private CryptoAddress requestHashGenesisAddress() throws CantGetGenesisAddressException{
