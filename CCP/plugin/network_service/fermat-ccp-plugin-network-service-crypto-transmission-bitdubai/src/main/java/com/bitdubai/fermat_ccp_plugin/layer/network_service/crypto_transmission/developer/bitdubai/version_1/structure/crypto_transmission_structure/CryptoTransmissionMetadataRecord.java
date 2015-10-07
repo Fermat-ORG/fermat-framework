@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enu
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 
-
 import java.util.UUID;
 
 /**

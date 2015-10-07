@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CryptoTransmissionNetworkServiceConnectionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communication.CryptoTransmissionNetworkServiceLocal;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
@@ -59,7 +59,7 @@ public class CryptoTransmissionAgent {
     /**
      * Communication manager, Class to obtain the connections
      */
-    CryptoTransmissionNetworkServiceConnectionManager cryptoTransmissionNetworkServiceConnectionManager;
+    CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     /**
      *
@@ -107,7 +107,7 @@ public class CryptoTransmissionAgent {
      * @param
      * @param cryptoTransmissionConnectionsDAO
      * @param cryptoTransmissionMetadataDAO
-     * @param cryptoTransmissionNetworkServiceConnectionManager
+     * @param communicationNetworkServiceConnectionManager
      * @param errorManager
      */
 
@@ -115,7 +115,7 @@ public class CryptoTransmissionAgent {
             //CryptoTransmissionNetworkServiceLocal communicationNetworkServiceLocal,
             CryptoTransmissionConnectionsDAO cryptoTransmissionConnectionsDAO,
             CryptoTransmissionMetadataDAO cryptoTransmissionMetadataDAO,
-            CryptoTransmissionNetworkServiceConnectionManager cryptoTransmissionNetworkServiceConnectionManager,
+            CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
             ErrorManager errorManager,
             List<PlatformComponentProfile> remoteNetworkServicesRegisteredList,
             ECCKeyPair identity) {
@@ -123,7 +123,7 @@ public class CryptoTransmissionAgent {
         //this.communicationNetworkServiceLocal = communicationNetworkServiceLocal;
         this.cryptoTransmissionConnectionsDAO = cryptoTransmissionConnectionsDAO;
         this.cryptoTransmissionMetadataDAO = cryptoTransmissionMetadataDAO;
-        this.cryptoTransmissionNetworkServiceConnectionManager = cryptoTransmissionNetworkServiceConnectionManager;
+        this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         this.errorManager = errorManager;
         this.remoteNetworkServicesRegisteredList = remoteNetworkServicesRegisteredList;
         this.identity = identity;
@@ -260,7 +260,7 @@ public class CryptoTransmissionAgent {
                                 null,                     // offset
                                 null,                     // max
                                 PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                NetworkServiceType.CRYPTO_TRANSMISSION); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+                                NetworkServiceType.NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
@@ -290,12 +290,12 @@ public class CryptoTransmissionAgent {
                         *
                         *  Te devuelve nullsi no existe la oonexion, si cryptoTransmissionNetworkServiceLocal te devuelve algo diferente quiere decir que está conectado
                         */
-                        CryptoTransmissionNetworkServiceLocal cryptoTransmissionNetworkServiceLocal = cryptoTransmissionNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+                        CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
 
-                        if(cryptoTransmissionNetworkServiceLocal==null){
+                        if(communicationNetworkServiceLocal==null){
 
                             // Establezco la conexion
-                            cryptoTransmissionNetworkServiceConnectionManager.connectTo(remoteComponentProfile);
+                            communicationNetworkServiceConnectionManager.connectTo(remoteComponentProfile);
 
 
                         }else{
@@ -306,7 +306,7 @@ public class CryptoTransmissionAgent {
                             String jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
 
                             // Envio el mensaje a la capa de comunicacion
-                            cryptoTransmissionNetworkServiceLocal.sendMessage(jsonMetadata,identity);
+                                communicationNetworkServiceLocal.sendMessage(jsonMetadata,identity);
 
                             //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
                             cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_DATABASE);
@@ -337,9 +337,9 @@ public class CryptoTransmissionAgent {
         for (PlatformComponentProfile remoteComponentProfile:remoteNetworkServicesRegisteredList){
             //Me fijo cuales estan conectados
             //TODO: iba a hacer dos listas para los que se enceuntran conectados y estan esperando conectarse
-            CryptoTransmissionNetworkServiceLocal cryptoTransmissionNetworkServiceLocal = cryptoTransmissionNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-            if(cryptoTransmissionNetworkServiceLocal!=null){
-                FermatMessage fermatMessage =  cryptoTransmissionNetworkServiceLocal.getLastMessageReceived();
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+            if(communicationNetworkServiceLocal!=null){
+                FermatMessage fermatMessage =  communicationNetworkServiceLocal.getLastMessageReceived();
                 String messageContent = fermatMessage.getContent();
                 Gson gson = new Gson();
                 CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(messageContent, CryptoTransmissionMetadata.class);
@@ -417,9 +417,9 @@ public class CryptoTransmissionAgent {
         for (PlatformComponentProfile remoteComponentProfile:remoteNetworkServicesRegisteredList){
             //Me fijo cuales estan conectados
             //TODO: preguntar si se pueden separar las dos listas o conviene trabajar todo desde acá con las otras respuestas tambien
-            CryptoTransmissionNetworkServiceLocal cryptoTransmissionNetworkServiceLocal = cryptoTransmissionNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-            if(cryptoTransmissionNetworkServiceLocal!=null){
-                FermatMessage fermatMessage =  cryptoTransmissionNetworkServiceLocal.getLastMessageReceived();
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+            if(communicationNetworkServiceLocal!=null){
+                FermatMessage fermatMessage =  communicationNetworkServiceLocal.getLastMessageReceived();
                 String messageContent = fermatMessage.getContent();
                 Gson gson = new Gson();
                 CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(messageContent, CryptoTransmissionMetadata.class);
@@ -449,7 +449,7 @@ public class CryptoTransmissionAgent {
                                 cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
                                 gson = new Gson();
                                 String message = gson.toJson(cryptoTransmissionMetadata);
-                                cryptoTransmissionNetworkServiceLocal.sendMessage(message,identity);
+                                communicationNetworkServiceLocal.sendMessage(message,identity);
                                 break;
                         }
                         cacheResponseMetadataFromRemotes.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata.getCryptoTransmissionStates());

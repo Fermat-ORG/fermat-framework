@@ -597,6 +597,16 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         return platformComponentProfile;
     }
 
+    @Override
+    public PlatformComponentType getPlatformComponentType() {
+        return platformComponentProfile.getPlatformComponentType();
+    }
+
+    @Override
+    public NetworkServiceType getNetworkServiceType() {
+        return platformComponentProfile.getNetworkServiceType();
+    }
+
     /**
      * Set the PlatformComponentProfile
      *

@@ -92,6 +92,8 @@ public enum Plugins {
     BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST                     ("BCCPCPR"  , Developers.BITDUBAI),
     BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION           ("BCCPOIAT" , Developers.BITDUBAI),
 
+    BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE ("BCTNS",Developers.BITDUBAI),
+
 
     // End  CCP Plugins
 
@@ -281,6 +283,7 @@ public enum Plugins {
             case "BCCPWCM"  : return BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE            ;
             case "BCCPCPR"  : return BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST                ;
             case "BCCPOIAT" : return BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION      ;
+            case "BCTNS": return BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE;
 
             // Init DAP Plugins
             case "BDAPAIA":   return BITDUBAI_DAP_ASSET_ISSUER_ACTOR;

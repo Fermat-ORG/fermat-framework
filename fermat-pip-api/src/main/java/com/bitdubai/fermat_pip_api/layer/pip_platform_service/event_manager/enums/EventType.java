@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.*;
@@ -525,13 +524,23 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION("NNSMRN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return null;
+            return new NewNetworkServiceMessageReceivedNotificationEventListener(fermatEventMonitor);
         }
 
         public FermatEvent getNewEvent() {
-            return new NewNetworkServiceMessageReceivedEvent(this);
+            return new NewNetworkServiceMessageReceivedNotificationEvent(this);
+        }
+    },
+
+    NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION("NNSMSN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewNetworkServiceMessageSentNotificationEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageSentNotificationEvent(this);
         }
     },
 
@@ -662,6 +671,17 @@ public enum EventType implements FermatEventEnum {
 
         public FermatEvent getNewEvent() {
             return new IncomingMoneyNotificationEvent(this);
+        }
+    },
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
         }
     };
 
