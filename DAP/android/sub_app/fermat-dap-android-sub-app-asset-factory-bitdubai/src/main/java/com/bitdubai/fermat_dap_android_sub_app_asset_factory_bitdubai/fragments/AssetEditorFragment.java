@@ -6,10 +6,13 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -35,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Asset Editor Fragment
@@ -48,7 +52,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     private AssetFactoryModuleManager manager;
     private ErrorManager errorManager;
     private AssetFactory asset;
-    private boolean isEdit;
+
 
     private View rootView;
     private FermatEditText nameView;
@@ -58,6 +62,9 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
     private FermatButton expirationDate;
     private FermatButton expirationTime;
     private FermatCheckBox isRedeemableView;
+    private FermatCheckBox hasExpirationDate;
+
+    private LinearLayout datetimePicker;
 
     private int year = 0;
     private int month = 0;
@@ -68,7 +75,9 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
 
 
     private boolean initializingDate = false;
+    private boolean initializingMonth = false;
     private boolean initializingTime = false;
+    private boolean isEdit;
 
     public static AssetEditorFragment newInstance(AssetFactory asset) {
         AssetEditorFragment fragment = new AssetEditorFragment();
@@ -139,6 +148,16 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         expirationDate = (FermatButton) rootView.findViewById(R.id.expiration_date);
         expirationTime = (FermatButton) rootView.findViewById(R.id.expiration_time);
         isRedeemableView = (FermatCheckBox) rootView.findViewById(R.id.isRedeemable);
+        hasExpirationDate = (FermatCheckBox) rootView.findViewById(R.id.hasExpiration);
+        datetimePicker = (LinearLayout) rootView.findViewById(R.id.datetime_picker);
+        datetimePicker.setVisibility(View.GONE);
+
+        hasExpirationDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                datetimePicker.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            }
+        });
 
         nameView.setText(isEdit ? asset.getName() != null ? asset.getName() : "" : "");
         descriptionView.setText(isEdit ? asset.getDescription() != null ? asset.getDescription() : "" : "");
@@ -149,6 +168,8 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
             isRedeemableView.setChecked(asset.getIsRedeemable());
 
         Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getDefault());
+        calendar.setTime(new Date());
         expirationDate.setText(String.format("%d/%d/%d", calendar.get(Calendar.DAY_OF_MONTH),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
         expirationTime.setText(String.format("%d:%d", calendar.get(Calendar.HOUR),
@@ -158,20 +179,28 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
             public void onClick(View view) {
                 if (initializingDate) {
                     Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeZone(TimeZone.getDefault());
+                    calendar.setTime(new Date());
                     day = calendar.get(Calendar.DAY_OF_MONTH);
                     month = calendar.get(Calendar.MONTH);
                     year = calendar.get(Calendar.YEAR);
                     initializingDate = false;
+                    initializingMonth = true;
                 }
+                int monthToShow = initializingMonth ? month + 1 : month;
+                initializingMonth = false;
                 DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         AssetEditorFragment.this.year = year;
                         AssetEditorFragment.this.month = month + 1;
                         AssetEditorFragment.this.day = day;
-                        expirationDate.setText(String.format("%d/%d/%d", day, month + 1, year));
+                        expirationDate.setText(String.format("%s/%s/%s",
+                                day < 10 ? "0" + String.valueOf(day) : String.valueOf(day),
+                                month + 1 < 10 ? "0" + String.valueOf(month + 1) : String.valueOf(month + 1),
+                                String.valueOf(year)));
                     }
-                }, year, month, day);
+                }, year, monthToShow, day);
                 pickerDialog.show();
                 CommonLogger.debug("DatePickerDialog", "Showing DatePickerDialog...");
             }
@@ -181,6 +210,8 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
             public void onClick(View view) {
                 if (initializingTime) {
                     Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeZone(TimeZone.getDefault());
+                    calendar.setTime(new Date());
                     hour = calendar.get(Calendar.HOUR);
                     minutes = calendar.get(Calendar.MINUTE);
                     initializingTime = false;
@@ -191,7 +222,9 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                         AssetEditorFragment.this.hour = hour;
                         AssetEditorFragment.this.minutes = minute;
-                        expirationTime.setText(String.format("%d:%d", hour, minute));
+                        expirationTime.setText(String.format("%s:%s",
+                                hour < 10 ? "0" + String.valueOf(hour) : String.valueOf(hour),
+                                minute < 10 ? "0" + String.valueOf(minute) : String.valueOf(minute)));
                     }
                 }, hour, minutes, true);
                 timePickerDialog.show();
@@ -200,6 +233,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         });
 
         if (isEdit && asset.getExpirationDate() != null) {
+            hasExpirationDate.setChecked(true);
             calendar.setTime(asset.getExpirationDate());
             expirationDate.setText(String.format("%d/%d/%d", calendar.get(Calendar.DAY_OF_MONTH),
                     calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
@@ -277,18 +311,22 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
         asset.setAssetBehavior(AssetBehavior.REGENERATION_ASSET);
         //// TODO: 02/10/15 Get at least one resource with one image byte[] (Choose from gallery or take a picture)
         asset.setResources(null);
-        if (!expirationDate.getText().toString().trim().isEmpty()) {
-            try {
-                @SuppressLint("SimpleDateFormat")
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                String dateTime = expirationDate.getText().toString().trim() + expirationTime.getText().toString().trim();
-                asset.setExpirationDate(new java.sql.Timestamp(format.parse(dateTime).getTime()));
-                long now = new Date().getTime();
-                asset.setCreationTimestamp(new java.sql.Timestamp(now));
-            } catch (Exception ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
+        if (hasExpirationDate.isChecked()) {
+            if (!expirationDate.getText().toString().trim().isEmpty()) {
+                try {
+                    @SuppressLint("SimpleDateFormat")
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    String dateTime = expirationDate.getText().toString().trim() + " " + expirationTime.getText().toString().trim();
+                    asset.setExpirationDate(new java.sql.Timestamp(format.parse(dateTime).getTime()));
+                    long now = new Date().getTime();
+                    asset.setCreationTimestamp(new java.sql.Timestamp(now));
+                } catch (Exception ex) {
+                    CommonLogger.exception(TAG, ex.getMessage(), ex);
+                }
             }
-        }
+        } else // this asset hasn't expiration date
+            asset.setExpirationDate(null);
+
         final ProgressDialog dialog = new ProgressDialog(getActivity());
         dialog.setTitle("Saving asset");
         dialog.setMessage("Please wait...");
@@ -317,7 +355,7 @@ public class AssetEditorFragment extends FermatFragment implements View.OnClickL
                 dialog.dismiss();
                 if (getActivity() != null) {
                     CommonLogger.exception(TAG, ex.getMessage(), ex);
-                    Toast.makeText(getActivity(), "There was an error deleting this asset", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "There was an error creating this asset", Toast.LENGTH_SHORT).show();
                 }
             }
         });

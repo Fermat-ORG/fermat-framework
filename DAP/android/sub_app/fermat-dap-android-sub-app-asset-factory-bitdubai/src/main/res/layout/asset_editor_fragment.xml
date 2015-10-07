@@ -80,21 +80,22 @@
                 android:textColor="@color/black"
                 android:textColorHint="@color/material_blue_grey_800" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
+                android:id="@+id/hasExpiration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:text="Expiration Date"
+                android:text="Has expiration date"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
             <LinearLayout
+                android:id="@+id/datetime_picker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/expiration_date"
