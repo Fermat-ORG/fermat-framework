@@ -30,12 +30,15 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantSetToCreditedInWalletException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantSetToSeenByCryptoVaultException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -48,6 +51,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
@@ -57,6 +63,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionMetadataRecord;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
@@ -205,6 +213,16 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      */
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
+    /**
+     * CryptoTransmission DAO
+     */
+    CryptoTransmissionMetadataDAO cryptoTransmissionMetadataDAO;
+    CryptoTransmissionConnectionsDAO cryptoTransmissionConnectionsDAO;
+
+    /**
+     * CryptoTransmissionAgent
+     */
+    CryptoTransmissionAgent cryptoTransmissionAgent;
 
     /**
      * Constructor
@@ -319,7 +337,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -342,13 +360,15 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
         }
 
     }
+
+
 
     /**
      * (non-Javadoc)
@@ -400,10 +420,37 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
+            /**
+             * Initialice CryptoTransmission databases
+             */
+            //TODO: ver como abrir las dos tablas mias
+
+
+            /**
+             * Initialice DAO
+             */
+            cryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO(pluginDatabaseSystem,pluginId);
+
+            cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
+
+            /**
+             * Inicialice de main agent
+             */
+            cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                    cryptoTransmissionConnectionsDAO,
+                    cryptoTransmissionMetadataDAO,
+                    communicationNetworkServiceConnectionManager,
+                    errorManager,
+                    new ArrayList<PlatformComponentProfile>(),
+                    identity
+                    );
+
+
             /*
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
+
 
 
        } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {
@@ -654,12 +701,15 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      */
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+        System.out.println(" CryptoTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+
 
         /*
          * save into the cache
          */
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+
+        cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
 
     }
 
@@ -671,10 +721,45 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
+        //TODO: acá podría mandarle al otro network service un mensaje diciendo que que le voy a mandar la metadata
+
         /*
          * Tell the manager to handler the new connection stablished
          */
+
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+
+
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+
+            /* -------------------------------------------------------------------------------------------------
+             * This is for test and example of how to use
+             * Get the local representation of the remote network service
+             */
+            //CryptoTransmissionNetworkServiceLocal templateNetworkServiceLocal = templateNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+
+            /*
+             * Get a remote network service registered from the list requested
+             */
+            //PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
+
+            /**
+             * Create the message content
+             * RECOMMENDATION: the content have to be a json string
+             */
+//            String messageContent = "*********************************************************************************\n " +
+//                                    "* HELLO TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
+//                                    "*********************************************************************************";
+
+            /*
+             * Send a message using the local representation
+             */
+            //templateNetworkServiceLocal.sendMessage(messageContent, identity);
+
+        }
+//=======
+//        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+//>>>>>>> f91b418ff30cb95d25cd3d3ea2c17212e4fc851f
 
     }
 
@@ -841,8 +926,39 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
     }
 
+    /**
+     * The method <code>sendCrypto</code> sends the meta information associated to a crypto transaction
+     * through the fermat network services
+     *
+     * @param transactionId                  The identifier of the transmission generated by the transactional layer
+     * @param cryptoCurrency                  The crypto currency of the payment
+     * @param cryptoAmount                    The crypto amount being sent
+     * @param senderPublicKey                 The public key of the sender of the payment
+     * @param destinationPublicKey            The public key of the destination of a payment
+     * @param associatedCryptoTransactionHash The hash of the crypto transaction associated with this meta information
+     * @param paymentDescription              The description of the payment
+     * @throws CouldNotTransmitCryptoException
+     */
     @Override
-    public void sendCrypto(UUID transmissionId, CryptoCurrency cryptoCurrency, long cryptoAmount, String senderPublicKey, String destinationPublicKey, String associatedCryptoTransactionHash, String paymentDescription) throws CouldNotTransmitCryptoException {
+    public void sendCrypto(UUID transactionId, CryptoCurrency cryptoCurrency, long cryptoAmount, String senderPublicKey, String destinationPublicKey, String associatedCryptoTransactionHash, String paymentDescription) throws CouldNotTransmitCryptoException {
+        CryptoTransmissionMetadata cryptoTransmissionMetadata = new CryptoTransmissionMetadataRecord(
+                associatedCryptoTransactionHash,
+                cryptoAmount,
+                cryptoCurrency,
+                destinationPublicKey,
+                paymentDescription,
+                null,
+                senderPublicKey
+                ,transactionId,
+                CryptoTransmissionStates.PROCESSING_SEND,
+                CryptoTransmissionMetadataType.METADATA_SEND
+        );
+
+        try {
+            cryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+        } catch (CantSaveCryptoTransmissionMetadatatException e) {
+            throw new CouldNotTransmitCryptoException("Metada can t be saved in table",e,"","database corrupted");
+        }
 
     }
 

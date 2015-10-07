@@ -14,7 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by rodrigo on 10/4/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchy</code>
+ * Defines the internal Hierarchy object used on the Crypto Vault. The hierarchy is created from a root key each time the platform
+ * is initiated. The Hierarchy is in charge of generating new bitcoin addresses when request from the public Keys derived for each account.
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 class VaultKeyHierarchy extends DeterministicHierarchy {
     private Map<Integer, DeterministicKey> accountsMasterKeys;

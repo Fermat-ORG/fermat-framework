@@ -140,7 +140,7 @@ public class AssetFactorySubAppModulePluginRoot implements DealsWithAssetFactory
 
     @Override
     public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException {
-        //TODO: Immplementar
+        assetFactorySupAppModuleManager.removeAssetFactory(publicKey);
     }
 
     @Override
