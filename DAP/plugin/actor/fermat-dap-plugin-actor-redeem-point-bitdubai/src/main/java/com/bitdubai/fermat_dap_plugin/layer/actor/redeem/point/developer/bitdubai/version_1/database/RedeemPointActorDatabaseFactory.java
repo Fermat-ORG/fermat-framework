@@ -54,7 +54,8 @@ public class RedeemPointActorDatabaseFactory implements DealsWithPluginDatabaseS
             table = databaseFactory.newTableFactory(ownerId, RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME);
 
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
@@ -71,60 +72,60 @@ public class RedeemPointActorDatabaseFactory implements DealsWithPluginDatabaseS
             /**
              * Create Asset Issuer relation Redeem Point Associate table.
              */
-            table = databaseFactory.newTableFactory(ownerId, RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_TABLE_NAME);
-
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.TRUE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_ASSETS_COUNT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 10, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_NAME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-
-            table.addIndex(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_ASSET_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
+//            table = databaseFactory.newTableFactory(ownerId, RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_TABLE_NAME);
+//
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.TRUE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_ASSETS_COUNT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 10, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_NAME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//
+//            table.addIndex(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ISSUER_ASSET_FIRST_KEY_COLUMN);
+//
+//            try {
+//                //Create the table
+//                databaseFactory.createTable(ownerId, table);
+//            } catch (CantCreateTableException cantCreateTableException) {
+//                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+//            }
 
             /**
              * Create Asset Issuer relation Asset User table.
              */
-            table = databaseFactory.newTableFactory(ownerId, RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_TABLE_NAME);
-
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ISSUER_IDENTITY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_SEX_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_UBICACION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_AGE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_RESOURCES_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_EXPIRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-
-            table.addIndex(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
+//            table = databaseFactory.newTableFactory(ownerId, RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_TABLE_NAME);
+//
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_RELATION_ISSUER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ISSUER_IDENTITY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_SEX_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_UBICACION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_USER_AGE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_RESOURCES_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_ASSET_EXPIRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_REDEEMPTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+//
+//            table.addIndex(RedeemPointActorDatabaseConstants.REDEEM_POINT_RELATION_ASSET_USER_FIRST_KEY_COLUMN);
+//
+//            try {
+//                //Create the table
+//                databaseFactory.createTable(ownerId, table);
+//            } catch (CantCreateTableException cantCreateTableException) {
+//                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+//            }
 
         } catch (InvalidOwnerIdException exception) {
             /**

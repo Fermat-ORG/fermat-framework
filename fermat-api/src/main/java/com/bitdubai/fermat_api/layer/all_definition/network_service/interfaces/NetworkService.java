@@ -94,7 +94,7 @@ public interface NetworkService {
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      * @param platformComponentProfileRegisteredList
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList);
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList,DiscoveryQueryParameters discoveryQueryParameters);
 
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent

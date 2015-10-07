@@ -32,8 +32,10 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -101,6 +103,12 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN, assetFactory.getFee());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, assetFactory.getAmount());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, assetFactory.getQuantity());
+        if (assetFactory.getCreationTimestamp() == null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeZone(TimeZone.getDefault());
+            calendar.setTime(new Date());
+            assetFactory.setCreationTimestamp(new Timestamp(calendar.getTime().getTime()));
+        }
         record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN, assetFactory.getCreationTimestamp().toString());
         if (assetFactory.getLastModificationTimestamp() == null) {
             Date date = new Date();
@@ -184,7 +192,8 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
 
         if (assetFactory.getContractProperties() != null) {
             for (ContractProperty contractProperties : assetFactory.getContractProperties()) {
-                DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(), contractProperties.getValue().toString());
+                DatabaseTableRecord record = getContractDataRecord(assetFactory.getPublicKey(), contractProperties.getName(),
+                        contractProperties.getValue() != null ? contractProperties.getValue().toString() : null);
                 DatabaseTableFilter filter = getContractFilter(contractProperties.getName());
                 filter.setValue(contractProperties.getName());
                 if (isNewRecord(table, filter))
@@ -620,6 +629,9 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
 
                     if (contractProperty.getName().equalsIgnoreCase("expiration_date")) {
                         assetFactory.setExpirationDate(Timestamp.valueOf( contractProperty.getValue().toString()));
+                        String value = contractProperty.getValue() != null ?
+                                !contractProperty.getValue().toString().equalsIgnoreCase("null") ? contractProperty.getValue().toString() : null : null;
+                        assetFactory.setExpirationDate(value != null ? Timestamp.valueOf(value) : null);
                     }
                     contractProperties.add(contractProperty);
                 }

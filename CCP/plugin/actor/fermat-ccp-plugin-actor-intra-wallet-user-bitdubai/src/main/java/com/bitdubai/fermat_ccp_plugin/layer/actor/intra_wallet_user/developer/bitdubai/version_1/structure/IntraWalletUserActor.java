@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUser;
 
 /**
@@ -19,13 +19,13 @@ public class IntraWalletUserActor implements IntraWalletUser {
     private final String       publicKey       ;
     private final byte[]       profileImage    ;
     private final long         registrationDate;
-    private final ContactState contactState    ;
+    private final ConnectionState contactState    ;
 
     public IntraWalletUserActor(final String       name            ,
                                 final String       publicKey       ,
                                 final byte[]       profileImage    ,
                                 final long         registrationDate,
-                                final ContactState contactState    ) {
+                                final ConnectionState contactState    ) {
 
         this.name             = name                ;
         this.publicKey        = publicKey           ;
@@ -57,7 +57,7 @@ public class IntraWalletUserActor implements IntraWalletUser {
     }
 
     @Override
-    public ContactState getContactState() {
+    public ConnectionState getContactState() {
         return this.contactState;
     }
 
