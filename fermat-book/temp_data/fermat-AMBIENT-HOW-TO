@@ -1,0 +1,60 @@
+COMO CREAR EL AMBIENTE DE TRABAJO
+
+JAVA ENVIRONMET:
+http://www.ubuntu-guia.com/2012/04/instalar-oracle-java-7-en-ubuntu-1204.html
+
+
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java7-installer
+
+
+
+Para comprobar que la instalación ha tenido éxito, ejecuta en una terminal el comando para saber la versión de Java que utiliza tu Ubuntu:
+java -version
+La terminal te debe devolver algo parecido a esto:
+java version "1.8.0"
+Java(TM) SE Runtime Environment (build 1.8.0-b132)
+Java HotSpot(TM) 64-Bit Server VM (build 25.0-b70, mixed mode)
+
+Comando para saber la versión del compilador de Java "javac" (JDK):
+javac -version
+
+sudo update-java-alternatives -s java-7-oracle
+
+----
+ejecute studio.sh
+abrio android studio
+abro proyecto fermat
+dio warning
+dio error
+* What went wrong:
+Execution failed for task ':fermat-android-core:dexDebug'.
+> com.android.ide.common.process.ProcessException: org.gradle.process.internal.ExecException: Process 'command '/usr/lib/jvm/java-7-openjdk-i386/bin/java'' finished with non-zero exit value 1
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+
+BUILD FAILED
+
+Total time: 4 mins 38.109 secs
+
+2nd run:
+system health warning
+
+
+tl;dr: On Linux systems (where the ibus-daemon is active), there are scenarios where the IDE will stop responding to keyboard input or start inputting random characters. This document provides some workarounds for those bugs.
+
+The bug seems to be triggered by some missing synchronization between IBus (the server) and Xlib + AWT (the client JVM), exposed by a combination of a quick succession of key presses and the client’s slower event handling. The bug has already been reported upstream:
+https://youtrack.jetbrains.com/issue/IDEA-78860
+https://code.google.com/p/ibus/issues/detail?id=1770
+
+Workaround #1: Force ibus in synchronous mode
+
+$ IBUS_ENABLE_SYNC_MODE=1 ibus-daemon -xrd
+
+ejecuto esto para arreglar warning
+fs.inotify.max_user_watches = 524288
+Then run this command to apply the change:
+sudo sysctl -p
+
