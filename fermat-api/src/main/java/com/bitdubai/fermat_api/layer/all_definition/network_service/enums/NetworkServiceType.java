@@ -19,10 +19,13 @@ public enum NetworkServiceType {
 
     // Definition types
 
-    UNDEFINED                       ("UNDEF"),
-    NETWORK_SERVICE_TEMPLATE_TYPE   ("NS_TEMP_TYP"),
-    NETWORK_SERVICE_INTRA_USER_TYPE ("NS_INT_USR_TYP"),
-    NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE ("NS_CRY_TRAN_TYPE");
+
+    UNDEFINED                                 ("UNDEF"),
+    NETWORK_SERVICE_TEMPLATE_TYPE             ("NS_TEMP_TYP"),
+    NETWORK_SERVICE_INTRA_USER_TYPE           ("NS_INT_USR_TYP"),
+    NETWORK_SERVICE_ASSET_TRANSMISSION_TYPE   ("NS_ASS_TRANS_TYP"),
+    NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE  ("NS_CRY_TRANS_TYP");
+
 
     /**
      * Represent the code
@@ -57,10 +60,13 @@ public enum NetworkServiceType {
 
         switch (code){
 
-            case "UNDEF"          : return NetworkServiceType.UNDEFINED;
-            case "NS_TEMP_TYP"    : return NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE;
-            case "NS_INT_USR_TYP" : return NetworkServiceType.NETWORK_SERVICE_INTRA_USER_TYPE;
-            case "NS_CRY_TRAN_TYPE": return NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE;
+
+            case "UNDEF"            : return NetworkServiceType.UNDEFINED;
+            case "NS_TEMP_TYP"      : return NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE;
+            case "NS_INT_USR_TYP"   : return NetworkServiceType.NETWORK_SERVICE_INTRA_USER_TYPE;
+            case "NS_ASS_TRANS_TYP" : return NetworkServiceType.NETWORK_SERVICE_ASSET_TRANSMISSION_TYPE;
+            case "NS_CRY_TRANS_TYP" : return NetworkServiceType.NETWORK_SERVICE_CRYPTO_TRANSMISSION_TYPE;
+
             default: throw new IllegalArgumentException();
         }
     }

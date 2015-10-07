@@ -130,6 +130,21 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
+    public PlatformComponentProfile getPlatformComponentProfile() {
+        return null;
+    }
+
+    @Override
+    public PlatformComponentType getPlatformComponentType() {
+        return null;
+    }
+
+    @Override
+    public NetworkServiceType getNetworkServiceType() {
+        return null;
+    }
+
+    @Override
     public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
         return null;
     }
@@ -147,6 +162,35 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
     @Override
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
         return null;
+    }
+
+    /**
+     * Handles the events CompleteComponentRegistrationNotification
+     * @param platformComponentProfileRegistered
+     */
+    @Override
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+    }
+
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param platformComponentProfileRegisteredList
+     */
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+
+    }
+
+
+    /**
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param remoteComponentProfile
+     */
+    @Override
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+
     }
 
     /**

@@ -78,18 +78,18 @@ public interface DiscoveryQueryParameters {
     public String getExtraData();
 
     /**
-     * Get the first Record to make pagination
+     * Get the first record to make pagination
      *
      * @return int
      */
-    public Integer firstRecord();
+    public Integer getOffset();
 
     /**
-     * Get the number of register to return
+     * Get the number of max the record to return
      *
      * @return int
      */
-    public Integer getNumberRegister();
+    public Integer getMax();
 
     /**
      * Return the platform component type from other component type,
