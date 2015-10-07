@@ -223,7 +223,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
          ******************************************************************/
         this.platformComponentType = PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT;
-        this.networkServiceType    = NetworkServiceType.NETWORK_SERVICE_INTRA_USER_TYPE;
+        this.networkServiceType    = NetworkServiceType.INTRA_USER;
         this.name                  = "Intra actor Network Service";
         this.alias                 = "IntraActorNetworkService";
         this.extraData             = null;
@@ -643,7 +643,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*

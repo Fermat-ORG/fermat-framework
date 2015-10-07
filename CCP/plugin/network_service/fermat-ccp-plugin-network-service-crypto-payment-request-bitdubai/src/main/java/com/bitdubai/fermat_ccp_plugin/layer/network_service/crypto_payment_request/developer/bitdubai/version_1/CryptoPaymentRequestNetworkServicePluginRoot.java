@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -44,15 +45,21 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.exceptions.CantInitializeNetworkServiceDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CryptoPaymentRequestNetworkServiceConnectionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.RegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantDeleteRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -60,7 +67,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -88,7 +97,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * DealsWithEvents Interface member variables
      */
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded;
+    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -118,17 +128,12 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     /**
      * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
      */
-    private CryptoPaymentRequestNetworkServiceConnectionManager cryptoPaymentRequestNetworkServiceConnectionManager;
+    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     /**
      *   Represent the templateNetworkServiceDeveloperDatabaseFactory
      */
     private CommunicationLayerNetworkServiceDeveloperDatabaseFactory communicationLayerNetworkServiceDeveloperDatabaseFactory;
-
-    /**
-     * Represent the platformComponentProfile
-     */
-    private PlatformComponentProfile platformComponentProfile;
 
     /**
      * Represent the dataBase
@@ -141,6 +146,20 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     private ECCKeyPair identity;
 
     /**
+     * Represent the platformComponentProfile
+     */
+    private PlatformComponentProfile platformComponentProfile;
+
+    /**
+     * Crypto Payment Request Network Service details.
+     */
+    private final PlatformComponentType platformComponentType;
+    private final NetworkServiceType networkServiceType;
+    private final String name;
+    private final String alias;
+    private final String extraData;
+
+    /**
      * Represent the register
      */
     private boolean register;
@@ -148,9 +167,27 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     /**
      * Represent the registrationProcessNetworkServiceAgent
      */
-    private RegistrationProcessNetworkServiceAgent registrationProcessNetworkServiceAgent;
+    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
+
+    /**
+     *  Active connectionss
+     */
+    private Map<String,PlatformComponentProfile> cacheConnections;
+
+    /**
+     * Constructor
+     */
+    public CryptoPaymentRequestNetworkServicePluginRoot() {
+        super();
+        this.listenersAdded = new ArrayList<>();
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+        this.networkServiceType    = NetworkServiceType.CRYPTO_PAYMENT_REQUEST;
+        this.name                  = "Crypto Payment Request Network Service";
+        this.alias                 = "CryptoPaymentRequestNetworkService";
+        this.extraData             = null;
+    }
 
     @Override
     public void sendCryptoPaymentRequest(String                walletPublicKey  ,
@@ -348,8 +385,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                 /*
                  * Initialize the agent and start
                  */
-                registrationProcessNetworkServiceAgent = new RegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
-                registrationProcessNetworkServiceAgent.start();
+                communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection());
+                communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
             // adding communication network service common events listeners
@@ -383,7 +420,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
             
             CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
         
@@ -470,16 +507,37 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
     @Override
     public void pause() {
+
+        // pause connections manager.
+        communicationNetworkServiceConnectionManager.pause();
+
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
+
+        // resume connections manager.
+        communicationNetworkServiceConnectionManager.resume();
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
+
+        // remove all listeners from the event manager and from the plugin.
+        for (FermatEventListener listener: listenersAdded)
+            eventManager.removeListener(listener);
+
+        listenersAdded.clear();
+
+        // close all connections.
+        communicationNetworkServiceConnectionManager.closeAllConnection();
+
+        // set to not registered.
+        register = Boolean.FALSE;
+
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -528,7 +586,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      */
     @Override
     public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
-        return cryptoPaymentRequestNetworkServiceConnectionManager;
+        return communicationNetworkServiceConnectionManager;
     }
 
     /**
@@ -568,8 +626,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * IMPORTANT: Call this method only in the RegistrationProcessNetworkServiceAgent, when execute the registration process
      * because at this moment, is create the platformComponentProfile for this component
      */
-    public void initializeCryptoPaymentRequestNetworkServiceConnectionManager(){
-        this.cryptoPaymentRequestNetworkServiceConnectionManager = new CryptoPaymentRequestNetworkServiceConnectionManager(
+    public void initializeCommunicationNetworkServiceConnectionManager(){
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
                 platformComponentProfile,
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
@@ -579,32 +637,34 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         );
     }
 
-    /**
-     * Get the IdentityPublicKey
-     *
-     * @return String
-     */
     public String getIdentityPublicKey(){
         return this.identity.getPublicKey();
     }
 
-    /**
-     * Get the PlatformComponentProfile
-     *
-     * @return PlatformComponentProfile
-     */
+    public String getName() {
+        return name;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public String getExtraData() {
+        return extraData;
+    }
+
     public PlatformComponentProfile getPlatformComponentProfile() {
         return platformComponentProfile;
     }
 
     @Override
     public PlatformComponentType getPlatformComponentType() {
-        return platformComponentProfile.getPlatformComponentType();
+        return platformComponentType;
     }
 
     @Override
     public NetworkServiceType getNetworkServiceType() {
-        return platformComponentProfile.getNetworkServiceType();
+        return networkServiceType;
     }
 
     /**
@@ -676,7 +736,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         /*
          * Tell the manager to handler the new connection stablished
          */
-         cryptoPaymentRequestNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
@@ -730,6 +790,33 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     @Override
     public void setId(final UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    /**
+     * Get the New Received Message List
+     *
+     * @return List<FermatMessage>
+     */
+    public List<FermatMessage> getNewReceivedMessageList() throws CantReadRecordDataBaseException {
+
+        Map<String, Object> filters = new HashMap<>();
+        filters.put(CommunicationLayerNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
+
+        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
+    }
+
+    /**
+     * Mark the message as read
+     * @param fermatMessage
+     */
+    public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
+
+        ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
+        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
+    }
+
+    public PlatformComponentProfile isRegisteredConnectionForActorPK(String actorPublicKey){
+        return cacheConnections.get(actorPublicKey);
     }
 
 }
