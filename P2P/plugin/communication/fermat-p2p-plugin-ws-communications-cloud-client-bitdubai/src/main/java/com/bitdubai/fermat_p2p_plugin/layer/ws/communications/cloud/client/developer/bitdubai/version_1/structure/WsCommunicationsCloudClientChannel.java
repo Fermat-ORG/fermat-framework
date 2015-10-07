@@ -181,7 +181,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onMessage(String)");
-        System.out.println(" WsCommunicationsCloudClientChannel - encode fermatPacket " + fermatPacketEncode);
+       // System.out.println(" WsCommunicationsCloudClientChannel - encode fermatPacket " + fermatPacketEncode);
 
         FermatPacket fermatPacketReceive = null;
 
