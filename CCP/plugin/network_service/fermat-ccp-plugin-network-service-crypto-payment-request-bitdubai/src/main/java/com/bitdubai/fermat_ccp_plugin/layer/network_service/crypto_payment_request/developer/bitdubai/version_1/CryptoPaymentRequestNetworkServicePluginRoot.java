@@ -635,7 +635,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_PAYMENT_REQUEST &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST_TYPE &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
