@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions;
 
 import com.bitdubai.fermat_api.layer.DAPException;
 
