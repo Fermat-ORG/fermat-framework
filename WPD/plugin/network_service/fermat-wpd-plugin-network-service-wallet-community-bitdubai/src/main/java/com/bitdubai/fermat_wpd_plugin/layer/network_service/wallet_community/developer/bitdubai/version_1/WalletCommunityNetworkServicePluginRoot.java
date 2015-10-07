@@ -173,15 +173,11 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
 
     }
 
-
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     * @param platformComponentProfileRegisteredList
-     */
     @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
     }
+
 
 
     /**
