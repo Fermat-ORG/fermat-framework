@@ -100,7 +100,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     /**
      * Represent the EVENT_SOURCE
      */
-    public final static EventSource EVENT_SOURCE = EventSource.ACTOR_NETWORK_SERVICE_INTRA_ACTOR;
+    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_INTRA_ACTOR;
 
     /**
      * Represent the logManager
