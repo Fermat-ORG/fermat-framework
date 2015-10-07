@@ -42,10 +42,12 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
@@ -74,11 +76,11 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     ReferenceWalletSession referenceWalletSession;
 
     // unsorted list items
-    ArrayList<String> mItems;
+    List<CryptoWalletWalletContact> mItems;
     // array list to store section positions
     ArrayList<Integer> mListSectionPos;
     // array list to store listView data
-    ArrayList<String> mListItems;
+    ArrayList<Object> mListItems;
     // custom list view with pinned header
     PinnedHeaderListView mListView;
     // custom adapter
@@ -149,18 +151,20 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
         mItems = new ArrayList<>();
 
-        for (CryptoWalletWalletContact walletContactRecords1 : walletContactRecords) {
-            mItems.add(walletContactRecords1.getActorName());
-        }
+        mItems = walletContactRecords;
+//        for (CryptoWalletWalletContact walletContactRecords1 : walletContactRecords) {
+//            mItems.add(walletContactRecords1.getActorName());
+//        }
 
         // Array to ArrayList
         // mItems = new ArrayList<String>(Arrays.asList(ITEMS));
         mListSectionPos = new ArrayList<Integer>();
-        mListItems = new ArrayList<String>();
+        mListItems = new ArrayList<Object>();
 
         // for handling configuration change
         if (savedInstanceState != null) {
-            mListItems = savedInstanceState.getStringArrayList("mListItems");
+            //TODO: no se si esto esta bien
+            mListItems =(ArrayList) savedInstanceState.getParcelableArrayList("mListItems");
             mListSectionPos = savedInstanceState.getIntegerArrayList("mListSectionPos");
 
             if (mListItems != null && mListItems.size() > 0 && mListSectionPos != null && mListSectionPos.size() > 0) {
@@ -173,13 +177,14 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 setIndexBarViewVisibility(constraint);
             }
         } else {
-            new Populate().execute(mItems);
+            new Populate().execute((ArrayList<CryptoWalletWalletContact>)mItems);
         }
 
         mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                Toast.makeText(getActivity(), mListItems.get(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), mListItems.get(position).toString(), Toast.LENGTH_SHORT).show();
+                System.out.println(adapterView.getItemAtPosition(position));
             }
 
             @Override
@@ -315,25 +320,16 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 try {
 
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
-//                    String accountName = String.valueOf(adapter.getItem(position));
-//                    Fragment fragment = ContactDetailFragment.newInstance(walletSession,walletResourcesProviderManager);
-//                    FragmentManager fragmentManager = getActivity().getFragmentManager();
-//                    fragmentManager
-//                            .beginTransaction()
-//                                    //TODO COMMENTED FOR ERROR WHEN TRYING TO GET CONTACT DETAIL
-//                                    //.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-//                            .add(R.id.fragment_container2, fragment)
-//                            .attach(fragment)sta
-//                            .show(fragment)
-//                            .commit();
+//
                     referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
                     CryptoWalletWalletContact cryptoWalletWalletContact;
 
+                    System.out.println(adapterView.getItemAtPosition(position).toString());
 
                     if(position == 1)
-                        referenceWalletSession.setLastContactSelected(walletContactRecords.get(position-1));
+                        referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact)adapterView.getItemAtPosition(position));
                     else
-                        referenceWalletSession.setLastContactSelected(walletContactRecords.get(position-2));
+                        referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact)adapterView.getItemAtPosition(position));
 
 
                     InstalledWallet installedWallet = walletSession.getWalletSessionType();
@@ -349,7 +345,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), mListItems.get(i), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), mListItems.get(i).toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -377,7 +373,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     /**
      * Sort array and extract sections f background Thread here we use AsyncTask
      */
-    private class Populate extends AsyncTask<ArrayList<String>, Void, Void> {
+    private class Populate extends AsyncTask<ArrayList<CryptoWalletWalletContact>, Void, Void> {
         private final int TOTAL_CONTACTS_SECTION_POSITION = 0;
         private String constrainStr;
 
@@ -406,16 +402,22 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
         @Override
         @SafeVarargs
-        protected final Void doInBackground(ArrayList<String>... params) {
+        protected final Void doInBackground(ArrayList<CryptoWalletWalletContact>... params) {
             mListItems.clear();
             mListSectionPos.clear();
 
-            ArrayList<String> items = params[0];
+            ArrayList<CryptoWalletWalletContact> items = params[0];
+
+            Map<Integer,CryptoWalletWalletContact> positions = new HashMap<>();
 
             if (items.size() > 0) {
 
                 // sort array
-                Collections.sort(items, new SortIgnoreCase());
+                //Collections.sort(items, new SortIgnoreCase());
+
+                MyComparator icc = new MyComparator();
+
+                Collections.sort(items, icc);
 
                 final boolean searchMode = constrainStr != null;
                 if (searchMode) {
@@ -445,18 +447,23 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                     final String letterRegex = HeaderTypes.LETTER.getRegex();
 
                     // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                    for (String currentItem : items) {
-                        String currentSection = currentItem.substring(0, 1);
+                    for (int i=0;i<items.size();i++){//) {
+
+                        CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
+
+                        String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
 
                         if (currentSection.matches(numberRegex))
                             // is Digit
-                            numbers.add(currentItem);
-                        else if (currentSection.matches(letterRegex))
+                            numbers.add(cryptoWalletWalletContact.getActorName());
+                        else if (currentSection.matches(letterRegex)) {
                             // is Letter
-                            letters.add(currentItem);
+                            letters.add(cryptoWalletWalletContact.getActorName());
+                            positions.put(i, cryptoWalletWalletContact);
+                        }
                         else
                             // Is other symbol
-                            symbols.add(currentItem);
+                            symbols.add(cryptoWalletWalletContact.getActorName());
                     }
 
                     final String symbolCode = HeaderTypes.SYMBOL.getCode();
@@ -478,7 +485,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
                     // add the letters items in the list and his corresponding sections based on its first letter
                     String prevSection = "";
-                    for (String currentItem : letters) {
+                    for (int i = 0; i<letters.size();i++){//String currentItem : letters) {
+                        String currentItem = letters.get(i);
                         String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
 
                         if (!prevSection.equals(currentSection)) {
@@ -489,7 +497,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                             prevSection = currentSection;
                         }
 
-                        mListItems.add(currentItem);
+                        mListItems.add(positions.get(i));
                     }
                 }
 
@@ -532,6 +540,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             loadingView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
+
+
     }
 
 
@@ -547,11 +557,11 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
             if (constraint != null && constraint.toString().length() > 0) {
                 String constraintStr = constraint.toString().toLowerCase(Locale.getDefault());
-                ArrayList<String> filterItems = new ArrayList<>();
+                ArrayList<CryptoWalletWalletContact> filterItems = new ArrayList<>();
 
                 synchronized (this) {
-                    for (String item : mItems) {
-                        if (item.toLowerCase(Locale.getDefault()).contains(constraintStr)) {
+                    for (CryptoWalletWalletContact item : mItems) {
+                        if (item.getActorName().toLowerCase(Locale.getDefault()).contains(constraintStr)) {
                             filterItems.add(item);
                         }
                     }
@@ -571,7 +581,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         @Override
         @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            ArrayList<String> filtered = (ArrayList<String>) results.values;
+            ArrayList<CryptoWalletWalletContact> filtered = (ArrayList<CryptoWalletWalletContact>) results.values;
             final String constrainStr = constraint.toString();
             setIndexBarViewVisibility(constrainStr);
 
