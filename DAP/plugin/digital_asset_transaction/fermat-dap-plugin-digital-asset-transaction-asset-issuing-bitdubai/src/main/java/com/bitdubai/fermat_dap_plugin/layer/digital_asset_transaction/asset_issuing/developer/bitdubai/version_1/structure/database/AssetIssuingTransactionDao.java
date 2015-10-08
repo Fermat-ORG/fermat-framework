@@ -745,6 +745,13 @@ public class AssetIssuingTransactionDao {
                 AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
+    public List<String> getTransactionHashByDeliveredStatus() throws CantCheckAssetIssuingProgressException {
+        return getValueListFromAssetIssuingTableByFiledCode(
+                AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME,
+                TransactionStatus.DELIVERED.getCode(),
+                AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME);
+    }
+
     private List<String> getValueListFromAssetIssuingTableByFiledCode(String fieldCode, String valueAsked, String columnToReturn) throws CantCheckAssetIssuingProgressException {
         try{
             this.database=openDatabase();

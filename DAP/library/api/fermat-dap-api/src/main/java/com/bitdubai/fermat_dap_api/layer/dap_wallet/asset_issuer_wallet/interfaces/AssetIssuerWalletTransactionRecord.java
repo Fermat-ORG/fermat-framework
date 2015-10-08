@@ -13,7 +13,7 @@ public interface AssetIssuerWalletTransactionRecord {
 
     //TODO: Definir bien las propiedades
     DigitalAsset getDigitalAsset();
-    String getAssetIssuingPublicKey();
+    String getDigitalAssetPublicKey();
     String getName();
     String getDescription();
 
