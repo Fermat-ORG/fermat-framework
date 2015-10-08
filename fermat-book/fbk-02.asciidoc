@@ -52,11 +52,11 @@ FERMAT as a system is built on several overlaping architectural paradigms:
 
 At a higher level, it is a Peer to Peer system with asymetric nodes, meaning that each node even having all the code base, it specializes itself according to the profile of the end user or the way it was configured.
 
-Inside each node FERMAT features a Multi-OS architecture meaning that the lowest level OS-ependent components are wrapped in a way that can be easily replaced when running on a different OS. The upmost components, the ones facing the end user (GUI) are also OS-dependent. Everything in the middle is not.
+Inside each node FERMAT features a Multi-OS architecture meaning that the lowest level OS-dependent components are wrapped in a way that can be easily replaced when running on a different OS without affecting the rest of the components consuming services from them. The upmost components, the ones facing the end user (GUI) are also OS-dependent. Everything in between is not.
 
-At the same time it features a plugins architecture inserted into a multi-layered structure. These layers are ocasionally grouped into "Superlayers". 
+At the same time it features a plugins architecture inserted into a multi-layered structure. These layers are ocasionally grouped into *Superlayers*. 
 
-These Plugins are subdivided into a hiriarchy of "Platforms". Those "Platforms" shares a common set of layers, and each one adds "Actors" and "Products" to the overall functionallity of the FERMAT system.
+These Plugins are subdivided into a hiriarchy of *Platforms*. Those *Platforms* shares a common set of layers, and each one adds *Actors* and *Products* to the overall functionallity of the FERMAT system.
 
 Inside each Plugin, you might find a specialized structure and in many cases a database or files belonging to that plugin.
 
