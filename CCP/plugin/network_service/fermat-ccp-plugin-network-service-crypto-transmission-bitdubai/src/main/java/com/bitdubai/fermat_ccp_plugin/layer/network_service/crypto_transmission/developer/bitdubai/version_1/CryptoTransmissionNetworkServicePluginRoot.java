@@ -87,11 +87,9 @@ import java.util.regex.Pattern;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot</code> is
- * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by Roberto Requena - (rrequena) on 21/07/15.
+ * Created by Matias Furszyfer - matiasfurszyfer@gmail.com  on 7/09/15.
  *
  * @version 1.0
  */

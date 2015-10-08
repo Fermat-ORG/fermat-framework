@@ -1,12 +1,15 @@
-package com.bitdubai.fermat_core.layer.dmp_network_service.crypto_transmission;
+package com.bitdubai.fermat_core.layer.ccp.network_service.crypto_transmission;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_ccp_api.layer.network_service.NetworkServiceSubsystem;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_ccp_api.layer.network_service.CantStartSubsystemException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.NetworkServiceSubsystem;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by Matias Furszyfer on 08/09/15.
+ * Created by Matias Furszyfer - (matiasfurszyfer@gmail.com) on 09/10/2015.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class CryptoTransmissionSubsystem implements NetworkServiceSubsystem {
 
@@ -19,17 +22,13 @@ public class CryptoTransmissionSubsystem implements NetworkServiceSubsystem {
 
     @Override
     public void start() throws CantStartSubsystemException {
-        /**
-         * I will choose from the different Developers available which implementation to use. Right now there is only
-         * one, so it is not difficult to choose.
-         */
-
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
-            throw new CantStartSubsystemException(e,null,null);
+            throw new CantStartSubsystemException(e, null, null);
         }
     }
+
 }
