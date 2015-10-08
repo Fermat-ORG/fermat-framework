@@ -12,6 +12,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
  */
 public class CryptoTransmissionNetworkServiceDatabaseConstants {
 
+    public static final String DATABASE_NAME = "crypto_transmission_database";
+
     /**
      * CRYPTO TRANSMISSION METADATA database table definition.
      */
@@ -41,5 +43,6 @@ public class CryptoTransmissionNetworkServiceDatabaseConstants {
     public static final String COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME = "last_connection";
 
    public static final String COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN = "id";
+
 
 }

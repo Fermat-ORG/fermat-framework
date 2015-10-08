@@ -1536,7 +1536,7 @@ public class Platform implements Serializable {
             if (plugin instanceof DealsWithCryptoPaymentRequestNetworkService)
                 ((DealsWithCryptoPaymentRequestNetworkService) plugin).setCryptoPaymentRequestManager((CryptoPaymentRequestManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
 
-            if (plugin instanceof DealsWithCryptoTransmissionNetworkService)
+             if (plugin instanceof DealsWithCryptoTransmissionNetworkService)
                 ((DealsWithCryptoTransmissionNetworkService) plugin).setCryptoTransmissionNetworkService((CryptoTransmissionNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE));
 
 

@@ -741,7 +741,7 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
     public void sendMetadataLikeChampion(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType) {
         try {
 
-            cryptoTransmissionNetworkServiceManager.sendCrypto(UUID.randomUUID(), CryptoCurrency.BITCOIN,cryptoAmount,deliveredByActorPublicKey,deliveredToActorPublicKey,"hash","Estoy haciendo un pago por molesto");
+            cryptoTransmissionNetworkServiceManager.sendCrypto(UUID.randomUUID(), CryptoCurrency.BITCOIN,10000,deliveredByActorPublicKey,"actor_prueba_robert_public_key","hash","Estoy haciendo un pago por molesto");
 
         } catch (CouldNotTransmitCryptoException e) {
             e.printStackTrace();
