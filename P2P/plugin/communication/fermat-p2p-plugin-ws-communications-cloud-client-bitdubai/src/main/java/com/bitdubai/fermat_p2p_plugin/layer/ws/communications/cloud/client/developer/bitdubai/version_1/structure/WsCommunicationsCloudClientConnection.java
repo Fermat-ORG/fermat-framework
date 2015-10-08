@@ -287,12 +287,12 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         participants.add(remoteDestination);
 
         /**
-         * Validate all are the same type and NETWORK_SERVICE_COMPONENT
+         * Validate all are the same type and NETWORK_SERVICE
          */
         for (PlatformComponentProfile participant: participants) {
 
-            if (participant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE_COMPONENT){
-                throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE_COMPONENT ");
+            if (participant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+                throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
             }
 
             if (participant.getNetworkServiceType() != applicant.getNetworkServiceType()){
@@ -346,8 +346,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile) {
 
-        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE_COMPONENT){
-            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE_COMPONENT ");
+        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
         }
 
         if (applicant.getNetworkServiceType() != applicant.getNetworkServiceType()){

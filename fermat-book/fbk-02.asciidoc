@@ -1,0 +1,130 @@
+:numbered:
+== FERMAT: a platform stack system
+
+
+*FERMAT* is, technically speaking , an Open Source P2P (Peer-to-Peer) System built on a Plug-in Architecture running on end-user's devices. 
+
+ 
+=== What makes FERMAT different from other wallet platforms or services?
+
+* **FERMAT is P2P.** This makes it censorship resistent and difficult to be attacked.
+
+* **FERMAT is built with plugins.** This enables functionality to be reused and opens the door to any developer to participate.
+
+* **FERMAT runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party. 
+
+* **FERMAT is inclusive.** By creating their own plugins, current industry members can integrate with FERMAT to offer their services and products to FERMAT user base. 
+
+* **FERMAT segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the FERMAT platform.
+
+* **FERMAT guaratees plugins and wallet developers a revenue stream.** FERMAT implements an innovative business model which allows plugins and wallet developers to define a use license, and FERMAT itself enforces this license on behalf of developers. )
+
+The first goal is to get very close to the end user offering and easy way of coming onboard the crytocurrency world by means of and insutitively easy to access cryptocurrency Wallet. At the same time, the open source plug-in platform allow any skilled actor in the community to jump in and develop applications and offering services with different abstractin levels and addressing a wide range of segmented markets. In fact, FERMAT as whole sets a common ground, a kind of "Master Plan" for developing wallets, wallet services, p2p network services and all kind of future develpments based in blockchain tech, using the existent global talent and intelligence that the community already has and collaborating with very intense feedback in expanding this technology to reach rapidily end user's mass adoption, giving all the participants in the different sectors a sense of trust, safety and equity, and the corresponding right to become a revenue for each one's contribution and effort.
+Instead of begginning a new project in this industry completley from zero point, the clear and firm logic of FERMAT can turn it to become a new standard in the industry by giving the collective a group coherence as it had never before, and encourages to grow safely in a collaborative way.
+
+
+
+
+=== FERMAT as a system of platforms
+FERMAT was originally conceived as a new platform for wallet production to reach end user's that were ready to adopt cryptocurrency but did not want to get involved in the technichal aspecting of programming or needing developer's skills to use them. The initial goal could be reached and at the same time the technology to be developed was thought to expand the possibilities of wallets to marketing agencies to rebrand wallets  for their customers and event reach to the retailers circuit in a very convinient way. After the first months of development where the team has rapidly grown to more than 20 people, the implications of FERMAT{ s conceptual framework led to the exploration and development of new applications, that reorganized, have turn FERMAT instead of a platform into a system of platforms ( a platform stack) based on a plug-in architecture to be implemented as a distributed system that runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+
+* OPEN SOURCE
+The code can be reviewed and audited by anyone.
+
+* DECENTRALIZED
+It runs on end users’ devices.
+
+* PUBLIC
+Anybody can connect to the Fermat P2P network and use its services. Anybody can write plug-ins for the platform.
+
+* OPEN
+Anybody can participate and innovate without requiring permission.
+
+* INCLUSIVE
+Any existing crypto service running outside the Fermat network / platform can be integrated and consumed from within the network.
+
+* OPEN STANDARD
+Can be freely adopted, implemented and extended.
+
+:numbered:
+
+
+=== Specific architecture 
+:numbered!:
+FERMAT System of Platforms consists of a collection of components that are organized in a conceptual array of layers and columns complying with a set of structural rules. 
+
+.Types of components
+* *libraries*: structural components of the core of the system (downlevel) (FERMAT-CORE - FERMAT-API) 
+* *androids*: applications that run on Android System and present the graphic environment to the user.
+* *plug-ins*: components which encapsulates a very specific sets of functions, that offer a public interface to consum services (*INPUT*) from other alike components and offers certain other services to be consumed (*OUTPUT*).
+* *add-ons*: this is an original name coined in FERMAT to address to certain low level plug-ins that provides the core functionalities of the system, and therefore are developed by FERMAT'S developer team, while plug-ins are open to include third party developers from its inception.
+
+NOTE: *PLUG-INS* are very convienent bacause of its defyning feature: as long as the INTERFACE (i.e. the shape of the interconnection) is known and publish, the plug-in can interact with others, consuming and offering services, INDEPENDENTLY of its inner structure and how it is built. As long as they conserve this INTERFACE, they can safely evolve to more efficient functioning WITHOUT altering a single service that has been built upon it ! ( FERMAT'S core concept of REUSABILITY relies on this plug-in/add-on architechture chosen to develop it)
+
+
+Inside FERMAT, each plug-in is given certain responsability within the whole, they are organized in layers which collect plug-ins under a common shared task, and they are specific designed to communicate only to the adjacent layers, building a hierachical structure where responsability is transfered from the lower layer onto the next upper one. The broad scope of FERMAT's developing potential introduces also the idea of a second dimensional arragement of plug-ins into "columns" that join plug-ins that are interconnected to offer a specific functionality to a determined niche or segment.
+
+Through its plug-ins the platform connects to and reuses most of the infrastructure deployed by the industry.   At the same time it adds the necessary layers of abstraction on top of those services. In this way it amplifies their reach to every possible niche by allowing any of the segment specific wallets to consume those existing services directly or indirectly if they rely on the platform or its plug-ins to provide the necessary abstraction.
+
+ 
+.General overview on FERMAT'S platforms and product's families
+* FERMAT CORE
+** FERMAT OSA (operating system)8
+** FERMAT P2P (network and communication layers)
+*** Fermat P2P network provides connectivity between devices. Fermat P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. Fermat P2P provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
+This ensures a rich *set of abstractions for wallet applications running on top of the platform*. Fermat P2P is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
+** FERMAT BCH (blockchain) 
+*** in a transaction between users of any of Fermat DMP’s wallets, crypto networks are used for transporting value *TRANSPORT OF VALUE* 
+** FERMAT PIP (Plug-ins Platform)
+***Fermat PIP is an open source platform running on end users’ devices. It features a plug-ins architecture that allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment.
+A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
+
+=== Segmentation and different levels of abstraction
+Cryptocurrencies are born into existent by a very specific mathemathical algorithym based on cryptographics rules run by a computer in a process called " mining". They are held and stored by their owners in specific applications called *wallets* that live in a certain device of the decentralized p2p network. To start using a cryptocurrency you have to download a client application ( full node or leightweight) to your device or use a cloud base application. The client application provides the basic functionalities to operate, i.e. usually one or a couple of "basic wallets" which generates an user unique identification and also a specific adress in the chosen cryptonetwork.
+
+FERMAT understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is unique, and therefore there are potentially so many differents ways of shaping the accessibility, appearance and functionality of applications dealing with cryptocurrencies and blockchain technology to match very specific need and scalable demand of each consumer's niche. Here begins the huge differentation between FERMAT applications and the rest ! FERMAT takes very seriously into account the actor's profile to develop attractive applications in each case. Well, for some actor's with more complex relationships world, more complexity is also wanted in ther wallets and in the wallet of kindred actor's that interdepend and interact in the same *niche*. These alike functionalities are held together in specific *areas* within FERMAT platform stack system that build a one-on-one relationship with a real-world environment.
+
+Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. Thus this is the first acknowledgment that sets the foundation of FERMAT's plan inside this global trend: to address this UNIQUENESS of each individuum and every kind of collective gathering of human beings (associations, clubs, NGO's, educational institutions, even banks, financial institutions, etc) that will adopt blockchain technology based transactions on their lives, in a similar way we have already adopted digitalised pictures, music, books, cell phones and internet as a whole.
+
+
+.Wallets "ready-to-use"
+* FERMAT WPD (Wallet Production & Distribution)
+** WaFa (Wallet Factory)  -> *for marketers to re-brand any of the already existing segment specific wallets in a few steps (without the need to deal with the source code of the base wallet selected!)*
+** WaPu (Wallet Publisher) -> *for wallet designers/marketing agency to offer their rebranded Wallet to the world !*
+** WaSt (Wallet Store) -> the store where available wallets live, ready to be adopted !
+** WaMa (Wallet Manager)  -> for everyone who uses more than one wallet, to manage them !
+* FERMAT CCP (crypto currency platform)
+** BitWa (Basic Bitcoin Wallet)  -> *for those devoted "BTC-only" users!*
+** Argentine Bitcoin wallet -> *for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady* comparison between argentine$, USD (oficial and blue!) and even Eu$!)
+** BLP (Bitcoin Loss Protected wallet) -> *for conservative user's caring about never selling under the purchase price ! (preserving value!)*
+* FERMAT CCM (Crypto Currency Money)
+** CCM (Crypto Currency Money Wallet)
+** DiWa (Discount Wallet) -> *for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)*
+* FERMAT BNK (Bank Notes)
+** BaNo (Bank Notes Wallet) -> *for those wanting to visualize their investment in "real money traditional bank notes" of their usual fiat/currency ( rest on FERMAT, we do the "dirty work" with all the crypto stuff!)*
+* FERMAT SHP (Shop Platform)
+** ShWa (Shop Wallet) -> *for shop owners who accept cryptocurrency in payment of their products !*
+** BrWa (Brand Wallet) -> *for brands owners who accept cryptocurrency in their retailers network.*
+** ReWa (Retail wallet) -> *for* 
+* FERMAT DAP (Digital Assets Platform)
+** AsIs (Shop wallet) -> for *the Issuer of a Digital Asset (creates and offer to the markt)*
+** AsUs (Shop wallet) -> for *the customer who accepts/obtain some Digital Assets according to his interests*
+** RePo (Shop wallet) -> for the place/shop/person that exchanges the Asset for a certain service or product (redeems it).*
+* FERMAT MKT  (Market Platform)
+** VoWa (VShop wallet) -> for 
+** CoWa (Voucher Wallet) -> for 
+** DiWa (Shop wallet) -> for shop owners who accept cryptocurrency in payment of their products !
+* FERMAT CBP (Crypto Broker Platform)
+** CrBr (Crypto Broker Wallet) -> for persons/organizations whose business activity is exchanging cryptocurrency for fiat-money
+** CrCu (Crypto Broker Customer Wallet) ->  for customers of the cryptobroker
+* FERMAT CDN (Crypto Distribution Network)
+** CrWh (Crypto Wholesaler) -> for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
+** CrCu (Crypto Distributor) -> for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point
+** TUP (Top Up Point) -> for shops/organizations/persons who transfer crypto-credit in exchange for fiat-money (receives money - gives crypto)
+** COP (Cash Out Point) -> for shops/organizations/persons who gives out money in exchange for a transfer of crypto (receive crypto - gives money)
+For a cool visualization of the constant growing system of layers & columns, platforms and wallets visit http://fermat.org
+
+
+
+
+
