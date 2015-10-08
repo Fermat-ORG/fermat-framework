@@ -2,6 +2,10 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.FactoryProject;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.RoundedDrawable;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -78,6 +83,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      * Allow the zxing engine use the default argument for the margin variable
      */
     private Bitmap contactPicture;
+    private EditText txt_address;
 
 
     /**
@@ -122,6 +128,7 @@ public class CreateContactFragmentDialog extends Dialog implements
             cancel_btn = (Button) findViewById(R.id.cancel_btn);
             contact_name = (EditText) findViewById(R.id.contact_name);
             take_picture_btn = (ImageView) findViewById(R.id.take_picture_btn);
+            txt_address = (EditText) findViewById(R.id.txt_address);
 
 
             contact_name.setText(walletContact.name);
@@ -135,6 +142,24 @@ public class CreateContactFragmentDialog extends Dialog implements
                 take_picture_btn.setBackground(new BitmapDrawable(contactImageBitmap));
                 take_picture_btn.setImageDrawable(null);
             }
+
+            ImageView scanImage = (ImageView) findViewById(R.id.scan_qr);
+
+            scanImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentIntegrator integrator = new IntentIntegrator(activity, (EditText) findViewById(R.id.contact_address));
+                    integrator.initiateScan();
+                }
+            });
+
+            // paste_button button definition
+            ImageView pasteFromClipboardButton = (ImageView) findViewById(R.id.paste_from_clipboard_btn);
+            pasteFromClipboardButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    pasteFromClipboard();
+                }
+            });
 
 
             //getWindow().setBackgroundDrawable(new ColorDrawable(0));
@@ -166,7 +191,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
             CryptoWallet cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
-            CryptoAddress validAddress = validateAddress(walletContact.address,cryptoWallet );
+            CryptoAddress validAddress = validateAddress(txt_address.getText().toString(),cryptoWallet );
 
             if (validAddress != null) {
 
@@ -196,6 +221,38 @@ public class CreateContactFragmentDialog extends Dialog implements
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error - " +  e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Paste valid clipboard text into a view
+     *
+     * @param
+     */
+    private void pasteFromClipboard() {
+        try {
+            ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+            // Gets the ID of the "paste" menu item
+            ImageView mPasteItem = (ImageView) findViewById(R.id.paste_from_clipboard_btn);
+            if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                mPasteItem.setEnabled(true);
+                ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+                EditText editText = (EditText) findViewById(R.id.contact_address);
+                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getCryptoWalletManager().getCryptoWallet());
+                if (validAddress != null) {
+                    editText.setText(validAddress.getAddress());
+                } else {
+                    Toast.makeText(activity.getApplicationContext(), "Cannot find an address in the clipboard text.\n\n" + item.getText().toString(), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                // This enables the paste menu item, since the clipboard contains plain text.
+                mPasteItem.setEnabled(false);
+            }
+        } catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(activity.getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
