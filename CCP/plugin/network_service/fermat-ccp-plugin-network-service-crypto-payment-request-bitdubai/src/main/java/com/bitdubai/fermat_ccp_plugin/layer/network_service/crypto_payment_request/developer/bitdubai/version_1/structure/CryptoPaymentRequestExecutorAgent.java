@@ -179,27 +179,75 @@ public class CryptoPaymentRequestExecutorAgent {
                 for(CryptoPaymentRequest cpr : cryptoPaymentRequestList) {
 
                     switch (cpr.getType()) {
-                        case OUTGOING:
 
-                            break;
-                        case INCOMING:
+
+                        // OUTGOING ACTIONS .-
+                        case OUTGOING:
                             switch (cpr.getAction()) {
+
+                                case INFORM_APPROVAL:
+
+                                    // TODO: SEND APPROVING MESSAGE
+
+                                    toWaitingResponse(cpr.getRequestId());
+                                    break;
+
+                                case INFORM_DENIAL:
+
+                                    // TODO: SEND DENYING MESSAGE
+
+                                    toWaitingResponse(cpr.getRequestId());
+                                    break;
+
+                                case INFORM_RECEPTION:
+
+                                    // TODO: SEND CONFIRM RECEPTION MESSAGE
+
+                                    toWaitingResponse(cpr.getRequestId());
+                                    break;
+
+                                case INFORM_REFUSAL:
+
+                                    // TODO: SEND REFUSAL MESSAGE
+
+                                    toWaitingResponse(cpr.getRequestId());
+                                    break;
+
+                                case REQUEST:
+
+                                    // TODO: SEND CRYPTO PAYMENT REQUEST
+
+                                    toWaitingResponse(cpr.getRequestId());
+                                    break;
+                            }
+                            break;
+
+
+                        // INCOMING ACTIONS .-
+                        case INCOMING:
+
+                            switch (cpr.getAction()) {
+
                                 case INFORM_APPROVAL:
                                     raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_APPROVED, cpr.getRequestId());
                                     toPendingAction(cpr.getRequestId());
                                     break;
+
                                 case INFORM_DENIAL:
                                     raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_DENIED, cpr.getRequestId());
                                     toPendingAction(cpr.getRequestId());
                                     break;
+
                                 case INFORM_RECEPTION:
                                     raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_CONFIRMED_RECEPTION, cpr.getRequestId());
                                     toPendingAction(cpr.getRequestId());
                                     break;
+
                                 case INFORM_REFUSAL:
                                     raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_REFUSED, cpr.getRequestId());
                                     toPendingAction(cpr.getRequestId());
                                     break;
+
                                 case REQUEST:
                                     raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED, cpr.getRequestId());
                                     toPendingAction(cpr.getRequestId());
@@ -225,6 +273,13 @@ public class CryptoPaymentRequestExecutorAgent {
 
             cryptoPaymentRequestNetworkServiceDao.changeProtocolState(requestId, RequestProtocolState.PENDING_ACTION);
         }
+
+        private void toWaitingResponse(UUID requestId) throws CantChangeCryptoPaymentRequestProtocolStateException,
+                                                              RequestNotFoundException                            {
+
+            cryptoPaymentRequestNetworkServiceDao.changeProtocolState(requestId, RequestProtocolState.WAITING_RESPONSE);
+        }
+
         private void raiseEvent(final EventType eventType,
                                 final UUID      requestId) {
 
