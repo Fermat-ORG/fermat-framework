@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * Created by by Leon Acosta (laion.cj91@gmail.com) on 05/10/2015.
  */
-public class CryptoPaymentRequestReceivedEvent extends AbstractCCPEvent {
+public class CryptoPaymentRequestReceivedEvent extends AbstractCCPEvent implements CryptoPaymentRequestEvent {
 
     private UUID requestId;
 
