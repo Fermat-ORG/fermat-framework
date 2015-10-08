@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -11,6 +12,8 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
@@ -38,29 +41,31 @@ public class CryptoPaymentRequestExecutorAgent {
     private Thread        agentThread  ;
     private ExecutorAgent executorAgent;
 
-    private final ErrorManager         errorManager        ;
-    private final EventManager         eventManager        ;
-    private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID                 pluginId            ;
+    private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+    private final ErrorManager                                 errorManager                                ;
+    private final EventManager                                 eventManager                                ;
+    private final PluginDatabaseSystem                         pluginDatabaseSystem                        ;
+    private final UUID                                         pluginId                                    ;
 
+    public CryptoPaymentRequestExecutorAgent(final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
+                                             final ErrorManager                                 errorManager                                ,
+                                             final EventManager                                 eventManager                                ,
+                                             final PluginDatabaseSystem                         pluginDatabaseSystem                        ,
+                                             final UUID                                         pluginId                                    ) {
 
-
-    public CryptoPaymentRequestExecutorAgent(final ErrorManager         errorManager        ,
-                                             final EventManager         eventManager        ,
-                                             final PluginDatabaseSystem pluginDatabaseSystem,
-                                             final UUID                 pluginId            ) {
-
-        this.errorManager             = errorManager        ;
-        this.eventManager             = eventManager        ;
-        this.pluginDatabaseSystem     = pluginDatabaseSystem;
-        this.pluginId                 = pluginId            ;
+        this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
+        this.errorManager                                 = errorManager                                ;
+        this.eventManager                                 = eventManager                                ;
+        this.pluginDatabaseSystem                         = pluginDatabaseSystem                        ;
+        this.pluginId                                     = pluginId                                    ;
     }
 
     public void start() throws CantStartCryptoPaymentRequestExecutorAgentException {
 
         this.executorAgent = new ExecutorAgent(
-                errorManager,
-                eventManager,
+                communicationNetworkServiceConnectionManager,
+                errorManager        ,
+                eventManager        ,
                 pluginDatabaseSystem,
                 pluginId
         );
@@ -93,22 +98,25 @@ public class CryptoPaymentRequestExecutorAgent {
 
         private static final int SLEEP_TIME = 5000;
 
-        private final ErrorManager         errorManager        ;
-        private final EventManager         eventManager        ;
-        private final PluginDatabaseSystem pluginDatabaseSystem;
-        private final UUID                 pluginId            ;
+        private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+        private final ErrorManager                                 errorManager                                ;
+        private final EventManager                                 eventManager                                ;
+        private final PluginDatabaseSystem                         pluginDatabaseSystem                        ;
+        private final UUID                                         pluginId                                    ;
 
         private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
-        public ExecutorAgent(final ErrorManager         errorManager        ,
-                             final EventManager         eventManager        ,
-                             final PluginDatabaseSystem pluginDatabaseSystem,
-                             final UUID                 pluginId            ) {
+        public ExecutorAgent(final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
+                             final ErrorManager                                 errorManager                                ,
+                             final EventManager                                 eventManager                                ,
+                             final PluginDatabaseSystem                         pluginDatabaseSystem                        ,
+                             final UUID                                         pluginId                                    ) {
 
-            this.errorManager             = errorManager        ;
-            this.eventManager             = eventManager        ;
-            this.pluginDatabaseSystem     = pluginDatabaseSystem;
-            this.pluginId                 = pluginId            ;
+            this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
+            this.errorManager                                 = errorManager                                ;
+            this.eventManager                                 = eventManager                                ;
+            this.pluginDatabaseSystem                         = pluginDatabaseSystem                        ;
+            this.pluginId                                     = pluginId                                    ;
         }
 
         public boolean isRunning(){
@@ -191,7 +199,6 @@ public class CryptoPaymentRequestExecutorAgent {
 
                                     sendMessageToActor(
                                             buildJsonInformationMessage(cpr),
-                                            cpr.getActorType(),
                                             cpr.getActorPublicKey()
                                     );
 
@@ -202,7 +209,6 @@ public class CryptoPaymentRequestExecutorAgent {
 
                                     sendMessageToActor(
                                             buildJsonInformationMessage(cpr),
-                                            cpr.getActorType(),
                                             cpr.getActorPublicKey()
                                     );
 
@@ -213,7 +219,6 @@ public class CryptoPaymentRequestExecutorAgent {
 
                                     sendMessageToActor(
                                             buildJsonInformationMessage(cpr),
-                                            cpr.getActorType(),
                                             cpr.getActorPublicKey()
                                     );
 
@@ -224,7 +229,6 @@ public class CryptoPaymentRequestExecutorAgent {
 
                                     sendMessageToActor(
                                             buildJsonInformationMessage(cpr),
-                                            cpr.getActorType(),
                                             cpr.getActorPublicKey()
                                     );
 
@@ -235,7 +239,6 @@ public class CryptoPaymentRequestExecutorAgent {
 
                                     sendMessageToActor(
                                             buildJsonRequestMessage(cpr),
-                                            cpr.getActorType(),
                                             cpr.getActorPublicKey()
                                     );
 
@@ -291,9 +294,12 @@ public class CryptoPaymentRequestExecutorAgent {
         }
 
         private void sendMessageToActor(String jsonMessage   ,
-                                        Actors actorType     ,
                                         String actorPublicKey) {
 
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey);
+
+            if(communicationNetworkServiceLocal != null)
+                communicationNetworkServiceLocal.sendMessage(jsonMessage, communicationNetworkServiceConnectionManager.getIdentity());
         }
 
         private String buildJsonInformationMessage(CryptoPaymentRequest cpr) {

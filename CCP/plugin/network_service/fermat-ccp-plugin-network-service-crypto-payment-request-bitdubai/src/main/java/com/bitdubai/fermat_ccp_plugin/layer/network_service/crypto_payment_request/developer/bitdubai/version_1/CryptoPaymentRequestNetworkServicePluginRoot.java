@@ -858,31 +858,4 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         this.pluginId = pluginId;
     }
 
-    /**
-     * Get the New Received Message List
-     *
-     * @return List<FermatMessage>
-     */
-    public List<FermatMessage> getNewReceivedMessageList() throws CantReadRecordDataBaseException {
-
-        Map<String, Object> filters = new HashMap<>();
-        filters.put(CommunicationLayerNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
-
-        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
-    }
-
-    /**
-     * Mark the message as read
-     * @param fermatMessage
-     */
-    public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
-
-        ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
-    }
-
-    public PlatformComponentProfile isRegisteredConnectionForActorPK(String actorPublicKey){
-        return cacheConnections.get(actorPublicKey);
-    }
-
 }
