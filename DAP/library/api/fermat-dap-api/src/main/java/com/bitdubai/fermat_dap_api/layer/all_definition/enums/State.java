@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum State {
     DRAFT ("DFT"),
-    PENDING_FINAL ("PFI"),
-    FINAL ("FIN");
+    FINAL ("FIN"),
+    PENDING_FINAL ("PFI");
 
     private String code;
 
@@ -22,10 +22,10 @@ public enum State {
         switch (code) {
             case "DFT":
                 return State.DRAFT;
-            case "PFI":
-                return State.PENDING_FINAL;
             case "FIN":
                 return State.FINAL;
+            case "PFI":
+                return State.PENDING_FINAL;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the State enum.");
         }

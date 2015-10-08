@@ -44,6 +44,7 @@
                 android:id="@+id/txt_amount"
                 android:text="1.4 BTC"
                 android:textSize="18dp"
+                android:textColor="#1d1d26"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -51,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_contactName"
                 android:text="Matias Furszyfer"
+                android:textColor="#6e6e71"
                 />
 
         </LinearLayout>
@@ -71,6 +73,7 @@
                 android:id="@+id/txt_notes"
                 android:text="Conference ticket"
                 android:textSize="13dp"
+                android:textColor="#5b5993"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -78,7 +81,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_time"
                 android:text="03 Feb 2014"
-                android:textSize="10dp"/>
+                android:textSize="10dp"
+                android:textColor="#6e6e71"/>
 
         </LinearLayout>
 
@@ -99,17 +103,21 @@
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="20dp"
             android:id="@+id/btn_accept_request"
             android:textSize="12dp"
-            android:text="Accept"/>
+            android:text="Accept"
+            android:layout_marginRight="5dp"
+            android:background="#c3e9c8"/>
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="20dp"
             android:id="@+id/btn_refuse_request"
             android:textSize="12dp"
-            android:text="Refuse"/>
+            android:text="Refuse"
+            android:background="#efefef"
+            />
 
 
 

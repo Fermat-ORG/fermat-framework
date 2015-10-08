@@ -391,4 +391,54 @@ public class AssetsOverBitcoinCryptoVaultDao {
         else
             return databaseTable.getRecords().get(0).getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME);
     }
+
+    /**
+     * Sets the new depth of the current Used keys value
+     * @param accountId
+     * @param newValue
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void setNewCurrentUsedKeyValue(int accountId, int newValue) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+
+        /**
+         * I will check to see if I already have a value for this account so i can updated it.
+         */
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(
+                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "Error loading into memory table " + AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME + "to set new key depth",
+                    "Database issue");
+
+        }
+        DatabaseTableRecord record = null;
+        try{
+            if (databaseTable.getRecords().size() == 0){
+                // I will insert the new value
+                record = databaseTable.getEmptyRecord();
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, 0);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, newValue);
+
+                databaseTable.insertRecord(record);
+            } else {
+                // I will update the existing value
+                record = databaseTable.getRecords().get(0);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, newValue);
+                databaseTable.updateRecord(record);
+            }
+        } catch (CantInsertRecordException | CantUpdateRecordException e) {
+            StringBuilder outputMessage = new StringBuilder("There was an error inserting or updating the key depth value in the database.");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append("The record is:");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append(XMLParser.parseObject(record));
+
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "database issue");
+        }
+    }
 }

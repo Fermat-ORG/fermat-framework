@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 02/10/15.
  */
 public enum EventStatus {
-    PENDING("PEND"),
-    NOTIFIED("NOTD");
+    NOTIFIED("NOTD"),
+    PENDING("PEND");
 
     String code;
 
@@ -19,10 +19,10 @@ public enum EventStatus {
 
     public EventStatus getByCode(String code) throws InvalidParameterException {
         switch (code){
-            case "PEND":
-                return EventStatus.PENDING;
             case "NOTD":
                 return EventStatus.NOTIFIED;
+            case "PEND":
+                return EventStatus.PENDING;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the EventStatus enum.");
         }

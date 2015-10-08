@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
@@ -61,6 +62,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceNotification;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
@@ -222,7 +225,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         /******************************************************************
          * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
          ******************************************************************/
-        this.platformComponentType = PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT;
+        this.platformComponentType = PlatformComponentType.ACTOR_NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.INTRA_USER;
         this.name                  = "Intra actor Network Service";
         this.alias                 = "IntraActorNetworkService";
@@ -642,7 +645,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
@@ -666,7 +669,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                         ("alias"),
                         ("name+algo mas"),
                         NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                        PlatformComponentType.ACTOR_COMPONENT, // actor.INTRA_USER
+                        PlatformComponentType.ACTOR, // actor.INTRA_USER
                         getExtraData());
 
                 /*
@@ -947,14 +950,30 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
     }
 
+    //TODO harcodeado
+
     @Override
     public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
-        return null;
+
+        List<IntraUser> intraUserList = new ArrayList<IntraUser>();
+
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0],"alias1"));
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0],"alias2"));
+
+        return intraUserList;
     }
 
     @Override
     public List<IntraUser> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException {
-        return null;
+        //TODO Harcode
+
+        List<IntraUser> intraUserList = new ArrayList<IntraUser>();
+
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Matias") );
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Leon") );
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Natalia") );
+        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Ezequiel") );
+        return intraUserList;
     }
 
     @Override
@@ -984,7 +1003,15 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
     @Override
     public List<IntraUserNotification> getNotifications() throws ErrorGetNotificationsIntraUserException {
-        return null;
+//TODO Harcode
+        List<IntraUserNotification> intraUserNotificationList = new ArrayList<IntraUserNotification>();
+
+        intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(),"alias1",UUID.randomUUID().toString(),IntraUserNotificationDescriptor.ACCEPTED,new byte[0]));
+        intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(),"alias2",UUID.randomUUID().toString(),IntraUserNotificationDescriptor.CANCEL,new byte[0]));
+
+
+        return intraUserNotificationList;
+
     }
 
     @Override
@@ -1007,7 +1034,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     (actor.getName().toLowerCase()),
                     (actor.getName().toLowerCase() + "_" + this.getName()),
                     NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_COMPONENT, // actor.INTRA_USER
+                    PlatformComponentType.ACTOR, // actor.INTRA_USER
                     getExtraData());
 
                 /*

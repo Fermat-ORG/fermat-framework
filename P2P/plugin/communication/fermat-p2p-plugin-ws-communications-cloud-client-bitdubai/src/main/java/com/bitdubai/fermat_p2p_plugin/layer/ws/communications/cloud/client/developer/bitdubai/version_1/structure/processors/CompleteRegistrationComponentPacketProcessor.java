@@ -68,7 +68,7 @@ public class CompleteRegistrationComponentPacketProcessor extends FermatPacketPr
          */
         PlatformComponentProfile platformComponentProfile = new PlatformComponentProfileCommunication().fromJson(messageContentJsonStringRepresentation);
 
-        if (platformComponentProfile.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT){
+        if (platformComponentProfile.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT){
 
             /*
              * Mark as register
