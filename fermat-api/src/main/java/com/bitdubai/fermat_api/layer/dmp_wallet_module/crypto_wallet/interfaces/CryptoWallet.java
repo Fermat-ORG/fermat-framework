@@ -304,15 +304,49 @@ public interface CryptoWallet extends Serializable {
                                    UUID   transactionID,
                                    String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException;
 
-    List<PaymentRequest> listSentPaymentRequest();
+    /**
+     *The method <code>listSentPaymentRequest</code> list the wallet send payments request.
+     *
+     * @param walletPublicKey
+     * @return List of PaymentRequest object
+     */
+    List<PaymentRequest> listSentPaymentRequest(String  walletPublicKey,int max,int offset) throws CantListSentPaymentRequestException;
 
-    List<PaymentRequest> listReceivedPaymentRequest();
+    /**
+     *The method <code>listReceivedPaymentRequest</code> list the wallet receive payments request.
+     *
+     * @param walletPublicKey
+     * @return List of PaymentRequest object
+     */
+    List<PaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws CantListReceivePaymentRequestException;
 
-    List<PaymentRequest> listPaymentRequestDatOrder();
+    /**
+     * The method <code>listPaymentRequestDateOrder</code> list the wallet payments requests order by date.
+     *
+     * @param walletPublicKey
+     * @return List of PaymentRequest object
+     */
+    List<PaymentRequest> listPaymentRequestDateOrder(String  walletPublicKey,int max,int offset) throws CantListPaymentRequestDateOrderException;
+
+    /**
+     *
+     * @return
+     * @throws CantListCryptoWalletIntraUserIdentityException
+     */
 
     List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
 
-
+    /**
+     *
+     * @param cryptoAmount
+     * @param destinationAddress
+     * @param notes
+     * @param walletPublicKey
+     * @param deliveredByActorPublicKey
+     * @param deliveredByActorType
+     * @param deliveredToActorPublicKey
+     * @param deliveredToActorType
+     */
     void sendMetadataLikeChampion(long cryptoAmount,
                                   CryptoAddress destinationAddress,
                                   String notes, String walletPublicKey,

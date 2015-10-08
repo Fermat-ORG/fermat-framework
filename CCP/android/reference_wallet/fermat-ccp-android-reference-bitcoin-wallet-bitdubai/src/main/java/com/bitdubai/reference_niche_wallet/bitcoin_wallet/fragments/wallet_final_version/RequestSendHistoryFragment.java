@@ -13,8 +13,10 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -50,6 +52,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     private int MAX_TRANSACTIONS = 20;
     private int offset = 0;
+
+    String walletPublicKey = "reference_wallet";
 
     /**
      * Create a new instance of this fragment
@@ -142,14 +146,14 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     public List<PaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<PaymentRequest> lstPaymentRequest  = new ArrayList<PaymentRequest>();
 
-        //try {
-            lstPaymentRequest = cryptoWallet.listSentPaymentRequest();
+        try {
+            lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,10,offset);
             offset+=MAX_TRANSACTIONS;
-//        } catch (Exception e) {
-//            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(e,
-//                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//            e.printStackTrace();
-//        }
+        } catch (Exception e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+           e.printStackTrace();
+       }
 
         return lstPaymentRequest;
     }
