@@ -132,7 +132,6 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             fromNotSentYetToPendingResponse(
                     requestId        ,
-                    walletPublicKey  ,
                     identityPublicKey,
                     identityType     ,
                     actorPublicKey   ,
@@ -140,6 +139,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     cryptoAddress    ,
                     description      ,
                     amount           ,
+                    startTimeStamp   ,
                     networkType
             );
 
@@ -163,7 +163,6 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     }
 
     private void fromNotSentYetToPendingResponse(UUID                  requestId        ,
-                                                 String                walletPublicKey  ,
                                                  String                identityPublicKey,
                                                  Actors                identityType     ,
                                                  String                actorPublicKey   ,
@@ -171,6 +170,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                                  CryptoAddress         cryptoAddress    ,
                                                  String                description      ,
                                                  long                  amount           ,
+                                                 long                  startTimeStamp   ,
                                                  BlockchainNetworkType networkType      ) throws CantSendRequestException                     ,
                                                                                                  CantChangeCryptoPaymentRequestStateException ,
                                                                                                  CryptoPaymentRequestNotFoundException        {
@@ -178,7 +178,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         // if i can save it, i send it to the network service.
 
         cryptoPaymentRequestManager.sendCryptoPaymentRequest(
-                walletPublicKey,
+                requestId,
                 identityPublicKey,
                 identityType,
                 actorPublicKey,
@@ -186,6 +186,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                 cryptoAddress,
                 description,
                 amount,
+                startTimeStamp,
                 networkType
         );
 
@@ -522,7 +523,6 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
                             fromNotSentYetToPendingResponse(
                                     cryptoPayment.getRequestId(),
-                                    cryptoPayment.getWalletPublicKey(),
                                     cryptoPayment.getIdentityPublicKey(),
                                     cryptoPayment.getIdentityType(),
                                     cryptoPayment.getActorPublicKey(),
@@ -530,6 +530,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                     cryptoPayment.getCryptoAddress(),
                                     cryptoPayment.getDescription(),
                                     cryptoPayment.getAmount(),
+                                    cryptoPayment.getStartTimeStamp(),
                                     cryptoPayment.getNetworkType()
                             );
 

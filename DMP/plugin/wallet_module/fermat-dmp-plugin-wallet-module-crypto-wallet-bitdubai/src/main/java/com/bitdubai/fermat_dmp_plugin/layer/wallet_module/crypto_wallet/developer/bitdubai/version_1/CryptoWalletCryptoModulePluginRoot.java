@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.DealsWithIntraUsersModule;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
@@ -45,7 +47,7 @@ import java.util.regex.Pattern;
 /**
  * Created by loui on 27/05/15.a
  */
-public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,DealsWithCCPIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers/*, DealsWithIntraUsersActor,*/,DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook, WalletModule, Plugin, Service {
+public class CryptoWalletCryptoModulePluginRoot implements DealsWithCryptoTransmissionNetworkService,CryptoWalletManager,DealsWithCCPIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers/*, DealsWithIntraUsersActor,*/,DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook, WalletModule, Plugin, Service {
 
     /**
      * Service Interface member variables.
@@ -106,6 +108,7 @@ public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,D
      * DealsWithWalletContacts Interface member variables.
      */
     private WalletContactsManager walletContactsManager;
+    private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
     /**
      * Service Interface implementation.
@@ -152,6 +155,7 @@ public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,D
             walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
             walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
             walletModuleCryptoWallet.setIntraUserManager(intraWalletUserManager);
+            walletModuleCryptoWallet.setCryptoTransmissionNetworkService(cryptoTransmissionNetworkServiceManager);
 //            walletModuleCryptoWallet.setActorIntraUserManager(this.intraUserManager);
             walletModuleCryptoWallet.initialize();
 
@@ -264,6 +268,11 @@ public class CryptoWalletCryptoModulePluginRoot implements CryptoWalletManager,D
     @Override
     public void setIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
         this.intraWalletUserManager = intraWalletUserManager;
+    }
+
+    @Override
+    public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
+        this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
     }
 
 //    @Override

@@ -1,7 +1,8 @@
 questions-fermat-book.asciidoc
+4-10 como se llaman servicios nicho
 
 3-10-15
-1) doiferencia entre un voucher y un digital asset
+1) doiferencia entre un voucher y un digital asset y token
 
 2-10
 1/ d6nde se ven los milestones de desarrollo_

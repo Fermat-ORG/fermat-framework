@@ -275,19 +275,19 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     sendCrypto();
 
                     //testing
-
+//
 //                    EditText amount = (EditText) rootView.findViewById(R.id.amount);
 //
 //
 //                    String notes = txt_notes.getText().toString();
 //
-//                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong(amount.getText().toString()),
+//                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
 //                            null,
-//                            notes,
+//                            "holasdad",
 //                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
 //                            user_id,
 //                            Actors.INTRA_USER,
-//                            walletContact.actorPublicKey,
+//                            "actor_prueba_robert_public_key",
 //                            Actors.INTRA_USER);
                 }
             });
