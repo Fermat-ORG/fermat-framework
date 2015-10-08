@@ -273,10 +273,10 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
          * Construct a fermat packet whit the same platform component profile and different FermatPacketType
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                serverIdentity.getPublicKey(),                    //Sender
-                platformComponentProfileToRegister.toJson(),      //Message Content
-                FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                serverIdentity.getPrivateKey());                  //Sender private key
+                                                                                                                    serverIdentity.getPublicKey(),                    //Sender
+                                                                                                                    platformComponentProfileToRegister.toJson(),      //Message Content
+                                                                                                                    FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
+                                                                                                                    serverIdentity.getPrivateKey());                  //Sender private key
 
          /*
          * Send the encode packet to the server

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -88,6 +89,26 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
 
+    }
+
+    /**
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile, DiscoveryQueryParameters)
+     */
+    @Override
+    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters) {
+
+        try {
+
+            /*
+             * ask to the communicationLayerManager to connect to other network service
+             */
+            communicationsClientConnection.requestDiscoveryVpnConnection(applicantNetworkService, discoveryQueryParameters);
+
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+        }
     }
 
     /**

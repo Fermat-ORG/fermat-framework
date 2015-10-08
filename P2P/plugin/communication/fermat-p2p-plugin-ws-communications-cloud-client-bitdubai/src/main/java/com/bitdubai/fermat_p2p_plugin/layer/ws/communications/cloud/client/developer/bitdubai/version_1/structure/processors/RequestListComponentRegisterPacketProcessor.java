@@ -60,13 +60,13 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         JsonParser parser = new JsonParser();
         JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
 
-        NetworkServiceType networkServiceType       = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE), NetworkServiceType.class);
-        PlatformComponentType platformComponentType = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE), PlatformComponentType.class);
+        NetworkServiceType networkServiceType       = gson.fromJson(respond.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE), NetworkServiceType.class);
+        PlatformComponentType platformComponentType = gson.fromJson(respond.get(JsonAttNamesConstants.COMPONENT_TYPE), PlatformComponentType.class);
 
          /*
          * Get the receivedList
          */
-        List<PlatformComponentProfile> receivedList = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
+        List<PlatformComponentProfile> receivedList = gson.fromJson(respond.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
         System.out.println("RequestListComponentRegisterPacketProcessor - receivedlist.size() = " + receivedList.size());

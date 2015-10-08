@@ -48,9 +48,14 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     private ECCKeyPair vpnClientIdentity;
 
     /**
-     * Represent the participant of the vpn
+     * Represent the remoteParticipant of the vpn
      */
-    private PlatformComponentProfile participant;
+    private PlatformComponentProfile remoteParticipant;
+
+    /**
+     * Represent the remoteParticipantNetworkService of the vpn
+     */
+    private PlatformComponentProfile remoteParticipantNetworkService;
 
     /**
      * Represent the vpnServerIdentity
@@ -71,10 +76,11 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      * Constructor with parameters
      * @param serverURI
      */
-    public WsCommunicationVPNClient(ECCKeyPair vpnClientIdentity, URI serverURI, PlatformComponentProfile participant, String vpnServerIdentity, Map<String, String> headers) {
+    public WsCommunicationVPNClient(ECCKeyPair vpnClientIdentity, URI serverURI, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService, String vpnServerIdentity, Map<String, String> headers) {
         super(serverURI , new Draft_17(), headers , WsCommunicationVPNClient.DEFAULT_CONNECTION_TIMEOUT);
         this.vpnClientIdentity = vpnClientIdentity;
-        this.participant       = participant;
+        this.remoteParticipant = remoteParticipant;
+        this.remoteParticipantNetworkService = remoteParticipantNetworkService;
         this.vpnServerIdentity = vpnServerIdentity;
         this.pendingIncomingMessages = new ArrayList<>();
     }
@@ -213,10 +219,10 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
          * Construct a fermat packet whit the message to transmit
          */
         FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnServerIdentity,                  //Destination
-                                                                                                                    vpnClientIdentity.getPublicKey(),   //Sender
-                                                                                                                    fermatMessage.toJson(),             //Message Content
-                                                                                                                    FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
-                                                                                                                    vpnClientIdentity.getPrivateKey()); //Sender private key
+                vpnClientIdentity.getPublicKey(),   //Sender
+                fermatMessage.toJson(),             //Message Content
+                FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
+                vpnClientIdentity.getPrivateKey()); //Sender private key
         /*
          * Send the encode packet to the server
          */
@@ -297,8 +303,9 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     }
 
     /**
-     * Get the isActive
-     * @return boolean
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#isActive()
      */
     @Override
     public boolean isActive() {
@@ -311,5 +318,23 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#getRemoteParticipant()
+     */
+    public PlatformComponentProfile getRemoteParticipant() {
+        return remoteParticipant;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#getRemoteParticipantNetworkService()
+     */
+    public PlatformComponentProfile getRemoteParticipantNetworkService() {
+        return remoteParticipantNetworkService;
     }
 }

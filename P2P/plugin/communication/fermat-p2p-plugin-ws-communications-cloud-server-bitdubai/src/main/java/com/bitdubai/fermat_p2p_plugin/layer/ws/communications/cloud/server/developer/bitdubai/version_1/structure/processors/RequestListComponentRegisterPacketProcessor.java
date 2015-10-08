@@ -87,9 +87,9 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Create the respond
          */
         JsonObject jsonObjectRespond = new JsonObject();
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE, discoveryQueryParameters.getNetworkServiceType().toString());
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_RESULT_LIST,          jsonListRepresentation);
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, discoveryQueryParameters.getNetworkServiceType().toString());
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST,          jsonListRepresentation);
 
          /*
          * Construct a fermat packet whit the list
