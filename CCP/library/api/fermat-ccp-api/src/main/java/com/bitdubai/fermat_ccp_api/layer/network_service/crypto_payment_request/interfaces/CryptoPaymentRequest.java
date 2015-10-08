@@ -3,11 +3,9 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestDirection;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
 
 import java.util.UUID;
 
@@ -19,30 +17,30 @@ import java.util.UUID;
  */
 public interface CryptoPaymentRequest {
 
-    UUID                       getRequestId()        ;
+    UUID                          getRequestId()        ;
 
-    String                     getIdentityPublicKey();
+    String                        getIdentityPublicKey();
 
-    Actors                     getIdentityType()     ;
+    Actors                        getIdentityType()     ;
 
-    String                     getActorPublicKey()   ;
+    String                        getActorPublicKey()   ;
 
-    Actors                     getActorType()        ;
+    Actors                        getActorType()        ;
 
-    String                     getDescription()      ;
+    String                        getDescription()      ;
 
-    CryptoAddress              getCryptoAddress()    ;
+    CryptoAddress                 getCryptoAddress()    ;
 
-    long                       getAmount()           ;
+    long                          getAmount()           ;
 
-    long                       getStartTimeStamp()   ;
+    long                          getStartTimeStamp()   ;
 
-    CryptoPaymentRequestType   getType()             ;
+    RequestDirection              getDirection()        ;
 
-    CryptoPaymentRequestAction getAction()           ;
+    RequestAction                 getAction()           ;
 
-    RequestProtocolState       getProtocolState()    ;
+    RequestProtocolState          getProtocolState()    ;
 
-    BlockchainNetworkType      getNetworkType()      ;
+    BlockchainNetworkType         getNetworkType()      ;
 
 }

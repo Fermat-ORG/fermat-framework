@@ -27,7 +27,7 @@ public class CryptoPaymentRequestNetworkServiceDatabaseConstants {
     public static final String CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME     = "crypto_currency"       ;
     public static final String CRYPTO_PAYMENT_REQUEST_AMOUNT_COLUMN_NAME              = "amount"                ;
     public static final String CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME    = "start_time_stamp"      ;
-    public static final String CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME                = "type"                  ;
+    public static final String CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME           = "direction"             ;
     public static final String CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME              = "action"                ;
     public static final String CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME      = "protocol_state"        ;
     public static final String CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME        = "network_type"          ;

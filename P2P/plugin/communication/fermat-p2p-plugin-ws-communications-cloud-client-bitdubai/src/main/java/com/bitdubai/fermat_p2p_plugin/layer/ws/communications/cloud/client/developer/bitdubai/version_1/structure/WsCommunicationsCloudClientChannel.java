@@ -144,7 +144,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          * Get json representation
          */
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_IDENTITY, tempIdentity.getPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, tempIdentity.getPublicKey());
 
         /*
          * Add the att to the header

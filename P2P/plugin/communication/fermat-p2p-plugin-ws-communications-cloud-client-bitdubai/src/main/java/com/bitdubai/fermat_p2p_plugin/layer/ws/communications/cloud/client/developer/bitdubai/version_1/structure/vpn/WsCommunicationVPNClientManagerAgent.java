@@ -64,7 +64,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * @param vpnServerIdentity
      * @param remotePlatformComponentProfile
      */
-    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile) {
+    public void createNewWsCommunicationVPNClient(URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile, PlatformComponentProfile remoteParticipantNetworkService) {
 
         /*
          * Create the identity
@@ -80,8 +80,8 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
          * Get json representation
          */
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
-        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
+        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
 
         /*
          * Add the att to the header
@@ -91,7 +91,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         /*
          * Construct the vpn client
          */
-        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, remotePlatformComponentProfile, vpnServerIdentity, headers);
+        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
 
         /*
          * Add to the vpn client active

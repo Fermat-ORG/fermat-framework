@@ -61,10 +61,11 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         try {
 
             //Get all values
-            URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_VPN_URI).getAsString());
-            String vpnServerIdentity = respond.get(JsonAttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY).getAsString();
-            String participantIdentity = respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
-            PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+            URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.VPN_URI).getAsString());
+            String vpnServerIdentity = respond.get(JsonAttNamesConstants.VPN_SERVER_IDENTITY).getAsString();
+            String participantIdentity = respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+            PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
 
             /*
@@ -86,10 +87,10 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
              */
             WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent = getWsCommunicationsCloudClientChannel().getWsCommunicationsCloudClientConnection().getWsCommunicationVPNClientManagerAgent();
 
-            /**
+            /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile);
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile);
 
             /*
              * Is not running

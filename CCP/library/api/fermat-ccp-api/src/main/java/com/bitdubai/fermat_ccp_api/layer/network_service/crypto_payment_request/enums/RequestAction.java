@@ -4,12 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The enum <code>com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction</code>
+ * The enum <code>com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction</code>
  * represents the different actions that you can inform throw the network service for a Crypto Payment Request.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/10/2015.
  */
-public enum CryptoPaymentRequestAction implements FermatEnum {
+public enum RequestAction implements FermatEnum {
 
     /**
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
@@ -25,11 +25,11 @@ public enum CryptoPaymentRequestAction implements FermatEnum {
 
     private String code;
 
-    CryptoPaymentRequestAction(String code) {
+    RequestAction(String code) {
         this.code = code;
     }
 
-    public static CryptoPaymentRequestAction getByCode(String code) throws InvalidParameterException {
+    public static RequestAction getByCode(String code) throws InvalidParameterException {
 
         switch (code){
 
@@ -43,7 +43,7 @@ public enum CryptoPaymentRequestAction implements FermatEnum {
                     InvalidParameterException.DEFAULT_MESSAGE,
                     null,
                     "Code Received: " + code,
-                    "This code is not valid for the CryptoPaymentRequestAction enum."
+                    "This code is not valid for the RequestAction enum."
             );
         }
     }

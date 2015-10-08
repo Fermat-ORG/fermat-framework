@@ -143,7 +143,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
              */
             JsonParser parser = new JsonParser();
             JsonObject temporalIdentity = parser.parse(handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI)).getAsJsonObject();
-            String temporalClientIdentity = temporalIdentity.get(JsonAttNamesConstants.JSON_ATT_NAME_IDENTITY).getAsString();
+            String temporalClientIdentity = temporalIdentity.get(JsonAttNamesConstants.NAME_IDENTITY).getAsString();
 
             /*
              * Create a new server identity to talk with this client
@@ -159,7 +159,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
              * Get json representation for the serverIdentity
              */
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_SERVER_IDENTITY, serverIdentity.getPublicKey());
+            jsonObject.addProperty(JsonAttNamesConstants.SERVER_IDENTITY, serverIdentity.getPublicKey());
 
             /*
              * Construct a fermat packet whit the server identity
@@ -365,7 +365,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
                 if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
 
-                    System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
+                   // System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
                     registeredNetworkServicesCache.get(networkServiceType).remove(platformComponentProfile);
                     break;
 

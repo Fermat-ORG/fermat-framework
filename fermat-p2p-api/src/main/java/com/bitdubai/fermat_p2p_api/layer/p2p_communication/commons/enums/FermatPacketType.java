@@ -60,10 +60,21 @@ public enum FermatPacketType {
      */
     COMPONENT_CONNECTION_REQUEST   ("COMP_CONNECT_REQ"),
 
+
+    /**
+     * This type is use when a component connection request is made
+     */
+    DISCOVERY_COMPONENT_CONNECTION_REQUEST   ("DIS_COMP_CONNECT_REQ"),
+
     /**
      * This type is use when a component connection respond is made
      */
     COMPONENT_CONNECTION_RESPOND   ("COMP_CONNECT_RES"),
+
+    /**
+     * This type is use when a discovery component connection respond is made
+     */
+    DISCOVERY_COMPONENT_CONNECTION_RESPOND   ("DIS_COMP_CONNECT_RES"),
 
     /**
      * This type is use when a component connection request is complete, are
@@ -110,13 +121,15 @@ public enum FermatPacketType {
         switch (code){
             case "SRV_HS_RESP"            : return FermatPacketType.SERVER_HANDSHAKE_RESPOND;
             case "VPN_SRV_HS_RESP"        : return FermatPacketType.VPN_SERVER_HANDSHAKE_RESPOND;
-            case "COMP_REG_REQ"           : return FermatPacketType.COMPONENT_CONNECTION_REQUEST;
+            case "COMP_REG_REQ"           : return FermatPacketType.COMPONENT_REGISTRATION_REQUEST;
             case "COMPL_COMP_REG"         : return FermatPacketType.COMPLETE_COMPONENT_REGISTRATION;
             case "REQ_LIST_COMP_REG"      : return FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED;
             case "COMP_DISC_REQ"          : return FermatPacketType.COMPONENT_DISCONNECT_REQUEST;
             case "MSG_DEL_NOT"            : return FermatPacketType.MESSAGE_DELIVERY_NOTIFICATION;
             case "COMP_CONNECT_REQ"       : return FermatPacketType.COMPONENT_CONNECTION_REQUEST;
+            case "DISC_COMP_CONNECT_REQ"  : return FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST;
             case "COMP_CONNECT_RES"       : return FermatPacketType.COMPONENT_CONNECTION_RESPOND;
+            case "DIS_COMP_CONNECT_RES"   : return FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_RESPOND;
             case "COMPL_COMP_CONNECT_REQ" : return FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST;
             case "MSG_TRANS"              : return FermatPacketType.MESSAGE_TRANSMIT;
 
