@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestReceivedEvent;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestRefusedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.CryptoPaymentRequestPluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CryptoPaymentRequestPluginNotStartedException;
@@ -71,7 +70,7 @@ public class CryptoPaymentRequestReceivedEventHandler implements FermatEventHand
                 );
 
             } else {
-                EventType eventExpected = EventType.CRYPTO_PAYMENT_RECEIVED;
+                EventType eventExpected = EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
                                  "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
