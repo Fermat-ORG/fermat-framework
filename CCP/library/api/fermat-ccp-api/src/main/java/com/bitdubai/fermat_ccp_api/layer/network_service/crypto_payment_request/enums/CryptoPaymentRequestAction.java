@@ -11,10 +11,17 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CryptoPaymentRequestAction implements FermatEnum {
 
+    /**
+     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     */
+
     INFORM_APPROVAL  ("INAP"),
     INFORM_DENIAL    ("INDE"),
     INFORM_RECEPTION ("INRC"),
-    INFORM_REFUSAL   ("INRF");
+    INFORM_REFUSAL   ("INRF"),
+    REQUEST          ("REQU"),
+
+    ;
 
     private String code;
 
@@ -30,6 +37,7 @@ public enum CryptoPaymentRequestAction implements FermatEnum {
             case "INDE": return INFORM_DENIAL   ;
             case "INRC": return INFORM_RECEPTION;
             case "INRF": return INFORM_REFUSAL  ;
+            case "REQU": return REQUEST         ;
 
             default: throw new InvalidParameterException(
                     InvalidParameterException.DEFAULT_MESSAGE,
