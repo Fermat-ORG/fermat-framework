@@ -543,7 +543,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             return TemplateNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             * If I couldn't get the correct login level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
         }
@@ -695,10 +695,28 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              */
             PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
+
+            DiscoveryQueryParameters discoveryQueryParametersT = wsCommunicationsCloudClientManager.
+                                                                getCommunicationsCloudClientConnection().
+                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
+                                                                        null,                     // alias
+                                                                        remoteNetworkServiceToConnect.getIdentityPublicKey(),                     // identityPublicKey
+                                                                        null,                     // location
+                                                                        null,                     // distance
+                                                                        null,                     // name
+                                                                        null,                     // extraData
+                                                                        null,                     // offset
+                                                                        null,                     // max
+                                                                        remoteNetworkServiceToConnect.getPlatformComponentType(),                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                        remoteNetworkServiceToConnect.getNetworkServiceType());                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+
+
+
+
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, discoveryQueryParametersT);
 
         }
 
@@ -725,11 +743,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              * Get the local representation of the remote network service
              */
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
 
             /**
              * Create the message content

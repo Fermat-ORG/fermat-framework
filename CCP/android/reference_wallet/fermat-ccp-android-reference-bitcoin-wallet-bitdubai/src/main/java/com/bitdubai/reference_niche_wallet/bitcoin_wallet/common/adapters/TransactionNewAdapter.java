@@ -96,17 +96,14 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
             holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
             holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
-            holder.getTxt_amount().setTextColor(Color.BLACK);
 
             holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
-            holder.getTxt_contactName().setTextColor(Color.BLACK);
 
             holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
-            holder.getTxt_notes().setTextColor(Color.BLACK);
+
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
-            holder.getTxt_time().setTextColor(Color.BLACK);
 
             ActorTransactionSummary actorTransactionSummary = null;
 
@@ -117,19 +114,11 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
                 e.printStackTrace();
             }
 
-            if(actorTransactionSummary!=null){
+            if(actorTransactionSummary!=null) {
                 holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
 
                 holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
-            }else{
-                holder.getTxt_total_number_transactions().setText("16");
-                holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
-
-                holder.getTxt_total_balance().setText("19 BTC");
-                holder.getTxt_total_balance().setTextColor(Color.BLACK);
             }
-            holder.getTxt_total_balance().setTextColor(Color.BLACK);
-            holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
 
 
 

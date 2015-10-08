@@ -83,7 +83,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         super(address);
         this.vpnServerIdentity               = new ECCKeyPair();
         this.registeredParticipants          = registeredParticipants;
-        this.participantsConnections = new ConcurrentHashMap<>();
+        this.participantsConnections         = new ConcurrentHashMap<>();
         this.vpnClientIdentityByParticipants = new ConcurrentHashMap<>();
         this.wsCommunicationCloudServer      = wsCommunicationCloudServer;
 
@@ -123,8 +123,8 @@ public class WsCommunicationVPNServer extends WebSocketServer{
             /*
              * Get the identity send by the participant
              */
-            String participantIdentity =  respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
-            String vpnClientIdentity   =  respond.get(JsonAttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN).getAsString();
+            String participantIdentity =  respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            String vpnClientIdentity   =  respond.get(JsonAttNamesConstants.CLIENT_IDENTITY_VPN).getAsString();
 
             for (PlatformComponentProfile registeredParticipant : registeredParticipants) {
 
@@ -179,7 +179,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
          */
         Gson gson = new Gson();
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
 
 
         /*
