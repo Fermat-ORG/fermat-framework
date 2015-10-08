@@ -81,24 +81,28 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
         PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_VPN).getAsString());
         DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(packetContent.get(JsonAttNamesConstants.DISCOVERY_PARAM_VPN).getAsString());
+        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
 
         /*
          * Get the component profile to connect as remote participant
          */
         List<PlatformComponentProfile> remoteParticipantList = searchProfile(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), discoveryQueryParameters.getIdentityPublicKey());
         PlatformComponentProfile remoteParticipant = remoteParticipantList.get(0);
+        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteParticipant "+remoteParticipant.toJson());
 
         /*
          * Get the network service profile that live in the same device of the remote participant
          */
         List<PlatformComponentProfile> remoteNsParticipantList = searchProfileByCommunicationCloudClientIdentity(networkServiceApplicant.getPlatformComponentType(), networkServiceApplicant.getNetworkServiceType(), remoteParticipant.getCommunicationCloudClientIdentity());
         PlatformComponentProfile remoteNsParticipant = remoteNsParticipantList.get(0);
+        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteNsParticipant "+remoteNsParticipant.toJson());
 
         /*
          * Get the component profile as participant that live in the same device of the network service applicant
          */
         List<PlatformComponentProfile> applicantParticipantList = searchProfileByCommunicationCloudClientIdentity(networkServiceApplicant.getPlatformComponentType(), networkServiceApplicant.getNetworkServiceType(), networkServiceApplicant.getCommunicationCloudClientIdentity());
         PlatformComponentProfile applicantParticipant = applicantParticipantList.get(0);
+        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - applicantParticipant "+applicantParticipant.toJson());
 
         /*
          * Create the list of participant

@@ -327,7 +327,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         /*
          * Add the applicant to the requested list
          */
-        wsCommunicationVPNClientManagerAgent.addRequestedVpnConnections(applicant, remoteDestination);
+        //wsCommunicationVPNClientManagerAgent.addRequestedVpnConnections(applicant, remoteDestination);
 
     }
 
@@ -380,11 +380,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
          * Send the encode packet to the server
          */
         wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
-
-        /*
-         * Add the applicant to the requested list
-         */
-        wsCommunicationVPNClientManagerAgent.addRequestedDiscoveryVpnConnections(applicant, discoveryQueryParameters);
 
     }
 

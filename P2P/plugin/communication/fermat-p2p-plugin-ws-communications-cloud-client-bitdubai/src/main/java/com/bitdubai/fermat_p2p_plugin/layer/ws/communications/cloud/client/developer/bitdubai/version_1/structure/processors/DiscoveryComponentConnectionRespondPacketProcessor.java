@@ -40,7 +40,6 @@ public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPa
     @Override
     public void processingPackage(FermatPacket receiveFermatPacket) {
 
-
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentConnectionRespondPacketProcessor - Starting processingPackage");
 
@@ -66,7 +65,7 @@ public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPa
             String vpnServerIdentity = respond.get(JsonAttNamesConstants.VPN_SERVER_IDENTITY).getAsString();
             String participantIdentity = respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
-            DiscoveryQueryParameters discoveryQueryParameters       = gson.fromJson(respond.get(JsonAttNamesConstants.DISCOVERY_PARAM_VPN).getAsString(), DiscoveryQueryParameters.class);
+            PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
             /*
              * TEMPORAL:
@@ -90,7 +89,7 @@ public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPa
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClientFromDiscoveryConnectionRequest(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, discoveryQueryParameters);
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile);
 
             /*
              * Is not running
