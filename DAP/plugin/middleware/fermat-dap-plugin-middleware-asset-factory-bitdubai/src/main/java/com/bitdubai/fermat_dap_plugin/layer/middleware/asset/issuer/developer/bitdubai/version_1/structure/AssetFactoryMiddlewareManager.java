@@ -438,17 +438,12 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             if(assetFactory.getState() == State.DRAFT) {
                 DigitalAsset digitalAsset = new DigitalAsset();
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
-                //TODO: Revisar porque la asignacion del value al property no la asigna
-//                ContractProperty redeemable;
-//                ContractProperty expirationDate;
-//                redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-//                expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-//                ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
-//                ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
-//                redeemable1.setValue(assetFactory.getIsRedeemable());
-//                expirationDate1.setValue(assetFactory.getExpirationDate());
-//                digitalAssetContract.setContractProperty(redeemable1);
-//                digitalAssetContract.setContractProperty(expirationDate1);
+                ContractProperty redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
+                redeemable.setValue(assetFactory.getIsRedeemable());
+                ContractProperty expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
+                expirationDate.setValue(assetFactory.getExpirationDate());
+                digitalAssetContract.setContractProperty(redeemable);
+                digitalAssetContract.setContractProperty(expirationDate);
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());
@@ -464,10 +459,12 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
                 markAssetFactoryState(State.PENDING_FINAL, assetFactory.getPublicKey());
                 //Method the DealsWithAssetIssuing
                 assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), blockchainNetworkType);
+                //assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), "wallet_public_key", blockchainNetworkType);
 
             }
             else
             {
+                markAssetFactoryState(State.DRAFT, assetFactory.getPublicKey());
                 throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }
 
