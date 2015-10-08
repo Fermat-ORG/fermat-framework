@@ -274,7 +274,7 @@ public class CryptoPaymentRequestEventActions {
                     cryptoPaymentRequestManager.informReception(requestId);
                 } catch(DefaultWalletNotFoundException z) {
 
-                        cryptoPaymentRequestManager.informDenial(requestId);
+                    cryptoPaymentRequestManager.informDenial(requestId);
 
                 }
 

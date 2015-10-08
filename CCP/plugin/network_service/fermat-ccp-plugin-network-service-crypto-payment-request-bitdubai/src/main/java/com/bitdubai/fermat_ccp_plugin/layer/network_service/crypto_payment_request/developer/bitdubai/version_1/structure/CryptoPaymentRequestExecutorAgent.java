@@ -7,10 +7,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeExecutorAgentException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
@@ -178,47 +180,51 @@ public class CryptoPaymentRequestExecutorAgent {
 
                     switch (cpr.getType()) {
                         case OUTGOING:
-                            raiseEventByAction(cpr.getAction(), cpr.getRequestId());
+
                             break;
                         case INCOMING:
-                            sendMessage(cpr);
+                            switch (cpr.getAction()) {
+                                case INFORM_APPROVAL:
+                                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_APPROVED, cpr.getRequestId());
+                                    toPendingAction(cpr.getRequestId());
+                                    break;
+                                case INFORM_DENIAL:
+                                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_DENIED, cpr.getRequestId());
+                                    toPendingAction(cpr.getRequestId());
+                                    break;
+                                case INFORM_RECEPTION:
+                                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_CONFIRMED_RECEPTION, cpr.getRequestId());
+                                    toPendingAction(cpr.getRequestId());
+                                    break;
+                                case INFORM_REFUSAL:
+                                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_REFUSED, cpr.getRequestId());
+                                    toPendingAction(cpr.getRequestId());
+                                    break;
+                                case REQUEST:
+                                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED, cpr.getRequestId());
+                                    toPendingAction(cpr.getRequestId());
+                                    break;
+                            }
                             break;
                     }
                 }
 
-            } catch (CantListRequestsException e) {
+            } catch(CantListRequestsException                            |
+                    CantChangeCryptoPaymentRequestProtocolStateException |
+                    RequestNotFoundException                             e) {
 
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (Exception e) {
+            } catch(Exception e) {
 
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             }
         }
 
-        private void sendMessage(CryptoPaymentRequest cpr) {
+        private void toPendingAction(UUID requestId) throws CantChangeCryptoPaymentRequestProtocolStateException,
+                                                            RequestNotFoundException {
 
+            cryptoPaymentRequestNetworkServiceDao.changeProtocolState(requestId, RequestProtocolState.PENDING_ACTION);
         }
-
-        // raise events having in count the action.
-        private void raiseEventByAction(final CryptoPaymentRequestAction action   ,
-                                        final UUID                       requestId) {
-
-            switch (action) {
-                case INFORM_APPROVAL:
-                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_APPROVED, requestId);
-                    break;
-                case INFORM_DENIAL:
-                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_DENIED, requestId);
-                    break;
-                case INFORM_REFUSAL:
-                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_REFUSED, requestId);
-                    break;
-                case REQUEST:
-                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED, requestId);
-                    break;
-            }
-        }
-
         private void raiseEvent(final EventType eventType,
                                 final UUID      requestId) {
 

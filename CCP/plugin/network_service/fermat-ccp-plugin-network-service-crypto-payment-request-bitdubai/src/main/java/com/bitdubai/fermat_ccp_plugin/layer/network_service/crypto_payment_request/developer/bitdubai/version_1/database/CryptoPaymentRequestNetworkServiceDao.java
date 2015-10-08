@@ -23,6 +23,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantGetRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantCreateCryptoPaymentRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantDeleteRequestException;
@@ -165,7 +166,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
     }
 
     public void deleteRequest(UUID requestId) throws CantDeleteRequestException,
-                                                           RequestNotFoundException  {
+                                                     RequestNotFoundException  {
 
         if (requestId == null)
             throw new CantDeleteRequestException("", "requestId, can not be null");
@@ -237,6 +238,45 @@ public class CryptoPaymentRequestNetworkServiceDao {
         } catch (CantUpdateRecordException exception) {
 
             throw new CantTakeActionException(exception, "", "Cant update record exception.");
+        }
+    }
+
+    public void changeProtocolState(UUID                 requestId    ,
+                                    RequestProtocolState protocolState) throws CantChangeCryptoPaymentRequestProtocolStateException,
+                                                                               RequestNotFoundException                            {
+
+        if (requestId == null)
+            throw new CantChangeCryptoPaymentRequestProtocolStateException("requestId null "   , "The requestId is required, can not be null"    );
+
+        if (protocolState == null)
+            throw new CantChangeCryptoPaymentRequestProtocolStateException("protocolState null", "The protocolState is required, can not be null");
+
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.setUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
+
+                cryptoPaymentRequestTable.updateRecord(record);
+            } else {
+                throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantChangeCryptoPaymentRequestProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (CantUpdateRecordException exception) {
+
+            throw new CantChangeCryptoPaymentRequestProtocolStateException(exception, "", "Cant update record exception.");
         }
     }
 
