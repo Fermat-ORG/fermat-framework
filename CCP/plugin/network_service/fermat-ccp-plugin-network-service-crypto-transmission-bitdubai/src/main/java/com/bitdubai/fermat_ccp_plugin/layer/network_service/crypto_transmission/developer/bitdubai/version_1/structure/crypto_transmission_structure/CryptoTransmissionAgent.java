@@ -281,7 +281,7 @@ public class CryptoTransmissionAgent {
                                 null,                     // extraData
                                 null,                     // offset
                                 null,                     // max
-                                PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                PlatformComponentType.ACTOR_NETWORK_SERVICE,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
                                 NetworkServiceType.CRYPTO_TRANSMISSION); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 

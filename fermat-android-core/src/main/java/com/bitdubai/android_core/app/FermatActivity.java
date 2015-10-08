@@ -887,8 +887,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         fragments.add(subAppDesktopFragment);
                         break;
                     case "DDAP":
-                        com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment walletDesktopFragment1 = com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment.newInstance(0);
-                        fragments.add(walletDesktopFragment1);
+                        com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
+                        fragments.add(went1);
                         com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
                         fragments.add(dapDesktopFragment);
                         break;
