@@ -37,6 +37,11 @@ class VaultKeyHierarchyGenerator implements Runnable{
     private DeterministicSeed seed;
 
     /**
+     * dao object to access the database
+     */
+    AssetsOverBitcoinCryptoVaultDao dao;
+
+    /**
      * RootKey of the hierarchy that will be generated
      */
     private DeterministicKey rootKey;
@@ -103,11 +108,12 @@ class VaultKeyHierarchyGenerator implements Runnable{
         /**
          * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
          */
-        VaultKeyHierarchyMaintainer vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager);
+        VaultKeyHierarchyMaintainer vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         try {
             vaultKeyHierarchyMaintainer.start();
         } catch (CantStartAgentException e) {
-            //todo handle
+            // I will log this error for now.
+            e.printStackTrace();
         }
     }
 
@@ -128,15 +134,11 @@ class VaultKeyHierarchyGenerator implements Runnable{
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
 
         /**
-         * The DAO object used to access the database.
+         * Gets the Hierarchy accouns from the database
          */
-        AssetsOverBitcoinCryptoVaultDao dao = null;
-
         try {
-            dao = new AssetsOverBitcoinCryptoVaultDao(this.pluginDatabaseSystem, pluginId);
-            hierarchyAccounts = dao.getHierarchyAccounts();
-        } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException |
-                CantExecuteDatabaseOperationException e) {
+            hierarchyAccounts = getDao().getHierarchyAccounts();
+        } catch (CantExecuteDatabaseOperationException e) {
             /**
              * If there was an error creating or loading the database, or getting the list of accounts, I can't go on.
              */
@@ -158,16 +160,29 @@ class VaultKeyHierarchyGenerator implements Runnable{
             /**
              * And I will also try to add this to the database so I can load it the next time.
              */
-            if (dao == null)
                 try {
-                    dao = new AssetsOverBitcoinCryptoVaultDao(this.pluginDatabaseSystem, this.pluginId);
-                    dao.addNewHierarchyAccount(accountZero);
-                } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException |
-                        CantExecuteDatabaseOperationException e) {
+                    getDao().addNewHierarchyAccount(accountZero);
+                } catch (CantExecuteDatabaseOperationException e) {
                     // I don't need to handle this error.
                 }
         }
         return hierarchyAccounts;
+    }
+
+    /**
+     * Gets and instance of the AssetsOverBitcoinCryptoVaultDao class used to access database objects.
+     * @return
+     * @throws CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException
+     */
+    private AssetsOverBitcoinCryptoVaultDao getDao() {
+        if (dao == null){
+            try {
+                dao = new AssetsOverBitcoinCryptoVaultDao(pluginDatabaseSystem, pluginId);
+            } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException e) {
+                e.printStackTrace();
+            }
+        }
+        return dao;
     }
 
     /**
