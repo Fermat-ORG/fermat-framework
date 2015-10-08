@@ -1,11 +1,12 @@
 /*
- * @#ComponentConnectionRespondPacketProcessor.java - 2015
+ * @#DiscoveryComponentConnectionRespondPacketProcessor.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
@@ -23,14 +24,14 @@ import java.util.StringTokenizer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor</code> implement
- * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.COMPONENT_CONNECTION_RESPOND</code> is receive by the server.
+ * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_RESPOND</code> is receive by the server.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 13/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ComponentConnectionRespondPacketProcessor extends FermatPacketProcessor {
+public class DiscoveryComponentConnectionRespondPacketProcessor extends FermatPacketProcessor {
 
     /**
      * (no-javadoc)
@@ -65,7 +66,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             String vpnServerIdentity = respond.get(JsonAttNamesConstants.VPN_SERVER_IDENTITY).getAsString();
             String participantIdentity = respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
-
+            DiscoveryQueryParameters discoveryQueryParameters       = gson.fromJson(respond.get(JsonAttNamesConstants.DISCOVERY_PARAM_VPN).getAsString(), DiscoveryQueryParameters.class);
 
             /*
              * TEMPORAL:
@@ -89,7 +90,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile);
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClientFromDiscoveryConnectionRequest(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, discoveryQueryParameters);
 
             /*
              * Is not running
@@ -110,6 +111,6 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
      */
     @Override
     public FermatPacketType getFermatPacketType() {
-        return FermatPacketType.COMPONENT_CONNECTION_RESPOND;
+        return FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_RESPOND;
     }
 }

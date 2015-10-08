@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -80,8 +81,8 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
          * Get json representation
          */
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
-        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
+        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
 
         /*
          * Add the att to the header
@@ -112,6 +113,65 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
          */
         vpnClient.connect();
     }
+
+
+    /**
+     * Create a new WsCommunicationVPNClient
+     *
+     * @param serverURI
+     * @param vpnServerIdentity
+     * @param remotePlatformComponentProfile
+     */
+    public void createNewWsCommunicationVPNClientFromDiscoveryConnectionRequest(URI serverURI, String vpnServerIdentity, String participantIdentity, PlatformComponentProfile remotePlatformComponentProfile, DiscoveryQueryParameters discoveryQueryParameters) {
+
+        /*
+         * Create the identity
+         */
+        ECCKeyPair vpnClientIdentity = new ECCKeyPair();
+
+        /*
+         * Create a new headers
+         */
+        Map<String, String> headers = new HashMap<>();
+
+        /*
+         * Get json representation
+         */
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, participantIdentity);
+        jsonObject.addProperty(JsonAttNamesConstants.CLIENT_IDENTITY_VPN, vpnClientIdentity.getPublicKey());
+
+        /*
+         * Add the att to the header
+         */
+        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI,  AsymmectricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
+
+        /*
+         * Construct the vpn client
+         */
+        WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, remotePlatformComponentProfile, vpnServerIdentity, headers);
+
+        /*
+         * Add to the vpn client active
+         */
+        if (vpnClientActiveCache.containsKey(remotePlatformComponentProfile.getNetworkServiceType())){
+
+            vpnClientActiveCache.get(remotePlatformComponentProfile.getNetworkServiceType()).put(discoveryQueryParameters.getIdentityPublicKey(), vpnClient);
+
+        }else {
+
+            Map<String, WsCommunicationVPNClient> newMap = new HashMap<>();
+            newMap.put(discoveryQueryParameters.getIdentityPublicKey(), vpnClient);
+            vpnClientActiveCache.put(remotePlatformComponentProfile.getNetworkServiceType(), newMap);
+        }
+
+        /*
+         * call the connect
+         */
+        vpnClient.connect();
+    }
+
+
 
     /**
      * (non-javadoc)
@@ -188,6 +248,26 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
             Map<String, PlatformComponentProfile> newMap = new HashMap<>();
             newMap.put(remote.getIdentityPublicKey(), applicant);
+            requestedVpnConnections.put(applicant.getNetworkServiceType(), newMap);
+        }
+
+    }
+
+    /**
+     * Add a new applicant to vpn
+     * @param applicant
+     */
+    public void addRequestedDiscoveryVpnConnections(PlatformComponentProfile applicant, DiscoveryQueryParameters discoveryQueryParameters){
+
+
+        if (requestedVpnConnections.containsKey(applicant.getNetworkServiceType())){
+
+            requestedVpnConnections.get(applicant.getNetworkServiceType()).put(discoveryQueryParameters.getIdentityPublicKey(), applicant);
+
+        }else {
+
+            Map<String, PlatformComponentProfile> newMap = new HashMap<>();
+            newMap.put(discoveryQueryParameters.getIdentityPublicKey(), applicant);
             requestedVpnConnections.put(applicant.getNetworkServiceType(), newMap);
         }
 

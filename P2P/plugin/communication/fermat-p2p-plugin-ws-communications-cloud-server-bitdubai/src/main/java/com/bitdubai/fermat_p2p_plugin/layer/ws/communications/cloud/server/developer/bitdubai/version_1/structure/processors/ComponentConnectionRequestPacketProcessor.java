@@ -99,10 +99,10 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
          * Get json representation for the filters
          */
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_VPN_URI, vpnServer.getUriConnection().toString());
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY, vpnServer.getVpnServerIdentityPublicKey());
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, platformComponentProfileDestination.getIdentityPublicKey());
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN, remote.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.VPN_URI, vpnServer.getUriConnection().toString());
+        packetContent.addProperty(JsonAttNamesConstants.VPN_SERVER_IDENTITY, vpnServer.getVpnServerIdentityPublicKey());
+        packetContent.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, platformComponentProfileDestination.getIdentityPublicKey());
+        packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remote.toJson());
 
         /*
          * Get the client connection destination
