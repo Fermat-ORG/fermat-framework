@@ -1,19 +1,23 @@
-package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
- * Created by franklin on 01/10/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 06/10/15.
+ * Based on com/bitdubai/fermat_dap_plugin/layer/wallet/asset/issuer/developer/bitdubai/version_1/structure/AssetIssuerWalletTransactionRecordWrapper.java
+ * Implemented by franklin on 01/10/15.
  */
 public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWalletTransactionRecord {
     private final DigitalAsset digitalAsset;
-    private final String assetIssuingPublicKey;
+    private final String digitalAssetPublicKey;
     private final String name;
     private final String description;
     private final CryptoAddress addressFrom;
@@ -29,7 +33,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final UUID transactionId;
 
     AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
-                                              String assetIssuingPublicKey,
+                                              String digitalAssetPublicKey,
                                               String name,
                                               String description,
                                               CryptoAddress addressFrom,
@@ -44,7 +48,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
                                               String digitalAssetMetadataHash,
                                               UUID transactionId){
         this.digitalAsset = digitalAsset;
-        this.assetIssuingPublicKey = assetIssuingPublicKey;
+        this.digitalAssetPublicKey = digitalAssetPublicKey;
         this.name = name;
         this.description = description;
         this.addressFrom = addressFrom;
@@ -59,6 +63,29 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.digitalAssetMetadataHash = digitalAssetMetadataHash;
         this.transactionId = transactionId;
     }
+
+    AssetIssuerWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
+                                              CryptoTransaction cryptoGenesisTransaction,
+                                              String actorFromPublicKey,
+                                              String actorToPublicKey){
+        this.digitalAsset = digitalAssetMetadata.getDigitalAsset();
+        this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
+        this.name = this.digitalAsset.getName();
+        this.description = this.digitalAsset.getDescription();
+        this.addressFrom = cryptoGenesisTransaction.getAddressFrom();
+        this.addressTo = cryptoGenesisTransaction.getAddressTo();
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey =actorToPublicKey;
+        this.actorFromType = Actors.INTRA_USER;
+        this.actorToType = Actors.ASSET_ISSUER;
+        this.amount = cryptoGenesisTransaction.getCryptoAmount();
+        this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
+        this.transactionId = UUID.fromString(cryptoGenesisTransaction.getTransactionHash());
+        Date date= new Date();
+        this.timeStamp = date.getTime();
+        this.memo = "Digital Asset delivered at"+this.timeStamp;
+    }
+
     @Override
     public DigitalAsset getDigitalAsset() {
         return digitalAsset;
@@ -66,7 +93,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
 
     @Override
     public String getDigitalAssetPublicKey() {
-        return assetIssuingPublicKey;
+        return digitalAssetPublicKey;
     }
 
     @Override
