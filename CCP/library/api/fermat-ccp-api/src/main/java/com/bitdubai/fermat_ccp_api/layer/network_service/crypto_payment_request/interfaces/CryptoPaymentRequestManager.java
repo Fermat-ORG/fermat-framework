@@ -28,7 +28,7 @@ public interface CryptoPaymentRequestManager {
      * Throw the method <code>sendCryptoPaymentRequest</code> you can send a crypto payment request to the actor with
      * public key receiverActorPublicKey the actors are always intra-wallet-user of CCP.
      *
-     * @param walletPublicKey     public key of the wallet sending the request.
+     * @param requestId           uuid assigned to the request.
      * @param identityPublicKey   public key of the identity sending the request.
      * @param identityType        type of actor that generates the request,
      * @param actorPublicKey      public key of the actor whom will receive the request.
@@ -36,11 +36,12 @@ public interface CryptoPaymentRequestManager {
      * @param cryptoAddress       crypto address where the identity wants to receive the payment.
      * @param description         text describing the crypto payment request.
      * @param amount              amount of crypto expected.
+     * @param startTimeStamp      start time stamp assigned to the request.
      * @param networkType         blockchain network type where we will work.
      *
      * @throws CantSendRequestException if something goes wrong.
      */
-    void sendCryptoPaymentRequest(String                walletPublicKey  ,
+    void sendCryptoPaymentRequest(UUID                  requestId        ,
                                   String                identityPublicKey,
                                   Actors                identityType     ,
                                   String                actorPublicKey   ,
@@ -48,6 +49,7 @@ public interface CryptoPaymentRequestManager {
                                   CryptoAddress         cryptoAddress    ,
                                   String                description      ,
                                   long                  amount           ,
+                                  long                  startTimeStamp   ,
                                   BlockchainNetworkType networkType      ) throws CantSendRequestException;
 
     /**
