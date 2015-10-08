@@ -1568,7 +1568,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeActivity.setColor("#8bba9e");
+        runtimeActivity.setColor("#12aca1");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
 
@@ -1581,19 +1581,19 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar.setLabelSize(16);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
+        runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        runtimeStatusBar.setColor("#72af9c");
+        runtimeStatusBar.setColor("#12aca1");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#5b5993");
+        runtimeTabStrip.setTabsColor("#1173aa");
 
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
@@ -1744,7 +1744,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
-        runtimeActivity.setColor("#8bba9e");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
@@ -1753,7 +1752,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar.setLabel("bitdubai bitcoin Wallet");
         runtimeTitleBar.setLabelSize(16);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
+        runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
 
@@ -1761,6 +1760,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeStatusBar.setColor("#72af9c");
 
         runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
@@ -1812,6 +1817,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeTabStrip = new TabStrip();
 
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
         runtimeTab = new Tab();
         runtimeTab.setLabel("sent");
         runtimeTab.setFragment(Fragments.CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY);
@@ -1843,7 +1854,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeActivity.setColor("#8bba9e");
+        runtimeActivity.setColor("#12aca1");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
@@ -1852,12 +1863,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar.setLabel("Contacts");
         runtimeTitleBar.setLabelSize(16);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
+        runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        runtimeStatusBar.setColor("#72af9c");
+        runtimeStatusBar.setColor("#12aca1");
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());

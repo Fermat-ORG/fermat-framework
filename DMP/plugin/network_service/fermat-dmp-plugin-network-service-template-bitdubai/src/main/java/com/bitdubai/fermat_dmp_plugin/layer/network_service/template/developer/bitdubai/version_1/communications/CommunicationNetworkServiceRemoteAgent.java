@@ -25,7 +25,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
@@ -58,7 +58,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     /**
      * Represent the communicationsVPNConnection
      */
-    CommunicationsVPNConnection communicationsVPNConnection;
+    private CommunicationsVPNConnection communicationsVPNConnection;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -101,24 +101,17 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     private ECCKeyPair eccKeyPair;
 
     /**
-     * Represent the public key of the remote network service
-     */
-    private String remoteNetworkServicePublicKey;
-
-    /**
      * Constructor with parameters
      *
      * @param eccKeyPair from the plugin root
-     * @param remoteNetworkServicePublicKey the public key
      * @param errorManager  instance
      * @param incomingMessageDao instance
      * @param outgoingMessageDao instance
      */
-    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
         this.eccKeyPair                          = eccKeyPair;
-        this.remoteNetworkServicePublicKey       = remoteNetworkServicePublicKey;
         this.errorManager                        = errorManager;
         this.eventManager                        = eventManager;
         this.running                             = Boolean.FALSE;
@@ -222,7 +215,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Validate the message signature
                      */
-                    AsymmectricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), remoteNetworkServicePublicKey);
+                    AsymmectricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey());
 
                     /*
                      * Decrypt the message content
@@ -278,7 +271,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
                     Map<String, Object> filters = new HashMap<>();
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-                    filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
+                    filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
 
                     /*
                      * Read all pending message from database
@@ -293,9 +286,9 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                         if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
 
                             /*
-                             * Encrypt the content of the message whit the remote public key
+                             * Encrypt the content of the message whit the remote network service public key
                              */
-                            ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), remoteNetworkServicePublicKey));
+                            ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
 
                             /*
                              * Sing the message

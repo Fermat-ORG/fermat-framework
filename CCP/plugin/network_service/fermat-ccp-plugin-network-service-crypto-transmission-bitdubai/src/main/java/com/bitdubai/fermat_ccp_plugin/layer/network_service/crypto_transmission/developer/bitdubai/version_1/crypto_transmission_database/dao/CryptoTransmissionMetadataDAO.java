@@ -46,10 +46,12 @@ public class CryptoTransmissionMetadataDAO {
     private Database database;
 
     public CryptoTransmissionMetadataDAO(final PluginDatabaseSystem pluginDatabaseSystem,
-                                            final UUID                 pluginId            ) {
+                                            final UUID                 pluginId           ,
+                                         final Database database) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
+        this.database = database;
     }
 
     public void initialize() throws CantInitializeCryptoTransmissionNetworkServiceDatabaseException {
@@ -57,7 +59,7 @@ public class CryptoTransmissionMetadataDAO {
 
             database = this.pluginDatabaseSystem.openDatabase(
                     this.pluginId,
-                    this.pluginId.toString()
+                    CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME
             );
 
         } catch (DatabaseNotFoundException e) {
@@ -67,7 +69,7 @@ public class CryptoTransmissionMetadataDAO {
                 CryptoTransmissionNetworkServiceDatabaseFactory databaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(
                         pluginId,
-                        pluginId.toString()
+                        CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME
                 );
 
             } catch (CantCreateDatabaseException f) {
@@ -110,7 +112,7 @@ public class CryptoTransmissionMetadataDAO {
 
         try {
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
             DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
             entityRecord = buildDatabaseRecord(entityRecord, cryptoTransmissionMetadata);
@@ -407,7 +409,7 @@ public class CryptoTransmissionMetadataDAO {
                                                     CryptoTransmissionMetadata cryptoTransmissionMetadata) {
 
         record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TRANSMISSION_ID_COLUMN_NAME, cryptoTransmissionMetadata.getTransactionId());
-        record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME, cryptoTransmissionMetadata.getRequestId());
+        record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME, UUID.randomUUID());
         record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_CURRENCY_COLUMN_NAME, cryptoTransmissionMetadata.getCryptoCurrency().getCode());
         record.setLongValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_CRYPTO_AMOUNT_COLUMN_NAME, cryptoTransmissionMetadata.getCryptoAmount());
         record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_SENDER_PUBLICK_KEY_COLUMN_NAME, cryptoTransmissionMetadata.getSenderPublicKey());
@@ -415,6 +417,7 @@ public class CryptoTransmissionMetadataDAO {
         record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME   , cryptoTransmissionMetadata.getAssociatedCryptoTransactionHash());
         record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME  , cryptoTransmissionMetadata.getPaymentDescription());
         record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, cryptoTransmissionMetadata.getCryptoTransmissionStates().getCode());
+        record.setStringValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME,cryptoTransmissionMetadata.getCryptoTransmissionMetadataType().getCode());
         return record;
     }
 

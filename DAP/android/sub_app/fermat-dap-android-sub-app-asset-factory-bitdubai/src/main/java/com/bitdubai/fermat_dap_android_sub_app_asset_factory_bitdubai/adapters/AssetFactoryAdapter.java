@@ -38,7 +38,7 @@ public class AssetFactoryAdapter extends FermatAdapter<AssetFactory, AssetHolder
 
     @Override
     protected void bindHolder(final AssetHolder holder, final AssetFactory data, final int position) {
-        holder.title.setTag(data.getName() != null ? data.getName() : "No name given...");
+        holder.title.setText(data.getName() != null ? data.getName() : "No name given...");
         holder.description.setText(data.getDescription() != null ? data.getDescription() : "");
         if (holder.options != null && menuItemClick != null) {
             holder.options.setOnClickListener(new View.OnClickListener() {
