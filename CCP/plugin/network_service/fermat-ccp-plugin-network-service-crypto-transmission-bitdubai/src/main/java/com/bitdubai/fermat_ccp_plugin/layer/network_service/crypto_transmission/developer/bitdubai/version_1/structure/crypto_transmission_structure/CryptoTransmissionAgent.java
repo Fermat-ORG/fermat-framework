@@ -15,6 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantInitializeCryptoTransmissionNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -120,8 +121,8 @@ public class CryptoTransmissionAgent {
 
     /**
      *  Constructor
-     *
-     * @param
+     *  @param
+     * @param cryptoTransmissionNetworkServicePluginRoot
      * @param cryptoTransmissionConnectionsDAO
      * @param cryptoTransmissionMetadataDAO
      * @param communicationNetworkServiceConnectionManager
@@ -130,20 +131,26 @@ public class CryptoTransmissionAgent {
 
     public CryptoTransmissionAgent(
             //CryptoTransmissionNetworkServiceLocal communicationNetworkServiceLocal,
+            CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot,
             CryptoTransmissionConnectionsDAO cryptoTransmissionConnectionsDAO,
             CryptoTransmissionMetadataDAO cryptoTransmissionMetadataDAO,
             CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
+            WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager,
+            PlatformComponentProfile platformComponentProfile,
             ErrorManager errorManager,
             List<PlatformComponentProfile> remoteNetworkServicesRegisteredList,
             ECCKeyPair identity) {
 
         //this.communicationNetworkServiceLocal = communicationNetworkServiceLocal;
+        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
         this.cryptoTransmissionConnectionsDAO = cryptoTransmissionConnectionsDAO;
         this.cryptoTransmissionMetadataDAO = cryptoTransmissionMetadataDAO;
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
+        this.wsCommunicationsCloudClientManager =wsCommunicationsCloudClientManager;
         this.errorManager = errorManager;
         this.remoteNetworkServicesRegisteredList = remoteNetworkServicesRegisteredList;
         this.identity = identity;
+        this.platformComponentProfile = platformComponentProfile;
 
 
         cacheResponseMetadataFromRemotes = new HashMap<String, CryptoTransmissionStates>();
@@ -176,6 +183,12 @@ public class CryptoTransmissionAgent {
 
         //Set to running
         this.running  = Boolean.TRUE;
+
+        try {
+            cryptoTransmissionMetadataDAO.initialize();
+        } catch (CantInitializeCryptoTransmissionNetworkServiceDatabaseException e) {
+            e.printStackTrace();
+        }
 
         //Start the Thread
         toSend.start();
@@ -224,17 +237,19 @@ public class CryptoTransmissionAgent {
 
         try {
 
-            // deberia dividirlo en funciones mas pequeñas despues
+            if(cryptoTransmissionNetworkServicePluginRoot.isRegister()) {
+                // deberia dividirlo en funciones mas pequeñas despues
 
-            // function to process and send metadata to remote
-            processMetadata();
+                // function to process and send metadata to remote
+                processMetadata();
 
-            // this function read the active conections waiting for response that the events not catch
-            //readResponseFromRemote();
+                // this function read the active conections waiting for response that the events not catch
+                //readResponseFromRemote();
 
 
-            //Discount from the the waiting list
-            discountWaitTime();
+                //Discount from the the waiting list
+                discountWaitTime();
+            }
 
             //Sleep for a time
             toSend.sleep(CryptoTransmissionAgent.SLEEP_TIME);
@@ -269,23 +284,28 @@ public class CryptoTransmissionAgent {
 //                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory()
 //                PlatformComponentProfile platformComponentProfile = new Pl
 
-
-                DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
-                        getCommunicationsCloudClientConnection().
-                        constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
-                                null,                     // alias
-                                cryptoTransmissionMetadata.getDestinationPublicKey(), // identityPublicKey
-                                null,                     // location
-                                null,                     // distance
-                                null,                     // name
-                                null,                     // extraData
-                                null,                     // offset
-                                null,                     // max
-                                PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                NetworkServiceType.CRYPTO_TRANSMISSION); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+                if(wsCommunicationsCloudClientManager!=null) {
 
 
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+
+
+                    DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
+                            getCommunicationsCloudClientConnection().
+                            constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
+                                    null,                     // alias
+                                    cryptoTransmissionMetadata.getDestinationPublicKey(), // identityPublicKey
+                                    null,                     // location
+                                    null,                     // distance
+                                    null,                     // name
+                                    null,                     // extraData
+                                    null,                     // offset
+                                    null,                     // max
+                                    PlatformComponentType.ACTOR_NETWORK_SERVICE,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                    NetworkServiceType.CRYPTO_TRANSMISSION); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+
+
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+                }
             }
 
 

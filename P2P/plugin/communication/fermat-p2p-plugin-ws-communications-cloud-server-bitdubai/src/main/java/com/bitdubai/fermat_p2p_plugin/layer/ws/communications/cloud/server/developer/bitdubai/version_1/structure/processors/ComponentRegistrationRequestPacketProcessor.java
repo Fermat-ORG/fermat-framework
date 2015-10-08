@@ -64,20 +64,17 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         /*
          * Switch between platform component type
          */
-        switch (platformComponentProfileToRegister.getPlatformComponentType().getCode()){
+        switch (platformComponentProfileToRegister.getPlatformComponentType()){
 
-            //COMMUNICATION_CLOUD_SERVER_COMPONENT;
-            case "COM_CLD_SER_COMP" :
+            case COMMUNICATION_CLOUD_SERVER :
                 registerCommunicationsCloudServerComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
                 break;
 
-            //COMMUNICATION_CLOUD_CLIENT_COMPONENT
-            case "COM_CLD_CLI_COMP" :
+            case COMMUNICATION_CLOUD_CLIENT :
                     registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
                 break;
 
-            //NETWORK_SERVICE_COMPONENT
-            case "NS_COMP" :
+            case NETWORK_SERVICE :
                 registerNetworServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
                 break;
 

@@ -41,12 +41,6 @@ public class DigitalAssetMetadata {
 
     @Override
     public String toString(){
-        /*String digitalAssetMetadataString="\nDigital Asset Metadata:\n" +
-                "Digital Asset XML:\n"+digitalAsset+"\n" +
-                "Genesis Transaction: "+genesisTransaction+"\n" +
-                "Hash:"+hash;
-        return digitalAssetMetadataString;*/
-        //For testing and future use, I need the XML from this object
         return XMLParser.parseObject(this);
     }
 

@@ -186,7 +186,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     public CryptoPaymentRequestNetworkServicePluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.CRYPTO_PAYMENT_REQUEST;
         this.name                  = "Crypto Payment Request Network Service";
         this.alias                 = "CryptoPaymentRequestNetworkService";
@@ -760,7 +760,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE_COMPONENT &&
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
             platformComponentProfileRegistered.getNetworkServiceType()    == NetworkServiceType   .CRYPTO_PAYMENT_REQUEST    &&
             platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())                        ) {
 

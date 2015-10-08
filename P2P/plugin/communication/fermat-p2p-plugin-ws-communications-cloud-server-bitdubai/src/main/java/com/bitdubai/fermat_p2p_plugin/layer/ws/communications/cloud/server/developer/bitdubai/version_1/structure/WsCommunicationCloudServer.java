@@ -217,7 +217,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onMessage");
-        System.out.println(" WsCommunicationCloudServer - encode fermatPacket = " + fermatPacketEncode);
+       // System.out.println(" WsCommunicationCloudServer - encode fermatPacket = " + fermatPacketEncode);
         System.out.println(" WsCommunicationCloudServer - server identity for this connection = " + serverIdentityByClientCache.get(clientConnection.hashCode()).getPrivateKey());
 
         /*

@@ -51,6 +51,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantSaveCryptoTransmissionMetadatatException;
@@ -87,11 +89,9 @@ import java.util.regex.Pattern;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot</code> is
- * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by Roberto Requena - (rrequena) on 21/07/15.
+ * Created by Matias Furszyfer - matiasfurszyfer@gmail.com  on 7/09/15.
  *
  * @version 1.0
  */
@@ -187,6 +187,10 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      * Represent the dataBase
      */
     private Database dataBase;
+    /**
+     *
+     */
+    private Database cryptoTrasmissionDatabase;
 
     /**
      * Represent the identity
@@ -230,12 +234,17 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     CryptoTransmissionAgent cryptoTransmissionAgent;
 
     /**
+     * DB
+     */
+    private Database cryptoTRansmissionDatabase;
+
+    /**
      * Constructor
      */
     public CryptoTransmissionNetworkServicePluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.CRYPTO_TRANSMISSION;
         this.name                  = "Crypto Transmission Network Service";
         this.alias                 = "CryptoTransmissionNetworkService";
@@ -353,12 +362,65 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              */
             CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
+            CryptoTransmissionNetworkServiceDatabaseFactory cryptoTransmissionNetworkServiceDatabaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
             try {
 
                 /*
                  * We create the new database
                  */
                 this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId,CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
+    }
+
+
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     */
+    private void initializeCryptoTransmissionDb() throws CantInitializeTemplateNetworkServiceDatabaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.cryptoTRansmissionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            CryptoTransmissionNetworkServiceDatabaseFactory cryptoTransmissionNetworkServiceDatabaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.cryptoTRansmissionDatabase = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId,CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -401,6 +463,11 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              */
             initializeDb();
 
+            /**
+             * Initialize crypto db
+             */
+            initializeCryptoTransmissionDb();
+
             /*
              * Initialize Developer Database Factory
              */
@@ -434,7 +501,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             /**
              * Initialice DAO
              */
-            cryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO(pluginDatabaseSystem,pluginId);
+            cryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO(pluginDatabaseSystem,pluginId,cryptoTrasmissionDatabase);
 
             cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
 
@@ -442,14 +509,19 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              * Inicialice de main agent
              */
             cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                    this,
                     cryptoTransmissionConnectionsDAO,
                     cryptoTransmissionMetadataDAO,
                     communicationNetworkServiceConnectionManager,
+                    wsCommunicationsCloudClientManager,
+                    platformComponentProfile,
                     errorManager,
                     new ArrayList<PlatformComponentProfile>(),
                     identity
                     );
 
+
+            cryptoTransmissionAgent.start();
 
             /*
              * Its all ok, set the new status
@@ -533,6 +605,11 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         //set to not register
         register = Boolean.FALSE;
+
+        /**
+         * Stop agent
+         */
+        cryptoTransmissionAgent.stop();
 
         /*
          * Set the new status
@@ -687,14 +764,15 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_TRANSMISSION &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
              * Mark as register
              */
              this.register = Boolean.TRUE;
+
 
         }
 
