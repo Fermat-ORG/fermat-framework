@@ -6976,7 +6976,9 @@
 	<processes>
 	    <process platform="CBP" 
 	    	     name="Connection request from customer to broker"
-	             description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation.">
+	             description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
+	             previous="List crypto brokers"
+	             >
 	        <steps>
 	            <step id="0"
 	                  type="start"
@@ -6985,8 +6987,8 @@
 	                  platform="CBP"
 	                  superlayer=""
 	                  layer="Sub App"
-	                  component-name="Crypto Broker Community"
-	                  component-type="Plugin">
+	                  name="Crypto Broker Community"
+	                  >
 	                <next>
 	                    <step id="1" type="direct call"></step>
 	                </next>
@@ -6999,8 +7001,8 @@
 	                  superlayer=""
 	                  component="Plugin"
 	                  layer="Module"
-	                  component-name="Crypto Broker Community"
-	                  component-type="Plugin">
+	                  name="Crypto Broker Community"
+	                  >
 	                <next>
 	                    <step id="2" type="direct call"></step>
 	                </next>
@@ -7012,8 +7014,8 @@
 	                  platform="CBP"
 	                  superlayer=""
 	                  layer="Actor Network Service"
-	                  component-name="Crypto Broker"
-	                  component-type="Plugin">
+	                  name="Crypto Broker"
+	                  >
 	                <next>
 	                    <step id="3" type="direct call"></step>
 	                </next>
@@ -7025,8 +7027,8 @@
 	                  platform=""
 	                  superlayer="P2P"
 	                  layer="communication"
-	                  component-name="Communication Layer"
-	                  component-type="Layer">
+	                  name="Communication Layer"
+	                  >
 	                <next>
 	                    <step id="4" type="fermat message"></step>
 	                </next>
@@ -7038,8 +7040,8 @@
 	                  platform="CBP"
 	                  superlayer=""
 	                  layer="Actor Network Service"
-	                  component-name="Crypto Broker"
-	                  component-type="Plugin">
+	                  name="Crypto Broker"
+	                  >
 	                <next>
 	                    <step id="5" type="event"></step>
 	                </next>
@@ -7051,8 +7053,8 @@
 	                  platform="CBP"
 	                  superlayer=""
 	                  layer="Actor"
-	                  component-name="Crypto Broker"
-	                  component-type="Plugin">
+	                  name="Crypto Broker"
+	                  >
 	                <next>
 	                    <step id="6" type="direct call"></step>
 	                </next>
@@ -7064,8 +7066,8 @@
 	                  platform="PIP"
 	                  superlayer=""
 	                  layer="Middleware"
-	                  component-name="Notification"
-	                  component-type="Plugin">
+	                  name="Notification"
+	                  >
 	                <next>
 	                    <step id="7" type="event"></step>
 	                </next>
@@ -7077,12 +7079,10 @@
 	                  platform="COR"
 	                  superlayer=""
 	                  layer="core"
-	                  component-name="Notification Manager"
-	                  component-type="Library">
+	                  name="Notification Manager"
+	                  >
 	            </step>
 	        </steps>
-	        <previous process="List crypto brokers"></previous>
-	        <next process=""></next>
 	    </process>
 	</processes>
 
