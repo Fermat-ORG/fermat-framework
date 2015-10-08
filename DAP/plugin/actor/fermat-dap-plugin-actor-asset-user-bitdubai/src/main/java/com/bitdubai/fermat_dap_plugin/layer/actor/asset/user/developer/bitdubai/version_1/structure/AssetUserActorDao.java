@@ -275,7 +275,7 @@ public class AssetUserActorDao implements Serializable {
         return list;
     }
 
-    public List<ActorAssetUser> getAssetUsers(String assetUserLoggedInPublicKey, ConnectionState connectionState, int max, int offset) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAllAssetUsers(String assetUserLoggedInPublicKey, ConnectionState connectionState, int max, int offset) throws CantGetAssetUsersListException {
 
         // Setup method.
         List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
