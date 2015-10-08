@@ -42,7 +42,7 @@ public class AssetIssuerSession implements WalletSession {
 
     /**
      * Constructor
-     *  @param       SubApp Type
+     *  @param
      * @param errorManager Error Manager
      * @param manager      AssetIssuerWallet Manager
      */
