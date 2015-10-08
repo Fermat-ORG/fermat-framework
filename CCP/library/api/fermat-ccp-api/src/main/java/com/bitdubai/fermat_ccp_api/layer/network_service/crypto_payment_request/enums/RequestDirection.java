@@ -4,23 +4,23 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The enum <code>com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentRequestDirection</code>
+ * The enum <code>com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.RequestDirection</code>
  * represents the direction of the Crypto Payment Request.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/10/2015.
  */
-public enum CryptoPaymentRequestDirection implements FermatEnum {
+public enum RequestDirection implements FermatEnum {
 
     OUTGOING("OUTGOING"),
     INCOMING("INCOMING");
 
     private String code;
 
-    CryptoPaymentRequestDirection(String code) {
+    RequestDirection(String code) {
         this.code = code;
     }
 
-    public static CryptoPaymentRequestDirection getByCode(String code) throws InvalidParameterException {
+    public static RequestDirection getByCode(String code) throws InvalidParameterException {
 
         switch (code){
 
@@ -31,7 +31,7 @@ public enum CryptoPaymentRequestDirection implements FermatEnum {
                     InvalidParameterException.DEFAULT_MESSAGE,
                     null,
                     "Code Received: " + code,
-                    "This code is not valid for the CryptoPaymentRequestDirection enum."
+                    "This code is not valid for the RequestDirection enum."
             );
         }
     }

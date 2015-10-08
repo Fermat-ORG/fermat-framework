@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestEvent;
@@ -17,6 +17,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeExecutorAgentException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantStartCryptoPaymentRequestExecutorAgentException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.InformationMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -178,7 +180,7 @@ public class CryptoPaymentRequestExecutorAgent {
 
                 for(CryptoPaymentRequest cpr : cryptoPaymentRequestList) {
 
-                    switch (cpr.getType()) {
+                    switch (cpr.getDirection()) {
 
 
                         // OUTGOING ACTIONS .-
@@ -187,35 +189,55 @@ public class CryptoPaymentRequestExecutorAgent {
 
                                 case INFORM_APPROVAL:
 
-                                    // TODO: SEND APPROVING MESSAGE
+                                    sendMessageToActor(
+                                            buildJsonInformationMessage(cpr),
+                                            cpr.getActorType(),
+                                            cpr.getActorPublicKey()
+                                    );
 
                                     toWaitingResponse(cpr.getRequestId());
                                     break;
 
                                 case INFORM_DENIAL:
 
-                                    // TODO: SEND DENYING MESSAGE
+                                    sendMessageToActor(
+                                            buildJsonInformationMessage(cpr),
+                                            cpr.getActorType(),
+                                            cpr.getActorPublicKey()
+                                    );
 
                                     toWaitingResponse(cpr.getRequestId());
                                     break;
 
                                 case INFORM_RECEPTION:
 
-                                    // TODO: SEND CONFIRM RECEPTION MESSAGE
+                                    sendMessageToActor(
+                                            buildJsonInformationMessage(cpr),
+                                            cpr.getActorType(),
+                                            cpr.getActorPublicKey()
+                                    );
 
                                     toWaitingResponse(cpr.getRequestId());
                                     break;
 
                                 case INFORM_REFUSAL:
 
-                                    // TODO: SEND REFUSAL MESSAGE
+                                    sendMessageToActor(
+                                            buildJsonInformationMessage(cpr),
+                                            cpr.getActorType(),
+                                            cpr.getActorPublicKey()
+                                    );
 
                                     toWaitingResponse(cpr.getRequestId());
                                     break;
 
                                 case REQUEST:
 
-                                    // TODO: SEND CRYPTO PAYMENT REQUEST
+                                    sendMessageToActor(
+                                            buildJsonRequestMessage(cpr),
+                                            cpr.getActorType(),
+                                            cpr.getActorPublicKey()
+                                    );
 
                                     toWaitingResponse(cpr.getRequestId());
                                     break;
@@ -266,6 +288,37 @@ public class CryptoPaymentRequestExecutorAgent {
 
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             }
+        }
+
+        private void sendMessageToActor(String jsonMessage   ,
+                                        Actors actorType     ,
+                                        String actorPublicKey) {
+
+        }
+
+        private String buildJsonInformationMessage(CryptoPaymentRequest cpr) {
+
+            return new InformationMessage(
+                    cpr.getRequestId(),
+                    cpr.getAction()
+            ).toJson();
+        }
+
+        private String buildJsonRequestMessage(CryptoPaymentRequest cpr) {
+
+            return new RequestMessage(
+                    cpr.getRequestId()        ,
+                    cpr.getIdentityPublicKey(),
+                    cpr.getIdentityType()     ,
+                    cpr.getActorPublicKey()   ,
+                    cpr.getActorType()        ,
+                    cpr.getDescription()      ,
+                    cpr.getCryptoAddress()    ,
+                    cpr.getAmount()           ,
+                    cpr.getStartTimeStamp()   ,
+                    cpr.getAction()           ,
+                    cpr.getNetworkType()
+            ).toJson();
         }
 
         private void toPendingAction(UUID requestId) throws CantChangeCryptoPaymentRequestProtocolStateException,

@@ -17,8 +17,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestDirection;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestDirection;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantGetRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
@@ -99,8 +99,8 @@ public class CryptoPaymentRequestNetworkServiceDao {
                                            String                      description      ,
                                            long                        amount           ,
                                            long                        startTimeStamp   ,
-                                           CryptoPaymentRequestDirection type             ,
-                                           CryptoPaymentRequestAction  action           ,
+                                           RequestDirection type             ,
+                                           RequestAction action           ,
                                            RequestProtocolState        protocolState    ,
                                            BlockchainNetworkType       networkType      ) throws CantCreateCryptoPaymentRequestException {
 
@@ -198,7 +198,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
     }
 
     public void takeAction(UUID                       requestId    ,
-                           CryptoPaymentRequestAction action       ,
+                           RequestAction action       ,
                            RequestProtocolState       protocolState) throws CantTakeActionException  ,
                                                                             RequestNotFoundException {
 
@@ -222,12 +222,14 @@ public class CryptoPaymentRequestNetworkServiceDao {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
             if (!records.isEmpty()) {
+
                 DatabaseTableRecord record = records.get(0);
 
                 record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
-                record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME, action.getCode());
+                record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME        , action       .getCode());
 
                 cryptoPaymentRequestTable.updateRecord(record);
+
             } else {
                 throw new RequestNotFoundException("RequestId: "+requestId, "Cannot find a CryptoPaymentRequest with the given id.");
             }
@@ -318,7 +320,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DESCRIPTION_COLUMN_NAME        , cryptoPaymentRequestRecord.getDescription()                                    );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     , cryptoPaymentRequestRecord.getCryptoAddress()    .getAddress()                 );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    , cryptoPaymentRequestRecord.getCryptoAddress()    .getCryptoCurrency().getCode());
-        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME          , cryptoPaymentRequestRecord.getType()             .getCode()                    );
+        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME          , cryptoPaymentRequestRecord.getDirection()        .getCode()                    );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME     , cryptoPaymentRequestRecord.getProtocolState()    .getCode()                    );
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME             , cryptoPaymentRequestRecord.getAction()           .getCode()                    );
         record.setLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_AMOUNT_COLUMN_NAME             , cryptoPaymentRequestRecord.getAmount()                                         );
@@ -348,10 +350,10 @@ public class CryptoPaymentRequestNetworkServiceDao {
 
         CryptoAddress        cryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.getByCode(cryptoCurrencyString));
 
-        CryptoPaymentRequestDirection type          = CryptoPaymentRequestDirection.getByCode(typeString)         ;
-        CryptoPaymentRequestAction   action        = CryptoPaymentRequestAction.getByCode(actionString)       ;
-        RequestProtocolState         protocolState = RequestProtocolState      .getByCode(protocolStateString);
-        BlockchainNetworkType        networkType   = BlockchainNetworkType     .getByCode(networkTypeString)  ;
+        RequestDirection      type          = RequestDirection     .getByCode(typeString)         ;
+        RequestAction         action        = RequestAction        .getByCode(actionString)       ;
+        RequestProtocolState  protocolState = RequestProtocolState .getByCode(protocolStateString);
+        BlockchainNetworkType networkType   = BlockchainNetworkType.getByCode(networkTypeString)  ;
 
         Actors identityType = Actors.getByCode(identityTypeString);
         Actors actorType    = Actors.getByCode(actorTypeString   );
