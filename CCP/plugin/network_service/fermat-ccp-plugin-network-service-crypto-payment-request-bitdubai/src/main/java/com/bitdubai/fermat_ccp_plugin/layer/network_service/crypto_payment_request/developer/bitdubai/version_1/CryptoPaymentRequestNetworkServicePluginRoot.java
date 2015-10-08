@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestDirection;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantConfirmRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantGetRequestException;
@@ -197,7 +197,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING.
      * - Action        : REQUEST.
-     * - Type          : OWN.
+     * - Type          : OUTGOING.
      */
     @Override
     public void sendCryptoPaymentRequest(UUID                  requestId        ,
@@ -213,9 +213,9 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
         try {
 
-            RequestProtocolState       protocolState = RequestProtocolState      .PROCESSING;
-            CryptoPaymentRequestAction action        = CryptoPaymentRequestAction.REQUEST   ;
-            CryptoPaymentRequestType   type          = CryptoPaymentRequestType  .OWN       ;
+            RequestProtocolState          protocolState = RequestProtocolState         .PROCESSING;
+            CryptoPaymentRequestAction    action        = CryptoPaymentRequestAction   .REQUEST   ;
+            CryptoPaymentRequestDirection direction     = CryptoPaymentRequestDirection.OUTGOING  ;
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
                     requestId        ,
@@ -227,7 +227,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                     description      ,
                     amount           ,
                     startTimeStamp   ,
-                    type             ,
+                    direction        ,
                     action           ,
                     protocolState    ,
                     networkType
@@ -258,7 +258,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
                     CryptoPaymentRequestAction.INFORM_REFUSAL,
-                    RequestProtocolState.PROCESSING
+                    RequestProtocolState      .PROCESSING
             );
 
         } catch(CantTakeActionException  |

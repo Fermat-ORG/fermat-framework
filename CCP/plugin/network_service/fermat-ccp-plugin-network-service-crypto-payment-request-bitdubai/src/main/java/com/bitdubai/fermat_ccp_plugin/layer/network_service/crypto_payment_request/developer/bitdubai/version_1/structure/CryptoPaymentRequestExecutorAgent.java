@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
@@ -177,10 +177,10 @@ public class CryptoPaymentRequestExecutorAgent {
                 for(CryptoPaymentRequest cpr : cryptoPaymentRequestList) {
 
                     switch (cpr.getType()) {
-                        case OWN:
+                        case OUTGOING:
                             raiseEventByAction(cpr.getAction(), cpr.getRequestId());
                             break;
-                        case RECEIVED:
+                        case INCOMING:
                             sendMessage(cpr);
                             break;
                     }
@@ -205,16 +205,16 @@ public class CryptoPaymentRequestExecutorAgent {
 
             switch (action) {
                 case INFORM_APPROVAL:
-                    raiseEvent(EventType.CRYPTO_PAYMENT_APPROVED, requestId);
+                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_APPROVED, requestId);
                     break;
                 case INFORM_DENIAL:
-                    raiseEvent(EventType.CRYPTO_PAYMENT_DENIED, requestId);
+                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_DENIED, requestId);
                     break;
                 case INFORM_REFUSAL:
-                    raiseEvent(EventType.CRYPTO_PAYMENT_REFUSED, requestId);
+                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_REFUSED, requestId);
                     break;
                 case REQUEST:
-                    raiseEvent(EventType.CRYPTO_PAYMENT_RECEIVED, requestId);
+                    raiseEvent(EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED, requestId);
                     break;
             }
         }

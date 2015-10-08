@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestDirection;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 
@@ -27,7 +27,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     private final CryptoAddress              cryptoAddress    ;
     private final long                       amount           ;
     private final long                       startTimeStamp   ;
-    private final CryptoPaymentRequestType   type             ;
+    private final CryptoPaymentRequestDirection type             ;
     private final CryptoPaymentRequestAction action           ;
     private final RequestProtocolState       protocolState    ;
     private final BlockchainNetworkType      networkType      ;
@@ -41,7 +41,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
                                                     final CryptoAddress              cryptoAddress    ,
                                                     final long                       amount           ,
                                                     final long                       startTimeStamp   ,
-                                                    final CryptoPaymentRequestType   type             ,
+                                                    final CryptoPaymentRequestDirection type             ,
                                                     final CryptoPaymentRequestAction action           ,
                                                     final RequestProtocolState       protocolState    ,
                                                     final BlockchainNetworkType      networkType      ) {
@@ -107,7 +107,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     }
 
     @Override
-    public CryptoPaymentRequestType getType() {
+    public CryptoPaymentRequestDirection getType() {
         return type;
     }
 
