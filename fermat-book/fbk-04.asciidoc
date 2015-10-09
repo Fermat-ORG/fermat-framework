@@ -1,11 +1,30 @@
 == FERMAT CCP (crypto currency platform)
+This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future. + 
 
-=== BitWa (Basic Bitcoin Wallet)  -> *for those devoted "BTC-only" users!*
-=== Argentine Bitcoin wallet -> *for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady* comparison between argentine$, USD (oficial and blue!) and even Eu$!)
-=== BLP (Bitcoin Loss Protected wallet) -> *for conservative user's caring about never selling under the purchase price ! (preserving value!)*
+=== BitWa (Basic Bitcoin Wallet)
+Here we have one of FERMAT's basic building block to allow interaction and actual value transport in the
+most popular cryptonetwork: Bitcoin Niche Reference Wallet (Bi-Wa module). +
+We begin with a *basic wallet* in terms of its functionalities, even simpler as other popular BTC wallets on the market to maximize its
+ulterior reutilisation. + 
+Bi-Wa provides the minimum tasks to perform a succesful transaction of Bitcoins, so it is designed to: (+)
 
+* make a payment in BTC ( send value to a BTC Wallet owner)
+* receive payments in BTC
+* show the balance of the transaction
+* show the transaction in the public ledger
+* see the contacts list
 
+NOTE: the simplicity of this wallet is maximized. Bi-Wa does NOT handles payment or money request and and it is _wether_ interconnected with other wallet _not_ showing anything else but plain BTC currency. (no FIAT money abstraction!)
 
+=== BLP (Bitcoin Loss Protected wallet) 
+BLP is the second *Reference Wallet* developed by FERMAT, and its main goal is to protect the user from lossing money when attemping to spend 
+Bitcoin at a change curse lower that the price when that Bitcoin amount was purchased (entered the wallet). +
+The new functionalities added are:
+
+* to store the  when a payment is received
+* 
+
+=== FERMAT CBP
 
 
 
