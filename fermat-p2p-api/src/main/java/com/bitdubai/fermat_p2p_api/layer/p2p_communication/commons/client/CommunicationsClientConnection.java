@@ -83,6 +83,16 @@ public interface CommunicationsClientConnection {
     public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination);
 
     /**
+     * Method that request to the communication cloud server create a vpn connection between the applicant and
+     * the remote destination component to send message, but the applicant only now a other component type identity public key
+     * and the server has to discovery the component type for this identity public key that is the same type as the applicant.
+     *
+     * @param applicant
+     * @param discoveryQueryParameters
+     */
+    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicant, DiscoveryQueryParameters discoveryQueryParameters);
+
+    /**
      * Method that verified is the connection is
      * connected whit the server
      *

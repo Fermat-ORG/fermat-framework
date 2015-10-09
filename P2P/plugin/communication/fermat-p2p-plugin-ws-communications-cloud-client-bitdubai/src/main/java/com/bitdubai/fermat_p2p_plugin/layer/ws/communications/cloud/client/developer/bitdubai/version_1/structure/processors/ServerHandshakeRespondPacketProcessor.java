@@ -60,7 +60,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         /*
          * Get the server identity and set into the communication cloud client
          */
-        getWsCommunicationsCloudClientChannel().setServerIdentity(serverIdentity.get(JsonAttNamesConstants.JSON_ATT_NAME_SERVER_IDENTITY).getAsString());
+        getWsCommunicationsCloudClientChannel().setServerIdentity(serverIdentity.get(JsonAttNamesConstants.SERVER_IDENTITY).getAsString());
 
 
         System.out.println("ServerHandshakeRespondPacketProcessor - ServerIdentity = "+ getWsCommunicationsCloudClientChannel().getServerIdentity());

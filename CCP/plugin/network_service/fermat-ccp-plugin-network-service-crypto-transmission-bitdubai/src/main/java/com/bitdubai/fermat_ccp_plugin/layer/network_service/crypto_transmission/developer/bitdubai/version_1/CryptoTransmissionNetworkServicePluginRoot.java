@@ -895,6 +895,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      */
     public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
+        this.cryptoTransmissionAgent.setPlatformComponentProfile(platformComponentProfile);
     }
 
     /**

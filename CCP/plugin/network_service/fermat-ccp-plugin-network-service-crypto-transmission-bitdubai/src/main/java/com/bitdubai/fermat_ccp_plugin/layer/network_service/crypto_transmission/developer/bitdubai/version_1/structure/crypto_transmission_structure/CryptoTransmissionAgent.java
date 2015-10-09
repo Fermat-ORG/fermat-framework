@@ -286,25 +286,27 @@ public class CryptoTransmissionAgent {
 
                 if(wsCommunicationsCloudClientManager!=null) {
 
+                    if (platformComponentProfile != null) {
 
 
+                        DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
+                                getCommunicationsCloudClientConnection().
+                                constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
+                                        null,                     // alias
+                                        cryptoTransmissionMetadata.getDestinationPublicKey(), // identityPublicKey
+                                        null,                     // location
+                                        null,                     // distance
+                                        null,                     // name
+                                        null,                     // extraData
+                                        null,                     // offset
+                                        null,                     // max
+                                        PlatformComponentType.ACTOR_NETWORK_SERVICE,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                        NetworkServiceType.CRYPTO_TRANSMISSION); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
-                    DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
-                            getCommunicationsCloudClientConnection().
-                            constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
-                                    null,                     // alias
-                                    cryptoTransmissionMetadata.getDestinationPublicKey(), // identityPublicKey
-                                    null,                     // location
-                                    null,                     // distance
-                                    null,                     // name
-                                    null,                     // extraData
-                                    null,                     // offset
-                                    null,                     // max
-                                    PlatformComponentType.ACTOR_NETWORK_SERVICE,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                    NetworkServiceType.CRYPTO_TRANSMISSION); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
+                        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+                    }
 
-                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
                 }
             }
 
@@ -506,6 +508,10 @@ public class CryptoTransmissionAgent {
             }
         }
 
+    }
+
+    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile){
+        this.platformComponentProfile = platformComponentProfile;
     }
 
 }

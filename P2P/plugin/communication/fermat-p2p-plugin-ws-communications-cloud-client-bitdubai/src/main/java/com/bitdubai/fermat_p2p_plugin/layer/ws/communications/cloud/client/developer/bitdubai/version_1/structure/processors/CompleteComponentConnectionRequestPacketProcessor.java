@@ -52,7 +52,7 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
-        PlatformComponentProfile remoteComponent = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+        PlatformComponentProfile remoteComponent = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity

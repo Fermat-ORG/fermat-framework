@@ -8,11 +8,5 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
  */
 public interface ActorAssetUserManager {
 
-    void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister);
 
-    void requestListActorAssetUserRegistered();
-
-    void connectTo(PlatformComponentProfile actorAssetUser);
-
-    void sendMessage(PlatformComponentProfile actorAssetUser, String msjContent);
 }
