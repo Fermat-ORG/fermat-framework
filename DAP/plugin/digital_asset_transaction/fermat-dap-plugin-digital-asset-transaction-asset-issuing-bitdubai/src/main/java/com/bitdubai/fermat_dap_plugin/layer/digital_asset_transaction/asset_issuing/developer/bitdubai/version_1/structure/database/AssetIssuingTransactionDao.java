@@ -416,6 +416,11 @@ public class AssetIssuingTransactionDao {
         }
     }
 
+    public boolean isAnyPendingAsset() throws CantCheckAssetIssuingProgressException {
+        List<String> pendingAssetsPublicKey=getPendingDigitalAssetPublicKeys();
+        return !pendingAssetsPublicKey.isEmpty();
+    }
+
     public int getNumberOfPendingAssets(String publicKey)throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
 
         try{
