@@ -22,6 +22,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
@@ -29,6 +30,7 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -129,7 +131,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onOpen");
         System.out.println(" WsCommunicationCloudServer - New Client: " + clientConnection.getRemoteSocketAddress().getAddress().getHostAddress() + " is connected!");
-        System.out.println(" WsCommunicationCloudServer - Handshake Resource Descriptor = " + handshake.getResourceDescriptor());
+        //System.out.println(" WsCommunicationCloudServer - Handshake Resource Descriptor = " + handshake.getResourceDescriptor());
         System.out.println(" WsCommunicationCloudServer - temp-i = " + handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI));
 
         /*
@@ -150,10 +152,8 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
              */
             ECCKeyPair serverIdentity = new ECCKeyPair();
 
-
-            System.out.println(" WsCommunicationCloudServer - private key for this connection = "+serverIdentity.getPrivateKey());
-            System.out.println(" WsCommunicationCloudServer - public key for this connection = "+serverIdentity.getPublicKey());
-
+            //System.out.println(" WsCommunicationCloudServer - private key for this connection = "+serverIdentity.getPrivateKey());
+            //System.out.println(" WsCommunicationCloudServer - public key for this connection = "+serverIdentity.getPublicKey());
 
             /*
              * Get json representation for the serverIdentity
@@ -204,7 +204,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onClose");
-        System.out.println(" WsCommunicationCloudServer - " +clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code +" reason = " + reason +" remote = " + remote);
+        System.out.println(" WsCommunicationCloudServer - " + clientConnection.getRemoteSocketAddress() + " is disconnect! code = " + code + " reason = " + reason + " remote = " + remote);
         cleanReferences(clientConnection);
     }
 
@@ -230,7 +230,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
          */
         FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, serverIdentity.getPrivateKey());
 
-        System.out.println(" WsCommunicationCloudServer - decode fermatPacket = "+fermatPacketReceive);
+        System.out.println(" WsCommunicationCloudServer - decode fermatPacket = " + fermatPacketReceive);
         System.out.println(" WsCommunicationCloudServer - fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
 
 
@@ -359,6 +359,14 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" WsCommunicationCloudServer - removeNetworkServiceRegisteredByClientIdentity ");
 
+        /*
+         * Hold references to remove
+         */
+        Map<NetworkServiceType, PlatformComponentProfile> platformComponentProfileMapToRemove = new HashMap();
+
+        /*
+         * Search all the profile to remove
+         */
         for (NetworkServiceType networkServiceType : registeredNetworkServicesCache.keySet()) {
 
             for (PlatformComponentProfile platformComponentProfile : registeredNetworkServicesCache.get(networkServiceType)) {
@@ -366,19 +374,25 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                 if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
 
                    // System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
-                    registeredNetworkServicesCache.get(networkServiceType).remove(platformComponentProfile);
+                    platformComponentProfileMapToRemove.put(networkServiceType, platformComponentProfile);
                     break;
 
                 }
             }
 
+        }
+
+        /*
+         * Remove the profiles
+         */
+        for (NetworkServiceType networkServiceType: platformComponentProfileMapToRemove.keySet()) {
+
+            registeredNetworkServicesCache.get(networkServiceType).remove(platformComponentProfileMapToRemove.get(networkServiceType));
+
             if (registeredNetworkServicesCache.get(networkServiceType).isEmpty()){
                 registeredNetworkServicesCache.remove(networkServiceType);
             }
-
         }
-
-
 
     }
 
@@ -391,6 +405,9 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
 
         System.out.println(" WsCommunicationCloudServer - removePlatformComponentRegisterByClientIdentity ");
 
+
+        Map<PlatformComponentType, PlatformComponentProfile> platformComponentProfileMapToRemove = new HashMap<>();
+
         for (PlatformComponentType platformComponentType : registeredPlatformComponentProfileCache.keySet()) {
 
             for (PlatformComponentProfile platformComponentProfile : registeredPlatformComponentProfileCache.get(platformComponentType)) {
@@ -398,16 +415,27 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
                 if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
 
                     System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
-                    registeredPlatformComponentProfileCache.get(platformComponentType).remove(platformComponentProfile);
+                    platformComponentProfileMapToRemove.put(platformComponentType, platformComponentProfile);
                     break;
 
                 }
             }
 
-            if (registeredPlatformComponentProfileCache.get(platformComponentType).isEmpty()){
-                registeredPlatformComponentProfileCache.remove(platformComponentType);
-            }
+        }
 
+        /*
+         * Remove the profiles
+         */
+        for (PlatformComponentType platformComponentType: platformComponentProfileMapToRemove.keySet()) {
+
+            registeredPlatformComponentProfileCache.get(platformComponentType).remove(platformComponentProfileMapToRemove.get(platformComponentType));
+
+            if (registeredPlatformComponentProfileCache.get(platformComponentType).isEmpty()){
+
+                if (registeredPlatformComponentProfileCache.get(platformComponentType).isEmpty()){
+                    registeredPlatformComponentProfileCache.remove(platformComponentType);
+                }
+            }
         }
 
     }
