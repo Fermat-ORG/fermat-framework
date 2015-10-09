@@ -41,6 +41,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantConnectToAssetTransmissionNetworkServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantRequestListAssetTransmissionNetworkServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
@@ -872,17 +873,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
 
     @Override
-    public void requestListAssetTransmissionNetworkService(PlatformComponentProfile actorAssetUser) throws CantRequestListAssetTransmissionNetworkServiceException {
-
-    }
-
-    @Override
-    public void connectTo(PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantConnectToAssetTransmissionNetworkServiceException {
-
-    }
-
-    @Override
-    public void sendDigitalAssetMetadata(DigitalAssetMetadata toSend, PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantSendDigitalAssetMetadataException {
+    public void sendDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadataToSend, ActorAssetUser actorAssetUser) throws CantSendDigitalAssetMetadataException {
 
     }
 }
