@@ -52,7 +52,7 @@ public class MainFragment extends FermatWalletFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.main_fragment, container, false);
         assetsView = (ListView) rootView.findViewById(R.id.assets);
-        ArrayAdapter<DigitalAsset> adapter = new ArrayAdapter<DigitalAsset>(getActivity(), android.R.layout.simple_list_item_1, DigitalAsset.getAssets());
+        ArrayAdapter<DigitalAsset> adapter = new ArrayAdapter<DigitalAsset>(getActivity(), R.layout.simple_row_asset, R.id.option, DigitalAsset.getAssets());
         assetsView.setAdapter(adapter);
         return rootView;
     }
