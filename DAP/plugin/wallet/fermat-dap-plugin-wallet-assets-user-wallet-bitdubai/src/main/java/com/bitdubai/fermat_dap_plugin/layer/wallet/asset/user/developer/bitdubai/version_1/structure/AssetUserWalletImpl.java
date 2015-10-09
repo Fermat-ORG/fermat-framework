@@ -49,7 +49,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     //TODO: Implementar clase DAO y los metodos de la interfaz manager y otros metodos.
     private AssetUserWalletDao assetIssuerWalletDao;
-    private ErrorManager errorManager;
+    private com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -58,7 +58,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     private UUID pluginId;
 
     //TODO: El error manager que esta en el constructor debe ser el de fermat-api
-    public AssetUserWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetUserWalletImpl(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
