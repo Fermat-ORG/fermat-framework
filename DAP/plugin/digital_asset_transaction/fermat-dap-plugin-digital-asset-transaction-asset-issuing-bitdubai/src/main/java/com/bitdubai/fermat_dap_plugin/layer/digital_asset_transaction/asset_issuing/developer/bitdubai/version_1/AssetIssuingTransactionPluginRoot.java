@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Re
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -62,6 +63,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetMetadataVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
@@ -75,6 +77,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
@@ -217,16 +220,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
             //Start the plugin monitor agent
             //I will comment the MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
-            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            this.assetIssuingTransactionMonitorAgent=new AssetIssuingTransactionMonitorAgent(this.eventManager,
-                    this.pluginDatabaseSystem,
-                    this.errorManager,
-                    this.pluginId,
-                    userPublicKey,
-                    this.assetVaultManager);
-            this.assetIssuingTransactionMonitorAgent.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
-            this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
-            this.assetIssuingTransactionMonitorAgent.start();
+
+            checkIfExistsPendingAssets();
 
             //For testing, please, clean up your database or change the asset public key
             //testIssueSingleAsset();
@@ -249,6 +244,33 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }
         this.serviceStatus = ServiceStatus.STARTED;
 
+    }
+
+    private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
+        //printSomething("Asset Issuing monitor agent starting");
+        if(this.assetIssuingTransactionMonitorAgent==null){
+            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            this.assetIssuingTransactionMonitorAgent=new AssetIssuingTransactionMonitorAgent(this.eventManager,
+                    this.pluginDatabaseSystem,
+                    this.errorManager,
+                    this.pluginId,
+                    userPublicKey,
+                    this.assetVaultManager);
+            this.assetIssuingTransactionMonitorAgent.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+            this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
+            this.assetIssuingTransactionMonitorAgent.start();
+        }else{
+                this.assetIssuingTransactionMonitorAgent.start();
+            }
+
+
+    }
+
+    private void checkIfExistsPendingAssets() throws CantCheckAssetIssuingProgressException, CantStartAgentException, CantSetObjectException, CantGetLoggedInDeviceUserException {
+        boolean isPendingAssets=this.assetIssuingTransactionDao.isAnyPendingAsset();
+        if(isPendingAssets){
+            startMonitorAgent();
+        }
     }
 
     @Override
@@ -284,7 +306,15 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     @Override
     public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String walletPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
-        this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, blockchainNetworkType);
+        try {
+            startMonitorAgent();
+            this.assetIssuingTransactionManager.issueAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, blockchainNetworkType);
+        } catch (CantStartAgentException exception) {
+            throw new CantIssueDigitalAssetsException(exception,"Issuing Assets","Cannot start the Asset Issuing monitor Agent");
+        } catch (Exception exception) {
+            throw new CantIssueDigitalAssetsException(exception,"Issuing Assets","Unexpected exception");
+        }
+
     }
 
     @Override
@@ -443,7 +473,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         digitalAsset.setContract(digitalAssetContract);
         LOG.info("MAP_DigitalAsset2:"+digitalAsset);
 
-            this.assetIssuingTransactionManager.issueAssets(digitalAsset,3,new ECCKeyPair().getPublicKey(),BlockchainNetworkType.REG_TEST);
+            this.issueAssets(digitalAsset,1,new ECCKeyPair().getPublicKey(),BlockchainNetworkType.REG_TEST);
 
     }
 
