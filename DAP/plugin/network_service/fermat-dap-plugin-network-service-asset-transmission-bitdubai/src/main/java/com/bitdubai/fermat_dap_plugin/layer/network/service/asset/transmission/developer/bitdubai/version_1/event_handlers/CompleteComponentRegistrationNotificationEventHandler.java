@@ -11,15 +11,14 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler</code>
- * implements the handle to the event <code>com.bitdubai.fermat_api.layer.platform_service.event_manager.events.CompleteComponentRegistrationNotificationEvent</code><p/>
- *
- * Created by Roberto Requena - (rart3001@gmail.com) on 04/10/15.
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler</code> is
+ * throw when error occurred updating new record in a table of the data base
+ * <p/>
+ * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -27,17 +26,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 public class CompleteComponentRegistrationNotificationEventHandler implements FermatEventHandler {
 
     /*
-    * Represent the assetTransmissionPluginRoot
+    * Represent the networkService
     */
-    private AssetTransmissionPluginRoot assetTransmissionPluginRoot;
+    private NetworkService networkService;
 
     /**
      * Constructor with parameter
      *
-     * @param templateNetworkServicePluginRoot
+     * @param networkService
      */
-    public CompleteComponentRegistrationNotificationEventHandler(AssetTransmissionPluginRoot templateNetworkServicePluginRoot) {
-        this.assetTransmissionPluginRoot = templateNetworkServicePluginRoot;
+    public CompleteComponentRegistrationNotificationEventHandler(NetworkService networkService) {
+        this.networkService = networkService;
     }
 
     /**
@@ -53,17 +52,17 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
 
         System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
-        if (((Service) this.assetTransmissionPluginRoot).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
 
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
 
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == NetworkServiceType.TEMPLATE) {
+            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType()) {
 
                 /*
-                 *  TemplateManager make the job
+                 *  networkService make the job
                  */
-                 this.assetTransmissionPluginRoot.handleCompleteComponentRegistrationNotificationEvent(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
+                 this.networkService.handleCompleteComponentRegistrationNotificationEvent(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
 
             }
         }

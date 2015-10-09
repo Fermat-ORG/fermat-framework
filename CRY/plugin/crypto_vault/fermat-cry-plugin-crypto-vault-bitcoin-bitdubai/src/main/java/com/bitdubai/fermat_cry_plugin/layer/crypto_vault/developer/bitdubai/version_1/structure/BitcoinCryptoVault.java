@@ -388,11 +388,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             db.setVault(vault);
 
-            if (!db.isNewFermatTransaction(FermatTxId))
+            //if (!db.isNewFermatTransaction(FermatTxId))
             /**
              * Already sent, this might be an error. I'm not going to send it again.
              */
-                throw new CryptoTransactionAlreadySentException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
+            //    throw new CryptoTransactionAlreadySentException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
 
             Address address = null;
             /**

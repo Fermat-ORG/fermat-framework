@@ -184,19 +184,19 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
 
         //Validate parameters
-        if (applicant == null){
-            throw new IllegalArgumentException("The applicant argument are required, can not be null ");
+        if (platformComponentType == null && networkServiceType == null){
+            throw new IllegalArgumentException("The platformComponentType and networkServiceType argument are required, can not be null ");
         }
 
         /*
          * Construct a PlatformComponentProfile instance
          */
-        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, distance, name, applicant.getNetworkServiceType(), applicant.getPlatformComponentType(), extraData, offset, max, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, distance, name, networkServiceType, platformComponentType, extraData, offset, max, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
 
     }
 
