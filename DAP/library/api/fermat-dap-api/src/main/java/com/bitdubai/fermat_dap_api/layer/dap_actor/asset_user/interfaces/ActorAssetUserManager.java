@@ -39,7 +39,6 @@ public interface ActorAssetUserManager {
      */
     void acceptAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToAddPublicKey) throws CantAcceptAssetUserActorException;
 
-
     /**
      * The method <code>denyConnection</code> rejects a connection request from another Asset User Actor
      *
@@ -116,5 +115,4 @@ public interface ActorAssetUserManager {
     * @throws CantAssetUserActorNotFoundException
     */
   List<ActorAssetUser> getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
-
 }
