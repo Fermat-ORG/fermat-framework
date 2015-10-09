@@ -64,6 +64,8 @@ public enum PlatformLayers {
 
     // Init DAP Layers
     BITDUBAI_DAP_ACTOR_LAYER            ("BDAPAL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER  ("BDAPANSL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_NETWORK_SERVICE_LAYER  ("BDAPNSL",  Developers.BITDUBAI),
     BITDUBAI_DAP_IDENTITY_LAYER         ("BDAPIL",  Developers.BITDUBAI),
     BITDUBAI_DAP_MIDDLEWARE_LAYER       ("BDAPMIL", Developers.BITDUBAI),
     BITDUBAI_DAP_MODULE_LAYER           ("BDAPMOL", Developers.BITDUBAI),
@@ -198,6 +200,8 @@ public enum PlatformLayers {
 
             // Init DAP Layers
             case "BDAPAL":   return BITDUBAI_DAP_ACTOR_LAYER;
+            case "BDAPANSL": return BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER;
+            case "BDAPNSL": return BITDUBAI_DAP_NETWORK_SERVICE_LAYER;
             case "BDAPIL":   return BITDUBAI_DAP_IDENTITY_LAYER;
             case "BDAPMIL":  return BITDUBAI_DAP_MIDDLEWARE_LAYER;
             case "BDAPMOL":  return BITDUBAI_DAP_MODULE_LAYER;

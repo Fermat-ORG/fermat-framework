@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -104,6 +105,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile)
      */
+    @Override
     public void connectTo(PlatformComponentProfile remotePlatformComponentProfile) {
 
         try {
@@ -122,8 +124,29 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     /**
      * (non-javadoc)
+     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile, DiscoveryQueryParameters)
+     */
+    @Override
+    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters) {
+
+        try {
+
+            /*
+             * ask to the communicationLayerManager to connect to other network service
+             */
+            communicationsClientConnection.requestDiscoveryVpnConnection(applicantNetworkService, discoveryQueryParameters);
+
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+        }
+    }
+
+    /**
+     * (non-javadoc)
      * @see NetworkServiceConnectionManager#closeConnection(String)
      */
+    @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
         //Remove the instance and stop his threads
@@ -135,6 +158,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#closeAllConnection()
      */
+    @Override
     public void closeAllConnection() {
 
         for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
@@ -172,7 +196,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -202,6 +226,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
+    @Override
     public CommunicationNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance

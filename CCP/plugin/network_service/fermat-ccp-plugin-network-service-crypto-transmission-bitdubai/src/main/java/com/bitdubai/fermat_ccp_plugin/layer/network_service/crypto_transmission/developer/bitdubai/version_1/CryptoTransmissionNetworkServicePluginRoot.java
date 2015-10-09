@@ -492,6 +492,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
+            initializeCommunicationNetworkServiceConnectionManager();
+
             /**
              * Initialice CryptoTransmission databases
              */
@@ -505,23 +507,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
             cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
 
-            /**
-             * Inicialice de main agent
-             */
-            cryptoTransmissionAgent = new CryptoTransmissionAgent(
-                    this,
-                    cryptoTransmissionConnectionsDAO,
-                    cryptoTransmissionMetadataDAO,
-                    communicationNetworkServiceConnectionManager,
-                    wsCommunicationsCloudClientManager,
-                    platformComponentProfile,
-                    errorManager,
-                    new ArrayList<PlatformComponentProfile>(),
-                    identity
-                    );
 
-
-            cryptoTransmissionAgent.start();
 
             /*
              * Its all ok, set the new status
@@ -773,6 +759,28 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              */
              this.register = Boolean.TRUE;
 
+            System.out.print("-----------------------\n" +
+                    "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
+                    "-----------------------\n A: " + getName());
+
+            /**
+             * Inicialice de main agent
+             */
+            cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                    this,
+                    cryptoTransmissionConnectionsDAO,
+                    cryptoTransmissionMetadataDAO,
+                    communicationNetworkServiceConnectionManager,
+                    wsCommunicationsCloudClientManager,
+                    platformComponentProfile,
+                    errorManager,
+                    new ArrayList<PlatformComponentProfile>(),
+                    identity
+            );
+
+
+            cryptoTransmissionAgent.start();
+
 
         }
 
@@ -786,18 +794,21 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         System.out.println(" CryptoTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
+        System.out.print("-----------------------\n" +
+                "CRYPTO TRANSMISSION CONEXION EXITOSA!!!!  -----------------------\n" +
+                "-----------------------\n A: " + getName());
 
         /*
          * save into the cache
          */
-        remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+        remoteNetworkServicesRegisteredList.addAll( platformComponentProfileRegisteredList);
 
 
 
         cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
 
         // por ahora guardo solo el primero para saber cuales estan conectados
-        cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(),platformComponentProfileRegisteredList.get(0));
+        cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(), platformComponentProfileRegisteredList.get(0));
 
     }
 
@@ -815,10 +826,22 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
          * Tell the manager to handler the new connection stablished
          */
 
+
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
+        System.out.print("-----------------------\n" +
+                "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
+                "-----------------------\n A: " + remoteComponentProfile.getAlias());
 
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+
+            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
+
+            cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(remoteNetworkServicesRegisteredList);
+
+            System.out.print("-----------------------\n" +
+                    "CRYPTO TRANSMISSION CONEXION ENTRANTE AGREGADA AL AGENTE  -----------------------\n" +
+                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
 
             /* -------------------------------------------------------------------------------------------------
              * This is for test and example of how to use
@@ -942,11 +965,12 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(applicant, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType                ,
+                networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     /**
@@ -1035,7 +1059,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
                 associatedCryptoTransactionHash,
                 cryptoAmount,
                 cryptoCurrency,
-                destinationPublicKey,
+                "actor_prueba_robert_public_key",
                 paymentDescription,
                 null,
                 senderPublicKey

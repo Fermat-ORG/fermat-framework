@@ -87,9 +87,9 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Create the respond
          */
         JsonObject jsonObjectRespond = new JsonObject();
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_NETWORK_SERVICE_TYPE, discoveryQueryParameters.getNetworkServiceType().toString());
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_RESULT_LIST,          jsonListRepresentation);
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, discoveryQueryParameters.getNetworkServiceType().toString());
+        jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST,          jsonListRepresentation);
 
          /*
          * Construct a fermat packet whit the list
@@ -259,51 +259,160 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
      */
     private  List<PlatformComponentProfile> applyDiscoveryQueryParametersFromOtherComponent(DiscoveryQueryParameters discoveryQueryParameters, FermatPacket receiveFermatPacket){
 
+        System.out.println("RequestListComponentRegisterPacketProcessor - applyDiscoveryQueryParametersFromOtherComponent    = ");
+
         List<PlatformComponentProfile>  filteredListFromOtherComponentType = new ArrayList<>();
-        List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
 
         /*
          * Get the list from the cache that match with the other componet
          */
-        List<PlatformComponentProfile>  list = getPrimaryFilteredListFromCache(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), receiveFermatPacket);
+        List<PlatformComponentProfile> otherComponentList = searchProfile(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), discoveryQueryParameters.getIdentityPublicKey());
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - otherComponentList  = "+otherComponentList.size());
 
         /*
          * Find the other component that match with the identity
          */
-        for (PlatformComponentProfile platformComponentProfile: list) {
+        for (PlatformComponentProfile platformComponentProfile: otherComponentList) {
 
             if (discoveryQueryParameters.getIdentityPublicKey() != null && discoveryQueryParameters.getIdentityPublicKey() != ""){
-                if (platformComponentProfile.getIdentityPublicKey() == discoveryQueryParameters.getIdentityPublicKey()){
-                    filteredListFromOtherComponentType.add(platformComponentProfile);
-                }
+                List<PlatformComponentProfile>  newList = searchProfileByCommunicationCloudClientIdentity(discoveryQueryParameters.getPlatformComponentType(), discoveryQueryParameters.getNetworkServiceType(), platformComponentProfile.getCommunicationCloudClientIdentity());
+                filteredListFromOtherComponentType.addAll(newList);
             }
 
         }
 
-         /*
-         * Get the list from the cache that match with the componet that made the request, to find his same type
+        /*
+         * Remove the requester from the list
          */
-         list = getPrimaryFilteredListFromCache(discoveryQueryParameters.getPlatformComponentType(), discoveryQueryParameters.getNetworkServiceType(), receiveFermatPacket);
+        for (PlatformComponentProfile platformComponentProfileRegistered: filteredListFromOtherComponentType) {
+            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
+                System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
+                filteredListFromOtherComponentType.remove(platformComponentProfileRegistered);
+                break;
+            }
+        }
+
+        System.out.println("RequestListComponentRegisterPacketProcessor - filteredListFromOtherComponentType  = "+filteredListFromOtherComponentType.size());
 
 
-        for (PlatformComponentProfile otherPlatformComponentProfile: filteredListFromOtherComponentType) {
+        return filteredListFromOtherComponentType;
 
-            for (PlatformComponentProfile platformComponentProfile : list) {
+    }
 
-                /*
-                 * The component that have the same CommunicationCloudClientIdentity, they are register for the same CommunicationCloudClientIdentity and
-                 * this indicate the are from the same device
-                 */
-                if (platformComponentProfile.getCommunicationCloudClientIdentity().equals(otherPlatformComponentProfile.getCommunicationCloudClientIdentity())) {
-                    finalFilteredList.add(platformComponentProfile);
-                }
+    /**
+     * Method that search the PlatformComponentProfiles tha mach with the
+     * parameters
+     *
+     * @param platformComponentType
+     * @param networkServiceType
+     * @param identityPublicKey
+     * @return List<PlatformComponentProfile>
+     */
+    private List<PlatformComponentProfile> searchProfile(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String identityPublicKey) {
 
+        /*
+         * Prepare the list
+         */
+        List<PlatformComponentProfile> temporalList = null;
+        List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
+
+         /*
+         * Switch between platform component type
+         */
+        switch (platformComponentType){
+
+            case COMMUNICATION_CLOUD_SERVER :
+                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                break;
+
+            case COMMUNICATION_CLOUD_CLIENT :
+                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                break;
+
+            case NETWORK_SERVICE :
+                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                break;
+
+            //Others
+            default :
+                temporalList = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                break;
+
+        }
+
+
+        /*
+         * Find the component that match with the identity
+         */
+        for (PlatformComponentProfile platformComponentProfile: temporalList) {
+
+            if (platformComponentProfile.getIdentityPublicKey().equals(identityPublicKey)){
+                finalFilteredList.add(platformComponentProfile);
+            }
+        }
+
+
+        return finalFilteredList;
+
+    }
+
+
+    /**
+     * Method that search the PlatformComponentProfiles tha mach with the
+     * parameters
+     *
+     * @param platformComponentType
+     * @param networkServiceType
+     * @param communicationCloudClientIdentity
+     * @return List<PlatformComponentProfile>
+     */
+    private List<PlatformComponentProfile> searchProfileByCommunicationCloudClientIdentity(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String communicationCloudClientIdentity) {
+
+        /*
+         * Prepare the list
+         */
+        List<PlatformComponentProfile> temporalList = null;
+        List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
+
+         /*
+         * Switch between platform component type
+         */
+        switch (platformComponentType){
+
+            case COMMUNICATION_CLOUD_SERVER :
+                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                break;
+
+            case COMMUNICATION_CLOUD_CLIENT :
+                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                break;
+
+            case NETWORK_SERVICE :
+                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                break;
+
+            //Others
+            default :
+                temporalList = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                break;
+
+        }
+
+        /*
+         * Find the component that match with the CommunicationCloudClientIdentity
+         */
+        for (PlatformComponentProfile platformComponentProfile: temporalList) {
+
+            if (platformComponentProfile.getCommunicationCloudClientIdentity().equals(communicationCloudClientIdentity)){
+                finalFilteredList.add(platformComponentProfile);
             }
         }
 
         return finalFilteredList;
 
     }
+
 
     /**
      * Count the number of filter to apply
