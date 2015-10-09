@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_transaction;
+package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
  */
 public interface AssetTransactionService {
 
-    public void start () throws CantStartServiceException;
+    public void start () throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 
     public void stop();
 
