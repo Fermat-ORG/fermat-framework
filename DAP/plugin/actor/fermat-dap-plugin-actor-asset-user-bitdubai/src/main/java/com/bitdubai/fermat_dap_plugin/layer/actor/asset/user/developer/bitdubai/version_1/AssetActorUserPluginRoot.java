@@ -13,6 +13,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -258,6 +260,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
             this.serviceStatus = ServiceStatus.STARTED;
 
             test();
+            testRaiseEvent();
 
         } catch (Exception e) {
              errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -522,7 +525,15 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         return list;
     }
 
-    public void test() throws CantCreateAssetUserActorException {
+    private void testRaiseEvent(){
+        System.out.println("Start event test");
+        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ASSET_USER_CONNECTION_ACCEPTED);
+        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+        eventManager.raiseEvent(eventToRaise);
+        System.out.println("End event test");
+    }
+
+    private void test() throws CantCreateAssetUserActorException {
 //        list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
 
         System.out.println("************************************************************************");
