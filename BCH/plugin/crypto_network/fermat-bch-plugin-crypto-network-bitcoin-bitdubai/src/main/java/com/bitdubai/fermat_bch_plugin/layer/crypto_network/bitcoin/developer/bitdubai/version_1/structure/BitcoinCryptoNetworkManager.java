@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.ECKey;
@@ -38,11 +39,14 @@ public class BitcoinCryptoNetworkManager {
      * @param blockchainNetworkTypes
      * @param keyList
      */
-    public void monitorNetworkFromKeyList(List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList){
+    public void monitorNetworkFromKeyList(CryptoVaults cryptoVault, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList){
         /**
          * This method will be called from agents from the Vaults. New keys may be added on each call or not.
          * If no new keys have been added and I'm already monitoring the network, then I won't do anything
          */
+
+        //todo record in CryptoVaults_Stats table that this request is from the specicied cryptoVault
+
         if (wallet != null){ //this means I have already been called
             /**
              * I will compare the amount of keys that I have in the wallet againts the ones that are been passed in this method
