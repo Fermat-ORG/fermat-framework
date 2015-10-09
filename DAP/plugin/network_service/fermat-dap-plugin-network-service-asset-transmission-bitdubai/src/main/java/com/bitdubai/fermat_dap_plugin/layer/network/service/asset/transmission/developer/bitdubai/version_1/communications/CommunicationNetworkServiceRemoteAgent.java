@@ -252,9 +252,9 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-        } /*catch (CantInsertRecordDataBaseException e) {
+        } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
-        }*/
+        }
 
     }
 
@@ -321,6 +321,10 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+        } catch (CantUpdateRecordDataBaseException e) {
+            e.printStackTrace();
+        } catch (CantReadRecordDataBaseException e) {
+            e.printStackTrace();
         }
 
     }

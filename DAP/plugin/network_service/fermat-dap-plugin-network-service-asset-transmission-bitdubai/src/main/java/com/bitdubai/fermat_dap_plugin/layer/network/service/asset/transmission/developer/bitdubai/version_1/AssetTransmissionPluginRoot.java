@@ -40,6 +40,12 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantConnectToAssetTransmissionNetworkServiceException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantRequestListAssetTransmissionNetworkServiceException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
@@ -83,7 +89,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class AssetTransmissionPluginRoot implements TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServiceManager,TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithAssetTransmissionNetworkServiceManager,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
 
 
 
@@ -862,4 +868,23 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
     }
 
 
+    @Override
+    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
+
+    }
+
+    @Override
+    public void requestListAssetTransmissionNetworkService(PlatformComponentProfile actorAssetUser) throws CantRequestListAssetTransmissionNetworkServiceException {
+
+    }
+
+    @Override
+    public void connectTo(PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantConnectToAssetTransmissionNetworkServiceException {
+
+    }
+
+    @Override
+    public void sendDigitalAssetMetadata(DigitalAssetMetadata toSend, PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantSendDigitalAssetMetadataException {
+
+    }
 }
