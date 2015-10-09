@@ -13,7 +13,7 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     private String publicKey;
     private byte[] profileImage;
     private long registrationDate;
-    private ConnectionState contactState;
+    private ConnectionState connectionState;
 
     @Override
     public String getPublicKey() {
@@ -52,17 +52,17 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     }
 
     @Override
-    public ConnectionState getContactState() {
-        return this.contactState;
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
     }
 
     public void setContactState(ConnectionState contactState){
-        this.contactState=contactState;
+        this.connectionState=contactState;
     }
 
     public void setActorAssetUser(ActorAssetUser actorAssetUser){
         setContactRegistrationDate(actorAssetUser.getContactRegistrationDate());
-        setContactState(actorAssetUser.getContactState());
+        setContactState(actorAssetUser.getConnectionState());
         setName(actorAssetUser.getName());
         setProfileImage(actorAssetUser.getProfileImage());
         setPublicKey(actorAssetUser.getPublicKey());

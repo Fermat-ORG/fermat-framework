@@ -75,6 +75,7 @@ dependencies {
 
     // DMP Projects (Addons)
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
+
     //DAP Projects (Plugins)
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
@@ -87,6 +88,9 @@ dependencies {
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai')
+    compile project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
+
     // CRY Projects
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':fermat-cry-plugin-crypto-module-crypto-address-book-bitdubai')

@@ -7,13 +7,14 @@
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communication.IncomingMessageDao;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -55,14 +56,14 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     private EventManager eventManager;
 
     /**
-     * Holds all references to the template network service locals
+     * Holds all references to the communication network service locals
      */
-    private Map<String, CommunicationNetworkServiceLocal> templateNetworkServiceLocalsCache;
+    private Map<String, CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
 
     /**
-     * Holds all references to the template network service remote agents
+     * Holds all references to the communication network service remote agents
      */
-    private Map<String, CommunicationNetworkServiceRemoteAgent> templateNetworkServiceRemoteAgentsCache;
+    private Map<String, CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
      * Represent the incomingMessageDao
@@ -95,8 +96,8 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
         this.eventManager = eventManager;
         this.incomingMessageDao = new IncomingMessageDao(dataBase);
         this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
-        this.templateNetworkServiceLocalsCache = new HashMap<>();
-        this.templateNetworkServiceRemoteAgentsCache = new HashMap<>();
+        this.communicationNetworkServiceLocalsCache = new HashMap<>();
+        this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
 
 
@@ -104,6 +105,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile)
      */
+    @Override
     public void connectTo(PlatformComponentProfile remotePlatformComponentProfile) {
 
         try {
@@ -115,19 +117,40 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
 
     }
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceConnectionManager# closeConnection(PlatformComponentProfile)
+     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile, DiscoveryQueryParameters)
      */
+    @Override
+    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters) {
+
+        try {
+
+            /*
+             * ask to the communicationLayerManager to connect to other network service
+             */
+            communicationsClientConnection.requestDiscoveryVpnConnection(applicantNetworkService, discoveryQueryParameters);
+
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+        }
+    }
+
+    /**
+     * (non-javadoc)
+     * @see NetworkServiceConnectionManager#closeConnection(String)
+     */
+    @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
         //Remove the instance and stop his threads
-        templateNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+        communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
 
@@ -135,12 +158,13 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#closeAllConnection()
      */
+    @Override
     public void closeAllConnection() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.remove(key).stop();
+            communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
         }
 
     }
@@ -172,7 +196,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -187,14 +211,14 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                 /*
                  * Add to the cache
                  */
-                templateNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceLocal);
-                templateNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceRemoteAgent);
+                communicationNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceLocal);
+                communicationNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceRemoteAgent);
 
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
     }
 
@@ -202,10 +226,11 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
+    @Override
     public CommunicationNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance
-        return templateNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
+        return communicationNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
     }
 
     /**
@@ -213,10 +238,10 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      */
     public void pause() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.get(key).pause();
+            communicationNetworkServiceRemoteAgentsCache.get(key).pause();
         }
 
     }
@@ -226,12 +251,28 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      */
     public void resume() {
 
-        for (String key : templateNetworkServiceRemoteAgentsCache.keySet()) {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            templateNetworkServiceRemoteAgentsCache.get(key).resume();
+            communicationNetworkServiceRemoteAgentsCache.get(key).resume();
         }
 
+    }
+
+    /**
+     * Get the OutgoingMessageDao
+     * @return OutgoingMessageDao
+     */
+    public OutgoingMessageDao getOutgoingMessageDao() {
+        return outgoingMessageDao;
+    }
+
+    /**
+     * Get the IncomingMessageDao
+     * @return IncomingMessageDao
+     */
+    public IncomingMessageDao getIncomingMessageDao() {
+        return incomingMessageDao;
     }
 
 }

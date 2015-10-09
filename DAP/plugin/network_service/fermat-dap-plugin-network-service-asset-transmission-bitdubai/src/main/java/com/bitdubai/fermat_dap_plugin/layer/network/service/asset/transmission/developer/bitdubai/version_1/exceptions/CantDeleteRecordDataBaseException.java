@@ -10,10 +10,10 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException</code> is
- * throw when error occurred deleting new record in a table of the data base
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException</code> is
+ * throw when error occurred updating new record in a table of the data base
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 26/06/15.
+ * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7

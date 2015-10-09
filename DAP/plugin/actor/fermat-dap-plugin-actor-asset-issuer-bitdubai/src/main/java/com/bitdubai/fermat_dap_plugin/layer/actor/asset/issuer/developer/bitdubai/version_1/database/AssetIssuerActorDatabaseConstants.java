@@ -12,14 +12,14 @@ public class AssetIssuerActorDatabaseConstants {
 
     public static final String ASSET_ISSUER_TABLE_NAME = "asset_issuer_actor";
 
-    public static final String ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME = "asset_issuer_publicKey_actor";
-    public static final String ASSET_ISSUER_ISSUER_LOGGED_PUBLIC_KEY_COLUMN_NAME = "asset_issuer_logged_publicKey_actor";
-    public static final String ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME = "asset_issuer_name_actor";
-    public static final String ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME = "contact_state_actor";
-    public static final String ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME = "registration_date_actor";
-    public static final String ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME = "modified_date_actor";
+    public static final String ASSET_ISSUER_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_publicKey";
+    public static final String ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME = "publicKey";
+    public static final String ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME = "name";
+    public static final String ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME = "contact_state";
+    public static final String ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
+    public static final String ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME = "modified_date";
 
-    public static final String ASSET_ISSUER_FIRST_KEY_COLUMN = "asset_issuer_publicKey_actor";
+    public static final String ASSET_ISSUER_FIRST_KEY_COLUMN = "publicKey";
 
     /**
      * Asset Issuer relation Redeem Point Associate table definition.
