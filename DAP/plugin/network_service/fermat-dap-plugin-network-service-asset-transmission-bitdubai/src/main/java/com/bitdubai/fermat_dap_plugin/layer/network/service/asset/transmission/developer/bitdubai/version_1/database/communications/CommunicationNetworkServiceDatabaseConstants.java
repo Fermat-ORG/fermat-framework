@@ -4,20 +4,20 @@
   * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.AssetTransmissionNetworkServiceDatabaseConstants</code>
- * keeps constants the column names of the database.<p/>
- *
- * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants</code> is
+ * throw when error occurred updating new record in a table of the data base
+ * <p/>
+ * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AssetTransmissionNetworkServiceDatabaseConstants {
+public class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "template_network_service_data_base";
+    public static final String DATA_BASE_NAME  = "communication_network_service_data_base";
 
     /**
      * incoming messages database table definition.

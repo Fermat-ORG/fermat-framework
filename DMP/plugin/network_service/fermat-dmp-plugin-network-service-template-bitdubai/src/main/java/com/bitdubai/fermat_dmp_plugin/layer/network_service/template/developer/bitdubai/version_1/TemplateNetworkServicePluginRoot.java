@@ -645,7 +645,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              */
             DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                                                                 getCommunicationsCloudClientConnection().
-                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
+                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
+                                                                        platformComponentProfile.getNetworkServiceType(),
                                                                         null,                     // alias
                                                                         null,                     // identityPublicKey
                                                                         null,                     // location
@@ -698,7 +699,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
             DiscoveryQueryParameters discoveryQueryParametersT = wsCommunicationsCloudClientManager.
                                                                 getCommunicationsCloudClientConnection().
-                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
+                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
+                                                                        platformComponentProfile.getNetworkServiceType(),
                                                                         null,                     // alias
                                                                         remoteNetworkServiceToConnect.getIdentityPublicKey(),                     // identityPublicKey
                                                                         null,                     // location
@@ -850,11 +852,11 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(applicant, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     /**

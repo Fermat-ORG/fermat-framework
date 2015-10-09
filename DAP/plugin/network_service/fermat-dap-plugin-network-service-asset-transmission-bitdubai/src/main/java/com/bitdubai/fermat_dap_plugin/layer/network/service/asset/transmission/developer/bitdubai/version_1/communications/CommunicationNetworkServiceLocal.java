@@ -9,10 +9,10 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -41,6 +41,8 @@ import java.util.Observer;
  * @since Java JDK 1.7
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
+
+
 
     /**
      * Represent the profile of the remote network service
@@ -91,9 +93,9 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentity,                //Sender
-                                                                                                    remoteNetworkServiceProfile,   //Receiver
-                                                                                                    messageContent,                //Message Content
-                                                                                                    FermatMessageContentType.TEXT);//Type
+                    remoteNetworkServiceProfile,   //Receiver
+                    messageContent,                //Message Content
+                    FermatMessageContentType.TEXT);//Type
 
             /*
              * Configure the correct status
@@ -107,7 +109,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
         } catch (Exception e) {
             e.printStackTrace();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
         }
 
     }
@@ -117,24 +119,24 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      * Notify the client when a incoming message is receive by the incomingTemplateNetworkServiceMessage
      * ant fire a new event
      *
-     * @param incomingTemplateNetworkServiceMessage received
+     * @param incomingMessage received
      */
-    private void onMessageReceived(FermatMessage incomingTemplateNetworkServiceMessage) {
+    private void onMessageReceived(FermatMessage incomingMessage) {
 
         System.out.println("CommunicationNetworkServiceLocal - onMessageReceived ");
-        System.out.println(incomingTemplateNetworkServiceMessage.getContent());
+        System.out.println(incomingMessage.getContent());
 
         /*
          * set the last message received
          */
-        this.lastMessageReceived = incomingTemplateNetworkServiceMessage;
+        this.lastMessageReceived = incomingMessage;
 
         /**
          * Put the message on a event and fire new event
          */
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
-        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage);
+        fermatEvent.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
+        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         eventManager.raiseEvent(fermatEvent);
 
     }
@@ -157,9 +159,10 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceLocal#getLastMessageReceived()
+     *
      */
     public FermatMessage getLastMessageReceived() {
         return lastMessageReceived;
     }
+
 }
