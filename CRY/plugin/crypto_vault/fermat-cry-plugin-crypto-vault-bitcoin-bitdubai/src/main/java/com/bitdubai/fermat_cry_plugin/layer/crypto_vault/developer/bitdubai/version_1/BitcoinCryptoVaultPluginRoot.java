@@ -417,9 +417,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantStartAgentException );
             }
 
-
-        System.out.println("Bitcoin crypto vault address: " + this.getAddress().getAddress());
-
             /**
              * the service is started.
              */
