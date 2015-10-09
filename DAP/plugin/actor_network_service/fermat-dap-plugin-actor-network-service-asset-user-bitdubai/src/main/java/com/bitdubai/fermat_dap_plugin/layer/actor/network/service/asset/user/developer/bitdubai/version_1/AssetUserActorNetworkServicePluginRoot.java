@@ -570,7 +570,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                     (actorAssetUserToRegister.getName()),
                     (actorAssetUserToRegister.getName()),
                     NetworkServiceType.UNDEFINED,
-                    PlatformComponentType .ACTOR,
+                    PlatformComponentType.ACTOR,
                     actorAssetUserToRegister.getProfileImage().toString());
 
             communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
@@ -609,6 +609,31 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
     @Override
     public void requestListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
+
+
+             /*-------------------------------------------------------------------------------------------------
+             * Search remote ListActorAssetUserRegistered
+             *
+             */
+        DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR, //applicant = who made the request
+                        NetworkServiceType.UNDEFINED,
+                        null,                     // alias
+                        null,                     // identityPublicKey
+                        null,                     // location
+                        null,                     // distance
+                        null,                     // name
+                        null,                     // extraData
+                        null,                     // offset
+                        null,                     // max
+                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                        null);
+
+
+        requestRemoteNetworkServicesRegisteredList(discoveryQueryParametersAssetUser);
+
+
+
 
     }
 
