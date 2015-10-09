@@ -136,13 +136,13 @@ public class AssetIssuingTransactionDeveloperDatabaseFactory implements DealsWit
          * */
         List<String> transitionProtocolStatusColumns = new ArrayList<String>();
 
-        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_ID_COLUMN);
-        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_EVENT_COLUMN);
-        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_SOURCE_COLUMN);
-        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_STATUS_COLUMN);
-        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN);
+        transitionProtocolStatusColumns.add(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN);
 
-        DeveloperDatabaseTable transitionProtocolStatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME, digitalAssetTransactionColumns);
+        DeveloperDatabaseTable transitionProtocolStatusTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME, transitionProtocolStatusColumns);
         tables.add(transitionProtocolStatusTable);
 
         /**

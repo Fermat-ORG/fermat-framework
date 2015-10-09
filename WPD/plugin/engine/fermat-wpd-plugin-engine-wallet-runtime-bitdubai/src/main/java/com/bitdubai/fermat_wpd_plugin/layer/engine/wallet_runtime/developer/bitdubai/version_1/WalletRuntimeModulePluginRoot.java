@@ -548,19 +548,19 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         activity.setColor("#03A9F4");
 
 
-         titleBar = new TitleBar();
+        titleBar = new TitleBar();
         titleBar.setLabel("Contracts History");
         titleBar.setColor("#FFFFFF");
         titleBar.setLabelSize(16);
         activity.setTitleBar(titleBar);
 
 
-         statusBar = new StatusBar();
+        statusBar = new StatusBar();
         statusBar.setColor("#0288D1");
         activity.setStatusBar(statusBar);
 
 
-         fragment = new Fragment();
+        fragment = new Fragment();
         fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getKey(), fragment);
 
@@ -595,25 +595,25 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         activity.setSideMenu(sideMenu);
         navigationStructure.addActivity(activity);
 
-         activity = new Activity();
+        activity = new Activity();
         activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
         activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getCode());
         activity.setColor("#03A9F4");
 
 
-         titleBar = new TitleBar();
+        titleBar = new TitleBar();
         titleBar.setLabel("Settings");
         titleBar.setColor("#FFFFFF");
         titleBar.setLabelSize(16);
         activity.setTitleBar(titleBar);
 
 
-         statusBar = new StatusBar();
+        statusBar = new StatusBar();
         statusBar.setColor("#0288D1");
         activity.setStatusBar(statusBar);
 
 
-         fragment = new Fragment();
+        fragment = new Fragment();
         fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey(), fragment);
         activity.setSideMenu(sideMenu);
@@ -1522,13 +1522,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
                 newFile.setContent(navigationStructureXml);
                 newFile.persistToMedia();
             } catch (CantPersistFileException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't create or overwrite navigation structure file.", "");
             } catch (CantCreateFileException e) {
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't convert navigation structure to xml format", "");
         }
     }
@@ -1568,7 +1568,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-        runtimeActivity.setColor("#8bba9e");
+        runtimeActivity.setColor("#12aca1");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
 
@@ -1581,23 +1581,23 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar.setLabelSize(16);
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#72af9c");
+        runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
 
         runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-        runtimeStatusBar.setColor("#72af9c");
+        runtimeStatusBar.setColor("#12aca1");
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#8bba9e");
+        runtimeTabStrip.setTabsColor("#1173aa");
 
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
-        runtimeTabStrip.setTabsIndicateColor("#72af9c");
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
 
 
 

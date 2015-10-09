@@ -16,7 +16,7 @@ import java.util.UUID;
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager</code>
  * provides the methods to send and receive meta information of crypto transactions.
  */
-public interface CryptoTransmissionNetworkServiceManager extends TransactionSender<FermatCryptoTransaction> {
+public interface CryptoTransmissionNetworkServiceManager extends TransactionSender<FermatCryptoTransaction>{
 
     /**
      * The method <code>informTransactionCreditedInWallet</code> informs the peer network service

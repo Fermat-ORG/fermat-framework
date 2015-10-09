@@ -6973,4 +6973,117 @@
 
 	</super_layers>
 
+	<processes>
+	    <process platform="CBP" 
+	    	     name="Connection request from customer to broker"
+	             description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
+	             previous="List crypto brokers"
+	             >
+	        <steps>
+	            <step id="0"
+	                  type="start"
+	                  title="Select broker and submit request"
+	                  description="The customer selects a broker from the list and submits the request to connect to him."
+	                  platform="CBP"
+	                  superlayer=""
+	                  layer="Sub App"
+	                  name="Crypto Broker Community"
+	                  >
+	                <next>
+	                    <step id="1" type="direct call"></step>
+	                </next>
+	            </step>
+	            <step id="1"
+	                  type="activity"
+	                  title="Route request to network service"
+	                  description="The module routes this request to the network service to reach the selected broker."
+	                  platform="CBP"
+	                  superlayer=""
+	                  component="Plugin"
+	                  layer="Sub App Module"
+	                  name="Crypto Broker Community"
+	                  >
+	                <next>
+	                    <step id="2" type="direct call"></step>
+	                </next>
+	            </step>
+	            <step id="2"
+	                  type="activity"
+	                  title="Call the broker to deliver the request"
+	                  description="The network service places a call to the broker and then it delivers the request via the Fermat network."
+	                  platform="CBP"
+	                  superlayer=""
+	                  layer="Actor Network Service"
+	                  name="Crypto Broker"
+	                  >
+	                <next>
+	                    <step id="3" type="direct call"></step>
+	                </next>
+	            </step>
+	            <step id="3"
+	                  type="communication"
+	                  title="Transport request"
+	                  description="The request is transported through the communication layer and one of the available channels."
+	                  platform=""
+	                  superlayer="P2P"
+	                  layer="communication"
+	                  name="Communication Layer"
+	                  >
+	                <next>
+	                    <step id="4" type="fermat message"></step>
+	                </next>
+	            </step>
+	            <step id="4"
+	                  type="activity"
+	                  title="Receive the request"
+	                  description="The network service receives the request and informs the Crypto Broker Actor."
+	                  platform="CBP"
+	                  superlayer=""
+	                  layer="Actor Network Service"
+	                  name="Crypto Broker"
+	                  >
+	                <next>
+	                    <step id="5" type="event"></step>
+	                </next>
+	            </step>
+	            <step id="5"
+	                  type="activity"
+	                  title="Records the request"
+	                  description="The request is saved and a notification for the end user is created."
+	                  platform="CBP"
+	                  superlayer=""
+	                  layer="Actor"
+	                  name="Crypto Broker"
+	                  >
+	                <next>
+	                    <step id="6" type="direct call"></step>
+	                </next>
+	            </step>
+	            <step id="6"
+	                  type="activity"
+	                  title="Records the notification"
+	                  description="The the notification is saved and the OS core library is notified."
+	                  platform="PIP"
+	                  superlayer=""
+	                  layer="Middleware"
+	                  name="Notification"
+	                  >
+	                <next>
+	                    <step id="7" type="event"></step>
+	                </next>
+	            </step>
+	            <step id="7"
+	                  type="end"
+	                  title="Send notification to the OS"
+	                  description="Sends the notification to the OS and this in turn shows it to the end user."
+	                  platform="COR"
+	                  superlayer=""
+	                  layer="core"
+	                  name="Notification Manager"
+	                  >
+	            </step>
+	        </steps>
+	    </process>
+	</processes>
+
 </fermat>

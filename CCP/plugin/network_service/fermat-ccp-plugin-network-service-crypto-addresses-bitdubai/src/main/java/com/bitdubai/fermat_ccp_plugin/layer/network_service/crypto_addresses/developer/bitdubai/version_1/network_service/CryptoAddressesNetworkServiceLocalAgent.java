@@ -9,7 +9,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 
@@ -101,9 +101,9 @@ public class CryptoAddressesNetworkServiceLocalAgent implements Observer {
         /**
          * Put the message on a event and fire new event
          */
-        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEvent.setSource(EventSource.NETWORK_SERVICE_TEMPLATE_PLUGIN);
-        ((NewNetworkServiceMessageReceivedEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
+        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingTemplateNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
         eventManager.raiseEvent(fermatEvent);
 
     }

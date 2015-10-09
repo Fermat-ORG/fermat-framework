@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.*;
@@ -161,17 +160,9 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    //Modified by Manuel Perez on 02/10/2015
+    //Fix returning IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener
     INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICOCNWTIU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEvent();
-        }
-    },
-
-    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOCNWTAI") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
         }
@@ -181,6 +172,16 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOCNWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+    //End of fix
     INCOMING_CRYPTO_RECEIVED("ICR") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new IncomingCryptoReceivedEventListener(this, fermatEventMonitor);
@@ -523,13 +524,23 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION("NNSMRN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return null;
+            return new NewNetworkServiceMessageReceivedNotificationEventListener(fermatEventMonitor);
         }
 
         public FermatEvent getNewEvent() {
-            return new NewNetworkServiceMessageReceivedEvent(this);
+            return new NewNetworkServiceMessageReceivedNotificationEvent(this);
+        }
+    },
+
+    NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION("NNSMSN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewNetworkServiceMessageSentNotificationEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageSentNotificationEvent(this);
         }
     },
 
@@ -660,6 +671,17 @@ public enum EventType implements FermatEventEnum {
 
         public FermatEvent getNewEvent() {
             return new IncomingMoneyNotificationEvent(this);
+        }
+    },
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
         }
     };
 

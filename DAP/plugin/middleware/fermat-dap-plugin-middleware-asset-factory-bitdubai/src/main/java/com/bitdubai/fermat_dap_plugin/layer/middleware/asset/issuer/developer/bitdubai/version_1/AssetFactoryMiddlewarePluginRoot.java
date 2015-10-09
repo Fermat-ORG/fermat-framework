@@ -280,7 +280,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
             java.util.Date date= new java.util.Date();
             System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
-            assetFactory.setPublicKey("ASD-125412541-BS-854");
+            //assetFactory.setPublicKey("ASD-125412541-BS-854");
             assetFactory.setDescription("Asset de Prueba");
             assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
             assetFactory.setAmount(1);
@@ -409,8 +409,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
     }
 
     @Override
-    public void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException {
-
+    public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException {
+        assetFactoryMiddlewareManager.removeAssetFactory(publicKey);
     }
 
     @Override

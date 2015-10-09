@@ -14,6 +14,12 @@
         android:paddingTop="15dp"
         >
 
+        <TextView
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:id="@+id/txt_color_type"
+            android:background="#000"/>
+
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -29,17 +29,21 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
@@ -158,7 +162,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         try {
 
             rootView = super.onCreateView(inflater, container, savedInstanceState);
-
+            empty = (LinearLayout)rootView.findViewById(R.id.empty);
 
             linear_layout_send_form = (LinearLayout) rootView.findViewById(R.id.send_form);
 
@@ -355,7 +359,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
        try {
            lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
-           offset+=MAX_TRANSACTIONS;
+           offset+=lstTransactions.size();
        }
        catch (Exception e) {
            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
@@ -396,7 +400,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                lstCryptoWalletTransactions = (ArrayList) result[0];
+                lstCryptoWalletTransactions.addAll((ArrayList) result[0]);
                 if (adapter != null)
                     adapter.changeDataSet(lstCryptoWalletTransactions);
             }
@@ -408,6 +412,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
+            referenceWalletSession.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
@@ -453,15 +458,14 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
             if(!amount.getText().toString().equals("") && amount.getText()!=null) {
                 try {
-                    //TODO que pasa si no puedo crear el user?
-                    //CryptoWalletWalletContact walletContactRecord = cryptoWallet.createWalletContact(validAddress, autocompleteContacts.getText().toString(), Actors.EXTRA_USER, ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, walletPublicKey);
-                    //CryptoWalletWalletContact walletContactRecord = cryptoWallet.
-                    // TODO harcoded deliveredbyactorid
                     String notes=null;
                     if(txt_notes.getText().toString().length()!=0){
                         notes = txt_notes.getText().toString();
                     }
 
+                    CryptoWalletWalletContact cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId);
+
+                    //TODO: ver que mas puedo usar del cryptoWalletWalletContact
 
                     cryptoWallet.send(
                             Long.parseLong(amount.getText().toString()),
@@ -471,7 +475,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             user_id,
                             Actors.INTRA_USER,
                             walletContact.actorPublicKey,
-                            Actors.EXTRA_USER
+                            cryptoWalletWalletContact.getActorType()
                     );
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
@@ -480,6 +484,10 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 } catch (CantSendCryptoException e) {
                     referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "Error send satoshis - " + e.getMessage());
+                } catch (WalletContactNotFoundException e) {
+                    e.printStackTrace();
+                } catch (CantFindWalletContactException e) {
+                    e.printStackTrace();
                 }
             }
         } else {
