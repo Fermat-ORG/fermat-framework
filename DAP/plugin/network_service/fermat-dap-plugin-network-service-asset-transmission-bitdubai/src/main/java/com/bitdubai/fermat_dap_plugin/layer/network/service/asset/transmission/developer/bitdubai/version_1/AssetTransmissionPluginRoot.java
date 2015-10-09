@@ -89,7 +89,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServiceManager,TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithAssetTransmissionNetworkServiceManager,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServiceManager,TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
 
 
 
@@ -868,10 +868,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
 
-    @Override
-    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
 
-    }
 
     @Override
     public void requestListAssetTransmissionNetworkService(PlatformComponentProfile actorAssetUser) throws CantRequestListAssetTransmissionNetworkServiceException {

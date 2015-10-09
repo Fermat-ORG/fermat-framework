@@ -22,7 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.ex
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DAPActorNetworServiceLayer  implements PlatformLayer {
+public class DAPActorNetworkServiceLayer  implements PlatformLayer {
 
     private Plugin assetUserActorNetworService;
 

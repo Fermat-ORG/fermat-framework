@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface PlatformComponentProfile {
+public interface    PlatformComponentProfile {
 
     /**
      * Return the public key that represent the identity of the component
