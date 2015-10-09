@@ -945,9 +945,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         List<IntraUser> intraUserList = new ArrayList<IntraUser>();
 
-        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0],"alias1"));
-        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0],"alias2"));
-
+        intraUserList.add(new IntraUserNetworkService("public_key",new byte[0],"Matias"));
+        intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
+        intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
+        intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
         return intraUserList;
     }
 
