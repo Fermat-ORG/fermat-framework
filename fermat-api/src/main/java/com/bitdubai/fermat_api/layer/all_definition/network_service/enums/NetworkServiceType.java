@@ -21,6 +21,7 @@ public enum NetworkServiceType implements FermatEnum {
      */
 
     ASSET_TRANSMISSION       ("ASS_TRANS"),
+    ASSET_USER_ACTOR_NETWORK_SERVICE ("AUANS"),
     CRYPTO_PAYMENT_REQUEST   ("CPR"),
     CRYPTO_TRANSMISSION      ("CRY_TRANS"),
     INTRA_USER               ("INT_USR"),

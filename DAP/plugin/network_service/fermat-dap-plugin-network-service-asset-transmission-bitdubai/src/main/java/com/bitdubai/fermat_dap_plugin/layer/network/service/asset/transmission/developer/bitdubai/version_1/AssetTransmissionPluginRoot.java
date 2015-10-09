@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
@@ -32,23 +34,38 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantConnectToAssetTransmissionNetworkServiceException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantRequestListAssetTransmissionNetworkServiceException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.AssetTransmissionNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.AssetTransmissionNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.AssetTransmissionNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeAssetTransmissionNetworkServiceDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -72,7 +89,15 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class AssetTransmissionPluginRoot implements TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServiceManager,TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithAssetTransmissionNetworkServiceManager,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+
+
+
+    /**
+     * Represent the EVENT_SOURCE
+     */
+    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION;
+
 
     /**
      * Represent the logManager
@@ -80,54 +105,30 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
     private LogManager logManager;
 
     /**
-     * Represent the newLoggingLevel
+     * Service Interface member variables.
      */
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
-     * Represent the platformComponentProfile
+     * Represent the register
      */
-    private PlatformComponentProfile platformComponentProfile;
+    private boolean register;
 
     /**
-     * Represent the wsCommunicationsCloudClientManager
+     * Represent the name
      */
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+    private String name;
 
     /**
-     * Represent the status of the network service
+     * Represent the alias
      */
-    private ServiceStatus serviceStatus;
+    private String alias;
 
     /**
-     * DealWithEvents Interface member variables.
+     * Represent the extraData
      */
-    private EventManager eventManager;
+    private String extraData;
 
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variable
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    private UUID pluginId;
-
-    /**
-     * Hold the listeners references
-     */
-    private List<FermatEventListener> listenersAdded;
-
-    /**
-     * Represent the communicationNetworkServiceConnectionManager
-     */
-    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     /**
      * Represent the dataBase
@@ -140,14 +141,61 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
     private ECCKeyPair identity;
 
     /**
-     * Represent the register
+     * Represent the networkServiceType
      */
-    private boolean register;
+    private NetworkServiceType networkServiceType;
 
     /**
-     * Represent the communicationRegistrationProcessNetworkServiceAgent
+     * Represent the platformComponentProfile
      */
-    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
+    private PlatformComponentProfile platformComponentProfile;
+
+    /**
+     * DealsWithPlatformDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * FileSystem Interface member variables.
+     */
+    PluginFileSystem pluginFileSystem;
+
+    /**
+     * Plugin Interface member variables.
+     */
+    UUID pluginId;
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    ErrorManager errorManager;
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    EventManager eventManager;
+
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
+
+    /**
+     * DealsWithLogger interface member variable
+     */
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    /**
+     * Represent the communicationNetworkServiceConnectionManager
+     */
+    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+
+    /**
+     * Represent the wsCommunicationsCloudClientManager
+     */
+    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+
+    /**
+     * Represent the platformComponentType
+     */
+    private PlatformComponentType platformComponentType;
 
     /**
      *  Represent the remoteNetworkServicesRegisteredList
@@ -155,9 +203,14 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
     private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
     /**
-     *   Represent the assetTransmissionNetworkServiceDeveloperDatabaseFactory
+     *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private AssetTransmissionNetworkServiceDeveloperDatabaseFactory assetTransmissionNetworkServiceDeveloperDatabaseFactory;
+    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+
+    /**
+     * Represent the communicationRegistrationProcessNetworkServiceAgent
+     */
+    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
 
     /**
@@ -166,8 +219,152 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
     public AssetTransmissionPluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
+
+        /******************************************************************
+         * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
+         ******************************************************************/
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
+        this.networkServiceType    = NetworkServiceType.ASSET_TRANSMISSION;
+        this.name                  = "Network Service Asset Transmission";
+        this.alias                 = "NetworkServiceAssetTransmission";
+        this.extraData             = null;
     }
 
+
+
+    @Override
+    public void setEventManager(EventManager DealsWithEvents) {
+        this.eventManager = DealsWithEvents;
+    }
+
+    public boolean isRegister() {
+        return register;
+    }
+
+    /**
+     * Get the IdentityPublicKey
+     *
+     * @return String
+     */
+    public String getIdentityPublicKey(){
+        return this.identity.getPublicKey();
+    }
+
+    /**
+     * Get the Name
+     * @return String
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Get the Alias
+     * @return String
+     */
+    public String getAlias() {
+        return alias;
+    }
+
+    /**
+     * Get the ExtraData
+     * @return String
+     */
+    public String getExtraData() {
+        return extraData;
+    }
+
+    /**
+     * Set the PlatformComponentProfile
+     *
+     * @param platformComponentProfile
+     */
+    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
+        this.platformComponentProfile = platformComponentProfile;
+    }
+
+    /**
+     * This method initialize the communicationNetworkServiceConnectionManager.
+     * IMPORTANT: Call this method only in the CommunicationRegistrationProcessNetworkServiceAgent, when execute the registration process
+     * because at this moment, is create the platformComponentProfile for this component
+     */
+    public void initializeCommunicationNetworkServiceConnectionManager(){
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+    }
+
+
+    /**
+     * DealsWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
+     * DealWithPluginFileSystem Interface implementation.
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent");
+
+
+        return returnedClasses;
+    }
+
+
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * Modify by Manuel on 25/07/2015
+         * I will wrap all this method within a try, I need to catch any generic java Exception
+         */
+        try {
+            /**
+             * I will check the current values and update the LogLevel in those which is different
+             */
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+                /**
+                 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+                 */
+                if (AssetTransmissionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    AssetTransmissionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    AssetTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    AssetTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
+            }
+        } catch (Exception exception) {
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + AssetTransmissionPluginRoot.newLoggingLevel, "Check the cause");
+            // this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+        }
+    }
 
     /**
      * This method validate is all required resource are injected into
@@ -201,7 +398,7 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
 
@@ -210,14 +407,6 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
 
     }
 
-    /**
-     * This method initialize the communicationNetworkServiceConnectionManager.
-     * IMPORTANT: Call this method only in the CommunicationRegistrationProcessNetworkServiceAgent, when execute the registration process
-     * because at this moment, is create the platformComponentProfile for this component
-     */
-    public void initializeNetworkServiceConnectionManager(){
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
-    }
 
     /**
      * Initialize the event listener and configure
@@ -250,86 +439,35 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
 
     }
 
-    /**
-     * This method initialize the database
-     *
-     * @throws CantInitializeAssetTransmissionNetworkServiceDatabaseException
-     */
-    private void initializeDb() throws CantInitializeAssetTransmissionNetworkServiceDatabaseException {
 
-        try {
-            /*
-             * Open new database connection
-             */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeAssetTransmissionNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-        } catch (DatabaseNotFoundException e) {
-
-            /*
-             * The database no exist may be the first time the plugin is running on this device,
-             * We need to create the new database
-             */
-            AssetTransmissionNetworkServiceDatabaseFactory templateNetworkServiceDatabaseFactory = new AssetTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                /*
-                 * We create the new database
-                 */
-                this.dataBase = templateNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeAssetTransmissionNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-            }
-        }
-
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see Service#start()
-     */
     @Override
     public void start() throws CantStartPluginException {
+        logManager.log(AssetTransmissionPluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetTransmissionNetworkService - Starting", "AssetTransmissionPluginRoot - Starting", "AssetTransmissionPluginRoot - Starting");
 
-        logManager.log(AssetTransmissionPluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetTransmissionPluginRoot - Starting", "AssetTransmissionPluginRoot - Starting", "AssetTransmissionPluginRoot - Starting");
-
-        /*
+          /*
          * Validate required resources
          */
         validateInjectedResources();
 
         try {
 
-            /*
+             /*
              * Create a new key pair for this execution
              */
             identity = new ECCKeyPair();
 
+
             /*
-             * Initialize the data base
-             */
+            * Initialize the data base
+            */
             initializeDb();
 
             /*
              * Initialize Developer Database Factory
              */
-            assetTransmissionNetworkServiceDeveloperDatabaseFactory = new AssetTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            assetTransmissionNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+
 
             /*
              * Initialize listeners
@@ -352,30 +490,28 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
             /*
              * Its all ok, set the new status
             */
+
+
+
             this.serviceStatus = ServiceStatus.STARTED;
 
-
-        } catch (CantInitializeAssetTransmissionNetworkServiceDatabaseException exception) {
+        } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("Database Name: " +  AssetTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
-            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
+            String possibleCause = "The Asset User Actor Network Service Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
             throw pluginStartException;
         }
-
     }
 
-    /**
-     * (non-Javadoc)
-     * @see Service#pause()
-     */
     @Override
     public void pause() {
 
@@ -388,16 +524,10 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
          * Set the new status
          */
         this.serviceStatus = ServiceStatus.PAUSED;
-
     }
 
-    /**
-     * (non-Javadoc)
-     * @see Service#resume()
-     */
     @Override
     public void resume() {
-
         /*
          * resume the managers
          */
@@ -407,16 +537,10 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
          * Set the new status
          */
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
-    /**
-     * (non-Javadoc)
-     * @see Service#stop()
-     */
     @Override
     public void stop() {
-
         //Clear all references of the event listeners registered with the event manager.
         listenersAdded.clear();
 
@@ -425,9 +549,6 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
          */
         communicationNetworkServiceConnectionManager.closeAllConnection();
 
-        //Clear all references
-
-
         //set to not register
         register = Boolean.FALSE;
 
@@ -435,17 +556,16 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
          * Set the new status
          */
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
-    /**
-     * (non-Javadoc)
-     * @see Service#getStatus()
-     */
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
     }
+
+
+
+
 
     /**
      * (non-Javadoc)
@@ -456,154 +576,63 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
         this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see DealsWithErrors#setErrorManager(ErrorManager)
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithEvents#setEventManager(EventManager) )
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /* (non-Javadoc)
-    * @see DealsWithPluginDatabaseSystem#setPluginDatabaseSystem()
-    */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-
-    /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return AssetTransmissionPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see DealsWithLogger#setLogManager(LogManager)
-     */
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see LogManagerForDevelopers#getClassesFullPath()
-     */
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.AssetTransmissionPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.IncomingTemplateNetworkServiceMessage");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.OutgoingTemplateNetworkServiceMessage");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.CommunicationRegistrationProcessNetworkServiceAgent");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.CommunicationNetworkServiceLocal");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.CommunicationNetworkServiceConnectionManager");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.structure.CommunicationNetworkServiceRemoteAgent");
-        return returnedClasses;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see LogManagerForDevelopers#setLoggingLevelPerClass(Map<String, LogLevel>)
-     */
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
-        /*
-         * I will check the current values and update the LogLevel in those which is different
-         */
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-
-            /*
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (AssetTransmissionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                AssetTransmissionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                AssetTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                AssetTransmissionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
-
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see NetworkService#getId()
-     */
     @Override
     public UUID getId() {
         return this.pluginId;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see Plugin#setId(UUID)
-     */
     @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+    public PlatformComponentProfile getPlatformComponentProfile() {
+        return platformComponentProfile;
     }
 
-    /**
-     * Handles the events CompleteComponentRegistrationNotification
-     */
-    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
+    @Override
+    public PlatformComponentType getPlatformComponentType() {
+        return platformComponentType;
+    }
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+    @Override
+    public NetworkServiceType getNetworkServiceType() {
+        return networkServiceType;
+    }
+
+    @Override
+    public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
+        return remoteNetworkServicesRegisteredList;
+    }
+
+    @Override
+    public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
+
+        System.out.println(" AssetTransmissionPluginRoot - requestRemoteNetworkServicesRegisteredList");
 
         /*
-         * If the communication cloud client is registered
+         * Request the list of component registers
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT){
+        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
 
-            /*
-             * Is not register
-             */
-            if (!isRegister()){
-                /*
-                 * Construct my profile and register me
-                 */
-                platformComponentProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(), "TemplateNetworkService", "Template Network Service", NetworkServiceType.TEMPLATE, PlatformComponentType.NETWORK_SERVICE, null);
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(platformComponentProfile);
+    }
 
-            }
+    @Override
+    public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+    }
 
-        }
+    @Override
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    }
+
+    @Override
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         /*
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.ASSET_TRANSMISSION &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -611,11 +640,25 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
              */
             this.register = Boolean.TRUE;
 
+
             /*-------------------------------------------------------------------------------------------------
              * This is for test and example of how to use
              * Construct the filter
              */
-            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentProfile, null, null, null, null, null, null, null, null, null, null);
+            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
+                    getCommunicationsCloudClientConnection().
+                    constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
+                            platformComponentProfile.getNetworkServiceType(),
+                            null,                     // alias
+                            null,                     // identityPublicKey
+                            null,                     // location
+                            null,                     // distance
+                            null,                     // name
+                            null,                     // extraData
+                            null,                     // offset
+                            null,                     // max
+                            null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                            null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
             /*
              * Request the list of component registers
@@ -624,23 +667,19 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
 
         }
 
-
     }
 
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        /*
+         /*
          * save into the cache
          */
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
 
-
-        /* -----------------------------------------------------------------------
+         /* -----------------------------------------------------------------------
          * This is for test and example of how to use
          */
         if(getRemoteNetworkServicesRegisteredList() != null && !getRemoteNetworkServicesRegisteredList().isEmpty()){
@@ -657,14 +696,14 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
 
         }
 
+
+
     }
 
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
+    @Override
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
 
-        System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+        System.out.println(" AssetTransmissionPluginRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
         /*
          * Tell the manager to handler the new connection stablished
@@ -690,7 +729,7 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
              * RECOMMENDATION: the content have to be a json string
              */
             String messageContent = "*********************************************************************************\n " +
-                    "* HELLO TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
+                    "* HELLO TEAM...  This message was sent from the device of Roberto Requena Asset Transmission  Network Service... :) *\n" +
                     "*********************************************************************************";
 
             /*
@@ -703,48 +742,103 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
     }
 
     /**
-     * Get the IdentityPublicKey
+     * This method initialize the database
      *
-     * @return String
+     * @throws CantInitializeTemplateNetworkServiceDatabaseException
      */
-    public String getIdentityPublicKey(){
-        return this.identity.getPublicKey();
+    private void initializeDb() throws CantInitializeTemplateNetworkServiceDatabaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
     }
+
 
     /**
-     * Get the PlatformComponentProfile
-     *
-     * @return PlatformComponentProfile
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
      */
-    public PlatformComponentProfile getPlatformComponentProfile() {
-        return platformComponentProfile;
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return AssetTransmissionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
     }
-
     @Override
-    public PlatformComponentType getPlatformComponentType() {
-        return null;
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
     }
 
-    @Override
-    public NetworkServiceType getNetworkServiceType() {
-        return null;
-    }
+
 
     /**
-     * Set the PlatformComponentProfile
+     * Get the New Received Message List
      *
-     * @param platformComponentProfile
+     * @return List<FermatMessage>
      */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
+    public List<FermatMessage> getNewReceivedMessageList() throws CantReadRecordDataBaseException {
+
+        Map<String, Object> filters = new HashMap<>();
+        filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
+
+        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
     }
 
     /**
-     * Get is Register
-     * @return boolean
+     * Mark the message as read
+     * @param fermatMessage
      */
-    public boolean isRegister() {
-        return register;
+    public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
+
+        ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
+        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
     }
 
     /**
@@ -753,7 +847,7 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return assetTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     /**
@@ -762,7 +856,7 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return assetTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     /**
@@ -771,52 +865,27 @@ public class AssetTransmissionPluginRoot implements TemplateManager, Service, Ne
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return assetTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-    /**
-     * (non-javadoc)
-     * @see NetworkService#getNetworkServiceConnectionManager()
-     */
-    public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
-        return communicationNetworkServiceConnectionManager;
-    }
 
-    /**
-     * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
-     */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(applicant, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
-    }
-
-    /**
-     * (non-javadoc)
-     * @see NetworkService#getRemoteNetworkServicesRegisteredList()
-     */
-    public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
-        return remoteNetworkServicesRegisteredList;
-    }
-
-    /**
-     * (non-javadoc)
-     * @see NetworkService#requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters)
-     */
-    public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters){
-
-        System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
-
-        /*
-         * Request the list of component registers
-         */
-        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
 
     }
 
+    @Override
+    public void requestListAssetTransmissionNetworkService(PlatformComponentProfile actorAssetUser) throws CantRequestListAssetTransmissionNetworkServiceException {
 
+    }
 
+    @Override
+    public void connectTo(PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantConnectToAssetTransmissionNetworkServiceException {
 
+    }
 
+    @Override
+    public void sendDigitalAssetMetadata(DigitalAssetMetadata toSend, PlatformComponentProfile assetTransmissionNetworkServiceRemote) throws CantSendDigitalAssetMetadataException {
 
+    }
 }

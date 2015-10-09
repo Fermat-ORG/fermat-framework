@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -118,6 +120,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
     private Handler mHandler = new Handler();
     private boolean activeAddress = true;
     private LinearLayout empty;
+    private ReferenceWallet referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
 
     /**
      * Create a new instance of this fragment
@@ -187,6 +190,14 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 }
             });
 
+           empty.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+               @Override
+               public void onSystemUiVisibilityChange(int i) {
+                   Fx.slide_up(getActivity(), empty);
+               }
+           });
+
+
             autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
 
 
@@ -220,6 +231,20 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     // if (!editTextAddress.getText().equals("")) linear_address.setVisibility(View.VISIBLE);
                 }
             });
+
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.imageView_new_contact);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    walletContact = new WalletContact();
+                    walletContact.setName(autocompleteContacts.getText().toString());
+                    registerForContextMenu(autocompleteContacts);
+                    getActivity().openContextMenu(autocompleteContacts);
+                }
+            });
+
+
+
 
             /**
              *  Address line
@@ -272,7 +297,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
-                    //sendCrypto();
+                    sendCrypto();
 
                     //testing
 //
@@ -281,14 +306,14 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 //
 //                    String notes = txt_notes.getText().toString();
 //
-                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
-                            null,
-                            "holasdad",
-                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
-                            user_id,
-                            Actors.INTRA_USER,
-                            "actor_prueba_robert_public_key",
-                            Actors.INTRA_USER);
+//                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
+//                            null,
+//                            "holasdad",
+//                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+//                            user_id,
+//                            Actors.INTRA_USER,
+//                            "actor_prueba_robert_public_key",
+//                            Actors.INTRA_USER);
                 }
             });
 
@@ -483,6 +508,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
                     //TODO: ver que mas puedo usar del cryptoWalletWalletContact
 
+
                     cryptoWallet.send(
                             Long.parseLong(amount.getText().toString()),
                             validAddress,
@@ -491,12 +517,8 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             user_id,
                             Actors.INTRA_USER,
                             walletContact.actorPublicKey,
-                            cryptoWalletWalletContact.getActorType()
+                            cryptoWalletWalletContact.getActorType(), referenceWallet
                     );
-
-
-
-
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {
                     Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();

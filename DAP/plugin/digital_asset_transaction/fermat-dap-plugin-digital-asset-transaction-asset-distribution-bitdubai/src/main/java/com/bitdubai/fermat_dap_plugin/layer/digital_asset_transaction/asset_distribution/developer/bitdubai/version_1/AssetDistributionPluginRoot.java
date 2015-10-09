@@ -215,6 +215,19 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (AssetDistributionPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                AssetDistributionPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                AssetDistributionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                AssetDistributionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
     }
 }

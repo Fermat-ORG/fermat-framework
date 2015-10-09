@@ -101,7 +101,7 @@ public class RegisterIntraUserFragment extends FermatFragment {
     /**
      * Identity Image
      */
-    byte[] identityImage = null;
+    byte[] identityImage = new byte[0];
 
     private TextView txtView_account_name;
     private ImageView imageView_profile;

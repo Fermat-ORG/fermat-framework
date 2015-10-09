@@ -104,6 +104,9 @@ public enum Plugins {
     BITDUBAI_DAP_ASSET_ISSUER_IDENTITY                  ("BDAPAII", Developers.BITDUBAI),
     BITDUBAI_DAP_ASSET_USER_IDENTITY                    ("BDAPAUI", Developers.BITDUBAI),
     BITDUBAI_DAP_REDEEM_POINT_IDENTITY                  ("BDAPRPI", Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE             ("BDAIWMO", Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE       ("BDAPAUANS", Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE       ("BDAPATNS", Developers.BITDUBAI),
     // End  DAP Plugins
 
     // Init WPD Plugins
@@ -292,6 +295,9 @@ public enum Plugins {
             case "BDAPAII":   return BITDUBAI_DAP_ASSET_ISSUER_IDENTITY;
             case "BDAPAUI":   return BITDUBAI_DAP_ASSET_USER_IDENTITY;
             case "BDAPRPI":   return BITDUBAI_DAP_REDEEM_POINT_IDENTITY;
+            case "BDAIWMO":   return BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE;
+            case "BDAPAUANS": return BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE;
+            case "BDAPATNS":  return BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE;
             // End  DAP Plugins
 
             // Init WPD Plugins
