@@ -33,7 +33,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
