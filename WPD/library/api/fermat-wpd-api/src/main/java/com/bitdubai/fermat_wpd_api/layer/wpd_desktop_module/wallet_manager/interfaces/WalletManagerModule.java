@@ -2,6 +2,9 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.inte
 
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletCreateNewIntraUserIdentityException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletGetIntraUsersIdentityException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletRemovalFailedException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletRenameFailedException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
@@ -54,4 +57,23 @@ public interface WalletManagerModule {
      */
     public void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException;
 
-}
+    /**
+     * This method create a new Intra User Identity
+     *
+     * @param alias
+     * @param profileImage
+     * @return
+     * @throws WalletCreateNewIntraUserIdentityException
+     */
+
+     IntraWalletUser createNewIntraWalletUser(String alias, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException;
+
+    /**
+     * This method returns a all Intra User Identity form current device user
+     *
+     * @return
+     * @throws WalletGetIntraUsersIdentityException
+     */
+     List<IntraWalletUser> getAllIntraWalletUsersFromCurrentDeviceUser() throws WalletGetIntraUsersIdentityException;
+
+    }
