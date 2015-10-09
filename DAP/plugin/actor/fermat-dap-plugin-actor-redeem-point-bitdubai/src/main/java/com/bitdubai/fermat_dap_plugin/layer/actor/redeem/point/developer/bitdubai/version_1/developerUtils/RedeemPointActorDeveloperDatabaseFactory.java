@@ -111,9 +111,9 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         List<String> redeemPointActorColumns = new ArrayList<String>();
 
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
-        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME);
-        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME);
         /*
