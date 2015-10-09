@@ -120,12 +120,24 @@ public class UninstallCompleteSubAppTest extends TestCase {
                 "navigationStructureVersion",
                 true,
                 "subAppPublicKey"
-                );
+        );
+        System.out.println(CatchException.<Exception>caughtException());
         assertThat(CatchException.<Exception>caughtException()).isNotNull();
-
     }
-
-
-
+    @Test
+    public void testUninstallCompleteSubApp_throwsCantInstallCompleteSubAppResourcesException() throws  Exception{
+        subAppResourcesInstallationNetworkServicePluginRoot.start();
+        catchException(subAppResourcesInstallationNetworkServicePluginRoot).uninstallCompleteSubApp(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false,
+                null
+        );
+        System.out.println(CatchException.<Exception>caughtException());
+        assertThat(CatchException.<Exception>caughtException()).isNull();
+    }
 }
 

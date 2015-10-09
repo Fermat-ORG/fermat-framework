@@ -109,12 +109,12 @@ public class InstallSkinForSubAppTest extends TestCase {
     public void testInstallInstallSkinForSubApp_ThrowsSubAppInstalationException() throws Exception {
 
         subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installSkinForSubApp("reference_wallet",
+        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installSkinForSubApp("wallet_factory",
                 "bitDubai",
                 "medium",
-                "mati_wallet_verde",
+                "default",
                 "navigationStructureVersion",
-                "walletPublicKey");
+                "");
         assertThat(caughtException()).isNotNull();
 
     }

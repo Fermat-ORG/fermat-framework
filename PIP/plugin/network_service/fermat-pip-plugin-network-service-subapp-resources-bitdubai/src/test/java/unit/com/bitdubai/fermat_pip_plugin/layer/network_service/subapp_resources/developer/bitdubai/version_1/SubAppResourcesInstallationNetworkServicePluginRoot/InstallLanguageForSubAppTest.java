@@ -107,7 +107,7 @@ public class InstallLanguageForSubAppTest extends TestCase {
     @Test
     public void testInstallLanguageForSubApp_ThrowsCantInstallSubAppLanguageException() throws Exception {
         subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installLanguageForSubApp("reference_wallet",
+        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installLanguageForSubApp("wallet_factory",
                 "bitDubai",
                 "medium",
                 UUID.randomUUID(),
@@ -120,7 +120,7 @@ public class InstallLanguageForSubAppTest extends TestCase {
     @Test
     public void testInstallLanguageForSubApp_FileNotFoundThrowsCantInstallSubAppLanguageException() throws Exception {
         subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installLanguageForSubApp("reference_wallet","bitDubai","medium",UUID.randomUUID(),"en","walletPublicKey");
+        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installLanguageForSubApp("wallet_factory","bitDubai","medium",UUID.randomUUID(),"en","walletPublicKey");
         assertThat(CatchException.<Exception>caughtException()).isNull();
 
     }

@@ -1,5 +1,6 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -28,6 +29,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -80,6 +82,7 @@ public class InstallCompleteSubAppTest extends TestCase {
     private XMLParser mockXMLParser;
 
     String repoManifest = "<skin ></skin >";
+    private String walletPublicKey;
 
     SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
 //
@@ -99,35 +102,36 @@ public class InstallCompleteSubAppTest extends TestCase {
 
         when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockFermatEventListener);
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
-
+        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
     }
     @Test
     public void testInstallCompleteSubApp_ThrowsCantInstallCompleteSubAppResourcesException() throws Exception {
 
         subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installCompleteSubApp("reference_wallet",
-                                                                                                    "bitDubai",
-                                                                                                    "medium",
-                                                                                                    "mati_wallet_verde",
-                                                                                                    "languageName",
-                                                                                                    "navigationStructureVersion",
-                                                                                                    "walletPublicKey");
-        assertThat(CatchException.<Exception>caughtException()).isNotNull();
+        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installCompleteSubApp("wallet_factory",
+                "bitDubai",
+                "medium",
+                "default",
+                "en",
+                "navigationStructureVersion",
+                "");
+        System.out.println(CatchException.<Exception>caughtException());
+       assertThat(caughtException()).isNotNull();
 
     }
 
 
     @Test
     public void testInstallCompleteSubApp_FileNotFoundThrowsCantInstallCompleteSubAppResourcesException() throws Exception {
-
         subAppResourcesInstallationNetworkServicePluginRoot.start();
-        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installCompleteSubApp("reference_wallet",
-                                                                                                    "bitDubai",
-                                                                                                    "medium",
-                                                                                                    "mati_wallet_verde",
-                                                                                                    "languageName",
-                                                                                                    "navigationStructureVersion",
-                                                                                                    "walletPublicKey");
+        catchException(subAppResourcesInstallationNetworkServicePluginRoot).installCompleteSubApp("wallet_factory",
+                "bitDubai",
+                "medium",
+                "default",
+                "en",
+                "navigationStructureVersion",
+                "");
+        System.out.println(CatchException.<Exception>caughtException());
         assertThat(CatchException.<Exception>caughtException()).isInstanceOf(CantInstallCompleteSubAppResourcesException.class);
 
     }

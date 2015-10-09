@@ -163,7 +163,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
     private String REPOSITORY_LINK = "https://raw.githubusercontent.com/bitDubai/fermat/master/seed-resources/subApp_resources/";
 
 
-    private final String LOCAL_STORAGE_PATH = "subApp-resources/";
+    private final String LOCAL_STORAGE_PATH = "subApp_resources/";
 
 
     /**
@@ -287,7 +287,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
         // this will be use when the repository be open source
         //String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
 
-        String linkToRepo = "seed-resources/wallet_resources/" + developer+ "/"+ subAppType+"/";
+        String linkToRepo = "seed-resources/subApp_resources/" + developer+ "/"+ subAppType+"/";
 
         String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
@@ -1153,7 +1153,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
 
             String filename = skinId.toString() + "_" + name;
 
-            reponame+=publicKey+"/";
+            reponame+=publicKey+"";
 
             layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, filename, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
             layoutFile.setContent(xml);
