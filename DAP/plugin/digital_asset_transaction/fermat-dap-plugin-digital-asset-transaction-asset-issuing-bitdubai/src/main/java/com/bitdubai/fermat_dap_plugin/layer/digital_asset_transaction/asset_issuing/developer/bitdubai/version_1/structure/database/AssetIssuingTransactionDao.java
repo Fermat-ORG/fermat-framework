@@ -25,7 +25,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.UnexpectedResultReturnedFromDatabaseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -739,20 +739,20 @@ public class AssetIssuingTransactionDao {
     }
 
     public List<String> getGenesisTransactionByDeliveredStatus() throws CantCheckAssetIssuingProgressException {
-        return getValueListFromAssetIssuingTableByFiledCode(
+        return getValueListFromAssetIssuingTableByFieldCode(
                 AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME,
                 TransactionStatus.DELIVERED.getCode(),
                 AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
     public List<String> getTransactionHashByDeliveredStatus() throws CantCheckAssetIssuingProgressException {
-        return getValueListFromAssetIssuingTableByFiledCode(
+        return getValueListFromAssetIssuingTableByFieldCode(
                 AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_STATE_COLUMN_NAME,
                 TransactionStatus.DELIVERED.getCode(),
                 AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME);
     }
 
-    private List<String> getValueListFromAssetIssuingTableByFiledCode(String fieldCode, String valueAsked, String columnToReturn) throws CantCheckAssetIssuingProgressException {
+    private List<String> getValueListFromAssetIssuingTableByFieldCode(String fieldCode, String valueAsked, String columnToReturn) throws CantCheckAssetIssuingProgressException {
         try{
             this.database=openDatabase();
             List<String> resultList=new ArrayList<>();

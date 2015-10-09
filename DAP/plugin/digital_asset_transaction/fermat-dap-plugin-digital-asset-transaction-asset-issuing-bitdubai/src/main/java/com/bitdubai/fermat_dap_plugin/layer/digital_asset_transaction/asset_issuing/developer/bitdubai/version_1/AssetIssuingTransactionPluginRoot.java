@@ -348,7 +348,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         returnedClasses.add("com.bitdubai.fermat_dap_api.layer.dap_transaction.CantPersistDigitalAssetException");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException");
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException");
+        returnedClasses.add("com.bitdubai.fermat_dap_api.layer.dap_transaction.UnexpectedResultReturnedFromDatabaseException");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants");
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory");

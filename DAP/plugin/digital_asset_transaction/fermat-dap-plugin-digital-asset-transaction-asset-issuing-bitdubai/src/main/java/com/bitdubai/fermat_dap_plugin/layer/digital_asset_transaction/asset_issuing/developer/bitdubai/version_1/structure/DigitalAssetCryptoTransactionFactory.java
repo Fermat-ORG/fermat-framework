@@ -58,7 +58,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -411,7 +411,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 sendBitcoins(cryptoAssetGenesisAddress, digitalAssetHash, transactionId);
                 issueUnfinishedDigitalAsset(transactionId);
             }
-            if(digitalAssetTransactionStatus==TransactionStatus.SENDING_BITCOINS){
+            if(digitalAssetTransactionStatus==TransactionStatus.SENDING_CRYPTO){
                 digitalAssetPublicKey=this.assetIssuingTransactionDao.getDigitalAssetPublicKeyById(transactionId);
                 setDigitalAssetLocalFilePath(digitalAssetPublicKey);
                 getDigitalAssetFileFromLocalStorage();
@@ -498,7 +498,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     private String sendBitcoins(CryptoAddress genesisAddress, String digitalAssetHash, String transactionId) throws CantSendGenesisAmountException, CantPersistsGenesisTransactionException {
         try {
-            this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_BITCOINS);
+            this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_CRYPTO);
             this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(digitalAssetHash, CryptoStatus.PENDING_SUBMIT);
             //this.cryptoVaultManager.sendBitcoins(this.digitalAsset.getPublicKey(), genesisTransaction, genesisAddress, genesisAmount);
             //TODO: Send btc through outgoing intra user
