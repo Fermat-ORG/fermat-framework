@@ -72,7 +72,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
- * Created by mati on 2015.09.28..
+ * Created by Matias Furszyfer on 2015.09.28..
  */
 public class ReceiveTransactionsFragment extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler {
 
