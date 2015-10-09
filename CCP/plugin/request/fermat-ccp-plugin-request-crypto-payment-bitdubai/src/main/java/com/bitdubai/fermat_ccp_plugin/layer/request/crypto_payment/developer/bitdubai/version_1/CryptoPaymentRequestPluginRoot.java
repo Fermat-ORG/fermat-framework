@@ -155,13 +155,13 @@ public class CryptoPaymentRequestPluginRoot implements
 
         // adding listeners to the events
 
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_APPROVED, new CryptoPaymentRequestApprovedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
+        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_APPROVED, new CryptoPaymentRequestApprovedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
 
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_DENIED  , new CryptoPaymentRequestDeniedEventHandler  (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
+        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_DENIED, new CryptoPaymentRequestDeniedEventHandler  (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
 
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_RECEIVED, new CryptoPaymentRequestReceivedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId, walletManagerManager));
+        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED, new CryptoPaymentRequestReceivedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId, walletManagerManager));
 
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REFUSED , new CryptoPaymentRequestRefusedEventHandler (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
+        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_REFUSED, new CryptoPaymentRequestRefusedEventHandler (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
 
         // executing pending event actions
         try {

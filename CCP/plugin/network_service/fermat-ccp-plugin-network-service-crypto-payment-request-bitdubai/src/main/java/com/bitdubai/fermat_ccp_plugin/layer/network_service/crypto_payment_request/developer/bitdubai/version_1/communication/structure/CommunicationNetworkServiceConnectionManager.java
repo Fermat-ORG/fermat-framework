@@ -241,5 +241,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
         return incomingMessageDao;
     }
 
-
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
 }

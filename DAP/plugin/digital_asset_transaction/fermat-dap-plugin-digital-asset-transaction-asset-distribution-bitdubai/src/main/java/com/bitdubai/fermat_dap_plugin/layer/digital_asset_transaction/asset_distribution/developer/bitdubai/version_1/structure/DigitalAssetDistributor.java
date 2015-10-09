@@ -138,7 +138,7 @@ public class DigitalAssetDistributor {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty=digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
         Timestamp expirationDate= (Timestamp) contractProperty.getValue();
-        Date date= new java.util.Date();
+        Date date= new Date();
         return expirationDate.after(new Timestamp(date.getTime()));
     }
 

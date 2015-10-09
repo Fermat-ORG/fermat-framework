@@ -503,11 +503,10 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         assetFactory.setName(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN));
         assetFactory.setDescription(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN));
         assetFactory.setAmount(assetFactoriesRecord.getLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN));
-
+        assetFactory.setWalletPublicKey(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY);
         AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
         assetIssuerIdentity.setAlias(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN));
         assetIssuerIdentity.setPublicKey(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN));
-        //assetFactory.setAssetUserIdentityPublicKey(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN));
         assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
         assetFactory.setState(State.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN)));
         assetFactory.setFee(assetFactoriesRecord.getLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN));
@@ -603,6 +602,37 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         }
     }
 
+    public void markAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException {
+
+
+        try {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
+
+            DatabaseTable table = getDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME);
+            DatabaseTableRecord assetFactoryRecord = getAssetFactoryProjectRecord(assetFactory);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(assetFactory.getPublicKey());
+            filter.setColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, assetFactoryRecord);
+            else {
+                table.setStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, assetFactoryRecord);
+            }
+
+            //I execute the transaction and persist the database side of the asset.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+        } catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Asset Factory in the database.", null);
+        }
+    }
+
     public List<AssetFactory> getAssetFactoryList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantCreateFileException {
         Database database = null;
         try {
@@ -628,6 +658,7 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                     }
 
                     if (contractProperty.getName().equalsIgnoreCase("expiration_date")) {
+                        assetFactory.setExpirationDate(Timestamp.valueOf( contractProperty.getValue().toString()));
                         String value = contractProperty.getValue() != null ?
                                 !contractProperty.getValue().toString().equalsIgnoreCase("null") ? contractProperty.getValue().toString() : null : null;
                         assetFactory.setExpirationDate(value != null ? Timestamp.valueOf(value) : null);

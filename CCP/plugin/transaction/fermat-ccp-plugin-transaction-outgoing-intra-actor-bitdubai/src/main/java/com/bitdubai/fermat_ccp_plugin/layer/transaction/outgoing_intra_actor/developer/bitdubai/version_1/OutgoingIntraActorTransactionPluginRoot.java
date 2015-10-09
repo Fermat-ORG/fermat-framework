@@ -3,6 +3,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.de
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -17,6 +22,7 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interf
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
+import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.OutgoingIntraActorTransactionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.OutgoingIntraActorTransactionProcessorAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionHandlerFactory;
@@ -29,12 +35,13 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by loui on 20/02/15.
  */
-public class OutgoingIntraActorTransactionPluginRoot implements DealsWithBitcoinWallet, DealsWithCryptoTransmissionNetworkService, DealsWithCryptoVault, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, OutgoingIntraActorManager, Plugin, Service{
+public class OutgoingIntraActorTransactionPluginRoot implements DatabaseManagerForDevelopers, DealsWithBitcoinWallet, DealsWithCryptoTransmissionNetworkService, DealsWithCryptoVault, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, OutgoingIntraActorManager, Plugin, Service{
 
     /*
      * DealsWithBitcoinWallet Interface member variables.
@@ -87,6 +94,28 @@ public class OutgoingIntraActorTransactionPluginRoot implements DealsWithBitcoin
     private OutgoingIntraActorDao outgoingIntraActorDao;
     private OutgoingIntraActorTransactionProcessorAgent transactionProcessorAgent;
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
+
+    /**
+     * DatabaseManagerForDevelopers implementation
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        OutgoingIntraActorTransactionDeveloperDatabaseFactory developerDatabaseFactory = new OutgoingIntraActorTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        OutgoingIntraActorTransactionDeveloperDatabaseFactory developerDatabaseFactory = new OutgoingIntraActorTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        OutgoingIntraActorTransactionDeveloperDatabaseFactory developerDatabaseFactory = new OutgoingIntraActorTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    }
+
 
 
     /*

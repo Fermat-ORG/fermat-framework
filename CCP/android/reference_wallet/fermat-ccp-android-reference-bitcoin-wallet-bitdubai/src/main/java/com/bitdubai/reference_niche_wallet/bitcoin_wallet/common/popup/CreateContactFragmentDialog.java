@@ -206,6 +206,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 );
 
                 Toast.makeText(activity.getApplicationContext(), "Contact saved!", Toast.LENGTH_SHORT).show();
+                
 
                 dismiss();
 

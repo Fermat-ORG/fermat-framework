@@ -233,7 +233,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         for(String eventId : eventIdList){
                             transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
                             for(String transactionHash: transactionHashList){
-                                transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                                transactionCryptoStatus= getGenesisTransactionFromAssetVault(transactionHash).getCryptoStatus();
                                 assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                                 assetIssuingTransactionDao.updateEventStatus(eventId);
                             }
@@ -246,10 +246,11 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                     for(String transactionHash: transactionHashList){
                         //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
-                        transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                        CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
+                        transactionCryptoStatus= cryptoGenesisTransaction.getCryptoStatus();
                         assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                         String genesisTransaction=assetIssuingTransactionDao.getDigitalAssetGenesisTransactionByHash(transactionHash);
-                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(genesisTransaction, AssetBalanceType.BOOK);
+                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.BOOK);
                     }
                 }
 
@@ -257,7 +258,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.REVERSED_ON_CRYPTO_NETWORK);
                     for(String transactionHash: transactionHashList){
                         //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
-                        transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                        CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
+                        transactionCryptoStatus= cryptoGenesisTransaction.getCryptoStatus();
                         assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                     }
                 }
@@ -266,7 +268,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.REVERSED_ON_BLOCKCHAIN);
                     for(String transactionHash: transactionHashList){
                         //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
-                        transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                        CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
+                        transactionCryptoStatus= cryptoGenesisTransaction.getCryptoStatus();
                         assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                     }
                 }
@@ -275,13 +278,13 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.IRREVERSIBLE);
                     for(String transactionHash: transactionHashList){
                         //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
-                        transactionCryptoStatus= getCryptoStatusFromAssetVault(transactionHash);
+                        CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
+                        transactionCryptoStatus= cryptoGenesisTransaction.getCryptoStatus();
                         assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                         assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByTransactionHash(transactionHash, TransactionStatus.DELIVERING);
-                        String genesisTransaction=assetIssuingTransactionDao.getDigitalAssetGenesisTransactionByHash(transactionHash);
                         String publicKey=this.assetIssuingTransactionDao.getPublicKeyByTransactionHash(transactionHash);
                         this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
-                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(genesisTransaction, AssetBalanceType.AVAILABLE);
+                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
                     }
                 }
 
@@ -293,9 +296,10 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 }
 
                 if (isDeliveredDigitalAssets()){
-                    List<String> genesisTransactionFromAssetsDelivered=assetIssuingTransactionDao.getGenesisTransactionByDeliveredStatus();
-                    for(String genesisTransaction: genesisTransactionFromAssetsDelivered){
-                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(genesisTransaction, AssetBalanceType.BOOK);
+                    List<String> transactionHashFromAssetsDelivered=assetIssuingTransactionDao.getTransactionHashByDeliveredStatus();
+                    for(String transactionHash: transactionHashFromAssetsDelivered){
+                        CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
+                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
                     }
                 }
 
@@ -346,9 +350,14 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         /*private CryptoStatus getCryptoStatusFromOutgoingIntraActorPlugin(String transactionHash) throws OutgoingIntraActorCantGetCryptoStatusException {
             return outgoingIntraActorManager.getTransactionStatus(transactionHash);
         }*/
-        private CryptoStatus getCryptoStatusFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
+        /*private CryptoStatus getCryptoStatusFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
             CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
             return cryptoTransaction.getCryptoStatus();
+        }*/
+
+        private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
+            CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
+            return cryptoTransaction;
         }
 
     }
