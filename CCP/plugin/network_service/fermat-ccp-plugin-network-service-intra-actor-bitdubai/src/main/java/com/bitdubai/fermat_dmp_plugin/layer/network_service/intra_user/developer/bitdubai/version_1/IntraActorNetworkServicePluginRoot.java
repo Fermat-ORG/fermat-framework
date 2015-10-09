@@ -642,11 +642,18 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+        if(platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR){
+            System.out.print("-----------------------\n" +
+                    "ACTOR REGISTRADO!! -----------------------\n" +
+                    "-----------------------\n A: " +platformComponentProfileRegistered.getAlias());
+        }
+
+
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.INTRA_USER &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -660,6 +667,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
 
             CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+            System.out.print("-----------------------\n" +
+                    "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
+                    "-----------------------\n A: " + getName());
 
 
         /*
@@ -677,30 +688,6 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                  */
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
-
-
-//            /*-------------------------------------------------------------------------------------------------
-//             * This is for test and example of how to use
-//             * Construct the filter
-//             */
-//            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
-//                                                                getCommunicationsCloudClientConnection().
-//                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
-//                                                                        null,                     // alias
-//                                                                        null,                     // identityPublicKey
-//                                                                        null,                     // location
-//                                                                        null,                     // distance
-//                                                                        null,                     // name
-//                                                                        null,                     // extraData
-//                                                                        null,                     // offset
-//                                                                        null,                     // max
-//                                                                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-//                                                                        null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
-//
-//            /*
-//             * Request the list of component registers
-//             */
-//             requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         }
 
@@ -873,12 +860,13 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(applicant, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
+
 
     /**
      * (non-javadoc)
@@ -957,9 +945,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         List<IntraUser> intraUserList = new ArrayList<IntraUser>();
 
-        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0],"alias1"));
-        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0],"alias2"));
-
+        intraUserList.add(new IntraUserNetworkService("public_key",new byte[0],"Matias"));
+        intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
+        intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
+        intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
         return intraUserList;
     }
 

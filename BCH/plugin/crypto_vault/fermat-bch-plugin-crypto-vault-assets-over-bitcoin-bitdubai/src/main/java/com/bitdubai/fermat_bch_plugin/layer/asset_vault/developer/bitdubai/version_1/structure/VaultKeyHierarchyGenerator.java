@@ -95,7 +95,7 @@ class VaultKeyHierarchyGenerator implements Runnable{
         /**
          * I create the VaultKeyHierarchy from the master key
          */
-        vaultKeyHierarchy = new VaultKeyHierarchy(rootKey);
+        vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId);
 
         /**
          * I will get from the database the list of accounts to create
