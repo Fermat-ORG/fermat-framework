@@ -120,6 +120,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
          */
         List<String> incoming_TransactionsColumns = new ArrayList<String>();
 
+        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TRX_ID_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_HASH_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME);
@@ -140,6 +141,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
          */
         List<String> outgoing_TransactionsColumns = new ArrayList<String>();
 
+        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TRX_ID_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_HASH_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME);
