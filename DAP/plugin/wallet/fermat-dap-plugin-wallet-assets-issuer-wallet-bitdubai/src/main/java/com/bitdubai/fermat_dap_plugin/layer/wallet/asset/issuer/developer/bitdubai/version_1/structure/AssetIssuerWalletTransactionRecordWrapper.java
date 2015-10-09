@@ -65,7 +65,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     }
 
     @Override
-    public String getAssetIssuingPublicKey() {
+    public String getDigitalAssetPublicKey() {
         return assetIssuingPublicKey;
     }
 

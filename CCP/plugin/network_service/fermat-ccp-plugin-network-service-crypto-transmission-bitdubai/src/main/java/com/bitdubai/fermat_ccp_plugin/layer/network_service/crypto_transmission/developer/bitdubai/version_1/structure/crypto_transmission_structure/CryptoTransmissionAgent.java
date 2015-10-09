@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
@@ -289,6 +290,7 @@ public class CryptoTransmissionAgent {
 
                 if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getDestinationPublicKey()) == null) {
 
+
                     if (wsCommunicationsCloudClientManager != null) {
 
                         if (platformComponentProfile != null) {
@@ -296,7 +298,9 @@ public class CryptoTransmissionAgent {
 
                             DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                                     getCommunicationsCloudClientConnection().
-                                    constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
+                                    constructDiscoveryQueryParamsFactory(
+                                            PlatformComponentType.NETWORK_SERVICE,//applicant = who made the request
+                                            NetworkServiceType.CRYPTO_TRANSMISSION,
                                             null,                     // alias
                                             cryptoTransmissionMetadata.getDestinationPublicKey(), // identityPublicKey
                                             null,                     // location
@@ -333,6 +337,7 @@ public class CryptoTransmissionAgent {
                     // Envio el mensaje a la capa de comunicacion
 
                     communicationNetworkServiceLocal.sendMessage(jsonMetadata, identity);
+
 
                     //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
                     cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);

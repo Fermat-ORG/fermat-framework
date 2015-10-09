@@ -10,20 +10,20 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeAssetTransmissionNetworkServiceDatabaseException</code> is
- * throw when error occurred initialize the data base
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException</code> is
+ * throw when error occurred updating new record in a table of the data base
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
+ * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInitializeAssetTransmissionNetworkServiceDatabaseException extends FermatException {
+public class CantInitializeTemplateNetworkServiceDatabaseException extends FermatException {
 
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE NETWORK INTRAUSER DATABASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE  NETWORK SERVICE ASSET TRANSMISSION  DATABASE";
 
     /**
      * Constructor with parameters
@@ -33,7 +33,7 @@ public class CantInitializeAssetTransmissionNetworkServiceDatabaseException exte
      * @param context
      * @param possibleReason
      */
-    public CantInitializeAssetTransmissionNetworkServiceDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantInitializeTemplateNetworkServiceDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -43,7 +43,7 @@ public class CantInitializeAssetTransmissionNetworkServiceDatabaseException exte
      * @param message
      * @param cause
      */
-    public CantInitializeAssetTransmissionNetworkServiceDatabaseException(final String message, final Exception cause) {
+    public CantInitializeTemplateNetworkServiceDatabaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -52,7 +52,7 @@ public class CantInitializeAssetTransmissionNetworkServiceDatabaseException exte
      *
      * @param message
      */
-    public CantInitializeAssetTransmissionNetworkServiceDatabaseException(final String message) {
+    public CantInitializeTemplateNetworkServiceDatabaseException(final String message) {
         this(message, null);
     }
 
@@ -61,7 +61,7 @@ public class CantInitializeAssetTransmissionNetworkServiceDatabaseException exte
      *
      * @param exception
      */
-    public CantInitializeAssetTransmissionNetworkServiceDatabaseException(final Exception exception) {
+    public CantInitializeTemplateNetworkServiceDatabaseException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -69,7 +69,7 @@ public class CantInitializeAssetTransmissionNetworkServiceDatabaseException exte
     /**
      * Constructor
      */
-    public CantInitializeAssetTransmissionNetworkServiceDatabaseException() {
+    public CantInitializeTemplateNetworkServiceDatabaseException() {
         this(DEFAULT_MESSAGE);
     }
 }

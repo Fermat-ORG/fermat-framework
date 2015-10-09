@@ -26,8 +26,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestAction;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.CryptoPaymentRequestType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestDirection;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantConfirmRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantGetRequestException;
@@ -47,8 +47,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.exceptions.CantInitializeNetworkServiceDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
@@ -57,13 +55,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -71,7 +65,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -197,7 +190,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING.
      * - Action        : REQUEST.
-     * - Type          : OWN.
+     * - Type          : OUTGOING.
      */
     @Override
     public void sendCryptoPaymentRequest(UUID                  requestId        ,
@@ -213,9 +206,9 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
         try {
 
-            RequestProtocolState       protocolState = RequestProtocolState      .PROCESSING;
-            CryptoPaymentRequestAction action        = CryptoPaymentRequestAction.REQUEST   ;
-            CryptoPaymentRequestType   type          = CryptoPaymentRequestType  .OWN       ;
+            RequestProtocolState          protocolState = RequestProtocolState         .PROCESSING;
+            RequestAction action        = RequestAction.REQUEST   ;
+            RequestDirection direction     = RequestDirection.OUTGOING  ;
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
                     requestId        ,
@@ -227,7 +220,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                     description      ,
                     amount           ,
                     startTimeStamp   ,
-                    type             ,
+                    direction        ,
                     action           ,
                     protocolState    ,
                     networkType
@@ -257,8 +250,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
-                    CryptoPaymentRequestAction.INFORM_REFUSAL,
-                    RequestProtocolState.PROCESSING
+                    RequestAction.INFORM_REFUSAL,
+                    RequestProtocolState      .PROCESSING
             );
 
         } catch(CantTakeActionException  |
@@ -286,7 +279,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
-                    CryptoPaymentRequestAction.INFORM_DENIAL,
+                    RequestAction.INFORM_DENIAL,
                     RequestProtocolState.PROCESSING
             );
 
@@ -315,7 +308,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
-                    CryptoPaymentRequestAction.INFORM_APPROVAL,
+                    RequestAction.INFORM_APPROVAL,
                     RequestProtocolState.PROCESSING
             );
 
@@ -343,7 +336,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
-                    CryptoPaymentRequestAction.INFORM_RECEPTION,
+                    RequestAction.INFORM_RECEPTION,
                     RequestProtocolState.PROCESSING
             );
 
@@ -660,7 +653,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(final PlatformComponentProfile applicant                     ,
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(final PlatformComponentType    platformComponentType         ,
+                                                                         final NetworkServiceType       networkServiceType            ,
                                                                          final String                   alias                         ,
                                                                          final String                   identityPublicKey             ,
                                                                          final Location                 location                      ,
@@ -673,7 +667,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                                                                          final NetworkServiceType       fromOtherNetworkServiceType   ) {
 
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
-                applicant                     ,
+                platformComponentType         ,
+                networkServiceType            ,
                 alias                         ,
                 identityPublicKey             ,
                 location                      ,
@@ -856,33 +851,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     @Override
     public void setId(final UUID pluginId) {
         this.pluginId = pluginId;
-    }
-
-    /**
-     * Get the New Received Message List
-     *
-     * @return List<FermatMessage>
-     */
-    public List<FermatMessage> getNewReceivedMessageList() throws CantReadRecordDataBaseException {
-
-        Map<String, Object> filters = new HashMap<>();
-        filters.put(CommunicationLayerNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
-
-        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
-    }
-
-    /**
-     * Mark the message as read
-     * @param fermatMessage
-     */
-    public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
-
-        ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
-    }
-
-    public PlatformComponentProfile isRegisteredConnectionForActorPK(String actorPublicKey){
-        return cacheConnections.get(actorPublicKey);
     }
 
 }

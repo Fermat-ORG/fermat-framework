@@ -68,7 +68,8 @@ public interface NetworkService {
      * of the discovery query to search all component register in the communication
      * cloud server that match with the params
      *
-     * @param applicant
+     * @param platformComponentType
+     * @param networkServiceType
      * @param alias
      * @param identityPublicKey
      * @param location
@@ -81,7 +82,7 @@ public interface NetworkService {
      * @param fromOtherNetworkServiceType
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
 
     /**
