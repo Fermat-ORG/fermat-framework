@@ -28,7 +28,6 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interf
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.database.CryptoPaymentRequestDao;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestStateException;
-import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteCryptoPaymentRequestPendingEventActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteUnfinishedActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestRegistryException;
@@ -107,7 +106,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             Long startTimeStamp = System.currentTimeMillis();
 
-            CryptoPaymentType  type  = CryptoPaymentType .OWN         ;
+            CryptoPaymentType  type  = CryptoPaymentType .SENT;
             CryptoPaymentState state = CryptoPaymentState.NOT_SENT_YET;
 
             // save the record in database
@@ -130,16 +129,16 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
             // if i can save it, i send it to the network service.
 
-            fromNotSentYetToPendingResponse(
-                    requestId        ,
+            fromNotSentYetToWaitingReceptionConfirmation(
+                    requestId,
                     identityPublicKey,
-                    identityType     ,
-                    actorPublicKey   ,
-                    actorType        ,
-                    cryptoAddress    ,
-                    description      ,
-                    amount           ,
-                    startTimeStamp   ,
+                    identityType,
+                    actorPublicKey,
+                    actorType,
+                    cryptoAddress,
+                    description,
+                    amount,
+                    startTimeStamp,
                     networkType
             );
 
@@ -162,18 +161,18 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         }
     }
 
-    private void fromNotSentYetToPendingResponse(UUID                  requestId        ,
-                                                 String                identityPublicKey,
-                                                 Actors                identityType     ,
-                                                 String                actorPublicKey   ,
-                                                 Actors                actorType        ,
-                                                 CryptoAddress         cryptoAddress    ,
-                                                 String                description      ,
-                                                 long                  amount           ,
-                                                 long                  startTimeStamp   ,
-                                                 BlockchainNetworkType networkType      ) throws CantSendRequestException                     ,
-                                                                                                 CantChangeCryptoPaymentRequestStateException ,
-                                                                                                 CryptoPaymentRequestNotFoundException        {
+    private void fromNotSentYetToWaitingReceptionConfirmation(UUID                  requestId        ,
+                                                              String                identityPublicKey,
+                                                              Actors                identityType     ,
+                                                              String                actorPublicKey   ,
+                                                              Actors                actorType        ,
+                                                              CryptoAddress         cryptoAddress    ,
+                                                              String                description      ,
+                                                              long                  amount           ,
+                                                              long                  startTimeStamp   ,
+                                                              BlockchainNetworkType networkType      ) throws CantSendRequestException                     ,
+                                                                                                              CantChangeCryptoPaymentRequestStateException ,
+                                                                                                              CryptoPaymentRequestNotFoundException        {
 
         // if i can save it, i send it to the network service.
 
@@ -190,11 +189,11 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                 networkType
         );
 
-        // change the state to pending response
+        // change the state to waiting reception confirmation
 
         cryptoPaymentRequestDao.changeState(
                 requestId,
-                CryptoPaymentState.PENDING_RESPONSE
+                CryptoPaymentState.WAITING_RECEPTION_CONFIRMATION
         );
     }
 
@@ -521,7 +520,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
 
                         try {
 
-                            fromNotSentYetToPendingResponse(
+                            fromNotSentYetToWaitingReceptionConfirmation(
                                     cryptoPayment.getRequestId(),
                                     cryptoPayment.getIdentityPublicKey(),
                                     cryptoPayment.getIdentityType(),

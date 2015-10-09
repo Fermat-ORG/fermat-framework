@@ -1,8 +1,8 @@
-== FERMAT SHP : Making it easy for shop owners 
+== FERMAT CCP (crypto currency platform)
 
-=== Shop Owners 
-=== Brands
-=== Retailers
+=== BitWa (Basic Bitcoin Wallet)  -> *for those devoted "BTC-only" users!*
+=== Argentine Bitcoin wallet -> *for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady* comparison between argentine$, USD (oficial and blue!) and even Eu$!)
+=== BLP (Bitcoin Loss Protected wallet) -> *for conservative user's caring about never selling under the purchase price ! (preserving value!)*
 
 
 

@@ -21,8 +21,3 @@ include::fermat-dap/fermatDAPLayersIndex.asciidoc[]
 :leveloffset: 0
 include::android/Iniciacion_android.asciidoc[]
 
-= FERMAT: expanding the cryptoworld (the official book)
-
-:leveloffset: 0
-include::fermat-book/fbk-01.asciidoc[]
-

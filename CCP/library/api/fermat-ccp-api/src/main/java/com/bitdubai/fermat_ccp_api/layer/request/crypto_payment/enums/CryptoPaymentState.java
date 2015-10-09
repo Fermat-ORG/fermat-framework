@@ -11,15 +11,18 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CryptoPaymentState implements FermatEnum {
 
-    APPROVED                  ("APR"),
-    DENIED_BY_INCOMPATIBILITY ("DBI"),
-    ERROR                     ("ERR"),
-    IN_APPROVING_PROCESS      ("IAP"),
-    NOT_SENT_YET              ("NSY"),
-    PAID                      ("PAI"),
-    PAYMENT_PROCESS_STARTED   ("PPS"),
-    PENDING_RESPONSE          ("PEN"),
-    REFUSED                   ("REF");
+    APPROVED                       ("APR"),
+    DENIED_BY_INCOMPATIBILITY      ("DBI"),
+    ERROR                          ("ERR"),
+    IN_APPROVING_PROCESS           ("IAP"),
+    NOT_SENT_YET                   ("NSY"),
+    PAID                           ("PAI"),
+    PAYMENT_PROCESS_STARTED        ("PPS"),
+    PENDING_RESPONSE               ("PEN"),
+    REFUSED                        ("REF"),
+    WAITING_RECEPTION_CONFIRMATION ("WRC"),
+
+    ;
 
     private String code;
 
@@ -31,15 +34,16 @@ public enum CryptoPaymentState implements FermatEnum {
 
         switch (code){
 
-            case "APR": return APPROVED                 ;
-            case "DBI": return DENIED_BY_INCOMPATIBILITY;
-            case "ERR": return ERROR                    ;
-            case "IAP": return IN_APPROVING_PROCESS     ;
-            case "NSY": return NOT_SENT_YET             ;
-            case "PAI": return PAID                     ;
-            case "PPS": return PAYMENT_PROCESS_STARTED                     ;
-            case "PEN": return PENDING_RESPONSE         ;
-            case "REF": return REFUSED                  ;
+            case "APR": return APPROVED                      ;
+            case "DBI": return DENIED_BY_INCOMPATIBILITY     ;
+            case "ERR": return ERROR                         ;
+            case "IAP": return IN_APPROVING_PROCESS          ;
+            case "NSY": return NOT_SENT_YET                  ;
+            case "PAI": return PAID                          ;
+            case "PPS": return PAYMENT_PROCESS_STARTED       ;
+            case "PEN": return PENDING_RESPONSE              ;
+            case "REF": return REFUSED                       ;
+            case "WRC": return WAITING_RECEPTION_CONFIRMATION;
 
             default: throw new InvalidParameterException(
                     InvalidParameterException.DEFAULT_MESSAGE,

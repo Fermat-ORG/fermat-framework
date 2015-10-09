@@ -246,6 +246,10 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     }
 
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
+
     /**
      * Resume the manager
      */
