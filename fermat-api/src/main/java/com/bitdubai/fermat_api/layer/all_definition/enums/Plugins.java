@@ -296,9 +296,8 @@ public enum Plugins {
             case "BDAPAUI":   return BITDUBAI_DAP_ASSET_USER_IDENTITY;
             case "BDAPRPI":   return BITDUBAI_DAP_REDEEM_POINT_IDENTITY;
             case "BDAIWMO":   return BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE;
-            case "BDAPRPI":   return BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE;
+            case "BDAPAUANS": return BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE;
             case "BDAPATNS":  return BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE;
-            case "BDAPAUANS":   return BITDUBAI_DAP_REDEEM_POINT_IDENTITY;
             // End  DAP Plugins
 
             // Init WPD Plugins

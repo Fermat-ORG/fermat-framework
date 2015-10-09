@@ -291,7 +291,7 @@ public class CryptoTransmissionAgent {
 
                         DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                                 getCommunicationsCloudClientConnection().
-                                constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
+                                constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(),platformComponentProfile.getNetworkServiceType(),
                                         null,                     // alias
                                         cryptoTransmissionMetadata.getDestinationPublicKey(), // identityPublicKey
                                         null,                     // location

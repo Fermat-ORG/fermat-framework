@@ -653,7 +653,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(final PlatformComponentProfile applicant                     ,
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(final PlatformComponentType    platformComponentType         ,
+                                                                         final NetworkServiceType       networkServiceType            ,
                                                                          final String                   alias                         ,
                                                                          final String                   identityPublicKey             ,
                                                                          final Location                 location                      ,
@@ -666,7 +667,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                                                                          final NetworkServiceType       fromOtherNetworkServiceType   ) {
 
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
-                applicant                     ,
+                platformComponentType         ,
+                networkServiceType            ,
                 alias                         ,
                 identityPublicKey             ,
                 location                      ,
