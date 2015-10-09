@@ -17,6 +17,10 @@ databaseTables << [
                 ["hash", "STRING", "100", "true"],
                 ["Crypto_status", "STRING", "30", "false"],
                 ["block_depth", "INTEGER", "10", "false"],
+                ["address_to", "STRING", "100", "false"],
+                ["address_from", "STRING", "100", "false"],
+                ["value", "INTEGER", "10", "false"],
+                ["fee", "INTEGER", "10", "false"],
                 ["transmission_status", "STRING", "30", "false"],
                 ["last_update", "STRING", "50", "false"],
         ],
@@ -29,6 +33,10 @@ databaseTables << [
                 ["hash", "STRING", "100", "true"],
                 ["Crypto_status", "STRING", "30", "false"],
                 ["block_depth", "INTEGER", "10", "false"],
+                ["address_to", "STRING", "100", "false"],
+                ["address_from", "STRING", "100", "false"],
+                ["value", "INTEGER", "10", "false"],
+                ["fee", "INTEGER", "10", "false"],
                 ["transmission_status", "STRING", "30", "false"],
                 ["last_update", "STRING", "50", "false"]
         ],
@@ -43,6 +51,17 @@ databaseTables << [
                 ["Monitored_publicKeys", "INTEGER", "10", "false"]
         ],
         firstKey:"crypto_vault"
+]
+
+databaseTables << [
+        name: "EventAgent_Stats",
+        columns: [
+                ["execution_number", "INTEGER", "10", "true"],
+                ["last_execution_date", "STRING", "100", "false"],
+                ["pending_incoming_transactions", "INTEGER", "10", "false"],
+                ["pending_outgoing_transactions", "INTEGER", "10", "false"],
+        ],
+        firstKey:"execution_number"
 ]
 
 /**
