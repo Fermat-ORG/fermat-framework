@@ -59,6 +59,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
     AssetVaultManager assetVaultManager;
     DigitalAssetMetadataVault digitalAssetMetadataVault;
 
+
     public AssetIssuingTransactionMonitorAgent(EventManager eventManager,
                                                PluginDatabaseSystem pluginDatabaseSystem,
                                                ErrorManager errorManager,
@@ -99,6 +100,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
     @Override
     public void start() throws CantStartAgentException {
 
+        Logger LOG = Logger.getGlobal();
+        LOG.info("Asset Issuing monitor agent starting");
         monitorAgent = new MonitorAgent();
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -156,6 +159,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         public final int SLEEP_TIME = /*AssetIssuingTransactionNotificationAgent.AGENT_SLEEP_TIME*/5000;
         int iterationNumber = 0;
         AssetIssuingTransactionDao assetIssuingTransactionDao;
+        boolean threadWorking;
         @Override
         public void setErrorManager(ErrorManager errorManager) {
             this.errorManager = errorManager;
@@ -168,8 +172,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         @Override
         public void run() {
 
+            threadWorking=true;
             logManager.log(AssetIssuingTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
-            while(true){
+            while(threadWorking){
                 /**
                  * Increase the iteration counter
                  */
@@ -218,6 +223,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         private void doTheMainTask() throws CantCheckAssetIssuingProgressException, CantExecuteQueryException, CantDeliverDigitalAssetToAssetWalletException {
 
+            //Logger LOG = Logger.getGlobal();
+            //LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
                 assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 /**
@@ -288,7 +295,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 }
 
                 if (isReceivedDigitalAssets()){
-                    List<String> genesisTransactionsFromAssetsReceived=assetIssuingTransactionDao.getGenesisTransactionsFromDigitalAssetsReceived();
+                    List<String> genesisTransactionsFromAssetsReceived=getGenesisTransactionsFromDigitalAssetsReceived();
                     for(String genesisTransaction: genesisTransactionsFromAssetsReceived){
                         digitalAssetMetadataVault.deleteDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                     }
@@ -300,6 +307,10 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
                         digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
                     }
+                }
+
+                if(!isPendingAssets()){
+                    threadWorking=false;
                 }
 
 
@@ -343,6 +354,10 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         private List<String> getGenesisTransactionsFromDigitalAssetsReceived() throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
             return assetIssuingTransactionDao.getGenesisTransactionsFromDigitalAssetsReceived();
+        }
+
+        private boolean isPendingAssets() throws CantCheckAssetIssuingProgressException {
+            return assetIssuingTransactionDao.isAnyPendingAsset();
         }
 
         //I comment this method, now I'm gonna use the asset vault to check the transaction status.
