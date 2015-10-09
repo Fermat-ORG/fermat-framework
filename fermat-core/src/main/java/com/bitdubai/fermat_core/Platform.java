@@ -953,12 +953,6 @@ public class Platform implements Serializable {
             Plugin walletStoreMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletStorePlugin();
             injectPluginReferencesAndStart(walletStoreMiddleware, Plugins.BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE);
 
-            /*
-             * Plugin CCP Crypto Payment Request
-             * ----------------------------------
-             */
-            Plugin cryptoPaymentRequest = ((CCPRequestLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_REQUEST_LAYER)).getCryptoPaymentPlugin();
-            injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
 
             /*
              * Plugin Wallet Store Module
@@ -1098,6 +1092,15 @@ public class Platform implements Serializable {
             //TODO lo comente porque la variable cryptoLossProtectedWalletWalletModule es null y da error al inicializar la APP (Natalia)
             //Plugin cryptoLossProtectedWalletWalletModule = ((WalletModuleLayer) mWalletModuleLayer).getmCryptoLossProtectedWallet();
             //injectPluginReferencesAndStart(cryptoLossProtectedWalletWalletModule, Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_WALLET_MODULE);
+
+
+               /*
+             * Plugin CCP Crypto Payment Request
+             * ----------------------------------
+             */
+            Plugin cryptoPaymentRequest = ((CCPRequestLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_REQUEST_LAYER)).getCryptoPaymentPlugin();
+            injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
+
 
             /*
              * Plugin crypto Wallet Niche Type Wallet
@@ -1252,8 +1255,9 @@ public class Platform implements Serializable {
              * Plugin Asset Distribution Transaction
              * -----------------------------
              */
+            //TODO error en el start
             Plugin assetDistributionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
-            injectPluginReferencesAndStart(assetDistributionTransaction, Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
+           // injectPluginReferencesAndStart(assetDistributionTransaction, Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
 
            /*
             * Plugin Asset Issuer Actor Layer

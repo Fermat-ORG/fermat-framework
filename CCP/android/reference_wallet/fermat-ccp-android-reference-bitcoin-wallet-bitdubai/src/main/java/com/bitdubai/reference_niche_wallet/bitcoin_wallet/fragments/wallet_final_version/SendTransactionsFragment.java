@@ -506,6 +506,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
                     //TODO: ver que mas puedo usar del cryptoWalletWalletContact
 
+
                     cryptoWallet.send(
                             Long.parseLong(amount.getText().toString()),
                             validAddress,

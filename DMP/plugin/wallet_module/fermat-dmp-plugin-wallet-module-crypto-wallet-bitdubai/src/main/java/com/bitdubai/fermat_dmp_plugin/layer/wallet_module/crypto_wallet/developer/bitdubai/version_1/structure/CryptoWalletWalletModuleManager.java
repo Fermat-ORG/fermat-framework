@@ -99,7 +99,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.develope
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -171,6 +174,9 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
 
    private CryptoPaymentManager cryptoPaymentManager;
 
+    /**
+     * DealsWithCryptoPayment Interface member variable
+     */
     private CryptoPaymentRegistry cryptoPaymentRegistry;
 
     //testing purpose
@@ -678,13 +684,15 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
         try {
             List<PaymentRequest> lst =  new ArrayList<PaymentRequest>();
             CryptoWalletWalletContact cryptoWalletWalletContact = null;
-            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.OWN, max, offset)) {
+
+            //find received payment request
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, max, offset)) {
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
                 if (walletContactRecord != null)
                     cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago",paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
                 lst.add(cryptoWalletPaymentRequest);
             }
 
@@ -714,16 +722,18 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
 
             CryptoWalletWalletContact cryptoWalletWalletContact = null;
 
+            //find received payment request
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.RECEIVED,max,offset)) {
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
                 if (walletContactRecord != null)
                     cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago",paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
                 lst.add(cryptoWalletPaymentRequest);
             }
 
+            //TODO: Harcoder
             CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
             lst.add(cryptoWalletPaymentRequest);
             cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
@@ -745,21 +755,43 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
 
     @Override
     public List<PaymentRequest> listPaymentRequestDateOrder(String walletPublicKey,int max,int offset) throws CantListPaymentRequestDateOrderException {
+        try {
+                    //Request order by date desc
 
-//ordenados por fecha del mas nuevo
-        List<PaymentRequest> lst =  new ArrayList<>();
-        CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
+            List<PaymentRequest> lst =  new ArrayList<>();
 
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
+            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequests(walletPublicKey, max,offset)) {
+
+                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
+                if (walletContactRecord != null)
+                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
+                lst.add(cryptoWalletPaymentRequest);
+            }
+            //TODO: Harcoder
+            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
+            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
+
+            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
+            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
 
 
-        return lst;
+            return lst;
+        }
+        catch (com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException e)
+        {
+            throw new CantListPaymentRequestDateOrderException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, e);
+
+        } catch (Exception e) {
+            throw new CantListPaymentRequestDateOrderException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
     }
 
     @Override
@@ -803,7 +835,7 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
     public void sendMetadataLikeChampion(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType) {
         try {
 
-            cryptoTransmissionNetworkServiceManager.sendCrypto(UUID.randomUUID(), CryptoCurrency.BITCOIN,10000,deliveredByActorPublicKey,"actor_prueba_robert_public_key","hash","Estoy haciendo un pago por molesto");
+            cryptoTransmissionNetworkServiceManager.sendCrypto(UUID.randomUUID(), CryptoCurrency.BITCOIN, 10000, deliveredByActorPublicKey, "actor_prueba_robert_public_key", "hash", "Estoy haciendo un pago por molesto");
 
         } catch (CouldNotTransmitCryptoException e) {
             e.printStackTrace();
@@ -911,6 +943,11 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
         }
     }
 
+    private  String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return format.format(date);
+    }
 
     /**
      * DealsWithBitcoinWallet Interface implementation.
