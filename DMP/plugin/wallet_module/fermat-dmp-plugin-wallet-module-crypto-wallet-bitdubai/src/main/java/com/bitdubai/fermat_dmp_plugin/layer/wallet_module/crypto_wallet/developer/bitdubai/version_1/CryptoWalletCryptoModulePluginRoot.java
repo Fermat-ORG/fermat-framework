@@ -29,6 +29,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.DealsWithOutgoingIntraActor;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -49,7 +51,7 @@ import java.util.regex.Pattern;
 /**
  * Created by loui on 27/05/15.a
  */
-public class CryptoWalletCryptoModulePluginRoot implements DealsWithCryptoTransmissionNetworkService,CryptoWalletManager,DealsWithCCPIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers/*, DealsWithIntraUsersActor,*/,DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook,DealsWithCryptoPayment, WalletModule, Plugin, Service {
+public class CryptoWalletCryptoModulePluginRoot implements DealsWithCryptoTransmissionNetworkService,CryptoWalletManager,DealsWithCCPIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers,DealsWithOutgoingExtraUser, DealsWithOutgoingIntraActor,DealsWithWalletContacts, DealsWithCryptoAddressBook,DealsWithCryptoPayment, WalletModule, Plugin, Service {
 
     /**
      * Service Interface member variables.
@@ -86,6 +88,13 @@ public class CryptoWalletCryptoModulePluginRoot implements DealsWithCryptoTransm
      * DealsWithCryptoPayment Interface member variable
      */
     private CryptoPaymentManager cryptoPaymentManager;
+
+
+    /**
+     * DealsWithOutgoingIntraActor Interface member variable
+     */
+
+    private OutgoingIntraActorManager outgoingIntraActorManager;
 
     /**
      * DealsWithIntraUsersActor Interface member variables.
@@ -164,6 +173,7 @@ public class CryptoWalletCryptoModulePluginRoot implements DealsWithCryptoTransm
             walletModuleCryptoWallet.setCryptoTransmissionNetworkService(cryptoTransmissionNetworkServiceManager);
 //            walletModuleCryptoWallet.setActorIntraUserManager(this.intraUserManager);
             walletModuleCryptoWallet.setCryptoPaymentManager(this.cryptoPaymentManager);
+            walletModuleCryptoWallet.setOutgoingIntraActorManager(this.outgoingIntraActorManager);
             walletModuleCryptoWallet.initialize();
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
@@ -285,6 +295,11 @@ public class CryptoWalletCryptoModulePluginRoot implements DealsWithCryptoTransm
     @Override
     public void setCryptoPaymentManager(CryptoPaymentManager cryptoPaymentManager) {
         this.cryptoPaymentManager = cryptoPaymentManager;
+    }
+
+    @Override
+    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
+        this.outgoingIntraActorManager = outgoingIntraActorManager;
     }
 
 //    @Override

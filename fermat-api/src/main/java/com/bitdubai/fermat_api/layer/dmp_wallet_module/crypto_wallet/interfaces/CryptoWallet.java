@@ -202,7 +202,8 @@ public interface CryptoWallet extends Serializable {
               String deliveredByActorPublicKey,
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
-              Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException;
+              Actors deliveredToActorType,
+              ReferenceWallet referenceWallet) throws CantSendCryptoException, InsufficientFundsException;
 
 
     /**
