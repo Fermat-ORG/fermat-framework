@@ -131,7 +131,6 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
     public class App implements Serializable {
 
-
         private static final long serialVersionUID = -8730067026050196758L;
 
         public String Names;
@@ -150,6 +149,7 @@ public class ConnectionsWorldFragment  extends FermatFragment {
             App item = getItem(position);
 
             ViewHolder holder;
+
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.intra_user_connection_word_list, parent, false);
@@ -163,51 +163,27 @@ public class ConnectionsWorldFragment  extends FermatFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-
             holder.name.setText(item.Names);
-
 
             try {
 
-                byte[] imageResource;
-                Bitmap bitmap;
-              /*  switch (position) {
+                switch (position){
                     case 0:
-                        imageResource = walletResourceManger.getImageResource("kid_3.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.mati_profile);
                         break;
                     case 1:
-                        imageResource = walletResourceManger.getImageResource("kid_1.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.caroline_profile_picture);
                         break;
                     case 2:
-                        imageResource = walletResourceManger.getImageResource("kid_4.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.brant_profile_picture);
                         break;
                     case 3:
-                        imageResource = walletResourceManger.getImageResource("kid_5.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.louis_profile_picture);
                         break;
                     case 4:
-                        imageResource = walletResourceManger.getImageResource("kid_2.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.madaleine_profile_picture);
                         break;
-                    case 5:
-                        imageResource = walletResourceManger.getImageResource("kid_6.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
-                        break;
-                    case 6:
-                        imageResource = walletResourceManger.getImageResource("kid_7.png");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
-                        break;
-                }*/
+                }
 
 
             } catch (Exception ex) {
