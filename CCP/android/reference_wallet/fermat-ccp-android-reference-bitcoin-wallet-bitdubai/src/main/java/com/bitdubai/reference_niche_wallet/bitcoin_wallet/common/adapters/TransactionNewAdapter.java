@@ -1,6 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.LinearLayout;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetActorTransactionHistoryException;
@@ -92,8 +95,14 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
     protected void bindHolder(final TransactionItemViewHolder holder, final CryptoWalletTransaction data, int position) {
 
         try {
+            Bitmap bitmap= null;
+            if(data.getInvolvedActor().getPhoto()!=null){
+                 bitmap  = BitmapFactory.decodeByteArray(data.getInvolvedActor().getPhoto(),0,data.getInvolvedActor().getPhoto().length);
+                 holder.getContactIcon().setImageBitmap(bitmap);
+            }else{
+                holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+            }
 
-            holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
             holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
 
