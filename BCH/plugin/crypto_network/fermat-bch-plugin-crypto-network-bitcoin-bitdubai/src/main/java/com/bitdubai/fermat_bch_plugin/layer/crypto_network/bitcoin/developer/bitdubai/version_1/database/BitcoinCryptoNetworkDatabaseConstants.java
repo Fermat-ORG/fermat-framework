@@ -10,7 +10,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 * @version 1.0
 * @since Java JDK 1.7
 */
-public class BitcoinCryptoNetworkDatabaseConstants {
+class BitcoinCryptoNetworkDatabaseConstants {
 
     /**
      * Incoming_Transactions database table definition.
