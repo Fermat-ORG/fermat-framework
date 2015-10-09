@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 02/10/15.
  */
 public enum AssetBalanceType {
-    BOOK("BOOK"),
-    AVAILABLE("AVAI");
+    AVAILABLE("AVAI"),
+    BOOK("BOOK");
 
     String code;
 

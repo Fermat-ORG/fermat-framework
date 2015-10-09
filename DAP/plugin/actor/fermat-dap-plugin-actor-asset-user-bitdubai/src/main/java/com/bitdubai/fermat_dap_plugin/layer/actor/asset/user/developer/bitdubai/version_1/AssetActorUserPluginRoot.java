@@ -29,7 +29,13 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDis
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorConnectionAcceptedEventHandlers;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorDeniedConnectionEventHandlers;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorDisconnectionEventHandlers;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorRequestConnectionEventHandlers;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
@@ -39,6 +45,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -53,8 +60,8 @@ import java.util.UUID;
 /**
  * Created by Nerio on 09/09/15.
  */
-//TODO TERMINAR DE IMPLEMENTAR - DealsWhitAssetUserActorNetworkServiceManager
-public class AssetActorUserPluginRoot implements ActorAssetUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+//TODO TERMINAR DE IMPLEMENTAR
+public class AssetActorUserPluginRoot implements ActorAssetUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithAssetUserActorNetworkServiceManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     private AssetUserActorDao assetUserActorDao;
 
@@ -88,10 +95,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * DealsWithLogger interface member variable
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
     /**
      * DealsWithIntraWalletUsersNetworkService interface member variable
      */
- //   AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager:
+    AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
 //    IntraUserManager intraUserNetworkServiceManager;
 
     @Override
@@ -172,10 +180,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
     /**
      * DealsWithIntraWalletUsersNetworkService Interface implementation.
      */
-//    @Override
-//    public void setAssetUserActorNetworkServiceManager(AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager) {
-//        this.assetUserActorNetworkServiceManager = assetUserActorNetworkServiceManager;
-//    }
+    @Override
+    public void setAssetUserActorNetworkServiceManager(AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager) {
+        this.assetUserActorNetworkServiceManager = assetUserActorNetworkServiceManager;
+    }
 
     @Override
     public void start() throws CantStartPluginException {
@@ -193,17 +201,67 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
 
+            /**
+             * Listener Accepted connection event
+             */
+            fermatEventListener = eventManager.getNewListener(EventType.ASSET_USER_CONNECTION_ACCEPTED);
+            fermatEventHandler = new AssetUserActorConnectionAcceptedEventHandlers();
+            ((AssetUserActorConnectionAcceptedEventHandlers) fermatEventHandler).setActorAssetUserManager(this);
+            ((AssetUserActorConnectionAcceptedEventHandlers) fermatEventHandler).setEventManager(eventManager);
+            ((AssetUserActorConnectionAcceptedEventHandlers) fermatEventHandler).setAssetUserActorNetworkServiceManager(this.assetUserActorNetworkServiceManager);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+//            /**
+//             * Listener Cancelled connection event
+//             */
+//            fermatEventListener = eventManager.getNewListener(EventType.ASSET_USER_DISCONNECTION_REQUEST_RECEIVED);
+//            fermatEventHandler = new AssetUserActorDisconnectionEventHandlers();
+//            ((AssetUserActorDisconnectionEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
+//            ((AssetUserActorDisconnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.assetUserActorNetworkServiceManager);
+//            fermatEventListener.setEventHandler(fermatEventHandler);
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
+//
+//            /**
+//             * Listener Request connection event
+//             */
+//            fermatEventListener = eventManager.getNewListener(EventType.ASSET_USER_REQUESTED_CONNECTION);
+//            fermatEventHandler = new AssetUserActorRequestConnectionEventHandlers();
+//            ((AssetUserActorRequestConnectionEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
+//            ((AssetUserActorRequestConnectionEventHandlers) fermatEventHandler).setEventManager(this.eventManager);
+//            ((AssetUserActorRequestConnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.assetUserActorNetworkServiceManager);
+//
+//            fermatEventListener.setEventHandler(fermatEventHandler);
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
+//
+//            /**
+//             * Listener Denied connection event
+//             */
+//            fermatEventListener = eventManager.getNewListener(EventType.ASSET_USER_CONNECTION_DENIED);
+//            fermatEventHandler = new AssetUserActorDeniedConnectionEventHandlers();
+//            ((AssetUserActorDeniedConnectionEventHandlers) fermatEventHandler).setActorIntraUserManager(this);
+//            ((AssetUserActorDeniedConnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.assetUserActorNetworkServiceManager);
+//            fermatEventListener.setEventHandler(fermatEventHandler);
+//
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
+
 
             /**
              * I ask the list of pending requests to the Network Service to execute
              */
-//TODO: ANALIZAR PARA COLOCAR EN FUNCIONAMIENTO
+//TODO ANALIZAR PARA COLOCAR EN FUNCIONAMIENTO
 //            this.processNotifications();
-
             this.serviceStatus = ServiceStatus.STARTED;
+
+            test();
+
         } catch (Exception e) {
-            // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            // throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
+             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR);
         }
     }
 
@@ -427,9 +485,9 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         try {
             this.assetUserActorDao.createNewAssetUser(assetUserActorLoggedInPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
         } catch (CantAddPendingAssetUserException e) {
-            throw new CantCreateAssetUserActorException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", e, "", "");
+            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", e, "", "");
         } catch (Exception e) {
-            throw new CantCreateAssetUserActorException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", FermatException.wrapException(e), "", "");
+            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -442,28 +500,57 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @throws CantAssetUserActorNotFoundException
      */
     @Override
-    public DAPActor getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-//        try {
-//            //TODO harcoder - descomentar cunando se complete el circuito que crea el Actor de la wallet
-//
-//            ActorAssetUser actor = assetUserActorDao.getIntraUser(actorPublicKey);
-//
-////            not found actor
+    public List<ActorAssetUser> getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+        List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
+
+        try {
+//            return this.assetUserActorDao.getAssetUserActor(actorPublicKey);
+
+//            not found actor
 //             if(actor == null)
 //             throw new CantAssetUserActorNotFoundException("", null, ".","Intra User not found");
-//
+
 //             return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
-//
-//            return new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321,ConnectionState.CONNECTED);
-//
+
+            list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
+
 //             } catch (CantGetAssetUserActorsException  e) {
 //              throw new CantGetAssetUserActorsException("", e, ".","Cant Get Intra USer from Data Base");
-//        } catch (Exception e) {
-//            throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
-//        }
-        return null;
+        } catch (Exception e) {
+            throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
+        }
+        return list;
     }
 
+    public void test() throws CantCreateAssetUserActorException {
+//        list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
+
+        System.out.println("************************************************************************");
+        System.out.println("------------ Lista de Asset User Actors Agregados en Table -------------");
+        System.out.println("************************************************************************");
+        for (int i = 0; i < 10; i++) {
+//            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.CONNECTED);
+            try {
+                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
+                String assetUserActorToAddPublicKey = UUID.randomUUID().toString();
+
+                this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, "Thunders Asset Wallet User_" + i, assetUserActorToAddPublicKey, new byte[0], ConnectionState.CONNECTED);
+
+                System.out.println("assetUserActorIdentityToLinkPublicKey: " + assetUserActorIdentityToLinkPublicKey);
+                System.out.println("assetUserActorToAddName: Thunders Asset Wallet User_" + i);
+                System.out.println("assetUserActorToAddPublicKey: "+assetUserActorToAddPublicKey);
+                System.out.println("profileImage: "+new byte[0]);
+                System.out.println("------------------------------------------------------------------------");
+
+            } catch (CantAddPendingAssetUserException e) {
+                throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
+            } catch (Exception e) {
+                throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", FermatException.wrapException(e), "", "");
+            }
+        }
+        System.out.println("************************************************************************");
+
+    }
     /**
      * Private methods
      */

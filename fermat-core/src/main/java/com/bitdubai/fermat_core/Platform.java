@@ -18,6 +18,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformLayers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUsers;
@@ -449,31 +451,34 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new RequestServiceLayer(), PlatformLayers.BITDUBAI_REQUEST_LAYER);
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_Identity.IdentityLayer(), PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new IdentityLayer(), PlatformLayers.BITDUBAI_IDENTITY_LAYER);
-            corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(), PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER);
+            corePlatformContext.registerPlatformLayer(new EngineLayer(), PlatformLayers.BITDUBAI_ENGINE_LAYER);
+
+            // Init CCP Layers
+            corePlatformContext.registerPlatformLayer(new CCPActorLayer(), PlatformLayers.BITDUBAI_CCP_ACTOR_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPIdentityLayer(), PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPMiddlewareLayer(), PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPNetworkServiceLayer(), PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPRequestLayer(), PlatformLayers.BITDUBAI_CCP_REQUEST_LAYER);
+            corePlatformContext.registerPlatformLayer(new CCPTransactionLayer(), PlatformLayers.BITDUBAI_CCP_TRANSACTION_LAYER);
+            // End  CCP Layers
+
+            // Init DAP Layers
             corePlatformContext.registerPlatformLayer(new DAPActorLayer(), PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPIdentityLayer(), PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPMiddlewareLayer(), PlatformLayers.BITDUBAI_DAP_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPModuleLayer(), PlatformLayers.BITDUBAI_DAP_MODULE_LAYER);
+            corePlatformContext.registerPlatformLayer(new DAPTransactionLayer(), PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPWalletLayer(), PlatformLayers.BITDUBAI_DAP_WALLET_LAYER);
-            corePlatformContext.registerPlatformLayer(new EngineLayer(), PlatformLayers.BITDUBAI_ENGINE_LAYER);
-
-            // Init CCP Layers
-            corePlatformContext.registerPlatformLayer(new CCPActorLayer()         , PlatformLayers.BITDUBAI_CCP_ACTOR_LAYER          );
-            corePlatformContext.registerPlatformLayer(new CCPIdentityLayer()      , PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER       );
-            corePlatformContext.registerPlatformLayer(new CCPMiddlewareLayer()    , PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER     );
-            corePlatformContext.registerPlatformLayer(new CCPNetworkServiceLayer(), PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER);
-            corePlatformContext.registerPlatformLayer(new CCPRequestLayer()       , PlatformLayers.BITDUBAI_CCP_REQUEST_LAYER        );
-            corePlatformContext.registerPlatformLayer(new CCPTransactionLayer()   , PlatformLayers.BITDUBAI_CCP_TRANSACTION_LAYER    );
-            // End  CCP Layers
+            // End  DAP Layers
 
             // Init WPD Layers
-            corePlatformContext.registerPlatformLayer(new WPDActorLayer(),          PlatformLayers.BITDUBAI_WPD_ACTOR_LAYER);
-            corePlatformContext.registerPlatformLayer(new WPDDesktopModuleLayer(),  PlatformLayers.BITDUBAI_WPD_DESKTOP_MODULE_LAYER);
-            corePlatformContext.registerPlatformLayer(new WPDEngineLayer(),         PlatformLayers.BITDUBAI_WPD_ENGINE_LAYER);
-            corePlatformContext.registerPlatformLayer(new WPDIdentityLayer(),       PlatformLayers.BITDUBAI_WPD_IDENTITY_LAYER);
-            corePlatformContext.registerPlatformLayer(new WPDMiddlewareLayer(),     PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER);
+            corePlatformContext.registerPlatformLayer(new WPDActorLayer(), PlatformLayers.BITDUBAI_WPD_ACTOR_LAYER);
+            corePlatformContext.registerPlatformLayer(new WPDDesktopModuleLayer(), PlatformLayers.BITDUBAI_WPD_DESKTOP_MODULE_LAYER);
+            corePlatformContext.registerPlatformLayer(new WPDEngineLayer(), PlatformLayers.BITDUBAI_WPD_ENGINE_LAYER);
+            corePlatformContext.registerPlatformLayer(new WPDIdentityLayer(), PlatformLayers.BITDUBAI_WPD_IDENTITY_LAYER);
+            corePlatformContext.registerPlatformLayer(new WPDMiddlewareLayer(), PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new WPDNetworkServiceLayer(), PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER);
-            corePlatformContext.registerPlatformLayer(new WPDSubAppModuleLayer(),   PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER);
+            corePlatformContext.registerPlatformLayer(new WPDSubAppModuleLayer(), PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER);
             // End  WPD Layers
 
             /*
@@ -691,6 +696,15 @@ public class Platform implements Serializable {
             Plugin cryptoPaymentRequestNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoPaymentRequestPlugin();
             injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
 
+
+            /*
+             * Plugin CCP Crypto Trasmission Network Service
+             * -----------------------------
+             */
+            Plugin cryptoTransmissionNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoTransmissionPlugin();
+            injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
+
+
              /*
              * Plugin Template Network Service
              * -----------------------------
@@ -837,23 +851,13 @@ public class Platform implements Serializable {
             Plugin walletStatisticsNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletStatistics();
             injectPluginReferencesAndStart(walletStatisticsNetworkService, Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE);
 
-
              /*
              * Plugin Crypto Addresses Network Service
              * -----------------------------
              */
             Plugin cryptoAddressesNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoAddressesPlugin();
             injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
-
-
-             /*
-             * Plugin Crypto Transmission Network Service
-             * -----------------------------
-             */
-            Plugin cryptoTransmissionNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getCryptoTransmission();
-            injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
-
-
+            
             /*
              * Plugin App Runtime Middleware
              * -------------------------------
@@ -1279,7 +1283,6 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(assetFactoryModlue, Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
 
 
-
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
             LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
@@ -1532,6 +1535,10 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithCryptoPaymentRequestNetworkService)
                 ((DealsWithCryptoPaymentRequestNetworkService) plugin).setCryptoPaymentRequestManager((CryptoPaymentRequestManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
+
+            if (plugin instanceof DealsWithCryptoTransmissionNetworkService)
+                ((DealsWithCryptoTransmissionNetworkService) plugin).setCryptoTransmissionNetworkService((CryptoTransmissionNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE));
+
 
             /*
              * Register the plugin into the platform context

@@ -24,7 +24,7 @@
         android:padding="10dp"
         android:singleLine="true"
         android:textSize="18sp"
-        android:textColor="@color/color_black"
+        android:textColor="#292929"
         android:text="Nelson Alfonso Ramirez Noguera"
         />
 

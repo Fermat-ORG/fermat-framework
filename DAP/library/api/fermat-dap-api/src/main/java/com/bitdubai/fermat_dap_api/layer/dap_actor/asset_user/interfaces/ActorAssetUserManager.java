@@ -115,6 +115,6 @@ public interface ActorAssetUserManager {
     * @throws CantGetAssetUserActorsException
     * @throws CantAssetUserActorNotFoundException
     */
-    DAPActor getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
+  List<ActorAssetUser> getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
 }

@@ -10,7 +10,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
@@ -27,7 +26,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
@@ -200,14 +199,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+           // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+             //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -321,7 +320,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                              */
                             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
                             fermatEvent.setSource(TemplateNetworkServicePluginRoot.EVENT_SOURCE);
-                            ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(message);
+                            ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                             eventManager.raiseEvent(fermatEvent);
                         }
                     }

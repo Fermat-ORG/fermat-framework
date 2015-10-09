@@ -37,7 +37,7 @@ public interface ActorAssetUser {
     public byte[] getProfileImage();
 
     /**
-     * The method <code>getContactState</code> gives us the contact state of the represented Asset
+     * The method <code>getConnectionState</code> gives us the ConnectionState state of the represented Asset
      * user
      *
      * @return the contact state

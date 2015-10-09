@@ -117,18 +117,15 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void createNewAssetUser(String assetUserLoggedInPublicKey, String assetUserToAddName, String assetUserToAddPublicKey, byte[] profileImage, ConnectionState connectionState) throws CantAddPendingAssetUserException {
+    public void createNewAssetUser(String assetUserLinkedInPublicKey, String assetUserToAddName, String assetUserToAddPublicKey, byte[] profileImage, ConnectionState connectionState) throws CantAddPendingAssetUserException {
 
         try {
-
             /**
              * if Asset User exist on table
              * change status
              */
             if (assetUserExists(assetUserToAddPublicKey)) {
-
-                this.updateAssetUserConnectionState(assetUserLoggedInPublicKey, assetUserToAddPublicKey, connectionState);
-
+                this.updateAssetUserConnectionState(assetUserLinkedInPublicKey, assetUserToAddPublicKey, connectionState);
             } else {
                 /**
                  * Get actual date
@@ -139,10 +136,10 @@ public class AssetUserActorDao implements Serializable {
                 DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLinkedInPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME, assetUserToAddName);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, connectionState.getCode());
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey);
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
 
@@ -189,7 +186,7 @@ public class AssetUserActorDao implements Serializable {
 
             // 2) Find the Asset User , filter by keys.
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -244,7 +241,7 @@ public class AssetUserActorDao implements Serializable {
             }
 
             // 2) Find all Asset Users.
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
@@ -296,7 +293,7 @@ public class AssetUserActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
             // 2) Find  Asset Users by state.
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
@@ -411,5 +408,55 @@ public class AssetUserActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant check if alias exists, unknown failure.");
         }
+    }
+
+    public List<ActorAssetUser> getAssetUserActor(String assetUserExistsToAddPublicKey) throws CantGetAssetUsersListException {
+        // Setup method.
+        List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+            // 2) Find  Asset Users by state.
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserExistsToAddPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            // 3) Get Asset Users Recorod.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                // Add records to list.
+                list.add(new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
+                        ConnectionState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
+            }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            database.closeDatabase();
+            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetUserActorProfileImageException e) {
+            database.closeDatabase();
+            // Failure unknown.
+            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            database.closeDatabase();
+            throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+        }
+        // Return the list values.
+        return list;
     }
 }
