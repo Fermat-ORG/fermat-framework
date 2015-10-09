@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.DealsWithCryptoBrokerIdentities;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import java.util.ArrayList;
@@ -28,7 +30,12 @@ import java.util.regex.Pattern;
 
  */
 
-public class IdentitySubAppModuleCryptoBrokenPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class IdentitySubAppModuleCryptoBrokenPluginRoot implements DealsWithCryptoBrokerIdentities,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+
+    /**
+     * Elementos de DealsWithCryptoBrokerIdentities
+      */
+    private CryptoBrokerIdentityManager identityManager;
 
 
     /**
@@ -168,4 +175,8 @@ public class IdentitySubAppModuleCryptoBrokenPluginRoot implements  DealsWithErr
     }
 
 
+    @Override
+    public void setCryptoBrokerIdentityManager(CryptoBrokerIdentityManager cryptoBrokerIdentityManager) {
+        this.identityManager = cryptoBrokerIdentityManager;
+    }
 }
