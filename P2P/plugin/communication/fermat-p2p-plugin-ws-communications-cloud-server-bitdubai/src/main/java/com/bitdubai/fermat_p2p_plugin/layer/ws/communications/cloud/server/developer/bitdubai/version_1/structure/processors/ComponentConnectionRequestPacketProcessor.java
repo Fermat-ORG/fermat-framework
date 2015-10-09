@@ -18,6 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAtt
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.WebSocket;
@@ -33,6 +34,24 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 public class ComponentConnectionRequestPacketProcessor extends FermatPacketProcessor {
+
+    /**
+     * Represent the gson
+     */
+    private Gson gson;
+
+    /**
+     * Represent the jsonParser
+     */
+    private JsonParser jsonParser;
+
+    /**
+     * Constructor
+     */
+    public ComponentConnectionRequestPacketProcessor() {
+        gson = new Gson();
+        jsonParser = new JsonParser();
+    }
 
     /**
      * (no-javadoc)
@@ -51,10 +70,6 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
         String packetContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
         System.out.println("ComponentConnectionRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
 
-        /*
-         * Construct the json object
-         */
-        Gson gson = new Gson();
 
         /*
          * Get the list
@@ -71,8 +86,8 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
         PlatformComponentProfile peer1 = participantsList.get(0);
         PlatformComponentProfile peer2 = participantsList.get((participantsList.size() -1));
 
-        constructRespondPacketAndSend(gson, vpnServer, peer1, peer2);
-        constructRespondPacketAndSend(gson, vpnServer, peer2, peer1);
+        constructRespondPacketAndSend(vpnServer, peer1, peer2, peer2);
+        constructRespondPacketAndSend(vpnServer, peer2, peer1, peer1);
 
         //if no running
         if (!getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().isRunning()){
@@ -84,25 +99,25 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
 
     }
 
-
     /**
      * Construct Respond Packet
      *
-     * @param gson
      * @param vpnServer
      * @param platformComponentProfileDestination
-     * @param remote
+     * @param remoteParticipant
+     * @param remoteParticipantNetworkService
      */
-    private void constructRespondPacketAndSend(Gson gson, WsCommunicationVPNServer vpnServer, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remote){
+    private void constructRespondPacketAndSend(WsCommunicationVPNServer vpnServer, PlatformComponentProfile platformComponentProfileDestination, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService){
 
         /*
          * Get json representation for the filters
          */
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_VPN_URI, vpnServer.getUriConnection().toString());
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY, vpnServer.getVpnServerIdentityPublicKey());
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN, platformComponentProfileDestination.getIdentityPublicKey());
-        packetContent.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN, remote.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.VPN_URI, vpnServer.getUriConnection().toString());
+        packetContent.addProperty(JsonAttNamesConstants.VPN_SERVER_IDENTITY, vpnServer.getVpnServerIdentityPublicKey());
+        packetContent.addProperty(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN, platformComponentProfileDestination.getIdentityPublicKey());
+        packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN, remoteParticipantNetworkService.toJson());
 
         /*
          * Get the client connection destination
@@ -118,10 +133,10 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
          * Create the respond packet
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(platformComponentProfileDestination.getCommunicationCloudClientIdentity(), //Destination
-                                                                                                                    serverIdentity.getPublicKey(), //Sender
-                                                                                                                    gson.toJson(packetContent), //packet Content
-                                                                                                                    FermatPacketType.COMPONENT_CONNECTION_RESPOND, //Packet type
-                                                                                                                    serverIdentity.getPrivateKey()); //Sender private key
+                serverIdentity.getPublicKey(), //Sender
+                gson.toJson(packetContent), //packet Content
+                FermatPacketType.COMPONENT_CONNECTION_RESPOND, //Packet type
+                serverIdentity.getPrivateKey()); //Sender private key
         /*
          * Send the packet
          */

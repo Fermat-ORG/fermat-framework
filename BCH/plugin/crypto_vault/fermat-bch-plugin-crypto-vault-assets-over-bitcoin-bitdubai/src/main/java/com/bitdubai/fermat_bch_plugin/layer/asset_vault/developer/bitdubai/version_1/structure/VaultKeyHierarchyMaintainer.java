@@ -198,11 +198,15 @@ class VaultKeyHierarchyMaintainer implements Agent {
             /**
              * I get this information from the active_Networks table on the networkType column
              */
-                //todo complete this
-            /**
-             * the default network is always active, so I will add this.
-             */
-            blockchainNetworkTypes.add(BlockchainNetworkType.DEFAULT);
+            try {
+                blockchainNetworkTypes = getDao().getActiveNetworkTypes();
+            } catch (CantExecuteDatabaseOperationException e) {
+                /**
+                 * the default network is always active, so I will add this.
+                 */
+                blockchainNetworkTypes.add(BlockchainNetworkType.DEFAULT);
+            }
+
             return blockchainNetworkTypes;
         }
 

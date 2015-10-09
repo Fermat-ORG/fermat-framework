@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -187,6 +188,14 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 }
             });
 
+           empty.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+               @Override
+               public void onSystemUiVisibilityChange(int i) {
+                   Fx.slide_up(getActivity(), empty);
+               }
+           });
+
+
             autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
 
 
@@ -220,6 +229,20 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     // if (!editTextAddress.getText().equals("")) linear_address.setVisibility(View.VISIBLE);
                 }
             });
+
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.imageView_new_contact);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    walletContact = new WalletContact();
+                    walletContact.setName(autocompleteContacts.getText().toString());
+                    registerForContextMenu(autocompleteContacts);
+                    getActivity().openContextMenu(autocompleteContacts);
+                }
+            });
+
+
+
 
             /**
              *  Address line
@@ -272,7 +295,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
-                    sendCrypto();
+                    //sendCrypto();
 
                     //testing
 //
@@ -281,14 +304,14 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 //
 //                    String notes = txt_notes.getText().toString();
 //
-//                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
-//                            null,
-//                            "holasdad",
-//                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
-//                            user_id,
-//                            Actors.INTRA_USER,
-//                            "actor_prueba_robert_public_key",
-//                            Actors.INTRA_USER);
+                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
+                            null,
+                            "holasdad",
+                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                            user_id,
+                            Actors.INTRA_USER,
+                            "actor_prueba_robert_public_key",
+                            Actors.INTRA_USER);
                 }
             });
 

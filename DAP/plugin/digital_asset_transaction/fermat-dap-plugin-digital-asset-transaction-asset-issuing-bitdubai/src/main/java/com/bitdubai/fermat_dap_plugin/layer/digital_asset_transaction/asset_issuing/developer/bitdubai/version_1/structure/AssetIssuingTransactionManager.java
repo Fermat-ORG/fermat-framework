@@ -46,6 +46,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     PluginFileSystem pluginFileSystem;
     AssetVaultManager assetVaultManager;
     OutgoingIntraActorManager outgoingIntraActorManager;
+    AssetIssuingTransactionDao assetIssuingTransactionDao;
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
@@ -164,14 +165,19 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.cryptoAddressBookManager=cryptoAddressBookManager;
     }
 
+    public void setAssetIssuingTransactionDao(AssetIssuingTransactionDao assetIssuingTransactionDao) throws CantSetObjectException {
+        if(assetIssuingTransactionDao==null){
+            throw new CantSetObjectException("assetIssuingTransactionDao is null");
+        }
+        this.assetIssuingTransactionDao=assetIssuingTransactionDao;
+        this.digitalAssetCryptoTransactionFactory.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
+    }
+
     @Override
     public void confirmReception(/*UUID transactionID*/String genesisTransaction) throws CantConfirmTransactionException {
         try {
-            AssetIssuingTransactionDao assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
-            assetIssuingTransactionDao.confirmReception(genesisTransaction);
-        } catch (CantExecuteDatabaseOperationException exception) {
-            throw new CantConfirmTransactionException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, "Confirming Reception", "Cannot update the plugin database");
-        } catch (CantExecuteQueryException exception) {
+            this.assetIssuingTransactionDao.confirmReception(genesisTransaction);
+        }  catch (CantExecuteQueryException exception) {
             throw new CantConfirmTransactionException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, "Confirming Reception", "Cannot execute query");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantConfirmTransactionException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Confirming Reception", "The database returns more than one valid result");

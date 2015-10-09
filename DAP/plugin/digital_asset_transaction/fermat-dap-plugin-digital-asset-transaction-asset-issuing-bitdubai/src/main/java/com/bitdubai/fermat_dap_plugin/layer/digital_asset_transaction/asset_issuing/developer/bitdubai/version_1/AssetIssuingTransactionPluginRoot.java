@@ -190,6 +190,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }try{
             /*DigitalAssetMetadataVault*/ digitalAssetMetadataVault=new DigitalAssetMetadataVault(this.pluginId, this.pluginFileSystem, this.errorManager);
             digitalAssetMetadataVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
+            this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao);
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
                     this.cryptoVaultManager,
                     this.cryptoWallet,
@@ -200,10 +202,9 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.cryptoAddressBookManager,
                     this.outgoingIntraActorManager);
             this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+            this.assetIssuingTransactionManager.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
             //Start the plugin event Recorder
             //I will comment the EventRecorderService start, because I don't need this right now, it starting without problems.
-            this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
-            this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao);
             ((DealsWithEvents) this.assetIssuingEventRecorderService).setEventManager(this.eventManager);
             try{
                 this.assetIssuingEventRecorderService.start();

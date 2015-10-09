@@ -56,6 +56,12 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
     public OutgoingIntraActorTransactionDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+
+        try {
+            initializeDatabase();
+        } catch (CantInitializeOutgoingIntraActorTransactionDatabaseException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

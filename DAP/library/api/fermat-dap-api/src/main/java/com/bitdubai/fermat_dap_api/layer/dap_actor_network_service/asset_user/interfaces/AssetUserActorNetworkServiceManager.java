@@ -21,6 +21,4 @@ public interface AssetUserActorNetworkServiceManager {
 
     public void sendMessage(PlatformComponentProfile actorAssetUser, String msjContent)  throws CantSendMessageException;
 
-
-
 }

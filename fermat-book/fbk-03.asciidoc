@@ -33,8 +33,8 @@ gatherings of the components of a certain wallet: +
 === FERMAT Wallet Factory
 
 Once we have at least one *Niche Reference Wallet* (e.g.*Bitcoin Reference Wallet*), we can realize that in the *front-end* there are two disctint tasks taking place: on one hand, there exist a *navigation structure* (available menus, tabs, buttons, etc) that provides the means by which the user operates the wallet, an on the other hand, there exists a set of *resources* (multimedia files, images, etc) used for the visualization of each element of the wallet.
-At the 
-En el *back-end* , where the really action is occuring, we have a lot of modules acting to provide the necessary functions, like: +
+At the *back-end* , where the really action is occuring, we have a lot of modules acting to provide the necessary functions, like: +
+
 * sending and receiving the cryptocurrency
 * keeping track of the balance of the wallet
 * managing the contacts ( register, identification, etc)
@@ -58,34 +58,14 @@ This module also has the responsability of notifying the release of new updates 
  
 === FERMAT Wallet Store
 
-The Wa-St module (Wallet Store) es dentro del sistema fermat una DAPP (Distributed Application).
-Es decir que es una aplicación formada por un número indeterminado de nodos que colaboran entre si
-para manejar la funcionalidad de la DAPP a nivel del sistema completo. +
-Su función es mostrarle al usuario wallets que pueden serle de interés y si el usuario decide
-instalar una wallet comunica la acción al Wallet Manager. +
-La Wallet Store debe manejar además de la identidad de la Wallet y del Developer que la publica.
-Además debe almacenar el Hash de la información correspondiente a la estructura de navegación y
-por otro lado el hash correspondiente a los recursos que esa wallet utiliza. +
-
-NOTE: Quizás no sea necesario lo de almacenamiento de arriba
-
-Luego el Wallet Manager en el dispositivo del usuario que finalmente instala la nueva wallet,
-se encargará de validar que la estructura de navegación obtenida de algún peer, tenga el mismo hash.
-Lo mismo con los recursos.
-
-==== Catálogo Distribuído
-
-Cada nodo de la Wallet Store mantiene una parte del catálogo distribuído de wallets disponibles.
-En principio querríamos que estos nodos muestren información relevante al usuario.
-La información que da este network service debe poder contrastarse con la versión de la plataforma
-que tenemos instalada  (plug-ins instalados) para poder comunicarle al usuario qué cosas
-puede instalar sin actualizar la plataforma y qué cosas podría instalar de hacer un upgrade.
-
-Criterios para determinar relevancia de una wallet para un usuario: localización del usuario,
-rango de acción, tipo de compras, etc.
-
-=== FERMAT wallet Manager
+The Wa-St module (Wallet Store) is inside FERMAT  a DAPP (Distributed Application), i.e. and undetermined amount of nodes collaborate bewteen them to provide the functionality of the app inside the whole system. + 
+The Wallet Store functions in a similar way of known app-stores, and it serves to show the user the wallet that may be attractive to him. Itis a *distributed catalog* of wallets. +
+When one new wallet is chosen, the Wallet Store notifies the Wa-Ma (Wallet Manager) app to make it available to the user. +
+Internally, the Wa-St module keeps the identity of the wallet, of its developer, and of the ressources used by it.
 
 
+=== FERMAT Wallet Manager
+
+The Wa-Ma module ( Wallet Manager) lets install the chosen wallet in the user's device, collecting from the distributed network, the necessary components: te walletś navigation structure and the wallet's ressources. 
 
 

@@ -45,9 +45,7 @@ import java.util.regex.Pattern;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by loui on 26/04/15.
- * Update by Jorge Gonzales
- * Update by Roberto Requena - (rart3001@gmail.com) on 03/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
  */
