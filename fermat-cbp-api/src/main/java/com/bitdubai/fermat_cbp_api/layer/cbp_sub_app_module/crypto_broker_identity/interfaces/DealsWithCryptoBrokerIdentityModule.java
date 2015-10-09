@@ -5,5 +5,5 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_ident
  */
 public interface DealsWithCryptoBrokerIdentityModule {
 
-    public void setCryptoBrokerIdentityModuleManagerr(CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager);
+    public void setCryptoBrokerIdentityModuleManager(CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager);
 }

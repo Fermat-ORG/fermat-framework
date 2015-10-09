@@ -39,6 +39,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppNavigationStructure;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -1135,10 +1136,41 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             dapFactory.addActivity(runtimeActivity);
 
-            listSubApp.put(SubApps.DAP_ASSETS_FACTORY,dapFactory);
+            listSubApp.put(SubApps.DAP_ASSETS_FACTORY, dapFactory);
             /**
              * End of intra user sub app
              */
+
+            // Crypto Broker Identity
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CBP_CRYPTO_BROKER_IDENTITY);
+            listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
+
+            Activity activity = new Activity();
+            activity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+            activity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+            activity.setColor("#03A9F4");
+            runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            TitleBar titleBar = new TitleBar();
+            titleBar.setLabel("Crypto Broker Identity");
+            titleBar.setColor("#FFFFFF");
+            titleBar.setLabelSize(16);
+            activity.setTitleBar(titleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            activity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+            activity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeFragment.setBack(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+            activity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;
