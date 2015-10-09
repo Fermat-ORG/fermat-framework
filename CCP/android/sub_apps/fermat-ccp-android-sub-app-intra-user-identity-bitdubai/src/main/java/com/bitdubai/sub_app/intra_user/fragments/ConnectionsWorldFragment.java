@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by natalia on 15/09/15.
+ * Created by Matias Furszyfer on 15/09/15.
  */
 public class ConnectionsWorldFragment  extends FermatFragment {
 
@@ -40,17 +40,22 @@ public class ConnectionsWorldFragment  extends FermatFragment {
      */
     private final int POPUP_MENU_WIDHT = 325;
 
-    int MAX = 5;
-    int OFFSET= 0;
+
     private static final String ARG_POSITION = "position";
-    private ArrayList<App> appList;
     /**
      * MANAGERS
      */
     private  static IntraUserModuleManager moduleManager;
     private  static ErrorManager errorManager;
 
+    private List<IntraUserInformation> lstIntraUserInformations;
+
+
     protected final String TAG = "Recycler Base";
+
+    private static final int MAX = 20;
+
+    private int offset = 0;
 
     /**
      * Create a new instance of this fragment
@@ -85,42 +90,36 @@ public class ConnectionsWorldFragment  extends FermatFragment {
         {
 
 
-        IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
-
-        intraUserSearch.setNameToSearch("n");
-
-        List<IntraUserInformation> intraUserInformationList = intraUserSearch.getResult();
+            IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
 
 
-            this.appList = new ArrayList<App>();
+            intraUserSearch.setNameToSearch("");
 
-            for (IntraUserInformation intraUserInformation : intraUserInformationList) {
-                App item = new App();
-                item.Names = intraUserInformation.getName();
-                this.appList.add(item);
+            lstIntraUserInformations = intraUserSearch.getResult();
 
+
+
+            //lstIntraUserInformations =  moduleManager.getSuggestionsToContact(MAX, offset);
+
+
+            Configuration config = getResources().getConfiguration();
+            if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                gridView.setNumColumns(5);
+            } else {
+                gridView.setNumColumns(3);
             }
 
-
-
-        Configuration config = getResources().getConfiguration();
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridView.setNumColumns(5);
-        } else {
-            gridView.setNumColumns(3);
-        }
-
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.intra_user_connection_word_filter, this.appList));
+            gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.intra_user_connection_word_filter, lstIntraUserInformations));
 
 
 
-        }
-        catch(Exception ex)
-        {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
+            }
+            catch(Exception ex)
+            {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+            }
 
-        return gridView;
+            return gridView;
     }
 
 
@@ -129,24 +128,17 @@ public class ConnectionsWorldFragment  extends FermatFragment {
      */
 
 
-    public class App implements Serializable {
 
-        private static final long serialVersionUID = -8730067026050196758L;
+    public class AppListAdapter extends ArrayAdapter<IntraUserInformation> {
 
-        public String Names;
-
-    }
-
-    public class AppListAdapter extends ArrayAdapter<App> {
-
-        public AppListAdapter(Context context, int textViewResourceId, List<App> objects) {
+        public AppListAdapter(Context context, int textViewResourceId, List<IntraUserInformation> objects) {
             super(context, textViewResourceId, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            App item = getItem(position);
+            IntraUserInformation item = getItem(position);
 
             ViewHolder holder;
 
@@ -163,7 +155,7 @@ public class ConnectionsWorldFragment  extends FermatFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.name.setText(item.Names);
+            holder.name.setText(item.getName());
 
             try {
 
@@ -172,7 +164,7 @@ public class ConnectionsWorldFragment  extends FermatFragment {
                         holder.Photo.setImageResource(R.drawable.mati_profile);
                         break;
                     case 1:
-                        holder.Photo.setImageResource(R.drawable.caroline_profile_picture);
+                        holder.Photo.setImageResource(R.drawable.luis_profile_picture);
                         break;
                     case 2:
                         holder.Photo.setImageResource(R.drawable.brant_profile_picture);
@@ -182,6 +174,9 @@ public class ConnectionsWorldFragment  extends FermatFragment {
                         break;
                     case 4:
                         holder.Photo.setImageResource(R.drawable.madaleine_profile_picture);
+                        break;
+                    default:
+                        holder.Photo.setImageResource(R.drawable.robert_profile_picture);
                         break;
                 }
 
