@@ -19,6 +19,6 @@ public interface AssetUserActorNetworkServiceManager {
 
     public void connectTo(PlatformComponentProfile actorAssetUser)  throws CantConnecToException;
 
-    public void sendMessage(PlatformComponentProfile actorAssetUser, String msjContent)  throws CantSendMessageException;
+    public void sendMessage(ActorAssetUser actorAssetUser, String msjContent)  throws CantSendMessageException;
 
 }

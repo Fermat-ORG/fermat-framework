@@ -45,6 +45,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.dev
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -52,12 +53,14 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.dev
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -643,7 +646,96 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
     }
 
     @Override
-    public void sendMessage(PlatformComponentProfile actorAssetUser, String msjContent) throws CantSendMessageException {
+    public void sendMessage(ActorAssetUser actorAssetUser, String msjContent) throws CantSendMessageException {
+
+
+        try {
+
+            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+            PlatformComponentProfile platformComponentProfileAssetUser =  communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUser.getPublicKey(),
+                    (actorAssetUser.getName()),
+                    (actorAssetUser.getName()),
+                    NetworkServiceType.UNDEFINED,
+                    PlatformComponentType.ACTOR,
+                    actorAssetUser.getProfileImage().toString());
+
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(platformComponentProfileAssetUser.getIdentityPublicKey());
+
+
+
+
+            if (communicationNetworkServiceLocal != null) {
+
+                //save into the database
+                communicationNetworkServiceLocal.sendMessage(msjContent, identity);
+
+
+            }else{
+
+                OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+
+                FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(identity,//Sender
+                        platformComponentProfileAssetUser, //Receiver
+                        msjContent,                //Message Content
+                        FermatMessageContentType.TEXT);//Type
+
+            /*
+             * Configure the correct status
+             */
+                ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+
+            /*
+             * Save to the data base table
+             */
+                outgoingMessageDao.create(fermatMessage);
+
+
+                DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                        constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
+                                platformComponentProfile.getNetworkServiceType(),
+                                null,                     // alias
+                                platformComponentProfileAssetUser.getIdentityPublicKey(),                     // identityPublicKey
+                                null,                     // location
+                                null,                     // distance
+                                null,                     // name
+                                null,                     // extraData
+                                null,                     // offset
+                                null,                     // max
+                                platformComponentProfileAssetUser.getPlatformComponentType(),                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                platformComponentProfileAssetUser.getNetworkServiceType());
+
+
+
+                communicationNetworkServiceConnectionManager.connectTo(platformComponentProfileAssetUser,discoveryQueryParametersAssetUser);
+
+
+
+            }
+
+
+        }catch(Exception e){
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantSendMessageException pluginStartException = new CantSendMessageException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        }
 
     }
 
