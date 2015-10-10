@@ -1,12 +1,11 @@
-package com.bitdubai.fermat_dap_api.layer.dap_transaction;
+package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException;
 
 import java.util.UUID;
 
@@ -37,23 +36,23 @@ public interface DigitalAssetVault {
     /**
      * This method persists the DigitalAssetMetadata XML file in local storage.
      * @param digitalAssetMetadata
-     * @throws CantCreateDigitalAssetFileException
+     * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException
      */
-    void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata)throws CantCreateDigitalAssetFileException;
+    void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata)throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 
     /**
      * This method get the XML file and cast the DigitalAssetMetadata object
      * @param genesisTransaction
      * @return
-     * @throws CantGetDigitalAssetFromLocalStorageException
+     * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException
      */
-    DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String genesisTransaction) throws CantGetDigitalAssetFromLocalStorageException ;
+    DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String genesisTransaction) throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 
     /**
      * This method delete a XML file from the local storage
      * @param genesisTransaction
-     * @throws CantDeleteDigitalAssetFromLocalStorageException
+     * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException
      */
-    void deleteDigitalAssetMetadataFromLocalStorage(String genesisTransaction) throws CantDeleteDigitalAssetFromLocalStorageException ;
+    void deleteDigitalAssetMetadataFromLocalStorage(String genesisTransaction) throws CantDeleteDigitalAssetFromLocalStorageException;
 
 }

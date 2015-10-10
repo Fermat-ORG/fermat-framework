@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -11,10 +9,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantDeleteDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantGetDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.DigitalAssetVault;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.DigitalAssetVault;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.UUID;

@@ -17,7 +17,7 @@ public interface AssetUserWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    AssetUserWalletManager getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
+    AssetUserWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
 
     List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
                                                        TransactionType transactionType,
