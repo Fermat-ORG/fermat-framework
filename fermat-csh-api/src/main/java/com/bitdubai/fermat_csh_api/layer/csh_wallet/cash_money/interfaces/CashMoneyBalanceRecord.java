@@ -10,13 +10,13 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 30.09.15.
  */
-public interface CashMoneyTransactionRecord {
+public interface CashMoneyBalanceRecord {
 
     UUID getCashTransactionId();
 
-    String getPublicKeyCustomer();
+    String getPublicKeyActorFrom();
 
-    String getPublicKeyBroker();
+    String getPublicKeyActorTo();
 
     CashTransactionStatus getStatus();
 

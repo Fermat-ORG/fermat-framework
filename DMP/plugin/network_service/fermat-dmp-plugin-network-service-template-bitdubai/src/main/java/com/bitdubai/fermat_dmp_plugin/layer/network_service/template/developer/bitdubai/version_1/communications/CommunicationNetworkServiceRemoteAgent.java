@@ -211,7 +211,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
 
-
                     /*
                      * Validate the message signature
                      */

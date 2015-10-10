@@ -75,58 +75,99 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         String packetContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
         System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
 
-        /*
-         * Construct the json object
-         */
-        JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-        PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_VPN).getAsString());
-        DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(packetContent.get(JsonAttNamesConstants.DISCOVERY_PARAM_VPN).getAsString());
-        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
+        try {
 
-        /*
-         * Get the component profile to connect as remote participant
-         */
-        List<PlatformComponentProfile> remoteParticipantList = searchProfile(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), discoveryQueryParameters.getIdentityPublicKey());
-        PlatformComponentProfile remoteParticipant = remoteParticipantList.get(0);
-        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteParticipant "+remoteParticipant.toJson());
+            /*
+             * Construct the json object
+             */
+            JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            String applicantParticipantPublicKey = packetContent.get(JsonAttNamesConstants.APPLICANT_VPN).getAsString();
+            PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_NS_VPN).getAsString());
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(packetContent.get(JsonAttNamesConstants.DISCOVERY_PARAM_VPN).getAsString());
+            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
 
-        /*
-         * Get the network service profile that live in the same device of the remote participant
-         */
-        List<PlatformComponentProfile> remoteNsParticipantList = searchProfileByCommunicationCloudClientIdentity(networkServiceApplicant.getPlatformComponentType(), networkServiceApplicant.getNetworkServiceType(), remoteParticipant.getCommunicationCloudClientIdentity());
-        PlatformComponentProfile remoteNsParticipant = remoteNsParticipantList.get(0);
-        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteNsParticipant "+remoteNsParticipant.toJson());
+            /*
+             * Get the component profile to connect as remote participant
+             */
+            List<PlatformComponentProfile> remoteParticipantList = searchProfile(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), discoveryQueryParameters.getIdentityPublicKey());
+            PlatformComponentProfile remoteParticipant = remoteParticipantList.get(0);
+            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteParticipant "+remoteParticipant.toJson());
 
-        /*
-         * Get the component profile as participant that live in the same device of the network service applicant
-         */
-        List<PlatformComponentProfile> applicantParticipantList = searchProfileByCommunicationCloudClientIdentity(networkServiceApplicant.getPlatformComponentType(), networkServiceApplicant.getNetworkServiceType(), networkServiceApplicant.getCommunicationCloudClientIdentity());
-        PlatformComponentProfile applicantParticipant = applicantParticipantList.get(0);
-        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - applicantParticipant "+applicantParticipant.toJson());
+            /*
+             * Get the network service profile that live in the same device of the remote participant
+             */
+            List<PlatformComponentProfile> remoteNsParticipantList = searchProfileByCommunicationCloudClientIdentity(networkServiceApplicant.getPlatformComponentType(), networkServiceApplicant.getNetworkServiceType(), remoteParticipant.getCommunicationCloudClientIdentity());
+            PlatformComponentProfile remoteNsParticipant = remoteNsParticipantList.get(0);
+            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - remoteNsParticipant "+remoteNsParticipant.toJson());
 
-        /*
-         * Create the list of participant
-         */
-        List<PlatformComponentProfile> participantsList = new ArrayList<>();
-        participantsList.add(applicantParticipant);
-        participantsList.add(remoteParticipant);
+            /*
+             * Get the component profile as participant that live in the same device of the network service applicant
+             */
+            List<PlatformComponentProfile> applicantParticipantList = searchProfileByCommunicationCloudClientIdentity(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), networkServiceApplicant.getCommunicationCloudClientIdentity());
+            PlatformComponentProfile applicantParticipant = null;
+            for (PlatformComponentProfile platformComponentProfile: applicantParticipantList) {
+                if (platformComponentProfile.getIdentityPublicKey().equals(applicantParticipantPublicKey) &&
+                        platformComponentProfile.getCommunicationCloudClientIdentity().equals(networkServiceApplicant.getCommunicationCloudClientIdentity())){
+                    applicantParticipant = platformComponentProfile;
+                    break;
+                }
+            }
 
-        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - participantsList.size() = "+participantsList.size());
+            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - applicantParticipant "+applicantParticipant.toJson());
 
-        //Create a new vpn
-        WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
+            /*
+             * Create the list of participant
+             */
+            List<PlatformComponentProfile> participantsList = new ArrayList<>();
+            participantsList.add(applicantParticipant);
+            participantsList.add(remoteParticipant);
 
-        /*
-         * Notify to the participants of the vpn
-         */
-        constructRespondPacketAndSend(vpnServer, networkServiceApplicant, remoteParticipant, remoteNsParticipant);
-        constructRespondPacketAndSend(vpnServer, remoteParticipant, networkServiceApplicant, networkServiceApplicant);
+            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - participantsList.size() = "+participantsList.size());
 
-        //if no running
-        if (!getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().isRunning()){
+            //Create a new vpn
+            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
 
-            //Start the agent
-            getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().start();
+            /*
+             * Notify to the participants of the vpn
+             */
+            constructRespondPacketAndSend(vpnServer, applicantParticipant, remoteParticipant, remoteNsParticipant);
+            constructRespondPacketAndSend(vpnServer, remoteParticipant, networkServiceApplicant, networkServiceApplicant);
+
+            //if no running
+            if (!getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().isRunning()){
+
+                //Start the agent
+                getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().start();
+            }
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+             /*
+             * Get the client connection destination
+             */
+            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
+
+            /*
+             * Construct the json object
+             */
+            JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection: "+e.getMessage());
+
+            /*
+             * Create the respond packet
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
+                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        gson.toJson(packetContent), //packet Content
+                                                                                                                        FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST, //Packet type
+                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
+            /*
+             * Send the packet
+             */
+            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
         }
 
     }

@@ -15,8 +15,8 @@ public interface BankMoneyManager {
 
     BankMoney registerBankMoney(
          final String bankTransactionId
-        ,final String publicKeyCustomer
-        ,final String publicKeyBroker
+        ,final String publicKeyActorFrom
+        ,final String publicKeyActorTo
         ,final String balanceType
         ,final String transactionType
         ,final float  amount
