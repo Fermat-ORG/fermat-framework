@@ -20,6 +20,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantChangeCryptoPaymentRequestStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteCryptoPaymentRequestPendingEventActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantHandleCryptoPaymentRequestApprovedEventException;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantHandleCryptoPaymentRequestConfirmedReceptionEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantHandleCryptoPaymentRequestDeniedEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantHandleCryptoPaymentRequestReceivedEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantHandleCryptoPaymentRequestRefusedEventException;
@@ -151,6 +152,35 @@ public class CryptoPaymentRequestEventActions {
     }
 
     /**
+     * first, i change the state to pending_response.
+     * then i confirm the request, to delete it in the network service.
+     */
+    public void handleCryptoPaymentRequestConfirmedReception(UUID requestId) throws CantHandleCryptoPaymentRequestConfirmedReceptionEventException {
+
+        try {
+
+            cryptoPaymentRequestDao.changeState(
+                    requestId,
+                    CryptoPaymentState.PENDING_RESPONSE
+            );
+
+            cryptoPaymentRequestManager.confirmRequest(requestId);
+
+        } catch(CantChangeCryptoPaymentRequestStateException |
+                CryptoPaymentRequestNotFoundException        e) {
+
+            throw new CantHandleCryptoPaymentRequestConfirmedReceptionEventException(e, "RequestId: "+requestId, "Error trying to change the state.");
+        } catch(CantConfirmRequestException |
+                RequestNotFoundException    e) {
+            // TODO what to do in case i didn't find the request.
+            throw new CantHandleCryptoPaymentRequestConfirmedReceptionEventException(e, "RequestId: "+requestId, "Error in network service.");
+        } catch(Exception e) {
+
+            throw new CantHandleCryptoPaymentRequestConfirmedReceptionEventException(e, "RequestId: "+requestId, "Unhandled exception.");
+        }
+    }
+
+    /**
      * first, i change the state to denied.
      * then i confirm the request, to delete it in the network service.
      */
@@ -244,7 +274,7 @@ public class CryptoPaymentRequestEventActions {
                     cryptoPaymentRequestManager.informReception(requestId);
                 } catch(DefaultWalletNotFoundException z) {
 
-                        cryptoPaymentRequestManager.informDenial(requestId);
+                    cryptoPaymentRequestManager.informDenial(requestId);
 
                 }
 

@@ -673,6 +673,47 @@ public enum EventType implements FermatEventEnum {
             return new IncomingMoneyNotificationEvent(this);
         }
     },
+
+    ASSET_USER_CONNECTION_ACCEPTED("AUCA") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorConnectionAcceptedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorConnectionAcceptedEvent(this);
+        }
+    },
+
+    ASSET_USER_DISCONNECTION_REQUEST_RECEIVED("AUDRR") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorConnectionCancelledEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorConnectionCancelledEvent(this);
+        }
+    },
+
+    ASSET_USER_REQUESTED_CONNECTION("AURC") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorRequestConnectionEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorRequestConnectionEvent(this);
+        }
+    },
+
+    ASSET_USER_CONNECTION_DENIED("AUCD") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorDeniedConnectionEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorConnectionDeniedEvent(this);
+        }
+    },
+
     NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {

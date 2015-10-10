@@ -59,8 +59,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                         (cryptoPaymentRequestNetworkServicePluginRoot.getName()+" ("+cryptoPaymentRequestNetworkServicePluginRoot.getId()+")"),
                         cryptoPaymentRequestNetworkServicePluginRoot.getNetworkServiceType(),
                         cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentType(),
-                        cryptoPaymentRequestNetworkServicePluginRoot.getExtraData()
-                );
+                        cryptoPaymentRequestNetworkServicePluginRoot.getExtraData());
 
                 /*
                  * Register me

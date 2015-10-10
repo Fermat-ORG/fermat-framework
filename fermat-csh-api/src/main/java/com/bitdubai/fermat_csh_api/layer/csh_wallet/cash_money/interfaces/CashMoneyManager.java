@@ -15,8 +15,8 @@ public interface CashMoneyManager {
 
         CashMoney registerCashMoney(
                  final String cashTransactionId
-                ,final String publicKeyCustomer
-                ,final String publicKeyBroker
+                ,final String publicKeyActorFrom
+                ,final String publicKeyActorTo
                 ,final String status
                 ,final String balanceType
                 ,final String transactionType

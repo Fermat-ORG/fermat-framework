@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
@@ -11,11 +12,13 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantDeliverDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
@@ -67,6 +70,8 @@ public class DigitalAssetDistributor {
      * */
     private void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws CantDeliverDigitalAssetException {
         try{
+            String genesisTransactionFromDigitalAssetMetadata=digitalAssetMetadata.getGenesisTransaction();
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH,genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
             CryptoTransaction cryptoTransaction = this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash);
             //This won't work until I can get the CryptoTransaction from AssetVault
@@ -77,8 +82,19 @@ public class DigitalAssetDistributor {
                         "Op_return:"+op_ReturnFromAssetVault+"\n" +
                         "digitalAssetMetadata:"+digitalAssetMetadata);
             }
-        } catch (CantGetGenesisTransactionException e) {
-            e.printStackTrace();
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED,genesisTransactionFromDigitalAssetMetadata);
+        } catch (CantGetGenesisTransactionException exception) {
+            throw new CantDeliverDigitalAssetException(exception,
+                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Cannot get the genesis transaction from Asset vault");
+        } catch (CantExecuteQueryException exception) {
+            throw new CantDeliverDigitalAssetException(exception,
+                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Cannot execute a database operation");
+        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
+            throw new CantDeliverDigitalAssetException(exception,
+                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Unexpected result in database");
         }
     }
 
@@ -92,16 +108,23 @@ public class DigitalAssetDistributor {
             //Now, I going to persist in database the basic information about digitalAssetMetadata
             persistDigitalAsset(digitalAssetMetadata, actorAssetUser);
             DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
-            if(!isAvailableBalanceInAssetVault(digitalAsset.getGenesisAmount(), digitalAssetMetadata.getGenesisTransaction())){
+            String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_AVAILABLE_BALANCE,genesisTransaction);
+            if(!isAvailableBalanceInAssetVault(digitalAsset.getGenesisAmount(), genesisTransaction)){
                 throw new CantDeliverDigitalAssetException("The Available balance ins asset vault is incorrect");
             }
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.AVAILABLE_BALANCE_CHECKED,genesisTransaction);
             DigitalAssetContract digitalAssetContract=digitalAsset.getContract();
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_CONTRACT,genesisTransaction);
             if(!isValidContract(digitalAssetContract)){
                 throw new CantDeliverDigitalAssetException("The DigitalAsset Contract is not valid, the expiration date has passed");
             }
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CONTRACT_CHECKED,genesisTransaction);
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH,genesisTransaction);
             if(!isDigitalAssetHashValid(digitalAssetMetadata)){
                 throw new CantDeliverDigitalAssetException("The DigitalAsset hash is not valid");
             }
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED,genesisTransaction);
             deliverToRemoteActor(digitalAssetMetadata, actorAssetUser.getPublicKey());
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
@@ -109,6 +132,10 @@ public class DigitalAssetDistributor {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into local storage");
         } catch (CantGetGenesisTransactionException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
+        } catch (CantExecuteQueryException exception) {
+            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot execute a database operation");
+        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
+            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Unexpected result in database");
         }
     }
 
@@ -120,6 +147,14 @@ public class DigitalAssetDistributor {
     }
 
     private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, String remoteActorPublicKey){
+        String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
+        try {
+            this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING,genesisTransaction);
+        } catch (CantExecuteQueryException e) {
+            e.printStackTrace();
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            e.printStackTrace();
+        }
         //TODO: send through Asset Transmission plugin
     }
 
@@ -138,7 +173,7 @@ public class DigitalAssetDistributor {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty=digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
         Timestamp expirationDate= (Timestamp) contractProperty.getValue();
-        Date date= new java.util.Date();
+        Date date= new Date();
         return expirationDate.after(new Timestamp(date.getTime()));
     }
 
