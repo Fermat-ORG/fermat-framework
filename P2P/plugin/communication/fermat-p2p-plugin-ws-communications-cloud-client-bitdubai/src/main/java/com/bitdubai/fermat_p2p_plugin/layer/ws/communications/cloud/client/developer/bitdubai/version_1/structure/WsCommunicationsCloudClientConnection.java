@@ -402,9 +402,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile) {
 
-        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
-        }
+//        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+//            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
+//        }
 
         if (applicant.getNetworkServiceType() != applicant.getNetworkServiceType()){
             throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");

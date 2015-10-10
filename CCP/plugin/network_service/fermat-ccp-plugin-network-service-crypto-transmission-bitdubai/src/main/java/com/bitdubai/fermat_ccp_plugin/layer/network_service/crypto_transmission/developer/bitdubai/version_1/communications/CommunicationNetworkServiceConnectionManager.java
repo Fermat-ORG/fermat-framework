@@ -181,7 +181,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(remoteComponentProfile, remoteComponentProfile.getIdentityPublicKey());
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(applicantComponentProfile, remoteComponentProfile.getIdentityPublicKey());
 
             //Validate the connection
             if (communicationsVPNConnection != null &&

@@ -132,8 +132,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
-        //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
-        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
+        //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
     }
 
 
