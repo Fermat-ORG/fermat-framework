@@ -1020,14 +1020,14 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             statusBar.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("");
+            runtimeTitleBar.setLabel("World");
             runtimeTitleBar.setColor("#FF0B46F0");
             runtimeTitleBar.setIconName("world");
 
-            RuntimeFernatComboBox comboBox = new RuntimeFernatComboBox();
-            comboBox.addValue("Mati");
+            //RuntimeFernatComboBox comboBox = new RuntimeFernatComboBox();
+            //comboBox.addValue("Mati");
 
-            runtimeTitleBar.setComboBox(comboBox);
+            //runtimeTitleBar.setComboBox(comboBox);
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 //            runtimeTabStrip = new TabStrip();
