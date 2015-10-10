@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 
 /**
@@ -12,12 +13,12 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private String publicKey;
     private byte[] profileImage ;
     private long registrationDate;
-    private ContactState contactState;
+    private ConnectionState contactState;
 
     /**
      * Constructor
      */
-    public RedeemPointActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ContactState contactState){
+    public RedeemPointActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
 
         this.name = name;
         this.publicKey = publicKey;
@@ -74,7 +75,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
      * @return the contact state
      */
     @Override
-    public ContactState getContactState() {
+    public ConnectionState getContactState() {
         return this.contactState;
     }
 }

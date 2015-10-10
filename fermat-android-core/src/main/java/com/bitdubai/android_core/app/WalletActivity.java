@@ -560,7 +560,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
      */
     @Override
     public void onNavigationDrawerItemSelected(int position, String activityCode) {
-        Toast.makeText(this,activityCode,Toast.LENGTH_LONG).show();
         changeActivity(activityCode);
     }
 }

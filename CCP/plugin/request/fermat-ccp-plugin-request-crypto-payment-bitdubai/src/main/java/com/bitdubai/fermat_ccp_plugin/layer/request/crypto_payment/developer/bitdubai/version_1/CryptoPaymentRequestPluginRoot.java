@@ -21,7 +21,11 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interf
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestApprovedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestDeniedEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestReceivedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.event_handlers.CryptoPaymentRequestRefusedEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteCryptoPaymentRequestPendingEventActionsException;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteUnfinishedActionsException;
+import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestEventActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestRegistryException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure.CryptoPaymentRequestEventActions;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure.CryptoPaymentRequestRegistry;
@@ -30,6 +34,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +57,7 @@ public class CryptoPaymentRequestPluginRoot implements
         DealsWithEvents,
         DealsWithOutgoingIntraActor,
         DealsWithPluginDatabaseSystem,
+        DealsWithWalletManager,
         Plugin,
         Service {
 
@@ -84,6 +91,11 @@ public class CryptoPaymentRequestPluginRoot implements
      * Plugin Interface member variables.
      */
     private UUID pluginId;
+
+    /*
+     * DealsWithWalletManager Interface member variables.
+     */
+    private WalletManagerManager walletManagerManager;
 
     /*
      * Service Interface member variables.
@@ -143,21 +155,59 @@ public class CryptoPaymentRequestPluginRoot implements
 
         // adding listeners to the events
 
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_APPROVED, new CryptoPaymentRequestApprovedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
+        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_APPROVED, new CryptoPaymentRequestApprovedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
 
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_DENIED  , new CryptoPaymentRequestDeniedEventHandler  (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
+        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_DENIED, new CryptoPaymentRequestDeniedEventHandler  (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
 
-        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REFUSED , new CryptoPaymentRequestRefusedEventHandler (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
+        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_RECEIVED, new CryptoPaymentRequestReceivedEventHandler(cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId, walletManagerManager));
 
-        // executing pending actions
+        addCryptoPaymentRequestListener(EventType.CRYPTO_PAYMENT_REQUEST_REFUSED, new CryptoPaymentRequestRefusedEventHandler (cryptoPaymentRequestManager, this, pluginDatabaseSystem, pluginId));
 
-        new CryptoPaymentRequestEventActions(
-                cryptoPaymentRequestManager,
-                pluginDatabaseSystem,
-                pluginId
-        ).executePendingRequestActions();
+        // executing pending event actions
+        try {
+            CryptoPaymentRequestEventActions eventActions = new CryptoPaymentRequestEventActions(
+                    cryptoPaymentRequestManager,
+                    pluginDatabaseSystem,
+                    pluginId,
+                    walletManagerManager
+            );
 
-        this.serviceStatus = ServiceStatus.STARTED;
+            eventActions.initialize();
+
+            eventActions.executePendingRequestEventActions();
+
+            this.serviceStatus = ServiceStatus.STARTED;
+
+        } catch(CantInitializeCryptoPaymentRequestEventActionsException     |
+                CantExecuteCryptoPaymentRequestPendingEventActionsException e) {
+
+            reportUnexpectedException(e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
+        }
+
+        // executing unfinished actions
+        try {
+
+            CryptoPaymentRequestRegistry cryptoPaymentRegistry = new CryptoPaymentRequestRegistry(
+                    cryptoPaymentRequestManager,
+                    errorManager,
+                    outgoingIntraActorManager,
+                    pluginDatabaseSystem,
+                    pluginId
+            );
+
+            cryptoPaymentRegistry.initialize();
+
+            cryptoPaymentRegistry.executeUnfinishedActions();
+
+        } catch(CantInitializeCryptoPaymentRequestRegistryException |
+                CantExecuteUnfinishedActionsException               e) {
+
+            reportUnexpectedException(e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
+        }
+
+
     }
 
     private void addCryptoPaymentRequestListener(FermatEventEnum fermatEventEnum, FermatEventHandler fermatEventHandler) {
@@ -199,7 +249,7 @@ public class CryptoPaymentRequestPluginRoot implements
     }
 
     @Override
-    public void setCryptoPaymentRequestManager(CryptoPaymentRequestManager cryptoPaymentRequestManager) {
+    public void setCryptoPaymentRequestManager(final CryptoPaymentRequestManager cryptoPaymentRequestManager) {
         this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
     }
 
@@ -220,7 +270,7 @@ public class CryptoPaymentRequestPluginRoot implements
     }
 
     @Override
-    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
+    public void setOutgoingIntraActorManager(final OutgoingIntraActorManager outgoingIntraActorManager) {
         this.outgoingIntraActorManager = outgoingIntraActorManager;
     }
 
@@ -240,4 +290,11 @@ public class CryptoPaymentRequestPluginRoot implements
         this.pluginId = pluginId;
     }
 
+    /**
+     * DealsWithWalletManager Interface implementation.
+     */
+    @Override
+    public void setWalletManagerManager(final WalletManagerManager walletManagerManager) {
+        this.walletManagerManager = walletManagerManager;
+    }
 }

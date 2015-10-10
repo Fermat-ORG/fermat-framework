@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_ccp_api.layer.identity.CantStartSubsystemException;
 import com.bitdubai.fermat_ccp_api.layer.identity.IdentitySubsystem;
-import com.bitdubai.fermat_core.layer.ccp.identity.intra_user.IntraWalletUserSubsystem;
+import com.bitdubai.fermat_core.layer.ccp.identity.intra_wallet_user.IntraWalletUserSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/2015.

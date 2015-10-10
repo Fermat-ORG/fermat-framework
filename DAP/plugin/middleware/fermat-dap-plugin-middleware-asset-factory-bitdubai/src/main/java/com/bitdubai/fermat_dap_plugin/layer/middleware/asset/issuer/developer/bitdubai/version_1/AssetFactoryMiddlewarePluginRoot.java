@@ -280,12 +280,13 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
             java.util.Date date= new java.util.Date();
             System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
-            assetFactory.setPublicKey("ASD-125412541-BS-854");
+            System.out.println(assetFactory.getPublicKey());
+            //assetFactory.setPublicKey("ASD-125412541-BS-854");
             assetFactory.setDescription("Asset de Prueba");
             assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
             assetFactory.setAmount(1);
             assetFactory.setFee(1);
-            assetFactory.setIsRedeemable(true);
+            assetFactory.setIsRedeemable(false);
             assetFactory.setName("Asset de Mcdonald - modificado");
             assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
             assetFactory.setExpirationDate(new Timestamp(date.getTime()));
@@ -293,16 +294,16 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
             assetFactory.setQuantity(2);
             assetFactory.setState(State.DRAFT);
             assetFactory.setWalletPublicKey(new ECCKeyPair().getPublicKey());
-            Resource resource = new Resource();
-            List<Resource> resources = new ArrayList<>();
-            resource.setId(UUID.randomUUID());
-            resource.setName("Foto 1");
-            resource.setFileName("imagen2.png");
-            resource.setResourceType(ResourceType.IMAGE);
-            resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(new byte[]{0xa, 0x2, 0xf, (byte) 0xff, (byte) 0xff, (byte) 0xff});
-            resources.add(resource);
-            assetFactory.setResources(resources);
+//            Resource resource = new Resource();
+//            List<Resource> resources = new ArrayList<>();
+//            resource.setId(UUID.randomUUID());
+//            resource.setName("Foto 1");
+//            resource.setFileName("imagen2.png");
+//            resource.setResourceType(ResourceType.IMAGE);
+//            resource.setResourceDensity(ResourceDensity.HDPI);
+//            resource.setResourceBinayData(new byte[]{0xa, 0x2, 0xf, (byte) 0xff, (byte) 0xff, (byte) 0xff});
+//            resources.add(resource);
+            assetFactory.setResources(null);
             AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
             assetIssuerIdentity.setAlias("Franklin Marcano");
             assetIssuerIdentity.setPublicKey("ASDS-10087982");
@@ -409,8 +410,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
     }
 
     @Override
-    public void removeAssetFactory(AssetFactory assetFactory) throws CantDeleteAsserFactoryException {
-
+    public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException {
+        assetFactoryMiddlewareManager.removeAssetFactory(publicKey);
     }
 
     @Override

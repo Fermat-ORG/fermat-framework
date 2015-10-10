@@ -27,7 +27,7 @@ android {
         multiDexEnabled true
     }
 
-    dexOptions{ javaMaxHeapSize "4g"}
+   dexOptions{ javaMaxHeapSize "4g"}
 
     sourceSets {
         main {
@@ -94,6 +94,9 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
+
+
+    compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
 
     /*
     Sub APPs on the pipeline

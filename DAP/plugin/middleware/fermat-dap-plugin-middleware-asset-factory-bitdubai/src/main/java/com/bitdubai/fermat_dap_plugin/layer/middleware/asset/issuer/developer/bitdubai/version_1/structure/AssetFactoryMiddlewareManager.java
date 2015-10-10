@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
@@ -117,20 +119,17 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
     private boolean areObjectsSettled(AssetFactory assetFactory)
     {
         boolean isBoolean = true;
-        if (assetFactory.getResources() == null) isBoolean = false;
+        //TODO: Descomentar luego solo es para la prueba y testeo
+        //if (assetFactory.getResources() == null) isBoolean = false;
         if (assetFactory.getState() == null) isBoolean = false;
         if (assetFactory.getName() == null) isBoolean = false;
         if (assetFactory.getDescription() == null) isBoolean = false;
         if (assetFactory.getQuantity() == 0) isBoolean = false;
         if (assetFactory.getAmount() == 0) isBoolean = false;
-        if (assetFactory.getExpirationDate() == null) isBoolean = false;
         if (assetFactory.getAssetBehavior() == null) isBoolean = false;
         return isBoolean;
     }
 
-    //De esa forma poder almacenarlo en la tabla de contract seteando la variable assetFactory.setContractProperties
-    //Asi mismo cuando se vaya a enviar el DigitalAsset a la transaccion traer el objeto AssetFactory lleno, y las propiedades del contrato
-    //asignarselas mas adelante al objeto DigitalAssetContract, que a su vez sera seteado a ala propiedad setContract del DigitalAsset
     private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantCreateFileException, CantPersistFileException{
         try {
             List<ContractProperty> contractProperties = new ArrayList<>();
@@ -141,13 +140,18 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             contractProperties.add(redeemable);
             contractProperties.add(expirationDate);
             assetFactory.setContractProperties(contractProperties);
+            //TODO: Borrar luego cuado funcione el Identity debe venir desde el dispositivo
+            AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
+            assetIssuerIdentity.setAlias("Franklin Marcano");
+            assetIssuerIdentity.setPublicKey("ASDS-10087982");
+            assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
-            for (Resource resource : assetFactory.getResources()) {
-                //if (resource.getResourceBinayData() != null) {
+            if (assetFactory.getResources() != null){
+                for (Resource resource : assetFactory.getResources()) {
                     PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
                     imageFile.setContent(resource.getResourceBinayData());
                     imageFile.persistToMedia();
-                //}
+                }
             }
         }catch (CantCreateFileException cantCreateFileException)
         {
@@ -160,6 +164,16 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
 
     }
 
+    private void saveMarkFactoryInDatabase(AssetFactory assetFactory) throws CantSaveAssetFactoryException, DatabaseOperationException, MissingAssetDataException{
+        try {
+            getAssetFactoryMiddlewareDao().markAssetFactoryData(assetFactory);
+        }
+        catch (DatabaseOperationException | MissingAssetDataException e)
+        {
+            throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Mark Save Asset Factory");
+        }
+    }
+
     private List<AssetFactory> getAssetFactories(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException, CantCreateFileException
     {
         List<AssetFactory> assetFactories = new ArrayList<>();
@@ -170,6 +184,18 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         }
 
         return assetFactories;
+    }
+
+
+    private void markAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException
+    {
+        try {
+            saveMarkFactoryInDatabase(assetFactory);
+        }
+        catch (DatabaseOperationException | MissingAssetDataException e)
+        {
+            throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Save Asset Factory");
+        }
     }
 
 
@@ -256,11 +282,16 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             ContractProperty redeemable;
             ContractProperty expirationDate;
             redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
             ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
             ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
-            assetFactory.setIsRedeemable(Boolean.valueOf(redeemable1.getValue().toString()));
-            assetFactory.setExpirationDate(Timestamp.valueOf(expirationDate1.getValue().toString()));
+            if (redeemable1.getValue() != null)
+                assetFactory.setIsRedeemable(Boolean.valueOf(redeemable1.getValue().toString()));
+            else  assetFactory.setIsRedeemable(assetFactory.getIsRedeemable());
+            if (expirationDate1.getValue() != null)
+                assetFactory.setExpirationDate(Timestamp.valueOf(expirationDate1.getValue().toString()));
+            else assetFactory.setExpirationDate(assetFactory.getExpirationDate());
+
             return assetFactory;
         }
         catch (DatabaseOperationException  | InvalidParameterException | CantLoadTableToMemoryException e)
@@ -388,33 +419,31 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         }
     }
 
+    public void removeAssetFactory(String publicKey) throws CantDeleteAsserFactoryException
+    {
+        try {
+            AssetFactory assetFactory = getAssetFactory(publicKey);
+            if (assetFactory.getState().getCode() != State.DRAFT.getCode())
+                throw new CantDeleteAsserFactoryException(null, "Error delete Asset Factory", "Asset Factory in DRAFT");
+            else
+                getAssetFactoryMiddlewareDao().removeAssetFactory(assetFactory);
+        }catch (Exception exception){
+            throw new CantDeleteAsserFactoryException(exception, "Error delete Asset Factory", "Asset Factory - Delete");
+        }
+    }
+
     public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException
     {
         try {
             if(assetFactory.getState() == State.DRAFT) {
                 DigitalAsset digitalAsset = new DigitalAsset();
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
-
-//            for(ContractProperty property : assetFactory.getContractProperties())
-//            {
-//                ContractProperty contractProperty = digitalAssetContract.getContractProperty(property.getName());
-//                digitalAssetContract.setContractProperty(contractProperty);
-//            }
-                ContractProperty redeemable;
-                ContractProperty expirationDate;
-                redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-                expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-                ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
-                ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
-                redeemable1.setValue(assetFactory.getIsRedeemable());
-                expirationDate1.setValue(assetFactory.getExpirationDate());
-                //TODO: Revisar porque la asignacion del value al property no la asigna
-                try {
-
-                    digitalAssetContract.setContractProperty(redeemable1);
-                } catch (Exception e) {
-                    digitalAssetContract.setContractProperty(expirationDate1);
-                }
+                ContractProperty redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
+                redeemable.setValue(assetFactory.getIsRedeemable());
+                ContractProperty expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
+                expirationDate.setValue(assetFactory.getExpirationDate());
+                digitalAssetContract.setContractProperty(redeemable);
+                digitalAssetContract.setContractProperty(expirationDate);
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());
@@ -427,26 +456,21 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
                 aseetIssuerIdentity = (AssetIssuerIdentity)assetFactory.getIdentyAssetIssuer();
                 digitalAsset.setIdentityAssetIssuer(aseetIssuerIdentity);
                 digitalAsset.setResources(assetFactory.getResources());
-                //Actualiza el State a Pending_Final del objeto assetFactory
-                assetFactory.setState(State.PENDING_FINAL);
-                saveAssetFactory(assetFactory);
-                //Llama al metodo AssetIssuer de la transaction
+                markAssetFactoryState(State.PENDING_FINAL, assetFactory.getPublicKey());
+                //Method the DealsWithAssetIssuing
                 assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), blockchainNetworkType);
-                assetFactory.setState(State.FINAL);
-                saveAssetFactory(assetFactory);
+                //assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), "wallet_public_key", blockchainNetworkType);
+
             }
             else
             {
+                markAssetFactoryState(State.DRAFT, assetFactory.getPublicKey());
                 throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }
 
         }catch (CantIssueDigitalAssetsException e){
             e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: issueAssets");
-        }
-        catch (CantSaveAssetFactoryException exception)
-        {
-            throw new CantSaveAssetFactoryException(exception, "Cant Save Asset Factory", "Method: publishAsset");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -457,14 +481,15 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
     public void markAssetFactoryState(State state, String assetPublicKey) throws CantSaveAssetFactoryException, CantGetAssetFactoryException, CantCreateFileException, CantPersistFileException{
         AssetFactory assetFactory = getAssetFactory(assetPublicKey);
         assetFactory.setState(state);
-        saveAssetFactory(assetFactory);
+        markAssetFactory(assetFactory);
+        //saveAssetFactory(assetFactory);
     }
 
     public AssetFactory getNewAssetFactory() throws  CantCreateAssetFactoryException, CantCreateEmptyAssetFactoryException
     {
             AssetFactory assetFactory = new AssetFactory() {
                 String walletPublicKey;
-                String publicKey;
+                String publicKey = new ECCKeyPair().getPublicKey();
                 String name;
                 String description;
                 List<Resource> resources;

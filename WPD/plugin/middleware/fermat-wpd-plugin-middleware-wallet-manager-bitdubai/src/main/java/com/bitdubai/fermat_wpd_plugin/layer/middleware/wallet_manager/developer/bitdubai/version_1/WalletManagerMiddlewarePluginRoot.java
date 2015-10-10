@@ -94,6 +94,8 @@ import java.util.logging.Logger;
  */
 public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithErrors,DealsWithEvents,DealsWithLogger,DealsWithWalletResources,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletManagerManager {
 
+    String walletPublicKey = "reference_wallet";
+
     /**
      * DealsWithDeviceUser member variables
      */
@@ -232,14 +234,14 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
              * The database exists but cannot be open. I can not handle this situation.
              */
             FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         } catch(Exception exception){
             FermatException e = new CantDeliverDatabaseException("Unexpected Exception",exception,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
@@ -259,7 +261,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             try {
                 createWalletManagerMiddlewareDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception){
                 throw new CantStartPluginException("Cannot start WalletManagerMiddleware plugin.", FermatException.wrapException(exception), null, null);
@@ -271,7 +273,7 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             try {
                 createWalletManagerMiddlewareDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             }
         } catch (Exception exception){
@@ -400,21 +402,23 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
 
         // Harcoded para testear el circuito más arriba
-       InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.REFERENCE_WALLET,
+        InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",
-                "Reference nich wallet",
-                "public_key",
+                "bitDubai bitcoin Wallet",
+                "reference_wallet",
                 "wallet_platform_identifier",
                 new Version(1,0,0),
                 WalletType.REFERENCE,
-                "300",
-                "1",
-                UUID.randomUUID(),
-                "Natalia",
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
                 ""
-                );
+        );
 
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
         lstInstalledWallet.add(installedWallet);
@@ -730,10 +734,10 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
             return walletManagerMiddlewareDao.getInstalledWallet(walletPublicKey);
 
         } catch (CantGetInstalledWalletsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
         } catch (CantExecuteDatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateNewWalletException("CAN'T INSTALL WALLET Language",e, null, null);
         }
 

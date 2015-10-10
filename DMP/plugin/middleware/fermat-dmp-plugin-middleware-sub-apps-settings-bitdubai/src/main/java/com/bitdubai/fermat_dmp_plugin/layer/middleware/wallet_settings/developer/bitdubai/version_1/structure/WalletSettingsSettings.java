@@ -305,9 +305,9 @@ public class WalletSettingsSettings implements WalletSettings {
             return walletPublicKey;
 
         } catch (FileNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
         } catch (CantCreateFileException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SETTINGS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
 
 

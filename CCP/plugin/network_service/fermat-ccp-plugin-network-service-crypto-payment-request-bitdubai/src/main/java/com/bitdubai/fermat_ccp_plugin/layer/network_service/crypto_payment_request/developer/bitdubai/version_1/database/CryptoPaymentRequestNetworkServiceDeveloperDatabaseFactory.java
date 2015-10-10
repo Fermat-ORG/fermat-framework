@@ -94,24 +94,25 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
          */
         List<String> cryptoAddressRequestColumns = new ArrayList<>();
 
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_REQUEST_ID_COLUMN_NAME         );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME  );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME   );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_DESCRIPTION_COLUMN_NAME        );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_AMOUNT_COLUMN_NAME             );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_START_TIME_STAMP_COLUMN_NAME   );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_END_TIME_STAMP_COLUMN_NAME     );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TYPE_COLUMN_NAME               );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_STATE_COLUMN_NAME              );
-        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_PROTOCOL_STATE_COLUMN_NAME     );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME         );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_TYPE_COLUMN_NAME      );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME   );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTOR_TYPE_COLUMN_NAME         );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DESCRIPTION_COLUMN_NAME        );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME     );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_CRYPTO_CURRENCY_COLUMN_NAME    );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_AMOUNT_COLUMN_NAME             );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME   );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME          );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME             );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME     );
+        cryptoAddressRequestColumns.add(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME       );
 
         /**
          * Table Crypto Address Request addition.
          */
-        DeveloperDatabaseTable cryptoAddressRequestTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_ADDRESS_REQUEST_TABLE_NAME, cryptoAddressRequestColumns);
+        DeveloperDatabaseTable cryptoAddressRequestTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME, cryptoAddressRequestColumns);
         tables.add(cryptoAddressRequestTable);
 
         return tables;

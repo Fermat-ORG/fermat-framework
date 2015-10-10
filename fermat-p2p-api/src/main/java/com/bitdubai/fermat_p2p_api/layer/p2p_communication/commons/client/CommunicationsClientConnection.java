@@ -43,20 +43,21 @@ public interface CommunicationsClientConnection {
      * of the discovery query to search all component register in the communication
      * cloud server that match with the params
      *
-     * @param applicant
+     * @param platformComponentType
+     * @param networkServiceType
      * @param alias
      * @param identityPublicKey
      * @param location
      * @param distance
      * @param name
      * @param extraData
-     * @param firstRecord
-     * @param numRegister
+     * @param offset
+     * @param max
      * @param fromOtherPlatformComponentType
      * @param fromOtherNetworkServiceType
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
     /**
      * Method that register a platform component with for Communication like online
@@ -81,6 +82,16 @@ public interface CommunicationsClientConnection {
      * @param remoteDestination the remote destination component to receive message
      */
     public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination);
+
+    /**
+     * Method that request to the communication cloud server create a vpn connection between the applicant and
+     * the remote destination component to send message, but the applicant only now a other component type identity public key
+     * and the server has to discovery the component type for this identity public key that is the same type as the applicant.
+     *
+     * @param applicant
+     * @param discoveryQueryParameters
+     */
+    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicant, DiscoveryQueryParameters discoveryQueryParameters);
 
     /**
      * Method that verified is the connection is

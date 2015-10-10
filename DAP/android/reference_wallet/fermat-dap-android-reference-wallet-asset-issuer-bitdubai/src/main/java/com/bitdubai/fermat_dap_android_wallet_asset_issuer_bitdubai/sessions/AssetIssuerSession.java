@@ -1,9 +1,13 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +18,9 @@ import java.util.Map;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class AssetIssuerSession implements SubAppsSession {
+public class AssetIssuerSession implements WalletSession {
 
+    private final InstalledWallet installedWallet;
     /**
      * Issuer Manager
      */
@@ -23,7 +28,7 @@ public class AssetIssuerSession implements SubAppsSession {
     /**
      * SubApps type
      */
-    private SubApps subApps;
+    private WalletSession walletSession;
 
     /**
      * Active objects in wallet session
@@ -37,22 +42,22 @@ public class AssetIssuerSession implements SubAppsSession {
 
     /**
      * Constructor
-     *
-     * @param subApps      SubApp Type
+     *  @param
      * @param errorManager Error Manager
      * @param manager      AssetIssuerWallet Manager
      */
-    public AssetIssuerSession(SubApps subApps, ErrorManager errorManager, AssetIssuerWalletManager manager) {
-        this.subApps = subApps;
+    public AssetIssuerSession(InstalledWallet installedWallet, ErrorManager errorManager, AssetIssuerWalletManager manager) {
+        this.installedWallet = installedWallet;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
         this.manager = manager;
     }
 
 
+
     @Override
-    public SubApps getSubAppSessionType() {
-        return subApps;
+    public InstalledWallet getWalletSessionType() {
+        return null;
     }
 
     @Override
@@ -70,22 +75,16 @@ public class AssetIssuerSession implements SubAppsSession {
         return errorManager;
     }
 
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AssetIssuerSession that = (AssetIssuerSession) o;
-
-        return subApps == that.subApps;
-
+    public WalletResourcesProviderManager getWalletResourcesProviderManager() {
+        return null;
     }
 
     @Override
-    public int hashCode() {
-        return subApps.hashCode();
+    public WalletSettings getWalletSettings() {
+        return null;
     }
+
 
     /**
      * Get Asset Issuer Wallet Manager instance
