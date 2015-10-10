@@ -295,6 +295,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                         String signature = AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                         ((FermatMessageCommunication) message).setSignature(signature);
 
+
                             /*
                              * Send the message
                              */
@@ -303,6 +304,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Change the message and update in the data base
                              */
+
                         ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                         outgoingMessageDao.update(message);
 
@@ -331,5 +333,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         }
 
     }
+
 
 }

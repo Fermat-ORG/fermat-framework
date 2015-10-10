@@ -89,6 +89,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        //todo record this transaction
         FermatEvent transactionEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
         transactionEvent.setSource(EventSource.CRYPTO_VAULT);
         eventManager.raiseEvent(transactionEvent);
@@ -97,7 +98,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-
+        //todo record this transaction
     }
 
     @Override
@@ -107,6 +108,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
+        // todo records this change in the transaction.
 
     }
 
@@ -122,6 +124,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onKeysAdded(List<ECKey> keys) {
-
+        // I may need to reset the wallet in this case?
     }
 }

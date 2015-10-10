@@ -12,14 +12,14 @@ public class RedeemPointActorDatabaseConstants {
 
     public static final String REDEEM_POINT_TABLE_NAME = "redeem_point_actor";
 
-    public static final String REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME = "redeem_point_publicKey_actor";
-    public static final String REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME = "redeem_point_logged_publicKey_actor";
-    public static final String REDEEM_POINT_NAME_COLUMN_NAME = "redeem_point_name_actor";
-    public static final String REDEEM_POINT_STATUS_COLUMN_NAME = "redeem_point_status_actor";
-    public static final String REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME = "redeem_point_registration_date_actor";
-    public static final String REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME = "redeem_point_modified_date_actor";
+    public static final String REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_publicKey";
+    public static final String REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME = "publicKey";
+    public static final String REDEEM_POINT_NAME_COLUMN_NAME = "name";
+    public static final String REDEEM_POINT_STATE_COLUMN_NAME = "redeem_point_state";
+    public static final String REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
+    public static final String REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME = "modified_date";
 
-    public static final String REDEEM_POINT_FIRST_KEY_COLUMN = "redeem_point_publicKey_actor";
+    public static final String REDEEM_POINT_FIRST_KEY_COLUMN = "publicKey";
 
     /**
      * Redeem Point Relation Issuer database table definition.

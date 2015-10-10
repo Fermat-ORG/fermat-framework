@@ -25,6 +25,11 @@ public class CompleteComponentConnectionRequestNotificationEvent extends Abstrac
      */
     private PlatformComponentProfile remoteComponent;
 
+    /**
+     * Represent the applicant
+     */
+    private PlatformComponentProfile applicantProfile;
+
 
     /**
      * Constructor with parameter
@@ -48,5 +53,14 @@ public class CompleteComponentConnectionRequestNotificationEvent extends Abstrac
      */
     public void setRemoteComponent(PlatformComponentProfile remoteComponent) {
         this.remoteComponent = remoteComponent;
+    }
+
+    public void setApplicantProfile(PlatformComponentProfile applicantProfile) {
+        this.applicantProfile = applicantProfile;
+    }
+
+    public PlatformComponentProfile getApplicantProfile() {
+
+        return applicantProfile;
     }
 }

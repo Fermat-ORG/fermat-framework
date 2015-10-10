@@ -15,10 +15,23 @@ public class AssetDistributionDatabaseConstants {
     public static final String ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME = "digital_asset_hash";
     public static final String ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME = "actor_asset_user_public_key";
     public static final String ASSET_DISTRIBUTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME = "digital_asset_storage_local_path";
-    public static final String ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME = "transaction_status";
+    public static final String ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME = "distribution_status";
     public static final String ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
 
     public static final String ASSET_DISTRIBUTION_FIRST_KEY_COLUMN = "genesis_transaction";
+
+    /**
+     * Events recorded database table definition.
+     */
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME = "distribution_events_recorded";
+
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN = "event_id";
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN = "event";
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN = "source";
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN = "status";
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN = "timestamp";
+
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
 
 }
