@@ -21,4 +21,17 @@ public class AssetDistributionDatabaseConstants {
 
     public static final String ASSET_DISTRIBUTION_FIRST_KEY_COLUMN = "genesis_transaction";
 
+    /**
+     * Events recorded database table definition.
+     */
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME = "distribution_events_recorded";
+
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN = "event_id";
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN = "event";
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN = "source";
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN = "status";
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN = "timestamp";
+
+    public static final String ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
+
 }
