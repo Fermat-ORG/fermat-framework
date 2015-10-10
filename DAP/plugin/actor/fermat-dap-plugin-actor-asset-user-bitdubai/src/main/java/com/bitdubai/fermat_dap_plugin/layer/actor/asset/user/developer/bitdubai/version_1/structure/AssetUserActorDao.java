@@ -254,7 +254,7 @@ public class AssetUserActorDao implements Serializable {
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
+                        ConnectionState.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
             }
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
@@ -307,7 +307,7 @@ public class AssetUserActorDao implements Serializable {
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
+                        ConnectionState.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
             }
 
             database.closeDatabase();
@@ -410,7 +410,8 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetUser> getAssetUserActor(String assetUserToAddPublicKey) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAllAssetUserActor() throws CantGetAssetUsersListException {
+//        public List<ActorAssetUser> getAllAssetUserActor(String assetUserToAddPublicKey) throws CantGetAssetUsersListException {
         // Setup method.
         List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
         DatabaseTable table;
@@ -428,9 +429,10 @@ public class AssetUserActorDao implements Serializable {
                  * Table not found.
                  */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
-            }
+            }//TODO Filtro de Busqueda en Tabla no colocado para que traiga toda la informacion que contiene
             // 2) Find  Asset Users by public Key.
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -441,7 +443,7 @@ public class AssetUserActorDao implements Serializable {
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
+                        ConnectionState.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
             }
 
             database.closeDatabase();

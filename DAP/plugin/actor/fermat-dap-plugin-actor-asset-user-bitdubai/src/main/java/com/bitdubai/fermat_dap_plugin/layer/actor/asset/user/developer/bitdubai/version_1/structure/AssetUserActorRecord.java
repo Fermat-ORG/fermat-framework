@@ -17,6 +17,15 @@ public class AssetUserActorRecord implements ActorAssetUser {
     /**
      * Constructor
      */
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate){
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.registrationDate = registrationDate;
+        this.connectionState = ConnectionState.CONNECTED;
+    }
+
     public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState connectionState){
 
         this.name = name;

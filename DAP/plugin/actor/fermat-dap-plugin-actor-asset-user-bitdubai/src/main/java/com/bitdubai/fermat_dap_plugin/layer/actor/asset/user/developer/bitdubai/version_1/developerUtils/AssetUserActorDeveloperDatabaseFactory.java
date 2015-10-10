@@ -124,6 +124,25 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         tables.add(assetUserActorTable);
 
         /**
+         * Asset User Registered Table database columns.
+         */
+        List<String> assetUserRegisteredColumns = new ArrayList<String>();
+
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_STATE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_REGISTRATION_DATE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_MODIFIED_DATE_COLUMN_NAME);
+
+        /**
+         * Asset User Registered database addition.
+         */
+        DeveloperDatabaseTable assetUserRegisteredTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_TABLE_NAME, assetUserRegisteredColumns);
+        tables.add(assetUserRegisteredTable);
+
+
+        /**
          * Asset User Relation Asset Issuer database columns.
          */
 //        List<String> assetUserRelationAssetIssuerColumns = new ArrayList<String>();
