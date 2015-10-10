@@ -1,26 +1,31 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishment;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.util.BankMoneyStockReplenishmentBusinessTransactionWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInsertRecordBankMoneyStockReplenishmentException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
-
-import sun.util.locale.StringTokenIterator;
 
 /**
  * Created by Yordin Alayn on 27.09.15.
@@ -80,7 +85,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
             String executionTransactionId,
             BankCurrencyType bankCurrencyType,
             BankOperationType bankOperationType
-    ) throws CantInsertRecordBankMoneyStockReplenishmentException {
+    ) throws CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException {
         try {
             DatabaseTable transactionTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
@@ -88,21 +93,21 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
             loadRecordAsNew(recordToInsert, transactionStatus,publicKeyBroker, merchandiseCurrency, executionTransactionId, bankCurrencyType, bankOperationType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
-            throw new CantInsertRecordBankMoneyStockReplenishmentException("An exception happened", e, "", "");
+            throw new CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException("An exception happened", e, "", "");
         } catch (Exception exception) {
-            throw new CantInsertRecordBankMoneyStockReplenishmentException(CantInsertRecordBankMoneyStockReplenishmentException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException(CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
-    /*public void updateTransactionStatusBankMoneyStockReplenishment(OutgoingIntraActorTransactionWrapper businessTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void updateStatusBankMoneyStockReplenishment(BankMoneyStockReplenishmentBusinessTransactionWrapper businessTransaction, BusinessTransactionStatus transactionStatus) throws CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException {
         try {
-            setToState(businessTransaction, TransactionState.CANCELED);
-        } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
+            setToState(businessTransaction, transactionStatus);
+        } catch (CantUpdateRecordException | CantLoadTableToMemoryException exception) {
+            throw new CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException("An exception happened",exception,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
-    }*/
+    }
 
     private void loadRecordAsNew(
         DatabaseTableRecord databaseTableRecord,
@@ -125,11 +130,25 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
 
     }
 
-    /*private void setToState(BankMoneyStockReplenishmentBusinessTransactionWrapper businessTransaction, BusinessTransactionStatus status) throws CantUpdateRecordException, OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException {
+    private void setToState(BankMoneyStockReplenishmentBusinessTransactionWrapper businessTransaction, BusinessTransactionStatus status) throws CantUpdateRecordException, BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable       transactionTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
-        DatabaseTableRecord recordToUpdate   = getByPrimaryKey(businessTransaction.getIdTransaction());
-        recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
+        DatabaseTableRecord recordToUpdate   = getByPrimaryKey(businessTransaction.getTransactionId());
+        recordToUpdate.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME, status.getCode());
         transactionTable.updateRecord(recordToUpdate);
-    }*/
+    }
+
+    private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException {
+        DatabaseTable transactionTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
+        List<DatabaseTableRecord> records;
+
+        transactionTable.setStringFilter(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
+        transactionTable.loadToMemory();
+        records = transactionTable.getRecords();
+
+        if (records.size() != 1)
+            throw new BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException("The number of records with a primary key is different thatn one ", null, "The id is: " + id.toString(), "");
+
+        return records.get(0);
+    }
 
 }

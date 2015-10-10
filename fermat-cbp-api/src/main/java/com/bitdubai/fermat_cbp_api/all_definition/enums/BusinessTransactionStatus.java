@@ -7,7 +7,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
  */
  
 public enum BusinessTransactionStatus {
-    NEGOTIATION("NEG"),
     PAUSED("PAU"),
     PENDING_PAYMENT("PEN"),
     COMPLETED("COM"),
@@ -25,12 +24,11 @@ public enum BusinessTransactionStatus {
 
     public static BusinessTransactionStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "NEG": return BusinessTransactionStatus.NEGOTIATION;
             case "PAU": return BusinessTransactionStatus.PAUSED;
             case "PEN": return BusinessTransactionStatus.PENDING_PAYMENT;
             case "COM": return BusinessTransactionStatus.COMPLETED;
             case "CAN": return BusinessTransactionStatus.CANCELLED;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
+            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BusinessTransactionStatus enum");
         }
     }
 }

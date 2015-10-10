@@ -25,7 +25,7 @@ public interface CustomerBrokerBankSale extends BusinessTransaction {
 
     BankOperationType getBankOperationType();
 
-    /*UUID getContractId();
+    /*UUID getNegotiationId();
 
     String getPublicKeyCustomer();
 
