@@ -107,8 +107,8 @@ public interface NetworkService {
 
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     * @param remoteComponentProfile
+     * @param applicantComponentProfile
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile);
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile);
 
 }

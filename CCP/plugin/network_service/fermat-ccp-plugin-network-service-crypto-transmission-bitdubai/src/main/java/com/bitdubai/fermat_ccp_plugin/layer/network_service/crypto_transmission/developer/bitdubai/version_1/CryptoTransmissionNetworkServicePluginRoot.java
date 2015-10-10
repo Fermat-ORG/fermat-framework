@@ -829,11 +829,15 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
     }
 
+
+
+
     /**
-     * (non-Javadoc)
-     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile)
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param remoteComponentProfile
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
+    @Override
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
         System.out.println(" CryptoTransmissionNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
@@ -845,8 +849,15 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
          * Tell the manager to handler the new connection stablished
          */
 
+        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(applicantComponentProfile, remoteComponentProfile);
 
-            communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+        System.out.print("-----------------------\n" +
+                "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
+                "-----------------------\n A: " + remoteComponentProfile.getAlias());
+
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+
+            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
 
 
             System.out.print("-----------------------\n" +
@@ -889,13 +900,12 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             //templateNetworkServiceLocal.sendMessage(messageContent, identity);
 
         }
-//=======
+
 //        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-//>>>>>>> f91b418ff30cb95d25cd3d3ea2c17212e4fc851f
 
      //   System.out.println("NETWORK SERVICE CRYPTO TRANSMISSION, Estoy conectado Roberto ;) ");
 
-    //}
+    }
 
     /**
      * Get the IdentityPublicKey

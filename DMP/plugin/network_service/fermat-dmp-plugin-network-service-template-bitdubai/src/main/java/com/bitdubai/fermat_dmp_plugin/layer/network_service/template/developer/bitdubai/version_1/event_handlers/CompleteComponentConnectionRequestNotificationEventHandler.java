@@ -67,7 +67,7 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
                 /*
                  *  networkService make the job
                  */
-                this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
+                this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getApplicantComponent(), completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
 
             }
 
