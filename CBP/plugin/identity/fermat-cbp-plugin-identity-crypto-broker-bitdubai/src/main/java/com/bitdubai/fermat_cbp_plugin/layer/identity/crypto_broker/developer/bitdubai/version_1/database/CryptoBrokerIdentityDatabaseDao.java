@@ -2,8 +2,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bi
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -60,7 +58,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
     Database database;
 
-    /*INITIALIZETE DATABASE*/
+    /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCryptoBrokerIdentityDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
@@ -110,7 +108,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
     }
 
     /*GENERATE LIST IDENTITY*/
-    public List<CryptoBrokerIdentity> getAllIntraUserFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListCryptoBrokerIdentitiesException {
+    public List<CryptoBrokerIdentity> getAllCryptoBrokersIdentitiesFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListCryptoBrokerIdentitiesException {
         List<CryptoBrokerIdentity> list = new ArrayList<CryptoBrokerIdentity>();
         DatabaseTable table;
         try {

@@ -58,7 +58,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
 
     Database database;
 
-    /*INITIALIZETE DATABASE*/
+    /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeCryptoCustomerIdentityDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
