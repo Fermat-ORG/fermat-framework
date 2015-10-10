@@ -342,7 +342,9 @@ public class CryptoTransmissionAgent {
                                                     NetworkServiceType.UNDEFINED); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
-                                    communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, discoveryQueryParameters);
+
+                                    communicationNetworkServiceConnectionManager.connectTo(cryptoTransmissionMetadata.getSenderPublicKey(), platformComponentProfile, discoveryQueryParameters);
+
 
                                     // pass the metada to a pool wainting for the response of the other peer or server failure
                                     poolConnectionsWaitingForResponse.put(cryptoTransmissionMetadata.getTransactionId(), cryptoTransmissionMetadata);
@@ -368,7 +370,7 @@ public class CryptoTransmissionAgent {
 
                     // Envio el mensaje a la capa de comunicacion
 
-                    communicationNetworkServiceLocal.sendMessage(jsonMetadata, identity);
+                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), jsonMetadata);
 
 
                     //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
@@ -639,7 +641,7 @@ public class CryptoTransmissionAgent {
                                     cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
                                     Gson gson = new Gson();
                                     String message = gson.toJson(cryptoTransmissionMetadata);
-                                    communicationNetworkServiceLocal.sendMessage(message,identity);
+                                    communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getSenderPublicKey(),message);
                                     System.out.print("-----------------------\n" +
                                             "ENVIANDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
@@ -772,7 +774,7 @@ public class CryptoTransmissionAgent {
 
             cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
 
-            communicationNetworkServiceLocal.sendMessage(gson.toJson(cryptoTransmissionMetadata), identity);
+            communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getSenderPublicKey(),gson.toJson(cryptoTransmissionMetadata));
 
             System.out.print("-----------------------\n" +
                     "RESPONDIENDO ENVIO DE CRYPTO METADATA!!!!! -----------------------\n" +

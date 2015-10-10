@@ -83,6 +83,12 @@ public enum FermatPacketType {
     COMPLETE_COMPONENT_CONNECTION_REQUEST("COMPL_COMP_CONNECT_REQ"),
 
     /**
+     * This type is use when a component connection request is failure, are
+     * participants are not connected to the vpn, and they cant send message
+     */
+    FAILURE_COMPONENT_CONNECTION_REQUEST("FAIL_COMP_CONNECT_REQ"),
+
+    /**
      * This type is use whe an component send a message to another component
      */
     MESSAGE_TRANSMIT ("MSG_TRANS");
@@ -131,6 +137,7 @@ public enum FermatPacketType {
             case "COMP_CONNECT_RES"       : return FermatPacketType.COMPONENT_CONNECTION_RESPOND;
             case "DIS_COMP_CONNECT_RES"   : return FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_RESPOND;
             case "COMPL_COMP_CONNECT_REQ" : return FermatPacketType.COMPLETE_COMPONENT_CONNECTION_REQUEST;
+            case "FAIL_COMP_CONNECT_REQ"  : return FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST;
             case "MSG_TRANS"              : return FermatPacketType.MESSAGE_TRANSMIT;
 
             default: throw new IllegalArgumentException();
