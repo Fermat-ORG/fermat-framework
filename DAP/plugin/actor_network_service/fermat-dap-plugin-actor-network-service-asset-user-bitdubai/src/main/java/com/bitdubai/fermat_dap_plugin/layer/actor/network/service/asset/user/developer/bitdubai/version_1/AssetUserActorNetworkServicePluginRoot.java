@@ -555,7 +555,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
 
     @Override
-    public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
+    public void registerActorAssetUser(List<ActorAssetUser> actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
 
         if(actorAssetUserToRegister != null){
 

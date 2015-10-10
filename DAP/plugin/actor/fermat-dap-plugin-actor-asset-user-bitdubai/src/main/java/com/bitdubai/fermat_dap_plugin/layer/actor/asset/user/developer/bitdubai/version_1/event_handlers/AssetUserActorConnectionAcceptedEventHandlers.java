@@ -66,6 +66,8 @@ public class AssetUserActorConnectionAcceptedEventHandlers implements FermatEven
                  */
                 //TODO DEBE EDITARSE parametro PARA PODER HACER EL registerActorAssetUser COMPLETO
 //                assetUserActorNetworkServiceManager.registerActorAssetUser(assetUserActorConnectionAcceptedEvent.getAssetUserToAddPublicKey());
+
+//                 assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
 //                /**
 //                 * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
 //                 */
