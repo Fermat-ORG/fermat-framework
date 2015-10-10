@@ -5,11 +5,14 @@ include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-bnk-api'
+project(':fermat-bnk-api').projectDir = new File('BNK/library/api/fermat-bnk-api')
 include ':fermat-ccm-api'
 include ':fermat-cbp-api'
+project(':fermat-cbp-api').projectDir = new File('CBP/library/api/fermat-cbp-api')
 include ':fermat-ccp-api'
 include ':fermat-cry-api'
 include ':fermat-csh-api'
+project(':fermat-csh-api').projectDir = new File('CSH/library/api/fermat-csh-api')
 
 include ':fermat-dap-api'
 project(':fermat-dap-api').projectDir = new File('DAP/library/api/fermat-dap-api')
