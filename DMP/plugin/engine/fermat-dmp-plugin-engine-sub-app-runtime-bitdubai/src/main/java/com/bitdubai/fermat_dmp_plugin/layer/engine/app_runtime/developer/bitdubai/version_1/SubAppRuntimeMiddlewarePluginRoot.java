@@ -1144,12 +1144,12 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             // Crypto Broker Identity
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CBP_CRYPTO_BROKER_IDENTITY);
-            listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
 
-            Activity activity = new Activity();
-            activity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-            activity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
-            activity.setColor("#03A9F4");
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+            runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
             runtimeSubApp.addActivity(runtimeActivity);
 
@@ -1157,20 +1157,42 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             titleBar.setLabel("Crypto Broker Identity");
             titleBar.setColor("#FFFFFF");
             titleBar.setLabelSize(16);
-            activity.setTitleBar(titleBar);
+            runtimeActivity.setTitleBar(titleBar);
 
             statusBar = new StatusBar();
             statusBar.setColor("#0288D1");
-            activity.setStatusBar(statusBar);
+            runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
-            activity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+            // activity 2
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2.getCode());
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            titleBar = new TitleBar();
+            titleBar.setLabel("Crypto Broker Identity");
+            titleBar.setColor("#FFFFFF");
+            titleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(titleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeFragment.setBack(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
-            activity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+
+            listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;
