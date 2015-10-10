@@ -27,6 +27,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
@@ -109,6 +110,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new ComponentConnectionRespondPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new CompleteComponentConnectionRequestPacketProcessor());
+        wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new FailureComponentConnectionRequestPacketProcessor());
 
     }
 
@@ -333,17 +335,17 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#requestDiscoveryVpnConnection(PlatformComponentProfile, DiscoveryQueryParameters)
+     * @see CommunicationsClientConnection#requestDiscoveryVpnConnection(String, PlatformComponentProfile, DiscoveryQueryParameters)
      */
     @Override
-    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicant, DiscoveryQueryParameters discoveryQueryParameters){
+    public void requestDiscoveryVpnConnection(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters){
 
         System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
 
         /*
          * Validate parameter
          */
-        if (applicant == null || discoveryQueryParameters == null){
+        if (applicantNetworkService == null || discoveryQueryParameters == null){
 
             throw new IllegalArgumentException("All parameters are required, can not be null");
         }
@@ -351,7 +353,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         /*
          * Validate are the  type NETWORK_SERVICE
          */
-        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+        if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
             throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
         }
 
@@ -360,7 +362,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
          */
         Gson gson = new Gson();
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_VPN, applicant.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_VPN, identityPublicKeyRequestingParticipant);
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_NS_VPN, applicantNetworkService.toJson());
         packetContent.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM_VPN, discoveryQueryParameters.toJson());
 
         /*

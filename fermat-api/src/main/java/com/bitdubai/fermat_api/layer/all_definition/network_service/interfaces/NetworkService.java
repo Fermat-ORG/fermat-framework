@@ -92,6 +92,14 @@ public interface NetworkService {
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered);
 
     /**
+     * Handles the events FailureComponentConnectionRequestNotificationEvent
+     * @param networkServiceApplicant
+     * @param discoveryQueryParameters
+     */
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters);
+
+
+    /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      * @param platformComponentProfileRegisteredList
      */
@@ -102,6 +110,5 @@ public interface NetworkService {
      * @param remoteComponentProfile
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile);
-
 
 }
