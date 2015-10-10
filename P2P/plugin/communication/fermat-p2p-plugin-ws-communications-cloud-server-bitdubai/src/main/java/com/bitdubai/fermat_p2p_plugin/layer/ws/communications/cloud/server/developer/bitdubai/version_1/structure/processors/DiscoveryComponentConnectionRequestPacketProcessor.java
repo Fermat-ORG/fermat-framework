@@ -130,7 +130,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             /*
              * Notify to the participants of the vpn
              */
-            constructRespondPacketAndSend(vpnServer, networkServiceApplicant, remoteParticipant, remoteNsParticipant);
+            constructRespondPacketAndSend(vpnServer, applicantParticipant, remoteParticipant, remoteNsParticipant);
             constructRespondPacketAndSend(vpnServer, remoteParticipant, networkServiceApplicant, networkServiceApplicant);
 
             //if no running

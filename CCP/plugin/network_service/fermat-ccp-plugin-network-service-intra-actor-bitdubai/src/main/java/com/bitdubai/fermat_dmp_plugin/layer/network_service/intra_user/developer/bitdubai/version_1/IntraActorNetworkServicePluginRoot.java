@@ -677,7 +677,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          * Construct  profile and register
          */
                 PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        "actor_prueba_robert_public_key",
+                        "actor_prueba_juan_public_key",
                         ("alias"),
                         ("name+algo mas"),
                         NetworkServiceType.UNDEFINED, // aca iria UNDEFIND

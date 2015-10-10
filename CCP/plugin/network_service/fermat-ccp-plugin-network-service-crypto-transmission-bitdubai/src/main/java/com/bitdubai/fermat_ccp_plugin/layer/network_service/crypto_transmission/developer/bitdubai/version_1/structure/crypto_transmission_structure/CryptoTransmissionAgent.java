@@ -123,9 +123,9 @@ public class CryptoTransmissionAgent {
     /**
      * Pool connections requested waiting for peer or server response
      *
-     * Transactions id  and transaccion metadata waiting to be a response
+     * publicKey  and transaccion metadata waiting to be a response
      */
-    Map<UUID,CryptoTransmissionMetadata> poolConnectionsWaitingForResponse;
+    Map<String,CryptoTransmissionMetadata> poolConnectionsWaitingForResponse;
 
 
     Map<String, FermatMessage> receiveMessage;
@@ -310,7 +310,7 @@ public class CryptoTransmissionAgent {
                 for (CryptoTransmissionMetadata cryptoTransmissionMetadata : lstCryptoTransmissionMetadata) {
 
 
-                    if(!poolConnectionsWaitingForResponse.containsKey(cryptoTransmissionMetadata.getTransactionId())) {
+                    if(!poolConnectionsWaitingForResponse.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())) {
 
                         //TODO: hacer un filtro por aquellas que se encuentran conectadas
 
@@ -341,13 +341,15 @@ public class CryptoTransmissionAgent {
                                                     PlatformComponentType.ACTOR,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
                                                     NetworkServiceType.UNDEFINED); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
+                                    //TODO: poner tipo de actor, PlatformComponenType.ActorTtype
+
 
 
                                     communicationNetworkServiceConnectionManager.connectTo(cryptoTransmissionMetadata.getSenderPublicKey(), platformComponentProfile, discoveryQueryParameters);
 
 
                                     // pass the metada to a pool wainting for the response of the other peer or server failure
-                                    poolConnectionsWaitingForResponse.put(cryptoTransmissionMetadata.getTransactionId(), cryptoTransmissionMetadata);
+                                    poolConnectionsWaitingForResponse.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata);
                                 }
 
                             }
@@ -787,8 +789,13 @@ public class CryptoTransmissionAgent {
         }
     }
 
-    public void connectionFailure(UUID transacionId){
-        this.poolConnectionsWaitingForResponse.remove(transacionId);
+    public void connectionFailure(String identityPublicKey){
+        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+    }
+
+
+    public boolean isConnection(String publicKey){
+        return this.poolConnectionsWaitingForResponse.containsKey(publicKey);
     }
 
 }

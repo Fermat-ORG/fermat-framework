@@ -65,7 +65,7 @@ public class FailureComponentConnectionRequestPacketProcessor extends FermatPack
          * Construct the json object
          */
         JsonObject packetContent = jsonParser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
-        PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_VPN).getAsString());
+        PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_NS_VPN).getAsString());
         DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(packetContent.get(JsonAttNamesConstants.DISCOVERY_PARAM_VPN).getAsString());
         System.out.println("FailureComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
 
