@@ -14,9 +14,9 @@ public interface CashMoneyTransaction{
 
     UUID getCashTransactionId();
 
-    String getPublicKeyCustomer();
+    String getPublicKeyActorFrom();
 
-    String getPublicKeyBroker();
+    String getPublicKeyActorTo();
 
     CashTransactionStatus getStatus();
 
