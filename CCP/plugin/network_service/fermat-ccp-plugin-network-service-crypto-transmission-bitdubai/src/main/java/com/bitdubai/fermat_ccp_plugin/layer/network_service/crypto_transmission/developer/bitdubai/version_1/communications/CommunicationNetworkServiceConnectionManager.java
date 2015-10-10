@@ -174,7 +174,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      *
      * @param remoteComponentProfile
      */
-    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile remoteComponentProfile) {
+    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
         try {
 
