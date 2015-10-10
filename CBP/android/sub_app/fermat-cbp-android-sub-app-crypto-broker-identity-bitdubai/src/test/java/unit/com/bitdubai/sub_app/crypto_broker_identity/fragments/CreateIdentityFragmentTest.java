@@ -37,5 +37,12 @@ public class CreateIdentityFragmentTest {
         ft.commit();
     }
 
+    @Test
+    public void testIsVisible(){
+        Activity resultActivity = fragment.getActivity();
+        assertThat(resultActivity).isInstanceOf(TestActivity.class);
+        assertThat(fragment.isVisible()).isTrue();
+    }
+
 
 }

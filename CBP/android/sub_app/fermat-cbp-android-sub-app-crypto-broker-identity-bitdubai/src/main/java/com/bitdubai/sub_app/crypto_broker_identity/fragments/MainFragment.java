@@ -3,22 +3,29 @@ package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
+import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.IdentityInfoAdapter;
+import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +33,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends FermatListFragment<CryptoCustomerIdentityInformation> {
+public class MainFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
+        implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
 
 
     private CryptoBrokerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<CryptoCustomerIdentityInformation> identityInformationList;
+    private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
 
 
     public static MainFragment newInstance() {
@@ -41,13 +49,28 @@ public class MainFragment extends FermatListFragment<CryptoCustomerIdentityInfor
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         try {
             // setting up  module
             moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
+            identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
+    }
+
+    @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_identity_float_action_button);
+        newIdentityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
+            }
+        });
     }
 
     @Override
@@ -62,12 +85,12 @@ public class MainFragment extends FermatListFragment<CryptoCustomerIdentityInfor
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return  R.id.swipe_refresh;
+        return R.id.swipe_refresh;
     }
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.identities_recycler_view;
+        return R.id.identity_recycler_view;
     }
 
     @Override
@@ -100,7 +123,11 @@ public class MainFragment extends FermatListFragment<CryptoCustomerIdentityInfor
 
     @Override
     public FermatAdapter getAdapter() {
-        return null;
+        if (adapter == null) {
+            adapter = new IdentityInfoAdapter(getActivity(), identityInformationList);
+            adapter.setFermatListEventListener(this); // setting up event listeners
+        }
+        return adapter;
     }
 
     @Override
@@ -109,5 +136,27 @@ public class MainFragment extends FermatListFragment<CryptoCustomerIdentityInfor
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
         return layoutManager;
+    }
+
+    @Override
+    public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        ArrayList<CryptoBrokerIdentityInformation> data = new ArrayList<>();
+        if(moduleManager == null){
+            for (int i = 0; i < 20; i++) {
+                data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i, R.drawable.deniz_profile_picture));
+            }
+        }
+
+        return super.getMoreDataAsync(refreshType, pos);
+    }
+
+    @Override
+    public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+
+    }
+
+    @Override
+    public void onLongItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+
     }
 }

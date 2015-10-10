@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_container"
@@ -11,7 +12,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/identities_recycler_view"
+            android:id="@+id/identity_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -23,7 +24,7 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab_add_person"
+        android:id="@+id/new_identity_float_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
@@ -33,7 +34,7 @@
         android:src="@drawable/ic_plus_green"
         fab:fab_colorNormal="@color/add_button_normal"
         fab:fab_colorPressed="@color/material_blue_grey_800"
-        fab:fab_colorRipple="@color/ripple_material_dark"/>
+        fab:fab_colorRipple="@color/ripple_material_dark" />
 
 </FrameLayout>
 

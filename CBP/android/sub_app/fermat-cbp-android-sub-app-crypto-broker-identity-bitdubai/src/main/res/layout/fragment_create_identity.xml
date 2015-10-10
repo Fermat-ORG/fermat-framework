@@ -5,25 +5,28 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/profileImage"
+        android:id="@+id/broker_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/deniz_profile_picture" />
+        android:background="@android:color/darker_gray"
+        tools:src="@android:drawable/ic_menu_camera"
+         />
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+    <EditText
+        android:id="@+id/broker_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profileImage"
+        android:layout_below="@+id/broker_image"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:hint="@string/alias"/>
+        android:hint="@string/broker_name"/>
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+    <Button
+        android:id="@+id/create_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
