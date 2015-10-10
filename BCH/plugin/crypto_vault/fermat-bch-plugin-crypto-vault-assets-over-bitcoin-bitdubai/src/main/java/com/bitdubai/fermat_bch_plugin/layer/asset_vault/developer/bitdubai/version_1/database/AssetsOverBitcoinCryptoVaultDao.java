@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -9,12 +11,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.HierarchyAccount;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -160,5 +165,374 @@ public class AssetsOverBitcoinCryptoVaultDao {
         }
 
         return hierarchyAccounts;
+    }
+
+    /**
+     * Inserts (if new) or updates Key Maitainer statistics in the database.
+     * this information is usefull to troubleshoot maintainer issues
+     * @param hierarchyAccountId the account we have just maintained.
+     * @param date the current execution date and time
+     * @param currentGeneratedKeys the current amount of generated keys already
+     * @param currentUsedKeys the current amount of used keys
+     * @param currentThreshold the current threshold that will indicate if new keys are generated.
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void updateMaintainerStatistics(int hierarchyAccountId,
+                                            String date,
+                                            int currentGeneratedKeys,
+                                            int currentUsedKeys,
+                                            int currentThreshold)
+            throws CantExecuteDatabaseOperationException{
+
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
+
+        /**
+         * I will filter the table using the account id
+         */
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(
+                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "there was an error loading the " +
+                            AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME
+                            + " table into memory.",
+                    "Database issue");
+        }
+
+        /**
+         * If there are no matching record I will insert it, or update them if they already exists.
+         */
+
+        if (databaseTable.getRecords().size() == 0){
+            insertNewMaintainerStatistics(hierarchyAccountId, date, currentGeneratedKeys, currentUsedKeys, currentThreshold);
+        } else {
+            DatabaseTableRecord record = databaseTable.getRecords().get(0);
+            updateExistingMaintainerStatistics(record, date, currentGeneratedKeys, currentUsedKeys, currentThreshold);
+        }
+
+    }
+
+    /**
+     * Inserts into the database new statistics from the key maintainer
+     * @param hierarchyAccountId
+     * @param date
+     * @param currentGeneratedKeys
+     * @param currentUsedKeys
+     * @param currentThreshold
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private void insertNewMaintainerStatistics(int hierarchyAccountId,
+                                               String date,
+                                               int currentGeneratedKeys,
+                                               int currentUsedKeys,
+                                               int currentThreshold)
+            throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
+
+        DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+        databaseTableRecord.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME, 1);
+        databaseTableRecord.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, hierarchyAccountId);
+        databaseTableRecord.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_DATE_COLUMN_NAME, date);
+        databaseTableRecord.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_GENERATED_KEYS_COLUMN_NAME, currentGeneratedKeys);
+        databaseTableRecord.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_USED_KEYS_COLUMN_NAME, currentUsedKeys);
+        databaseTableRecord.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_THRESHOLD_COLUMN_NAME, currentThreshold);
+
+        try {
+            databaseTable.insertRecord(databaseTableRecord);
+        } catch (CantInsertRecordException e) {
+            /**
+             * I will create the output meessage
+             */
+            StringBuilder outputMessage = new StringBuilder("there was an error inserting a new record into " );
+            outputMessage.append(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append("The record to insert is: ");
+            outputMessage.append(XMLParser.parseObject(databaseTableRecord));
+
+            throw new CantExecuteDatabaseOperationException(
+                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    outputMessage.toString(),
+                    "Database issue");
+        }
+    }
+
+    /**
+     * Updates existing key maintainer statistics.
+     * @param date
+     * @param currentGeneratedKeys
+     * @param currentUsedKeys
+     * @param currentThreshold
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private void updateExistingMaintainerStatistics(DatabaseTableRecord recordToUpdate,
+                                                    String date,
+                                                    int currentGeneratedKeys,
+                                                    int currentUsedKeys,
+                                                    int currentThreshold)
+            throws CantExecuteDatabaseOperationException{
+        int previousExecNumber = recordToUpdate.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME);
+        recordToUpdate.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_NUMBER_COLUMN_NAME, previousExecNumber + 1);
+        recordToUpdate.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_EXECUTION_DATE_COLUMN_NAME, date);
+        recordToUpdate.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_GENERATED_KEYS_COLUMN_NAME, currentGeneratedKeys);
+        recordToUpdate.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_USED_KEYS_COLUMN_NAME, currentUsedKeys);
+        recordToUpdate.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_THRESHOLD_COLUMN_NAME, currentThreshold);
+
+        try {
+            getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME).updateRecord(recordToUpdate);
+        } catch (CantUpdateRecordException e) {
+            /**
+             * I will create the output meessage
+             */
+            StringBuilder outputMessage = new StringBuilder("there was an error updating an existing record from " );
+            outputMessage.append(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME);
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append("The record to insert is: ");
+            outputMessage.append(XMLParser.parseObject(recordToUpdate));
+
+            throw new CantExecuteDatabaseOperationException(
+                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    outputMessage.toString(),
+                    "Database issue");
+        }
+    }
+
+    /**
+     * Sets the new value of how many keys have been generated by the Key Maintainer
+     * @param accountId the account id
+     * @param value the amount of keys generated. This value accumulates to the one that existed.
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void setGeneratedKeysValue(int accountId, int value) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+
+        /**
+         * first I see if we already have records for this account by setting a filter and getting the values
+         */
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException (
+                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "there was an error loading into memory the table " + databaseTable.getTableName(),
+                    "database error");
+        }
+
+        /**
+         * I will insert or update the record
+         */
+        DatabaseTableRecord record = null;
+        try{
+            if (databaseTable.getRecords().size() == 0){
+                //insert
+                record = databaseTable.getEmptyRecord();
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, value);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, 0);
+                databaseTable.insertRecord(record);
+            } else {
+                //update
+                record = databaseTable.getRecords().get(0);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, value);
+                databaseTable.updateRecord(record);
+            }
+        } catch (CantInsertRecordException | CantUpdateRecordException e) {
+            StringBuilder outputMessage = new StringBuilder("There was an error inserting or updating the following table: ");
+            outputMessage.append(databaseTable.getTableName());
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append("The record is:");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append(XMLParser.parseObject(record));
+        }
+    }
+
+
+    /**
+     * Gets the current ammount of generated keys from the database for the specified account
+     * @param accountId
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public int getCurrentGeneratedKeys(int accountId) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error loading table to get current Generated Keys value.", "database error");
+        }
+
+        if (databaseTable.getRecords().size() == 0)
+            return 1;
+        else
+            return databaseTable.getRecords().get(0).getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME);
+    }
+
+    /**
+     * Gets the current ammount of used Keys from the database for the specified account
+     * @param accountId
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public int getCurrentUsedKeys(int accountId) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error loading table to get current Used Keys value.", "database error");
+        }
+
+        if (databaseTable.getRecords().size() == 0)
+            return 1;
+        else
+            return databaseTable.getRecords().get(0).getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME);
+    }
+
+    /**
+     * Sets the new depth of the current Used keys value
+     * @param accountId
+     * @param newValue
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void setNewCurrentUsedKeyValue(int accountId, int newValue) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
+
+        /**
+         * I will check to see if I already have a value for this account so i can updated it.
+         */
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(
+                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "Error loading into memory table " + databaseTable.getTableName() + " to set new key depth.",
+                    "Database issue");
+
+        }
+        DatabaseTableRecord record = null;
+        try{
+            if (databaseTable.getRecords().size() == 0){
+                // I will insert the new value
+                record = databaseTable.getEmptyRecord();
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_GENERATED_KEYS_COLUMN_NAME, 0);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, newValue);
+
+                databaseTable.insertRecord(record);
+            } else {
+                // I will update the existing value
+                record = databaseTable.getRecords().get(0);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_USED_KEYS_COLUMN_NAME, newValue);
+                databaseTable.updateRecord(record);
+            }
+        } catch (CantInsertRecordException | CantUpdateRecordException e) {
+            StringBuilder outputMessage = new StringBuilder("There was an error inserting or updating the key depth value in the database.");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append("The record is:");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append(XMLParser.parseObject(record));
+
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "database issue");
+        }
+    }
+
+    /**
+     * Sets the active network type that the Bitcoin Network will need to listen too.
+     * Network types are MainNet, TestNet and RegTest
+     * @param blockchainNetworkType
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void setActiveNetworkType(BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_TABLE_NAME);
+
+        /**
+         * I will check to see if I already have a value for this account so i can updated it.
+         */
+        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(
+                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "Error loading into memory table " + databaseTable.getTableName() + " to set new network type.",
+                    "Database issue");
+
+        }
+        DatabaseTableRecord record = null;
+        String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+        try{
+            if (databaseTable.getRecords().size() == 0){
+                // I will insert the new value
+                record = databaseTable.getEmptyRecord();
+                record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode());
+                record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_ACTIVATION_DATE_COLUMN_NAME, date);
+                databaseTable.insertRecord(record);
+            } else {
+                // I will update the existing value
+                record = databaseTable.getRecords().get(0);
+                record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_ACTIVATION_DATE_COLUMN_NAME, date);
+                databaseTable.updateRecord(record);
+            }
+        } catch (CantInsertRecordException | CantUpdateRecordException e) {
+            StringBuilder outputMessage = new StringBuilder("There was an error inserting or updating the network type in the database.");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append("The record is:");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append(XMLParser.parseObject(record));
+
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "database issue");
+        }
+    }
+
+    /**
+     * gets the list of Active network Types activated in the platform
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public List<BlockchainNetworkType> getActiveNetworkTypes() throws CantExecuteDatabaseOperationException{
+        List<BlockchainNetworkType> networkTypes = new ArrayList<>();
+        DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_TABLE_NAME);
+
+        /**
+         * I will check to see if I already have a value for this account so i can updated it.
+         */
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(
+                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "Error loading into memory table " + databaseTable.getTableName() + " to set new network type.",
+                    "Database issue");
+
+        }
+
+        /**
+         * I will add all the saved values into the list to return
+         */
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            networkTypes.add(BlockchainNetworkType.getByCode(record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME)));
+        }
+
+        /**
+         * If there are no records saved yet, because no one request an address to set the network
+         * I will manually save the default value
+         */
+        if (networkTypes.size() == 0){
+            this.setActiveNetworkType(BlockchainNetworkType.DEFAULT);
+            networkTypes.add(BlockchainNetworkType.DEFAULT);
+        }
+
+        return networkTypes;
     }
 }

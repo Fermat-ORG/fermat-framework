@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * Created by by Leon Acosta (laion.cj91@gmail.com) on 05/10/2015.
  */
-public class CryptoPaymentRequestReceivedEvent extends AbstractCCPEvent implements CryptoPaymentRequestEvent {
+public class CryptoPaymentRequestReceivedEvent extends AbstractCCPEvent implements com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestEvent {
 
     private UUID requestId;
 

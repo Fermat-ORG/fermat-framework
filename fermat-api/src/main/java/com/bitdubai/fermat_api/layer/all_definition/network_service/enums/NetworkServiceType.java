@@ -15,12 +15,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum NetworkServiceType implements FermatEnum {
 
-    /**
+    /*
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      * Network Service prefix or Type sufix are not necessary having in count that the name of the plugin is NETWORK SERVICE TYPE.,
      */
 
     ASSET_TRANSMISSION       ("ASS_TRANS"),
+    ASSET_USER_ACTOR_NETWORK_SERVICE ("AUANS"),
     CRYPTO_PAYMENT_REQUEST   ("CPR"),
     CRYPTO_TRANSMISSION      ("CRY_TRANS"),
     INTRA_USER               ("INT_USR"),

@@ -209,7 +209,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /******************************************************************
          * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
          ******************************************************************/
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.TEMPLATE;
         this.name                  = "Template Network Service";
         this.alias                 = "TemplateNetworkService";
@@ -543,7 +543,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             return TemplateNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             * If I couldn't get the correct login level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
         }
@@ -629,7 +629,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
@@ -645,7 +645,8 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              */
             DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                                                                 getCommunicationsCloudClientConnection().
-                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
+                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
+                                                                        platformComponentProfile.getNetworkServiceType(),
                                                                         null,                     // alias
                                                                         null,                     // identityPublicKey
                                                                         null,                     // location
@@ -695,10 +696,29 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              */
             PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
+
+            DiscoveryQueryParameters discoveryQueryParametersT = wsCommunicationsCloudClientManager.
+                                                                getCommunicationsCloudClientConnection().
+                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
+                                                                        platformComponentProfile.getNetworkServiceType(),
+                                                                        null,                     // alias
+                                                                        remoteNetworkServiceToConnect.getIdentityPublicKey(),                     // identityPublicKey
+                                                                        null,                     // location
+                                                                        null,                     // distance
+                                                                        null,                     // name
+                                                                        null,                     // extraData
+                                                                        null,                     // offset
+                                                                        null,                     // max
+                                                                        remoteNetworkServiceToConnect.getPlatformComponentType(),                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                        remoteNetworkServiceToConnect.getNetworkServiceType());                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+
+
+
+
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, discoveryQueryParametersT);
 
         }
 
@@ -725,11 +745,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              * Get the local representation of the remote network service
              */
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
 
             /**
              * Create the message content
@@ -837,11 +852,11 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(applicant, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     /**

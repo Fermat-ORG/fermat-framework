@@ -5,7 +5,7 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
-    android:background="#f3e4c4"
+    android:background="#ffffff"
     android:orientation="vertical">
 
 
@@ -25,7 +25,8 @@
             android:layout_toLeftOf="@+id/clear_search_image_button"
             android:layout_toStartOf="@+id/clear_search_image_button"
             android:hint="@string/search_hint"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:background="#c8ecff"/>
 
         <ImageButton
             style="@style/Clear_Contact_Search_Button"
