@@ -14,12 +14,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
@@ -107,6 +110,35 @@ public class AssetDistributionDao {
         } catch (Exception exception){
             this.database.closeDatabase();
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Trying to update "+columnName,"Check the cause");
+        }
+    }
+
+    public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable = this.database.getTable(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+            UUID eventRecordID = UUID.randomUUID();
+            long unixTime = System.currentTimeMillis();
+            Logger LOG = Logger.getGlobal();
+            LOG.info("Distribution DAO:\nUUID:"+eventRecordID+"\n"+unixTime);
+            eventRecord.setUUIDValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, eventRecordID);
+            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN, eventType);
+            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN, eventSource);
+            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, EventStatus.PENDING.toString());
+            eventRecord.setLongValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN, unixTime);
+            databaseTable.insertRecord(eventRecord);
+            LOG.info("record:" + eventRecord.getStringValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN));
+            this.database.closeDatabase();
+        }  catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Issuing database");
+        } catch (CantInsertRecordException exception) {
+            this.database.closeDatabase();
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Issuing database");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
         }
     }
 
