@@ -786,6 +786,11 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
     }
 
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) {
+
+    }
+
     /**
      * (non-Javadoc
      * @see NetworkService#

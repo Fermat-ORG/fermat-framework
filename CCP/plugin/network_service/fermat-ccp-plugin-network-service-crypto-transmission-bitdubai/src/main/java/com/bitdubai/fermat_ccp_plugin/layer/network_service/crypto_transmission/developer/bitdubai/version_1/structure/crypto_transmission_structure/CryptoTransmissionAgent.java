@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
@@ -313,7 +312,7 @@ public class CryptoTransmissionAgent {
                                             NetworkServiceType.UNDEFINED); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
-                            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, discoveryQueryParameters);
+                            communicationNetworkServiceConnectionManager.connectTo("", platformComponentProfile, discoveryQueryParameters);
 
 
                         }
@@ -336,7 +335,7 @@ public class CryptoTransmissionAgent {
 
                     // Envio el mensaje a la capa de comunicacion
 
-                    communicationNetworkServiceLocal.sendMessage(jsonMetadata, identity);
+                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), jsonMetadata);
 
 
                     //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
@@ -580,7 +579,7 @@ public class CryptoTransmissionAgent {
                                 cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
                                 gson = new Gson();
                                 String message = gson.toJson(cryptoTransmissionMetadata);
-                                communicationNetworkServiceLocal.sendMessage(message,identity);
+                                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), message);
                                 System.out.print("-----------------------\n" +
                                         "ENVIANDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                         "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
