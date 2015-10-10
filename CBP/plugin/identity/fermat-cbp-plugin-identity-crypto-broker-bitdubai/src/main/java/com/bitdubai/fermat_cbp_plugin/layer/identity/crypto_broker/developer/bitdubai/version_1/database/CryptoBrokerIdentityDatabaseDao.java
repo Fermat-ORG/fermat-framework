@@ -90,7 +90,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
     ) throws CantCreateNewDeveloperException {
         try {
             if (aliasExists (alias)) {
-                throw new CantCreateNewDeveloperException ("Cant create new Intra User, alias exists.", "Crypto Broker Identity", "Cant create new Intra User, alias exists.");
+                throw new CantCreateNewDeveloperException ("Cant create new Crypto Broker Identity, alias exists.", "Crypto Broker Identity", "Cant create new Crypto Broker Identity, alias exists.");
             }
             persistNewCryptoBrokerIdentityPrivateKeysFile(publicKey, privateKey);
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
@@ -101,11 +101,11 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             table.insertRecord(record);
             persistNewCryptoBrokerIdentityProfileImage(publicKey, profileImage);
         } catch (CantInsertRecordException e){
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Intra User, insert database problems.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity, insert database problems.");
         } catch (CantPersistPrivateKeyException e){
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Intra User,persist private key error.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity,persist private key error.");
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Broker Identity", "Cant create new Intra User, unknown failure.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Broker Identity", "Cant create new Crypto Broker Identity, unknown failure.");
         }
     }
 
@@ -168,7 +168,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    /**/
+    /*CREATE FILE THE PRIVATE KEY*/
     private void  persistNewCryptoBrokerIdentityPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
@@ -188,7 +188,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         }
     }
 
-    /**/
+    /*CREATE FILE THE PROFILE IMEAGE*/
     private void  persistNewCryptoBrokerIdentityProfileImage(String publicKey,byte[] profileImage) throws CantPersistProfileImageException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,

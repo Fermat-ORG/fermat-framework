@@ -88,7 +88,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     ) throws CantCreateNewDeveloperException {
         try {
             if (aliasExists (alias)) {
-                throw new CantCreateNewDeveloperException ("Cant create new Intra User, alias exists.", "Crypto Customer Identity", "Cant create new Intra User, alias exists.");
+                throw new CantCreateNewDeveloperException ("Cant create new Crypto Customer Identity, alias exists.", "Crypto Customer Identity", "Cant create new Crypto Customer Identity, alias exists.");
             }
             persistNewCryptoCustomerIdentityPrivateKeysFile(publicKey, privateKey);
             DatabaseTable table = this.database.getTable(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME);
@@ -99,11 +99,11 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             table.insertRecord(record);
             persistNewCryptoCustomerIdentityProfileImage(publicKey, profileImage);
         } catch (CantInsertRecordException e){
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Customer Identity", "Cant create new Intra User, insert database problems.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Customer Identity", "Cant create new Crypto Customer Identity, insert database problems.");
         } catch (CantPersistPrivateKeyException e){
-            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Customer Identity", "Cant create new Intra User,persist private key error.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Customer Identity", "Cant create new Crypto Customer Identity,persist private key error.");
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "Cant create new Intra User, unknown failure.");
+            throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "Cant create new Crypto Customer Identity, unknown failure.");
         }
     }
 
