@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by rodrigo on 10/4/15.
@@ -143,6 +144,11 @@ public class BitcoinCryptoNetworkManager {
         } catch (UnreadableWalletException e) {
             wallet = new Wallet(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
         }
+
+        /**
+         * Will set the autosave information
+         */
+        wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
 
         return wallet;
     }
