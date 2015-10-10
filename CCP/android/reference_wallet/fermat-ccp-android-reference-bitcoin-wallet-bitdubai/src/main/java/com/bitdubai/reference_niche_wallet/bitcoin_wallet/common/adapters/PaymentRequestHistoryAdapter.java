@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.Toast;
 
@@ -93,6 +94,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         holder.getTxt_time().setText(data.getDate());
 
-        holder.getTxt_state().setText("accepted");//data.getState());
+        holder.getTxt_state().setText(data.getState());//data.getState());
+
     }
 }

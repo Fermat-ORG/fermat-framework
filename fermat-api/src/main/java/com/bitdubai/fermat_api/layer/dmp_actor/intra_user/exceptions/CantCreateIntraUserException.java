@@ -12,7 +12,7 @@ public class CantCreateIntraUserException extends FermatException {
 	 */
 	private static final long serialVersionUID = 7137746546837677675L;
 
-	public static final String DEFAULT_MESSAGE = "CAN'T CREATE INTRAUSER";
+	public static final String DEFAULT_MESSAGE = "CAN'T CREATE INTRA USER";
 
 	public CantCreateIntraUserException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);

@@ -115,7 +115,7 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
 
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME);
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME);
-        assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLICKEY_COLUMN_NAME);
+        assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME);
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME);
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME);
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME);
@@ -126,7 +126,19 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
         DeveloperDatabaseTable assetDistributionTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME, assetDistributionColumns);
         tables.add(assetDistributionTable);
 
+        /**
+         * Events Recorder table
+         * */
+        List<String> eventsRecorderColumns = new ArrayList<String>();
 
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN);
+
+        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
+        tables.add(eventsRecorderTable);
 
         return tables;
     }

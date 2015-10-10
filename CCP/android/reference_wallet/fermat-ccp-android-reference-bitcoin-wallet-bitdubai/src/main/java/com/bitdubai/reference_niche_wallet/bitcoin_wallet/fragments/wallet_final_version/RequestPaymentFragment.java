@@ -47,7 +47,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
      */
     private List<PaymentRequest> lstPaymentRequest;
     private PaymentRequest selectedItem;
-
+    String walletPublicKey = "reference_wallet";
     /**
      * Executor Service
      */
@@ -129,7 +129,7 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
         List<PaymentRequest> lstPaymentRequest  = null;
 
         try {
-            lstPaymentRequest = cryptoWallet.listPaymentRequestDatOrder();
+            lstPaymentRequest = cryptoWallet.listPaymentRequestDateOrder(walletPublicKey,10,0);
 
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,

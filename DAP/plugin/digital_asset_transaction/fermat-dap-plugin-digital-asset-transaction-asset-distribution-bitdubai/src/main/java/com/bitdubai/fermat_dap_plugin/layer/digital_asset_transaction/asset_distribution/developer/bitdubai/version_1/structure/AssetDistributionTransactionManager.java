@@ -6,7 +6,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -25,6 +25,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
+    DigitalAssetTransmissionVault digitalAssetTransmissionVault;
 
     public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager,
                                                ErrorManager errorManager,
@@ -40,6 +41,10 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
                 pluginId,
                 pluginDatabaseSystem,
                 pluginFileSystem);
+    }
+
+    public void setDigitalAssetTransmissionVault(DigitalAssetTransmissionVault digitalAssetTransmissionVault) throws CantSetObjectException{
+        this.digitalAssetDistributor.setDigitalAssetTransmissionVault(digitalAssetTransmissionVault);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{

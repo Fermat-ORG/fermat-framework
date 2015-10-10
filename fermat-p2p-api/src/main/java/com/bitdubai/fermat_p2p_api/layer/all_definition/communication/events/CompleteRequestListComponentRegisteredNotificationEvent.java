@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -39,6 +40,7 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
      * Represent the platformComponentType
      */
     private PlatformComponentType platformComponentType;
+    private DiscoveryQueryParameters discoveryQueryPerams;
 
     /**
      * Constructor with parameter
@@ -95,5 +97,9 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
      */
     public void setPlatformComponentType(PlatformComponentType platformComponentType) {
         this.platformComponentType = platformComponentType;
+    }
+
+    public DiscoveryQueryParameters getDiscoveryQueryPerams() {
+        return discoveryQueryPerams;
     }
 }

@@ -21,16 +21,19 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientPingAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ComponentConnectionRespondPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FailureComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.drafts.Draft_17;
@@ -107,6 +110,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new ComponentConnectionRespondPacketProcessor());
         wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new CompleteComponentConnectionRequestPacketProcessor());
+        wsCommunicationsCloudClientChannel.registerFermatPacketProcessor(new FailureComponentConnectionRequestPacketProcessor());
 
     }
 
@@ -182,19 +186,19 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numberRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
 
         //Validate parameters
-        if (applicant == null){
-            throw new IllegalArgumentException("The applicant argument are required, can not be null ");
+        if (platformComponentType == null && networkServiceType == null){
+            throw new IllegalArgumentException("The platformComponentType and networkServiceType argument are required, can not be null ");
         }
 
         /*
          * Construct a PlatformComponentProfile instance
          */
-        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, distance, name, applicant.getNetworkServiceType(), applicant.getPlatformComponentType(), extraData, firstRecord, numberRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+        return new DiscoveryQueryParametersCommunication(alias, identityPublicKey, location, distance, name, networkServiceType, platformComponentType, extraData, offset, max, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
 
     }
 
@@ -271,7 +275,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination){
 
-
         System.out.println("WsCommunicationsCloudClientConnection - requestVpnConnection");
 
         /*
@@ -287,12 +290,12 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         participants.add(remoteDestination);
 
         /**
-         * Validate all are the same type and NETWORK_SERVICE_COMPONENT
+         * Validate all are the same type and NETWORK_SERVICE
          */
         for (PlatformComponentProfile participant: participants) {
 
-            if (participant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE_COMPONENT){
-                throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE_COMPONENT ");
+            if (participant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+                throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
             }
 
             if (participant.getNetworkServiceType() != applicant.getNetworkServiceType()){
@@ -326,7 +329,60 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
         /*
          * Add the applicant to the requested list
          */
-        wsCommunicationVPNClientManagerAgent.addRequestedVpnConnections(applicant, remoteDestination);
+        //wsCommunicationVPNClientManagerAgent.addRequestedVpnConnections(applicant, remoteDestination);
+
+    }
+
+    /**
+     * (non-javadoc)
+     * @see CommunicationsClientConnection#requestDiscoveryVpnConnection(String, PlatformComponentProfile, DiscoveryQueryParameters)
+     */
+    @Override
+    public void requestDiscoveryVpnConnection(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters){
+
+        System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
+
+        /*
+         * Validate parameter
+         */
+        if (applicantNetworkService == null || discoveryQueryParameters == null){
+
+            throw new IllegalArgumentException("All parameters are required, can not be null");
+        }
+
+        /*
+         * Validate are the  type NETWORK_SERVICE
+         */
+        if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
+        }
+
+        /*
+         * Construct the json object
+         */
+        Gson gson = new Gson();
+        JsonObject packetContent = new JsonObject();
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_VPN, identityPublicKeyRequestingParticipant);
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_NS_VPN, applicantNetworkService.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM_VPN, discoveryQueryParameters.toJson());
+
+        /*
+         * Convert to json representation
+         */
+        String packetContentJson = gson.toJson(packetContent);
+
+         /*
+         * Construct a fermat packet whit the request
+         */
+        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                                                                                                                    packetContentJson,                                                  //Message Content
+                                                                                                                    FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST,                 //Packet type
+                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+        /*
+         * Send the encode packet to the server
+         */
+        wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 
@@ -346,8 +402,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile) {
 
-        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE_COMPONENT){
-            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE_COMPONENT ");
+        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
         }
 
         if (applicant.getNetworkServiceType() != applicant.getNetworkServiceType()){

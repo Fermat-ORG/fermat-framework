@@ -142,7 +142,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     private UUID pluginId;
 
     /**
-     * DealsWithWalletManager Interface member variables.
+     * DealsWithCCPWalletManager Interface member variables.
      */
     private WalletManagerManager walletManagerManager;
 
@@ -173,8 +173,20 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
 
         try {
 
+            List<IntraWalletUser> intraWalletUserList1 = new ArrayList<IntraWalletUser>();
+
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            return intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
+            intraWalletUserList1 = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
+
+            //TODO harcoder
+
+
+            intraWalletUserList1.add(new IntraWalletUserIdentity("Matias","public_key1",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
+            intraWalletUserList1.add(new IntraWalletUserIdentity("Jorge","public_key2",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
+            intraWalletUserList1.add(new IntraWalletUserIdentity("Leon","public_key",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
+            intraWalletUserList1.add(new IntraWalletUserIdentity("Rodrigo","public_key3",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
+
+            return intraWalletUserList1;
 
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
@@ -210,7 +222,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-            String publicKey = keyPair.getPublicKey();
+           String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
             intraWalletUserIdentityDao.createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);

@@ -144,7 +144,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          * Get json representation
          */
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.JSON_ATT_NAME_IDENTITY, tempIdentity.getPublicKey());
+        jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, tempIdentity.getPublicKey());
 
         /*
          * Add the att to the header
@@ -181,7 +181,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onMessage(String)");
-        System.out.println(" WsCommunicationsCloudClientChannel - encode fermatPacket " + fermatPacketEncode);
+       // System.out.println(" WsCommunicationsCloudClientChannel - encode fermatPacket " + fermatPacketEncode);
 
         FermatPacket fermatPacketReceive = null;
 
@@ -439,7 +439,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
         FermatEvent platformEvent = eventManager.getNewEvent(EventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
         CompleteClientComponentRegistrationNotificationEvent event =  (CompleteClientComponentRegistrationNotificationEvent) platformEvent;
-        event.setSource(EventSource.INCOMING_EXTRA_USER);
+        event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         event.setMessage("Cloud client communication, registered and established connection.");
         eventManager.raiseEvent(platformEvent);
     }

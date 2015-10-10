@@ -15,6 +15,8 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 
 
 public class TransactionItemViewHolder extends FermatViewHolder {
+
+
     private ImageView contactIcon;
     private TextView txt_contactName;
     private TextView txt_amount;
@@ -32,7 +34,7 @@ public class TransactionItemViewHolder extends FermatViewHolder {
     public TransactionItemViewHolder(View itemView) {
         super(itemView);
 
-        contactIcon = (ImageView) itemView.findViewById(R.id.contactIcon);
+        contactIcon = (ImageView) itemView.findViewById(R.id.profile_Image);
         txt_contactName = (TextView) itemView.findViewById(R.id.txt_contactName);
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
@@ -46,6 +48,8 @@ public class TransactionItemViewHolder extends FermatViewHolder {
 
 
     }
+
+
 
     public ImageView getContactIcon() {
         return contactIcon;

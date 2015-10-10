@@ -417,7 +417,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantStartAgentException );
             }
 
-
             /**
              * the service is started.
              */

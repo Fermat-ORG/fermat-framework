@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Created by ciencias on 31.12.14.
  */
-public class CommunicationException extends FermatException {
+	public class CommunicationException extends FermatException {
     
 	/**
 	 * 

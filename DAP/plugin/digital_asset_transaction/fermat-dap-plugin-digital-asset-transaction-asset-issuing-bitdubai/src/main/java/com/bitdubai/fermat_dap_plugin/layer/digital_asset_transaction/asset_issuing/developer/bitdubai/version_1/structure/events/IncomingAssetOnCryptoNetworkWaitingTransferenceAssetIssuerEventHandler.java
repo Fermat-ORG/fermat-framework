@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantSaveEventException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent;
 
 /**
@@ -31,7 +31,10 @@ public class IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventHand
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent", "Check the cause");
             } catch(ClassCastException exception){
-                throw new CantSaveEventException(exception, "Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent", "Cannot find this class");
+                //Logger LOG = Logger.getGlobal();
+                //LOG.info("EXCEPTION DETECTOR----------------------------------");
+                //exception.printStackTrace();
+                throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent", "Cannot cast this event");
             } catch(Exception exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent", "Unexpected exception");
             }

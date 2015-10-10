@@ -22,9 +22,10 @@ public interface NetworkServiceLocal {
      * This method prepare the message to send and save on the
      * data base in the table <code>outgoing_messages</code>
      *
-     * @param messageContent the message to send
+     * @param senderIdentityPublicKey
+     * @param messageContent
      */
-    public void sendMessage(final String messageContent, final ECCKeyPair senderIdentity);
+    public void sendMessage(final String senderIdentityPublicKey, final String messageContent);
 
 
     //public FermatMessage getLastMessageReceived();

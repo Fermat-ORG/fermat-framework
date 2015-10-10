@@ -155,7 +155,7 @@ public class BitcoinWalletBasicWalletDao {
                     BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME +
                     " = '" +
                     transactionType.getCode() +
-                    " GROUP BY ";
+                    "' GROUP BY ";
 
             if (transactionType == TransactionType.CREDIT)
                 query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME;
@@ -290,12 +290,13 @@ public class BitcoinWalletBasicWalletDao {
 
                 switch (transactionType) {
                     case CREDIT:
-                        sentTransactionsNumber = record.getIntegerValue("Column0");
-                        sentAmount = record.getLongValue("Column2");
-                        break;
-                    case DEBIT:
                         receivedTransactionsNumber = record.getIntegerValue("Column0");
                         receivedAmount = record.getLongValue("Column2");
+                        break;
+                    case DEBIT:
+                        sentTransactionsNumber = record.getIntegerValue("Column0");
+                        sentAmount = record.getLongValue("Column2");
+
                         break;
                 }
             }

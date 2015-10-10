@@ -26,6 +26,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
@@ -85,6 +86,8 @@ public class SendFragment extends FermatWalletFragment {
     private WalletContact contact;
 
     public boolean fromContacts = true;
+
+    private ReferenceWallet referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
 
     /**
      * Resources
@@ -366,7 +369,7 @@ public class SendFragment extends FermatWalletFragment {
                             user_id,
                             Actors.INTRA_USER,
                             contact.actorPublicKey,
-                            Actors.EXTRA_USER
+                            Actors.EXTRA_USER,referenceWallet
                     );
 
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();

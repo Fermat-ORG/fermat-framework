@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 /**
- * Created by mati on 2015.10.01..
+ * Created by Matias Furszyfer on 2015.10.01..
  */
 public class RequestHomePaymentFragment extends FermatWalletListFragment<PaymentRequest>
         implements FermatListItemListeners<PaymentRequest> {
@@ -46,6 +46,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
     private List<PaymentRequest> lstPaymentRequest;
     private PaymentRequest selectedItem;
 
+    String walletPublicKey = "reference_wallet";
     /**
      * Executor Service
      */
@@ -57,9 +58,9 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
      *
      * @return InstalledFragment instance object
      */
-    public static RequestPaymentFragment newInstance() {
-        RequestPaymentFragment requestPaymentFragment = new RequestPaymentFragment();
-        return new RequestPaymentFragment();
+    public static RequestHomePaymentFragment newInstance() {
+        RequestHomePaymentFragment requestPaymentFragment = new RequestHomePaymentFragment();
+        return new RequestHomePaymentFragment();
     }
 
     @Override
@@ -127,13 +128,13 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
         List<PaymentRequest> lstPaymentRequest  = null;
 
         try {
-            lstPaymentRequest = cryptoWallet.listPaymentRequestDatOrder();
+            lstPaymentRequest = cryptoWallet.listPaymentRequestDateOrder(walletPublicKey,10,0);
 
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
-            // data = RequestPaymentListItem.getTestData(getResources());
+            //data = RequestPaymentListItem.getTestData(getResources());
         }
 
         return lstPaymentRequest;

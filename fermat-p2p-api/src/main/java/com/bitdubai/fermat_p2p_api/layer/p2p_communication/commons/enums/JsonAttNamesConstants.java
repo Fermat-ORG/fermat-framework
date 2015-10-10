@@ -22,52 +22,78 @@ public class JsonAttNamesConstants {
     public static final String HEADER_ATT_NAME_TI = "tmp-i";
 
     /**
-     * Represent the value of JSON_ATT_NAME_IDENTITY
+     * Represent the value of NAME_IDENTITY
      */
-    public static final String JSON_ATT_NAME_IDENTITY = "i";
+    public static final String NAME_IDENTITY = "i";
 
     /**
-     * Represent the value of JSON_ATT_NAME_SERVER_IDENTITY
+     * Represent the value of SERVER_IDENTITY
      */
-    public static final String JSON_ATT_NAME_SERVER_IDENTITY = "srv-i";
+    public static final String SERVER_IDENTITY = "srv-i";
 
     /**
-     * Represent the value of JSON_ATT_NAME_COMPONENT_TYPE
+     * Represent the value of COMPONENT_TYPE
      */
-    public static final String JSON_ATT_NAME_COMPONENT_TYPE = "comp-t";
+    public static final String COMPONENT_TYPE = "comp-t";
 
     /**
-     * Represent the value of JSON_ATT_NAME_COMPONENT_TYPE
+     * Represent the value of COMPONENT_TYPE
      */
-    public static final String JSON_ATT_NAME_NETWORK_SERVICE_TYPE = "ns-t";
+    public static final String NETWORK_SERVICE_TYPE = "ns-t";
 
     /**
-     * Represent the value of JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN
+     * Represent the value of REGISTER_PARTICIPANT_IDENTITY_VPN
      */
-    public static final String JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN = "r-p-iv";
+    public static final String REGISTER_PARTICIPANT_IDENTITY_VPN = "r-p-iv";
 
     /**
-     * Represent the value of JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN
+     * Represent the value of CLIENT_IDENTITY_VPN
      */
-    public static final String JSON_ATT_NAME_CLIENT_IDENTITY_VPN = "c-iv";
+    public static final String CLIENT_IDENTITY_VPN = "c-iv";
     /**
-     * Represent the value of JSON_ATT_NAME_VPN_URI
+     * Represent the value of VPN_URI
      */
-    public static final String JSON_ATT_NAME_VPN_URI = "u";
+    public static final String VPN_URI = "u";
 
     /**
-     * Represent the value of JSON_ATT_NAME_VPN_URI
+     * Represent the value of VPN_URI
      */
-    public static final String JSON_ATT_NAME_VPN_SERVER_IDENTITY = "v-s-i";
+    public static final String VPN_SERVER_IDENTITY = "v-s-i";
 
     /**
-     * Represent the value of JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN
+     * Represent the value of REMOTE_PARTICIPANT_VPN
      */
-    public static final String JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN = "r-p-v";
+    public static final String REMOTE_PARTICIPANT_VPN = "r-p-v";
 
     /**
-     * Represent the value of JSON_ATT_NAME_RESULT_LIST
+     * Represent the value of REMOTE_PARTICIPANT_NS_VPN
      */
-    public static final String JSON_ATT_NAME_RESULT_LIST = "rl";
+    public static final String REMOTE_PARTICIPANT_NS_VPN = "r-p-ns-v";
+
+    /**
+     * Represent the value of RESULT_LIST
+     */
+    public static final String RESULT_LIST = "rl";
+
+    /**
+     * Represent the value of APPLICANT_VPN
+     */
+    public static final String APPLICANT_VPN = "a-vpn";
+
+    /**
+     * Represent the value of APPLICANT_NS_VPN
+     */
+    public static final String APPLICANT_NS_VPN = "a-ns-vpn";
+
+    /**
+     * Represent the value of DISCOVERY_PARAM_VPN
+     */
+    public static final String DISCOVERY_PARAM_VPN = "dp-vpn";
+
+    /**
+     * Represent the value of FAILURE_PARAM_VPN
+     */
+    public static final String FAILURE_VPN_MSJ = "f-vpn-m";
+
 
 }
