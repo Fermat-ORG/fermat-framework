@@ -3,23 +3,19 @@ package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.IdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
@@ -33,7 +29,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
+public class IdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
         implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
 
 
@@ -42,8 +38,8 @@ public class MainFragment extends FermatListFragment<CryptoBrokerIdentityInforma
     private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
 
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static IdentityListFragment newInstance() {
+        return new IdentityListFragment();
     }
 
     @Override
@@ -80,7 +76,7 @@ public class MainFragment extends FermatListFragment<CryptoBrokerIdentityInforma
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_main;
+        return R.layout.fragment_identity_list;
     }
 
     @Override
@@ -90,7 +86,7 @@ public class MainFragment extends FermatListFragment<CryptoBrokerIdentityInforma
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.identity_recycler_view;
+        return R.id.identity_list_recycler_view;
     }
 
     @Override
@@ -140,14 +136,20 @@ public class MainFragment extends FermatListFragment<CryptoBrokerIdentityInforma
 
     @Override
     public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        ArrayList<CryptoBrokerIdentityInformation> data = new ArrayList<>();
-        if(moduleManager == null){
+        List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
+        if (moduleManager == null) {
             for (int i = 0; i < 20; i++) {
                 data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i, R.drawable.deniz_profile_picture));
             }
+        } else {
+            try {
+                data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
+            } catch (CantGetCryptoBrokerListException e) {
+                e.printStackTrace();
+            }
         }
 
-        return super.getMoreDataAsync(refreshType, pos);
+        return data;
     }
 
     @Override

@@ -719,15 +719,15 @@ public class Platform implements Serializable {
             injectLayerReferences(cryptoTransmissionNetworkService);
             injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
 
-
-//             /*
-//             * Plugin Template Network Service
-//             * -----------------------------
-//             */
-//
-            Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
-            injectLayerReferences(templateNetworkService);
-            injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
+            if (true) {
+                /*
+                 * Plugin Template Network Service
+                 * -----------------------------
+                 */
+                Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
+                injectLayerReferences(templateNetworkService);
+                injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
+            }
 
 //            /*
 //            * Plugin Asset User Actor Network Service
@@ -1026,12 +1026,14 @@ public class Platform implements Serializable {
             Plugin bitcoinCryptoVault = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER)).getmBitcoin();
             injectPluginReferencesAndStart(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
 
-            /*
-             * Plugin Assets Crypto Vault
-             * ----------------------------------
-             */
-            Plugin assetsCryptoVault = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER)).getmAssetsVault();
-            injectPluginReferencesAndStart(assetsCryptoVault, Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT);
+            if (true) {
+                /*
+                 * Plugin Assets Crypto Vault
+                 * ----------------------------------
+                 */
+                Plugin assetsCryptoVault = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER)).getmAssetsVault();
+                injectPluginReferencesAndStart(assetsCryptoVault, Plugins.BITDUBAI_ASSETS_CRYPTO_VAULT);
+            }
 
             /*
              * Plugin Incoming Crypto Crypto Router
@@ -1177,15 +1179,15 @@ public class Platform implements Serializable {
             //  Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
             //  injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
 
-             /*
-             * Plugin Intra User NetWorkService
-             * -----------------------------
-             */
-            Plugin intraUserNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getIntraUser();
-            injectLayerReferences(intraUserNetworkService);
-            injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
-
-
+            if (true) {
+                 /*
+                 * Plugin Intra User NetWorkService
+                 * -----------------------------
+                 */
+                Plugin intraUserNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getIntraUser();
+                injectLayerReferences(intraUserNetworkService);
+                injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
+            }
 
             /*
              * Plugin Intra User Actor
@@ -1240,117 +1242,117 @@ public class Platform implements Serializable {
             Plugin moneyRequest = ((RequestServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_REQUEST_LAYER)).getMoney();
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
-            //if(true) {
-           /*
-            * Plugin Asset User Actor Network Service
-            * ----------------------------------------
-            */
+            if (true) {
+               /*
+                * Plugin Asset User Actor Network Service
+                * ----------------------------------------
+                */
 
                 Plugin assetUserActorNetworkService = ((DAPActorNetworServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetUserActorNetworService();
                 injectLayerReferences(assetUserActorNetworkService);
                 injectPluginReferencesAndStart(assetUserActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE);
 
 
-           /*
-            * Plugin Asset Transmission Network Service
-            * ----------------------------------------
-            */
+               /*
+                * Plugin Asset Transmission Network Service
+                * ----------------------------------------
+                */
 
                 Plugin assetTransmissionNetworkService = ((DAPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_NETWORK_SERVICE_LAYER)).getAssetTransmissionNetworService();
                 injectLayerReferences(assetTransmissionNetworkService);
                 injectPluginReferencesAndStart(assetTransmissionNetworkService, Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE);
 
-           /*
-            * Plugin Asset Wallet Asset Issuer
-            * -----------------------------
-            */
+               /*
+                * Plugin Asset Wallet Asset Issuer
+                * -----------------------------
+                */
                 Plugin assetWalletIssuer = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletIssuer();
                 injectPluginReferencesAndStart(assetWalletIssuer, Plugins.BITDUBAI_ASSET_WALLET_ISSUER);
 
-            /*
-             * Plugin Asset Issuing Transaction
-             * -----------------------------
-             */
+                /*
+                 * Plugin Asset Issuing Transaction
+                 * -----------------------------
+                 */
                 Plugin assetIssuingTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetIssuingPlugin();
                 injectPluginReferencesAndStart(assetIssuingTransaction, Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION);
 
-            /*
-             * Plugin Asset Distribution Transaction
-             * -----------------------------
-             */
+                /*
+                 * Plugin Asset Distribution Transaction
+                 * -----------------------------
+                 */
                 Plugin assetDistributionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
                 injectPluginReferencesAndStart(assetDistributionTransaction, Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
 
-            /*
-             * Plugin Asset Reception Transaction
-             * -----------------------------
-             */
-            Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
-            injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
+                /*
+                 * Plugin Asset Reception Transaction
+                 * -----------------------------
+                 */
+                Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
+                injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
 
-           /*
-            * Plugin Asset Issuer Actor Layer
-            * -------------------------
-            */
+               /*
+                * Plugin Asset Issuer Actor Layer
+                * -------------------------
+                */
                 Plugin assetIssuerActorLayer = ((DAPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER)).getAssetIssuerActor();
                 injectPluginReferencesAndStart(assetIssuerActorLayer, Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR);
 
-           /*
-            * Plugin Asset User Actor Layer
-            * -------------------------
-            */
+               /*
+                * Plugin Asset User Actor Layer
+                * -------------------------
+                */
                 Plugin assetUserActorLayer = ((DAPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER)).getAssetUserActor();
                 injectPluginReferencesAndStart(assetUserActorLayer, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR);
 
-           /*
-            * Plugin Redeem Point Actor Layer
-            * -------------------------
-            */
+               /*
+                * Plugin Redeem Point Actor Layer
+                * -------------------------
+                */
                 Plugin redeemPointActorLayer = ((DAPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER)).getRedeemPointActor();
                 injectPluginReferencesAndStart(redeemPointActorLayer, Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR);
 
-           /*
-            * Plugin Asset Issuer Identity Layer
-            * -------------------------
-            */
+               /*
+                * Plugin Asset Issuer Identity Layer
+                * -------------------------
+                */
                 Plugin assetIssuerIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getAssetIssuerIdentity();
                 injectPluginReferencesAndStart(assetIssuerIdentityLayer, Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
 
-           /*
-            * Plugin Asset User Identity Layer
-            * -------------------------
-            */
+               /*
+                * Plugin Asset User Identity Layer
+                * -------------------------
+                */
                 Plugin assetUserIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getAssetUserIdentity();
                 injectPluginReferencesAndStart(assetUserIdentityLayer, Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);
 
-           /*
-            * Plugin Redeem Point Identity Layer
-            * -------------------------
-            */
+               /*
+                * Plugin Redeem Point Identity Layer
+                * -------------------------
+                */
                 Plugin redeemPointIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getRedeemPointIdentity();
                 injectPluginReferencesAndStart(redeemPointIdentityLayer, Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
 
-            /*
-             * Plugin Asset Factory Middleware
-             * -----------------------------
-             */
+                /*
+                 * Plugin Asset Factory Middleware
+                 * -----------------------------
+                 */
                 Plugin assetFactortMiddleware = ((DAPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MIDDLEWARE_LAYER)).getPluginAssetFactory();
                 injectPluginReferencesAndStart(assetFactortMiddleware, Plugins.BITDUBAI_ASSET_FACTORY);
 
-             /*
-             * Plugin Asset Factory Module
-             * -----------------------------
-             */
+                 /*
+                 * Plugin Asset Factory Module
+                 * -----------------------------
+                 */
                 Plugin assetFactoryModlue = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginAssetFactoryModule();
                 injectPluginReferencesAndStart(assetFactoryModlue, Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
 
-             /*
-             * Plugin Asset Issuer Wallet Module
-             * -----------------------------
-             */
+                 /*
+                 * Plugin Asset Issuer Wallet Module
+                 * -----------------------------
+                 */
                 Plugin assetIssuerWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetIssuerWallet();
                 injectPluginReferencesAndStart(assetIssuerWalletModule, Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
-           // }
+            }
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 

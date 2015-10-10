@@ -2,12 +2,10 @@ package unit.com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.widget.TextView;
 
 
 import com.bitdubai.sub_app.crypto_broker_identity.BuildConfig;
-import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.fragments.MainFragment;
+import com.bitdubai.sub_app.crypto_broker_identity.fragments.IdentityListFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,19 +24,19 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class MainFragmentTest {
+public class IdentityListFragmentTest {
 
-    private MainFragment fragment;
+    private IdentityListFragment fragment;
     private TestActivity activity;
 
     @Before
     public void setUp() {
-        fragment = MainFragment.newInstance();
+        fragment = IdentityListFragment.newInstance();
 
         activity = Robolectric.setupActivity(TestActivity.class);
 
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
-        ft.add(TestActivity.LAYOUT_ID, fragment);
+        ft.add(fragment, null);
         ft.commit();
     }
 

@@ -1152,8 +1152,8 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
             runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
             runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
             runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
 
             TitleBar titleBar = new TitleBar();
             titleBar.setLabel("Crypto Broker Identity");
@@ -1174,9 +1174,9 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
             titleBar = new TitleBar();
             titleBar.setLabel("Create New Identity");
@@ -1192,6 +1192,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeFragment.setBack(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
 
