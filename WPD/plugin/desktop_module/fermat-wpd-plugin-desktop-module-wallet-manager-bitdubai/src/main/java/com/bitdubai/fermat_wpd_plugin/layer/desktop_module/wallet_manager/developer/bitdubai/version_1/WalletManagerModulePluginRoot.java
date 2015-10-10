@@ -15,14 +15,14 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletCreateNewIntraUserIdentityException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletGetIntraUsersIdentityException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletCreateNewIntraUserIdentityException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletGetIntraUsersIdentityException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantRemoveWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantRenameWalletException;
@@ -465,10 +465,10 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     }
 
     @Override
-    public IntraWalletUser createNewIntraWalletUser(String alias, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
+    public void createNewIntraWalletUser(String alias, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-            return intraWalletUserManager.createNewIntraWalletUser(alias,profileImage);
+           intraWalletUserManager.createNewIntraWalletUser(alias,profileImage);
 
         }
         catch( CantCreateNewIntraWalletUserException e)
@@ -481,26 +481,26 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
             throw  new WalletCreateNewIntraUserIdentityException("CAN'T CREATE NEW INTRA USER IDENTITY",FermatException.wrapException(e),"","");
         }
     }
+
+
     @Override
-    public List<IntraWalletUser> getAllIntraWalletUsersFromCurrentDeviceUser() throws WalletGetIntraUsersIdentityException {
-
-            try
-            {
-                return intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser();
-
-            }
-            catch( CantListIntraWalletUsersException e)
-            {
-                throw  new WalletGetIntraUsersIdentityException("CAN'T GET ALL INTRA USERs IDENTITY",e,"","");
-
-            }
-            catch(Exception e)
-            {
-                throw  new WalletGetIntraUsersIdentityException("CAN'T GET ALL INTRA USERS IDENTITY",FermatException.wrapException(e),"","");
-            }
+    public boolean hasIntraUserIdentity() throws CantGetIfIntraWalletUsersExistsException {
+        try
+        {
+            return intraWalletUserManager.hasIntraUserIdentity();
         }
+        catch( CantListIntraWalletUsersException e)
+        {
+            throw  new CantGetIfIntraWalletUsersExistsException("CAN'T GET IF INTRA USERs IDENTITY EXISTS",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new CantGetIfIntraWalletUsersExistsException("CAN'T GET IF INTRA USERS IDENTITY EXISTS",FermatException.wrapException(e),"","");
+        }
+    }
 
-        //TODO: revisar si esta interface Wallet Manager se va a usar (Natalia)
+
+    //TODO: revisar si esta interface Wallet Manager se va a usar (Natalia)
     /**
      * WalletManager Interface implementation.
      */
