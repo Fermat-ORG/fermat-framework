@@ -88,10 +88,11 @@ public interface CommunicationsClientConnection {
      * the remote destination component to send message, but the applicant only now a other component type identity public key
      * and the server has to discovery the component type for this identity public key that is the same type as the applicant.
      *
-     * @param applicant
-     * @param discoveryQueryParameters
+     * @param identityPublicKeyRequestingParticipant the identity public key of the participant of the vpn
+     * @param applicantNetworkService the profile of the network service which it makes the request
+     * @param discoveryQueryParameters have the other type component information to find the corresponding
      */
-    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicant, DiscoveryQueryParameters discoveryQueryParameters);
+    public void requestDiscoveryVpnConnection(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters);
 
     /**
      * Method that verified is the connection is

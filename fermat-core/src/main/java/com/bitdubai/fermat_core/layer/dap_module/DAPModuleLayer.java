@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_core.layer.dap_module.Asset_factory.AssetFactoryModuleSubSystem;
+import com.bitdubai.fermat_core.layer.dap_module.Wallet.AssetIssuerWalletModuleSubSystem;
 import com.bitdubai.fermat_dap_api.layer.dap_module.CantStartSubsystemException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.DAPModuleSubsystem;
 
@@ -12,9 +13,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.DAPModuleSubsystem;
  */
 public class DAPModuleLayer implements PlatformLayer {
     private Plugin mSubAppAssetfactory;
+    private Plugin mModuleAssetIssuerWallet;
     @Override
     public void start() throws CantStartLayerException {
         mSubAppAssetfactory = getPlugin(new AssetFactoryModuleSubSystem());
+        mModuleAssetIssuerWallet = getPlugin(new AssetIssuerWalletModuleSubSystem());
     }
 
     private Plugin getPlugin(DAPModuleSubsystem dapModuleSubsystem) throws CantStartLayerException{
@@ -26,4 +29,5 @@ public class DAPModuleLayer implements PlatformLayer {
         }
     }
     public Plugin getPluginAssetFactoryModule() {return mSubAppAssetfactory;}
+    public Plugin getPluginModuleAssetIssuerWallet() {return mModuleAssetIssuerWallet;}
 }

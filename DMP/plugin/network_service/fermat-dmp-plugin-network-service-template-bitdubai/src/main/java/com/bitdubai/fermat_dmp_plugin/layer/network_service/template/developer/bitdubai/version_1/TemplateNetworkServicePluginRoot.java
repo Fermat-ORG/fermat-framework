@@ -670,8 +670,15 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see NetworkService#handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile, DiscoveryQueryParameters)
+     */
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) {
 
-
+        System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleFailureComponentRegistrationNotificationEvent");
+    }
 
     /**
      * (non-Javadoc)
@@ -718,7 +725,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, discoveryQueryParametersT);
+            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile, discoveryQueryParametersT);
 
         }
 
@@ -757,7 +764,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Send a message using the local representation
              */
-            communicationNetworkServiceLocal.sendMessage(messageContent, identity);
+            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
 
         }
 

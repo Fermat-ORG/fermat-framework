@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.10.05..
@@ -119,6 +120,13 @@ public class CryptoTransmissionAgent {
      */
     Map<String, CryptoTransmissionPlatformComponentProfilePlusWaitTime> waitingPlatformComponentProfile;
 
+    /**
+     * Pool connections requested waiting for peer or server response
+     *
+     * publicKey  and transaccion metadata waiting to be a response
+     */
+    Map<String,CryptoTransmissionMetadata> poolConnectionsWaitingForResponse;
+
 
     Map<String, FermatMessage> receiveMessage;
     private boolean flag=true;
@@ -160,6 +168,9 @@ public class CryptoTransmissionAgent {
 
         cacheResponseMetadataFromRemotes = new HashMap<String, CryptoTransmissionStates>();
         waitingPlatformComponentProfile = new HashMap<>();
+
+
+       poolConnectionsWaitingForResponse = new HashMap<> ();
 
         //Create a thread to send the messages
         this.toSend = new Thread(new Runnable() {
@@ -285,7 +296,7 @@ public class CryptoTransmissionAgent {
             List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
 
 
-            if (flag) {
+
 
 
 
@@ -299,45 +310,53 @@ public class CryptoTransmissionAgent {
                 for (CryptoTransmissionMetadata cryptoTransmissionMetadata : lstCryptoTransmissionMetadata) {
 
 
-                    //TODO: hacer un filtro por aquellas que se encuentran conectadas
+                    if(!poolConnectionsWaitingForResponse.containsKey(cryptoTransmissionMetadata.getDestinationPublicKey())) {
+
+                        //TODO: hacer un filtro por aquellas que se encuentran conectadas
 
 //                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory()
 //                PlatformComponentProfile platformComponentProfile = new Pl
 
-                    if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getDestinationPublicKey()) == null) {
+                        if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getDestinationPublicKey()) == null) {
 
 
-                        if (wsCommunicationsCloudClientManager != null) {
+                            if (wsCommunicationsCloudClientManager != null) {
 
-                            if (platformComponentProfile != null) {
-
-
-                                DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
-                                        getCommunicationsCloudClientConnection().
-                                        constructDiscoveryQueryParamsFactory(
-                                                PlatformComponentType.NETWORK_SERVICE,//applicant = who made the request
-                                                NetworkServiceType.CRYPTO_TRANSMISSION,
-                                                null,                     // alias
-                                                "actor_prueba_robert_public_key", // identityPublicKey
-                                                null,                     // location
-                                                null,                     // distance
-                                                null,                     // name
-                                                null,                     // extraData
-                                                null,                     // offset
-                                                null,                     // max
-                                                PlatformComponentType.ACTOR,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                NetworkServiceType.UNDEFINED); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+                                if (platformComponentProfile != null) {
 
 
-                                communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, discoveryQueryParameters);
+                                    DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
+                                            getCommunicationsCloudClientConnection().
+                                            constructDiscoveryQueryParamsFactory(
+                                                    PlatformComponentType.NETWORK_SERVICE,//applicant = who made the request
+                                                    NetworkServiceType.CRYPTO_TRANSMISSION,
+                                                    null,                     // alias
+                                                    "actor_prueba_robert_public_key", // identityPublicKey
+                                                    null,                     // location
+                                                    null,                     // distance
+                                                    null,                     // name
+                                                    null,                     // extraData
+                                                    null,                     // offset
+                                                    null,                     // max
+                                                    PlatformComponentType.ACTOR,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                    NetworkServiceType.UNDEFINED); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
-                                flag = false;
+                                    //TODO: poner tipo de actor, PlatformComponenType.ActorTtype
+
+
+
+                                    communicationNetworkServiceConnectionManager.connectTo(cryptoTransmissionMetadata.getSenderPublicKey(), platformComponentProfile, discoveryQueryParameters);
+
+
+                                    // pass the metada to a pool wainting for the response of the other peer or server failure
+                                    poolConnectionsWaitingForResponse.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata);
+                                }
+
                             }
-
                         }
                     }
                 }
-            }
+
 
 
             NetworkServiceLocal communicationNetworkServiceLocal = cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance("actor_prueba_robert_public_key");
@@ -353,7 +372,7 @@ public class CryptoTransmissionAgent {
 
                     // Envio el mensaje a la capa de comunicacion
 
-                    communicationNetworkServiceLocal.sendMessage(jsonMetadata, identity);
+                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), jsonMetadata);
 
 
                     //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
@@ -624,7 +643,7 @@ public class CryptoTransmissionAgent {
                                     cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
                                     Gson gson = new Gson();
                                     String message = gson.toJson(cryptoTransmissionMetadata);
-                                    communicationNetworkServiceLocal.sendMessage(message,identity);
+                                    communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getSenderPublicKey(),message);
                                     System.out.print("-----------------------\n" +
                                             "ENVIANDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
@@ -757,7 +776,7 @@ public class CryptoTransmissionAgent {
 
             cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
 
-            communicationNetworkServiceLocal.sendMessage(gson.toJson(cryptoTransmissionMetadata), identity);
+            communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getSenderPublicKey(),gson.toJson(cryptoTransmissionMetadata));
 
             System.out.print("-----------------------\n" +
                     "RESPONDIENDO ENVIO DE CRYPTO METADATA!!!!! -----------------------\n" +
@@ -768,6 +787,15 @@ public class CryptoTransmissionAgent {
         } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }
+    }
+
+    public void connectionFailure(String identityPublicKey){
+        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+    }
+
+
+    public boolean isConnection(String publicKey){
+        return this.poolConnectionsWaitingForResponse.containsKey(publicKey);
     }
 
 }

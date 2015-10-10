@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 
 import org.bitcoinj.core.ECKey;
 
@@ -17,5 +18,5 @@ public interface BitcoinNetworkManager {
      * @param keyList
      * @throws CantMonitorBitcoinNetworkException
      */
-    void monitorNetworkFromKeyList(List<BlockchainNetworkType> blockchainNetworkTypes,List<ECKey> keyList) throws CantMonitorBitcoinNetworkException;
+    void monitorNetworkFromKeyList(CryptoVaults vault, List<BlockchainNetworkType> blockchainNetworkTypes,List<ECKey> keyList) throws CantMonitorBitcoinNetworkException;
 }

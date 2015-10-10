@@ -126,7 +126,19 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
         DeveloperDatabaseTable assetDistributionTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME, assetDistributionColumns);
         tables.add(assetDistributionTable);
 
+        /**
+         * Events Recorder table
+         * */
+        List<String> eventsRecorderColumns = new ArrayList<String>();
 
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN);
+
+        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
+        tables.add(eventsRecorderTable);
 
         return tables;
     }

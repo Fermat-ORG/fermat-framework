@@ -796,6 +796,13 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
     }
 
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) {
+
+        cryptoTransmissionAgent.connectionFailure(discoveryQueryParameters.getIdentityPublicKey());
+
+    }
+
     /**
      * (non-Javadoc
      * @see NetworkService#
@@ -828,21 +835,24 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
 
-        System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+        System.out.println(" CryptoTransmissionNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
-        //TODO: acá podría mandarle al otro network service un mensaje diciendo que que le voy a mandar la metadata
+
+        if(cryptoTransmissionAgent.isConnection(remoteComponentProfile.getIdentityPublicKey())) {
+            //TODO: acá podría mandarle al otro network service un mensaje diciendo que que le voy a mandar la metadata
 
         /*
          * Tell the manager to handler the new connection stablished
          */
 
 
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+            communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
-        System.out.print("-----------------------\n" +
-                "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
-                "-----------------------\n A: " + remoteComponentProfile.getAlias());
+            System.out.print("-----------------------\n" +
+                    "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
+                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
+        }
 
 //        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
 //

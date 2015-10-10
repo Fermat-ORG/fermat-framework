@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.BlockChain;
@@ -42,7 +43,6 @@ class BitcoinCryptoNetworkMonitor implements Agent {
      */
     public BitcoinCryptoNetworkMonitor(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, Wallet wallet) {
         this.eventManager = eventManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.wallet = wallet;
     }
 
@@ -60,54 +60,84 @@ class BitcoinCryptoNetworkMonitor implements Agent {
     }
 
     /**
+     * Wallet setter
+     * @param wallet
+     */
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
+    /**
      * Class that generates all the objects needed to connect to the network with the passed wallet.
      */
     private class BitcoinCryptoNetworkMonitorAgent implements Runnable{
         final NetworkParameters NETWORK_PARAMETERS = wallet.getNetworkParameters();
 
         @Override
-        public void run() {
+        public void run(){
             while (isSupposedToBeRunning){
-                doTheMainTask();
+                try {
+                    doTheMainTask();
+                } catch (BlockchainException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
         /**
          * Agent main method
          */
-        private void doTheMainTask(){
+        private void doTheMainTask() throws BlockchainException {
             System.out.println("Crypto Network starting and connecting...");
-            //todo this won't be the final implementation of the network monitor. I will be using for now a simplified version.
-            BlockStore memoryBlockStore = new MemoryBlockStore(NETWORK_PARAMETERS);
-            try {
-                BlockChain blockChain = new BlockChain(NETWORK_PARAMETERS, wallet, memoryBlockStore);
-                PeerGroup peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
-                peerGroup.addWallet(wallet);
 
-                BitcoinNetworkEvents events = new BitcoinNetworkEvents(eventManager, pluginDatabaseSystem);
-                peerGroup.addEventListener(events);
-                wallet.addEventListener(events);
+            /**
+             * creates the blockchain object for the specified network.
+             */
+            BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS);
+            BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
+            blockChain.addWallet(wallet);
 
-                if (NETWORK_PARAMETERS == RegTestParams.get()){
-                    InetSocketAddress inetSocketAddress = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_PORT);
-                   PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
-                    peerGroup.addAddress(peerAddress);
-                } else
-                    peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
+            /**
+             * creates the peerGroup object
+             */
+            PeerGroup peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
+            peerGroup.addWallet(wallet);
 
-                peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
+            /**
+             * add the events
+             */
+            BitcoinNetworkEvents events = new BitcoinNetworkEvents(eventManager, pluginDatabaseSystem);
+            peerGroup.addEventListener(events);
+            wallet.addEventListener(events);
 
-                peerGroup.start();
-                peerGroup.downloadBlockChain();
-                while (true){
+            /**
+             * I will connect to the regTest server of search for peers if we are in a different network.
+             */
+            if (NETWORK_PARAMETERS == RegTestParams.get()){
+                InetSocketAddress inetSocketAddress = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_PORT);
+               PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
+                peerGroup.addAddress(peerAddress);
+            } else
+                peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
 
-                }
-            } catch (BlockStoreException e) {
-                //todo handle
+            /**
+             * Define internal agent information.
+             */
+            peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
+
+            /**
+             * starts the monitoring
+             */
+            peerGroup.start();
+            peerGroup.downloadBlockChain();
+
+            /**
+             * will start a loop to let the network sync and download until is requested to stop.
+             */
+            while (isSupposedToBeRunning){
+
             }
-
-
-
+            peerGroup.stop();
         }
     }
 }
