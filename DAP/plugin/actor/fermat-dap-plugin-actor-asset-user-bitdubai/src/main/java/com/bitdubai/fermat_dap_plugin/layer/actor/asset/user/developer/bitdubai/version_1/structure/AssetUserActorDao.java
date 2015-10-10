@@ -410,7 +410,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetUser> getAssetUserActor(String assetUserExistsToAddPublicKey) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAssetUserActor(String assetUserToAddPublicKey) throws CantGetAssetUsersListException {
         // Setup method.
         List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
         DatabaseTable table;
@@ -429,8 +429,8 @@ public class AssetUserActorDao implements Serializable {
                  */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
-            // 2) Find  Asset Users by state.
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserExistsToAddPublicKey, DatabaseFilterType.EQUAL);
+            // 2) Find  Asset Users by public Key.
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 

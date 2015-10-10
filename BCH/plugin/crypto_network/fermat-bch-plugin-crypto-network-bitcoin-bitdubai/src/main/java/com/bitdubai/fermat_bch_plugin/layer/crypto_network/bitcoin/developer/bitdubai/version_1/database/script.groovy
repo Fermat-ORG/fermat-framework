@@ -14,7 +14,8 @@ List databaseTables = []
 databaseTables << [
         name: "Incoming_Transactions",
         columns: [
-                ["hash", "STRING", "100", "true"],
+                ["trx_id", "STRING", "100", "true"],
+                ["hash", "STRING", "100", "false"],
                 ["Crypto_status", "STRING", "30", "false"],
                 ["block_depth", "INTEGER", "10", "false"],
                 ["address_to", "STRING", "100", "false"],
@@ -24,13 +25,14 @@ databaseTables << [
                 ["transmission_status", "STRING", "30", "false"],
                 ["last_update", "STRING", "50", "false"],
         ],
-        firstKey:"hash"
+        firstKey:"trx_id"
 ]
 
 databaseTables << [
         name: "Outgoing_Transactions",
         columns: [
-                ["hash", "STRING", "100", "true"],
+                ["trx_id", "STRING", "100", "true"],
+                ["hash", "STRING", "100", "false"],
                 ["Crypto_status", "STRING", "30", "false"],
                 ["block_depth", "INTEGER", "10", "false"],
                 ["address_to", "STRING", "100", "false"],
@@ -40,7 +42,7 @@ databaseTables << [
                 ["transmission_status", "STRING", "30", "false"],
                 ["last_update", "STRING", "50", "false"]
         ],
-        firstKey:"hash"
+        firstKey:"trx_id"
 ]
 
 databaseTables << [

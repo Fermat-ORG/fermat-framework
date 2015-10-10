@@ -10,13 +10,14 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 * @version 1.0
 * @since Java JDK 1.7
 */
-public class BitcoinCryptoNetworkDatabaseConstants {
+class BitcoinCryptoNetworkDatabaseConstants {
 
     /**
      * Incoming_Transactions database table definition.
      */
     static final String INCOMING_TRANSACTIONS_TABLE_NAME = "incoming_transactions";
 
+    static final String INCOMING_TRANSACTIONS_TRX_ID_COLUMN_NAME = "trx_id";
     static final String INCOMING_TRANSACTIONS_HASH_COLUMN_NAME = "hash";
     static final String INCOMING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     static final String INCOMING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
@@ -27,13 +28,14 @@ public class BitcoinCryptoNetworkDatabaseConstants {
     static final String INCOMING_TRANSACTIONS_TRANSMISSION_STATUS_COLUMN_NAME = "transmission_status";
     static final String INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";
 
-    static final String INCOMING_TRANSACTIONS_FIRST_KEY_COLUMN = "hash";
+    static final String INCOMING_TRANSACTIONS_FIRST_KEY_COLUMN = "trx_id";
 
     /**
      * Outgoing_Transactions database table definition.
      */
     static final String OUTGOING_TRANSACTIONS_TABLE_NAME = "outgoing_transactions";
 
+    static final String OUTGOING_TRANSACTIONS_TRX_ID_COLUMN_NAME = "trx_id";
     static final String OUTGOING_TRANSACTIONS_HASH_COLUMN_NAME = "hash";
     static final String OUTGOING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     static final String OUTGOING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
@@ -44,7 +46,7 @@ public class BitcoinCryptoNetworkDatabaseConstants {
     static final String OUTGOING_TRANSACTIONS_TRANSMISSION_STATUS_COLUMN_NAME = "transmission_status";
     static final String OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";
 
-    static final String OUTGOING_TRANSACTIONS_FIRST_KEY_COLUMN = "hash";
+    static final String OUTGOING_TRANSACTIONS_FIRST_KEY_COLUMN = "trx_id";
 
     /**
      * CryptoVaults_Stats database table definition.

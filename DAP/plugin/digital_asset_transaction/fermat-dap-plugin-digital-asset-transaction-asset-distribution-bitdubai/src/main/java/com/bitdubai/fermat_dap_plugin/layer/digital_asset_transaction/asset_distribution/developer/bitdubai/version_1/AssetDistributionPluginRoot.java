@@ -139,7 +139,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
 
     @Override
     public ServiceStatus getStatus() {
-        return null;
+        return this.serviceStatus;
     }
 
     //TODO: DELETE THIS USELESS METHOD

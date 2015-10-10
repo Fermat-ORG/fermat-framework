@@ -534,10 +534,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
                 String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorToAddPublicKey = UUID.randomUUID().toString();
 
-                this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, "Thunders Asset Wallet User_" + i, assetUserActorToAddPublicKey, new byte[0], ConnectionState.CONNECTED);
+                this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, "Thunders Asset User_" + i, assetUserActorToAddPublicKey, new byte[0], ConnectionState.CONNECTED);
 
                 System.out.println("assetUserActorIdentityToLinkPublicKey: " + assetUserActorIdentityToLinkPublicKey);
-                System.out.println("assetUserActorToAddName: Thunders Asset Wallet User_" + i);
+                System.out.println("assetUserActorToAddName: Thunders Asset User_" + i);
                 System.out.println("assetUserActorToAddPublicKey: "+assetUserActorToAddPublicKey);
                 System.out.println("profileImage: "+new byte[0]);
                 System.out.println("------------------------------------------------------------------------");

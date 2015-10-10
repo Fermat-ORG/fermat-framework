@@ -12,8 +12,8 @@ public class AssetUserActorDatabaseConstants {
 
     public static final String ASSET_USER_TABLE_NAME = "asset_user_actor";
 
-    public static final String ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_publicKey";
     public static final String ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME = "publicKey";
+    public static final String ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_publicKey";
     public static final String ASSET_USER_USER_NAME_COLUMN_NAME = "name";
     public static final String ASSET_USER_USER_STATE_COLUMN_NAME = "contact_state";
     public static final String ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
