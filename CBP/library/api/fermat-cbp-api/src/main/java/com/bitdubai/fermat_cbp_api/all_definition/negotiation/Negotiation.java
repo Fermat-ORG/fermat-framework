@@ -1,12 +1,9 @@
 package com.bitdubai.fermat_cbp_api.all_definition.negotiation;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CashOperationType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CryptoCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 
 import java.util.UUID;
 
@@ -17,34 +14,24 @@ public interface Negotiation {
 
     UUID getNegotiationId();
 
-    String getPublicKeyCustomer();
-    String getPublicKeyBroker();
-
     CurrencyType getMerchandiseCurrency();
+    CryptoDetail getMerchandiseCryptoDetail();
+    CashDetail getMerchandiseCashDetail();
+    BankDetail getMerchandiseBankDetail();
+
     CurrencyType getPaymentCurrency();
+    CryptoDetail getPaymentCryptoDetail();
+    CashDetail getPaymentCashDetail();
+    BankDetail getPaymentBankDetail();
 
-    CryptoCurrencyType getMerchandiseCryptoCurrencyType();
-    CashCurrencyType getMerchandiseCashCurrencyType();
-    BankCurrencyType getMerchandiseBankCurrencyType();
-
-    CashOperationType getMerchandiseCashHandlingOperation();
-    BankOperationType getMerchandiseBankHandlingOperation();
-
-    CryptoCurrencyType getPaymentCryptoCurrencyType();
-    CashCurrencyType getPaymentCashCurrencyType();
-    BankCurrencyType getPaymentBankCurrencyType();
-
-    CashOperationType getPaymentCashHandlingOperation();
-    BankOperationType getPaymentBankHandlingOperation();
+    ReferenceCurrency getReferenceCurrency();
+    float getReferencePrice();
+    float getSuggestedPrice();
+    float getMarketPrice();
 
     float getMerchandiseAmount();
-
-    float getReferencePrice();
-    ReferenceCurrency getReferenceCurrency();
-
     float getPaymentAmount();
+    long getExpirationDate();
 
-
-    long getPaymentExpirationDate();
-    long getMerchandiseDeliveryExpirationDate();
+    NegotiationStatus getStatus();
 }
