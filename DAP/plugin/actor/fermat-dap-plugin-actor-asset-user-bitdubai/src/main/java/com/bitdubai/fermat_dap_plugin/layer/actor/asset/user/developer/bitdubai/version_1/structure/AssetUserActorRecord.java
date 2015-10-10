@@ -12,18 +12,18 @@ public class AssetUserActorRecord implements ActorAssetUser {
     private String publicKey;
     private byte[] profileImage ;
     private long registrationDate;
-    private ConnectionState contactState;
+    private ConnectionState connectionState;
 
     /**
      * Constructor
      */
-    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState connectionState){
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[])profileImage.clone();
+        this.profileImage = profileImage.clone();
         this.registrationDate = registrationDate;
-        this.contactState = contactState;
+        this.connectionState = connectionState;
 
     }
 
@@ -74,7 +74,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * @return the contact state
      */
     @Override
-    public ConnectionState getContactState() {
-        return this.contactState;
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
     }
 }

@@ -464,7 +464,6 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             }
             else
             {
-                markAssetFactoryState(State.DRAFT, assetFactory.getPublicKey());
                 throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }
 
