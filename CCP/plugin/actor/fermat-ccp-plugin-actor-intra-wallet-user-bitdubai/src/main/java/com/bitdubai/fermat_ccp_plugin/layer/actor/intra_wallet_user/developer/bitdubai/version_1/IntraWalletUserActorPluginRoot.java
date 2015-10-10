@@ -288,7 +288,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     public Actor getActorByPublicKey(String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException {
 
         try {
-            //TODO harcoder - descomentar cunando se complete el circuito que crea el Actor de la wallet
+            //TODO verificar si se usa
 
          //   ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
 

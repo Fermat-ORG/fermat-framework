@@ -31,6 +31,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -119,6 +120,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
     private Handler mHandler = new Handler();
     private boolean activeAddress = true;
     private LinearLayout empty;
+    private ReferenceWallet referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
 
     /**
      * Create a new instance of this fragment
@@ -506,6 +508,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
                     //TODO: ver que mas puedo usar del cryptoWalletWalletContact
 
+
                     cryptoWallet.send(
                             Long.parseLong(amount.getText().toString()),
                             validAddress,
@@ -514,12 +517,8 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             user_id,
                             Actors.INTRA_USER,
                             walletContact.actorPublicKey,
-                            cryptoWalletWalletContact.getActorType()
+                            cryptoWalletWalletContact.getActorType(), referenceWallet
                     );
-
-
-
-
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {
                     Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
