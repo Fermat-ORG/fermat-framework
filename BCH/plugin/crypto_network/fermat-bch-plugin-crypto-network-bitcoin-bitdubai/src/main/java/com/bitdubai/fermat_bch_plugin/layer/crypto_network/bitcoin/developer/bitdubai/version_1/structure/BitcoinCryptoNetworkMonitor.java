@@ -19,6 +19,7 @@ import org.bitcoinj.store.BlockStoreException;
 import org.bitcoinj.store.MemoryBlockStore;
 
 import java.net.InetSocketAddress;
+import java.util.UUID;
 
 /**
  * Created by rodrigo on 10/4/15.
@@ -33,17 +34,17 @@ class BitcoinCryptoNetworkMonitor implements Agent {
     /**
      * Platform variables
      */
-    EventManager eventManager;
     PluginDatabaseSystem pluginDatabaseSystem;
+    UUID plugId;
 
     /**
      * Constructor
-     * @param eventManager
      * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkMonitor(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, Wallet wallet) {
-        this.eventManager = eventManager;
+    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.wallet = wallet;
+        this.plugId = pluginId;
     }
 
     @Override
@@ -106,7 +107,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * add the events
              */
-            BitcoinNetworkEvents events = new BitcoinNetworkEvents(eventManager, pluginDatabaseSystem);
+            BitcoinNetworkEvents events = new BitcoinNetworkEvents(pluginDatabaseSystem, plugId);
             peerGroup.addEventListener(events);
             wallet.addEventListener(events);
 

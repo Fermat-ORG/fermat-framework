@@ -122,7 +122,7 @@ public class BitcoinCryptoNetworkManager {
                 /**
                  * If the agent for the network is not running, I will start a new one.
                  */
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.eventManager, this.pluginDatabaseSystem, wallet);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 bitcoinCryptoNetworkMonitor.start();
