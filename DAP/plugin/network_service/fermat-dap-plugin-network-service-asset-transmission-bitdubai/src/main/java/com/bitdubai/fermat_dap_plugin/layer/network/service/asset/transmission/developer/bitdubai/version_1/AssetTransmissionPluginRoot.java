@@ -707,7 +707,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
         System.out.println(" AssetTransmissionPluginRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
