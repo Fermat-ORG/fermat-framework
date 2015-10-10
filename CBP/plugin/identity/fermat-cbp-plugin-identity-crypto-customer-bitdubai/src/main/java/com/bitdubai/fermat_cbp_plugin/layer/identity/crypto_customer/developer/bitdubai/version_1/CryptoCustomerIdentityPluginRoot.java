@@ -68,4 +68,7 @@ public class CryptoCustomerIdentityPluginRoot implements DealsWithErrors, DealsW
     public ServiceStatus getStatus() {
         return null;
     }
+
+    public static final String CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME = "cryptoCustomerIdentityProfileImage";
+    public static final String CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME = "cryptoCustomerIdentityPrivateKey";
 }
