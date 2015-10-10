@@ -1167,6 +1167,24 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
             activity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
 
+            // activity 2
+
+            activity = new Activity();
+            activity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2);
+            activity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2.getCode());
+            activity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            titleBar = new TitleBar();
+            titleBar.setLabel("Crypto Broker Identity");
+            titleBar.setColor("#FFFFFF");
+            titleBar.setLabelSize(16);
+            activity.setTitleBar(titleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            activity.setStatusBar(statusBar);
+
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeFragment.setBack(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
