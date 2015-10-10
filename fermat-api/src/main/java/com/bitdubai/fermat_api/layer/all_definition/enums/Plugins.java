@@ -154,6 +154,8 @@ public enum Plugins {
                 return BITDUBAI_CRYPTO_INDEX;
             case "BBTCCNET":
                 return BITDUBAI_BITCOIN_CRYPTO_NETWORK;
+            case "BBTCCNET2":
+                return BITDUBAI_BITCOIN_CRYPTO_NETWORK2;
             case "BCLOUDC":
                 return BITDUBAI_CLOUD_CHANNEL;
             case "BWSCCLSERVER":
