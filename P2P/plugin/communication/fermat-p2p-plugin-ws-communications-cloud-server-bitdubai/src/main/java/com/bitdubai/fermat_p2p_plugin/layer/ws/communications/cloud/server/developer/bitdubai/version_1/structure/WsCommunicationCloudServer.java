@@ -327,18 +327,25 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      */
     private void cleanReferences(WebSocket clientConnection){
 
-        /*
-         * Clean all the caches, remove data bind whit this connection
-         */
-        //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
-        removeNetworkServiceRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-        removePlatformComponentRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-        pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-        registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-        serverIdentityByClientCache.remove(clientConnection.hashCode());
-        clientIdentityByClientConnectionCache.remove(clientConnection.hashCode());
-        registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
-        registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
+       try {
+
+           /*
+             * Clean all the caches, remove data bind whit this connection
+             */
+           //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
+           removeNetworkServiceRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+           removePlatformComponentRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+           pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+           registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
+           serverIdentityByClientCache.remove(clientConnection.hashCode());
+           clientIdentityByClientConnectionCache.remove(clientConnection.hashCode());
+           registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
+           registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
+
+
+       }catch (Exception e){
+           e.printStackTrace();
+       }
 
         System.out.println(" WsCommunicationCloudServer - pendingRegisterClientConnectionsCache.size()    = " + pendingRegisterClientConnectionsCache.size());
         System.out.println(" WsCommunicationCloudServer - registeredClientConnectionsCache.size()         = " + registeredClientConnectionsCache.size());
