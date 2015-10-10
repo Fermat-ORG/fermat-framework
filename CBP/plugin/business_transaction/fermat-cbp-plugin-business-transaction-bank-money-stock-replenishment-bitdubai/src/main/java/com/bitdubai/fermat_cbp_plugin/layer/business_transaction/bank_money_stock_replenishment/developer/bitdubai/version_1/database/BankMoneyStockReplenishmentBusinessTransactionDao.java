@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+//import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishment;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.util.BankMoneyStockReplenishmentBusinessTransactionWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException;
@@ -31,23 +33,18 @@ import java.util.UUID;
  * Created by Yordin Alayn on 27.09.15.
  */
 public class BankMoneyStockReplenishmentBusinessTransactionDao{
-
     /**
      * CryptoAddressBook Interface member variables.
      */
     private Database database;
-
     /**
      * DealsWithDatabaseSystem Interface member variables.
      */
     PluginDatabaseSystem pluginDatabaseSystem;
-
     /**
      * DealsWithPluginIdentity Interface member variables.
      */
     private UUID pluginId;
-
-
     /**
      * Constructor.
      */
@@ -78,10 +75,10 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         }
     }
 
-
     public void createNewBankMoneyStockReplenishment(
             String publicKeyBroker,
             String merchandiseCurrency,
+            String merchandiseAmount,
             String executionTransactionId,
             BankCurrencyType bankCurrencyType,
             BankOperationType bankOperationType
@@ -90,7 +87,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
             DatabaseTable transactionTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
             BusinessTransactionStatus transactionStatus = BusinessTransactionStatus.PENDING_PAYMENT;
-            loadRecordAsNew(recordToInsert, transactionStatus,publicKeyBroker, merchandiseCurrency, executionTransactionId, bankCurrencyType, bankOperationType);
+            loadRecordAsNew(recordToInsert, transactionStatus,publicKeyBroker, merchandiseCurrency, merchandiseAmount, executionTransactionId, bankCurrencyType, bankOperationType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException("An exception happened", e, "", "");
@@ -109,11 +106,29 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         }
     }
 
+    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantLoadTableToMemoryException, InvalidParameterException {
+        DatabaseTable identityTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
+        identityTable.loadToMemory();
+
+        List<DatabaseTableRecord> records = identityTable.getRecords();
+        identityTable.clearAllFilters();
+
+        List<BankMoneyStockReplenishment> bankMoneyStockReplenishment = new ArrayList<>();
+
+        for (DatabaseTableRecord record : records) {
+            bankMoneyStockReplenishment.add(constructBankMoneyStockReplenishmentFromRecord(record));
+        }
+
+        return bankMoneyStockReplenishment;
+    }
+
+
     private void loadRecordAsNew(
         DatabaseTableRecord databaseTableRecord,
         BusinessTransactionStatus transactionStatus,
         String publicKeyBroker,
         String merchandiseCurrency,
+        String merchandiseAmount,
         String executionTransactionId,
         BankCurrencyType bankCurrencyType,
         BankOperationType bankOperationType
@@ -124,6 +139,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME, transactionStatus.getCode());
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME, publicKeyBroker);
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency);
+        databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseAmount);
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME, executionTransactionId);
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_CURRENCY_TYPE_COLUMN_NAME,bankCurrencyType.getCode());
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_OPERATION_TYPE_COLUMN_NAME,bankOperationType.getCode());
@@ -149,6 +165,29 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
             throw new BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException("The number of records with a primary key is different thatn one ", null, "The id is: " + id.toString(), "");
 
         return records.get(0);
+    }
+
+    private BankMoneyStockReplenishment constructBankMoneyStockReplenishmentFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
+
+        UUID                        transactionId           = record.getUUIDValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME);
+        String                      brokerPublicKey         = record.getStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        CurrencyType                merchandiseCurrency     = CurrencyType.getByCode(record.getStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME));
+        float                       merchandiseAmount       = record.getFloatValue(record.getStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME));
+        UUID                        executionTransactionId  = record.getUUIDValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME);
+        BankCurrencyType            bankCurrencyType        = BankCurrencyType.getByCode(record.getStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_CURRENCY_TYPE_COLUMN_NAME));
+        BankOperationType           bankOperationType       = BankOperationType.getByCode(record.getStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_OPERATION_TYPE_COLUMN_NAME));
+        BusinessTransactionStatus   status                  = BusinessTransactionStatus.getByCode(record.getStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME));
+
+        return new BankMoneyStockReplenishmentBusinessTransactionWrapper(
+            transactionId,
+            brokerPublicKey,
+            merchandiseCurrency,
+            merchandiseAmount,
+            executionTransactionId,
+            bankCurrencyType,
+            bankOperationType,
+            status
+        );
     }
 
 }

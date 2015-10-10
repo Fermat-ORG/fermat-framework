@@ -16,6 +16,7 @@ public class CashMoneyStockReplenishmentBusinessTransactionWrapper implements Bu
     private UUID transactionId;
     private String publicKeyBroker;
     private CurrencyType merchandiseCurrency;
+    private float merchandiseAmount;
     private UUID executionTransactionId;
     private CashCurrencyType cashCurrencyType;
     private BusinessTransactionStatus transactionStatus;
@@ -31,6 +32,10 @@ public class CashMoneyStockReplenishmentBusinessTransactionWrapper implements Bu
     @Override
     public CurrencyType getMerchandiseCurrency(){ return this.merchandiseCurrency; }
     public void setMerchandiseCurrency(CurrencyType merchandise){ this.merchandiseCurrency = merchandise; }
+
+    @Override
+    public float getMerchandiseAmount(){ return this.merchandiseAmount; }
+    public void setMerchandiseAmount(float amount){ this.merchandiseAmount = amount; }
 
     @Override
     public UUID getExecutionTransactionId(){ return this.executionTransactionId; }

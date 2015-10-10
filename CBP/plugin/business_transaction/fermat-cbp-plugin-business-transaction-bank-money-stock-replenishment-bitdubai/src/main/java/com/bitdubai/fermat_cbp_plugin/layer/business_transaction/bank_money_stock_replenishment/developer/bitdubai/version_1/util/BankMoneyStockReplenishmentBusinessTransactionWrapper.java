@@ -12,15 +12,36 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 29.09.15.
  */
-public class BankMoneyStockReplenishmentBusinessTransactionWrapper implements BusinessTransaction, BankMoneyStockReplenishment{
+public class BankMoneyStockReplenishmentBusinessTransactionWrapper implements BankMoneyStockReplenishment{
 
     private UUID transactionId;
     private String publicKeyBroker;
     private CurrencyType merchandiseCurrency;
+    private float merchandiseAmount;
     private UUID executionTransactionId;
     private BankCurrencyType bankCurrencyType;
     private BankOperationType bankOperationType;
     private BusinessTransactionStatus transactionStatus;
+
+    public BankMoneyStockReplenishmentBusinessTransactionWrapper(
+        UUID transactionId,
+        String publicKeyBroker,
+        CurrencyType merchandiseCurrency,
+        float merchandiseAmount,
+        UUID executionTransactionId,
+        BankCurrencyType bankCurrencyType,
+        BankOperationType bankOperationType,
+        BusinessTransactionStatus transactionStatus
+    ){
+        this.transactionId = transactionId;
+        this.publicKeyBroker = publicKeyBroker;
+        this.merchandiseCurrency = merchandiseCurrency;
+        this.merchandiseAmount = merchandiseAmount;
+        this.executionTransactionId = executionTransactionId;
+        this.bankCurrencyType = bankCurrencyType;
+        this.bankOperationType = bankOperationType;
+        this.transactionStatus = transactionStatus;
+    }
 
     @Override
     public UUID getTransactionId(){ return this.transactionId; }
@@ -33,6 +54,10 @@ public class BankMoneyStockReplenishmentBusinessTransactionWrapper implements Bu
     @Override
     public CurrencyType getMerchandiseCurrency(){ return this.merchandiseCurrency; }
     public void setMerchandiseCurrency(CurrencyType merchandise){ this.merchandiseCurrency = merchandise; }
+
+    @Override
+    public float getMerchandiseAmount(){ return this.merchandiseAmount; }
+    public void setMerchandiseAmount(float amount){ this.merchandiseAmount = amount; }
 
     @Override
     public UUID getExecutionTransactionId(){ return this.executionTransactionId; }
