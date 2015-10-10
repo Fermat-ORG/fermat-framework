@@ -191,7 +191,7 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
      * @param remoteComponentProfile
      */
     @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
     }
 
