@@ -108,7 +108,7 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     }
 
     /*GENERATE LIST IDENTITY*/
-    public List<CryptoCustomerIdentity> getAllIntraUserFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListCryptoCustomerIdentitiesException {
+    public List<CryptoCustomerIdentity> getAllCryptoCustomerIdentitiesFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListCryptoCustomerIdentitiesException {
         List<CryptoCustomerIdentity> list = new ArrayList<CryptoCustomerIdentity>();
         DatabaseTable table;
         try {
