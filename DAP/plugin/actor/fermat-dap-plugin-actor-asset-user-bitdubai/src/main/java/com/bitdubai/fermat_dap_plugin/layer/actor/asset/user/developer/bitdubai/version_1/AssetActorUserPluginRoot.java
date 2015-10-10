@@ -31,6 +31,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDis
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
@@ -197,7 +199,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
             this.assetUserActorDao = new AssetUserActorDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
             this.assetUserActorDao.initializeDatabase();
-           /**
+            /**
              * I will initialize the handling of com.bitdubai.platform events.
              */
             FermatEventListener fermatEventListener;
@@ -260,11 +262,12 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
             this.serviceStatus = ServiceStatus.STARTED;
 
             test();
-            testRaiseEvent();
+            register();
+//            testRaiseEvent();
 
         } catch (Exception e) {
-             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR);
         }
     }
 
@@ -525,7 +528,23 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         return list;
     }
 
-    private void testRaiseEvent(){
+    public void register(){
+
+        try {//TODO averiguar si se puede pasar una lista de ACTORS ó SE TRATA DE UNO ESPECIFICO por publicKEY ó ALGO
+            assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getAllAssetUserActor());
+        } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
+            e.printStackTrace();
+        }
+
+
+//        try {//TODO Averiguar para saber que se recibira de este metodo ya que actualmente no devuelve NADA
+//            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
+//        } catch (CantRequestListActorAssetUserRegisteredException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private void testRaiseEvent() {
         System.out.println("Start event test");
         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ASSET_USER_CONNECTION_ACCEPTED);
         eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
@@ -549,8 +568,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 
                 System.out.println("assetUserActorIdentityToLinkPublicKey: " + assetUserActorIdentityToLinkPublicKey);
                 System.out.println("assetUserActorToAddName: Thunders Asset User_" + i);
-                System.out.println("assetUserActorToAddPublicKey: "+assetUserActorToAddPublicKey);
-                System.out.println("profileImage: "+new byte[0]);
+                System.out.println("assetUserActorToAddPublicKey: " + assetUserActorToAddPublicKey);
+                System.out.println("profileImage: " + new byte[0]);
                 System.out.println("------------------------------------------------------------------------");
 
             } catch (CantAddPendingAssetUserException e) {

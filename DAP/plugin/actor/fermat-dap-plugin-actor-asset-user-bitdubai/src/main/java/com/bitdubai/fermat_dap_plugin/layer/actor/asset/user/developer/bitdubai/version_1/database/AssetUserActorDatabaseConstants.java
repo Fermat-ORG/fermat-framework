@@ -24,7 +24,7 @@ public class AssetUserActorDatabaseConstants {
     /**
      * Asset User Relation REGISTERED ACTOR USER database table definition.
      */
-    public static final String ASSET_USER_REGISTERED_USER_TABLE_NAME = "asset_user_actor";
+    public static final String ASSET_USER_REGISTERED_USER_TABLE_NAME = "asset_user_register_actor";
 
     public static final String ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME = "register_publicKey";
     public static final String ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "register_linked_identity_publicKey";
