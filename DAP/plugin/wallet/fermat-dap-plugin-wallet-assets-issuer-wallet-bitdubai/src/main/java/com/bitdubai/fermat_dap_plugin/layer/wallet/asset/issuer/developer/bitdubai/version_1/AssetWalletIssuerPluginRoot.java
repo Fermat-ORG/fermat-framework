@@ -94,8 +94,8 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
         try{
             loadWalletIssuerMap();
             //createWalletAssetIssuer("walletPublicKeyTest");
-            //assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
-            //testWallet();
+            assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
+            testWallet();
             //System.out.println(assetIssuerWallet);
             System.out.println("Star Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;

@@ -289,8 +289,10 @@ public class AssetIssuerWalletDao {
             } else {
                 transaction.addRecordToUpdate(getBalancesTable(), assetBalanceRecord);
             }
-        }catch (Exception exception){
 
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new CantExecuteAssetIssuerTransactionException("Error to get balances record",e,"Can't load balance table" , "");
         }
     }
 
@@ -454,9 +456,11 @@ public class AssetIssuerWalletDao {
     private DatabaseTableRecord getBalancesByAssetRecord(String assetPublicKey) throws CantGetBalanceRecordException{
         try {
             DatabaseTable balancesTable = getBalancesTable();
-            balancesTable.getNewFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseFilterType.EQUAL, assetPublicKey);
+            balancesTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             balancesTable.loadToMemory();
-            return balancesTable.getRecords().get(0);
+            if (balancesTable.getRecords() != null)
+                return balancesTable.getRecords().get(0);
+            else return null;
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantGetBalanceRecordException("Error to get balances record",exception,"Can't load balance table" , "");
         }
