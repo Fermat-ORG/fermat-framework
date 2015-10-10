@@ -197,16 +197,16 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
         try {
             walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
 
-            cryptoPaymentRegistry =  cryptoPaymentManager.getCryptoPaymentRegistry();
+            //cryptoPaymentRegistry =  cryptoPaymentManager.getCryptoPaymentRegistry();
 
         } catch (CantGetWalletContactRegistryException e) {
             throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, e);
         }
-        catch(CantGetCryptoPaymentRegistryException e)
-        {
-            throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, e,"","Error get crypto Payment Registry object");
+//        catch(CantGetCryptoPaymentRegistryException e)
+//        {
+//            throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, e,"","Error get crypto Payment Registry object");
 
-        }  catch (Exception e){
+          catch (Exception e){
             throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
@@ -788,15 +788,15 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
 
             CryptoWalletWalletContact cryptoWalletWalletContact = null;
 
-            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequests(walletPublicKey, max,offset)) {
-
-                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
-                if (walletContactRecord != null)
-                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
-
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
-                lst.add(cryptoWalletPaymentRequest);
-            }
+//            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequests(walletPublicKey, max,offset)) {
+//
+//                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
+//                if (walletContactRecord != null)
+//                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+//
+//                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
+//                lst.add(cryptoWalletPaymentRequest);
+//            }
             //TODO: Harcoder
             CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
             lst.add(cryptoWalletPaymentRequest);
@@ -810,11 +810,6 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
 
 
             return lst;
-        }
-        catch (com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException e)
-        {
-            throw new CantListPaymentRequestDateOrderException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, e);
-
         } catch (Exception e) {
             throw new CantListPaymentRequestDateOrderException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }

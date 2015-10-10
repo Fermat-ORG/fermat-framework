@@ -363,37 +363,38 @@ public class CryptoTransmissionAgent {
 
             if (communicationNetworkServiceLocal != null) {
 
-                CryptoTransmissionMetadata cryptoTransmissionMetadata = lstCryptoTransmissionMetadata.get(0);
+                for (CryptoTransmissionMetadata cryptoTransmissionMetadata : lstCryptoTransmissionMetadata) {
 
-                try {
-                    // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
-                    Gson gson = new Gson();
-                    String jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
+                    try {
+                        // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
+                        Gson gson = new Gson();
+                        String jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
 
-                    // Envio el mensaje a la capa de comunicacion
+                        // Envio el mensaje a la capa de comunicacion
 
-                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), jsonMetadata);
+                        communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), jsonMetadata);
 
 
-                    //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
-                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
+                        //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
+                        cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
 
-                    System.out.print("-----------------------\n" +
-                            "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
-                            "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
+                        System.out.print("-----------------------\n" +
+                                "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
 
-                    //cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
+                        //cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
 
-                    cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
+                        cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
 
-                    System.out.print("-----------------------\n" +
-                            "CRYPTO METADATA!!!!! -----------------------\n" +
-                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+                        System.out.print("-----------------------\n" +
+                                "CRYPTO METADATA!!!!! -----------------------\n" +
+                                "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
 
-                } catch (CantUpdateRecordDataBaseException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    } catch (CantUpdateRecordDataBaseException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
