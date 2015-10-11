@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 
 
 import android.app.ActionBar;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,8 +48,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
      * @return InstalledFragment instance object
      */
     public static MoreDetailsActivityFragment newInstance() {
-        MoreDetailsActivityFragment f = new MoreDetailsActivityFragment();
-        return f;
+        return new MoreDetailsActivityFragment();
     }
 
 
@@ -66,18 +64,12 @@ public class MoreDetailsActivityFragment extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View layout = inflater.inflate(R.layout.wallet_store_fragment_more_details_activity, container, false);
+        final View layout = inflater.inflate(R.layout.fragment_more_details_wallet, container, false);
         final WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
-
 
         ActionBar actionBar = getActivity().getActionBar();
         if (actionBar != null) {
-            int color = getResources().getColor(R.color.wallet_store_activities_background);
-            actionBar.setBackgroundDrawable(new ColorDrawable(color));
             actionBar.setTitle(catalogItem.getWalletName());
-            if (!actionBar.isShowing()) {
-                actionBar.show();
-            }
         }
 
         elevatorPitch = (FermatTextView) layout.findViewById(R.id.wallet_store_elevator_pitch);

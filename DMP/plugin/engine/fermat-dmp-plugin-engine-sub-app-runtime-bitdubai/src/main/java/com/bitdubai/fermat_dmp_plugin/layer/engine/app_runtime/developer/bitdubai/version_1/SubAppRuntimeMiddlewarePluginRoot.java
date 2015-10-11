@@ -769,12 +769,12 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             //Activity 1
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
-            runtimeActivity.setColor("#b46a54");
+            runtimeActivity.setColor("#B46A54");
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#b46a54");
+            statusBar.setColor("#B4573C");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
@@ -789,16 +789,17 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             //Activity 2
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
-            runtimeActivity.setColor("#00FFFFFF");
+            runtimeActivity.setColor("#B46A54");
             runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
             runtimeSubApp.addActivity(runtimeActivity);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#00FFFFFF");
+            statusBar.setColor("#B4573C");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabel("Wallet Details");
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             runtimeFragment = new Fragment();
@@ -809,16 +810,15 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             //Activity 3
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY);
-            runtimeActivity.setColor("#FFFFFF");
+            runtimeActivity.setColor("#B46A54");
             runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
             runtimeSubApp.addActivity(runtimeActivity);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#C4C4C4");
+            statusBar.setColor("#B4573C");
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setColor("#000000");
             runtimeTitleBar.setLabel("Wallet Store more detail");
             runtimeActivity.setTitleBar(runtimeTitleBar);
 

@@ -1,8 +1,6 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -19,9 +17,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorker;
@@ -29,6 +27,7 @@ import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorkerCallb
 import com.bitdubai.sub_app.wallet_store.common.workers.UninstallWalletWorker;
 import com.bitdubai.sub_app.wallet_store.common.workers.UninstallWalletWorkerCallback;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
+import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
 import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
@@ -101,8 +100,6 @@ public class DetailsActivityFragment extends FermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wallet_store_fragment_details_activity, container, false);
-        ActionBar actionBar = getActivity().getActionBar();
-        actionBar.setHomeButtonEnabled(true);
 
         developerName = (FermatTextView) rootView.findViewById(R.id.wallet_developer_name);
         shortDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
@@ -120,11 +117,6 @@ public class DetailsActivityFragment extends FermatFragment {
         setupDataInViews();
 
         return rootView;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     private void setupDataInViews() {
