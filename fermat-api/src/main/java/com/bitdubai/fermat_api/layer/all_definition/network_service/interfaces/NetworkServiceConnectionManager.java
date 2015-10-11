@@ -37,10 +37,11 @@ public interface NetworkServiceConnectionManager {
      *
      * All three attribute are required
      *
-     * @param applicantNetworkService the PlatformComponentProfile of the network service who made the request
-     * @param discoveryQueryParameters to make the search
+     * @param identityPublicKeyRequestingParticipant the identity public key of the participant of the vpn
+     * @param applicantNetworkService the profile of the network service which it makes the request
+     * @param discoveryQueryParameters have the other type component information to find the corresponding
      */
-    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters);
+    public void connectTo(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters);
 
 
     /**

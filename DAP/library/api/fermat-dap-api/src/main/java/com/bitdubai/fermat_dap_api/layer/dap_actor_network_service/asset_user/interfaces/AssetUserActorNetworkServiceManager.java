@@ -7,13 +7,15 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.ex
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
+import java.util.List;
+
 /**
  * Created by root on 07/10/15.
  */
 public interface AssetUserActorNetworkServiceManager {
 
 
-    public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
+    public void registerActorAssetUser(List<ActorAssetUser> actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
 
     public void requestListActorAssetUserRegistered()  throws CantRequestListActorAssetUserRegisteredException;
 
