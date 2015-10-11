@@ -51,8 +51,8 @@ import java.util.Observable;
 public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
-     * Represent the sleep time for the read or send (2000 milliseconds)
-     */
+   * Represent the sleep time for the read or send (2000 milliseconds)
+   */
     private static final long SLEEP_TIME = 2000;
 
     /**
@@ -192,14 +192,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+            //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -210,7 +210,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      * Read the next message in the queue
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
-
 
                     /*
                      * Validate the message signature
@@ -267,53 +266,63 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
+            try {
+
+                Map<String, Object> filters = new HashMap<>();
+                filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+                filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
 
                     /*
                      * Read all pending message from database
                      */
-            List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
+                List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
                     /*
                      * For each message
                      */
-            for (FermatMessage message: messages){
+                for (FermatMessage message: messages){
 
 
-                if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
+                    if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
 
-                        /*
-                         * Encrypt the content of the message whit the remote network service public key
-                         */
-                    ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
+                            /*
+                             * Encrypt the content of the message whit the remote network service public key
+                             */
+                        ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
 
-                        /*
-                         * Sing the message
-                         */
-                    String signature = AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
-                    ((FermatMessageCommunication) message).setSignature(signature);
-
-                        /*
-                         * Send the message
-                         */
-                    communicationsVPNConnection.sendMessage(message);
-
-                        /*
-                         * Change the message and update in the data base
-                         */
-                    ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
-                    outgoingMessageDao.update(message);
+                            /*
+                             * Sing the message
+                             */
+                        String signature = AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+                        ((FermatMessageCommunication) message).setSignature(signature);
 
 
-                        /*
-                         * Put the message on a event and fire new event
-                         */
-                    FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                    fermatEvent.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
-                    ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
-                    eventManager.raiseEvent(fermatEvent);
+                            /*
+                             * Send the message
+                             */
+                        communicationsVPNConnection.sendMessage(message);
+
+                            /*
+                             * Change the message and update in the data base
+                             */
+
+                        ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
+                        outgoingMessageDao.update(message);
+
+
+                            /*
+                             * Put the message on a event and fire new event
+                             */
+                        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+                        fermatEvent.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
+                        ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
+                        eventManager.raiseEvent(fermatEvent);
+                    }
                 }
+
+            } catch (CantUpdateRecordDataBaseException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
+            } catch (CantReadRecordDataBaseException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
             }
 
             //Sleep for a time
@@ -321,12 +330,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
-        } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
         }
 
     }
-
 }

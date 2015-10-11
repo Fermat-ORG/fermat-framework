@@ -214,6 +214,9 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
     private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
 
+    private ActorAssetUser actorAssetUserToRegisterLocal;
+
+
     /**
      * Constructor
      */
@@ -568,6 +571,8 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
         if(this.isRegister()){
 
+            this.actorAssetUserToRegisterLocal=actorAssetUserToRegister;
+
 
             CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
@@ -670,14 +675,14 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             if (communicationNetworkServiceLocal != null) {
 
                 //save into the database
-                communicationNetworkServiceLocal.sendMessage(msjContent, identity);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),msjContent);
 
 
             }else{
 
                 OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
 
-                FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(identity,//Sender
+                FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(identity.getPublicKey(),//Sender
                         platformComponentProfileAssetUser, //Receiver
                         msjContent,                //Message Content
                         FermatMessageContentType.TEXT);//Type
@@ -708,8 +713,16 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                                 platformComponentProfileAssetUser.getNetworkServiceType());
 
 
+                PlatformComponentProfile platformComponentProfileAssetUserlocal =  communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegisterLocal.getPublicKey(),
+                        (actorAssetUserToRegisterLocal.getName()),
+                        (actorAssetUserToRegisterLocal.getName()),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR,
+                        actorAssetUserToRegisterLocal.getProfileImage().toString());
 
-                communicationNetworkServiceConnectionManager.connectTo(platformComponentProfileAssetUser,discoveryQueryParametersAssetUser);
+
+
+                communicationNetworkServiceConnectionManager.connectTo(platformComponentProfileAssetUserlocal, platformComponentProfileAssetUserlocal, platformComponentProfileAssetUser);
 
 
 

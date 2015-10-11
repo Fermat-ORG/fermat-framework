@@ -24,8 +24,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
 
     /*
-    * Represent the sleep time for the read or send (5000 milliseconds)
-    */
+     * Represent the sleep time for the read or send (5000 milliseconds)
+     */
     private static final long SLEEP_TIME = 5000;
 
     /**

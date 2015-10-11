@@ -44,7 +44,9 @@ public class MockActorAssetUser implements ActorAssetUser {
     }
 
     @Override
-    public ConnectionState getContactState() {
+    public ConnectionState getConnectionState() {
         return ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
-    } //quitar tambien
+    }
+
+
 }
