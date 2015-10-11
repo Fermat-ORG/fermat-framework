@@ -1697,7 +1697,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeMenuItem.setIcon("contacts");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
@@ -1807,7 +1806,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeMenuItem.setIcon("contacts");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
@@ -1904,7 +1902,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeMenuItem.setIcon("contacts");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
@@ -1973,7 +1970,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeMenuItem.setLabel("Contacts");
         runtimeMenuItem.setIcon("contacts");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();

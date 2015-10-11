@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -154,7 +155,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                         //guardo el contacto
                         contactPositionItem.put(position, walletContact);
 
-                        if (walletContact.getProfilePicture() != null) {
+                        if (walletContact.getProfilePicture().length>0) {
                             //holder.imageView.setImageBitmap(ImagesUtils.getRoundedShape(BitmapFactory.decodeByteArray(walletContact.getProfilePicture(),0,walletContact.getProfilePicture().length)));
                             holder.imageView.setImageBitmap(MemoryUtils.decodeSampledBitmapFromByteArray(walletContact.getProfilePicture(), 60, 60));
                         } else {
@@ -223,7 +224,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     @Override
     public void configurePinnedHeader(View v, int position) {
         // set text in pinned header
-        TextView header = (TextView) v;
+        LinearLayout linearLayout =(LinearLayout)v;
+        TextView header = (TextView) linearLayout.getChildAt(0);
         mCurrentSectionPosition = getCurrentSectionPosition(position);
         header.setText(mListItems.get(mCurrentSectionPosition).toString());
     }
