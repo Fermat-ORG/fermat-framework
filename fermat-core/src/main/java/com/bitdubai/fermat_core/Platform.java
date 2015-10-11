@@ -719,7 +719,7 @@ public class Platform implements Serializable {
             injectLayerReferences(cryptoTransmissionNetworkService);
             injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
 
-            if (true) {
+            if (false) {
                 /*
                  * Plugin Template Network Service
                  * -----------------------------
@@ -1026,7 +1026,7 @@ public class Platform implements Serializable {
             Plugin bitcoinCryptoVault = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER)).getmBitcoin();
             injectPluginReferencesAndStart(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
 
-            if (true) {
+            if (false) {
                 /*
                  * Plugin Assets Crypto Vault
                  * ----------------------------------
@@ -1179,7 +1179,7 @@ public class Platform implements Serializable {
             //  Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
             //  injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
 
-            if (true) {
+            if (false) {
                  /*
                  * Plugin Intra User NetWorkService
                  * -----------------------------
@@ -1242,7 +1242,7 @@ public class Platform implements Serializable {
             Plugin moneyRequest = ((RequestServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_REQUEST_LAYER)).getMoney();
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
-            if (true) {
+            if (false) {
                /*
                 * Plugin Asset User Actor Network Service
                 * ----------------------------------------

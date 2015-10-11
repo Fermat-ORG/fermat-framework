@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/elevator_pitch"
+            android:id="@+id/wallet_store_elevator_pitch"
             style="@style/MoreInfoActivityText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

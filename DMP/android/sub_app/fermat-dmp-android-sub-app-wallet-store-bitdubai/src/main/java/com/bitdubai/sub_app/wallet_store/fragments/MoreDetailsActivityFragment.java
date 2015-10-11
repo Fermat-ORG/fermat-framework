@@ -80,7 +80,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
             }
         }
 
-        elevatorPitch = (FermatTextView) layout.findViewById(R.id.elevator_pitch);
+        elevatorPitch = (FermatTextView) layout.findViewById(R.id.wallet_store_elevator_pitch);
         description = (FermatTextView) layout.findViewById(R.id.description);
         features = (FermatTextView) layout.findViewById(R.id.features);
         whatsNewDescription = (FermatTextView) layout.findViewById(R.id.whats_new_description);

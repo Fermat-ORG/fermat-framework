@@ -28,9 +28,9 @@ public enum Activities {
     CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY("CIUCRA"),
 
     //Wallet store
-    CWP_WALLET_STORE_MAIN_ACTIVITY("CWSMA"),
-    CWP_WALLET_STORE_DETAIL_ACTIVITY("CWSDA"),
-    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWSMDA"),
+    CWP_WALLET_STORE_MAIN_ACTIVITY("CWPWSMA"),
+    CWP_WALLET_STORE_DETAIL_ACTIVITY("CWPWSDA"),
+    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWPWSMDA"),
 
 
     CWP_WALLET_ADULTS_ALL_MAIN("CWAAM"),
@@ -128,12 +128,12 @@ public enum Activities {
                 return Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN;
             case "CWRWBWBV1T":
                 return Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS;
-            case "CWSMA":
+            case "CWPWSMA":
                 return Activities.CWP_WALLET_STORE_MAIN_ACTIVITY;
-            case "CWSDA":
-                return CWP_WALLET_STORE_DETAIL_ACTIVITY;
-            case "CWSMDA":
-                return CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY;
+            case "CWPWSDA":
+                return Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY;
+            case "CWPWSMDA":
+                return Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY;
             case "CWAAM":
                 return Activities.CWP_WALLET_ADULTS_ALL_MAIN;
             case "CWBAM":

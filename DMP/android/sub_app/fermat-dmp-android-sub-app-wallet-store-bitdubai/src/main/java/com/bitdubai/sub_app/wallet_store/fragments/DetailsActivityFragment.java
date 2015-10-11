@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
 
+import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -98,6 +101,8 @@ public class DetailsActivityFragment extends FermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wallet_store_fragment_details_activity, container, false);
+        ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setHomeButtonEnabled(true);
 
         developerName = (FermatTextView) rootView.findViewById(R.id.wallet_developer_name);
         shortDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
@@ -117,6 +122,11 @@ public class DetailsActivityFragment extends FermatFragment {
         return rootView;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
     private void setupDataInViews() {
         final ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
         final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
@@ -134,17 +144,7 @@ public class DetailsActivityFragment extends FermatFragment {
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                final MoreDetailsActivityFragment fragment = MoreDetailsActivityFragment.newInstance();
-                fragment.setSubAppsSession(subAppsSession);
-                fragment.setSubAppSettings(subAppSettings);
-                fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
-
-                final FragmentTransaction FT = getActivity().getFragmentManager().beginTransaction();
-                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                FT.replace(R.id.activity_container, fragment);
-                FT.addToBackStack(null);
-                FT.commit();
+                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode());
             }
         });
 
