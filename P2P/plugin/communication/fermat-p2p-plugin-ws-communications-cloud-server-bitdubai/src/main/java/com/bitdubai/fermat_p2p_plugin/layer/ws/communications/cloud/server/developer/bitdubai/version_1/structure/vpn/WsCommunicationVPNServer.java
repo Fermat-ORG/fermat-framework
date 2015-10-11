@@ -180,7 +180,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         Gson gson = new Gson();
         JsonObject packetContent = new JsonObject();
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
-        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_VPN,  destinationPlatformComponentProfile.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN,  destinationPlatformComponentProfile.toJson());
 
 
         /*

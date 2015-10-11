@@ -1253,10 +1253,10 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(assetUserActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE);
 
 
-               /*
-                * Plugin Asset Transmission Network Service
-                * ----------------------------------------
-                */
+           /*
+            * Plugin Asset Transmission Network Service
+            * ----------------------------------------
+            */
 
                 Plugin assetTransmissionNetworkService = ((DAPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_NETWORK_SERVICE_LAYER)).getAssetTransmissionNetworService();
                 injectLayerReferences(assetTransmissionNetworkService);
@@ -1311,10 +1311,10 @@ public class Platform implements Serializable {
                 Plugin redeemPointActorLayer = ((DAPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER)).getRedeemPointActor();
                 injectPluginReferencesAndStart(redeemPointActorLayer, Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR);
 
-               /*
-                * Plugin Asset Issuer Identity Layer
-                * -------------------------
-                */
+           /*
+            * Plugin Asset Issuer Identity Layer
+            * -------------------------
+            */
                 Plugin assetIssuerIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getAssetIssuerIdentity();
                 injectPluginReferencesAndStart(assetIssuerIdentityLayer, Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
 
