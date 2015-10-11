@@ -9,6 +9,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
-    DigitalAssetTransmissionVault digitalAssetTransmissionVault;
+    //DigitalAssetDistributionVault digitalAssetDistributionVault;
 
     public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager,
                                                ErrorManager errorManager,
@@ -39,12 +40,15 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.digitalAssetDistributor=new DigitalAssetDistributor(assetVaultManager,
                 errorManager,
                 pluginId,
-                pluginDatabaseSystem,
                 pluginFileSystem);
     }
 
-    public void setDigitalAssetTransmissionVault(DigitalAssetTransmissionVault digitalAssetTransmissionVault) throws CantSetObjectException{
-        this.digitalAssetDistributor.setDigitalAssetTransmissionVault(digitalAssetTransmissionVault);
+    public void setAssetDistributionDatabaseDao(AssetDistributionDao assetDistributionDatabaseDao) throws CantSetObjectException {
+        this.digitalAssetDistributor.setAssetDistributionDao(assetDistributionDatabaseDao);
+    }
+
+    public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException{
+        this.digitalAssetDistributor.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{
