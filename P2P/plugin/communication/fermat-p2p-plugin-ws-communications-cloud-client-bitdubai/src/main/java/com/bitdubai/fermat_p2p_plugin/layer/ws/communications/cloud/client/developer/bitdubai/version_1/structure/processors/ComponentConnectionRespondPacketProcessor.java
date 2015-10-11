@@ -67,7 +67,6 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
-
             /*
              * TEMPORAL:
              * Reconstruct the uri, for the configuration of the AWS. The internal ip is different to the public ip,

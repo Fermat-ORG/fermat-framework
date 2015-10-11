@@ -324,29 +324,9 @@ public class CryptoTransmissionAgent {
 
                                 if (platformComponentProfile != null) {
 
-
-                                    DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
-                                            getCommunicationsCloudClientConnection().
-                                            constructDiscoveryQueryParamsFactory(
-                                                    PlatformComponentType.NETWORK_SERVICE,//applicant = who made the request
-                                                    NetworkServiceType.CRYPTO_TRANSMISSION,
-                                                    null,                     // alias
-                                                    "actor_prueba_robert_public_key", // identityPublicKey
-                                                    null,                     // location
-                                                    null,                     // distance
-                                                    null,                     // name
-                                                    null,                     // extraData
-                                                    null,                     // offset
-                                                    null,                     // max
-                                                    PlatformComponentType.ACTOR,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                    NetworkServiceType.UNDEFINED); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
-
-                                    //TODO: poner tipo de actor, PlatformComponenType.ActorTtype
-
-
-
-                                    communicationNetworkServiceConnectionManager.connectTo(cryptoTransmissionMetadata.getSenderPublicKey(), platformComponentProfile, discoveryQueryParameters);
-
+                                    PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory("actor_prueba_juan_public_key", NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR);
+                                    PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory("actor_prueba_robert_public_key", NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR);
+                                    communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
 
                                     // pass the metada to a pool wainting for the response of the other peer or server failure
                                     poolConnectionsWaitingForResponse.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata);
