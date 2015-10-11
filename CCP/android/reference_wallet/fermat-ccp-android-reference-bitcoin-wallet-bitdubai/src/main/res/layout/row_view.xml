@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0.6"
+        android:id="@+id/imageView_contact"
         android:src="@drawable/person1"/>
 
     <TextView
