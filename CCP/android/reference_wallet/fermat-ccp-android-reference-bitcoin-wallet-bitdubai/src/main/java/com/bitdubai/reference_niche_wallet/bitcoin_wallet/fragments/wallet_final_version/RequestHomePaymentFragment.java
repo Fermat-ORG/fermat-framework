@@ -46,10 +46,13 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
     private List<PaymentRequest> lstPaymentRequest;
     private PaymentRequest selectedItem;
 
+    String walletPublicKey = "reference_wallet";
     /**
      * Executor Service
      */
     private ExecutorService executor;
+
+    private int offset = 0;
 
 
     /**
@@ -127,7 +130,8 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
         List<PaymentRequest> lstPaymentRequest  = null;
 
         try {
-            lstPaymentRequest = cryptoWallet.listPaymentRequestDatOrder();
+            lstPaymentRequest = cryptoWallet.listPaymentRequestDateOrder(walletPublicKey,10,0);
+            offset = lstPaymentRequest.size();
 
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,

@@ -670,8 +670,15 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see NetworkService#handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile, PlatformComponentProfile)
+     */
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
-
+        System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleFailureComponentRegistrationNotificationEvent");
+    }
 
     /**
      * (non-Javadoc)
@@ -699,26 +706,10 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
 
-            DiscoveryQueryParameters discoveryQueryParametersT = constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(),      //PlatformComponentType you want to find
-                                                                                                      platformComponentProfile.getNetworkServiceType(),         //NetworkServiceType you want to find
-                                                                                                      null,                                                     // alias
-                                                                                                      remoteNetworkServiceToConnect.getIdentityPublicKey(),     // identityPublicKey
-                                                                                                      null,                                                     // location
-                                                                                                      null,                                                     // distance
-                                                                                                      null,                                                     // name
-                                                                                                      null,                                                     // extraData
-                                                                                                      null,                                                     // offset
-                                                                                                      null,                                                     // max
-                                                                                                      remoteNetworkServiceToConnect.getPlatformComponentType(), // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey (only apply identityPublicKey to filter)
-                                                                                                      remoteNetworkServiceToConnect.getNetworkServiceType());   // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey (only apply identityPublicKey to filter)
-
-
-
-
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, discoveryQueryParametersT);
+            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, platformComponentProfile, remoteNetworkServiceToConnect);
 
         }
 
@@ -726,16 +717,16 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile)
+     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile, PlatformComponentProfile)
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
 
         System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
         /*
          * Tell the manager to handler the new connection stablished
          */
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(applicantComponentProfile, remoteComponentProfile);
 
 
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
@@ -757,7 +748,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Send a message using the local representation
              */
-            communicationNetworkServiceLocal.sendMessage(messageContent, identity);
+            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
 
         }
 

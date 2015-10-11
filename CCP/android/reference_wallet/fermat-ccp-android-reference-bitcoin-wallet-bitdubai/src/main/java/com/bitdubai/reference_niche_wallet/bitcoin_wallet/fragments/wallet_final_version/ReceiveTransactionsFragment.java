@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionTy
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
@@ -63,6 +65,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -70,7 +73,7 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 
 /**
- * Created by mati on 2015.09.28..
+ * Created by Matias Furszyfer on 2015.09.28..
  */
 public class ReceiveTransactionsFragment extends FermatWalletListFragment<CryptoWalletTransaction> implements FermatListItemListeners<CryptoWalletTransaction>, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler {
 
@@ -99,7 +102,9 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     /**
      * DATA
      */
-    private List<CryptoWalletTransaction> lstCryptoWalletTransactions;
+    private List<CryptoWalletTransaction> lstCryptoWalletTransactionsAvailable;
+    private List<CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
+
     private CryptoWalletTransaction selectedItem;
 
     /**
@@ -108,7 +113,9 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     private ExecutorService executor;
 
     private int MAX_TRANSACTIONS = 20;
-    private int offset = 0;
+
+    private int available_offset = 0;
+    private int book_offset = 0;
 
     View rootView;
     private LinearLayout linear_layout_receive_form;
@@ -125,9 +132,12 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
     private Bitmap contactImageBitmap;
     private Button btn_give_address;
+    private LinearLayout empty;
 
 
-    private boolean contactSelectedFlag;
+    private boolean contactSelectedFlag=false;
+
+    private AtomicBoolean start;
 
     /**
      * Create a new instance of this fragment
@@ -146,7 +156,10 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
         referenceWalletSession = (ReferenceWalletSession)walletSession;
 
-        lstCryptoWalletTransactions = new ArrayList<CryptoWalletTransaction>();
+        lstCryptoWalletTransactionsBook = new ArrayList<CryptoWalletTransaction>();
+        lstCryptoWalletTransactionsAvailable = new ArrayList<CryptoWalletTransaction>();
+
+        start= new AtomicBoolean(false);
 
         try {
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
@@ -154,7 +167,11 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
             balanceAvailable = loadBalance(BalanceType.AVAILABLE);
             bookBalance = loadBalance(BalanceType.BOOK);
 
-            lstCryptoWalletTransactions.addAll(getMoreDataAsync(FermatRefreshTypes.NEW, 0)); // get init data
+            updateTransactions();
+
+
+
+            //lstCryptoWalletTransactions.addAll(getMoreDataAsync(FermatRefreshTypes.NEW, 0)); // get init data
         } catch (Exception ex) {
             ex.printStackTrace();
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -178,6 +195,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
             rootView = super.onCreateView(inflater, container, savedInstanceState);
 //
+            start.set(true);
 
             setUp(inflater);
             //container_header_balance.invalidate();
@@ -235,19 +253,25 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                        if (contactSelectedFlag==true){
-                            walletContact = null;
-                        }
+                    if (contactSelectedFlag == true) {
+                        walletContact = null;
+                        contactSelectedFlag = false;
+                    }
                 }
             });
 
 
-            Button btn_share = (Button) rootView.findViewById(R.id.btn_share);
-            btn_share.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    shareAddress();
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.imageView_new_contact);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    walletContact = new WalletContact();
+                    walletContact.setName(autocompleteContacts.getText().toString());
+                    registerForContextMenu(btn_give_address);
+                    getActivity().openContextMenu(btn_give_address);
                 }
             });
+
 
 
             btn_give_address = (Button) rootView.findViewById(R.id.btn_address);
@@ -256,39 +280,51 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                 public void onClick(View view) {
                     if (walletContact != null) {
                         try {
-                            CryptoWalletWalletContact walletContactDatabase =  cryptoWallet.findWalletContactById(walletContact.contactId);
+                            CryptoWalletWalletContact walletContactDatabase = cryptoWallet.findWalletContactById(walletContact.contactId);
 
-                        if(walletContact.actorPublicKey.equals(walletContactDatabase.getActorPublicKey())){
-                            ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(), cryptoWallet, referenceWalletSession.getErrorManager(), walletContact, user_id, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                            receiveFragmentDialog.show();
-                        }else{
-                            Toast.makeText(getActivity(),"no se que hacer",Toast.LENGTH_SHORT).show();
-//                            registerForContextMenu(btn_give_address);
-//                            getActivity().openContextMenu(btn_give_address);
-                        }
+                            if (walletContact.actorPublicKey.equals(walletContactDatabase.getActorPublicKey())) {
+                                ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(), cryptoWallet, referenceWalletSession.getErrorManager(), walletContact, user_id, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+                                receiveFragmentDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialogInterface) {
+                                        boolean isShow = linear_layout_receive_form.isShown();
+                                        //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
+                                        if (isShow) {
+                                            Fx.slide_up(getActivity(), linear_layout_receive_form);
+                                            linear_layout_receive_form.setVisibility(View.GONE);
+                                        }
+                                    }
+                                });
+                                receiveFragmentDialog.show();
+                            } else {
+                                Toast.makeText(getActivity(), "no se que hacer", Toast.LENGTH_SHORT).show();
+                                //                            registerForContextMenu(btn_give_address);
+                                //                            getActivity().openContextMenu(btn_give_address);
+                            }
                         } catch (CantFindWalletContactException e) {
                             e.printStackTrace();
                         } catch (WalletContactNotFoundException e) {
                             e.printStackTrace();
                         }
-//                        walletContact.contactId
-//                        walletContact.
-
-
-
+                        //                        walletContact.contactId
+                        //                        walletContact.
                     } else {
-                        walletContact = new WalletContact();
-                        walletContact.setName(autocompleteContacts.getText().toString());
-                        registerForContextMenu(btn_give_address);
-                        getActivity().openContextMenu(btn_give_address);
-                        //Toast.makeText(getActivity(), "Acá deberia salir para agregar contacto", Toast.LENGTH_SHORT).show();
+                                                                    //                        walletContact = new WalletContact();
+                                                                //                        walletContact.setName(autocompleteContacts.getText().toString());
+//                        registerForContextMenu(btn_give_address);
+//                        getActivity().openContextMenu(btn_give_address);
+                        Toast.makeText(getActivity(), "Sorry, action not posible\nadd contact first", Toast.LENGTH_SHORT).show();
                     }
 
                 }
             });
 
-            if (lstCryptoWalletTransactions.isEmpty()) {
-                ((LinearLayout) rootView.findViewById(R.id.empty)).setVisibility(View.VISIBLE);
+            empty=(LinearLayout) rootView.findViewById(R.id.empty);
+
+            if (lstCryptoWalletTransactionsBook.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.BOOK)) {
+                empty.setVisibility(View.VISIBLE);
+            }else if (lstCryptoWalletTransactionsAvailable.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)){
+                empty.setVisibility(View.VISIBLE);
             }
 
 
@@ -385,7 +421,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new TransactionNewAdapter(getActivity(), lstCryptoWalletTransactions,cryptoWallet,referenceWalletSession);
+            adapter = new TransactionNewAdapter(getActivity(), BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE) ? lstCryptoWalletTransactionsAvailable : lstCryptoWalletTransactionsBook,cryptoWallet,referenceWalletSession);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -401,25 +437,24 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
     @Override
     public List<CryptoWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<CryptoWalletTransaction> lstTransactions  = new ArrayList<CryptoWalletTransaction>();
+//        List<CryptoWalletTransaction> lstTransactions  = new ArrayList<CryptoWalletTransaction>();
+//
+//
+//        try {
+//            lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
+//            offset+=lstTransactions.size();
+//        }
+//        catch (Exception e) {
+//            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+//                    UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            e.printStackTrace();
+//            // data = RequestPaymentListItem.getTestData(getResources());
+//        }
 
-        try {
-            lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
-            offset+=lstTransactions.size();
-        }
-        catch (Exception e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                    UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            e.printStackTrace();
-            // data = RequestPaymentListItem.getTestData(getResources());
-        }
-        /*CryptoWalletTransactionsTest cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
-        lstTransactions.add(cryptoWalletTransactionsTest);
-         cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
-        lstTransactions.add(cryptoWalletTransactionsTest);
-         cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
-        lstTransactions.add(cryptoWalletTransactionsTest);*/
-        return lstTransactions;
+        updateTransactions();
+
+
+        return null;
     }
 
     @Override
@@ -439,17 +474,58 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
     }
 
+    private void updateTransactions(){
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+
+                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, available_offset));
+
+                    available_offset = lstCryptoWalletTransactionsAvailable.size();
+
+                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, book_offset));
+
+                    book_offset = lstCryptoWalletTransactionsBook.size();
+
+
+
+                } catch (CantListTransactionsException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+
+        thread.start();
+    }
 
     @Override
     public void onPostExecute(Object... result) {
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            if (result != null && result.length > 0) {
-                lstCryptoWalletTransactions.addAll((ArrayList) result[0]);
+            //if (result != null && result.length > 0) {
+                //lstCryptoWalletTransactions.addAll((ArrayList) result[0]);
                 if (adapter != null)
-                    adapter.changeDataSet(lstCryptoWalletTransactions);
+                    adapter.changeDataSet(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE) ? lstCryptoWalletTransactionsAvailable : lstCryptoWalletTransactionsBook);
+
+
+            if(start.get()) {
+
+                if (!lstCryptoWalletTransactionsBook.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.BOOK)) {
+                    empty.setVisibility(View.GONE);
+                } else if (!lstCryptoWalletTransactionsAvailable.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)) {
+                    empty.setVisibility(View.GONE);
+                } else {
+                    empty.setVisibility(View.VISIBLE);
+                }
             }
+            //}
         }
     }
 
@@ -576,13 +652,6 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         );
     }
 
-    public void shareAddress() {
-        Intent intent2 = new Intent();
-        intent2.setAction(Intent.ACTION_SEND);
-        intent2.setType("text/plain");
-        intent2.putExtra(Intent.EXTRA_TEXT, user_address_wallet);
-        startActivity(Intent.createChooser(intent2, "Share via"));
-    }
 
 
     @Override

@@ -51,7 +51,6 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     private Map<String, UUID> walletAssetIssuer = new HashMap<>();
 
-    //TODO: Implementar clase DAO y los metodos de la interfaz manager y otros metodos.
     private AssetIssuerWalletDao assetIssuerWalletDao;
     private ErrorManager errorManager;
 

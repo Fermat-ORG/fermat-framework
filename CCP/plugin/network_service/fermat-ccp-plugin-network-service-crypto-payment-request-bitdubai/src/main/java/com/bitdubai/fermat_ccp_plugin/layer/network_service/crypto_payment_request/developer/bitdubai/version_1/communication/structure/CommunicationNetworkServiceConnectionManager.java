@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Discov
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.IncomingMessageDao;
@@ -93,17 +94,17 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile, DiscoveryQueryParameters)
+     * @see NetworkServiceConnectionManager#connectTo(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) {
 
         try {
 
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-            communicationsClientConnection.requestDiscoveryVpnConnection(applicantNetworkService, discoveryQueryParameters);
+            communicationsClientConnection.requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
 
 
         } catch (Exception e) {
@@ -149,7 +150,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(NetworkServiceType.CRYPTO_PAYMENT_REQUEST, remoteComponentProfile);
 
             //Validate the connection
             if (communicationsVPNConnection != null &&

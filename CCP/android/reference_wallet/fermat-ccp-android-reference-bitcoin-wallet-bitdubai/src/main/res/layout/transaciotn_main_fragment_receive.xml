@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_tabs_diagonal_rotated"
+            android:background="@null"
             android:orientation="horizontal"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
@@ -25,14 +25,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp">
+                android:layout_height="wrap_content">
                 <ImageView
                     android:id="@+id/frame_tx_record"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
                     android:layout_gravity="center"
-                    android:background="@drawable/object_frame_3x1_filled"/>
+                    />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -65,6 +65,14 @@
                             android:gravity="center"
 
                             />
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:paddingTop="7dp"
+                            android:paddingRight="7dp"
+                            android:id="@+id/imageView_new_contact"
+                            android:src="@drawable/btn_send_adduser_normal"/>
 
 
                     </LinearLayout>
@@ -101,6 +109,7 @@
                             android:padding="3dp"
                             android:clickable="true"
                             android:text="Share"
+                            android:visibility="gone"
                             android:layout_weight="0.5"
 
                             />

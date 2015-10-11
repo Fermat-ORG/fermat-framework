@@ -300,7 +300,7 @@ public class CryptoPaymentRequestExecutorAgent {
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey);
 
             if(communicationNetworkServiceLocal != null)
-                communicationNetworkServiceLocal.sendMessage(jsonMessage, communicationNetworkServiceConnectionManager.getIdentity());
+                communicationNetworkServiceLocal.sendMessage(communicationNetworkServiceConnectionManager.getIdentity().getPublicKey(), jsonMessage);
         }
 
         private String buildJsonInformationMessage(CryptoPaymentRequest cpr) {

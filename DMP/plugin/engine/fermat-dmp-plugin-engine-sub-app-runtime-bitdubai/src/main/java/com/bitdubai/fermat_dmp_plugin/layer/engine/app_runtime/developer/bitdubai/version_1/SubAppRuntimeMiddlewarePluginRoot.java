@@ -39,6 +39,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
+import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppNavigationStructure;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -1019,14 +1020,14 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             statusBar.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("");
+            runtimeTitleBar.setLabel("World");
             runtimeTitleBar.setColor("#FF0B46F0");
             runtimeTitleBar.setIconName("world");
 
-            RuntimeFernatComboBox comboBox = new RuntimeFernatComboBox();
-            comboBox.addValue("Mati");
+            //RuntimeFernatComboBox comboBox = new RuntimeFernatComboBox();
+            //comboBox.addValue("Mati");
 
-            runtimeTitleBar.setComboBox(comboBox);
+            //runtimeTitleBar.setComboBox(comboBox);
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 //            runtimeTabStrip = new TabStrip();
@@ -1135,10 +1136,63 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             dapFactory.addActivity(runtimeActivity);
 
-            listSubApp.put(SubApps.DAP_ASSETS_FACTORY,dapFactory);
+            listSubApp.put(SubApps.DAP_ASSETS_FACTORY, dapFactory);
             /**
              * End of intra user sub app
              */
+
+            // Crypto Broker Identity
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CBP_CRYPTO_BROKER_IDENTITY);
+
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            TitleBar titleBar = new TitleBar();
+            titleBar.setLabel("Crypto Broker Identity");
+            titleBar.setColor("#FFFFFF");
+            titleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(titleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+            // activity 2
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2.getCode());
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            titleBar = new TitleBar();
+            titleBar.setLabel("Crypto Broker Identity");
+            titleBar.setColor("#FFFFFF");
+            titleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(titleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeFragment.setBack(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+
+            listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;

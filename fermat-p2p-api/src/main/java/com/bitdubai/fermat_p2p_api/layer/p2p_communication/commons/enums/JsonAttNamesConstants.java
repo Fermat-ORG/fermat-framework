@@ -76,13 +76,24 @@ public class JsonAttNamesConstants {
     public static final String RESULT_LIST = "rl";
 
     /**
-     * Represent the value of APPLICANT_VPN
+     * Represent the value of APPLICANT_PARTICIPANT_VPN
      */
-    public static final String APPLICANT_VPN = "a-vpn";
+    public static final String APPLICANT_PARTICIPANT_VPN = "a-vpn";
+
+    /**
+     * Represent the value of APPLICANT_PARTICIPANT_NS_VPN
+     */
+    public static final String APPLICANT_PARTICIPANT_NS_VPN = "a-ns-vpn";
 
     /**
      * Represent the value of DISCOVERY_PARAM_VPN
      */
     public static final String DISCOVERY_PARAM_VPN = "dp-vpn";
+
+    /**
+     * Represent the value of FAILURE_PARAM_VPN
+     */
+    public static final String FAILURE_VPN_MSJ = "f-vpn-m";
+
 
 }

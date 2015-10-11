@@ -17,8 +17,8 @@ public enum TransactionStatus {
     ISSUED_FAILED("FISSUED"),
     ISSUING("ISSUING"),
     RECEIVED("RX"),
-    SENDING_BITCOINS("TXBTC"),
-    SENDING_BITCOINS_FAILED("FTXBTC"),
+    SENDING_CRYPTO("TXBTC"),
+    SENDING_CRYPTO_FAILED("FTXBTC"),
     TO_DELIVER("TDEL");
 
     private String code;
@@ -52,9 +52,9 @@ public enum TransactionStatus {
             case "RX":
                 return TransactionStatus.RECEIVED;
             case "TXBTC":
-                return TransactionStatus.SENDING_BITCOINS;
+                return TransactionStatus.SENDING_CRYPTO;
             case "FTXBTC":
-                return TransactionStatus.SENDING_BITCOINS_FAILED;
+                return TransactionStatus.SENDING_CRYPTO_FAILED;
             case "TDEL":
                 return TransactionStatus.TO_DELIVER;
             default:

@@ -671,6 +671,11 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+    }
+
+    @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
@@ -702,7 +707,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
         System.out.println(" AssetTransmissionPluginRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
@@ -736,7 +741,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             /*
              * Send a message using the local representation
              */
-            communicationNetworkServiceLocal.sendMessage(messageContent, identity);
+            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
 
         }
 

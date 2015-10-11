@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -14,10 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionSummary;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.*;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
@@ -59,6 +57,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     private UUID pluginId;
 
+    //TODO: El error manager que esta en el constructor debe ser el de fermat-api
     public AssetUserWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -167,8 +166,14 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
-    public AssetUserWalletManager getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
-        return null;
+    public com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
+        try {
+            return new AssetUserWalletBalanceImpl(database);
+        } catch (Exception exception) {
+            //TODO: El error manager que esta en el constructor debe ser el de fermat-api, al corregirlo descomentar esta linea
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
     }
 
     @Override

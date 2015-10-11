@@ -1,10 +1,9 @@
-/*
+package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;/*
  * @#TemplateNetworkServiceConnectionManager.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -124,17 +123,17 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile, DiscoveryQueryParameters)
+     * @see NetworkServiceConnectionManager#connectTo(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) {
 
         try {
 
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-            communicationsClientConnection.requestDiscoveryVpnConnection(applicantNetworkService, discoveryQueryParameters);
+            communicationsClientConnection.requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
 
 
         } catch (Exception e) {
@@ -182,7 +181,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile.getNetworkServiceType(), remoteComponentProfile);
 
             //Validate the connection
             if (communicationsVPNConnection != null &&

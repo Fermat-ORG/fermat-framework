@@ -701,10 +701,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                     // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
-                    window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null));
+                    //window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
+                }catch (OutOfMemoryError outOfMemoryError){
+                    getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,new Exception());
+                    Toast.makeText(this,"out of memory exception",LENGTH_SHORT).show();
                 }
             }
         }

@@ -141,8 +141,8 @@ public class RedeemPointActorDao implements Serializable {
 
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointToAddPublicKey);
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME, redeemPointToAddName);
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, connectionState.getCode());
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey);
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey);
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, milliseconds);
 
@@ -189,7 +189,7 @@ public class RedeemPointActorDao implements Serializable {
 
             // 2) Find the Redeem Point , filter by keys.
             table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -201,7 +201,7 @@ public class RedeemPointActorDao implements Serializable {
 
             // 3) Get Redeem Point record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, connectionState.getCode());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME, connectionState.getCode());
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, milliseconds);
                 table.updateRecord(record);
             }
@@ -244,8 +244,8 @@ public class RedeemPointActorDao implements Serializable {
             }
 
             // 2) Find all Redeem Points.
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -257,7 +257,7 @@ public class RedeemPointActorDao implements Serializable {
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME),
                         getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME))));
+                        ConnectionState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME))));
             }
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
@@ -296,8 +296,8 @@ public class RedeemPointActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get Redeem Point identity list, table not found.", "Plugin Identity", "Cant get Redeem Point identity list, table not found.");
             }
             // 2) Find  Redeem Points by state.
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOGGED_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
@@ -310,7 +310,7 @@ public class RedeemPointActorDao implements Serializable {
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME),
                         getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATUS_COLUMN_NAME))));
+                        ConnectionState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME))));
             }
 
             database.closeDatabase();

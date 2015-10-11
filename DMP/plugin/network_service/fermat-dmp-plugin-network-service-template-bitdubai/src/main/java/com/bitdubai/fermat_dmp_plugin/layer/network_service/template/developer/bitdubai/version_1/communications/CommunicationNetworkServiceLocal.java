@@ -7,9 +7,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.TemplateNetworkServicePluginRoot;
@@ -85,13 +83,13 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceLocal#sendMessage(String, ECCKeyPair)
+     * @see NetworkServiceLocal#sendMessage(String, String)
      */
-    public void sendMessage(final String messageContent, final ECCKeyPair senderIdentity) {
+    public void sendMessage(final String senderIdentityPublicKey, final String messageContent) {
 
         try {
 
-            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentity,                //Sender
+            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
                                                                                                     remoteNetworkServiceProfile,   //Receiver
                                                                                                     messageContent,                //Message Content
                                                                                                     FermatMessageContentType.TEXT);//Type
@@ -137,6 +135,8 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         fermatEvent.setSource(TemplateNetworkServicePluginRoot.EVENT_SOURCE);
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         eventManager.raiseEvent(fermatEvent);
+
+        System.out.println("CommunicationNetworkServiceLocal - fired event = NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION");
 
     }
 
