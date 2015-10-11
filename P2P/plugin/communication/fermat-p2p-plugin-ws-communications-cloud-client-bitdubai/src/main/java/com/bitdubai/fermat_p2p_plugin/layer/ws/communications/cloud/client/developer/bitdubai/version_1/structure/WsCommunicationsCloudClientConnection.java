@@ -406,9 +406,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 //            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
 //        }
 
-        if (applicant.getNetworkServiceType() != applicant.getNetworkServiceType()){
-            throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");
-        }
+//        if (applicant.getNetworkServiceType() != applicant.getNetworkServiceType()){
+//            throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");
+//        }
 
         return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(applicant, remotePlatformComponentProfile);
     }

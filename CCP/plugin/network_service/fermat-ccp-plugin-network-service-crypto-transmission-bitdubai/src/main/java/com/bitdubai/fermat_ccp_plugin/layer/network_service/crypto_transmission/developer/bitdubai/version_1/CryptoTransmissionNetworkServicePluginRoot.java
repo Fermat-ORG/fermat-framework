@@ -842,7 +842,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         System.out.println(" CryptoTransmissionNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
 
-        if(cryptoTransmissionAgent.isConnection(remoteComponentProfile.getIdentityPublicKey())) {
+
+        //if(cryptoTransmissionAgent.isConnection(remoteComponentProfile.getIdentityPublicKey())) {
             //TODO: acá podría mandarle al otro network service un mensaje diciendo que que le voy a mandar la metadata
 
         /*
@@ -899,7 +900,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              */
             //templateNetworkServiceLocal.sendMessage(messageContent, identity);
 
-        }
+       // }
 
 //        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
