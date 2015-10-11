@@ -694,32 +694,33 @@ public class Platform implements Serializable {
             Plugin wsCommunicationCloudServer = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getWsCommunicationCloudServerPlugin();
             injectPluginReferencesAndStart(wsCommunicationCloudServer, Plugins.BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER);
 
-            /*
-             * Plugin Web Socket Communication Cloud Client
-             * -----------------------------
-             */
-            Plugin wsCommunicationCloudClient = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getWsCommunicationCloudClientPlugin();
-            injectPluginReferencesAndStart(wsCommunicationCloudClient, Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL);
+             /* flag temporal para desactivar plugins que tarde demasiado en inicializar,
+            y asi poder trabajar en otras partes del sistema de forma relativamente rapida */
+            boolean activatePlugin = true;
+            if (activatePlugin) {
+                /*
+                 * Plugin Web Socket Communication Cloud Client
+                 * -----------------------------
+                 */
+                Plugin wsCommunicationCloudClient = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getWsCommunicationCloudClientPlugin();
+                injectPluginReferencesAndStart(wsCommunicationCloudClient, Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL);
 
+                 /*
+                 * Plugin CCP Crypto Payment Request Network Service
+                 * -----------------------------
+                 */
+                Plugin cryptoPaymentRequestNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoPaymentRequestPlugin();
+                injectLayerReferences(cryptoPaymentRequestNetworkService);
+                injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
 
-             /*
-             * Plugin CCP Crypto Payment Request Network Service
-             * -----------------------------
-             */
-            Plugin cryptoPaymentRequestNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoPaymentRequestPlugin();
-            injectLayerReferences(cryptoPaymentRequestNetworkService);
-            injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
+                /*
+                 * Plugin CCP Crypto Trasmission Network Service
+                 * -----------------------------
+                 */
+                Plugin cryptoTransmissionNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoTransmissionPlugin();
+                injectLayerReferences(cryptoTransmissionNetworkService);
+                injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
 
-
-            /*
-             * Plugin CCP Crypto Trasmission Network Service
-             * -----------------------------
-             */
-            Plugin cryptoTransmissionNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoTransmissionPlugin();
-            injectLayerReferences(cryptoTransmissionNetworkService);
-            injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
-
-            if (false) {
                 /*
                  * Plugin Template Network Service
                  * -----------------------------
@@ -1026,7 +1027,7 @@ public class Platform implements Serializable {
             Plugin bitcoinCryptoVault = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER)).getmBitcoin();
             injectPluginReferencesAndStart(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
 
-            if (false) {
+            if (activatePlugin) {
                 /*
                  * Plugin Assets Crypto Vault
                  * ----------------------------------
@@ -1179,7 +1180,7 @@ public class Platform implements Serializable {
             //  Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
             //  injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
 
-            if (false) {
+            if (activatePlugin) {
                  /*
                  * Plugin Intra User NetWorkService
                  * -----------------------------
@@ -1242,7 +1243,7 @@ public class Platform implements Serializable {
             Plugin moneyRequest = ((RequestServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_REQUEST_LAYER)).getMoney();
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
-            if (false) {
+            if (activatePlugin) {
                /*
                 * Plugin Asset User Actor Network Service
                 * ----------------------------------------

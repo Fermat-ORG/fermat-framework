@@ -236,7 +236,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             } else {
                 // set Desktop current activity
-                Activity activity = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
+                activity = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
                 if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
                     resetThisActivity();
                     //getSubAppRuntimeMiddleware().getHomeScreen();
