@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.develop
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -9,10 +10,8 @@ import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateE
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSetPhotoException;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUsersException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.DealsWithIntraUsersActor;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
+import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
@@ -25,13 +24,21 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantFind
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListPaymentRequestDateOrderException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
+import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListSentPaymentRequestException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
 
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsSearch;
@@ -68,6 +75,17 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPayment;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.DealsWithOutgoingIntraActor;
+import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichTransactionException;
@@ -85,7 +103,10 @@ import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.develope
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -99,7 +120,8 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithCCPIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithIntraUsersActor, DealsWithOutgoingExtraUser, DealsWithWalletContacts, DealsWithCryptoAddressBook {
+public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmissionNetworkService,CryptoWallet, DealsWithCCPIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithCCPIntraWalletUsers, DealsWithOutgoingExtraUser, DealsWithOutgoingIntraActor,DealsWithWalletContacts, DealsWithCryptoAddressBook, DealsWithCryptoPayment {
+
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -122,16 +144,17 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
     private ExtraUserManager extraUserManager;
 
     /**
-     * DealsWithIntraUsersActor Interface member variables.
+     * DealsWithCCPIntraWalletUsers Interface member variables.
      */
-    private ActorIntraUserManager intraUserManager;
+    private IntraWalletUserManager intraUserManager;
+
 
 
     /**
      * DealsWithCCPIntraWalletUser Interface member variables.
      */
 
-    private IntraWalletUserManager intraWalletUserManager;
+    private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager;
 
     /**
      * DealsWithOutgoingExtraUser Interface member variables.
@@ -149,12 +172,40 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
      */
     private CryptoAddressBookManager cryptoAddressBookManager;
 
+    /**
+     * DealsWithMoneyRequestNetworkService Interface member variable
+     */
+
+   private CryptoPaymentManager cryptoPaymentManager;
+
+    /**
+     * DealsWithCryptoPayment Interface member variable
+     */
+    private CryptoPaymentRegistry cryptoPaymentRegistry;
+
+    /**
+     * DealsWithOutgoingIntraActor Interface member variable
+     */
+
+    private OutgoingIntraActorManager outgoingIntraActorManager;
+
+    //testing purpose
+    private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
+
 
     public void initialize() throws CantInitializeCryptoWalletManagerException {
         try {
             walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
-        } catch (CantGetWalletContactRegistryException e){
+
+            cryptoPaymentRegistry =  cryptoPaymentManager.getCryptoPaymentRegistry();
+
+        } catch (CantGetWalletContactRegistryException e) {
             throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, e);
+        }
+        catch(CantGetCryptoPaymentRegistryException e)
+        {
+            throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, e,"","Error get crypto Payment Registry object");
+
         }  catch (Exception e){
             throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
@@ -224,13 +275,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
         try {
             List<CryptoWalletIntraUserActor> intraUserActorList = new ArrayList<>();
 
-            List<ActorIntraUser> intraUserList = intraUserManager.getAllIntraUsers(intraUserSelectedPublicKey, max, offset);
+            List<IntraWalletUser> intraUserList = intraUserManager.getAllIntraWalletUsers(intraUserSelectedPublicKey, max, offset);
 
-            for(ActorIntraUser intraUser : intraUserList)
+            for(IntraWalletUser intraUser : intraUserList)
                 intraUserActorList.add(enrichIntraUser(intraUser, walletPublicKey));
 
             return intraUserActorList;
-        } catch (CantGetIntraUsersException e) {
+        } catch (CantGetIntraWalletUsersException e) {
             throw new CantGetAllIntraUserConnectionsException(CantGetAllIntraUserConnectionsException.DEFAULT_MESSAGE, e, "", "Problem trying yo get actors from Intra-User Actor plugin.");
         } catch (CantEnrichIntraUserException e) {
             throw new CantGetAllIntraUserConnectionsException(CantGetAllIntraUserConnectionsException.DEFAULT_MESSAGE, e, "", "Problem trying to enrich Intra-Users.");
@@ -239,23 +290,23 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
         }
     }
 
-    private CryptoWalletIntraUserActor enrichIntraUser(ActorIntraUser actorIntraUser,
+    private CryptoWalletIntraUserActor enrichIntraUser(IntraWalletUser intraWalletUser,
                                                        String walletPublicKey) throws CantEnrichIntraUserException {
         try {
-            walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(actorIntraUser.getPublicKey(), walletPublicKey);
+            walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(intraWalletUser.getPublicKey(), walletPublicKey);
 
             return new CryptoWalletWalletModuleIntraUserActor(
-                    actorIntraUser.getName(),
+                    intraWalletUser.getName(),
                     true,
-                    actorIntraUser.getProfileImage(),
-                    actorIntraUser.getPublicKey()
+                    intraWalletUser.getProfileImage(),
+                    intraWalletUser.getPublicKey()
             );
         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
             return new CryptoWalletWalletModuleIntraUserActor(
-                    actorIntraUser.getName(),
+                    intraWalletUser.getName(),
                     false,
-                    actorIntraUser.getProfileImage(),
-                    actorIntraUser.getPublicKey()
+                    intraWalletUser.getProfileImage(),
+                    intraWalletUser.getPublicKey()
                     );
         } catch (CantGetWalletContactException e) {
             throw new CantEnrichIntraUserException(CantEnrichIntraUserException.DEFAULT_MESSAGE, e, "", "There was a problem trying to enrich the intra user record.");
@@ -623,70 +674,150 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType) throws CantSendCryptoException, InsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet) throws CantSendCryptoException, InsufficientFundsException {
         try {
-            outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
-        } catch (com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException e) {
+
+            switch (deliveredByActorType) {
+                case EXTRA_USER:
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
+
+                    break;
+                case INTRA_USER:
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet);
+
+                    break;
+            }
+
+        }
+        catch (com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException e) {
             throw new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE, e);
-        } catch (CantSendFundsException | CantGetTransactionManagerException e) {
+        }
+        catch(OutgoingIntraActorCantSendFundsExceptions| OutgoingIntraActorInsufficientFundsException ex){
+            throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, ex);
+
+        }
+        catch (CantSendFundsException | CantGetTransactionManagerException e) {
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, e);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
     @Override
-    public List<PaymentRequest> listSentPaymentRequest() {
-        List<PaymentRequest> lst =  new ArrayList<PaymentRequest>();
+    public List<PaymentRequest> listSentPaymentRequest(String walletPublicKey,int max,int offset) throws CantListSentPaymentRequestException {
+        try {
+            List<PaymentRequest> lst =  new ArrayList<PaymentRequest>();
+            CryptoWalletWalletContact cryptoWalletWalletContact = null;
 
-        CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+            //find received payment request
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, max, offset)) {
 
-        lst.add(cryptoWalletPaymentRequest);
+                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
+                if (walletContactRecord != null)
+                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
-        return lst;
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
+                lst.add(cryptoWalletPaymentRequest);
+            }
+
+
+            //TODO: Harcoder
+            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
+            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+
+            lst.add(cryptoWalletPaymentRequest);
+
+            return lst;
+        } catch (com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException e) {
+            throw new CantListSentPaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE,e);
+
+        } catch (Exception e) {
+                 throw new CantListSentPaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+
     }
 
     @Override
-    public List<PaymentRequest> listReceivedPaymentRequest() {
-        List<PaymentRequest> lst =  new ArrayList<>();
+    public List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,int max,int offset) throws CantListReceivePaymentRequestException {
 
-        CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+        try {
+            List<PaymentRequest> lst =  new ArrayList<>();
 
-        lst.add(cryptoWalletPaymentRequest);
+            CryptoWalletWalletContact cryptoWalletWalletContact = null;
 
-        return lst;
+            //find received payment request
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.RECEIVED,max,offset)) {
+
+                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
+                if (walletContactRecord != null)
+                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
+                lst.add(cryptoWalletPaymentRequest);
+            }
+
+            //TODO: Harcoder
+            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
+            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+
+            lst.add(cryptoWalletPaymentRequest);
+
+            return lst;
+        }
+        catch (com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException e)
+        {
+            throw new CantListReceivePaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, e);
+
+        } catch (Exception e) {
+            throw new CantListReceivePaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+
+
     }
 
     @Override
-    public List<PaymentRequest> listPaymentRequestDatOrder() {
-        List<PaymentRequest> lst =  new ArrayList<>();
-        CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
+    public List<PaymentRequest> listPaymentRequestDateOrder(String walletPublicKey,int max,int offset) throws CantListPaymentRequestDateOrderException {
+        try {
+                    //Request order by date desc
 
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
+            List<PaymentRequest> lst =  new ArrayList<>();
+
+            CryptoWalletWalletContact cryptoWalletWalletContact = null;
+
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequests(walletPublicKey, max,offset)) {
+
+                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
+                if (walletContactRecord != null)
+                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
+
+                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
+                lst.add(cryptoWalletPaymentRequest);
+            }
+            //TODO: Harcoder
+            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
+            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
+
+            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
+            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+            lst.add(cryptoWalletPaymentRequest);
 
 
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("3 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
+            return lst;
+        }
+        catch (com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException e)
+        {
+            throw new CantListPaymentRequestDateOrderException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, e);
 
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("3 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-        cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("4 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-        lst.add(cryptoWalletPaymentRequest);
-
-        return lst;
+        } catch (Exception e) {
+            throw new CantListPaymentRequestDateOrderException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
     }
 
     @Override
@@ -701,7 +832,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
 
             List<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new  ArrayList<CryptoWalletIntraUserIdentity>();
 
-            for (IntraWalletUser  intraWalletUser : this.intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
+            for (com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser intraWalletUser : this.intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
 
                 CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = new CryptoWalletWalletIntraUserIdentity(intraWalletUser.getPublicKey(),intraWalletUser.getAlias(),intraWalletUser.getProfileImage());
 
@@ -726,6 +857,16 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
 
     }
 
+    @Override
+    public void sendMetadataLikeChampion(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType) {
+        try {
+
+            cryptoTransmissionNetworkServiceManager.sendCrypto(UUID.randomUUID(), CryptoCurrency.BITCOIN, 10000, deliveredByActorPublicKey, "actor_prueba_robert_public_key", "hash", "Estoy haciendo un pago por molesto");
+
+        } catch (CouldNotTransmitCryptoException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     private String createActor(String actorName, Actors actorType, byte[] photo) throws CantCreateOrRegisterActorException {
@@ -786,8 +927,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
                     break;
                 case DEBIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType());
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType());
+                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
@@ -800,7 +941,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
             }
             return new CryptoWalletWalletModuleTransaction(bitcoinWalletTransaction, contactId, involvedActor);
         } catch (Exception e) {
-            throw new CantEnrichTransactionException(CantEnrichTransactionException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantEnrichTransactionException(CantEnrichTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
     }
 
@@ -812,13 +953,27 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
                     actor = extraUserManager.getActorByPublicKey(actorPublicKey);
                     return actor;
                 } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, null);
+                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Extra User on DataBase");
                 }
+            case INTRA_USER:
+                //try {
+                    //TODO verificar si  usa
+                  //  actor = intraUserManager.getActorByPublicKey(actorPublicKey);
+                   // return actor;
+//                } catch (CantGetIntraUserException | IntraUserNotFoundException e) {
+//                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");
+//                }
+
             default:
                 throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, null, null, null);
         }
     }
 
+    private  String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return format.format(date);
+    }
 
     /**
      * DealsWithBitcoinWallet Interface implementation.
@@ -853,8 +1008,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
     }
 
     @Override
-    public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager) {
-        this.intraUserManager = actorIntraUserManager;
+    public void setIntraWalletUserManager(IntraWalletUserManager intraWalletUserManager) {
+        this.intraUserManager = intraWalletUserManager;
     }
 
     /**
@@ -882,7 +1037,24 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, DealsWithC
     }
 
     @Override
-    public void setIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
+    public void setIntraUserManager(com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager) {
         this.intraWalletUserManager = intraWalletUserManager;
+    }
+
+
+    @Override
+    public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
+        this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
+    }
+
+
+    @Override
+    public void setCryptoPaymentManager(CryptoPaymentManager cryptoPaymentManager) {
+        this.cryptoPaymentManager = cryptoPaymentManager;
+    }
+
+    @Override
+    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
+        this.outgoingIntraActorManager = outgoingIntraActorManager;
     }
 }

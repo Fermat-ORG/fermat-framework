@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 /**
@@ -12,18 +12,27 @@ public class AssetUserActorRecord implements ActorAssetUser {
     private String publicKey;
     private byte[] profileImage ;
     private long registrationDate;
-    private ContactState contactState;
+    private ConnectionState connectionState;
 
     /**
      * Constructor
      */
-    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ContactState contactState){
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate){
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[])profileImage.clone();
+        this.profileImage = profileImage.clone();
         this.registrationDate = registrationDate;
-        this.contactState = contactState;
+        this.connectionState = ConnectionState.CONNECTED;
+    }
+
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState connectionState){
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.registrationDate = registrationDate;
+        this.connectionState = connectionState;
 
     }
 
@@ -74,7 +83,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * @return the contact state
      */
     @Override
-    public ContactState getContactState() {
-        return this.contactState;
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
     }
 }

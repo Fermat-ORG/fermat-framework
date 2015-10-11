@@ -94,6 +94,8 @@ import java.util.logging.Logger;
  */
 public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithErrors,DealsWithEvents,DealsWithLogger,DealsWithWalletResources,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletManagerManager {
 
+    String walletPublicKey = "reference_wallet";
+
     /**
      * DealsWithDeviceUser member variables
      */
@@ -400,21 +402,23 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
 
 
         // Harcoded para testear el circuito más arriba
-       InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(WalletCategory.REFERENCE_WALLET,
+        InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(
+
+                WalletCategory.REFERENCE_WALLET,
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
                 "reference_wallet_icon",
-                "Reference nich wallet",
-                "public_key",
+                "bitDubai bitcoin Wallet",
+                "reference_wallet",
                 "wallet_platform_identifier",
                 new Version(1,0,0),
                 WalletType.REFERENCE,
-                "300",
-                "1",
-                UUID.randomUUID(),
-                "Natalia",
+                "medium",
+                "1.0.0",
+                null,
+                "bitDubai",
                 ""
-                );
+        );
 
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
         lstInstalledWallet.add(installedWallet);

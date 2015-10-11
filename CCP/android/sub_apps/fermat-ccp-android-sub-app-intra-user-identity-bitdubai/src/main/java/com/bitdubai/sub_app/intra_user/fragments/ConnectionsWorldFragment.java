@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUser;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-
-import com.bitdubai.sub_app.intra_user.common.models.IntraUserConnectionListItem;
 
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user.util.CommonLogger;
@@ -36,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by natalia on 15/09/15.
+ * Created by Matias Furszyfer on 15/09/15.
  */
 public class ConnectionsWorldFragment  extends FermatFragment {
 
@@ -45,17 +40,22 @@ public class ConnectionsWorldFragment  extends FermatFragment {
      */
     private final int POPUP_MENU_WIDHT = 325;
 
-    int MAX = 5;
-    int OFFSET= 0;
+
     private static final String ARG_POSITION = "position";
-    private ArrayList<App> appList;
     /**
      * MANAGERS
      */
     private  static IntraUserModuleManager moduleManager;
     private  static ErrorManager errorManager;
 
+    private List<IntraUserInformation> lstIntraUserInformations;
+
+
     protected final String TAG = "Recycler Base";
+
+    private static final int MAX = 20;
+
+    private int offset = 0;
 
     /**
      * Create a new instance of this fragment
@@ -90,42 +90,36 @@ public class ConnectionsWorldFragment  extends FermatFragment {
         {
 
 
-        IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
-
-        intraUserSearch.setNameToSearch("n");
-
-        List<IntraUserInformation> intraUserInformationList = intraUserSearch.getResult();
+            IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
 
 
-            this.appList = new ArrayList<App>();
+            intraUserSearch.setNameToSearch("");
 
-            for (IntraUserInformation intraUserInformation : intraUserInformationList) {
-                App item = new App();
-                item.Names = intraUserInformation.getName();
-                this.appList.add(item);
+            lstIntraUserInformations = intraUserSearch.getResult();
 
+
+
+            //lstIntraUserInformations =  moduleManager.getSuggestionsToContact(MAX, offset);
+
+
+            Configuration config = getResources().getConfiguration();
+            if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                gridView.setNumColumns(5);
+            } else {
+                gridView.setNumColumns(3);
             }
 
-
-
-        Configuration config = getResources().getConfiguration();
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridView.setNumColumns(5);
-        } else {
-            gridView.setNumColumns(3);
-        }
-
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.intra_user_connection_word_filter, this.appList));
+            gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.intra_user_connection_word_filter, lstIntraUserInformations));
 
 
 
-        }
-        catch(Exception ex)
-        {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-        }
+            }
+            catch(Exception ex)
+            {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+            }
 
-        return gridView;
+            return gridView;
     }
 
 
@@ -134,27 +128,20 @@ public class ConnectionsWorldFragment  extends FermatFragment {
      */
 
 
-    public class App implements Serializable {
 
+    public class AppListAdapter extends ArrayAdapter<IntraUserInformation> {
 
-        private static final long serialVersionUID = -8730067026050196758L;
-
-        public String Names;
-
-    }
-
-    public class AppListAdapter extends ArrayAdapter<App> {
-
-        public AppListAdapter(Context context, int textViewResourceId, List<App> objects) {
+        public AppListAdapter(Context context, int textViewResourceId, List<IntraUserInformation> objects) {
             super(context, textViewResourceId, objects);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            App item = getItem(position);
+            IntraUserInformation item = getItem(position);
 
             ViewHolder holder;
+
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.intra_user_connection_word_list, parent, false);
@@ -168,51 +155,30 @@ public class ConnectionsWorldFragment  extends FermatFragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-
-            holder.name.setText(item.Names);
-
+            holder.name.setText(item.getName());
 
             try {
 
-                byte[] imageResource;
-                Bitmap bitmap;
-              /*  switch (position) {
+                switch (position){
                     case 0:
-                        imageResource = walletResourceManger.getImageResource("kid_3.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.mati_profile);
                         break;
                     case 1:
-                        imageResource = walletResourceManger.getImageResource("kid_1.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.luis_profile_picture);
                         break;
                     case 2:
-                        imageResource = walletResourceManger.getImageResource("kid_4.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.brant_profile_picture);
                         break;
                     case 3:
-                        imageResource = walletResourceManger.getImageResource("kid_5.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.louis_profile_picture);
                         break;
                     case 4:
-                        imageResource = walletResourceManger.getImageResource("kid_2.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                        holder.Photo.setImageResource(R.drawable.madaleine_profile_picture);
                         break;
-                    case 5:
-                        imageResource = walletResourceManger.getImageResource("kid_6.jpg");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
+                    default:
+                        holder.Photo.setImageResource(R.drawable.robert_profile_picture);
                         break;
-                    case 6:
-                        imageResource = walletResourceManger.getImageResource("kid_7.png");
-                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                        holder.Photo.setImageBitmap(bitmap);
-                        break;
-                }*/
+                }
 
 
             } catch (Exception ex) {

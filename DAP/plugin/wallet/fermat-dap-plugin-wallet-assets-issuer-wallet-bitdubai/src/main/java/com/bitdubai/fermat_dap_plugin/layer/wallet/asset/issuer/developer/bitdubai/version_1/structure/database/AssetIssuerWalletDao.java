@@ -106,8 +106,9 @@ public class AssetIssuerWalletDao {
      */
     public void addDebit(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterDebitException{
         try {
-            if (isTransactionInTable(assetIssuerWalletTransactionRecord.getIdTransaction(), TransactionType.CREDIT, balanceType))
-                throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
+            System.out.println("Agregando Debito-----------------------------------------------------------");
+            if (isTransactionInTable(assetIssuerWalletTransactionRecord.getIdTransaction(), TransactionType.DEBIT, balanceType))
+                throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? assetIssuerWalletTransactionRecord.getAmount() : 0L;
@@ -127,6 +128,7 @@ public class AssetIssuerWalletDao {
     public void addCredit(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final BalanceType balanceType) throws CantRegisterCreditException{
 
         try {
+            System.out.println("Agregando Credito-----------------------------------------------------------");
             if (isTransactionInTable(assetIssuerWalletTransactionRecord.getIdTransaction(), TransactionType.CREDIT, balanceType))
                 throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
 
@@ -274,7 +276,8 @@ public class AssetIssuerWalletDao {
                 actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
     }
 
-    private void executeTransaction(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance) throws CantExecuteAssetIssuerTransactionException{
+    private void executeTransaction(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance) throws CantExecuteAssetIssuerTransactionException {
+        //TODO: Falta manejo de excepciones
         try {
             DatabaseTableRecord assetIssuerWalletRecord = constructAssetIssuerWalletRecord(assetIssuerWalletTransactionRecord, transactionType, balanceType, availableRunningBalance, bookRunningBalance);//DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance);
             DatabaseTableRecord assetBalanceRecord = constructAssetBalanceRecord(assetIssuerWalletTransactionRecord.getDigitalAsset(), availableRunningBalance, bookRunningBalance);

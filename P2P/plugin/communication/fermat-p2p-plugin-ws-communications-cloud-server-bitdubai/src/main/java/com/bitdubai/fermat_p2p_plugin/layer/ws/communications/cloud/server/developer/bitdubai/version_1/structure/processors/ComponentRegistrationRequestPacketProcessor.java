@@ -64,20 +64,17 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         /*
          * Switch between platform component type
          */
-        switch (platformComponentProfileToRegister.getPlatformComponentType().getCode()){
+        switch (platformComponentProfileToRegister.getPlatformComponentType()){
 
-            //COMMUNICATION_CLOUD_SERVER_COMPONENT;
-            case "COM_CLD_SER_COMP" :
+            case COMMUNICATION_CLOUD_SERVER :
                 registerCommunicationsCloudServerComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
                 break;
 
-            //COMMUNICATION_CLOUD_CLIENT_COMPONENT
-            case "COM_CLD_CLI_COMP" :
+            case COMMUNICATION_CLOUD_CLIENT :
                     registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
                 break;
 
-            //NETWORK_SERVICE_COMPONENT
-            case "NS_COMP" :
+            case NETWORK_SERVICE :
                 registerNetworServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
                 break;
 
@@ -276,10 +273,10 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
          * Construct a fermat packet whit the same platform component profile and different FermatPacketType
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                  //Destination
-                serverIdentity.getPublicKey(),                    //Sender
-                platformComponentProfileToRegister.toJson(),      //Message Content
-                FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
-                serverIdentity.getPrivateKey());                  //Sender private key
+                                                                                                                    serverIdentity.getPublicKey(),                    //Sender
+                                                                                                                    platformComponentProfileToRegister.toJson(),      //Message Content
+                                                                                                                    FermatPacketType.COMPLETE_COMPONENT_REGISTRATION, //Packet type
+                                                                                                                    serverIdentity.getPrivateKey());                  //Sender private key
 
          /*
          * Send the encode packet to the server

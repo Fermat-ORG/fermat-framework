@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 
 /**
@@ -24,6 +25,23 @@ public interface NetworkServiceConnectionManager {
      * @param remotePlatformComponentProfile the remote PlatformComponentProfile
      */
     public void connectTo(PlatformComponentProfile remotePlatformComponentProfile);
+
+    /**
+     * Create a new connection to from another platform component type, it is mean tha the who made the request is not a network service
+     *
+     * NOTE: the discoveryQueryParameters param has to be set the following attribute set
+     *
+     * IdentityPublicKey of the other platform component type who made the request
+     * FromOtherPlatformComponentType of the other platform component type who made the request
+     * FromOtherNetworkServiceType of the other platform component type who made the request
+     *
+     * All three attribute are required
+     *
+     * @param identityPublicKeyRequestingParticipant the identity public key of the participant of the vpn
+     * @param applicantNetworkService the profile of the network service which it makes the request
+     * @param discoveryQueryParameters have the other type component information to find the corresponding
+     */
+    public void connectTo(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters);
 
 
     /**

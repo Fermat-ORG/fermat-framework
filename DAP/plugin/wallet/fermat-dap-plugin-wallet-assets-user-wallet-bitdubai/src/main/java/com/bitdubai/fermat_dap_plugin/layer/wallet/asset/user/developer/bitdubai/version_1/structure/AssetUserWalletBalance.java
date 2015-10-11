@@ -20,6 +20,8 @@ public class AssetUserWalletBalance implements AssetUserWalletList {
         this.availableBalance = availableBalance;
     };
 
+    public AssetUserWalletBalance(){};
+
     @Override
     public String getAssetPublicKey() {
         return assetPublicKey;

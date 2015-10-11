@@ -73,7 +73,10 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             /**
              * search Device User intra users  from intra user identity
              */
+
+        //TODO Harcoder
             List<IntraWalletUser> intraWalletUserList = this.intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+
 
             /**
              * I only add intra users belonging to the Device User log

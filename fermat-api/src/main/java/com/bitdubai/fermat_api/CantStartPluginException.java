@@ -23,6 +23,10 @@ public class CantStartPluginException extends FermatException{
         this(message, cause, "", "");
     }
 
+    public CantStartPluginException(final Exception cause, final String context, final String possibleReason) {
+        this(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public CantStartPluginException(final String message) {
         this(message, null);
     }

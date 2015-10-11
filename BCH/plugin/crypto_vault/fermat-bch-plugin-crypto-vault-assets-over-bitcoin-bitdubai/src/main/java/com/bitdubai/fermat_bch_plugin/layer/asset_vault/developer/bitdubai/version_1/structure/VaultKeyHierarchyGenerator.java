@@ -4,6 +4,10 @@ import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantLoadHierarchyAccountsException;
 import com.google.common.collect.ImmutableList;
 
 import org.bitcoinj.crypto.ChildNumber;
@@ -13,15 +17,29 @@ import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
- * Created by rodrigo on 10/4/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchyGenerator</code>
+ * Is in charge of creating the Vault Key hierarchy from the master seed passed. It will get all the accounts created on this device
+ * and generate the key hierarchy for all of them.
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class VaultKeyHierarchyGenerator implements Runnable{
+class VaultKeyHierarchyGenerator implements Runnable{
     /**
      * Unique seed used to generate all the hierarchies
      */
     private DeterministicSeed seed;
+
+    /**
+     * dao object to access the database
+     */
+    AssetsOverBitcoinCryptoVaultDao dao;
 
     /**
      * RootKey of the hierarchy that will be generated
@@ -39,27 +57,36 @@ public class VaultKeyHierarchyGenerator implements Runnable{
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
     private BitcoinNetworkManager bitcoinNetworkManager;
+    UUID pluginId;
 
     /**
      * Constructor
      * @param seed
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager) {
+    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
         this.seed = seed;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.pluginId = pluginId;
     }
 
     @Override
     public void run() {
-        doTheMainTask();
+        try {
+            doTheMainTask();
+        } catch (CantLoadHierarchyAccountsException e) {
+            /**
+             * If there was an error, i will just log it.
+             */
+            e.printStackTrace();
+        }
     }
 
     /**
      * Starting point of the agent
      */
-    private void doTheMainTask(){
+    private void doTheMainTask() throws CantLoadHierarchyAccountsException {
         /**
          * I generate the rootKey (m) of the hierarchy.
          */
@@ -68,7 +95,7 @@ public class VaultKeyHierarchyGenerator implements Runnable{
         /**
          * I create the VaultKeyHierarchy from the master key
          */
-        vaultKeyHierarchy = new VaultKeyHierarchy(rootKey);
+        vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId);
 
         /**
          * I will get from the database the list of accounts to create
@@ -81,11 +108,12 @@ public class VaultKeyHierarchyGenerator implements Runnable{
         /**
          * once the hierarchy is created, I will start the HierarchyMaintainer agent that will load the keys, and the crypto network
          */
-        VaultKeyHierarchyMaintainer vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager);
+        VaultKeyHierarchyMaintainer vaultKeyHierarchyMaintainer = new VaultKeyHierarchyMaintainer(this.vaultKeyHierarchy, this.pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         try {
             vaultKeyHierarchyMaintainer.start();
         } catch (CantStartAgentException e) {
-            //todo handle
+            // I will log this error for now.
+            e.printStackTrace();
         }
     }
 
@@ -98,9 +126,27 @@ public class VaultKeyHierarchyGenerator implements Runnable{
         return HDKeyDerivation.createMasterPrivateKey(seed.getSeedBytes());
     }
 
-    private List<HierarchyAccount> getHierarchyAccounts(){
+    /**
+     * Gets the list of stored HierarchyAccounts. If no accounts exists, it will create the zero account.
+     * @return the store list of accounts
+     */
+    private List<HierarchyAccount> getHierarchyAccounts() throws CantLoadHierarchyAccountsException {
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
-        //todo add DAO logic to get the value from the database and form the accounts object
+
+        /**
+         * Gets the Hierarchy accouns from the database
+         */
+        try {
+            hierarchyAccounts = getDao().getHierarchyAccounts();
+        } catch (CantExecuteDatabaseOperationException e) {
+            /**
+             * If there was an error creating or loading the database, or getting the list of accounts, I can't go on.
+             */
+            throw new CantLoadHierarchyAccountsException(
+                    CantLoadHierarchyAccountsException.DEFAULT_MESSAGE,
+                    e,
+                    "Error trying to load the Hierarchy Accounts from the database.", "database issue");
+        }
 
 
         /**
@@ -108,11 +154,35 @@ public class VaultKeyHierarchyGenerator implements Runnable{
          * the account 0 that will be used by the asset vault.
          */
         if (hierarchyAccounts.size() == 0){
-            HierarchyAccount accountZero = new HierarchyAccount(0, "Asset vault account");
+            HierarchyAccount accountZero = new HierarchyAccount(0, "Asset Vault account");
             hierarchyAccounts.add(accountZero);
-            //todo Add this account to database
+
+            /**
+             * And I will also try to add this to the database so I can load it the next time.
+             */
+                try {
+                    getDao().addNewHierarchyAccount(accountZero);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    // I don't need to handle this error.
+                }
         }
         return hierarchyAccounts;
+    }
+
+    /**
+     * Gets and instance of the AssetsOverBitcoinCryptoVaultDao class used to access database objects.
+     * @return
+     * @throws CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException
+     */
+    private AssetsOverBitcoinCryptoVaultDao getDao() {
+        if (dao == null){
+            try {
+                dao = new AssetsOverBitcoinCryptoVaultDao(pluginDatabaseSystem, pluginId);
+            } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException e) {
+                e.printStackTrace();
+            }
+        }
+        return dao;
     }
 
     /**

@@ -21,7 +21,15 @@ import org.omg.CORBA.DynAnyPackage.Invalid;
 import java.util.UUID;
 
 /**
- * Created by rodrigo on 9/19/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.AssetCryptoVaultManager</code>
+ * In in charge of creating the master key from the generated seed and starts the agents that will create the
+ * key hierarchy and the Hierarchy maintainer agent.<p/>
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class AssetCryptoVaultManager  {
     /**
@@ -66,7 +74,7 @@ public class AssetCryptoVaultManager  {
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager);
+        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
         new Thread(vaultKeyHierarchyGenerator).start();
     }
 
@@ -105,7 +113,11 @@ public class AssetCryptoVaultManager  {
      */
 
     public CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
-        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset vault");
+        /**
+         * I create the account manually instead of getting it from the database because this method always returns addresses
+         * from the asset vault account with Id 0.
+         */
+        HierarchyAccount vaultAccount = new HierarchyAccount(0, "Asset Vault");
         return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
     }
 

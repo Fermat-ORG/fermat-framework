@@ -3,7 +3,12 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicHierarchy;
@@ -12,20 +17,46 @@ import org.bitcoinj.crypto.HDKeyDerivation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
- * Created by rodrigo on 10/4/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchy</code>
+ * Defines the internal Hierarchy object used on the Crypto Vault. The hierarchy is created from a root key each time the platform
+ * is initiated. The Hierarchy is in charge of generating new bitcoin addresses when request from the public Keys derived for each account.
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 06/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 class VaultKeyHierarchy extends DeterministicHierarchy {
+
+    /**
+     * Holds the list of Accounts and master keys of the hierarchy
+     */
     private Map<Integer, DeterministicKey> accountsMasterKeys;
+
+    /**
+     * Holds the DAO object to access the database
+     */
+    AssetsOverBitcoinCryptoVaultDao dao;
+
+    /**
+     * Platform variables
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+    UUID pluginId;
 
     /**
      * Constructor
      * @param rootKey (m) key
      */
-    public VaultKeyHierarchy(DeterministicKey rootKey) {
+    public VaultKeyHierarchy(DeterministicKey rootKey, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         super(rootKey);
         accountsMasterKeys = new HashMap<>();
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
     }
 
     /**
@@ -74,11 +105,16 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param blockchainNetworkType
      * @return the crypto address
      */
-    public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, HierarchyAccount hierarchyAccount){
+    public CryptoAddress getBitcoinAddress(BlockchainNetworkType blockchainNetworkType, HierarchyAccount hierarchyAccount) throws GetNewCryptoAddressException {
         /**
          * The depth of the next available public key for this account
          */
-        int pubKeyDepth = getNextAvailablePublicKeyDepth(hierarchyAccount);
+        int pubKeyDepth = 0;
+        try {
+            pubKeyDepth = getNextAvailablePublicKeyDepth(hierarchyAccount);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "there was a problem getting the key depth from the database.", "database issue");
+        }
 
         /**
          * I will derive a new public Key from this account
@@ -112,9 +148,41 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         //todo update table active_Networks and add (if missing) this blockchainNetworkType
     }
 
-    private int getNextAvailablePublicKeyDepth(HierarchyAccount hierarchyAccount) {
-        //todo get current value from table key_Maintenance column usedKeys
-        //todo increase value
-        return 3;
+    /**
+     * Get the net keyDepth that is available to generate a new key.
+     * It sets this value in the database.
+     * @param hierarchyAccount
+     * @return
+     */
+    private int getNextAvailablePublicKeyDepth(HierarchyAccount hierarchyAccount) throws CantExecuteDatabaseOperationException {
+        int returnValue = 0;
+        int currentUsedKey = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
+        /**
+         * I set the new value of the key depth
+         */
+        returnValue = currentUsedKey +1;
+
+        /**
+         * and Update this value in the database
+         */
+        getDao().setNewCurrentUsedKeyValue(hierarchyAccount.getId(), returnValue);
+
+        return returnValue;
+    }
+
+    /**
+     * gets the dao instance to access database operations
+     * @return
+     */
+    private AssetsOverBitcoinCryptoVaultDao getDao(){
+        if (dao == null){
+            try {
+                dao = new AssetsOverBitcoinCryptoVaultDao(pluginDatabaseSystem, pluginId);
+            } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return dao;
     }
 }

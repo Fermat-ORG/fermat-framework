@@ -45,9 +45,7 @@ import java.util.regex.Pattern;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by loui on 26/04/15.
- * Update by Jorge Gonzales
- * Update by Roberto Requena - (rart3001@gmail.com) on 03/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
  */
@@ -67,7 +65,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Represent the SERVER_IP
      */
     public static final String SERVER_IP = "52.11.156.16"; //AWS
-    //private static final String SERVER_IP = "192.168.1.2";
+    //public static final String SERVER_IP = "192.168.1.5";
 
     /**
      * Represents the value of DISABLE_CLIENT

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 /**
@@ -12,7 +13,7 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     private String publicKey;
     private byte[] profileImage;
     private long registrationDate;
-    private ContactState contactState;
+    private ConnectionState connectionState;
 
     @Override
     public String getPublicKey() {
@@ -51,17 +52,17 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     }
 
     @Override
-    public ContactState getContactState() {
-        return this.contactState;
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
     }
 
-    public void setContactState(ContactState contactState){
-        this.contactState=contactState;
+    public void setContactState(ConnectionState contactState){
+        this.connectionState=contactState;
     }
 
     public void setActorAssetUser(ActorAssetUser actorAssetUser){
         setContactRegistrationDate(actorAssetUser.getContactRegistrationDate());
-        setContactState(actorAssetUser.getContactState());
+        setContactState(actorAssetUser.getConnectionState());
         setName(actorAssetUser.getName());
         setProfileImage(actorAssetUser.getProfileImage());
         setPublicKey(actorAssetUser.getPublicKey());

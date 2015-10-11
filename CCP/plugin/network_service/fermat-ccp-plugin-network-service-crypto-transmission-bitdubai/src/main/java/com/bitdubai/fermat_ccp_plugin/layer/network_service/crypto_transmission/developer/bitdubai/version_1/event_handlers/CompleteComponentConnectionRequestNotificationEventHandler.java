@@ -8,13 +8,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 
 /**
@@ -29,17 +26,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 public class CompleteComponentConnectionRequestNotificationEventHandler implements FermatEventHandler {
 
     /*
-    * Represent the templateNetworkServicePluginRoot
+    * Represent the networkService
     */
-    private CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot;
+    private NetworkService networkService;
 
     /**
      * Constructor with parameter
      *
-     * @param cryptoTransmissionNetworkServicePluginRoot
+     * @param networkService
      */
-    public CompleteComponentConnectionRequestNotificationEventHandler(CryptoTransmissionNetworkServicePluginRoot cryptoTransmissionNetworkServicePluginRoot) {
-        this.cryptoTransmissionNetworkServicePluginRoot = cryptoTransmissionNetworkServicePluginRoot;
+    public CompleteComponentConnectionRequestNotificationEventHandler(NetworkService networkService) {
+        this.networkService = networkService;
     }
 
     /**
@@ -53,22 +50,23 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
+        System.out.println("CompleteComponentConnectionRequestNotificationEventHandlerCompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent.toString() );
 
 
-        if (((Service) this.cryptoTransmissionNetworkServicePluginRoot).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
-            CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
+            CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent ;
 
 
-            if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT &&
-                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == NetworkServiceType.NETWORK_SERVICE_TEMPLATE_TYPE){
-                 /*
-                 *  TemplateManager make the job
+//            if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == networkService.getPlatformComponentType() &&
+//                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == networkService.getNetworkServiceType()){
+
+                /*
+                 *  networkService make the job
                  */
-                this.cryptoTransmissionNetworkServicePluginRoot.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
+                this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getApplicantComponent(), completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
 
-            }
+            //}
 
 
         }

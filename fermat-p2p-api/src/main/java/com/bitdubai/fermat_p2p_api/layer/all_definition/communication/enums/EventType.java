@@ -11,10 +11,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.BasicFermatEventListener;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteRequestListComponentRegisteredNotificationEventListener;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.FailureComponentConnectionRequestNotificationEventListener;
 
 /**
  * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType</code>
@@ -42,7 +45,7 @@ public enum EventType implements FermatEventEnum {
 
     COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION("CL_CCRCN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new BasicFermatEventListener(this, eventMonitor);
+            return new CompleteClientComponentRegistrationNotificationEventListener(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new CompleteClientComponentRegistrationNotificationEvent(this);
@@ -65,7 +68,18 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new CompleteComponentConnectionRequestNotificationEvent(this);
         }
-    };
+    },
+
+    FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("F_CCCRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new FailureComponentConnectionRequestNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new FailureComponentConnectionRequestNotificationEvent(this);
+        }
+    }
+
+    ;
 
     /**
      * Represent the code of the message status

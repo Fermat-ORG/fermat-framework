@@ -12,7 +12,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.CryptoPaymentRequestPluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CryptoPaymentRequestPluginNotStartedException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure.CryptoPaymentRequestEventActions;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.UUID;
 
@@ -67,7 +66,7 @@ public class CryptoPaymentRequestApprovedEventHandler implements FermatEventHand
                 );
 
             } else {
-                EventType eventExpected = EventType.CRYPTO_PAYMENT_APPROVED;
+                EventType eventExpected = EventType.CRYPTO_PAYMENT_REQUEST_APPROVED;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
                                  "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);

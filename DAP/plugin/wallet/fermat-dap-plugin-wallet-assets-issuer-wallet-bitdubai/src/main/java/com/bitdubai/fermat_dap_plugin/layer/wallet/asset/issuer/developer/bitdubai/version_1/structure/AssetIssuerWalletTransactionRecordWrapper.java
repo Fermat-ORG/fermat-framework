@@ -28,7 +28,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final String digitalAssetMetadataHash;
     private final UUID transactionId;
 
-    AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
+    public AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                               String assetIssuingPublicKey,
                                               String name,
                                               String description,
@@ -65,7 +65,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     }
 
     @Override
-    public String getAssetIssuingPublicKey() {
+    public String getDigitalAssetPublicKey() {
         return assetIssuingPublicKey;
     }
 
