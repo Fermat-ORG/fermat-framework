@@ -186,6 +186,39 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
+     * @see CommunicationsClientConnection#constructBasicPlatformComponentProfileFactory(String, NetworkServiceType, PlatformComponentType)
+     */
+    @Override
+    public PlatformComponentProfile constructBasicPlatformComponentProfileFactory(String identityPublicKey, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType){
+
+        try {
+
+            //Validate parameters
+            if ((identityPublicKey == null || identityPublicKey == "") ||
+                    networkServiceType == null                         ||
+                    platformComponentType == null  ){
+
+                throw new IllegalArgumentException("All argument are required, can not be null ");
+
+            }
+
+            return new PlatformComponentProfileCommunication(null,
+                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
+                                                            identityPublicKey,
+                                                            null,
+                                                            null,
+                                                            networkServiceType,
+                                                            platformComponentType,
+                                                            null);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+
+    }
+
+
+    /**
+     * (non-javadoc)
      * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
@@ -335,17 +368,17 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#requestDiscoveryVpnConnection(String, PlatformComponentProfile, DiscoveryQueryParameters)
+     * @see CommunicationsClientConnection#requestDiscoveryVpnConnection(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void requestDiscoveryVpnConnection(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters){
+    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant){
 
         System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
 
         /*
          * Validate parameter
          */
-        if (applicantNetworkService == null || discoveryQueryParameters == null){
+        if (applicantParticipant == null || applicantNetworkService == null || remoteParticipant == null){
 
             throw new IllegalArgumentException("All parameters are required, can not be null");
         }
@@ -362,9 +395,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
          */
         Gson gson = new Gson();
         JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_VPN, identityPublicKeyRequestingParticipant);
-        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_NS_VPN, applicantNetworkService.toJson());
-        packetContent.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM_VPN, discoveryQueryParameters.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, applicantParticipant.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, applicantNetworkService.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
 
         /*
          * Convert to json representation
@@ -397,20 +430,12 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#getCommunicationsVPNConnectionStablished(PlatformComponentProfile, String)
+     * @see CommunicationsClientConnection#getCommunicationsVPNConnectionStablished(NetworkServiceType, PlatformComponentProfile)
      */
     @Override
-    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile) {
+    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile) {
+        return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
 
-//        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-//            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
-//        }
-
-//        if (applicant.getNetworkServiceType() != applicant.getNetworkServiceType()){
-//            throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");
-//        }
-
-        return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(applicant, remotePlatformComponentProfile);
     }
 
     /**

@@ -26,9 +26,9 @@ public class FailureComponentConnectionRequestNotificationEvent extends Abstract
     private PlatformComponentProfile networkServiceApplicant;
 
     /**
-     * Represent the discoveryQueryParameters
+     * Represent the remoteParticipant
      */
-    private DiscoveryQueryParameters discoveryQueryParameters;
+    private PlatformComponentProfile remoteParticipant;
 
     /**
      * Constructor with parameter
@@ -56,19 +56,18 @@ public class FailureComponentConnectionRequestNotificationEvent extends Abstract
     }
 
     /**
-     * Get the DiscoveryQueryParameters
-     *
-     * @return discoveryQueryParameters
+     * Get the RemoteParticipant
+     * @return remoteParticipant
      */
-    public DiscoveryQueryParameters getDiscoveryQueryParameters() {
-        return discoveryQueryParameters;
+    public PlatformComponentProfile getRemoteParticipant() {
+        return remoteParticipant;
     }
 
     /**
-     * Set the DiscoveryQueryParameters
-     * @param discoveryQueryParameters
+     * Set the RemoteParticipant
+     * @param remoteParticipant
      */
-    public void setDiscoveryQueryParameters(DiscoveryQueryParameters discoveryQueryParameters) {
-        this.discoveryQueryParameters = discoveryQueryParameters;
+    public void setRemoteParticipant(PlatformComponentProfile remoteParticipant) {
+        this.remoteParticipant = remoteParticipant;
     }
 }

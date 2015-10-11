@@ -137,6 +137,8 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         eventManager.raiseEvent(fermatEvent);
 
+        System.out.println("CommunicationNetworkServiceLocal - fired event = NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION");
+
     }
 
     /**

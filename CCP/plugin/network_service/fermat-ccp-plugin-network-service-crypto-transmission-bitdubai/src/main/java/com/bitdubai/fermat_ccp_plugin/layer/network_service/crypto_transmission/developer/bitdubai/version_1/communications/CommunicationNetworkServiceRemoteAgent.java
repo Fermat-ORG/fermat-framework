@@ -191,7 +191,11 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
+
             System.out.println("CommunicationNetworkServiceRemoteAgent - ROBERTOOOO"+communicationsVPNConnection.isActive());
+
+            //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
+
 
             /**
              * Verified the status of the connection
@@ -199,6 +203,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             if (communicationsVPNConnection.isActive()){
 
                    System.out.println("CommunicationNetworkServiceRemoteAgent - MATI!!! "+communicationsVPNConnection.getUnreadMessagesCount());
+                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
+
 
                 /**
                  * process all pending messages
@@ -213,7 +219,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      * Read the next message in the queue
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
-
 
                     /*
                      * Validate the message signature
