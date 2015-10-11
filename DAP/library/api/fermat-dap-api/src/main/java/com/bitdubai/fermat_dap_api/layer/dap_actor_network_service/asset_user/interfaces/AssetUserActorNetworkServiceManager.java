@@ -15,7 +15,7 @@ import java.util.List;
 public interface AssetUserActorNetworkServiceManager {
 
 
-    public void registerActorAssetUser(List<ActorAssetUser> actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
+    public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
 
     public void requestListActorAssetUserRegistered()  throws CantRequestListActorAssetUserRegisteredException;
 
