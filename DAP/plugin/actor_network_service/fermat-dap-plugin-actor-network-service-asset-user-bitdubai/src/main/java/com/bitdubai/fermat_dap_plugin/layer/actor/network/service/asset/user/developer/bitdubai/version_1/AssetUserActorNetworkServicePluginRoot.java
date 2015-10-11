@@ -76,6 +76,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot</code> is
  * throw when error occurred updating new record in a table of the data base
@@ -842,7 +844,39 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
              */
             requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
+
+            /* test prueba para registrar un assetuser*/
+
+            ActorAssetUser testassetuser = new MockActorAssetUser();
+
+            try {
+                registerActorAssetUser(testassetuser);
+            } catch (CantRegisterActorAssetUserException e) {
+                e.printStackTrace();
+            }
+
+            /* test prueba para registrar un assetuser*/
+
         }
+
+        /* test prueba para registrar un assetuser*/
+
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.UNDEFINED){
+
+
+            System.out.println(" Actor Network Service Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias"+platformComponentProfileRegistered.getAlias());
+
+            try {
+                requestListActorAssetUserRegistered();
+            } catch (CantRequestListActorAssetUserRegisteredException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        /* test prueba para registrar un assetuser*/
+
 
     }
 
@@ -864,12 +898,25 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             /*
              * Get a remote network service registered from the list requested
              */
-            PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
+            //PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+            //communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+
+            System.out.println("**********************************");
+
+            System.out.println(" Listado de assetuser");
+
+            for(PlatformComponentProfile p: platformComponentProfileRegisteredList){
+
+                System.out.println("Remoto assetuser "+p.getIdentityPublicKey()+"  Alias "+p.getAlias());
+
+
+            }
+
+            System.out.println("**********************************");
 
         }
 

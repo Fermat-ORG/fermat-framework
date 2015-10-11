@@ -1,21 +1,36 @@
-package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.actor_asset_distributor_user;
+package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;//quitar
-//import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+
+import java.util.Date;
+
+//import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/10/15.
  */
 public class MockActorAssetUser implements ActorAssetUser {
+
+    private String publickeys ="publickey";
+
+
+    public MockActorAssetUser(){
+        super();
+        Date today = new Date();
+        this.publickeys=this.publickeys+today.getTime();
+
+    }
+
+
     @Override
     public String getPublicKey() {
-        return "publicKey";
+        return this.publickeys;
     }
 
     @Override
     public String getName() {
-        return "testName";
+        return "testName"+this.publickeys;
     }
 
     @Override
