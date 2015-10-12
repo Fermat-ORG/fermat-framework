@@ -662,7 +662,6 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 //Send the message
                 communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
 
-
             }else{
 
                 /*
@@ -870,6 +869,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 /*
                  * TODO: CREAR LOS ACTORES CON EL CONTENIDO DEL PROFILE Y AGREGARLOS A LA LISTA
                  */
+
             }
 
         }
