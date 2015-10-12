@@ -86,7 +86,7 @@ import java.util.regex.Pattern;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by Roberto Requena - (rrequena) on 09/10/15.
+ * Created by Roberto Requena - (rrequena) on 21/07/15.
  *
  * @version 1.0
  */
@@ -874,10 +874,9 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-    /**
-     *  (no-javadoc)
-     *   @see AssetTransmissionNetworkServiceManager#sendDigitalAssetMetadata(DigitalAssetMetadata, ActorAssetUser)
-     */
+
+
+
     @Override
     public void sendDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadataToSend, ActorAssetUser actorAssetUser) throws CantSendDigitalAssetMetadataException {
 
