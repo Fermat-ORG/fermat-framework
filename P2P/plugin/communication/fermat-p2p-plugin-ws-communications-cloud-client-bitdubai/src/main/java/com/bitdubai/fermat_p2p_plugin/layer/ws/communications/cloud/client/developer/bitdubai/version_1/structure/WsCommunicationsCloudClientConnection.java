@@ -435,6 +435,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     @Override
     public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile) {
         return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
+
     }
 
     /**

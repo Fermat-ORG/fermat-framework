@@ -94,7 +94,7 @@ public enum Activities {
 
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
-    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2("CBPSACBI2");
+    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI");
 
     private String code;
 
@@ -236,8 +236,8 @@ public enum Activities {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
-            case "CBPSACBI2":
-                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2;
+            case "CBPSACBICI":
+                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
             case"CBPSACBI":
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             default:

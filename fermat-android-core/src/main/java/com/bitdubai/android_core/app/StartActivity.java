@@ -9,6 +9,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
@@ -67,6 +73,13 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
     private ProgressDialog mDialog;
 
+    private ImageView imageView_fermat;
+
+
+    Animation animation1;
+    Animation animation2;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +91,9 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
             try {
                 setContentView(R.layout.splash_screen);
+
+                imageView_fermat = (ImageView) findViewById(R.id.imageView_fermat);
+
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                         Toast.LENGTH_LONG).show();
@@ -86,10 +102,98 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
             int applicationState = ((ApplicationSession)getApplication()).getApplicationState();
 
             if(applicationState==ApplicationSession.STATE_NOT_CREATED) {
-                mDialog = new ProgressDialog(this);
-                mDialog.setMessage("Please wait...");
-                mDialog.setCancelable(false);
-                    mDialog.show();
+//                mDialog = new ProgressDialog(this);
+//                mDialog.setMessage("Please wait...");
+//                mDialog.setCancelable(false);
+//////                    mDialog.show();
+//                AlphaAnimation fadeOut = new AlphaAnimation( 1.0f , 0.0f ) ;
+//                AlphaAnimation fadeIn = new AlphaAnimation(0.0f , 1.0f ) ;
+//                imageView_fermat.startAnimation(fadeIn);
+//                imageView_fermat.startAnimation(fadeOut);
+//                imageView_fermat.getAnimation().setRepeatCount(Animation.INFINITE);
+//                fadeIn.setDuration(1200);
+//                fadeOut.setDuration(1200);
+//                imageView_fermat.getAnimation().setDuration(1500);
+
+//                Animation fadeIn = new AlphaAnimation(0, 1);
+//                fadeIn.setInterpolator(new DecelerateInterpolator()); // add this
+//                fadeIn.setDuration(1000);
+//
+//                Animation fadeOut = new AlphaAnimation(1, 0);
+//                fadeOut.setInterpolator(new AccelerateInterpolator()); // and this
+//                //fadeOut.setStartOffset(fadeInDuration + timeBetween);
+//                fadeOut.setDuration(1000);
+//
+//                AnimationSet animation = new AnimationSet(false); // change to false
+//                animation.addAnimation(fadeIn);
+//                animation.addAnimation(fadeOut);
+//                animation.setRepeatCount(Animation.INFINITE);
+//                imageView_fermat.setAnimation(animation);
+//                imageView_fermat.animate();
+//                imageView_fermat.getAnimation().start();
+//                imageView_fermat.getAnimation().setDuration(Animation.INFINITE);
+                //fadeOut.setStartOffset(1200+fadeIn.getStartOffset()+1200);
+//                measurement_index = AppSettings.getMeasureUnit(this);
+
+
+                animation1 = new AlphaAnimation(0.0f, 1.0f);
+                animation1.setDuration(1000);
+                //animation1.setStartOffset(5000);
+
+                //animation1 AnimationListener
+                animation1.setAnimationListener(new Animation.AnimationListener(){
+
+                    @Override
+                    public void onAnimationEnd(Animation arg0) {
+                        // start animation2 when animation1 ends (continue)
+                        imageView_fermat.startAnimation(animation2);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animation arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                });
+
+                animation2 = new AlphaAnimation(1.0f, 0.0f);
+                animation2.setDuration(1000);
+                //animation2.setStartOffset(5000);
+
+                //animation2 AnimationListener
+                animation2.setAnimationListener(new Animation.AnimationListener(){
+
+                    @Override
+                    public void onAnimationEnd(Animation arg0) {
+                        // start animation1 when animation2 ends (repeat)
+                        imageView_fermat.startAnimation(animation1);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animation arg0) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                });
+
+                imageView_fermat.startAnimation(animation1);
+
+
+
                 GetTask getTask = new GetTask(this,this);
                 getTask.setCallBack(this);
                 getTask.execute();
@@ -121,7 +225,9 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
     public void onPostExecute(Object... result) {
         PlatformInfoManager platformInfoManager = (PlatformInfoManager) platform.getCorePlatformContext().getAddon(Addons.PLATFORM_INFO);
         setPlatformDeviceInfo(platformInfoManager);
-        mDialog.dismiss();
+        //mDialog.dismiss();
+
+        imageView_fermat.clearAnimation();
 
         // Indicate that app was loaded.
         WAS_START_ACTIVITY_LOADED = true;

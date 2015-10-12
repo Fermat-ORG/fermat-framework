@@ -2,12 +2,10 @@ package unit.com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.widget.TextView;
 
 
 import com.bitdubai.sub_app.crypto_broker_identity.BuildConfig;
-import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.fragments.MainFragment;
+import com.bitdubai.sub_app.crypto_broker_identity.fragments.IdentityListFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,14 +24,14 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class MainFragmentTest {
+public class IdentityListFragmentTest {
 
-    private MainFragment fragment;
+    private IdentityListFragment fragment;
     private TestActivity activity;
 
     @Before
     public void setUp() {
-        fragment = MainFragment.newInstance();
+        fragment = IdentityListFragment.newInstance();
 
         activity = Robolectric.setupActivity(TestActivity.class);
 
@@ -42,25 +40,32 @@ public class MainFragmentTest {
         ft.commit();
     }
 
+
     @Test
     public void fragmentIsVisibleInActivity() {
         Activity resultActivity = fragment.getActivity();
         assertThat(resultActivity).isInstanceOf(TestActivity.class);
+        assertThat(fragment.isVisible()).isTrue();
     }
 
     @Test
-    public void helloTextViewIsNotNull() {
-        TextView helloText = (TextView) fragment.getView().findViewById(R.id.helloText);
-        assertThat(helloText).isNotNull();
+    public void testShowOneElementInList(){
+
     }
 
     @Test
-    public void helloTextViewShowCorrectText() {
-        final String expectedText = "Hello blank fragment";
+    public void testNoShowElementsInList(){
 
-        TextView helloText = (TextView) fragment.getView().findViewById(R.id.helloText);
-        String actualText = helloText.getText().toString();
-        assertThat(actualText).isEqualTo(expectedText);
+    }
+
+    @Test
+    public void clickOnAddIdentityButtonSendToCreateIdentityFragment(){
+
+    }
+
+    @Test
+    public void clickOnListTtemShowIdentityDetailsFragment(){
+
     }
 
 
