@@ -726,9 +726,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * Tell the manager to handler the new connection stablished
          */
-
-        //TODO: Robert, comenté esto porque falta algo
-        //communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(applicantComponentProfile, remoteComponentProfile);
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
