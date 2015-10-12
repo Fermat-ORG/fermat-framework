@@ -1,7 +1,16 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+
+import java.util.UUID;
 
 /**
  * Created by Nerio on 22/09/15.
@@ -13,17 +22,26 @@ public class AssetUserActorRecord implements ActorAssetUser {
     private byte[] profileImage ;
     private long registrationDate;
     private ConnectionState connectionState;
+    private Location location;
+    private Genders genders;
+    private String age;
+    private String cryptoAddress;
 
     /**
      * Constructor
      */
-    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState connectionState){
+
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, Genders genders, String age, String cryptoAddress){
 
         this.name = name;
         this.publicKey = publicKey;
         this.profileImage = profileImage.clone();
         this.registrationDate = registrationDate;
-        this.connectionState = connectionState;
+//        this.location = location;
+        this.genders = genders;
+        this.age = age;
+        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
 
     }
 
@@ -76,5 +94,45 @@ public class AssetUserActorRecord implements ActorAssetUser {
     @Override
     public ConnectionState getConnectionState() {
         return this.connectionState;
+    }
+
+    /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    @Override
+    public Location getLocation() {
+        return this.location;
+    }
+
+    /**
+     * The method <code>getGender</code> gives us the Gender of the represented Asset user
+     *
+     * @return the Gender of the Asset user
+     */
+    @Override
+    public Genders getGender() {
+        return this.genders;
+    }
+
+    /**
+     * The method <code>getAge</code> gives us the Age of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    @Override
+    public String getAge() {
+        return this.age;
+    }
+
+    /**
+     * returns the crypto address to which it belongs
+     *
+     * @return CryptoAddress instance.
+     */
+    @Override
+    public String getCryptoAddress() {
+        return this.cryptoAddress;
     }
 }

@@ -257,7 +257,7 @@ public class RedeemPointActorDao implements Serializable {
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME),
                         getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME))));
+                        ConnectionState.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME))));
             }
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
@@ -310,7 +310,7 @@ public class RedeemPointActorDao implements Serializable {
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME),
                         getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME))));
+                        ConnectionState.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME))));
             }
 
             database.closeDatabase();
