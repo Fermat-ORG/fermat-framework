@@ -5,8 +5,10 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
@@ -22,6 +26,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user.util.CommonLogger;
 import com.bitdubai.intra_user_identity.R;
@@ -114,12 +119,21 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
 
             }
-            catch(Exception ex)
-            {
+            catch(Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
             }
 
-            return gridView;
+        RelativeLayout rootView = new RelativeLayout(getActivity());
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        rootView.setLayoutParams(layoutParams);
+
+        rootView.setBackgroundColor(Color.WHITE);
+
+        rootView.addView(gridView);
+
+            return rootView;
     }
 
 
@@ -144,11 +158,12 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.intra_user_connection_word_list, parent, false);
+                convertView = inflater.inflate(R.layout.world_frament_row, parent, false);
                 holder = new ViewHolder();
 
                 holder.name = (TextView) convertView.findViewById(R.id.community_name);
                 holder.Photo = (ImageView) convertView.findViewById(R.id.profile_Image);
+                holder.connection = (ImageView) convertView.findViewById(R.id.imageView_connection);
 
                 convertView.setTag(holder);
             } else {
@@ -180,6 +195,11 @@ public class ConnectionsWorldFragment  extends FermatFragment {
                         break;
                 }
 
+                /**
+                 * falta poner si la conexion está activa
+                 *
+                 * */
+
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -193,6 +213,7 @@ public class ConnectionsWorldFragment  extends FermatFragment {
         private class ViewHolder {
             public TextView name;
             public ImageView Photo;
+            public ImageView connection;
         }
 
     }

@@ -28,9 +28,9 @@ public enum Activities {
     CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY("CIUCRA"),
 
     //Wallet store
-    CWP_WALLET_STORE_MAIN_ACTIVITY("CWSMA"),
-    CWP_WALLET_STORE_DETAIL_ACTIVITY("CWSDA"),
-    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWSMDA"),
+    CWP_WALLET_STORE_MAIN_ACTIVITY("CWPWSMA"),
+    CWP_WALLET_STORE_DETAIL_ACTIVITY("CWPWSDA"),
+    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWPWSMDA"),
 
 
     CWP_WALLET_ADULTS_ALL_MAIN("CWAAM"),
@@ -94,7 +94,7 @@ public enum Activities {
 
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
-    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2("CBPSACBI2");
+    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI");
 
     private String code;
 
@@ -128,12 +128,12 @@ public enum Activities {
                 return Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN;
             case "CWRWBWBV1T":
                 return Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS;
-            case "CWSMA":
+            case "CWPWSMA":
                 return Activities.CWP_WALLET_STORE_MAIN_ACTIVITY;
-            case "CWSDA":
-                return CWP_WALLET_STORE_DETAIL_ACTIVITY;
-            case "CWSMDA":
-                return CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY;
+            case "CWPWSDA":
+                return Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY;
+            case "CWPWSMDA":
+                return Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY;
             case "CWAAM":
                 return Activities.CWP_WALLET_ADULTS_ALL_MAIN;
             case "CWBAM":
@@ -236,8 +236,8 @@ public enum Activities {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
-            case "CBPSACBI2":
-                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2;
+            case "CBPSACBICI":
+                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
             case"CBPSACBI":
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             default:
