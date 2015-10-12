@@ -342,6 +342,14 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+        /**
+         *
+         */
+        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(cryptoTransmissionAgent));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 
     /**
