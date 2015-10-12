@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
@@ -32,6 +33,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantConnecToException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
@@ -912,40 +915,46 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-         /*
-         * save into the cache
-         */
-        remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+
 
          /* -----------------------------------------------------------------------
          * This is for test and example of how to use
          */
-        if(getRemoteNetworkServicesRegisteredList() != null && !getRemoteNetworkServicesRegisteredList().isEmpty()){
+        if(platformComponentProfileRegisteredList != null && !platformComponentProfileRegisteredList.isEmpty()){
 
             /*
              * Get a remote network service registered from the list requested
              */
-            //PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
+            PlatformComponentProfile remoteNetworkServiceToConnect = platformComponentProfileRegisteredList.get(0);
 
             /*
              * tell to the manager to connect to this remote network service
              */
             //communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
 
-            System.out.println("**********************************");
 
-            System.out.println(" Listado de assetuser");
+            if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR ){
 
-            for(PlatformComponentProfile p: platformComponentProfileRegisteredList){
+                List<ActorAssetUser> actorAssetUserListRemote = null;
 
-                System.out.println("Remoto assetuser "+p.getIdentityPublicKey()+"  Alias "+p.getAlias());
 
+
+                FermatEvent event =  EventTypeAssetUserANS.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION.getNewEvent();
+                event.setSource(EventSource.ACTOR_ASSET_USER);
+
+                ((CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent)event).setActorAssetUserList(actorAssetUserListRemote);
+
+
+            }else  if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.ASSET_USER_ACTOR_NETWORK_SERVICE &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.NETWORK_SERVICE ){
+
+                /*
+                 * save into the cache
+                 */
+                remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
 
             }
 
-            System.out.println("**********************************");
 
-            remoteActorNetworkServicesRegisteredListAux= platformComponentProfileRegisteredList;
 
 
 
