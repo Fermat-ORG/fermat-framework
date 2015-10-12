@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType</code> define
- * all types that a platform component cam be
+ * all types that a platform component can be
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/09/15.
  *
@@ -62,10 +62,10 @@ public enum PlatformComponentType implements FermatEnum {
         switch (code){
 
             case "ACT"         : return ACTOR;
-            case "ANS"         : return PlatformComponentType.ACTOR_NETWORK_SERVICE;
-            case "COM_CLD_CLI" : return PlatformComponentType.COMMUNICATION_CLOUD_CLIENT;
-            case "COM_CLD_SER" : return PlatformComponentType.COMMUNICATION_CLOUD_SERVER;
-            case "NS"          : return PlatformComponentType.NETWORK_SERVICE;
+            case "ANS"         : return ACTOR_NETWORK_SERVICE;
+            case "COM_CLD_CLI" : return COMMUNICATION_CLOUD_CLIENT;
+            case "COM_CLD_SER" : return COMMUNICATION_CLOUD_SERVER;
+            case "NS"          : return NETWORK_SERVICE;
 
             default: throw new IllegalArgumentException();
         }
