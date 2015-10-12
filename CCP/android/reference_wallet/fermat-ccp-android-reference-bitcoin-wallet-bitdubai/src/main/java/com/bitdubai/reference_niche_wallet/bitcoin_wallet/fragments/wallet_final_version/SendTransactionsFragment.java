@@ -208,9 +208,11 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     if (isShow) {
                         Fx.slide_up(getActivity(), linear_layout_send_form);
                         linear_layout_send_form.setVisibility(View.GONE);
+                        empty.setVisibility(View.VISIBLE);
                     } else {
                         linear_layout_send_form.setVisibility(View.VISIBLE);
                         Fx.slide_down(getActivity(), linear_layout_send_form);
+                        empty.setVisibility(View.GONE);
                     }
                     if (lstCryptoWalletTransactionsBook.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.BOOK)) {
                         empty.setVisibility(View.VISIBLE);
