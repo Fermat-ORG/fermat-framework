@@ -82,7 +82,7 @@ public enum Activities {
     //Desktop
     CCP_DESKTOP("CCPD"),
     DAP_DESKTOP("DAPD"),
-    CBP_DESKTOP("CBPD"), 
+    CBP_DESKTOP("CBPD"),
     DAP_MAIN("DAPM"),
 
     // Crypto Broker Wallet
@@ -94,7 +94,11 @@ public enum Activities {
 
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
-    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI");
+    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI"),
+
+    // Crypto Customer Identity
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY("CBPSACCI"),
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CBPSACCICI");
 
     private String code;
 
@@ -236,10 +240,14 @@ public enum Activities {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
+            case "CBPSACBI":
+                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             case "CBPSACBICI":
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
-            case"CBPSACBI":
-                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
+            case "CBPSACCI":
+                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
+            case "CBPSACCICI":
+                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
