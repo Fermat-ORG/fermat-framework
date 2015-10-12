@@ -76,8 +76,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-
-
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot</code> is
  * throw when error occurred updating new record in a table of the data base

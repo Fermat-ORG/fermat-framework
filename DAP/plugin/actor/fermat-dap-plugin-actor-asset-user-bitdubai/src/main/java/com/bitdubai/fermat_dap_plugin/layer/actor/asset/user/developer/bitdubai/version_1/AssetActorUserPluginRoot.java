@@ -11,15 +11,21 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAcceptAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -261,7 +267,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
             this.serviceStatus = ServiceStatus.STARTED;
 
             test();
-            register();
+            registerActorInANS();
 //            testRaiseEvent();
 
         } catch (Exception e) {
@@ -333,13 +339,14 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      */
     @Override
     public void askAssetUserActorForAcceptance(String assetUserActorIdentityToLinkPublicKey, String assetUserActorToAddName, String assetUserActorToAddPublicKey, byte[] profileImage) throws CantCreateAssetUserActorException {
-        try {
-            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
-        } catch (CantAddPendingAssetUserException e) {
-            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR CONNECTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
-        }
+    //TODO ARREGLAR METODO
+//        try {
+////            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+//        } catch (CantAddPendingAssetUserException e) {
+//            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR CONNECTION", e, "", "");
+//        } catch (Exception e) {
+//            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
+//        }
     }
 
     /**
@@ -487,13 +494,14 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      */
     @Override
     public void receivingAssetUserActorRequestConnection(String assetUserActorLoggedInPublicKey, String assetUserActorToAddName, String assetUserActorToAddPublicKey, byte[] profileImage) throws CantCreateAssetUserActorException {
-        try {
-            this.assetUserActorDao.createNewAssetUser(assetUserActorLoggedInPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
-        } catch (CantAddPendingAssetUserException e) {
-            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", FermatException.wrapException(e), "", "");
-        }
+    //TODO ARREGLAR METODO
+//        try {
+//            this.assetUserActorDao.createNewAssetUser(assetUserActorLoggedInPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+//        } catch (CantAddPendingAssetUserException e) {
+//            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", e, "", "");
+//        } catch (Exception e) {
+//            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", FermatException.wrapException(e), "", "");
+//        }
     }
 
     /**
@@ -517,7 +525,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 
 //             return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
 
-            list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
+//            list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
 
 //             } catch (CantGetAssetUserActorsException  e) {
 //              throw new CantGetAssetUserActorsException("", e, ".","Cant Get Intra USer from Data Base");
@@ -527,48 +535,56 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         return list;
     }
 
-    public void register(){
+    private void registerActorInANS() {
 
-  /*      try {//TODO averiguar si se puede pasar una lista de ACTORS ó SE TRATA DE UNO ESPECIFICO por publicKEY ó ALGO
-            assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getAllAssetUserActor());
+        try {//TODO Escuchar EVENTO para confirmar que se Registro Actor Correctamente en el A.N.S
+            assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getAssetUserActor());
         } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
             e.printStackTrace();
-        }*/
+        }
 
 
-//        try {//TODO Averiguar para saber que se recibira de este metodo ya que actualmente no devuelve NADA
-//            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
-//        } catch (CantRequestListActorAssetUserRegisteredException e) {
-//            e.printStackTrace();
-//        }
+        try {//TODO Escuchar EVENTO para saber cuando "buscar" la informacion
+            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
+        } catch (CantRequestListActorAssetUserRegisteredException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void testRaiseEvent() {
-        System.out.println("Start event test");
-        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ASSET_USER_CONNECTION_ACCEPTED);
-        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
-        eventManager.raiseEvent(eventToRaise);
-        System.out.println("End event test");
-    }
+//    private void testRaiseEvent() {
+//        System.out.println("Start event test");
+//        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ASSET_USER_CONNECTION_ACCEPTED);
+//        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+//        eventManager.raiseEvent(eventToRaise);
+//        System.out.println("End event test");
+//    }
 
     private void test() throws CantCreateAssetUserActorException {
 //        list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
 
         System.out.println("************************************************************************");
-        System.out.println("------------ Lista de Asset User Actors Agregados en Table -------------");
+        System.out.println("------ Lista de Asset User Registered Actors Agregados en Table --------");
         System.out.println("************************************************************************");
         for (int i = 0; i < 10; i++) {
 //            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.CONNECTED);
             try {
                 String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorToAddPublicKey = UUID.randomUUID().toString();
+                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
+                Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
+                Genders genders = Genders.INDEFINITE;
+                String age = "25";
+                this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, "Thunders Asset User_" + i, assetUserActorToAddPublicKey, new byte[0], genders, age, cryptoAddress, ConnectionState.CONNECTED);
 
-                this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, "Thunders Asset User_" + i, assetUserActorToAddPublicKey, new byte[0], ConnectionState.CONNECTED);
-
-                System.out.println("assetUserActorIdentityToLinkPublicKey: " + assetUserActorIdentityToLinkPublicKey);
-                System.out.println("assetUserActorToAddName: Thunders Asset User_" + i);
-                System.out.println("assetUserActorToAddPublicKey: " + assetUserActorToAddPublicKey);
+                System.out.println("Asset User Actor Identity Link PublicKey: " + assetUserActorIdentityToLinkPublicKey);
+                System.out.println("Asset User Actor Name: Thunders Asset User_" + i);
+                System.out.println("Asset User Actor PublicKey: " + assetUserActorToAddPublicKey);
                 System.out.println("profileImage: " + new byte[0]);
+//                System.out.println("Location: -AL: " + location.getAltitude() + " - LA: " + location.getLatitude() + " - LO: " + location.getLongitude() + " - Provider: " + LocationProvider.getByCode(location.getProvider().getCode()) + " - Time: " + location.getTime());
+                System.out.println("Genders: " + Genders.getByCode(genders.getCode()));
+                System.out.println("Age: " + age);
+                System.out.println("CryptoAddress: " + cryptoAddress.getAddress() + " " + CryptoCurrency.getByCode(cryptoAddress.getCryptoCurrency().getCode()));
+
                 System.out.println("------------------------------------------------------------------------");
 
             } catch (CantAddPendingAssetUserException e) {

@@ -62,6 +62,8 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
     private int offset = 0;
 
+    private int mNotificationsCount=0;
+
     /**
      * Create a new instance of this fragment
      *
@@ -78,6 +80,8 @@ public class ConnectionsWorldFragment  extends FermatFragment {
             // setting up  module
             moduleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
             errorManager = subAppsSession.getErrorManager();
+
+            mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -129,6 +133,8 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
         rootView.setLayoutParams(layoutParams);
 
+        rootView.setBackgroundColor(Color.parseColor("#000b12"));
+
         rootView.addView(gridView);
 
             return rootView;
@@ -174,7 +180,7 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
                 switch (position){
                     case 0:
-                        holder.Photo.setImageResource(R.drawable.mati_profile);
+                        holder.Photo.setImageResource(R.drawable.piper_profile_picture);
                         break;
                     case 1:
                         holder.Photo.setImageResource(R.drawable.luis_profile_picture);
@@ -188,6 +194,19 @@ public class ConnectionsWorldFragment  extends FermatFragment {
                     case 4:
                         holder.Photo.setImageResource(R.drawable.madaleine_profile_picture);
                         break;
+                    case 5:
+                        holder.Photo.setImageResource(R.drawable.adrian_profile_picture);
+                        break;
+                    case 6:
+                        holder.Photo.setImageResource(R.drawable.deniz_profile_picture);
+                        break;
+                    case 7:
+                        holder.Photo.setImageResource(R.drawable.dea_profile_picture);
+                        break;
+                    case 8:
+                        holder.Photo.setImageResource(R.drawable.florence_profile_picture);
+                        break;
+
                     default:
                         holder.Photo.setImageResource(R.drawable.robert_profile_picture);
                         break;

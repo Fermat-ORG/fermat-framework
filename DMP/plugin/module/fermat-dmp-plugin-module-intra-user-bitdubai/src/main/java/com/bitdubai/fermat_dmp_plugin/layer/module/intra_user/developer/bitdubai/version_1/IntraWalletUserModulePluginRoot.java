@@ -583,6 +583,19 @@ public class IntraWalletUserModulePluginRoot implements  DealsWithErrors,DealsWi
         }
     }
 
+    /**
+     * That method returns the list of intra users waiting to be accepted
+     * or rejected by the logged in intra user
+     *
+     * @return the list of intra users waiting to be accepted or rejected by the  logged in intra user
+     * @throws CantGetIntraUsersListException
+     */
+    @Override
+    public int getIntraUsersWaitingYourAcceptanceCount() {
+       //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
+       return 6;
+    }
+
 
     /**
      * That method list the intra users that haven't
