@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -10,17 +13,21 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.GetDataMessage;
 import org.bitcoinj.core.Message;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBag;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.core.WalletEventListener;
 import org.bitcoinj.script.Script;
@@ -102,11 +109,17 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          * Register the new incoming transaction into the database
          */
         try {
-            getDao().saveNewIncomingTransaction(tx.getHashAsString(), CryptoStatus.ON_CRYPTO_NETWORK, tx.getConfidence().getDepthInBlocks());
+            getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                    CryptoStatus.ON_CRYPTO_NETWORK,
+                    tx.getConfidence().getDepthInBlocks(),
+                    getIncomingTransactionAddressTo(wallet.getNetworkParameters(), tx),
+                    getIncomingTransactionAddressFrom(tx),
+                    tx.getValue(wallet).getValue(),
+                    tx.getFee().getValue(),
+                    ProtocolStatus.TO_BE_NOTIFIED);
         } catch (CantExecuteDatabaseOperationException e) {
             //todo handle I could try to save it to disk and each time is executed try to get it from disk
         }
-
     }
 
     @Override
@@ -152,11 +165,71 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     /**
      * Gets the Crypto Status of the transaction by calculating the transaction depth
+     * I need to check if the transaction had another Crypto Status to verify if this is a reversion.
+     * Example, if it was under 1 block (ON_BLOCKCHAIN) and now is 0 (ON_CRYPTO_NETWORK), is a Reversion on Blockchain.
      * @param tx
      * @return
      */
     private CryptoStatus getTransactionCryptoStatus(Transaction tx){
+        CryptoStatus currentCryptoStatus = getcurrentTransactionCryptoStatus(tx.getHashAsString());
 
+        switch (tx.getConfidence().getDepthInBlocks()){
+            case 0:
+                if (currentCryptoStatus == null)
+                    return CryptoStatus.REVERSED_ON_CRYPTO_NETWORK;
+                else
+                    return CryptoStatus.ON_CRYPTO_NETWORK;
+            case 1:
+                if (currentCryptoStatus == null)
+                    return CryptoStatus.REVERSED_ON_BLOCKCHAIN;
+                else
+                    return CryptoStatus.ON_BLOCKCHAIN;
+            case 2:
+                return CryptoStatus.IRREVERSIBLE;
+            default:
+                return CryptoStatus.PENDING_SUBMIT;
+        }
+    }
+
+    private CryptoStatus getcurrentTransactionCryptoStatus(String txHashAsString) {
+        //todo get CryptoStatus from database. Null if no records found.
         return null;
+    }
+
+    /**
+     * Extracts the Address To from an Incoming Transaction
+     * @param tx
+     * @return
+     */
+    private CryptoAddress getIncomingTransactionAddressTo (NetworkParameters networkParameters, Transaction tx){
+        /**
+         * I will loop from the outputs until i get an address
+         */
+        Address address = null;
+        for (TransactionOutput output : tx.getOutputs()){
+            if (output.getAddressFromP2PKHScript(networkParameters) != null)
+                address = output.getAddressFromP2PKHScript(networkParameters);
+
+            if (output.getAddressFromP2SH(networkParameters) != null)
+                address = output.getAddressFromP2PKHScript(networkParameters);
+        }
+        CryptoAddress cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+        return cryptoAddress;
+    }
+
+    /**
+     * Extracts the Address From from an Incoming Transaction
+     * @param tx
+     * @return
+     */
+    private CryptoAddress getIncomingTransactionAddressFrom (Transaction tx){
+        Address address = null;
+        for (TransactionInput input : tx.getInputs()){
+            if (input.getFromAddress() != null)
+                address = input.getFromAddress();
+        }
+
+        CryptoAddress cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+        return cryptoAddress;
     }
 }
