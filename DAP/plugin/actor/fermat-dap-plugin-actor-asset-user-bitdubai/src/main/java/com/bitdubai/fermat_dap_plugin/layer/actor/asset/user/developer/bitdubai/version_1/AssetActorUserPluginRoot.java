@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAcceptAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCancelAssetUserActorException;
@@ -530,11 +529,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 
     public void register(){
 
-        try {//TODO averiguar si se puede pasar una lista de ACTORS ó SE TRATA DE UNO ESPECIFICO por publicKEY ó ALGO
+  /*      try {//TODO averiguar si se puede pasar una lista de ACTORS ó SE TRATA DE UNO ESPECIFICO por publicKEY ó ALGO
             assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getAllAssetUserActor());
         } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
 //        try {//TODO Averiguar para saber que se recibira de este metodo ya que actualmente no devuelve NADA

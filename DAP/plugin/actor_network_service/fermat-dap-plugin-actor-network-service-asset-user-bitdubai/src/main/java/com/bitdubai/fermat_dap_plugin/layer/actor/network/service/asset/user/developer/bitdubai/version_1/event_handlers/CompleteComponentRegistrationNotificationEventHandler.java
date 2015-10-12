@@ -54,17 +54,13 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
-
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
 
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType()) {
+            /*
+             *  networkService make the job
+             */
+             this.networkService.handleCompleteComponentRegistrationNotificationEvent(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
 
-                /*
-                 *  networkService make the job
-                 */
-                 this.networkService.handleCompleteComponentRegistrationNotificationEvent(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
-
-            }
         }
     }
 }
