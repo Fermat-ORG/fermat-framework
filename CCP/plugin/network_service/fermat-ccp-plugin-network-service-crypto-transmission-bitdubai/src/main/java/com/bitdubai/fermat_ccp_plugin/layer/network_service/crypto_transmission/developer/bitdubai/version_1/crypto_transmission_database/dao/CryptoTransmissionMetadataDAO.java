@@ -371,6 +371,16 @@ public class CryptoTransmissionMetadataDAO {
 
     }
 
+    //TODO: actualiza el estado de el flag de visto a true.
+    public void confirmReception(UUID transactionID) {
+
+    }
+
+
+    public List<CryptoTransmissionMetadata> getPendings() throws CantReadRecordDataBaseException {
+        return findAll(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME,"true");
+    }
+
 
 
     private CryptoTransmissionMetadata buildCryptoTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {

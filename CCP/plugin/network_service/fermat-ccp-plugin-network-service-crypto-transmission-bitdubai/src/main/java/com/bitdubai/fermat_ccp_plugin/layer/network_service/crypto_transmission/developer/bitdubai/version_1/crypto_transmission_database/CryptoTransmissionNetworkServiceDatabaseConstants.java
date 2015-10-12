@@ -29,6 +29,7 @@ public class CryptoTransmissionNetworkServiceDatabaseConstants {
     public static final String CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME = "payment_description";
     public static final String CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME = "status";
     public static final String CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME = "type";
+    public static final String CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME = "pending_flag";
 
    public static final String CRYPTO_TRANSMISSION_METADATA_FIRST_KEY_COLUMN = "transmission_id";
 

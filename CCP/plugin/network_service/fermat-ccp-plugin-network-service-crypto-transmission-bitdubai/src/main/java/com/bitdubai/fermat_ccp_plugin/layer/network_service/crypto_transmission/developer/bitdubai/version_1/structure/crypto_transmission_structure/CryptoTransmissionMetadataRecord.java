@@ -22,6 +22,7 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     private String paymentDescription;
     private CryptoTransmissionStates cryptoTransmissionState;
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
+    private boolean pendigFlag;
 
 
     public CryptoTransmissionMetadataRecord(String associatedCryptoTransactionHash,
@@ -105,5 +106,10 @@ public class CryptoTransmissionMetadataRecord implements CryptoTransmissionMetad
     @Override
     public void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType) {
         this.cryptoTransmissionMetadataType =cryptoTransmissionMetadataType;
+    }
+
+    @Override
+    public boolean isPendigFlag() {
+        return pendigFlag;
     }
 }

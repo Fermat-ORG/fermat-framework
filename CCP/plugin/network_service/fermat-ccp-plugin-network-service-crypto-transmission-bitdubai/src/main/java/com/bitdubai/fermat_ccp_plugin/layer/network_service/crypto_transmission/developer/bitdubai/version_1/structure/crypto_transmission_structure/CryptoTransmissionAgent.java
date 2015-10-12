@@ -40,6 +40,8 @@ public class CryptoTransmissionAgent {
     * Represent the sleep time for the read or send (2000 milliseconds)
     */
     private static final long SLEEP_TIME = 6000;
+    private static final long RECEIVE_SLEEP_TIME = 15000;
+
 
     /**
      * DealsWithErrors Interface member variables.
@@ -525,7 +527,7 @@ public class CryptoTransmissionAgent {
 
 
             //Sleep for a time
-            toSend.sleep(CryptoTransmissionAgent.SLEEP_TIME);
+            toSend.sleep(CryptoTransmissionAgent.RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
@@ -540,7 +542,6 @@ public class CryptoTransmissionAgent {
         //communicationNetworkServiceConnectionManager.
 
         Map<String, Object> filters = new HashMap<>();
-        filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionStates.PROCESSING_RECEIVE.getCode());
 
             filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionMetadataType.METADATA_RECEIVE.getCode());
         //filters.put(ComunicationLayerNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
@@ -575,17 +576,9 @@ public class CryptoTransmissionAgent {
                             // lo cambio directo porque la metadata viene con un mensaje de estado distinto, actualizado
 
                             switch (cryptoTransmissionMetadata.getCryptoTransmissionStates()) {
-                                case PROCESSING_RECEIVE:
-                                    cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
-                                    // deberia ver si tengo que lanzar un evento acá
-                                    System.out.print("-----------------------\n" +
-                                            "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
-                                    System.out.print("CryptoTransmission PROCESSING_RECEIVE event");
-                                    break;
 
                                 case SEEN_BY_DESTINATION_NETWORK_SERVICE:
-                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
+                                    //guardo estado
                                     cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
                                     // deberia ver si tengo que lanzar un evento acá
                                     System.out.print("-----------------------\n" +
@@ -593,17 +586,18 @@ public class CryptoTransmissionAgent {
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     System.out.print("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
                                     break;
+
                                 case SEEN_BY_DESTINATION_VAULT:
                                     // deberia ver si tengo que lanzar un evento acá
-                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_DESTINATION_VAULT);
                                     cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
                                     System.out.print("-----------------------\n" +
                                             "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
                                     break;
+
                                 case CREDITED_IN_DESTINATION_WALLET:
-                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
+                                    // Guardo estado
                                     cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
                                     System.out.print("-----------------------\n" +
                                             "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
@@ -613,18 +607,25 @@ public class CryptoTransmissionAgent {
                                     break;
                                 // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                                 case SENT:
-                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
+
+                                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.SEEN_BY_OWN_NETWORK_SERVICE);
                                     cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
                                     cryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
+
                                     System.out.print("-----------------------\n" +
                                             "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
 
                                     // Notifico recepcion de metadata
-                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
+                                    CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = new CryptoTransmissionResponseMessage(
+                                            cryptoTransmissionMetadata.getTransactionId(),
+                                            CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE,
+                                            CryptoTransmissionMetadataType.METADATA_SEND);
+
                                     Gson gson = new Gson();
-                                    String message = gson.toJson(cryptoTransmissionMetadata);
+                                    String message = gson.toJson(cryptoTransmissionResponseMessage);
                                     communicationNetworkServiceLocal.sendMessage(cryptoTransmissionMetadata.getSenderPublicKey(),message);
+
                                     System.out.print("-----------------------\n" +
                                             "ENVIANDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
@@ -740,8 +741,6 @@ public class CryptoTransmissionAgent {
 
             CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(fermatMessage.getContent(), CryptoTransmissionMetadataRecord.class);
 
-            cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_RECEIVE);
-
             cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
 
             cryptoTransmissionMetadataDAO.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
@@ -767,6 +766,13 @@ public class CryptoTransmissionAgent {
 
         } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
+        }  catch (ClassCastException c){
+            //quiere decir que no estoy reciviendo metadata si no una respuesta
+
+            CryptoTransmissionResponseMessage cryptoTransmissionResponseMessage = gson.fromJson(fermatMessage.getContent(), CryptoTransmissionResponseMessage.class);
+
+
+
         }
     }
 
@@ -777,6 +783,10 @@ public class CryptoTransmissionAgent {
 
     public boolean isConnection(String publicKey){
         return this.poolConnectionsWaitingForResponse.containsKey(publicKey);
+    }
+
+    public boolean isRunning(){
+        return running;
     }
 
 }

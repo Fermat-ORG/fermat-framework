@@ -29,8 +29,13 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
@@ -1129,6 +1134,52 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
     @Override
     public TransactionProtocolManager<FermatCryptoTransaction> getTransactionManager() {
+
+
+//        TransactionProtocolManager<FermatCryptoTransaction> fermatCryptoTransactionTransactionProtocolManager = new FermatCryptoTransaction(
+//                false,
+//                null,
+//
+//        );
+        TransactionProtocolManager<FermatCryptoTransaction> transactionTransactionProtocolManager = new TransactionProtocolManager<FermatCryptoTransaction>() {
+            @Override
+            public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
+                cryptoTransmissionMetadataDAO.confirmReception(transactionID);
+            }
+
+            @Override
+            public List<Transaction<FermatCryptoTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+                List<Transaction<FermatCryptoTransaction>> lst = new ArrayList<>();
+                try {
+
+                    for(CryptoTransmissionMetadata cryptoTransmissionMetadata : cryptoTransmissionMetadataDAO.getPendings()){
+
+                        FermatCryptoTransaction fermatCryptoTransaction = new FermatCryptoTransaction(
+                                false,
+                                null,
+                                cryptoTransmissionMetadata.getSenderPublicKey(),
+                                cryptoTransmissionMetadata.getDestinationPublicKey(),
+                                cryptoTransmissionMetadata.getAssociatedCryptoTransactionHash(),
+                                cryptoTransmissionMetadata.getPaymentDescription());
+
+                        Transaction transaction = new Transaction(
+                                cryptoTransmissionMetadata.getTransactionId(),
+                                fermatCryptoTransaction,
+                                Action.APPLY,
+                                System.currentTimeMillis()
+                                );
+
+
+                        lst.add(transaction);
+                    }
+
+                } catch (CantReadRecordDataBaseException e) {
+                    e.printStackTrace();
+                }
+                return lst;
+            }
+        };
+
         return null;
     }
 
