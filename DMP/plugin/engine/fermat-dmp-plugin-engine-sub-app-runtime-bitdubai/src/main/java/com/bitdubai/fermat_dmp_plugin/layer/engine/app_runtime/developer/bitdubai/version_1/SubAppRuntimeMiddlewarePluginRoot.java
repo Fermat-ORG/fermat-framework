@@ -980,11 +980,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
 
-            TitleBar titleBar = new TitleBar();
-            titleBar.setLabel("Crypto Broker Identity");
-            titleBar.setColor("#FFFFFF");
-            titleBar.setLabelSize(16);
-            runtimeActivity.setTitleBar(titleBar);
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Crypto Broker Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
             statusBar.setColor("#0288D1");
@@ -1003,11 +1003,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
 
-            titleBar = new TitleBar();
-            titleBar.setLabel("Create New Identity");
-            titleBar.setColor("#FFFFFF");
-            titleBar.setLabelSize(16);
-            runtimeActivity.setTitleBar(titleBar);
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Create New Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
             statusBar.setColor("#0288D1");
@@ -1019,6 +1019,60 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
+
+            /**
+             * CRYPTO CUSTOMER IDENTITY
+             */
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY);
+
+            // Activity: List of identities
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Crypto Customer Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Create New Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            listSubApp.put(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, runtimeSubApp);
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;

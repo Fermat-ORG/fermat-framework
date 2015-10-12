@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/identity_list_recycler_view"
+            android:id="@+id/crypto_customer_identity_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -23,7 +23,7 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/new_identity_float_action_button"
+        android:id="@+id/new_crypto_customer_identity_float_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

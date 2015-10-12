@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_identity.fragments;
+package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -23,20 +23,20 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
-import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
+import com.bitdubai.sub_app.crypto_customer_identity.R;
+import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIdentityFragment extends FermatFragment {
-    private static final String TAG = "CreateIdentityFragment";
+public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
+    private static final String TAG = "CreateCustomerIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -51,7 +51,7 @@ public class CreateIdentityFragment extends FermatFragment {
 
     private byte[] brokerImageByteArray;
 
-    private CryptoBrokerIdentityModuleManager moduleManager;
+    private CryptoCustomerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
 
     private Button createButton;
@@ -59,8 +59,8 @@ public class CreateIdentityFragment extends FermatFragment {
     private ImageView mBrokerImage;
 
 
-    public static CreateIdentityFragment newInstance() {
-        return new CreateIdentityFragment();
+    public static CreateCryptoCustomerIdentityFragment newInstance() {
+        return new CreateCryptoCustomerIdentityFragment();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CreateIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
+            moduleManager = ((CryptoCustomerIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -79,7 +79,7 @@ public class CreateIdentityFragment extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_create_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_customer_identity, container, false);
         initViews(rootLayout);
 
 
@@ -91,9 +91,9 @@ public class CreateIdentityFragment extends FermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_button);
-        mBrokerName = (EditText) layout.findViewById(R.id.broker_name);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.broker_image);
+        createButton = (Button) layout.findViewById(R.id.create_crypto_customer_button);
+        mBrokerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
+        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
 
         mBrokerName.requestFocus();
 
@@ -115,7 +115,7 @@ public class CreateIdentityFragment extends FermatFragment {
                 int resultKey = CREATE_IDENTITY_SUCCESS;
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
@@ -203,9 +203,9 @@ public class CreateIdentityFragment extends FermatFragment {
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
-                    moduleManager.createCryptoBrokerIdentity(brokerNameText, brokerImageByteArray);
+                    moduleManager.createCryptoCustomerIdentity(brokerNameText, brokerImageByteArray);
                     return CREATE_IDENTITY_SUCCESS;
-                } catch (CouldNotCreateCryptoBrokerException ex) {
+                } catch (CouldNotCreateCryptoCustomerException ex) {
                     CommonLogger.exception(TAG, ex.getMessage(), ex);
                     return CREATE_IDENTITY_FAIL_MODULE_EXCEPTION;
                 }
@@ -228,7 +228,7 @@ public class CreateIdentityFragment extends FermatFragment {
     private void loadImageFromGallery() {
         Log.i(TAG, "Loading Image from Gallery...");
 
-        Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.factory.AssetFactoryFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentFactory;
+import com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCustomerIdentityFragmentFactory;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
 import com.bitdubai.sub_app.intra_user.fragmentFactory.IntraUserFragmentFactory;
 import com.bitdubai.sub_app.wallet_factory.factory.WalletFactoryFragmentFactory;
@@ -33,6 +34,8 @@ public class SubAppFragmentFactory {
                 return new AssetFactoryFragmentFactory();
             case CBP_CRYPTO_BROKER_IDENTITY:
                 return new CryptoBrokerIdentityFragmentFactory();
+            case CBP_CRYPTO_CUSTOMER_IDENTITY:
+                return new CryptoCustomerIdentityFragmentFactory();
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + subAppType, "This Code Is Not Valid for the Plugins enum");
         }
