@@ -31,6 +31,9 @@ public interface Negotiation {
 
     float getMerchandiseAmount();
     float getPaymentAmount();
+
+    long getCreationDate();
+    long getLastUpdateDate();
     long getExpirationDate();
 
     NegotiationStatus getStatus();
