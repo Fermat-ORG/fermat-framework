@@ -39,6 +39,8 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
         System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
 
+        System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE!!!!");
+
 
         if (((Service) this.cryptoTransmissionAgent).getStatus() == ServiceStatus.STARTED) {
 

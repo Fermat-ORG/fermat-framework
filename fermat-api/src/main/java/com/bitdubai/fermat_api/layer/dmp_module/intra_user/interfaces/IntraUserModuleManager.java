@@ -153,4 +153,6 @@ public interface IntraUserModuleManager {
      * @throws CantShowLoginIdentitiesException
      */
     public IntraUserLoginIdentity getActiveIntraUserIdentity() throws CantGetActiveLoginIdentityException;
+
+    public int getIntraUsersWaitingYourAcceptanceCount();
 }
