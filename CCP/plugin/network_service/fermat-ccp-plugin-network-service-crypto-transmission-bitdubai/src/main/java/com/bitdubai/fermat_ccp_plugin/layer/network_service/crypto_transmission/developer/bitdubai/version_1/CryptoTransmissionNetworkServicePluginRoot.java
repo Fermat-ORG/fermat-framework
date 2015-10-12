@@ -344,7 +344,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-        FermatEventListener fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+
+        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(cryptoTransmissionAgent));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -352,7 +353,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         /**
          *
          */
-        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(cryptoTransmissionAgent));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
