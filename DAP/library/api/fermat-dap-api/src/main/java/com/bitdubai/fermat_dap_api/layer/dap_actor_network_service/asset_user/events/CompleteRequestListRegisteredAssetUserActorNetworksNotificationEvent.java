@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events;
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEven
         this.actorAssetUserList = actorAssetUserList;
     }
 
-    public CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(EventType eventType) {
+    public CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(EventTypeAssetUserANS eventType) {
         super(eventType);
     }
 

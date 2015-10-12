@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.BasicFermatEventListener</code>
@@ -31,7 +31,7 @@ public class BasicFermatEventListener implements FermatEventListener {
     /**
      * Represent the eventType
      */
-    private EventType eventType;
+    private EventTypeAssetUserANS eventType;
 
     /**
      * Represent the eventHandler
@@ -44,7 +44,7 @@ public class BasicFermatEventListener implements FermatEventListener {
      * @param eventType
      * @param eventMonitor
      */
-    public BasicFermatEventListener(EventType eventType, FermatEventMonitor eventMonitor){
+    public BasicFermatEventListener(EventTypeAssetUserANS eventType, FermatEventMonitor eventMonitor){
         this.eventType = eventType;
         this.eventMonitor = eventMonitor;
     }
@@ -54,7 +54,7 @@ public class BasicFermatEventListener implements FermatEventListener {
      * @see FermatEventListener#getEventType()
      */
     @Override
-    public EventType getEventType() {
+    public EventTypeAssetUserANS getEventType() {
         return eventType;
     }
 

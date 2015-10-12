@@ -9,7 +9,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.e
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.AbstractDapAssetUserActorNetworkServiceFermatEvent</code>
@@ -21,17 +21,17 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.en
  */
 public class AbstractDapAssetUserActorNetworkServiceFermatEvent implements FermatEvent {
 
-    private final EventType eventType;
+    private final EventTypeAssetUserANS eventType;
 
     private EventSource eventSource;
 
-    public AbstractDapAssetUserActorNetworkServiceFermatEvent(EventType eventType){
+    public AbstractDapAssetUserActorNetworkServiceFermatEvent(EventTypeAssetUserANS eventType){
 
         this.eventType = eventType;
     }
 
     @Override
-    public EventType getEventType() {
+    public EventTypeAssetUserANS getEventType() {
         return this.eventType;
     }
 

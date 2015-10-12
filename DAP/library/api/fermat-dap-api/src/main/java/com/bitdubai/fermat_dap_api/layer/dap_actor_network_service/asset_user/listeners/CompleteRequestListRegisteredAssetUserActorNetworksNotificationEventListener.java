@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener</code>
@@ -19,7 +19,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.en
  */
 public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener extends BasicFermatEventListener{
 
-    public CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener(EventType eventType, FermatEventMonitor eventMonitor) {
+    public CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener(EventTypeAssetUserANS eventType, FermatEventMonitor eventMonitor) {
         super(eventType, eventMonitor);
     }
 }
