@@ -625,17 +625,17 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
          */
         DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
                                                                      constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR, //applicant = who made the request
-                                                                                                            NetworkServiceType.UNDEFINED,
-                                                                                                            null,                     // alias
-                                                                                                            null,                     // identityPublicKey
-                                                                                                            null,                     // location
-                                                                                                            null,                     // distance
-                                                                                                            null,                     // name
-                                                                                                            null,                     // extraData
-                                                                                                            null,                     // offset
-                                                                                                            null,                     // max
-                                                                                                            null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                                                            null);
+                                                                             NetworkServiceType.UNDEFINED,
+                                                                             null,                     // alias
+                                                                             null,                     // identityPublicKey
+                                                                             null,                     // location
+                                                                             null,                     // distance
+                                                                             null,                     // name
+                                                                             null,                     // extraData
+                                                                             null,                     // offset
+                                                                             null,                     // max
+                                                                             null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                             null);
 
         /*
          * request the list to the server
@@ -839,6 +839,10 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleFailureComponentRegistrationNotificationEvent");
+
+        /*
+         * TODO: ANALIZAR QUE HACER AQUI
+         */
 
     }
 
