@@ -1,7 +1,5 @@
-== FERMAT for developers
+== FERMAT for developers 1
 === FERMAT CORE 
-=== FERMAT P2P
-=== FERMAT BCH
 === FERMAT PIP
 
 

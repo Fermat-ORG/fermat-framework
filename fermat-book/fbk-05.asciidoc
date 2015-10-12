@@ -2,7 +2,9 @@
 In this platform the actors involved are the * cryptobroker*, i.e  the person or organization whose business logic is to buy and sell cryptocurrency for fiat money, obtaining his profits from the difference in the buy/sell price, and his customers ( *cryptocustomers* ).
 
 === FERMAT Cr-Br (Cryptobroker Wallet)
-This The theoretical assumption is that thet broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit.
+This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsability of the basic management of the broker's fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated. +
+
+
 Allow a network of cryptobrokers associated by means of an *agreement* to be able to address larger operations.
 
 
