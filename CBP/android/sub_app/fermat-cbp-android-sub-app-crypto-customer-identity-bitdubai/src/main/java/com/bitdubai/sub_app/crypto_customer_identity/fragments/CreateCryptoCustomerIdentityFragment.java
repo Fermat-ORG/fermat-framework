@@ -36,7 +36,7 @@ import java.io.ByteArrayOutputStream;
  * A simple {@link Fragment} subclass.
  */
 public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
-    private static final String TAG = "CreateCryptoCustomerIdentityFragment";
+    private static final String TAG = "CreateCustomerIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -115,7 +115,7 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
                 int resultKey = CREATE_IDENTITY_SUCCESS;
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();

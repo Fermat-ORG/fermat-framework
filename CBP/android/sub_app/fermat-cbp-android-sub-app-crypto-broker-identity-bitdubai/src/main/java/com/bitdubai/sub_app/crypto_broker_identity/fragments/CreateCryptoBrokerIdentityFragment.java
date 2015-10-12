@@ -36,7 +36,7 @@ import java.io.ByteArrayOutputStream;
  * A simple {@link Fragment} subclass.
  */
 public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
-    private static final String TAG = "CreateCryptoBrokerIdentityFragment";
+    private static final String TAG = "CreateBrokerIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
