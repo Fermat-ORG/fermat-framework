@@ -19,7 +19,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishment;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.util.BankMoneyStockReplenishmentBusinessTransactionWrapper;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.structure.BankMoneyStockReplenishmentBusinessTransactionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException;
@@ -33,29 +33,19 @@ import java.util.UUID;
  * Created by Yordin Alayn on 27.09.15.
  */
 public class BankMoneyStockReplenishmentBusinessTransactionDao{
-    /**
-     * CryptoAddressBook Interface member variables.
-     */
+
     private Database database;
-    /**
-     * DealsWithDatabaseSystem Interface member variables.
-     */
+
     PluginDatabaseSystem pluginDatabaseSystem;
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
+
     private UUID pluginId;
-    /**
-     * Constructor.
-     */
+
     public BankMoneyStockReplenishmentBusinessTransactionDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginId = pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    /**
-     * BankMoneyStockReplenishment Interface implementation.
-     */
+    /*INITIALIZE DATABASE*/
     public void initialize() throws CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException {
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
@@ -75,6 +65,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         }
     }
 
+    /*CREATE NEW TRANSACTION*/
     public void createNewBankMoneyStockReplenishment(
             String publicKeyBroker,
             String merchandiseCurrency,
@@ -96,7 +87,8 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         }
     }
 
-    public void updateStatusBankMoneyStockReplenishment(BankMoneyStockReplenishmentBusinessTransactionWrapper businessTransaction, BusinessTransactionStatus transactionStatus) throws CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException {
+    /*UPDATE STATUS TRANSACTION*/
+    public void updateStatusBankMoneyStockReplenishment(BankMoneyStockReplenishmentBusinessTransactionImpl businessTransaction, BusinessTransactionStatus transactionStatus) throws CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException {
         try {
             setToState(businessTransaction, transactionStatus);
         } catch (CantUpdateRecordException | CantLoadTableToMemoryException exception) {
@@ -106,22 +98,18 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         }
     }
 
-    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantLoadTableToMemoryException, InvalidParameterException {
+    /*GENERATE LIST TRANSACTION*/
+    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentListFromCurrentDeviceUser() throws CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable identityTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
         identityTable.loadToMemory();
-
         List<DatabaseTableRecord> records = identityTable.getRecords();
         identityTable.clearAllFilters();
-
         List<BankMoneyStockReplenishment> bankMoneyStockReplenishment = new ArrayList<>();
-
         for (DatabaseTableRecord record : records) {
             bankMoneyStockReplenishment.add(constructBankMoneyStockReplenishmentFromRecord(record));
         }
-
         return bankMoneyStockReplenishment;
     }
-
 
     private void loadRecordAsNew(
         DatabaseTableRecord databaseTableRecord,
@@ -134,7 +122,6 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         BankOperationType bankOperationType
     ) {
         UUID transactionId = UUID.randomUUID();
-
         databaseTableRecord.setUUIDValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME, transactionStatus.getCode());
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME, publicKeyBroker);
@@ -146,7 +133,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
 
     }
 
-    private void setToState(BankMoneyStockReplenishmentBusinessTransactionWrapper businessTransaction, BusinessTransactionStatus status) throws CantUpdateRecordException, BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException, CantLoadTableToMemoryException {
+    private void setToState(BankMoneyStockReplenishmentBusinessTransactionImpl businessTransaction, BusinessTransactionStatus status) throws CantUpdateRecordException, BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable       transactionTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
         DatabaseTableRecord recordToUpdate   = getByPrimaryKey(businessTransaction.getTransactionId());
         recordToUpdate.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME, status.getCode());
@@ -178,7 +165,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         BankOperationType           bankOperationType       = BankOperationType.getByCode(record.getStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_OPERATION_TYPE_COLUMN_NAME));
         BusinessTransactionStatus   status                  = BusinessTransactionStatus.getByCode(record.getStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME));
 
-        return new BankMoneyStockReplenishmentBusinessTransactionWrapper(
+        return new BankMoneyStockReplenishmentBusinessTransactionImpl(
             transactionId,
             brokerPublicKey,
             merchandiseCurrency,

@@ -20,10 +20,10 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Deals
     private String publicKey;
     private String privateKey;
     private byte[] profileImage;
-    private final PluginFileSystem pluginFileSystem;
+    private PluginFileSystem pluginFileSystem;
 
 //    public CryptoCustomerIdentityImpl(final String alias, final KeyPair keyPair, final byte[] profileImage, final PluginFileSystem pluginFileSystem){
-    public CryptoCustomerIdentityImpl(final String alias, String publicKey, String privateKey, final byte[] profileImage, final PluginFileSystem pluginFileSystem){
+    public CryptoCustomerIdentityImpl(final String alias, String publicKey, String privateKey, final byte[] profileImage, PluginFileSystem pluginFileSystem){
         this.alias = alias;
 //        this.keyPair = keyPair;
         this.publicKey = publicKey;
@@ -52,10 +52,14 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Deals
         return profileImage;
     }
 
+
     @Override
     public void setNewProfileImage(byte[] imageBytes) {
-
+        this.profileImage = imageBytes;
     }
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFile) { this.pluginFileSystem = pluginFile; }
 
     @Override
     public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
@@ -65,11 +69,6 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Deals
         } catch(Exception ex){
             throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
         }
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-
     }
 
     /*@Override

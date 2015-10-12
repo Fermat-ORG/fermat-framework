@@ -1,45 +1,41 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.util;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.crypto_money_stock_replenishment.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CryptoCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishment;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.crypto_money_stock_replenishment.interfaces.CryptoMoneyStockReplenishment;
 
 import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 29.09.15.
  */
-public class BankMoneyStockReplenishmentBusinessTransactionWrapper implements BankMoneyStockReplenishment{
+public class CryptoMoneyStockReplenishmentBusinessTransactionImpl implements BusinessTransaction, CryptoMoneyStockReplenishment{
 
     private UUID transactionId;
     private String publicKeyBroker;
     private CurrencyType merchandiseCurrency;
     private float merchandiseAmount;
     private UUID executionTransactionId;
-    private BankCurrencyType bankCurrencyType;
-    private BankOperationType bankOperationType;
+    private CryptoCurrencyType cryptoCurrencyType;
     private BusinessTransactionStatus transactionStatus;
 
-    public BankMoneyStockReplenishmentBusinessTransactionWrapper(
-        UUID transactionId,
-        String publicKeyBroker,
-        CurrencyType merchandiseCurrency,
-        float merchandiseAmount,
-        UUID executionTransactionId,
-        BankCurrencyType bankCurrencyType,
-        BankOperationType bankOperationType,
-        BusinessTransactionStatus transactionStatus
+    public CryptoMoneyStockReplenishmentBusinessTransactionImpl(
+            UUID transactionId,
+            String publicKeyBroker,
+            CurrencyType merchandiseCurrency,
+            float merchandiseAmount,
+            UUID executionTransactionId,
+            CryptoCurrencyType cryptoCurrencyType,
+            BusinessTransactionStatus transactionStatus
     ){
         this.transactionId = transactionId;
         this.publicKeyBroker = publicKeyBroker;
         this.merchandiseCurrency = merchandiseCurrency;
         this.merchandiseAmount = merchandiseAmount;
         this.executionTransactionId = executionTransactionId;
-        this.bankCurrencyType = bankCurrencyType;
-        this.bankOperationType = bankOperationType;
+        this.cryptoCurrencyType = cryptoCurrencyType;
         this.transactionStatus = transactionStatus;
     }
 
@@ -64,12 +60,8 @@ public class BankMoneyStockReplenishmentBusinessTransactionWrapper implements Ba
     public void setExecutionTransactionId(UUID execution){ this.executionTransactionId = execution; }
 
     @Override
-    public BankCurrencyType getBankCurrencyType(){ return this.bankCurrencyType; }
-    public void setBankCurrencyType(BankCurrencyType currencyType){ this.bankCurrencyType = currencyType; }
-
-    @Override
-    public BankOperationType getBankOperationType(){ return this.bankOperationType; }
-    public void setBankOperationType(BankOperationType operationType){ this.bankOperationType = operationType; }
+    public CryptoCurrencyType getCryptoCurrencyType(){ return this.cryptoCurrencyType; }
+    public void setCryptoCurrencyType(CryptoCurrencyType currency){ this.cryptoCurrencyType = currency; }
 
     @Override
     public BusinessTransactionStatus getStatus(){ return this.transactionStatus; }

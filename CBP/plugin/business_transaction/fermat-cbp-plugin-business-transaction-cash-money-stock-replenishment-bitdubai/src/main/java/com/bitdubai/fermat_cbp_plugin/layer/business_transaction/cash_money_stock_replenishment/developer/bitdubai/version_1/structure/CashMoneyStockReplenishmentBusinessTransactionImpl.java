@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.cash_money_stock_replenishment.developer.bitdubai.version_1.util;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.cash_money_stock_replenishment.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 29.09.15.
  */
-public class CashMoneyStockReplenishmentBusinessTransactionWrapper implements BusinessTransaction, CashMoneyStockReplenishment{
+public class CashMoneyStockReplenishmentBusinessTransactionImpl implements BusinessTransaction, CashMoneyStockReplenishment{
 
     private UUID transactionId;
     private String publicKeyBroker;
@@ -20,6 +20,24 @@ public class CashMoneyStockReplenishmentBusinessTransactionWrapper implements Bu
     private UUID executionTransactionId;
     private CashCurrencyType cashCurrencyType;
     private BusinessTransactionStatus transactionStatus;
+
+    public CashMoneyStockReplenishmentBusinessTransactionImpl(
+            UUID transactionId,
+            String publicKeyBroker,
+            CurrencyType merchandiseCurrency,
+            float merchandiseAmount,
+            UUID executionTransactionId,
+            CashCurrencyType cashCurrencyType,
+            BusinessTransactionStatus transactionStatus
+    ){
+        this.transactionId = transactionId;
+        this.publicKeyBroker = publicKeyBroker;
+        this.merchandiseCurrency = merchandiseCurrency;
+        this.merchandiseAmount = merchandiseAmount;
+        this.executionTransactionId = executionTransactionId;
+        this.cashCurrencyType = cashCurrencyType;
+        this.transactionStatus = transactionStatus;
+    }
 
     @Override
     public UUID getTransactionId(){ return this.transactionId; }
