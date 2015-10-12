@@ -677,17 +677,22 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          * Construct  profile and register
          */
                 PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        "actor_prueba_juan_public_key",
+                        //"actor_prueba_juan_public_key",
+                        "actor_prueba_robert_public_key",
                         ("alias"),
                         ("name+algo mas"),
                         NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
                         PlatformComponentType.ACTOR, // actor.INTRA_USER
                         getExtraData());
 
+
+
                 /*
                  * Register me
                  */
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+
+
 
 
         }
@@ -696,7 +701,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     }
 
     @Override
-    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
     }
 
@@ -956,6 +961,18 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
         intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
         intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
+        intraUserList.add(new IntraUserNetworkService("public_key",new byte[0],"Matias"));
+        intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
+        intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
+        intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
+        intraUserList.add(new IntraUserNetworkService("public_key",new byte[0],"Matias"));
+        intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
+        intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
+        intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
+        intraUserList.add(new IntraUserNetworkService("public_key",new byte[0],"Matias"));
+        intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
+        intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
+        intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
         return intraUserList;
     }
 
@@ -969,6 +986,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Leon") );
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Natalia") );
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Ezequiel") );
+        intraUserList.add(new IntraUserNetworkService("public_key",new byte[0],"Matias"));
+        intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
+        intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
+        intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
         return intraUserList;
     }
 

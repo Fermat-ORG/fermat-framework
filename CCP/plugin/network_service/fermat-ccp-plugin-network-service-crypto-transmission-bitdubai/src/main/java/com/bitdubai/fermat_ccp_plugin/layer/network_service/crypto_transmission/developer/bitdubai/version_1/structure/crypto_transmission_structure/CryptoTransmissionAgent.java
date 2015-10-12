@@ -324,29 +324,9 @@ public class CryptoTransmissionAgent {
 
                                 if (platformComponentProfile != null) {
 
-
-                                    DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
-                                            getCommunicationsCloudClientConnection().
-                                            constructDiscoveryQueryParamsFactory(
-                                                    PlatformComponentType.NETWORK_SERVICE,//applicant = who made the request
-                                                    NetworkServiceType.CRYPTO_TRANSMISSION,
-                                                    null,                     // alias
-                                                    "actor_prueba_robert_public_key", // identityPublicKey
-                                                    null,                     // location
-                                                    null,                     // distance
-                                                    null,                     // name
-                                                    null,                     // extraData
-                                                    null,                     // offset
-                                                    null,                     // max
-                                                    PlatformComponentType.ACTOR,        // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                    NetworkServiceType.UNDEFINED); // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
-
-                                    //TODO: poner tipo de actor, PlatformComponenType.ActorTtype
-
-
-
-                                    communicationNetworkServiceConnectionManager.connectTo(cryptoTransmissionMetadata.getSenderPublicKey(), platformComponentProfile, discoveryQueryParameters);
-
+                                    PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory("actor_prueba_juan_public_key", NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR);
+                                    PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory("actor_prueba_robert_public_key", NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR);
+                                    communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
 
                                     // pass the metada to a pool wainting for the response of the other peer or server failure
                                     poolConnectionsWaitingForResponse.put(cryptoTransmissionMetadata.getDestinationPublicKey(), cryptoTransmissionMetadata);
@@ -363,37 +343,38 @@ public class CryptoTransmissionAgent {
 
             if (communicationNetworkServiceLocal != null) {
 
-                CryptoTransmissionMetadata cryptoTransmissionMetadata = lstCryptoTransmissionMetadata.get(0);
+                for (CryptoTransmissionMetadata cryptoTransmissionMetadata : lstCryptoTransmissionMetadata) {
 
-                try {
-                    // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
-                    Gson gson = new Gson();
-                    String jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
+                    try {
+                        // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
+                        Gson gson = new Gson();
+                        String jsonMetadata = gson.toJson(cryptoTransmissionMetadata);
 
-                    // Envio el mensaje a la capa de comunicacion
+                        // Envio el mensaje a la capa de comunicacion
 
-                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), jsonMetadata);
+                        communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), jsonMetadata);
 
 
-                    //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
-                    cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
+                        //Cambio estado de base de datos a PROCESSING_SEND_COMMUNICATION_DATABASE
+                        cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
 
-                    System.out.print("-----------------------\n" +
-                            "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
-                            "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
+                        System.out.print("-----------------------\n" +
+                                "ENVIANDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                "-----------------------\n A: " + cryptoTransmissionMetadata.getDestinationPublicKey());
 
-                    //cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
+                        //cryptoTransmissionMetadata.changeState(CryptoTransmissionStates.PROCESSING_SEND_COMMUNICATION_TEMPLATE);
 
-                    cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
+                        cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionMetadata);
 
-                    System.out.print("-----------------------\n" +
-                            "CRYPTO METADATA!!!!! -----------------------\n" +
-                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
+                        System.out.print("-----------------------\n" +
+                                "CRYPTO METADATA!!!!! -----------------------\n" +
+                                "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
 
-                } catch (CantUpdateRecordDataBaseException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    } catch (CantUpdateRecordDataBaseException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

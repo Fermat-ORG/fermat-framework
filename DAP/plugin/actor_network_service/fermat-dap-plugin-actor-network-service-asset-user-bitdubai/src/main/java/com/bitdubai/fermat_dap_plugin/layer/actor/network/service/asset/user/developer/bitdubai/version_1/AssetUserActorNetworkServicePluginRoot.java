@@ -555,7 +555,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
 
     @Override
-    public void registerActorAssetUser(List<ActorAssetUser> actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
+    public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException {
 
         if(actorAssetUserToRegister != null){
 
@@ -689,7 +689,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
     }
 
     @Override
-    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
     }
 
