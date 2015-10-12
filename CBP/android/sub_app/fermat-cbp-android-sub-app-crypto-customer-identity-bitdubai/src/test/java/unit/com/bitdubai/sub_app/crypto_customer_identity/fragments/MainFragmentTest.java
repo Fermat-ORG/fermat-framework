@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.bitdubai.sub_app.crypto_customer_identity.BuildConfig;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.bitdubai.sub_app.crypto_customer_identity.fragments.IdentityListFragment;
+import com.bitdubai.sub_app.crypto_customer_identity.fragments.CryptoCustomerIdentityListFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,12 +28,12 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @Config(constants = BuildConfig.class)
 public class MainFragmentTest {
 
-    private IdentityListFragment fragment;
+    private CryptoCustomerIdentityListFragment fragment;
     private TestActivity activity;
 
     @Before
     public void setUp() {
-        fragment = IdentityListFragment.newInstance();
+        fragment = CryptoCustomerIdentityListFragment.newInstance();
 
         activity = Robolectric.setupActivity(TestActivity.class);
 

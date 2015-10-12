@@ -17,7 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.IdentityInfoAdapter;
+import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
+public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
         implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
 
 
@@ -38,8 +38,8 @@ public class IdentityListFragment extends FermatListFragment<CryptoBrokerIdentit
     private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
 
 
-    public static IdentityListFragment newInstance() {
-        return new IdentityListFragment();
+    public static CryptoBrokerIdentityListFragment newInstance() {
+        return new CryptoBrokerIdentityListFragment();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class IdentityListFragment extends FermatListFragment<CryptoBrokerIdentit
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_identity_float_action_button);
+        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_crypto_broker_identity_float_action_button);
         newIdentityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +76,7 @@ public class IdentityListFragment extends FermatListFragment<CryptoBrokerIdentit
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_identity_list;
+        return R.layout.fragment_crypto_broker_identity_list;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class IdentityListFragment extends FermatListFragment<CryptoBrokerIdentit
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.identity_list_recycler_view;
+        return R.id.crypto_broker_identity_recycler_view;
     }
 
     @Override
@@ -120,7 +120,7 @@ public class IdentityListFragment extends FermatListFragment<CryptoBrokerIdentit
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new IdentityInfoAdapter(getActivity(), identityInformationList);
+            adapter = new CryptoBrokerIdentityInfoAdapter(getActivity(), identityInformationList);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;

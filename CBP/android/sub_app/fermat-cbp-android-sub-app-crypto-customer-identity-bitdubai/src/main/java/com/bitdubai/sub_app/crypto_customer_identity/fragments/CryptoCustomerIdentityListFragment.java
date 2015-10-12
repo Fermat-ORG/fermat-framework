@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IdentityListFragment extends FermatListFragment<CryptoCustomerIdentityInformation>
+public class CryptoCustomerIdentityListFragment extends FermatListFragment<CryptoCustomerIdentityInformation>
         implements FermatListItemListeners<CryptoCustomerIdentityInformation> {
 
 
@@ -38,8 +38,8 @@ public class IdentityListFragment extends FermatListFragment<CryptoCustomerIdent
     private ArrayList<CryptoCustomerIdentityInformation> identityInformationList;
 
 
-    public static IdentityListFragment newInstance() {
-        return new IdentityListFragment();
+    public static CryptoCustomerIdentityListFragment newInstance() {
+        return new CryptoCustomerIdentityListFragment();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class IdentityListFragment extends FermatListFragment<CryptoCustomerIdent
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_customer_identity_float_action_button);
+        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_crypto_customer_identity_float_action_button);
         newIdentityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +76,7 @@ public class IdentityListFragment extends FermatListFragment<CryptoCustomerIdent
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_customer_identity_list;
+        return R.layout.fragment_crypto_customer_identity_list;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class IdentityListFragment extends FermatListFragment<CryptoCustomerIdent
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.customer_identity_list_recycler_view;
+        return R.id.crypto_customer_identity_recycler_view;
     }
 
     @Override

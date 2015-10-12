@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 /**
  * Created on 22/08/15.
- * Adapter para el RecliclerView del IdentityListFragment que muestra el catalogo de Wallets disponibles en el store
+ * Adapter para el RecliclerView del CryptoCustomerIdentityListFragment que muestra el catalogo de Wallets disponibles en el store
  *
  * @author Nelson Ramirez
  */
@@ -32,7 +32,7 @@ public class CustomerIdentityInfoAdapter extends FermatAdapter<CryptoCustomerIde
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.customer_identity_list_item;
+        return R.layout.crypto_customer_identity_list_item;
     }
 
     @Override

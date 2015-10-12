@@ -7,36 +7,36 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.common.holders.IdentityInfoViewHolder;
+import com.bitdubai.sub_app.crypto_broker_identity.common.holders.CryptoBrokerIdentityInfoViewHolder;
 import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
 
 import java.util.ArrayList;
 
 /**
  * Created on 22/08/15.
- * Adapter para el RecliclerView del IdentityListFragment que muestra el catalogo de Wallets disponibles en el store
+ * Adapter para el RecliclerView del CryptoBrokerIdentityListFragment que muestra el catalogo de Wallets disponibles en el store
  *
  * @author Nelson Ramirez
  */
-public class IdentityInfoAdapter extends FermatAdapter<CryptoBrokerIdentityInformation, IdentityInfoViewHolder> {
+public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerIdentityInformation, CryptoBrokerIdentityInfoViewHolder> {
 
 
-    public IdentityInfoAdapter(Context context, ArrayList<CryptoBrokerIdentityInformation> dataSet) {
+    public CryptoBrokerIdentityInfoAdapter(Context context, ArrayList<CryptoBrokerIdentityInformation> dataSet) {
         super(context, dataSet);
     }
 
     @Override
-    protected IdentityInfoViewHolder createHolder(View itemView, int type) {
-        return new IdentityInfoViewHolder(itemView);
+    protected CryptoBrokerIdentityInfoViewHolder createHolder(View itemView, int type) {
+        return new CryptoBrokerIdentityInfoViewHolder(itemView);
     }
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.identity_list_item;
+        return R.layout.crypto_broker_identity_list_item;
     }
 
     @Override
-    protected void bindHolder(final IdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
+    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
         holder.getIdentityName().setText(data.getName());
 
         if (data instanceof CryptoBrokerIdentityInformationImp) {

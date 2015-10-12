@@ -1,27 +1,20 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.bitdubai.sub_app.crypto_broker_identity.BuildConfig;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateIdentityFragment;
+import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateCryptoBrokerIdentityFragment;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowActivity;
-import org.robolectric.shadows.ShadowDialog;
-import org.robolectric.shadows.ShadowToast;
-import org.robolectric.util.FragmentTestUtil;
 
 import unit.com.bitdubai.sub_app.crypto_broker_identity.TestActivity;
 
@@ -34,12 +27,12 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @Config(constants = BuildConfig.class)
 public class CreateIdentityFragmentTest {
 
-    private CreateIdentityFragment fragment;
+    private CreateCryptoBrokerIdentityFragment fragment;
     private TestActivity activity;
 
     @Before
     public void setUp() throws Exception {
-        fragment = CreateIdentityFragment.newInstance();
+        fragment = CreateCryptoBrokerIdentityFragment.newInstance();
         activity = Robolectric.setupActivity(TestActivity.class);
 
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
@@ -59,8 +52,8 @@ public class CreateIdentityFragmentTest {
     public void clickOnCreateButtonSendBackToIdentityListFragment() {
         assertThat(fragment.isVisible()).isTrue();
 
-        Button button = (Button) fragment.getView().findViewById(R.id.create_button);
-        EditText brokerName = (EditText) fragment.getView().findViewById(R.id.broker_name);
+        Button button = (Button) fragment.getView().findViewById(R.id.create_crypto_broker_button);
+        EditText brokerName = (EditText) fragment.getView().findViewById(R.id.crypto_broker_name);
         brokerName.setText("test");
 
         button.performClick();

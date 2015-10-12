@@ -35,8 +35,8 @@ import java.io.ByteArrayOutputStream;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIdentityFragment extends FermatFragment {
-    private static final String TAG = "CreateIdentityFragment";
+public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
+    private static final String TAG = "CreateCryptoBrokerIdentityFragment";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
@@ -59,8 +59,8 @@ public class CreateIdentityFragment extends FermatFragment {
     private ImageView mBrokerImage;
 
 
-    public static CreateIdentityFragment newInstance() {
-        return new CreateIdentityFragment();
+    public static CreateCryptoBrokerIdentityFragment newInstance() {
+        return new CreateCryptoBrokerIdentityFragment();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CreateIdentityFragment extends FermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_create_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_broker_identity, container, false);
         initViews(rootLayout);
 
 
@@ -91,9 +91,9 @@ public class CreateIdentityFragment extends FermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_button);
-        mBrokerName = (EditText) layout.findViewById(R.id.broker_name);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.broker_image);
+        createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+        mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
+        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
 
         mBrokerName.requestFocus();
 

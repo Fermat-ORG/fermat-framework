@@ -17,8 +17,8 @@ public class CustomerIdentityInfoViewHolder extends FermatViewHolder {
     public CustomerIdentityInfoViewHolder(View itemView) {
         super(itemView);
 
-        identityImage = (ImageView) itemView.findViewById(R.id.customer_identity_image);
-        identityName = (FermatTextView) itemView.findViewById(R.id.customer_identity_alias);
+        identityImage = (ImageView) itemView.findViewById(R.id.crypto_customer_identity_image);
+        identityName = (FermatTextView) itemView.findViewById(R.id.crypto_customer_identity_alias);
     }
 
     public ImageView getIdentityImage() {
