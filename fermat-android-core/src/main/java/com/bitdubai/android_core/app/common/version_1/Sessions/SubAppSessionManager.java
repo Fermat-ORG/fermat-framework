@@ -11,6 +11,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.Ass
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
@@ -76,6 +77,10 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 CryptoBrokerIdentitySubAppSession cryptoBrokerIdentitySubAppSession = new CryptoBrokerIdentitySubAppSession(subApps,errorManager,null);
                 lstSubAppSession.put(subApps,cryptoBrokerIdentitySubAppSession);
                 return cryptoBrokerIdentitySubAppSession;
+            case CBP_CRYPTO_CUSTOMER_IDENTITY:
+                CryptoCustomerIdentitySubAppSession cryptoCustomerIdentitySubAppSession = new CryptoCustomerIdentitySubAppSession(subApps,errorManager,null);
+                lstSubAppSession.put(subApps,cryptoCustomerIdentitySubAppSession);
+                return cryptoCustomerIdentitySubAppSession;
             default:
                 return null;
                 //throw new FermatException("")
