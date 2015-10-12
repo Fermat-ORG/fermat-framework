@@ -15,9 +15,14 @@ public class AssetUserActorDatabaseConstants {
     public static final String ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME = "publicKey";
     public static final String ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_publicKey";
     public static final String ASSET_USER_USER_NAME_COLUMN_NAME = "name";
-    public static final String ASSET_USER_USER_STATE_COLUMN_NAME = "contact_state";
+    public static final String ASSET_USER_USER_LOCATION_COLUMN_NAME = "location";
+    public static final String ASSET_USER_USER_GENDER_COLUMN_NAME = "gender";
+    public static final String ASSET_USER_USER_AGE_COLUMN_NAME = "age";
+    public static final String ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
+    public static final String ASSET_USER_USER_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
     public static final String ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
     public static final String ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME = "modified_date";
+    public static final String ASSET_USER_USER_STATE_COLUMN_NAME = "contact_state";
 
     public static final String ASSET_USER_FIRST_KEY_COLUMN = "publicKey";
 
@@ -29,6 +34,11 @@ public class AssetUserActorDatabaseConstants {
     public static final String ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME = "register_publicKey";
     public static final String ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "register_linked_identity_publicKey";
     public static final String ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME = "register_name";
+    public static final String ASSET_USER_REGISTERED_USER_LOCATION_COLUMN_NAME = "register_location";
+    public static final String ASSET_USER_REGISTERED_USER_GENDER_COLUMN_NAME = "register_gender";
+    public static final String ASSET_USER_REGISTERED_USER_AGE_COLUMN_NAME = "register_age";
+    public static final String ASSET_USER_REGISTERED_USER_CRYPTO_ADDRESS_COLUMN_NAME = "register_crypto_address";
+    public static final String ASSET_USER_REGISTERED_USER_CRYPTO_CURRENCY_COLUMN_NAME = "register_crypto_currency";
     public static final String ASSET_USER_REGISTERED_USER_STATE_COLUMN_NAME = "register_contact_state";
     public static final String ASSET_USER_REGISTERED_USER_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
     public static final String ASSET_USER_REGISTERED_USER_MODIFIED_DATE_COLUMN_NAME = "register_modified_date";

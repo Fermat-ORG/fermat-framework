@@ -63,7 +63,7 @@ public class FailureComponentConnectionRequestNotificationEventHandler implement
                 /*
                  *  networkService make the job
                  */
-                this.networkService.handleFailureComponentRegistrationNotificationEvent(failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant(), failureComponentConnectionRequestNotificationEvent.getDiscoveryQueryParameters());
+                this.networkService.handleFailureComponentRegistrationNotificationEvent(failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant(), failureComponentConnectionRequestNotificationEvent.getRemoteParticipant());
 
             }
 

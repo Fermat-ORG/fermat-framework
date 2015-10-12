@@ -191,25 +191,34 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+
+            System.out.println("CommunicationNetworkServiceRemoteAgent - ROBERTOOOO"+communicationsVPNConnection.isActive());
+
+            //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
+
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                   System.out.println("CommunicationNetworkServiceRemoteAgent - MATI!!! "+communicationsVPNConnection.getUnreadMessagesCount());
+                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
+
 
                 /**
                  * process all pending messages
                  */
                 for (int i = 0; i < communicationsVPNConnection.getUnreadMessagesCount(); i++) {
 
+                    System.out.println("CommunicationNetworkServiceRemoteAgent - ADENTRO!!! " + communicationsVPNConnection.getUnreadMessagesCount());
+
+
+
                     /*
                      * Read the next message in the queue
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
-
 
                     /*
                      * Validate the message signature
@@ -225,6 +234,9 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      * Change to the new status
                      */
                     ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.NEW_RECEIVED);
+
+
+                    System.out.println("-------------------  Message!!! " +message.getContent());
 
                     /*
                      * Save to the data base table

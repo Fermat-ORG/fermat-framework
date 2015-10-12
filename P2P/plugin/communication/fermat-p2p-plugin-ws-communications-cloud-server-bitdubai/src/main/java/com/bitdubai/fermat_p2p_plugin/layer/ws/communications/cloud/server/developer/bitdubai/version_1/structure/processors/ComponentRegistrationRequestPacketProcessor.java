@@ -57,8 +57,8 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
          */
         PlatformComponentProfile platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(messageContentJsonStringRepresentation);
 
-        System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getPlatformComponentType() = "+platformComponentProfileToRegister.getPlatformComponentType() );
-        System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getNetworkServiceType() = "+platformComponentProfileToRegister.getNetworkServiceType() );
+       // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getPlatformComponentType() = "+platformComponentProfileToRegister.getPlatformComponentType() );
+       // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getNetworkServiceType() = "+platformComponentProfileToRegister.getNetworkServiceType() );
 
 
         /*
@@ -75,7 +75,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
                 break;
 
             case NETWORK_SERVICE :
-                registerNetworServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
+                registerNetworkServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
                 break;
 
             //Others
@@ -189,7 +189,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
     /**
      * Method that process the registration of the Network Service Component
      */
-    private void registerNetworServiceComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection,  final ECCKeyPair serverIdentity){
+    private void registerNetworkServiceComponent(final PlatformComponentProfile platformComponentProfileToRegister, final FermatPacket receiveFermatPacket, final WebSocket clientConnection, final ECCKeyPair serverIdentity){
 
         System.out.println("ComponentRegistrationRequestPacketProcessor - registerNetworkServiceComponent");
 

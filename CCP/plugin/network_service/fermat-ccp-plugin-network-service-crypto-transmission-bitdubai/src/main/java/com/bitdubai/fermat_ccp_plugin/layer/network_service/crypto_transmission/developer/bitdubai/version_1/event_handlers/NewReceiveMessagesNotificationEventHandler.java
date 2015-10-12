@@ -37,7 +37,9 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent);
+        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
+
+        System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE!!!!");
 
 
         if (((Service) this.cryptoTransmissionAgent).getStatus() == ServiceStatus.STARTED) {
