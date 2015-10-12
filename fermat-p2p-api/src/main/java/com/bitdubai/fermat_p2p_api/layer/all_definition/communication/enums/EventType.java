@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
@@ -12,6 +13,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.BasicFermatEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
@@ -77,7 +80,19 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new FailureComponentConnectionRequestNotificationEvent(this);
         }
-    }
+    },
+
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION("NNSMRN") {
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageReceivedNotificationEvent(this);
+        }
+    },
+
+    NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION("NNSMSN") {
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageSentNotificationEvent(this);
+        }
+    },
 
     ;
 
@@ -95,8 +110,9 @@ public enum EventType implements FermatEventEnum {
         this.code = code;
     }
 
-
-    public abstract FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor);
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+        return new GenericEventListener(this, fermatEventMonitor);
+    }
 
     public abstract FermatEvent getNewEvent();
 

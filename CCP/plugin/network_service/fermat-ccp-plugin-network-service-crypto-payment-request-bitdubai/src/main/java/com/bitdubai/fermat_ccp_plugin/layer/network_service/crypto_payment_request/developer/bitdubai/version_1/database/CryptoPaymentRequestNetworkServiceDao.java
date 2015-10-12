@@ -99,8 +99,8 @@ public class CryptoPaymentRequestNetworkServiceDao {
                                            String                      description      ,
                                            long                        amount           ,
                                            long                        startTimeStamp   ,
-                                           RequestDirection type             ,
-                                           RequestAction action           ,
+                                           RequestDirection type                        ,
+                                           RequestAction action                         ,
                                            RequestProtocolState        protocolState    ,
                                            BlockchainNetworkType       networkType      ) throws CantCreateCryptoPaymentRequestException {
 
@@ -130,6 +130,68 @@ public class CryptoPaymentRequestNetworkServiceDao {
         } catch (CantInsertRecordException e) {
 
             throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        }
+    }
+
+    public void createCryptoPaymentInformation(UUID                 requestId    ,
+                                               RequestDirection     direction    ,
+                                               RequestAction        action       ,
+                                               RequestProtocolState protocolState) throws CantCreateCryptoPaymentRequestException {
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
+
+            entityRecord.setUUIDValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME    , requestId              );
+            entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME     , direction.    getCode());
+            entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
+            entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME        , action       .getCode());
+
+            cryptoPaymentRequestTable.insertRecord(entityRecord);
+
+        } catch (CantInsertRecordException e) {
+
+            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        }
+    }
+
+    public void updateCryptoPaymentInformation(UUID                 requestId    ,
+                                               RequestDirection     direction    ,
+                                               RequestAction        action       ,
+                                               RequestProtocolState protocolState) throws CantCreateCryptoPaymentRequestException,
+                                                                                          RequestNotFoundException               {
+
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.setUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+
+            if (!records.isEmpty()) {
+
+                DatabaseTableRecord entityRecord = records.get(0);
+
+                entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME     , direction.    getCode());
+                entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
+                entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME        , action       .getCode());
+
+                cryptoPaymentRequestTable.updateRecord(entityRecord);
+
+            } else
+                throw new RequestNotFoundException(null, "RequestID: "+requestId, "Can not find an crypto payment request with the given request id.");
+
+        } catch (CantUpdateRecordException e) {
+
+            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
 
