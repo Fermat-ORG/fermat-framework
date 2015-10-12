@@ -1,23 +1,23 @@
 /*
- * @#NewNetworkServiceMessageReceivedEvent.java - 2015
+ * @#NewNetworkServiceMessageSentNotificationEvent.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 
 /**
- * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedNotificationEvent</code> represent the event
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent</code> represent the event
  * when a new Network Service Message is received
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 26/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 06/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NewNetworkServiceMessageReceivedNotificationEvent extends AbstractFermatEvent {
+public class NewNetworkServiceMessageSentNotificationEvent extends AbstractP2PFermatEvent {
 
     /**
      *  Represent the data
@@ -29,9 +29,10 @@ public class NewNetworkServiceMessageReceivedNotificationEvent extends AbstractF
      *
      * @param eventType type of the event
      */
-    public NewNetworkServiceMessageReceivedNotificationEvent(EventType eventType){
+    public NewNetworkServiceMessageSentNotificationEvent(EventType eventType){
         super(eventType);
     }
+
 
     /**
      * Return the data object that contains message received

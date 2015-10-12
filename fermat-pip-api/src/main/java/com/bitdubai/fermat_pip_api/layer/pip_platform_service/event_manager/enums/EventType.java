@@ -524,26 +524,6 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION("NNSMRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewNetworkServiceMessageReceivedNotificationEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new NewNetworkServiceMessageReceivedNotificationEvent(this);
-        }
-    },
-
-    NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION("NNSMSN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewNetworkServiceMessageSentNotificationEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new NewNetworkServiceMessageSentNotificationEvent(this);
-        }
-    },
-
     OUTGOING_INTRA_ACTOR_TRANSACTION_SENT("OMRA") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new OutgoingIntraActorTransactionSentEventListener(fermatEventMonitor);

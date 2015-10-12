@@ -31,8 +31,6 @@ public enum RequestProtocolState implements FermatEnum {
 
             default:
                 throw new InvalidParameterException(
-                        InvalidParameterException.DEFAULT_MESSAGE,
-                        null,
                         "Code Received: " + code,
                         "This code is not valid for the RequestProtocolState enum"
                 );
