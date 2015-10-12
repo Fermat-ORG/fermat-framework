@@ -111,7 +111,7 @@ public class AssetIssuerActorDeveloperDatabaseFactory  implements DealsWithPlugi
         List<String> assetIssuerActorColumns = new ArrayList<String>();
 
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME);
-        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOGGED_PUBLIC_KEY_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME);
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME);
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME);

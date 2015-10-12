@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -181,7 +182,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
              * A network becomes active when it generated address for an specified network (MainNet, RegTest or TestNet)
              */
             try {
-                bitcoinNetworkManager.monitorNetworkFromKeyList(getActiveNetworks(), allAccountsKeyList);
+                bitcoinNetworkManager.monitorNetworkFromKeyList(CryptoVaults.ASSETS_OVER_BITCOIN, getActiveNetworks(), allAccountsKeyList);
             } catch (CantMonitorBitcoinNetworkException e) {
                 //todo handle
             }

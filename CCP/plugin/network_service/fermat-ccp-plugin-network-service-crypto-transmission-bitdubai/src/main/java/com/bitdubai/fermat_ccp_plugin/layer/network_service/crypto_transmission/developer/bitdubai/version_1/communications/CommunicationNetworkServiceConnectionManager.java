@@ -123,17 +123,17 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile, DiscoveryQueryParameters)
+     * @see NetworkServiceConnectionManager#connectTo(String, PlatformComponentProfile, DiscoveryQueryParameters)
      */
     @Override
-    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void connectTo(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters) {
 
         try {
 
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-            communicationsClientConnection.requestDiscoveryVpnConnection(applicantNetworkService, discoveryQueryParameters);
+            communicationsClientConnection.requestDiscoveryVpnConnection(identityPublicKeyRequestingParticipant, applicantNetworkService, discoveryQueryParameters);
 
 
         } catch (Exception e) {
@@ -174,14 +174,14 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      *
      * @param remoteComponentProfile
      */
-    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile remoteComponentProfile) {
+    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
         try {
 
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(remoteComponentProfile, remoteComponentProfile.getIdentityPublicKey());
 
             //Validate the connection
             if (communicationsVPNConnection != null &&

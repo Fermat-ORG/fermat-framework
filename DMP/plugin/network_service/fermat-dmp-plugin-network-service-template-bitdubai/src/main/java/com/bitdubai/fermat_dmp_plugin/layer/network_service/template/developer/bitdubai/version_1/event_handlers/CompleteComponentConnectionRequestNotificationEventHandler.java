@@ -53,7 +53,7 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
+        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent.getEventType() );
 
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
@@ -67,7 +67,7 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
                 /*
                  *  networkService make the job
                  */
-                this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
+                this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getApplicantComponent(), completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
 
             }
 

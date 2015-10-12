@@ -6,7 +6,8 @@
     <GridLayout android:id="@+id/gridlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.1">
+        android:layout_weight="0.1"
+        android:background="#ffffff">
     </GridLayout>
     <LinearLayout android:id="@+id/filter_layout"
         android:orientation="horizontal" android:layout_width="match_parent"

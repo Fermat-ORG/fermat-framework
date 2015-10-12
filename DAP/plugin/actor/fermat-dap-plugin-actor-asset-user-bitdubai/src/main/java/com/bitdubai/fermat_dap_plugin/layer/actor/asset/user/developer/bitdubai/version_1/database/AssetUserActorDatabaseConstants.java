@@ -12,14 +12,28 @@ public class AssetUserActorDatabaseConstants {
 
     public static final String ASSET_USER_TABLE_NAME = "asset_user_actor";
 
-    public static final String ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME = "asset_user_publicKey_actor";
-    public static final String ASSET_USER_USER_NAME_COLUMN_NAME = "asset_user_name_actor";
-    public static final String ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME = "asset_issuer_logged_publicKey_actor";
-    public static final String ASSET_USER_USER_STATE_COLUMN_NAME = "contact_state_actor";
-    public static final String ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME = "asset_user_registration_date_actor";
-    public static final String ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME = "asset_user_modified_date_actor";
+    public static final String ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME = "publicKey";
+    public static final String ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_publicKey";
+    public static final String ASSET_USER_USER_NAME_COLUMN_NAME = "name";
+    public static final String ASSET_USER_USER_STATE_COLUMN_NAME = "contact_state";
+    public static final String ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
+    public static final String ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME = "modified_date";
 
-    public static final String ASSET_USER_FIRST_KEY_COLUMN = "asset_user_publicKey_actor";
+    public static final String ASSET_USER_FIRST_KEY_COLUMN = "publicKey";
+
+    /**
+     * Asset User Relation REGISTERED ACTOR USER database table definition.
+     */
+    public static final String ASSET_USER_REGISTERED_USER_TABLE_NAME = "asset_user_register_actor";
+
+    public static final String ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME = "register_publicKey";
+    public static final String ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "register_linked_identity_publicKey";
+    public static final String ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME = "register_name";
+    public static final String ASSET_USER_REGISTERED_USER_STATE_COLUMN_NAME = "register_contact_state";
+    public static final String ASSET_USER_REGISTERED_USER_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
+    public static final String ASSET_USER_REGISTERED_USER_MODIFIED_DATE_COLUMN_NAME = "register_modified_date";
+
+    public static final String ASSET_USER_REGISTERED_FIRST_KEY_COLUMN = "register_publicKey";
 
     /**
      * Asset User Relation Asset Issuer database table definition.

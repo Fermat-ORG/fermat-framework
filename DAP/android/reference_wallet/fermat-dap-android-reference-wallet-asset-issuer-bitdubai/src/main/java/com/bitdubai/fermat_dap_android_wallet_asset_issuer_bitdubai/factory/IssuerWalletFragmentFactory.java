@@ -8,9 +8,6 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.Ass
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
 
-/**
- * Created by Matias Furszyfer on 2015.07.22..
- */
 
 public class IssuerWalletFragmentFactory extends FermatWalletFragmentFactory<AssetIssuerSession, WalletSettings, WalletAssetIssuerFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
 
@@ -21,11 +18,9 @@ public class IssuerWalletFragmentFactory extends FermatWalletFragmentFactory<Ass
         try {
 
             switch (fragments) {
-                /**
-                 * Executing fragments for BITCOIN REQUESTED.
-                 */
                 case DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY:
                     currentFragment = new MainFragment();
+                    break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");
             }
