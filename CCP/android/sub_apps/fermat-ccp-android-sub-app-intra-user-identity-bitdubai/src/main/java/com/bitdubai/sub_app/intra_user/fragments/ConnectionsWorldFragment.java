@@ -129,8 +129,6 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
         rootView.setLayoutParams(layoutParams);
 
-        rootView.setBackgroundColor(Color.WHITE);
-
         rootView.addView(gridView);
 
             return rootView;
