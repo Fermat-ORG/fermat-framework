@@ -110,15 +110,15 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          */
         try {
             getDao().saveNewIncomingTransaction(tx.getHashAsString(),
-                    CryptoStatus.ON_CRYPTO_NETWORK,
+                    getTransactionCryptoStatus(tx),
                     tx.getConfidence().getDepthInBlocks(),
-                    getIncomingTransactionAddressTo(wallet.getNetworkParameters(), tx),
+                    getIncomingTransactionAddressTo(wallet, tx),
                     getIncomingTransactionAddressFrom(tx),
                     tx.getValue(wallet).getValue(),
                     tx.getFee().getValue(),
                     ProtocolStatus.TO_BE_NOTIFIED);
         } catch (CantExecuteDatabaseOperationException e) {
-            //todo handle I could try to save it to disk and each time is executed try to get it from disk
+            e.printStackTrace();
         }
     }
 
@@ -175,12 +175,12 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
         switch (tx.getConfidence().getDepthInBlocks()){
             case 0:
-                if (currentCryptoStatus == null)
+                if (currentCryptoStatus == CryptoStatus.ON_BLOCKCHAIN)
                     return CryptoStatus.REVERSED_ON_CRYPTO_NETWORK;
                 else
                     return CryptoStatus.ON_CRYPTO_NETWORK;
             case 1:
-                if (currentCryptoStatus == null)
+                if (currentCryptoStatus != CryptoStatus.IRREVERSIBLE)
                     return CryptoStatus.REVERSED_ON_BLOCKCHAIN;
                 else
                     return CryptoStatus.ON_BLOCKCHAIN;
@@ -201,17 +201,17 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param tx
      * @return
      */
-    private CryptoAddress getIncomingTransactionAddressTo (NetworkParameters networkParameters, Transaction tx){
-        /**
-         * I will loop from the outputs until i get an address
-         */
+    private CryptoAddress getIncomingTransactionAddressTo (Wallet wallet, Transaction tx){
         Address address = null;
-        for (TransactionOutput output : tx.getOutputs()){
-            if (output.getAddressFromP2PKHScript(networkParameters) != null)
-                address = output.getAddressFromP2PKHScript(networkParameters);
 
-            if (output.getAddressFromP2SH(networkParameters) != null)
-                address = output.getAddressFromP2PKHScript(networkParameters);
+        /**
+         * I will loop from the outputs that include keys that are in my wallet
+         */
+        for (TransactionOutput output : tx.getWalletOutputs(wallet)){
+            /**
+             * get the address from the output
+             */
+            address = output.getAddressFromP2PKHScript(wallet.getNetworkParameters());
         }
         CryptoAddress cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
         return cryptoAddress;
