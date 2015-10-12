@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_api.layer.dap_transaction.common;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -64,7 +64,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.transactionId = transactionId;
     }
 
-    AssetIssuerWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
+    public AssetIssuerWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
                                               CryptoTransaction cryptoGenesisTransaction,
                                               String actorFromPublicKey,
                                               String actorToPublicKey){

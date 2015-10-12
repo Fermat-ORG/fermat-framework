@@ -12,6 +12,10 @@ public class DAPException extends FermatException {
         super(message, cause, context, possibleReason);
     }
 
+    public DAPException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+    }
+
     public DAPException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
