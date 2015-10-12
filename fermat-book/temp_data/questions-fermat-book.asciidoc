@@ -1,4 +1,7 @@
 questions-fermat-book.asciidoc
+9-10 
+1) new functions BLP Wallet
+
 7-10
 1) DIF. BCH Y CCP 
 2) "GROUND" IN CITY METAPHER

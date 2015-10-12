@@ -1,9 +1,13 @@
-== Developing regional crypto ecosystems: FERMAT CDN 
+== FERMAT SHP : Making it easy for shop owners 
 
-=== FERMAT CDN
+=== Shop Owners 
+** ShWa (Shop Wallet) -> *for shop owners who accept cryptocurrency in payment of their products !*
 
+=== Brands
+** BrWa (Brand Wallet) -> *for brands owners who accept cryptocurrency in their retailers network.*
 
-
+=== Retailers
+** ReWa (Retail wallet) -> *for* 
 
 
 

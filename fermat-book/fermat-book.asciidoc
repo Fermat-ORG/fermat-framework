@@ -2,7 +2,7 @@
 :numbered:
 
 = FERMAT: expanding the cryptoworld
-Gustavo <book@fermat.org>
+Gustavo H. Corradi <book@fermat.org>
 v.1.0, october, 2015.
 
 include::fbk-01.asciidoc[]
@@ -26,6 +26,10 @@ include::fbk-09.asciidoc[]
 include::fbk-10.asciidoc[]
 
 include::fbk-11.asciidoc[]
+
+include::fbk-12.asciidoc[]
+
+include::fbk-13.asciidoc[]
 
 include::conventions.asciidoc[]
 

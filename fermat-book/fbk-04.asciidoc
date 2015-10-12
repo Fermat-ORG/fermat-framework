@@ -3,8 +3,8 @@ This platform provides all the interconnectivity necessary to interact with exis
 
 === BitWa (Basic Bitcoin Wallet)
 Here we have one of FERMAT's basic building block to allow interaction and actual value transport in the
-most popular cryptonetwork: Bitcoin Niche Reference Wallet (Bi-Wa module). +
-We begin with a *basic wallet* in terms of its functionalities, even simpler as other popular BTC wallets on the market to maximize its
+most popular cryptonetwork: Bitcoin Niche *Reference Wallet* (Bi-Wa module). +
+We begin with a _basic wallet_ in terms of its functionalities, even simpler as other popular BTC wallets on the market to maximize its
 ulterior reutilisation. + 
 Bi-Wa provides the minimum tasks to perform a succesful transaction of Bitcoins, so it is designed to: (+)
 
@@ -23,8 +23,4 @@ The new functionalities added are:
 
 * to store the  when a payment is received
 * 
-
-=== FERMAT CBP
-
-
 
