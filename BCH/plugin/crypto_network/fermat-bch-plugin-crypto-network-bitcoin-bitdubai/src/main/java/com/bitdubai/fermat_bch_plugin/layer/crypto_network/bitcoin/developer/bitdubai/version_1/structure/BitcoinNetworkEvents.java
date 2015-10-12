@@ -2,7 +2,11 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
@@ -16,12 +20,14 @@ import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBag;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.core.WalletEventListener;
 import org.bitcoinj.script.Script;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -29,21 +35,24 @@ import javax.annotation.Nullable;
  * Created by rodrigo on 10/4/15.
  */
 public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListener {
+    /**
+     * Class variables
+     */
+    BitcoinCryptoNetworkDatabaseDao dao;
 
     /**
      * Platform variables
      */
-    EventManager eventManager;
     PluginDatabaseSystem pluginDatabaseSystem;
+    UUID pluginId;
 
     /**
      * Constructor
-     * @param eventManager
      * @param pluginDatabaseSystem
      */
-    public BitcoinNetworkEvents(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem) {
-        this.eventManager = eventManager;
+    public BitcoinNetworkEvents(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -89,11 +98,15 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        //todo record this transaction
-        FermatEvent transactionEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
-        transactionEvent.setSource(EventSource.CRYPTO_VAULT);
-        eventManager.raiseEvent(transactionEvent);
-        System.out.println("coins received. Event Raised." + newBalance.toString());
+        /**
+         * Register the new incoming transaction into the database
+         */
+        try {
+            getDao().saveNewIncomingTransaction(tx.getHashAsString(), CryptoStatus.ON_CRYPTO_NETWORK, tx.getConfidence().getDepthInBlocks());
+        } catch (CantExecuteDatabaseOperationException e) {
+            //todo handle I could try to save it to disk and each time is executed try to get it from disk
+        }
+
     }
 
     @Override
@@ -125,5 +138,25 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public void onKeysAdded(List<ECKey> keys) {
         // I may need to reset the wallet in this case?
+    }
+
+    /**
+     * instantiates the database object
+     * @return
+     */
+    private BitcoinCryptoNetworkDatabaseDao getDao(){
+        if (dao == null)
+            dao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
+        return dao;
+    }
+
+    /**
+     * Gets the Crypto Status of the transaction by calculating the transaction depth
+     * @param tx
+     * @return
+     */
+    private CryptoStatus getTransactionCryptoStatus(Transaction tx){
+
+        return null;
     }
 }
