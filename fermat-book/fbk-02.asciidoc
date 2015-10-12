@@ -17,7 +17,8 @@
 
 * **FERMAT segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the FERMAT platform.
 
-* **FERMAT guaratees plugins and wallet developers a revenue stream.** FERMAT implements an innovative business model which allows plugins and wallet developers to define a use license, and FERMAT itself enforces this license on behalf of developers. )
+* **FERMAT guaratees plugins and wallet developers a revenue stream.
+* ** FERMAT implements an innovative business model which allows plugins and wallet developers to define a use license, and FERMAT itself enforces this license on behalf of developers. )
 
 The first goal is to get very close to the *end user* offering and easy way of coming onboard the crytocurrency world by means of possesing a digital *wallet* running on his preferred device. +
 At the same time, the open source *plug-in platform* allows any skilled actor in the community to jump in and develop applications and offer services with different abstraction levels and addressing a wide range of segmented markets. In fact, as we have seen in the section about FERMAT as a master plan, the possibility of using the existent global talent and intelligence that the community already has in a clever collaborative way, can rapidily expand this technology to mass adoption. + 
@@ -46,6 +47,7 @@ Any existing crypto service running outside the Fermat network / platform can be
 Can be freely adopted, implemented and extended.
 
 === FERMAT's architecture 
+
 :numbered!:
 
 FERMAT as a system is built on several overlaping architectural paradigms: 
@@ -56,7 +58,7 @@ Inside each node FERMAT features a Multi-OS architecture meaning that the lowest
 
 At the same time it features a plugins architecture inserted into a multi-layered structure. These layers are ocasionally grouped into *Superlayers*. 
 
-These Plugins are subdivided into a hiriarchy of *Platforms*. Those *Platforms* shares a common set of layers, and each one adds *Actors* and *Products* to the overall functionallity of the FERMAT system.
+These Plugins are subdivided into a hierarchy of *Platforms*. Those *Platforms* shares a common set of layers, and each one adds *Actors* and *Products* to the overall functionallity of the FERMAT system.
 
 Inside each Plugin, you might find a specialized structure and in many cases a database or files belonging to that plugin.
 
@@ -145,8 +147,8 @@ A visible way of grasping all the complexity of FERMAT as well as all its potent
 ** BitWa (Basic Bitcoin Wallet)  -> *for those devoted "BTC-only" users!*
 ** Argentine Bitcoin wallet -> *for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady* comparison between argentine$, USD (oficial and blue!) and even Eu$!)
 ** BLP (Bitcoin Loss Protected wallet) -> *for conservative user's caring about never selling under the purchase price ! (preserving value!)*
-* FERMAT CCM (Crypto Currency Money)
-** CCM (Crypto Currency Money Wallet)
+* FERMAT CCM (Crypto Commodity Money)
+** CCM (Crypto Commodity Money Wallet)
 ** DiWa (Discount Wallet) -> *for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)*
 * FERMAT BNK (Bank Notes)
 ** BaNo (Bank Notes Wallet) -> *for those wanting to visualize their investment in "real money traditional bank notes" of their usual fiat/currency ( rest on FERMAT, we do the "dirty work" with all the crypto stuff!)*

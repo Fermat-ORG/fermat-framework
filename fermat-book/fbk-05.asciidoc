@@ -1,10 +1,12 @@
-== Developing regional crypto ecosystems: FERMAT CBP & FERMAT CDN 
+== FERMAT CBP
+In this platform the actors involved are the * cryptobroker*, i.e  the person or organization whose business logic is to buy and sell cryptocurrency for fiat money, obtaining his profits from the difference in the buy/sell price, and his customers ( *cryptocustomers* ).
 
-=== FERMAT CBP
-=== FERMAT CDN
+=== FERMAT Cr-Br (Cryptobroker Wallet)
+This The theoretical assumption is that thet broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit.
+Allow a network of cryptobrokers associated by means of an *agreement* to be able to address larger operations.
 
 
-
+=== FERMAT Cr-Cu (Cryptobroker Customer Wallet)
 
 
 
