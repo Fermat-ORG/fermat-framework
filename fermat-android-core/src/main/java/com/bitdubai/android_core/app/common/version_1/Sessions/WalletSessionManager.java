@@ -3,6 +3,7 @@ package com.bitdubai.android_core.app.common.version_1.Sessions;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -34,7 +35,7 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
 
 
     @Override
-    public WalletSession openWalletSession(InstalledWallet installedWallet,CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager,ErrorManager errorManager,CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager) {
+    public WalletSession openWalletSession(InstalledWallet installedWallet,CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager,ErrorManager errorManager,CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager,AssetIssuerWalletSupAppModuleManager assetIssuerWalletManager) {
         WalletSession walletSession = null;
         if(installedWallet!=null){
             switch (installedWallet.getWalletCategory()){
@@ -51,8 +52,9 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
                         case "crypto_broker_wallet":
                             walletSession = new CryptoBrokerWalletSession(installedWallet,errorManager,cryptoBrokerWalletModuleManager);
                             return walletSession;
-                        case "":
-                            walletSession = new AssetIssuerSession(installedWallet,errorManager,null);
+                        case "asset_issuer":
+                            walletSession = new AssetIssuerSession(installedWallet,errorManager,assetIssuerWalletManager);
+                            return walletSession;
                     }
 
                 case NICHE_WALLET:

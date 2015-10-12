@@ -198,9 +198,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment=null;
 
+            Activity activity = null;
             try{
 
-                fragment  = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment();
+                activity= subAppRuntimeManager.getLastSubApp().getLastActivity();
+                fragment  = activity.getLastFragment();
 
             }catch (NullPointerException nullPointerException){
                 fragment=null;
@@ -229,11 +231,12 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.startContainer,frgBackType);
                 }
 
-
+            }else if(activity!=null && activity.getBackActivity()!=null){
+                changeActivity(activity.getBackActivity().getCode());
 
             } else {
                 // set Desktop current activity
-                Activity activity = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
+                activity = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
                 if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
                     resetThisActivity();
                     //getSubAppRuntimeMiddleware().getHomeScreen();

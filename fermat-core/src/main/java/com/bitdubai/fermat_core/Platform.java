@@ -726,9 +726,9 @@ public class Platform implements Serializable {
 //             * -----------------------------
 //             */
 //
-            Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
-            injectLayerReferences(templateNetworkService);
-            injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
+//            Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
+//            injectLayerReferences(templateNetworkService);
+//            injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
 
 //            /*
 //            * Plugin Asset User Actor Network Service
@@ -1241,7 +1241,8 @@ public class Platform implements Serializable {
             Plugin moneyRequest = ((RequestServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_REQUEST_LAYER)).getMoney();
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
-            //if(true) {
+            if(true) {
+
            /*
             * Plugin Asset User Actor Network Service
             * ----------------------------------------
@@ -1357,7 +1358,7 @@ public class Platform implements Serializable {
              */
                 Plugin assetIssuerWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetIssuerWallet();
                 injectPluginReferencesAndStart(assetIssuerWalletModule, Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
-           // }
+            }
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
