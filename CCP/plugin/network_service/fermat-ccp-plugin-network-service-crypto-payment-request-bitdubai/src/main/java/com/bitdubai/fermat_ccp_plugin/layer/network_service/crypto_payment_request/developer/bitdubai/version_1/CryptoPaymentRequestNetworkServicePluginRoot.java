@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -56,6 +57,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestExecutorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -166,6 +168,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * Represent the registrationProcessNetworkServiceAgent
      */
     private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
+
+    private CryptoPaymentRequestExecutorAgent cryptoPaymentRequestExecutorAgent;
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
@@ -454,11 +458,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             addCryptoPaymentRequestListener(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION, new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
             addCryptoPaymentRequestListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION     , new CompleteComponentConnectionRequestNotificationEventHandler(this));
 
-            addCryptoPaymentRequestListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION     , new CompleteComponentConnectionRequestNotificationEventHandler(this));
-
-            addCryptoPaymentRequestListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION          , new NewReceiveMessagesNotificationEventHandler(null));
-
-
             this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (CantInitializeNetworkServiceDatabaseException exception) {
@@ -488,8 +487,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
-        
-        
 
     }
 
@@ -754,7 +751,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     /**
      * Handles the events CompleteComponentRegistrationNotification
      */
-    public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered){
+    public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
         System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
@@ -770,6 +767,29 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
              */
             this.register = Boolean.TRUE;
             System.out.println(" Crypto Payment Request Network Service is now registered.");
+
+            try {
+
+                cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+                        communicationNetworkServiceConnectionManager,
+                        errorManager,
+                        eventManager,
+                        pluginDatabaseSystem,
+                        pluginId
+                );
+
+                cryptoPaymentRequestExecutorAgent.start();
+
+                addCryptoPaymentRequestListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION, new NewReceiveMessagesNotificationEventHandler(cryptoPaymentRequestExecutorAgent));
+
+                System.out.println(" Crypto Payment Request Network Service Executor Agent is now running and listening New Receive Messages Notification Events.");
+
+            } catch(CantStartAgentException e) {
+
+                CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            }
+
         }
     }
 
