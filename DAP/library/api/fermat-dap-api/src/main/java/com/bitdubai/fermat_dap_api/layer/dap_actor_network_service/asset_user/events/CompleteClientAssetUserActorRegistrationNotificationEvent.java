@@ -6,6 +6,9 @@
 */
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events;
 
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent</code>
  * <p/>
@@ -14,5 +17,19 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.e
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteClientAssetUserActorRegistrationNotificationEvent {
+public class CompleteClientAssetUserActorRegistrationNotificationEvent extends AbstractDapAssetUserActorNetworkServiceFermatEvent {
+
+    private ActorAssetUser actorAssetUser;
+
+    public ActorAssetUser getActorAssetUser() {
+        return actorAssetUser;
+    }
+
+    public void setActorAssetUserList(ActorAssetUser actorAssetUser) {
+        this.actorAssetUser = actorAssetUser;
+    }
+
+    public CompleteClientAssetUserActorRegistrationNotificationEvent(EventTypeAssetUserANS eventType) {
+        super(eventType);
+    }
 }

@@ -12,7 +12,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteClientAssetUserActorRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener;
 
 /**
@@ -25,12 +27,20 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.li
  */
 public enum EventTypeAssetUserANS implements FermatEventEnum {
 
-    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_CRLCRN") {
+    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_RLCRN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(this);
+        }
+    },
+    COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new CompleteClientAssetUserActorRegistrationNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new CompleteClientAssetUserActorRegistrationNotificationEvent(this);
         }
     },
 

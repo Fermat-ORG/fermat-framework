@@ -24,8 +24,6 @@ public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEven
     private List<ActorAssetUser> actorAssetUserList;
 
 
-
-
     public List<ActorAssetUser> getActorAssetUserList() {
         return actorAssetUserList;
     }

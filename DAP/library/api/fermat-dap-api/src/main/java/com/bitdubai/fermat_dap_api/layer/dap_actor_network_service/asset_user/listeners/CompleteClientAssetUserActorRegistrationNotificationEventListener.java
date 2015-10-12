@@ -6,6 +6,9 @@
 */
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteClientAssetUserActorRegistrationNotificationEventListener</code>
  * <p/>
@@ -14,5 +17,14 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.l
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteClientAssetUserActorRegistrationNotificationEventListener {
+public class CompleteClientAssetUserActorRegistrationNotificationEventListener extends BasicFermatEventListener {
+    /**
+     * Constructor with parameters
+     *
+     * @param eventType
+     * @param eventMonitor
+     */
+    public CompleteClientAssetUserActorRegistrationNotificationEventListener(EventTypeAssetUserANS eventType, FermatEventMonitor eventMonitor) {
+        super(eventType, eventMonitor);
+    }
 }
