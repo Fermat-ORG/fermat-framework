@@ -33,10 +33,25 @@ public interface CommunicationsClientConnection {
      * @param name
      * @param networkServiceType
      * @param platformComponentType
+     * @param extraData
      *
      * @return PlatformComponentProfile
      */
     public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
+
+    /**
+     * Construct a PlatformComponentProfile instance, for use in the process
+     * of connection
+     *
+     * @param identityPublicKey
+     * @param networkServiceType
+     * @param platformComponentType
+     *
+     * @return PlatformComponentProfile
+     */
+    public PlatformComponentProfile constructBasicPlatformComponentProfileFactory(String identityPublicKey, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType);
+
+
 
     /**
      * Construct a DiscoveryQueryParameters instance, for use in the process
@@ -88,10 +103,11 @@ public interface CommunicationsClientConnection {
      * the remote destination component to send message, but the applicant only now a other component type identity public key
      * and the server has to discovery the component type for this identity public key that is the same type as the applicant.
      *
-     * @param applicant
-     * @param discoveryQueryParameters
+     * @param applicantParticipant the applicant participant of the vpn
+     * @param applicantNetworkService the profile of the network service which it makes the request
+     * @param remoteParticipant the remote participant of the vpn
      */
-    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicant, DiscoveryQueryParameters discoveryQueryParameters);
+    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant);
 
     /**
      * Method that verified is the connection is
@@ -110,9 +126,10 @@ public interface CommunicationsClientConnection {
     /**
      * Get the CommunicationsVPNConnection stablished
      *
-     * @param applicant
+     * @param networkServiceType
+     * @param remotePlatformComponentProfile
      * @return CommunicationsVPNConnection
      */
-    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile);
+    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile);
 
 }

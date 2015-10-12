@@ -51,7 +51,6 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     private Map<String, UUID> walletAssetIssuer = new HashMap<>();
 
-    //TODO: Implementar clase DAO y los metodos de la interfaz manager y otros metodos.
     private AssetIssuerWalletDao assetIssuerWalletDao;
     private ErrorManager errorManager;
 
@@ -172,6 +171,20 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
         try {
             return new AssetIssuerWallletBalanceImpl(database);
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException {
+        try {
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database);
+            return assetIssuerWalletDao.listsTransactionsByAssetsAll(balanceType, transactionType, assetPublicKey);
+        }catch (CantGetTransactionsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw exception;
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);

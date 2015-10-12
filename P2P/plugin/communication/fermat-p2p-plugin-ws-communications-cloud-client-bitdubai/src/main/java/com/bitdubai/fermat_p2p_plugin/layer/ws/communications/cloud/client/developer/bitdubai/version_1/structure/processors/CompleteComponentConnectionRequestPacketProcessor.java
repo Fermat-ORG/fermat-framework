@@ -52,6 +52,7 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
+        PlatformComponentProfile applicantComponent = gson.fromJson(respond.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
         PlatformComponentProfile remoteComponent = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
         /*
@@ -63,7 +64,9 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         /*
          * Configure the values
          */
+        ((CompleteComponentConnectionRequestNotificationEvent)event).setApplicantComponent(applicantComponent);
         ((CompleteComponentConnectionRequestNotificationEvent)event).setRemoteComponent(remoteComponent);
+
         /*
          * Raise the event
          */

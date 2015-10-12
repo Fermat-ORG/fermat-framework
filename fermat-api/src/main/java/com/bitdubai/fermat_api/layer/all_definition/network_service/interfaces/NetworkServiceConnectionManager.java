@@ -29,18 +29,11 @@ public interface NetworkServiceConnectionManager {
     /**
      * Create a new connection to from another platform component type, it is mean tha the who made the request is not a network service
      *
-     * NOTE: the discoveryQueryParameters param has to be set the following attribute set
-     *
-     * IdentityPublicKey of the other platform component type who made the request
-     * FromOtherPlatformComponentType of the other platform component type who made the request
-     * FromOtherNetworkServiceType of the other platform component type who made the request
-     *
-     * All three attribute are required
-     *
-     * @param applicantNetworkService the PlatformComponentProfile of the network service who made the request
-     * @param discoveryQueryParameters to make the search
+     * @param applicantParticipant the applicant participant of the vpn
+     * @param applicantNetworkService the profile of the network service which it makes the request
+     * @param remoteParticipant the remote participant of the vpn
      */
-    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters);
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant);
 
 
     /**

@@ -158,6 +158,11 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
     }
 
     @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+    }
+
+    @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
     }
@@ -168,7 +173,7 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
      * @param remoteComponentProfile
      */
     @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
     }
 

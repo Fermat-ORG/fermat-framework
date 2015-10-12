@@ -90,8 +90,11 @@ public enum Activities {
     CBP_CRYPTO_BROKER_WALLET_DEALS("CBPCBWD"),
     CBP_CRYPTO_BROKER_WALLET_CONTRACTS("CBPCBWC"),
     CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE("CBPCBWSP"),
-    CBP_CRYPTO_BROKER_WALLET_SETTINGS("CBPCBWS")
-    ;
+    CBP_CRYPTO_BROKER_WALLET_SETTINGS("CBPCBWS"),
+
+    // Crypto Broker Identity
+    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
+    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI");
 
     private String code;
 
@@ -233,6 +236,10 @@ public enum Activities {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
+            case "CBPSACBICI":
+                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
+            case"CBPSACBI":
+                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

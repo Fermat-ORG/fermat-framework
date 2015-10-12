@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
@@ -11,11 +12,15 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.BasicFermatEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteRequestListComponentRegisteredNotificationEventListener;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.FailureComponentConnectionRequestNotificationEventListener;
 
 /**
  * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType</code>
@@ -66,7 +71,30 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new CompleteComponentConnectionRequestNotificationEvent(this);
         }
-    };
+    },
+
+    FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("F_CCCRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new FailureComponentConnectionRequestNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new FailureComponentConnectionRequestNotificationEvent(this);
+        }
+    },
+
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION("NNSMRN") {
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageReceivedNotificationEvent(this);
+        }
+    },
+
+    NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION("NNSMSN") {
+        public FermatEvent getNewEvent() {
+            return new NewNetworkServiceMessageSentNotificationEvent(this);
+        }
+    },
+
+    ;
 
     /**
      * Represent the code of the message status
@@ -82,8 +110,9 @@ public enum EventType implements FermatEventEnum {
         this.code = code;
     }
 
-
-    public abstract FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor);
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+        return new GenericEventListener(this, fermatEventMonitor);
+    }
 
     public abstract FermatEvent getNewEvent();
 

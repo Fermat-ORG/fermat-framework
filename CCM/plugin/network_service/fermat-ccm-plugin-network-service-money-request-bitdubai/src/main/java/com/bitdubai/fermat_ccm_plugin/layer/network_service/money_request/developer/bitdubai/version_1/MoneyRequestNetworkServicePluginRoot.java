@@ -225,6 +225,11 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     }
 
     @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+    }
+
+    @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
     }
@@ -235,7 +240,7 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
      * @param remoteComponentProfile
      */
     @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
     }
 

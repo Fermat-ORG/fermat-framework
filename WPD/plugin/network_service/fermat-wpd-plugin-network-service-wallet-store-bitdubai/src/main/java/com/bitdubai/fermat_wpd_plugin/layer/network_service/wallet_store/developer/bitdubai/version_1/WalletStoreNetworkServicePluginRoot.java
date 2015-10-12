@@ -456,6 +456,11 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
     @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+    }
+
+    @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
     }
@@ -466,7 +471,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      * @param remoteComponentProfile
      */
     @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile) {
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
     }
 

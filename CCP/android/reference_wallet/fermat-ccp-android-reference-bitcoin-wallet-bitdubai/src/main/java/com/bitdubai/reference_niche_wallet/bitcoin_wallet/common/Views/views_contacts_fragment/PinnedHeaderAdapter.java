@@ -17,9 +17,11 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.ui.util.MemoryUtils;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
@@ -135,53 +137,66 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
         mListSectionPos = mListSectionPos;
 
         int type = getItemViewType(position);
-        if (convertView == null) {
-            holder = new ViewHolder();
 
-            switch (type) {
-                case TYPE_ITEM:
-                    convertView = mLayoutInflater.inflate(R.layout.row_view, null);
-                    walletContact = (CryptoWalletWalletContact) mListItems.get(position);
+        try {
+            if (convertView == null) {
+                holder = new ViewHolder();
 
-                    //guardo el contacto
-                    contactPositionItem.put(position,walletContact);
 
-                    if(walletContact.getProfilePicture()!=null){
-                        //holder.imageView.setImageBitmap(ImagesUtils.getRoundedShape(BitmapFactory.decodeByteArray(walletContact.getProfilePicture(),0,walletContact.getProfilePicture().length)));
-                    }
-                    else{
-                        Picasso.with(mContext).load(R.drawable.person1).into(holder.imageView);
-                    }
-                    text = walletContact.getActorName();
 
-                    break;
-                case TYPE_SECTION:
-                    convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
-                    text = (String) mListItems.get(position);
-                    break;
-            }
+                switch (type) {
+                    case TYPE_ITEM:
+                        convertView = mLayoutInflater.inflate(R.layout.row_view, null);
 
-            holder.textView = (TextView) convertView.findViewById(R.id.row_title);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        if(text.equals("")) {
-            Object o = mListItems.get(0);
-            if (o instanceof CryptoWalletWalletContact) {
-                text =((CryptoWalletWalletContact) o).getActorName();
-            } else {
-                o = mListItems.get(1);
-                if (o instanceof CryptoWalletWalletContact) {
-                   text =((CryptoWalletWalletContact) o).getActorName();
+                        holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
+
+                        walletContact = (CryptoWalletWalletContact) mListItems.get(position);
+
+                        //guardo el contacto
+                        contactPositionItem.put(position, walletContact);
+
+                        if (walletContact.getProfilePicture().length>0) {
+                            //holder.imageView.setImageBitmap(ImagesUtils.getRoundedShape(BitmapFactory.decodeByteArray(walletContact.getProfilePicture(),0,walletContact.getProfilePicture().length)));
+                            holder.imageView.setImageBitmap(MemoryUtils.decodeSampledBitmapFromByteArray(walletContact.getProfilePicture(), 60, 60));
+                        } else {
+                            Picasso.with(mContext).load(R.drawable.person1).into(holder.imageView);
+                        }
+                        text = walletContact.getActorName();
+
+                        break;
+                    case TYPE_SECTION:
+                        convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
+                        text = (String) mListItems.get(position);
+                        break;
                 }
 
+                holder.textView = (TextView) convertView.findViewById(R.id.row_title);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
-        }
+            if (text.equals("")) {
+                Object o = mListItems.get(0);
+                if (o instanceof CryptoWalletWalletContact) {
+                    text = ((CryptoWalletWalletContact) o).getActorName();
+                } else {
+                    o = mListItems.get(1);
+                    if (o instanceof CryptoWalletWalletContact) {
+                        text = ((CryptoWalletWalletContact) o).getActorName();
+                    }
+
+                }
+            }
+
 
 //        final String text = mListItems.get(position);
-        final SpannableString textToShow = getSpannedText(text, constrainStr, type);
-        holder.textView.setText(text);
+            final SpannableString textToShow = getSpannedText(text, constrainStr, type);
+            holder.textView.setText(text);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         return convertView;
     }
@@ -209,7 +224,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     @Override
     public void configurePinnedHeader(View v, int position) {
         // set text in pinned header
-        TextView header = (TextView) v;
+        LinearLayout linearLayout =(LinearLayout)v;
+        TextView header = (TextView) linearLayout.getChildAt(0);
         mCurrentSectionPosition = getCurrentSectionPosition(position);
         header.setText(mListItems.get(mCurrentSectionPosition).toString());
     }

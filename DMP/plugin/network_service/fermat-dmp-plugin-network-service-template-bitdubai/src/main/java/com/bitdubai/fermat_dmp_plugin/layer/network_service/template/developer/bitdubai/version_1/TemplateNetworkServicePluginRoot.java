@@ -624,7 +624,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      */
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         /*
          * If the component registered have my profile and my identity public key
@@ -643,20 +643,22 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              * This is for test and example of how to use
              * Construct the filter
              */
-            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
-                                                                getCommunicationsCloudClientConnection().
-                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
-                                                                        platformComponentProfile.getNetworkServiceType(),
-                                                                        null,                     // alias
-                                                                        null,                     // identityPublicKey
-                                                                        null,                     // location
-                                                                        null,                     // distance
-                                                                        null,                     // name
-                                                                        null,                     // extraData
-                                                                        null,                     // offset
-                                                                        null,                     // max
-                                                                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                        null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+            DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //PlatformComponentType you want to find
+                                                                                                    platformComponentProfile.getNetworkServiceType(),     //NetworkServiceType you want to find
+                                                                                                    null,                     // alias
+                                                                                                    null,                     // identityPublicKey
+                                                                                                    null,                     // location
+                                                                                                    null,                     // distance
+                                                                                                    null,                     // name
+                                                                                                    null,                     // extraData
+                                                                                                    null,                     // offset
+                                                                                                    null,                     // max
+                                                                                                    null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                                                    null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+
+
+            System.out.println(" TemplateNetworkServicePluginRoot - discoveryQueryParameters = "+discoveryQueryParameters.toJson());
+
 
             /*
              * Request the list of component registers
@@ -668,17 +670,24 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see NetworkService#handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile, PlatformComponentProfile)
+     */
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
-
+        System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleFailureComponentRegistrationNotificationEvent");
+    }
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#
+     * @see NetworkService#handleCompleteRequestListComponentRegisteredNotificationEvent(List, DiscoveryQueryParameters)
      */
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+        System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
         /*
          * save into the cache
@@ -697,28 +706,10 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
 
-            DiscoveryQueryParameters discoveryQueryParametersT = wsCommunicationsCloudClientManager.
-                                                                getCommunicationsCloudClientConnection().
-                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
-                                                                        platformComponentProfile.getNetworkServiceType(),
-                                                                        null,                     // alias
-                                                                        remoteNetworkServiceToConnect.getIdentityPublicKey(),                     // identityPublicKey
-                                                                        null,                     // location
-                                                                        null,                     // distance
-                                                                        null,                     // name
-                                                                        null,                     // extraData
-                                                                        null,                     // offset
-                                                                        null,                     // max
-                                                                        remoteNetworkServiceToConnect.getPlatformComponentType(),                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                        remoteNetworkServiceToConnect.getNetworkServiceType());                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
-
-
-
-
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, discoveryQueryParametersT);
+            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, platformComponentProfile, remoteNetworkServiceToConnect);
 
         }
 
@@ -726,16 +717,18 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile)
+     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile, PlatformComponentProfile)
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
 
         System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
         /*
          * Tell the manager to handler the new connection stablished
          */
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+
+        //TODO: Robert, comenté esto porque falta algo
+        //communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(applicantComponentProfile, remoteComponentProfile);
 
 
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
@@ -757,7 +750,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Send a message using the local representation
              */
-            communicationNetworkServiceLocal.sendMessage(messageContent, identity);
+            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
 
         }
 

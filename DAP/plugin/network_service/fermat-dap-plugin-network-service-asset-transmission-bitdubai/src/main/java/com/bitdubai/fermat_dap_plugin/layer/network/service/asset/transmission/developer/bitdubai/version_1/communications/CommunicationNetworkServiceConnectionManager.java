@@ -124,21 +124,21 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile, DiscoveryQueryParameters)
+     * @see NetworkServiceConnectionManager#connectTo(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void connectTo(PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) {
 
         try {
 
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-            communicationsClientConnection.requestDiscoveryVpnConnection(applicantNetworkService, discoveryQueryParameters);
+            communicationsClientConnection.requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
 
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
     }
 
@@ -182,7 +182,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile.getNetworkServiceType(), remoteComponentProfile);
 
             //Validate the connection
             if (communicationsVPNConnection != null &&

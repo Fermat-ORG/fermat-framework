@@ -30,14 +30,14 @@ dependencies {
     compile project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
     compile project(':fermat-dmp-plugin-request-money-request-bitdubai')
     /*
-     World layer projects on the pipeline:
-      compile project(':fermat-dmp-plugin-world-blockchain-info-bitdubai')
-      compile project(':fermat-dmp-plugin-world-coinapult-bitdubai')
-      compile project(':fermat-dmp-plugin-world-crypto-index-bitdubai')
-      compile project(':fermat-dmp-plugin-world-shape-shift-bitdubai')
-      compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
-      compile project(':fermat-dmp-plugin-world-location-bitdubai')
-    */
+         World layer projects on the pipeline:
+          compile project(':fermat-dmp-plugin-world-blockchain-info-bitdubai')
+          compile project(':fermat-dmp-plugin-world-coinapult-bitdubai')
+          compile project(':fermat-dmp-plugin-world-crypto-index-bitdubai')
+          compile project(':fermat-dmp-plugin-world-shape-shift-bitdubai')
+          compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
+          compile project(':fermat-dmp-plugin-world-location-bitdubai')
+        */
     compile project(':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai')
     compile project(':fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai')
     compile project(':fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai')
@@ -63,7 +63,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
-
     // Init CCP Projects (Plugins)
     compile project(':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai')
     compile project(':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai')
@@ -86,9 +85,11 @@ dependencies {
     compile project(':fermat-dap-plugin-identity-redeem-point-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-assets-user-wallet-bitdubai')
     compile project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
 
@@ -136,5 +137,6 @@ dependencies {
     compile project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
     compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
 }
 

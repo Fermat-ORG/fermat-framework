@@ -3,6 +3,8 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -22,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -76,7 +79,7 @@ public class AssetUserActorDao implements Serializable {
 
     /**
      * This method open or creates the database i'll be working with     *
-
+     *
      * @throws CantInitializeAssetUserActorDatabaseException
      */
     public void initializeDatabase() throws CantInitializeAssetUserActorDatabaseException {
@@ -86,13 +89,9 @@ public class AssetUserActorDao implements Serializable {
               */
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, AssetUserActorDatabaseConstants.ASSET_USER_DATABASE_NAME);
             database.closeDatabase();
-        }
-        catch (CantOpenDatabaseException cantOpenDatabaseException)
-        {
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetUserActorDatabaseException(CantInitializeAssetUserActorDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        }
-        catch (DatabaseNotFoundException e)
-        {
+        } catch (DatabaseNotFoundException e) {
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
@@ -110,25 +109,20 @@ public class AssetUserActorDao implements Serializable {
                    */
                 throw new CantInitializeAssetUserActorDatabaseException(CantInitializeAssetUserActorDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new CantInitializeAssetUserActorDatabaseException(CantInitializeAssetUserActorDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a unknown problem and i cannot open the database.");
         }
     }
 
-    public void createNewAssetUser(String assetUserLoggedInPublicKey, String assetUserToAddName, String assetUserToAddPublicKey, byte[] profileImage, ConnectionState connectionState) throws CantAddPendingAssetUserException {
+    public void createNewAssetUser(String assetUserLinkedInPublicKey, String assetUserToAddName, String assetUserToAddPublicKey, byte[] profileImage, Genders genders, String age, CryptoAddress cryptoAddress, ConnectionState connectionState) throws CantAddPendingAssetUserException {
 
         try {
-
             /**
              * if Asset User exist on table
              * change status
              */
             if (assetUserExists(assetUserToAddPublicKey)) {
-
-                this.updateAssetUserConnectionState(assetUserLoggedInPublicKey, assetUserToAddPublicKey, connectionState);
-
+                this.updateAssetUserConnectionState(assetUserLinkedInPublicKey, assetUserToAddPublicKey, connectionState);
             } else {
                 /**
                  * Get actual date
@@ -139,10 +133,17 @@ public class AssetUserActorDao implements Serializable {
                 DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLinkedInPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME, assetUserToAddName);
+
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_COLUMN_NAME, "-");
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME, genders.getCode());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME, age);
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
+
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, connectionState.getCode());
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey);
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
 
@@ -189,7 +190,7 @@ public class AssetUserActorDao implements Serializable {
 
             // 2) Find the Asset User , filter by keys.
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -244,7 +245,7 @@ public class AssetUserActorDao implements Serializable {
             }
 
             // 2) Find all Asset Users.
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
@@ -257,7 +258,9 @@ public class AssetUserActorDao implements Serializable {
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
+                        Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME)),
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME),
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME)));
             }
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
@@ -275,7 +278,7 @@ public class AssetUserActorDao implements Serializable {
         return list;
     }
 
-    public List<ActorAssetUser> getAssetUsers(String assetUserLoggedInPublicKey, ConnectionState connectionState, int max, int offset) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAllAssetUsers(String assetUserLoggedInPublicKey, ConnectionState connectionState, int max, int offset) throws CantGetAssetUsersListException {
 
         // Setup method.
         List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
@@ -296,7 +299,7 @@ public class AssetUserActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
             // 2) Find  Asset Users by state.
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
             table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
@@ -310,7 +313,9 @@ public class AssetUserActorDao implements Serializable {
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
-                        ConnectionState.valueOf(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME))));
+                        Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME)),
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME),
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME)));
             }
 
             database.closeDatabase();
@@ -411,5 +416,60 @@ public class AssetUserActorDao implements Serializable {
         } catch (Exception e) {
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant check if alias exists, unknown failure.");
         }
+    }
+
+    public ActorAssetUser getAssetUserActor() throws CantGetAssetUsersListException {
+//        public List<ActorAssetUser> getAllAssetUserActor(String assetUserToAddPublicKey) throws CantGetAssetUsersListException {
+        // Setup method.
+//        List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
+        AssetUserActorRecord assetUserActorRecord = null;
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }//TODO Filtro de Busqueda en Tabla no colocado para que traiga toda la informacion que contiene
+            // 2) Find  Asset Users by public Key.
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            // 3) Get Asset Users Recorod.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                // Add records to list.
+                assetUserActorRecord = new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
+                        Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME)),
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME),
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME));
+            }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            database.closeDatabase();
+            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetUserActorProfileImageException e) {
+            database.closeDatabase();
+            // Failure unknown.
+            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            database.closeDatabase();
+            throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+        }
+        // Return the list values.
+        return assetUserActorRecord;
     }
 }

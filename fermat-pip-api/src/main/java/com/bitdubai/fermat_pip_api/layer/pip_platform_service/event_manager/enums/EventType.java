@@ -524,26 +524,6 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION("NNSMRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewNetworkServiceMessageReceivedNotificationEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new NewNetworkServiceMessageReceivedNotificationEvent(this);
-        }
-    },
-
-    NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION("NNSMSN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewNetworkServiceMessageSentNotificationEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new NewNetworkServiceMessageSentNotificationEvent(this);
-        }
-    },
-
     OUTGOING_INTRA_ACTOR_TRANSACTION_SENT("OMRA") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new OutgoingIntraActorTransactionSentEventListener(fermatEventMonitor);
@@ -673,6 +653,47 @@ public enum EventType implements FermatEventEnum {
             return new IncomingMoneyNotificationEvent(this);
         }
     },
+
+    ASSET_USER_CONNECTION_ACCEPTED("AUCA") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorConnectionAcceptedEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorConnectionAcceptedEvent(this);
+        }
+    },
+
+    ASSET_USER_DISCONNECTION_REQUEST_RECEIVED("AUDRR") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorConnectionCancelledEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorConnectionCancelledEvent(this);
+        }
+    },
+
+    ASSET_USER_REQUESTED_CONNECTION("AURC") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorRequestConnectionEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorRequestConnectionEvent(this);
+        }
+    },
+
+    ASSET_USER_CONNECTION_DENIED("AUCD") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorDeniedConnectionEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorConnectionDeniedEvent(this);
+        }
+    },
+
     NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {

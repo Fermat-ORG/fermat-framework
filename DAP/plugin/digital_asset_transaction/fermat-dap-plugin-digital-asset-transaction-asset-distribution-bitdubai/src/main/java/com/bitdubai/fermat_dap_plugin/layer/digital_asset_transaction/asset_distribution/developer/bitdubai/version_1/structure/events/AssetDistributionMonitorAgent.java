@@ -15,11 +15,11 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantInitializeAssetMonitorAgentException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionPluginRoot;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetTransmissionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetDistributionVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -46,7 +46,7 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
         UUID pluginId;
         //OutgoingIntraActorManager outgoingIntraActorManager;
         AssetVaultManager assetVaultManager;
-        DigitalAssetTransmissionVault digitalAssetTransmissionVault;
+        DigitalAssetDistributionVault digitalAssetDistributionVault;
 
         public AssetDistributionMonitorAgent(EventManager eventManager,
                 PluginDatabaseSystem pluginDatabaseSystem,
@@ -70,11 +70,11 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
         this.assetVaultManager=assetVaultManager;
     }
 
-    public void setDigitalAssetTransmissionVault(DigitalAssetTransmissionVault digitalAssetTransmissionVault)throws CantSetObjectException{
-        if(digitalAssetTransmissionVault==null){
-            throw new CantSetObjectException("DigitalAssetTransmissionVault is null");
+    public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault)throws CantSetObjectException{
+        if(digitalAssetDistributionVault ==null){
+            throw new CantSetObjectException("DigitalAssetDistributionVault is null");
         }
-        this.digitalAssetTransmissionVault=digitalAssetTransmissionVault;
+        this.digitalAssetDistributionVault = digitalAssetDistributionVault;
     }
 
     @Override

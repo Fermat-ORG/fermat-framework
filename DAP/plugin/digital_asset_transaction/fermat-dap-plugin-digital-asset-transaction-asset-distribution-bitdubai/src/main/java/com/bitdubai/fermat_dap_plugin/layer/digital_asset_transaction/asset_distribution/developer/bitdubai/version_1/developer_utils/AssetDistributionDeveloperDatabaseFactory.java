@@ -126,7 +126,33 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
         DeveloperDatabaseTable assetDistributionTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME, assetDistributionColumns);
         tables.add(assetDistributionTable);
 
+        /**
+         * Events Recorder table
+         * */
+        List<String> eventsRecorderColumns = new ArrayList<String>();
 
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME);
+        eventsRecorderColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
+
+        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
+        tables.add(eventsRecorderTable);
+
+        /**
+         * Asset Distribution table
+         */
+        List<String> assetDeliveringColumns = new ArrayList<String>();
+
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_MESSAGE_ID_COLUMN_NAME);
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME);
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_MESSAGE_TYPE_COLUMN_NAME);
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMESTAMP_COLUMN_NAME);
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_EVENT_ID_COLUMN_NAME);
+
+        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_FIRST_KEY_COLUMN, assetDeliveringColumns);
+        tables.add(assetDeliveringTable);
 
         return tables;
     }
