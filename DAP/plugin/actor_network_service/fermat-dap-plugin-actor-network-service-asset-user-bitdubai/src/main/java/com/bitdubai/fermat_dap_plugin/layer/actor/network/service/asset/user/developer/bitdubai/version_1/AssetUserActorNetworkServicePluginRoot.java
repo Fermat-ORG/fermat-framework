@@ -203,6 +203,9 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
      */
     private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
+
+    private List<PlatformComponentProfile> remoteActorNetworkServicesRegisteredListAux;
+
     /**
      *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
@@ -877,6 +880,8 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.UNDEFINED){
 
+            /*
+
 
             System.out.println(" Actor Network Service Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias"+platformComponentProfileRegistered.getAlias());
 
@@ -885,6 +890,10 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             } catch (CantRequestListActorAssetUserRegisteredException e) {
                 e.printStackTrace();
             }
+
+            */
+
+
 
         }
 
@@ -935,6 +944,10 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             }
 
             System.out.println("**********************************");
+
+            remoteActorNetworkServicesRegisteredListAux= platformComponentProfileRegisteredList;
+
+
 
         }
 
