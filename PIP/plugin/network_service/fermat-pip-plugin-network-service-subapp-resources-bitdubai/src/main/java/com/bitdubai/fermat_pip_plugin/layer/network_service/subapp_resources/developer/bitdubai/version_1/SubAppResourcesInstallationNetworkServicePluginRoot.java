@@ -282,7 +282,13 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
 
 
     @Override
-    public void installCompleteSubApp(String subAppType, String developer, String screenSize, String skinName, String languageName, String navigationStructureVersion, String subAppPublickey) throws CantInstallCompleteSubAppResourcesException {
+    public void installCompleteSubApp(String subAppType,
+                                      String developer,
+                                      String screenSize,
+                                      String skinName,
+                                      String languageName,
+                                      String navigationStructureVersion,
+                                      String subAppPublickey) throws CantInstallCompleteSubAppResourcesException {
 
         // this will be use when the repository be open source
         //String linkToRepo = REPOSITORY_LINK + walletCategory + "/" + walletType + "/" + developer + "/";
@@ -368,7 +374,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
                                      String navigationStructureVersion,
                                      String subAppPublicKey) throws CantInstallSubAppSkinException {
         try {
-            String linkToRepo = "seed-resources/wallet_resources/" + developer  + "/" + subAppType + "/";
+            String linkToRepo = "seed-resources/subApp_resources/" + developer  + "/" + subAppType + "/";
 
             String linkToResources = linkToRepo + "skins/" + skinName + "/";
 
@@ -389,7 +395,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
 
             Repository repository = new Repository(skinName, navigationStructureVersion, localStoragePath);
 
-            SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO = new SubAppResourcesInstallationNetworkServiceDAO(pluginDatabaseSystem);
+           // SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO = new SubAppResourcesInstallationNetworkServiceDAO(pluginDatabaseSystem);
 
 
             subAppResourcesDAO.createRepository(repository, skin.getId());
@@ -421,9 +427,14 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
      * @throws CantInstallSubAppLanguageException
      */
     @Override
-    public void installLanguageForSubApp(String subAppType, String developer, String screenSize, UUID skinId, String languageName, String subAppPublicKey) throws CantInstallSubAppLanguageException {
+    public void installLanguageForSubApp(String subAppType,
+                                         String developer,
+                                         String screenSize,
+                                         UUID skinId,
+                                         String languageName,
+                                         String subAppPublicKey) throws CantInstallSubAppLanguageException {
         try {
-            String linkToRepo = "seed-resources/wallet_resources/" + developer + "/" + subAppType + "/";
+            String linkToRepo = "seed-resources/subApp_resources/" + developer + "/" + subAppType + "/";
 
             Repository repository = subAppResourcesDAO.getRepository(skinId);
 
@@ -1221,7 +1232,10 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
 
 
             Skin skin = new Skin();
-            skin = (Skin) XMLParser.parseXML(repoManifest, skin);
+            Object object;
+            object=XMLParser.parseXML(repoManifest, skin);
+            skin= (Skin) object;
+            //skin = (Skin) XMLParser.parseXML(repoManifest, skin);
 
             /**
              *  Skin record

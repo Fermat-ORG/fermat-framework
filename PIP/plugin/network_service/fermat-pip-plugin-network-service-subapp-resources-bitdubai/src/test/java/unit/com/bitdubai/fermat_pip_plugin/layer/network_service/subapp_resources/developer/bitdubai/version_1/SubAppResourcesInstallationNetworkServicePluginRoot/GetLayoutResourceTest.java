@@ -1,16 +1,30 @@
 package unit.com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.github.GithubConnection;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesInstallationNetworkServicePluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure.Repository;
 
 import junit.framework.TestCase;
 
@@ -21,11 +35,16 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.List;
 import java.util.UUID;
 
+import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -50,8 +69,6 @@ public class GetLayoutResourceTest extends TestCase {
     /**
      * DealWithEvents Iianterface member variables.
      */
-
-
     @Mock
     private FermatEventListener mockFermatEventListener;
 
@@ -66,45 +83,108 @@ public class GetLayoutResourceTest extends TestCase {
 
     @Mock
     private PluginTextFile mockPluginTextFile;
-    private String subAppType;
+
+    @Mock
+    private Repository repository;
+
+    @Mock
+    private GithubConnection githubConnection;
+
+    @Mock
+    private XMLParser mockXMLParser;
+
+    @Mock
+    private PluginTextFile layoutFile;
+    @Mock
+    private PluginBinaryFile imageFile;
+
+    @Mock
+    private DatabaseTableFactory mockFactoryTable;
+
+    @Mock
+    private DatabaseFactory mockDatabaseFactory;
+
+    @Mock
+    private DatabaseTableRecord mockDatabaseTableRecord;
+
+    @Mock
+    private DatabaseTable mockDatabaseTable;
+
+    @Mock
+    private DatabaseTransaction mockTransaction;
+    @Mock
+    private Skin skin;
+    @Mock
+    private Object object;
+    @Mock
+    private XMLParser xmlParser = mock(XMLParser.class);
+    @Mock
+    private List<DatabaseTableRecord> databaseTableRecordList;
+    UUID skinId;
+
+    String repoManifest = "<skin ></skin >";
 
     SubAppResourcesInstallationNetworkServicePluginRoot subAppResourcesInstallationNetworkServicePluginRoot;
-//
+    private SubAppResourcesInstallationNetworkServiceDAO subAppResourcesDAO;
+
     @Before
     public void setUp() throws Exception {
         subAppResourcesInstallationNetworkServicePluginRoot = new SubAppResourcesInstallationNetworkServicePluginRoot();
         subAppResourcesInstallationNetworkServicePluginRoot.setPluginFileSystem(pluginFileSystem);
-
-        subAppResourcesInstallationNetworkServicePluginRoot.setErrorManager(errorManager);
         subAppResourcesInstallationNetworkServicePluginRoot.setEventManager(mockEventManager);
+        subAppResourcesInstallationNetworkServicePluginRoot.setErrorManager(errorManager);
         subAppResourcesInstallationNetworkServicePluginRoot.setPluginDatabaseSystem(mockPluginDatabaseSystem);
 
-        when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockFermatEventListener);
         when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
+        when(githubConnection.getFile(anyString())).thenReturn(repoManifest);
+        when(pluginFileSystem.createTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(layoutFile);
+        when(pluginFileSystem.createBinaryFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(imageFile);
 
+        when(mockEventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION)).thenReturn(mockFermatEventListener);
         when(pluginFileSystem.getTextFile(any(UUID.class), anyString(), anyString(), any(FilePrivacy.class), any(FileLifeSpan.class))).thenReturn(mockPluginTextFile);
-
-        when(mockPluginTextFile.getContent()).thenReturn("layoutContent");
-
-        subAppResourcesInstallationNetworkServicePluginRoot.start();
+        setUpDataBase();
     }
+    public void setUpDataBase() throws Exception {
 
+        when(mockPluginDatabaseSystem.openDatabase(any(UUID.class), anyString())).thenReturn(mockDatabase);
+        when(mockDatabaseFactory.newTableFactory(any(UUID.class), anyString())).thenReturn(mockFactoryTable);
+        when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
+        when(mockDatabaseTable.getEmptyRecord()).thenReturn(mockDatabaseTableRecord);
+        when(mockDatabase.newTransaction()).thenReturn(mockTransaction);
+        subAppResourcesDAO = new SubAppResourcesInstallationNetworkServiceDAO(mockPluginDatabaseSystem);
+        subAppResourcesDAO = new SubAppResourcesInstallationNetworkServiceDAO(mockPluginDatabaseSystem);
+
+        String path = "path1";
+        String skinName = "default/medium/landscape/layouts";
+        String navigationStructureVersion = "version1";
+        repository = new Repository(skinName, navigationStructureVersion, path);
+
+        subAppResourcesDAO.initializeDatabase(UUID.randomUUID(), SubAppResourcesNetworkServiceDatabaseConstants.DATABASE_NAME);
+        skinId = UUID.randomUUID();
+        subAppResourcesDAO.createRepository(repository, skinId);
+        when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
+        mockDatabaseTable.setUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+        mockDatabaseTable.loadToMemory();
+        when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
+        when(databaseTableRecordList.get(anyInt())).thenReturn(mockDatabaseTableRecord);
+        when(mockDatabaseTableRecord.getStringValue(anyString())).thenReturn(anyString());
+    }
     @Test
-    public void testgetImageResource_ReturnOk_ThrowsCantGetResourcesException() throws Exception {
-        //catchException(subAppResourcesInstallationNetworkServicePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt", ScreenOrientation.LANDSCAPE, UUID.randomUUID(),subAppType);
-        //assertThat(caughtException()).isNull();
+    public void testGetLayoutResource_ReturnOk_ThrowsCantGetResourcesException() throws Exception {
+        subAppResourcesInstallationNetworkServicePluginRoot.start();
+        catchException(subAppResourcesInstallationNetworkServicePluginRoot).getLayoutResource(
+                "default/medium/landscape/layouts",
+                ScreenOrientation.LANDSCAPE,
+                UUID.randomUUID(),
+                "subAppType");
+        assertThat(caughtException()).isNull();
     }
-
-    @Ignore
     @Test
     public void testcheckResources_TheResourcesRepositoryNotExist_ThrowsCantGetResourcesException() throws Exception {
-
-
-        //catchException(walletResourcePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt");
-        //assertThat(caughtException()).isInstanceOf(CantGetResourcesException.class);
-        caughtException().printStackTrace();
+        subAppResourcesInstallationNetworkServicePluginRoot.start();
+        catchException(subAppResourcesInstallationNetworkServicePluginRoot).getLayoutResource(null,null,null,null);
+        assertThat(caughtException()).isNotNull();
     }
-
     @Ignore
     @Test
     public void testcheckResources_fileNotFound_ThrowsCantGetResourcesException() throws Exception {
