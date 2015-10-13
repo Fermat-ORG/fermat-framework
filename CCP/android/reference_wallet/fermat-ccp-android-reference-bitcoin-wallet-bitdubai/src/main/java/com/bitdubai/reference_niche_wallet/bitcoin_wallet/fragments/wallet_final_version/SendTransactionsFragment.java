@@ -333,7 +333,12 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
-                    //sendCrypto();
+
+                 /*   if(walletContact!= null)
+                        sendCrypto();
+                    else
+                        Toast.makeText(getActivity(), "Contacto Inexistente", Toast.LENGTH_LONG).show();*/
+
 
                     //testing
 //
@@ -557,6 +562,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     if(txt_notes.getText().toString().length()!=0){
                         notes = txt_notes.getText().toString();
                     }
+
 
                     CryptoWalletWalletContact cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId);
 
