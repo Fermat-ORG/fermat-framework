@@ -119,8 +119,6 @@ public class IncomingCryptoDeveloperDatabaseFactory {
          * Modified by Franklin Marcano, 03/08/2015
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
@@ -129,10 +127,10 @@ public class IncomingCryptoDeveloperDatabaseFactory {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
             for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                List<String> developerRow = new ArrayList<String>();
                 for (DatabaseRecord field : row.getValues()){
                     /**
                      * I get each row and save them into a List<String>
@@ -143,7 +141,6 @@ public class IncomingCryptoDeveloperDatabaseFactory {
                  * I create the Developer Database record
                  */
                 returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-
             }
             /**
              * return the list of DeveloperRecords for the passed table.
@@ -161,5 +158,4 @@ public class IncomingCryptoDeveloperDatabaseFactory {
         database.closeDatabase();
         return returnedRecords;
     }
-
 }
