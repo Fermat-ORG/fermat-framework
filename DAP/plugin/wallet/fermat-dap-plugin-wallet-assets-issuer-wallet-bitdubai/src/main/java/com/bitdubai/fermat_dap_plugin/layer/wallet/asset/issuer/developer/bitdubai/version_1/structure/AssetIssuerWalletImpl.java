@@ -251,4 +251,5 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public AssetIssuerWalletTransactionSummary getActorTransactionSummary(String actorPublicKey, BalanceType balanceType) throws CantGetActorTransactionSummaryException {
         return null;
     }
+
 }
