@@ -96,7 +96,7 @@ public interface NetworkService {
      * @param networkServiceApplicant
      * @param discoveryQueryParameters
      */
-    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters);
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remo);
 
 
     /**

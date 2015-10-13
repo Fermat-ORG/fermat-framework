@@ -21,6 +21,7 @@ public class CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants {
     static final String CASH_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME = "status";
     static final String CASH_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
     static final String CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME = "merchandise_currency";
+    static final String CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME = "merchandise_amount";
     static final String CASH_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME = "execution_transaction_id";
     static final String CASH_MONEY_STOCK_REPLENISHMENT_CASH_CURRENCY_TYPE_COLUMN_NAME = "cash_currency_type";
 
