@@ -71,5 +71,5 @@ public interface ActorAssetUser {
      * returns the crypto address to which it belongs
      * @return CryptoAddress instance.
      */
-    String getCryptoAddress();
+    CryptoAddress getCryptoAddress();
 }
