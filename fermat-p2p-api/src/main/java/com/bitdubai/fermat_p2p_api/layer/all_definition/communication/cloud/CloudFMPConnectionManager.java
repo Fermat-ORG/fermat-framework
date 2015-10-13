@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
@@ -39,8 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -431,7 +429,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                 /*
                  * Decrypt the data packet json object string
                  */
-                String decryptedJson = AsymmectricCryptography.decryptMessagePrivateKey(stringBuffer.toString(), identity.getPrivateKey());
+                String decryptedJson = AsymmetricCryptography.decryptMessagePrivateKey(stringBuffer.toString(), identity.getPrivateKey());
 
 
                 System.out.println("CloudFMPConnectionManager - Received packet json = " + decryptedJson);
@@ -549,7 +547,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                     /*
                      * Encrypt the data packet json object string
                      */
-                    String encryptedJson = AsymmectricCryptography.encryptMessagePublicKey(dataPacketToSend.toJson(), dataPacketToSend.getDestination());
+                    String encryptedJson = AsymmetricCryptography.encryptMessagePublicKey(dataPacketToSend.toJson(), dataPacketToSend.getDestination());
 
                     //System.out.println("CloudFMPConnectionManager - Encrypted packet json to send  = " + encryptedJson);
                     System.out.println("CloudFMPConnectionManager - FermatPacketCommunication data length = " + encryptedJson.length());

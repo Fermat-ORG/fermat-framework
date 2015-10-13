@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
@@ -56,7 +56,7 @@ public class ListWalletContactsScrollingTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         doReturn(walletContactsRegistry).when(walletContactsManager).getWalletContactsRegistry();
-        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
+        walletPublicKey = AsymmetricCryptography.derivePublicKey(AsymmetricCryptography.createPrivateKey());
         walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
