@@ -127,6 +127,7 @@ public class CustomerBrokerCryptoSaleBusinessTransactionDeveloperDatabaseFactory
         customerBrokerCryptoSaleColumns.add(CustomerBrokerCryptoSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_SALE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
         customerBrokerCryptoSaleColumns.add(CustomerBrokerCryptoSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_SALE_PAYMENT_CURRENCY_COLUMN_NAME);
         customerBrokerCryptoSaleColumns.add(CustomerBrokerCryptoSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME);
+        customerBrokerCryptoSaleColumns.add(CustomerBrokerCryptoSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME);
         customerBrokerCryptoSaleColumns.add(CustomerBrokerCryptoSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_SALE_EXECUTION_TRANSACTION_ID_COLUMN_NAME);
         customerBrokerCryptoSaleColumns.add(CustomerBrokerCryptoSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_SALE_CRYPTO_CURRENCY_TYPE_COLUMN_NAME);
         /**

@@ -19,11 +19,12 @@ public interface CustomerBrokerBankPurchaseManager {
 
     CustomerBrokerBankPurchase createCustomerBrokerBankPurchase(
              final String contractId
+            ,final String publicKeyBroker
             ,final String publicKeyCustomer
             ,final String paymentTransactionId
             ,final String paymentCurrency
-            ,final String publicKeyBroker
             ,final String merchandiseCurrency
+            ,final float merchandiseAmount
             ,final String executionTransactionId
             ,final String bankCurrencyType
             ,final String bankOperationType

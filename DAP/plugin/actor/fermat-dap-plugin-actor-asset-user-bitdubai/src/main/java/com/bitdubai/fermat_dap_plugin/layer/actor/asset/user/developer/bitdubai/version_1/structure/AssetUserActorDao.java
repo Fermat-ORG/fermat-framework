@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -129,6 +130,15 @@ public class AssetUserActorDao implements Serializable {
                  */
                 Date d = new Date();
                 long milliseconds = d.getTime();
+                Location location = new DeviceLocation();
+                String locationLatitude, locationLongitude;
+                if (location.getLatitude() == null && location.getLongitude() == null) {
+                    locationLatitude = "-";
+                    locationLongitude = "-";
+                } else {
+                    locationLatitude = location.getLatitude().toString();
+                    locationLongitude = location.getLongitude().toString();
+                }
 
                 DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
@@ -137,7 +147,8 @@ public class AssetUserActorDao implements Serializable {
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME, assetUserToAddName);
 
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_COLUMN_NAME, "-");
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_LATITUDE_COLUMN_NAME, locationLatitude);
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_LONGITUDE_COLUMN_NAME, locationLongitude);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME, genders.getCode());
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME, age);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
@@ -234,6 +245,14 @@ public class AssetUserActorDao implements Serializable {
                  */
                 Date d = new Date();
                 long milliseconds = d.getTime();
+                String locationLatitude, locationLongitude;
+                if (location.getLatitude() == null || location.getLongitude() == null) {
+                    locationLatitude = "-";
+                    locationLongitude = "-";
+                } else {
+                    locationLatitude = location.getLatitude().toString();
+                    locationLongitude = location.getLongitude().toString();
+                }
 
                 DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
@@ -242,7 +261,8 @@ public class AssetUserActorDao implements Serializable {
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME, assetUserPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME, assetUserName);
 
-                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_COLUMN_NAME, "-");
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LATITUDE_COLUMN_NAME, locationLatitude);
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LONGITUDE_COLUMN_NAME, locationLongitude);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_GENDER_COLUMN_NAME, "-");
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_AGE_COLUMN_NAME, "-");
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_CRYPTO_ADDRESS_COLUMN_NAME, "-");
@@ -357,13 +377,12 @@ public class AssetUserActorDao implements Serializable {
             // 3) Get Asset Users Recorod.
             for (DatabaseTableRecord record : table.getRecords()) {
                 // Add records to list. AssetUserActorRecord
-                list.add(new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME),
+                list.add(new com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME),
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
                         Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME)),
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME),
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME)));
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME)));
             }
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
@@ -410,15 +429,13 @@ public class AssetUserActorDao implements Serializable {
 
             // 3) Get Asset Users Recorod.
             for (DatabaseTableRecord record : table.getRecords()) {
-
                 // Add records to list.
-                list.add(new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME),
+                list.add(new com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME),
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
                         Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME)),
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME),
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME)));
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME)));
             }
 
             database.closeDatabase();
@@ -525,7 +542,7 @@ public class AssetUserActorDao implements Serializable {
 //        public List<ActorAssetUser> getAllAssetUserActor(String assetUserToAddPublicKey) throws CantGetAssetUsersListException {
         // Setup method.
 //        List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
-        AssetUserActorRecord assetUserActorRecord = null;
+        com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord assetUserActorRecord = null;
         DatabaseTable table;
 
         // Get Asset Users identities list.
@@ -551,13 +568,12 @@ public class AssetUserActorDao implements Serializable {
             // 3) Get Asset Users Recorod.
             for (DatabaseTableRecord record : table.getRecords()) {
                 // Add records to list.
-                assetUserActorRecord = new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME),
+                assetUserActorRecord = new com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME),
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME),
                         Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME)),
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME),
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME));
+                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME));
             }
 
             database.closeDatabase();

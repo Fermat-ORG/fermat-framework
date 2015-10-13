@@ -6,18 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.zip.GZIPOutputStream;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.CloudServerMainRunner</code> initialize
  * the plugin root that represent the cloud server and start it
