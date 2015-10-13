@@ -1,10 +1,10 @@
 package functional.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 
 /**
@@ -80,23 +80,23 @@ public class MockFMPPacketsFactory {
 	
 	public static FMPPacket mockRequestConnectionNetworkServiceToVPNPacket(final NetworkServices networkService, final String sender, final String destination, final String server) throws FMPException {
 		mockType = FMPPacketType.CONNECTION_REQUEST;
-		String message = AsymmectricCryptography.encryptMessagePublicKey("VPN", server);
+		String message = AsymmetricCryptography.encryptMessagePublicKey("VPN", server);
 		return FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(mockSender, mockDestination, message, mockType, NetworkServices.UNDEFINED, MOCK_PRIVATE_KEY);
 
 	}
 	
 	public static FMPPacket mockRequestConnectionNetworkServiceVPNPacket(final NetworkServices networkService, final String sender, final String destination, final String server) throws FMPException {
 		mockType = FMPPacketType.CONNECTION_REQUEST;
-		String message = AsymmectricCryptography.encryptMessagePublicKey(networkService.toString(), server);
-		String signature = AsymmectricCryptography.createMessageSignature(message, MOCK_PRIVATE_KEY);
+		String message = AsymmetricCryptography.encryptMessagePublicKey(networkService.toString(), server);
+		String signature = AsymmetricCryptography.createMessageSignature(message, MOCK_PRIVATE_KEY);
 		return FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(mockSender, mockDestination, message, mockType, NetworkServices.UNDEFINED, MOCK_PRIVATE_KEY);
 
 	}
 	
 	public static FMPPacket mockDataTransmitVPNPacket(final String sender, final String destination, final String message) throws FMPException {
 		mockType = FMPPacketType.DATA_TRANSMIT;
-		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
-		String signature = AsymmectricCryptography.createMessageSignature(messageHash, MOCK_PRIVATE_KEY);
+		String messageHash = AsymmetricCryptography.encryptMessagePublicKey(message, destination);
+		String signature = AsymmetricCryptography.createMessageSignature(messageHash, MOCK_PRIVATE_KEY);
 		return FMPPacketFactory.constructCloudFMPPacketEncryptedAndSinged(mockSender, mockDestination, message, mockType, NetworkServices.UNDEFINED, MOCK_PRIVATE_KEY);
 
 	}

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSignExtraUserMessageException;
@@ -66,7 +66,7 @@ public class ExtraUserActorRecord implements Actor {
     @Override
     public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
         try {
-            return AsymmectricCryptography.createMessageSignature(message, this.privateKey);
+            return AsymmetricCryptography.createMessageSignature(message, this.privateKey);
         } catch (Exception e) {
             throw new CantSignExtraUserMessageException("Fatal Error Signed message", e, "", "");
         }

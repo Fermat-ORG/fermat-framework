@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 
 /**
@@ -60,7 +60,7 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 	public void ConnectionRequest_SendValidRequest_ResponseSignatureVerified() throws Exception{
 		setUpConnections(6);
 		FMPPacket response = requestConnection();		
-		boolean signatureVerification = AsymmectricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
+		boolean signatureVerification = AsymmetricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
 		assertThat(signatureVerification).isTrue();	
 	}
 

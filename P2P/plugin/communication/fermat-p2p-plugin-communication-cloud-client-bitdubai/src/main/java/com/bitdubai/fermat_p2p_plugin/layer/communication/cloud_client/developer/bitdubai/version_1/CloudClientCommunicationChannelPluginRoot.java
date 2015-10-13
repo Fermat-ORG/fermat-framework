@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -395,7 +395,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
         //FermatEventListener eventListener;
         //FermatEventHandler eventHandler;
     	ExecutorService executor = Executors.newCachedThreadPool();
-    	String clientKey = AsymmectricCryptography.createPrivateKey();
+    	String clientKey = AsymmetricCryptography.createPrivateKey();
 		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
 
 

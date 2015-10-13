@@ -4,7 +4,7 @@ import static org.fest.assertions.api.Assertions.*;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 
 public class ConstructionTest {
@@ -64,7 +64,7 @@ public class ConstructionTest {
 
 	@Test
 	public void Construction_NoParameters_whitAsymmectricCryptography() throws Exception{
-		ECCKeyPair testPairDefault1 = AsymmectricCryptography.generateECCKeyPair();
+		ECCKeyPair testPairDefault1 = AsymmetricCryptography.generateECCKeyPair();
 		assertThat(testPairDefault1).isNotNull();
 	}
 
