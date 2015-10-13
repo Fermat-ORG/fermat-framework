@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.sub_app.crypto_broker_identity.R;
+import com.bitdubai.sub_app.intra_user_identity.R;
 
 /**
  * Created by nelson on 01/09/15.
