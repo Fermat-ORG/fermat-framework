@@ -300,10 +300,6 @@ public class CryptoTransmissionAgent {
             List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
 
 
-
-
-
-
             /*
              * Por cada mensaje en la base de datos que se encuetra en estado de procesado
              * y que no se encuentra conectado (me tengo que fijar en el cryptoTransmissionNetworkServiceConnectionManager que la conexion para enviar la metadata no esté activa)
@@ -704,6 +700,7 @@ public class CryptoTransmissionAgent {
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                     "-----------------------\n STATE: " + CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
                             System.out.print("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
+
                             break;
                         case SEEN_BY_DESTINATION_VAULT:
                             // deberia ver si tengo que lanzar un evento acá
