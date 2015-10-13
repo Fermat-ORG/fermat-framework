@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
@@ -19,19 +19,35 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     private String name;
     private String publicKey;
-    private byte[] profileImage ;
+    private byte[] profileImage;
+    private Location location;
+
     private long registrationDate;
     private ConnectionState connectionState;
-    private Location location;
     private Genders genders;
     private String age;
-    private String cryptoAddress;
+    private CryptoAddress cryptoAddress;
 
     /**
      * Constructor
      */
 
-    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, Genders genders, String age, String cryptoAddress){
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage, Location location){
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.location = location;
+
+//        this.registrationDate = registrationDate;
+        this.genders = Genders.INDEFINITE;
+//        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
+
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage, long registrationDate, Genders genders, String age){
 
         this.name = name;
         this.publicKey = publicKey;
@@ -40,10 +56,12 @@ public class AssetUserActorRecord implements ActorAssetUser {
 //        this.location = location;
         this.genders = genders;
         this.age = age;
-        this.cryptoAddress = cryptoAddress;
+//        this.cryptoAddress = cryptoAddress;
         this.connectionState = ConnectionState.CONNECTED;
 
     }
+
+
 
     /**
      * The metho <code>getPublicKey</code> gives us the public key of the represented Asset User
@@ -132,7 +150,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * @return CryptoAddress instance.
      */
     @Override
-    public String getCryptoAddress() {
+    public CryptoAddress getCryptoAddress() {
         return this.cryptoAddress;
     }
 }
