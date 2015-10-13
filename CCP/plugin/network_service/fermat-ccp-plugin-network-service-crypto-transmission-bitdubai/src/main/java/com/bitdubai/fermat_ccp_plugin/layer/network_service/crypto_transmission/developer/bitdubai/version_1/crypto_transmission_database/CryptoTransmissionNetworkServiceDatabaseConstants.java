@@ -30,6 +30,7 @@ public class CryptoTransmissionNetworkServiceDatabaseConstants {
     public static final String CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME = "status";
     public static final String CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME = "type";
     public static final String CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME = "pending_flag";
+    public static final String CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME = "timestamp";
 
    public static final String CRYPTO_TRANSMISSION_METADATA_FIRST_KEY_COLUMN = "transmission_id";
 

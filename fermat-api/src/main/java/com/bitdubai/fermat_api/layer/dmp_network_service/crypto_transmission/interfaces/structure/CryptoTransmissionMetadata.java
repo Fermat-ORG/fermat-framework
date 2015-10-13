@@ -34,7 +34,11 @@ public interface CryptoTransmissionMetadata {
 
     public void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType);
 
-    public boolean isPendigFlag();
+    public boolean isPendigToRead();
+
+    public void confirmRead();
+
+    public long getTimestamp();
 
 
 }
