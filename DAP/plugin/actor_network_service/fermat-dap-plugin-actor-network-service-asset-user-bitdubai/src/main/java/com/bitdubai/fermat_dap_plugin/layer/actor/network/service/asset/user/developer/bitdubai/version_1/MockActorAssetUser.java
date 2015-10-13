@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.util.Date;
@@ -46,6 +48,26 @@ public class MockActorAssetUser implements ActorAssetUser {
     @Override
     public ConnectionState getConnectionState() {
         return ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+    }
+
+    @Override
+    public Location getLocation() {
+        return null;
+    }
+
+    @Override
+    public Genders getGender() {
+        return null;
+    }
+
+    @Override
+    public String getAge() {
+        return null;
+    }
+
+    @Override
+    public String getCryptoAddress() {
+        return null;
     }
 
 

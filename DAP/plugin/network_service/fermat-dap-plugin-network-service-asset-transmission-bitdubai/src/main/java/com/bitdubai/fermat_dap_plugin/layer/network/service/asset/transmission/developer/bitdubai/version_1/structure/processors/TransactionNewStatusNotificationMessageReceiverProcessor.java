@@ -8,6 +8,7 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionMsjContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.google.gson.JsonObject;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processor.TransactionNewStatusNotificationMessageReceiverProcessor</code> is
@@ -22,10 +23,10 @@ public class TransactionNewStatusNotificationMessageReceiverProcessor extends Fe
     /**
      * (non-javadoc)
      *
-     * @see FermatMessageProcessor#processingMessage(FermatMessage)
+     * @see FermatMessageProcessor#processingMessage(FermatMessage, JsonObject)
      */
     @Override
-    public void processingMessage(FermatMessage fermatMessage) {
+    public void processingMessage(FermatMessage fermatMessage, JsonObject jsonMsjContent) {
 
     }
 

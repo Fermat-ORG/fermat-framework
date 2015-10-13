@@ -341,10 +341,10 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      * Messages listeners
      */
     private void initializeMessagesListeners(){
+
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-
         FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(cryptoTransmissionAgent));
         eventManager.addListener(fermatEventListener);

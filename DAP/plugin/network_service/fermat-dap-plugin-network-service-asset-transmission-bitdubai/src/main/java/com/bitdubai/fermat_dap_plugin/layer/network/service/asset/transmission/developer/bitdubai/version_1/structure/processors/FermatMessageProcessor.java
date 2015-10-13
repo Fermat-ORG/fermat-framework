@@ -8,6 +8,7 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionMsjContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.google.gson.JsonObject;
 
 /**
  * The class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.FermatMessageProcessor</code> define
@@ -24,7 +25,7 @@ public abstract class FermatMessageProcessor {
     /**
      * Method that contain the logic to process the message
      */
-    public abstract void processingMessage(final FermatMessage fermatMessage);
+    public abstract void processingMessage(final FermatMessage fermatMessage, final JsonObject jsonMsjContent);
 
     /**
      * Return the AssetTransmissionMsjContentType that it processes

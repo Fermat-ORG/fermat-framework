@@ -56,11 +56,14 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionMsjContentType;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
@@ -433,6 +436,22 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
          */
         fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle new message sent
+         */
+        fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler());
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle new message receive notification
+         */
+        fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler());
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -889,7 +908,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             /*
              * Construct the message content in json format
              */
-            String msjContent = encodeMSjContentDigitalAssetMetadataTransmit(digitalAssetMetadataToSend);
+            String msjContent = EncodeMsjContent.encodeMSjContentDigitalAssetMetadataTransmit(digitalAssetMetadataToSend);
 
             /*
              * If not null
@@ -978,7 +997,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             /*
              * Construct the message content in json format
              */
-            String msjContent = encodeMSjContentTransactionNewStatusNotification(transactionId, newStatus);
+            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(transactionId, newStatus);
 
             /*
              * If not null
@@ -1051,48 +1070,10 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
     }
 
-    /**
-     *  Construct the content of the message fot the type <code>AssetTransmissionMsjContentType.META_DATA_TRANSMIT</code>
-     *
-     * @param digitalAssetMetadataToSend
-     * @return String message content
-     */
-    private String encodeMSjContentDigitalAssetMetadataTransmit(DigitalAssetMetadata digitalAssetMetadataToSend){
 
-        String contemnt = "";
 
-        /*
-         * Create the json object
-         */
-        Gson gson = new Gson();
-        JsonObject jsonObjectContent = new JsonObject();
-        jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.MSJ_CONTEMNT_TYPE     , AssetTransmissionMsjContentType.META_DATA_TRANSMIT.toString());
-        jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.DIGITAL_ASSET_METADATA, digitalAssetMetadataToSend.toString());
 
-        return gson.toJson(jsonObjectContent);
-    }
 
-    /**
-     * Construct the content of the message fot the type <code>AssetTransmissionMsjContentType.TRANSACTION_STATUS_UPDATE</code>
-     *
-     * @param transactionId
-     * @param newStatus
-     * @return String message content
-     */
-    private String encodeMSjContentTransactionNewStatusNotification(String transactionId, String newStatus){
 
-        String contemnt = "";
-
-        /*
-         * Create the json object
-         */
-        Gson gson = new Gson();
-        JsonObject jsonObjectContent = new JsonObject();
-        jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.MSJ_CONTEMNT_TYPE      , AssetTransmissionMsjContentType.TRANSACTION_STATUS_UPDATE.toString());
-        jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.TRANSACTION_ID         , transactionId);
-        jsonObjectContent.addProperty(AssetTransmissionJsonAttNames.NEW_STATUS_TRANSACTION , newStatus);
-
-        return gson.toJson(jsonObjectContent);
-    }
 
 }
