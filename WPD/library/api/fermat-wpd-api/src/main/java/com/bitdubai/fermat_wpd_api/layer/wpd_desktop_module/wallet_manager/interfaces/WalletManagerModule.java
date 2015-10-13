@@ -54,4 +54,6 @@ public interface WalletManagerModule {
      */
     public void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException;
 
-}
+
+
+    }

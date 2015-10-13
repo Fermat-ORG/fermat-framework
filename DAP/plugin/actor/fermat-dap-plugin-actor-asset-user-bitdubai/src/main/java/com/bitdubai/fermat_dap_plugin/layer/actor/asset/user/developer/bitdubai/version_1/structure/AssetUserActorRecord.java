@@ -19,10 +19,11 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     private String name;
     private String publicKey;
-    private byte[] profileImage ;
+    private byte[] profileImage;
+    private Location location;
+
     private long registrationDate;
     private ConnectionState connectionState;
-    private Location location;
     private Genders genders;
     private String age;
     private String cryptoAddress;
@@ -30,6 +31,21 @@ public class AssetUserActorRecord implements ActorAssetUser {
     /**
      * Constructor
      */
+
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage, Location location){
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.location = location;
+
+//        this.registrationDate = registrationDate;
+//        this.genders = genders;
+//        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
 
     public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, Genders genders, String age, String cryptoAddress){
 

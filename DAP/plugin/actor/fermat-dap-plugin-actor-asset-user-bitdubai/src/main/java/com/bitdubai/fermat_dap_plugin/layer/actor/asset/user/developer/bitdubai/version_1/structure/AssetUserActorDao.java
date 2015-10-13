@@ -170,11 +170,9 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-
-    public void updateAssetUserConnectionState(String assetUserLoggedInPublicKey, String assetUserToAddPublicKey, ConnectionState connectionState) throws CantUpdateAssetUserConnectionException {
+    public void updateAssetUserConnectionState(String assetUserLinkedInPublicKey, String assetUserPublicKey, ConnectionState connectionState) throws CantUpdateAssetUserConnectionException {
 
         DatabaseTable table;
-
         try {
             /**
              * 1) Get the table.
@@ -189,8 +187,113 @@ public class AssetUserActorDao implements Serializable {
             }
 
             // 2) Find the Asset User , filter by keys.
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetUserLinkedInPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            /**
+             * Get actual date
+             */
+            Date d = new Date();
+            long milliseconds = d.getTime();
+
+            // 3) Get Asset User record and update state.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+                table.updateRecord(record);
+            }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            database.closeDatabase();
+            throw new CantUpdateAssetUserConnectionException(e.getMessage(), e, "asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
+
+        } catch (CantUpdateRecordException e) {
+            database.closeDatabase();
+            throw new CantUpdateAssetUserConnectionException(e.getMessage(), e, "asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
+
+        } catch (Exception e) {
+            database.closeDatabase();
+            throw new CantUpdateAssetUserConnectionException(e.getMessage(), FermatException.wrapException(e), "asset User Actor", "Cant get developer identity list, unknown failure.");
+        }
+    }
+
+    public void createNewAssetUserRegisterInNetworkService(String assetUserPublicKey, String assetUserName, byte[] profileImage, Location location) throws CantAddPendingAssetUserException {
+        try {
+            /**
+             * if Asset User exist on table
+             * change status
+             */
+            if (assetUserExists(assetUserPublicKey)) {
+                this.updateAssetUserConnectionStateActorNetworService(assetUserPublicKey, ConnectionState.CONNECTED);
+            } else {
+                /**
+                 * Get actual date
+                 */
+                Date d = new Date();
+                long milliseconds = d.getTime();
+
+                DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_TABLE_NAME);
+                DatabaseTableRecord record = table.getEmptyRecord();
+
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME, assetUserPublicKey);
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME, assetUserName);
+
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_COLUMN_NAME, "-");
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_GENDER_COLUMN_NAME, "-");
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_AGE_COLUMN_NAME, "-");
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_CRYPTO_ADDRESS_COLUMN_NAME, "-");
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_CRYPTO_CURRENCY_COLUMN_NAME, "-");
+
+                record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode());
+                record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
+                record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);
+
+                table.insertRecord(record);
+                /**
+                 * Persist profile image on a file
+                 */
+                persistNewAssetUserProfileImage(assetUserPublicKey, profileImage);
+
+                database.closeDatabase();
+            }
+        } catch (CantInsertRecordException e) {
+            database.closeDatabase();
+            throw new CantAddPendingAssetUserException("CAN'T INSERT ASSET USER REGISTERED IN ACTOR NETWORK SERVICE", e, "", "Cant create new ASSET USER REGISTERED IN ACTOR NETWORK SERVICE, insert database problems.");
+
+        } catch (CantUpdateAssetUserConnectionException e) {
+            database.closeDatabase();
+            throw new CantAddPendingAssetUserException("CAN'T INSERT ASSET USER REGISTERED IN ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "Cant update exist ASSET USER REGISTERED IN ACTOR NETWORK SERVICE state, unknown failure.");
+
+        } catch (Exception e) {
+            database.closeDatabase();
+            // Failure unknown.
+            throw new CantAddPendingAssetUserException("CAN'T INSERT ASSET USER", FermatException.wrapException(e), "", "Cant create new ASSET USER, unknown failure.");
+        }
+    }
+
+
+    public void updateAssetUserConnectionStateActorNetworService(String assetUserPublicKey, ConnectionState connectionState) throws CantUpdateAssetUserConnectionException {
+
+        DatabaseTable table;
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User actor list, table not found.", "Asset User Actor", "");
+            }
+
+            // 2) Find the Asset User , filter by keys.
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 

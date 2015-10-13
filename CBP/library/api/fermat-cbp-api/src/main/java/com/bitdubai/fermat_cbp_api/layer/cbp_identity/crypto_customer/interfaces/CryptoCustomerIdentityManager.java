@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces;
 
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 
 import java.util.List;
 
@@ -10,8 +11,8 @@ import java.util.List;
  */
 public interface CryptoCustomerIdentityManager {
 
-    List<CryptoCustomerIdentity> getAllCryptoBrokersFromCurrentDeviceUser();
+    List<CryptoCustomerIdentity> getAllCryptoCustomerFromCurrentDeviceUser() throws CantGetCryptoCustomerIdentityException;
 
-    CryptoCustomerIdentity createCryptoBrokerIdentity(final String alias, final byte[] profileImage) throws CantCreateCryptoBrokerIdentityException;
+    CryptoCustomerIdentity createCryptoCustomerIdentity(final String alias, final byte[] profileImage) throws CantCreateCryptoCustomerIdentityException;
 
 }
