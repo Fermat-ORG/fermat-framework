@@ -71,8 +71,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     private final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager          ;
 
     public CryptoPaymentRequestExecutorAgent(final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
-                                             final ErrorManager                                 errorManager                                ,
                                              final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot,
+                                             final ErrorManager                                 errorManager                                ,
                                              final EventManager                                 eventManager                                ,
                                              final PluginDatabaseSystem                         pluginDatabaseSystem                        ,
                                              final UUID                                         pluginId                                    ,

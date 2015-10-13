@@ -796,10 +796,12 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
                 cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
                         communicationNetworkServiceConnectionManager,
+                        this,
                         errorManager,
                         eventManager,
                         pluginDatabaseSystem,
-                        pluginId
+                        pluginId,
+                        null
                 );
 
                 cryptoPaymentRequestExecutorAgent.start();
