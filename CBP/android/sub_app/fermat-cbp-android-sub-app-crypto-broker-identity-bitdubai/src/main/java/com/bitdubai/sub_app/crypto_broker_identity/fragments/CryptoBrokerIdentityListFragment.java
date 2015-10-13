@@ -19,6 +19,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
+import com.bitdubai.sub_app.crypto_broker_identity.common.views.DividerItemDecoration;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;
@@ -67,6 +68,13 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
             }
         });
+
+        if (getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setDisplayShowHomeEnabled(false);
+        }
+
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
+        recyclerView.addItemDecoration(itemDecoration);
     }
 
     @Override
@@ -139,7 +147,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
         if (moduleManager == null) {
             for (int i = 0; i < 20; i++) {
-                data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i, R.drawable.deniz_profile_picture));
+                data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i));
             }
         } else {
             try {
