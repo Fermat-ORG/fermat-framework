@@ -30,10 +30,12 @@ public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWalle
      */
     public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager) {
         this.assetIssuerWalletManager = assetIssuerWalletManager;
+
     }
 
     public List<AssetIssuerWalletList>  getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException{
         try{
+
             return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey).getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
         }catch (Exception exception){
             throw new CantLoadWalletException("Error load Wallet Balances Available", exception, "Method: getAssetIssuerWalletBalancesAvailable", "Class: AssetIssuerWalletModuleManager");
@@ -47,4 +49,6 @@ public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWalle
             throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetIssuerWalletBalancesBook", "Class: AssetIssuerWalletModuleManager");
         }
     }
+
+
 }
