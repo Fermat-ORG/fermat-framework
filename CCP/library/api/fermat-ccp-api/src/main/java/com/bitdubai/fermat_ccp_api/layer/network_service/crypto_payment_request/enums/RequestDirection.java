@@ -28,8 +28,6 @@ public enum RequestDirection implements FermatEnum {
             case "INCOMING": return INCOMING;
 
             default: throw new InvalidParameterException(
-                    InvalidParameterException.DEFAULT_MESSAGE,
-                    null,
                     "Code Received: " + code,
                     "This code is not valid for the RequestDirection enum."
             );

@@ -13,7 +13,7 @@ public enum RequestProtocolState implements FermatEnum {
 
     DONE             ("DON"), // final state of request.
     PENDING_ACTION   ("PEA"), // pending local action, is given after raise a crypto payment request event.
-    PROCESSING       ("PCS"), // when an action from the network service is needed (maybe send, maybe raise an event).
+    PROCESSING       ("PCS"), // when an action from the network service is needed (maybe send, maybe raise an event) depends on request direction.
     WAITING_RESPONSE ("WRE")  // waiting response from the counterpart.
 
     ;

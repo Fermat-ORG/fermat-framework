@@ -244,8 +244,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
     /**
      * I indicate to the Agent the action that it must take:
-     * - Protocol State: PROCESSING.
      * - Action        : INFORM_REFUSAL.
+     * - Protocol State: PROCESSING.
      */
     @Override
     public void informRefusal(UUID requestId) throws RequestNotFoundException   ,
@@ -256,14 +256,17 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
                     RequestAction.INFORM_REFUSAL,
-                    RequestProtocolState      .PROCESSING
+                    RequestProtocolState.PROCESSING
             );
 
-        } catch(CantTakeActionException  |
-                RequestNotFoundException e) {
+        } catch(CantTakeActionException e) {
             // i inform to error manager the error.
             reportUnexpectedException(e);
             throw new CantInformRefusalException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(RequestNotFoundException e) {
+
+            reportUnexpectedException(e);
+            throw e;
         } catch(Exception e) {
 
             reportUnexpectedException(e);
@@ -273,8 +276,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
     /**
      * I indicate to the Agent the action that it must take:
-     * - Protocol State: PROCESSING.
      * - Action        : INFORM_DENIAL.
+     * - Protocol State: PROCESSING.
      */
     @Override
     public void informDenial(UUID requestId) throws RequestNotFoundException  ,
@@ -288,11 +291,14 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                     RequestProtocolState.PROCESSING
             );
 
-        } catch(CantTakeActionException  |
-                RequestNotFoundException e) {
+        } catch(CantTakeActionException e) {
             // i inform to error manager the error.
             reportUnexpectedException(e);
             throw new CantInformDenialException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(RequestNotFoundException e) {
+
+            reportUnexpectedException(e);
+            throw e;
         } catch(Exception e) {
 
             reportUnexpectedException(e);
@@ -317,11 +323,14 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                     RequestProtocolState.PROCESSING
             );
 
-        } catch(CantTakeActionException  |
-                RequestNotFoundException e) {
+        } catch(CantTakeActionException e) {
             // i inform to error manager the error.
             reportUnexpectedException(e);
             throw new CantInformApprovalException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(RequestNotFoundException e) {
+
+            reportUnexpectedException(e);
+            throw e;
         } catch(Exception e) {
 
             reportUnexpectedException(e);
@@ -331,8 +340,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
     /**
      * I indicate to the Agent the action that it must take:
-     * - Protocol State: PROCESSING.
      * - Action        : INFORM_RECEPTION.
+     * - Protocol State: PROCESSING.
      */
     @Override
     public void informReception(UUID requestId) throws CantInformReceptionException, RequestNotFoundException {
@@ -345,11 +354,14 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                     RequestProtocolState.PROCESSING
             );
 
-        } catch(CantTakeActionException  |
-                RequestNotFoundException e) {
+        } catch(CantTakeActionException e) {
             // i inform to error manager the error.
             reportUnexpectedException(e);
             throw new CantInformReceptionException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(RequestNotFoundException e) {
+
+            reportUnexpectedException(e);
+            throw e;
         } catch(Exception e) {
 
             reportUnexpectedException(e);
@@ -357,19 +369,31 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         }
     }
 
+    /**
+     * I indicate to the NS that no more action is needed for the given request:
+     * - Action        : NONE.
+     * - Protocol State: DONE.
+     */
     @Override
     public void confirmRequest(UUID requestId) throws CantConfirmRequestException,
                                                       RequestNotFoundException   {
 
         try {
 
-            cryptoPaymentRequestNetworkServiceDao.deleteRequest(requestId);
+            cryptoPaymentRequestNetworkServiceDao.takeAction(
+                    requestId,
+                    RequestAction.NONE,
+                    RequestProtocolState.DONE
+            );
 
-        } catch(CantDeleteRequestException |
-                RequestNotFoundException e) {
+        } catch(CantTakeActionException e) {
             // i inform to error manager the error.
             reportUnexpectedException(e);
             throw new CantConfirmRequestException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(RequestNotFoundException e) {
+
+            reportUnexpectedException(e);
+            throw e;
         } catch(Exception e) {
 
             reportUnexpectedException(e);

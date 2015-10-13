@@ -99,8 +99,8 @@ public class CryptoPaymentRequestNetworkServiceDao {
                                            String                      description      ,
                                            long                        amount           ,
                                            long                        startTimeStamp   ,
-                                           RequestDirection type                        ,
-                                           RequestAction action                         ,
+                                           RequestDirection            type             ,
+                                           RequestAction               action           ,
                                            RequestProtocolState        protocolState    ,
                                            BlockchainNetworkType       networkType      ) throws CantCreateCryptoPaymentRequestException {
 
@@ -227,40 +227,8 @@ public class CryptoPaymentRequestNetworkServiceDao {
         }
     }
 
-    public void deleteRequest(UUID requestId) throws CantDeleteRequestException,
-                                                     RequestNotFoundException  {
-
-        if (requestId == null)
-            throw new CantDeleteRequestException("", "requestId, can not be null");
-
-        try {
-
-            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
-
-            cryptoPaymentRequestTable.setUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
-
-            cryptoPaymentRequestTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
-
-
-            if (!records.isEmpty())
-                cryptoPaymentRequestTable.deleteRecord(records.get(0));
-            else
-                throw new RequestNotFoundException(null, "RequestID: "+requestId, "Can not find an crypto payment request with the given request id.");
-
-
-        } catch (CantLoadTableToMemoryException exception) {
-
-            throw new CantDeleteRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        } catch (CantDeleteRecordException exception) {
-
-            throw new CantDeleteRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record."                                                                                );
-        }
-    }
-
     public void takeAction(UUID                       requestId    ,
-                           RequestAction action       ,
+                           RequestAction              action       ,
                            RequestProtocolState       protocolState) throws CantTakeActionException  ,
                                                                             RequestNotFoundException {
 
