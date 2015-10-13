@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_cash_money_purchase.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
@@ -67,6 +68,11 @@ public class CustomerBrokerCashMoneyPurchaseContract implements CustomerBrokerCa
     }
 
     @Override
+    public UUID getPaymentTransactionId() {
+        return null;
+    }
+
+    @Override
     public String getPublicKeyBroker() {
         return this.publicKeyBroker;
     }
@@ -74,6 +80,11 @@ public class CustomerBrokerCashMoneyPurchaseContract implements CustomerBrokerCa
     @Override
     public CurrencyType getPaymentCurrency() {
         return this.paymentCurrency;
+    }
+
+    @Override
+    public CashCurrencyType getCashCurrencyType() {
+        return null;
     }
 
     @Override
