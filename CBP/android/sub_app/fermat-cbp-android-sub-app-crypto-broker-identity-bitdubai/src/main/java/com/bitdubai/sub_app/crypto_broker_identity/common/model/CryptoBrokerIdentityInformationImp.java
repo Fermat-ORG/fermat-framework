@@ -12,12 +12,10 @@ public class CryptoBrokerIdentityInformationImp implements CryptoBrokerIdentityI
 
     private String brokerName;
     private byte[] profileImage;
-    private int profileImageDrawableId;
 
-    public CryptoBrokerIdentityInformationImp(String brokerName, int drawableId) {
+    public CryptoBrokerIdentityInformationImp(String brokerName) {
         this.brokerName = brokerName;
-        this.profileImageDrawableId = drawableId;
-        profileImage = new byte[0];
+        profileImage = null;
     }
 
     @Override
@@ -33,9 +31,5 @@ public class CryptoBrokerIdentityInformationImp implements CryptoBrokerIdentityI
     @Override
     public byte[] getProfileImage() {
         return profileImage;
-    }
-
-    public int getProfileImageDrawableId() {
-        return profileImageDrawableId;
     }
 }

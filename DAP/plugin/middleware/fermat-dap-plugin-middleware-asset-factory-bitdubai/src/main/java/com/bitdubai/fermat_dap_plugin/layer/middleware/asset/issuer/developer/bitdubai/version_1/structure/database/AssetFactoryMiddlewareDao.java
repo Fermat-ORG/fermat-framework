@@ -602,6 +602,10 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         }
     }
 
+    public boolean checkAssetDraft(){
+        return true;
+    }
+
     public void markAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException {
 
 
