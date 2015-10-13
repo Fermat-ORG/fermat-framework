@@ -150,7 +150,7 @@ public class AssetReceptionDeveloperDatabaseFactory implements DealsWithPluginDa
         assetDeliveringColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TIMESTAMP_COLUMN_NAME);
         assetDeliveringColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_EVENT_ID_COLUMN_NAME);
 
-        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TABLE_FIRST_KEY_COLUMN, assetDeliveringColumns);
+        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TABLE_NAME, assetDeliveringColumns);
         tables.add(assetDeliveringTable);
 
         return tables;
