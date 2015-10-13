@@ -82,6 +82,7 @@ public class CustomerBrokerCryptoPurchaseBusinessTransactionDatabaseFactory impl
             table.addColumn(CustomerBrokerCryptoPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_PURCHASE_PAYMENT_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerCryptoPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerCryptoPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCryptoPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(CustomerBrokerCryptoPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_PURCHASE_EXECUTION_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerCryptoPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CRYPTO_PURCHASE_CRYPTO_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 

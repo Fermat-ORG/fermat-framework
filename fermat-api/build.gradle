@@ -33,6 +33,9 @@ dependencies {
 
 
     compile 'org.bouncycastle:bcprov-jdk15on:1.52'
+    compile('org.bitcoinj:bitcoinj-core:0.13.2') {
+        exclude module: 'scrypt'
+    }
     compile('com.thoughtworks.xstream:xstream:1.4.7') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }

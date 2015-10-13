@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
@@ -64,8 +63,8 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Deals
     @Override
     public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
         try{
-//            return AsymmectricCryptography.createMessageSignature(message, keyPair.getPrivateKey());
-            return AsymmectricCryptography.createMessageSignature(message, this.privateKey);
+//            return AsymmetricCryptography.createMessageSignature(message, keyPair.getPrivateKey());
+            return AsymmetricCryptography.createMessageSignature(message, this.privateKey);
         } catch(Exception ex){
             throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
         }

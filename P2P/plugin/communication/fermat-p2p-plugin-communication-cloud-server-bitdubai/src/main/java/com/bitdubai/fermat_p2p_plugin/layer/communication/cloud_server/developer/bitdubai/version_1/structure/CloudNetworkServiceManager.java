@@ -124,7 +124,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	private void requestRegisteredConnection(FMPPacket packet) throws FMPException {
 		String decryptedMessage;
 		try{
-			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey());
+			decryptedMessage = AsymmetricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey());
 		}catch(Exception ex){
 			denyConnectionRequest(packet, ex.getMessage());
 			return;
@@ -146,7 +146,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		
 		NetworkServices networkService;
 		try{
-			networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey()));
+			networkService = NetworkServices.valueOf(AsymmetricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey()));
 		} catch(Exception ex){
 			denyConnectionRequest(packet, ex.getMessage());
 			return;

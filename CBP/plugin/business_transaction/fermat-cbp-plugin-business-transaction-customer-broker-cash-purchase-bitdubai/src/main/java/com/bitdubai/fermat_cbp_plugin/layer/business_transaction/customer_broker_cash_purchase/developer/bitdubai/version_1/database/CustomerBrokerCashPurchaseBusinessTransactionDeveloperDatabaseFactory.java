@@ -127,6 +127,7 @@ public class CustomerBrokerCashPurchaseBusinessTransactionDeveloperDatabaseFacto
         customerBrokerCashPurchaseColumns.add(CustomerBrokerCashPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_PURCHASE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
         customerBrokerCashPurchaseColumns.add(CustomerBrokerCashPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME);
         customerBrokerCashPurchaseColumns.add(CustomerBrokerCashPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME);
+        customerBrokerCashPurchaseColumns.add(CustomerBrokerCashPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME);
         customerBrokerCashPurchaseColumns.add(CustomerBrokerCashPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_PURCHASE_EXECUTION_TRANSACTION_ID_COLUMN_NAME);
         customerBrokerCashPurchaseColumns.add(CustomerBrokerCashPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_PURCHASE_CASH_CURRENCY_TYPE_COLUMN_NAME);
         /**
