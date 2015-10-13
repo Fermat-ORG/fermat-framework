@@ -446,7 +446,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 //        List<CryptoWalletTransaction> lstTransactions  = new ArrayList<CryptoWalletTransaction>();
 //
 //       try {
-//           lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
+//           lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionTypes.DEBIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
 //           offset+=lstTransactions.size();
 //       }
 //       catch (Exception e) {

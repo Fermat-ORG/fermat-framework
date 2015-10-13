@@ -392,6 +392,10 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         }
     }
 
+    public boolean checkAssetDraft(){
+        return getAssetFactoryMiddlewareDao().checkAssetDraft();
+    }
+
     public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to null for all

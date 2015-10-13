@@ -11,5 +11,5 @@ import java.util.HashMap;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
  */
 public interface AssetDistributionManager {
-    void distributeAssets(HashMap<DigitalAssetMetadata,ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException;
+    void distributeAssets(HashMap<DigitalAssetMetadata,ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException;
 }

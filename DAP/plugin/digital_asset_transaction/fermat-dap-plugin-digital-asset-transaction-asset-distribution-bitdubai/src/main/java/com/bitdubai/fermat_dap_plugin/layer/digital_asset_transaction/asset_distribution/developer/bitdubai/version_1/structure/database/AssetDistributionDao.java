@@ -42,8 +42,8 @@ public class AssetDistributionDao {
     }
 
     private DatabaseTable getDatabaseTable(String tableName){
-        DatabaseTable assetIssuingDatabaseTable = database.getTable(tableName);
-        return assetIssuingDatabaseTable;
+        DatabaseTable assetDistributionDatabaseTable = database.getTable(tableName);
+        return assetDistributionDatabaseTable;
     }
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {

@@ -59,6 +59,10 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
         this.digitalAssetDistributionVault = digitalAssetDistributionVault;
     }
 
+    public void setWalletPublicKey(String walletPublicKey) throws CantSetObjectException {
+        this.digitalAssetDistributionVault.setWalletPublicKey(walletPublicKey);
+    }
+
     /**
      * This method check if the DigitalAssetMetadata remains with not modifications
      * */
