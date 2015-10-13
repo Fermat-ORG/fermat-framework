@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -329,6 +330,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get genesis transaction from asset vault");
             } catch (CantDeleteDigitalAssetFromLocalStorageException exception) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            } catch (DAPException exception) {
+                throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Cannot check the asset issuing progress");
             }
 
         }
