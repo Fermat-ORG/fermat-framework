@@ -33,5 +33,15 @@ public interface IntraWalletUserManager {
      */
     IntraWalletUser createNewIntraWalletUser(String alias       ,
                                              byte[] profileImage) throws CantCreateNewIntraWalletUserException;
-    
+
+
+    /**
+     * The method <code>hasIntraUserIdentity</code> returns if has a intra user identity created
+     *
+     * @return
+     * @throws CantListIntraWalletUsersException
+     */
+
+    boolean  hasIntraUserIdentity() throws CantListIntraWalletUsersException;
+
 }

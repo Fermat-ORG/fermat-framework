@@ -5,7 +5,7 @@ import android.app.FragmentTransaction;
 
 
 import com.bitdubai.sub_app.crypto_broker_identity.BuildConfig;
-import com.bitdubai.sub_app.crypto_broker_identity.fragments.IdentityListFragment;
+import com.bitdubai.sub_app.crypto_broker_identity.fragments.CryptoBrokerIdentityListFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,12 +26,12 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @Config(constants = BuildConfig.class)
 public class IdentityListFragmentTest {
 
-    private IdentityListFragment fragment;
+    private CryptoBrokerIdentityListFragment fragment;
     private TestActivity activity;
 
     @Before
     public void setUp() {
-        fragment = IdentityListFragment.newInstance();
+        fragment = CryptoBrokerIdentityListFragment.newInstance();
 
         activity = Robolectric.setupActivity(TestActivity.class);
 

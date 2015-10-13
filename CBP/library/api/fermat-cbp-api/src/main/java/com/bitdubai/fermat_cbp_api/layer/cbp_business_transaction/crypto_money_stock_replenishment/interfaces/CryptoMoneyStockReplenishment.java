@@ -9,8 +9,8 @@ import java.util.UUID;
  * Created by Yordin Alayn on 17.09.2015
  */
 
-public interface CryptoMoneyStockReplenishment  extends BusinessTransaction {
+public interface CryptoMoneyStockReplenishment extends BusinessTransaction {
 
-    CryptoCurrencyType getCryptoCurrencyType();
+        CryptoCurrencyType getCryptoCurrencyType();
 
 }

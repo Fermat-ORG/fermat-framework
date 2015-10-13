@@ -97,7 +97,8 @@
                             android:clickable="true"
                             android:text="Give me an Address!"
                             android:layout_weight="0.5"
-
+                            android:background="#1172aa"
+                            android:textColor="#fff"
                             />
 
                         <Button
