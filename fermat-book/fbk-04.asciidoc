@@ -1,14 +1,15 @@
 == FERMAT CCP (crypto currency platform)
 This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future. + 
-It contains the specific modules needed to run a Crypto Currency Wallet on FERMAT and these FERMAT-CCP's modules connect to the underlying modules already providing cross-platform system-wide services, like those living on the foundationals layers and superlayer ( FERMAT-CORE / FERMAT-PIP, FERMAT-OSA, FERMAT-BCH, FERMAT-P2P, etc. ).
+It contains the specific modules needed to run a Crypto Currency Wallet on FERMAT and these FERMAT-CCP's modules connect to the underlying modules already providing cross-platform system-wide services, like those living on the foundationals layers and superlayer (FERMAT-CORE / FERMAT-PIP, FERMAT-OSA, FERMAT-BCH, FERMAT-P2P, etc.).
 For a *niche wallet* to run, we need to count on modules offering:
-*1 user identification 
-*2 device identification
-*3 cryptonetwork services to allow connection to existing cryptocurrencies networks ( *value transport* )
-*4 cyptoaddress management (addressbook)
-*5 network services ( to allow processing of events occurring outside the running device ) ( *information transport* )
-*6 world services ( to allow access to information provided from services living in the web like exchange rates,...)
-*7 transaction layer ( to allow the broadcasting of transaction created in a wallet)
+
+* 1 user identification 
+* 2 device identification
+* 3 cryptonetwork services to allow connection to existing cryptocurrencies networks ( *value transport* )
+* 4 cyptoaddress management (addressbook)
+* 5 network services ( to allow processing of events occurring outside the running device ) ( *information transport* )
+* 6 world services ( to allow access to information provided from services living in the web like exchange rates,...)
+* 7 transaction layer ( to allow the broadcasting of transaction created in a wallet)
 
 
 === BitWa (Basic Bitcoin Wallet)

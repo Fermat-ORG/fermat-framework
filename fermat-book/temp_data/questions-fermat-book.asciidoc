@@ -1,4 +1,8 @@
 questions-fermat-book.asciidoc
+
+12-10
+1) 
+
 9-10 
 1) new functions BLP Wallet
 
